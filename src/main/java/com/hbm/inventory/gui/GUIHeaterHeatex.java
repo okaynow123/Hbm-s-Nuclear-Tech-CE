@@ -59,8 +59,8 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
     public void drawScreen(int x, int y, float f) {
         super.drawScreen(x, y, f);
 
-        FFUtils.renderTankInfo(this, x, y, guiLeft + 44, guiTop + 36, 16, 52, heater.tanks[0], heater.tankTypes[0]);
-        FFUtils.renderTankInfo(this, x, y, guiLeft + 116, guiTop + 36, 16, 52, heater.tanks[1], heater.tankTypes[1]);
+        heater.tanks[0].renderTankInfo(this, x, y, guiLeft + 44, guiTop + 36, 16, 52);
+        heater.tanks[1].renderTankInfo(this, x, y, guiLeft + 116, guiTop + 36, 16, 52);
 
         if (guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 26 < y && guiTop + 26 + 18 >= y) {
             drawHoveringText(Arrays.asList("Amount per cycle"), x, y);
@@ -86,8 +86,8 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        FFUtils.drawLiquid(heater.tanks[0], guiLeft, guiTop, this.zLevel, 16, 52, 44, 116);
-        FFUtils.drawLiquid(heater.tanks[1], guiLeft, guiTop, this.zLevel, 16, 52, 116, 116);
+        heater.tanks[0].renderTank(guiLeft + 44, guiTop + 88, this.zLevel, 16, 52);
+        heater.tanks[1].renderTank(guiLeft + 116, guiTop + 88, this.zLevel, 16, 52);
 
         this.fieldCycles.drawTextBox();
         this.fieldDelay.drawTextBox();

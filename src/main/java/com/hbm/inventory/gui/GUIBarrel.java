@@ -36,7 +36,7 @@ public class GUIBarrel extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 
 		//tank.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 69 - 52, 34, 52);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 68 - 52, 34, 52, tank.tank);
+		tank.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 69 - 52, 34, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
@@ -67,8 +67,8 @@ public class GUIBarrel extends GuiInfoContainer {
 		
 		int i = tank.mode;
 		drawTexturedModalRect(guiLeft + 151, guiTop + 34, 176, i * 18, 18, 18);
-		
-		FFUtils.drawLiquid(tank.tank, guiLeft, guiTop, zLevel, 34, 52, 71, 97);
+
+		tank.tank.renderTank(guiLeft + 71, guiTop + 69, this.zLevel, 34, 52);
 		/*Minecraft.getMinecraft().getTextureManager().bindTexture(tank.tank.getSheet());
 		tank.tank.renderTank(this, guiLeft + 71, guiTop + 69, tank.tank.getTankType().textureX() * FluidTank.x, tank.tank.getTankType().textureY() * FluidTank.y, 16, 52);
 		tank.tank.renderTank(this, guiLeft + 71 + 16, guiTop + 69, tank.tank.getTankType().textureX() * FluidTank.x, tank.tank.getTankType().textureY() * FluidTank.y, 16, 52);

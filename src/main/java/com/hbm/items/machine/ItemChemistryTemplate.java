@@ -7,6 +7,7 @@ import com.hbm.inventory.ChemplantRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
+import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
@@ -20,7 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -85,7 +85,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 	    		}
 	    		if(fluidOutputs != null){
 	    			for(FluidStack outputFluid : fluidOutputs){
-	    				list.add(" §b"+ outputFluid.amount + "mB " + outputFluid.getFluid().getLocalizedName(outputFluid));
+	    				list.add(" §b"+ outputFluid.fill + "mB " + outputFluid.type.getLocalizedName());
 	    			}
 	    		}
 	    		list.add("§l" + I18nUtil.resolveKey("info.template_in_p"));
@@ -112,7 +112,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 	    		
     			if(fluidInputs != null){
     				for(FluidStack inputFluid : fluidInputs){
-    					list.add(" §e" + inputFluid.amount + "mB " + inputFluid.getFluid().getLocalizedName(inputFluid));
+    					list.add(" §e" + inputFluid.fill + "mB " + inputFluid.type.getLocalizedName());
     				}
     			}
 	    		

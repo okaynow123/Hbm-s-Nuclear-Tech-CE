@@ -1,5 +1,7 @@
 package com.hbm.render.item;
 
+import com.hbm.inventory.fluid.FluidStack;
+import com.hbm.inventory.fluid.FluidType;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.items.machine.ItemFluidIcon;
@@ -12,8 +14,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class ItemRenderFluidIcon extends TEISRBase {
 
@@ -33,13 +33,13 @@ public class ItemRenderFluidIcon extends TEISRBase {
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
 		GL11.glPopMatrix();
 
-		Fluid f = ItemFluidIcon.getFluid(stack);
+		FluidType f = ItemFluidIcon.getFluidType(stack);
 		TextureAtlasSprite lava = null;
 		if (f != null)
-			lava = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(f.getStill().toString());
+			lava = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(f.toString());
 
 		if (lava != null) {
-			RenderHelper.setColor(f.getColor(new FluidStack(f, 1000)));
+			RenderHelper.setColor(f.getColor());
 			GlStateManager.disableLighting();
 
 			GL11.glTranslated(0, 0, 0.5 + HALF_A_PIXEL);

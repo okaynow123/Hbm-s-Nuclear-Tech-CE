@@ -8,17 +8,25 @@ import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
+import com.hbm.main.MainRegistry;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
 
+import com.hbm.packet.PlayerInformPacket;
+import com.hbm.packet.PlayerInformPacketLegacy;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class HbmLivingProps {
@@ -156,6 +164,10 @@ public class HbmLivingProps {
 
 	public static void incrementAsbestos(EntityLivingBase entity, int asbestos){
 		setAsbestos(entity, getAsbestos(entity) + asbestos);
+
+		if(entity instanceof EntityPlayerMP) {
+			PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(new TextComponentTranslation("info.asbestos").setStyle(new Style().setColor(TextFormatting.RED)), 10, 3000), (EntityPlayerMP) entity);
+		}
 	}
 
 	public static void addCont(EntityLivingBase entity, ContaminationEffect cont){
@@ -178,6 +190,10 @@ public class HbmLivingProps {
 
 	public static void incrementBlackLung(EntityLivingBase entity, int blacklung){
 		setBlackLung(entity, getBlackLung(entity) + blacklung);
+
+		if(entity instanceof EntityPlayerMP) {
+			PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(new TextComponentTranslation("info.coaldust").setStyle(new Style().setColor(TextFormatting.RED)), 10, 3000), (EntityPlayerMP) entity);
+		}
 	}
 
 	/// TIME BOMB ///

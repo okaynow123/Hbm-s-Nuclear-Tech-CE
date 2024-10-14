@@ -1,5 +1,7 @@
 package com.hbm.handler.crt;
 
+import com.hbm.inventory.fluid.FluidStack;
+import com.hbm.inventory.fluid.Fluids;
 import crafttweaker.IAction;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -15,7 +17,6 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidRegistry;
 
 @ZenRegister
@@ -162,7 +163,7 @@ public class Chemplant {
 			
 			FluidStack[] flu = new FluidStack[Math.min(2, fluids.length)];
 			for(int i = 0; i < Math.min(2, fluids.length); i++)
-				flu[i] = new FluidStack(FluidRegistry.getFluid(fluids[i]), amounts[i]);
+				flu[i] = new FluidStack(Fluids.fromName(fluids[i]), amounts[i]);
 			return flu;
 		}
 

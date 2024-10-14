@@ -54,14 +54,14 @@ public class RenderCrystallizer extends TileEntitySpecialRenderer<TileEntityMach
 	}
 
 	public void renderFill(TileEntityMachineCrystallizer crys){
-		if(crys.tank.getFluid() == null) return;
+		if(crys.tank.getTankType() == null) return;
 		GL11.glPushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.disableTexture2D();
        	GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		
-		RenderHelper.setColor(ModForgeFluids.getFluidColor(crys.tank.getFluid().getFluid()));
+		RenderHelper.setColor(crys.tank.getTankType().getColor());
 		ResourceManager.crystallizer.renderPart("Windows");
 
 		

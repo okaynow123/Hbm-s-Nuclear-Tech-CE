@@ -1,35 +1,34 @@
 package com.hbm.tileentity.machine;
 
+import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBoiler;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.interfaces.ITankPacketAcceptor;
-import com.hbm.inventory.HeatRecipes;
+import com.hbm.inventory.MachineRecipes;
+import com.hbm.inventory.container.ContainerMachineBoiler;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.gui.GUIMachineBoiler;
 import com.hbm.packet.AuxGaugePacket;
-import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityMachineBoiler extends TileEntityMachineBase implements ITickable, IFluidHandler, ITankPacketAcceptor {
+public class TileEntityMachineBoiler extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IGUIProvider {
 
 	public int burnTime;
 	public int heat = 2000;
@@ -46,8 +45,8 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 	public TileEntityMachineBoiler() {
 		super(7);
 		tanks = new FluidTank[2];
-		tanks[0] = new FluidTank(8000);
-		tanks[1] = new FluidTank(8000);
+		tanks[0] = new FluidTank(Fluids.OIL, 8000, 0);
+		tanks[1] = new FluidTank(Fluids.HOTOIL, 8000, 1);
 	}
 
 	@Override
@@ -90,8 +89,8 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 	public void readFromNBT(NBTTagCompound nbt) {
 		heat = nbt.getInteger("heat");
 		burnTime = nbt.getInteger("burnTime");
-		if (nbt.hasKey("tanks"))
-			FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
+		tanks[0].readFromNBT(nbt, "water");
+		tanks[1].readFromNBT(nbt, "steam");
 		super.readFromNBT(nbt);
 	}
 
@@ -99,7 +98,8 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("heat", heat);
 		nbt.setInteger("burnTime", burnTime);
-		nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
+		tanks[0].writeToNBT(nbt, "water");
+		tanks[1].writeToNBT(nbt, "steam");
 		return super.writeToNBT(nbt);
 	}
 
@@ -109,38 +109,45 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 
 	@Override
 	public void update() {
+		boolean mark = false;
+
 		if (!world.isRemote) {
+
+			this.subscribeToAllAround(tanks[0].getTankType(), this);
+			this.sendFluidToAll(tanks[1], this);
+
 			age++;
 			if (age >= 20) {
 				age = 0;
 			}
-			if (needsUpdate) {
-				needsUpdate = false;
-			}
-			PacketDispatcher.wrapper.sendToAllAround(new FluidTankPacket(pos.getX(), pos.getY(), pos.getZ(), new FluidTank[] { tanks[0], tanks[1] }), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-			if (age == 9 || age == 19)
-				fillFluidInit(tanks[1]);
+			tanks[0].setType(0, 1, inventory);
+			tanks[0].loadTank(2, 3, inventory);
+			Object[] outs = MachineRecipes.getBoilerOutput(tanks[0].getTankType());
 
-			Object[] outs;
-			if (tanks[0].getFluid() != null) {
-				outs = HeatRecipes.getBoilerOutput(tanks[0].getFluid().getFluid());
+			if(outs == null) {
+				tanks[1].setTankType(Fluids.NONE);
 			} else {
-				outs = HeatRecipes.getBoilerOutput(null);
+				tanks[1].setTankType((FluidType) outs[0]);
 			}
-			if (this.inputValidForTank(0, 2))
-				if (FFUtils.fillFromFluidContainer(inventory, tanks[0], 2, 3))
-					needsUpdate = true;
+			tanks[1].unloadTank(5, 6, inventory);
 
-			if (FFUtils.fillFluidContainer(inventory, tanks[1], 5, 6))
-				needsUpdate = true;
+			for(int i = 0; i < 2; i++)
+				tanks[i].updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
 
-			if (heat > 2000) {
+			boolean flag1 = false;
+
+			if(heat > 2000) {
 				heat -= 15;
 			}
 
 			if (burnTime > 0) {
 				burnTime--;
 				heat += 50;
+				flag1 = true;
+			}
+
+			if(burnTime == 0 && flag1) {
+				mark = true;
 			}
 
 			if (burnTime <= 0 && world.getBlockState(pos).getBlock() == ModBlocks.machine_boiler_on)
@@ -163,6 +170,10 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 						inventory.setStackInSlot(4, ItemStack.EMPTY);
 				}
 
+				if(!flag1) {
+					mark = true;
+				}
+
 			}
 
 			if (burnTime > 0 && world.getBlockState(pos).getBlock() == ModBlocks.machine_boiler_off)
@@ -171,10 +182,9 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 			if (outs != null) {
 
 				for (int i = 0; i < (heat / ((Integer) outs[3]).intValue()); i++) {
-					if(tanks[0].getFluidAmount() >= ((Integer) outs[2]).intValue()*5 && tanks[1].getFluidAmount() + ((Integer) outs[1]).intValue()*5 <= tanks[1].getCapacity()) {
-						tanks[0].drain(((Integer) outs[2])*5, true);
-						tanks[1].fill(new FluidStack((Fluid) outs[0], ((Integer) outs[1]*5)), true);
-						needsUpdate = true;
+					if(tanks[0].getFill() >= ((Integer)outs[2]).intValue() && tanks[1].getFill() + ((Integer)outs[1]).intValue() <= tanks[1].getMaxFill()) {
+						tanks[0].setFill(tanks[0].getFill() - ((Integer)outs[2]).intValue());
+						tanks[1].setFill(tanks[1].getFill() + ((Integer)outs[1]).intValue());
 						if (i == 0)
 							heat -= 25;
 						else
@@ -187,119 +197,39 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 				heat = 2000;
 			}
 
-			
-			detectAndSendChanges();
+			PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), heat, 0), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
+			PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), burnTime, 1), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
 		}
 
-	}
-	
-	
-
-	public void fillFluidInit(FluidTank tank) {
-		boolean update = needsUpdate;
-		
-		update = FFUtils.fillFluid(this, tank, world, pos.west(), 8000) || update;
-		update = FFUtils.fillFluid(this, tank, world, pos.east(), 8000) || update;
-		update = FFUtils.fillFluid(this, tank, world, pos.north(), 8000) || update;
-		update = FFUtils.fillFluid(this, tank, world, pos.south(), 8000) || update;
-		update = FFUtils.fillFluid(this, tank, world, pos.up(), 8000) || update;
-		update = FFUtils.fillFluid(this, tank, world, pos.down(), 8000) || update;
-
-		
-		needsUpdate = update;
-	}
-
-	protected boolean inputValidForTank(int tank, int slot) {
-		if(inventory.getStackInSlot(slot).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && isValidFluid(FluidUtil.getFluidContained(inventory.getStackInSlot(slot)))) {
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean isValidFluid(FluidStack stack) {
-		if(stack == null)
-			return false;
-		return HeatRecipes.hasBoilRecipe(stack.getFluid());
-	}
-
-	@Override
-	public void recievePacket(NBTTagCompound[] tags) {
-		if(tags.length != 2) {
-			return;
-		} else {
-			tanks[0].readFromNBT(tags[0]);
-			tanks[1].readFromNBT(tags[1]);
+		if(mark) {
+			this.markDirty();
 		}
 	}
 
 	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		return new IFluidTankProperties[]{tanks[0].getTankProperties()[0], tanks[1].getTankProperties()[0]};
+	public FluidTank[] getSendingTanks() {
+		return new FluidTank[] {tanks[1]};
 	}
 
 	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		if (isValidFluid(resource)) {
-			return tanks[0].fill(resource, doFill);
-		}
-		return 0;
+	public FluidTank[] getReceivingTanks() {
+		return new FluidTank[] {tanks[0]};
 	}
 
 	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		if (resource == null || !resource.isFluidEqual(tanks[1].getFluid())) {
-			return null;
-		}
-		return tanks[1].drain(resource.amount, doDrain);
+	public FluidTank[] getAllTanks() {
+		return tanks;
 	}
 
 	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		return tanks[1].drain(maxDrain, doDrain);
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineBoiler(player.inventory, this);
 	}
-	
+
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
-		} else {
-			return super.getCapability(capability, facing);
-		}
-	}
-	
-	private int detectHeat;
-	private int detectBurnTime;
-	private FluidTank[] detectTanks = new FluidTank[]{null, null};
-	
-	private void detectAndSendChanges() {
-		boolean mark = false;
-		if(detectHeat != heat){
-			detectHeat = heat;
-			mark = true;
-		}
-		if(detectBurnTime != burnTime){
-			detectBurnTime = burnTime;
-			mark = true;
-		}
-		if(!FFUtils.areTanksEqual(tanks[0], detectTanks[0])){
-			needsUpdate = true;
-			detectTanks[0] = FFUtils.copyTank(tanks[0]);
-			mark = true;
-		}
-		if(!FFUtils.areTanksEqual(tanks[1], detectTanks[1])){
-			needsUpdate = true;
-			detectTanks[1] = FFUtils.copyTank(tanks[1]);
-			mark = true;
-		}
-		PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), heat, 0), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-		PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), burnTime, 1), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-		if(mark)
-			markDirty();
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineBoiler(player.inventory, this);
 	}
 
 }

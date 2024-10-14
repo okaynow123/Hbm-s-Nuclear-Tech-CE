@@ -168,16 +168,13 @@ public class ArmorFSB extends ItemArmor {
 
 	
     public static void handleAttack(LivingAttackEvent event) {
-
 		EntityLivingBase e = event.getEntityLiving();
-
-		if(ArmorFSB.hasFSBArmor(e)) {
-
-			ItemStack plate = e.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-
-			ArmorFSB chestplate = (ArmorFSB)plate.getItem();
-			
-			chestplate.handleAttack(event, chestplate);
+		if(e != null){
+			if(ArmorFSB.hasFSBArmor(e)) {
+				ItemStack plate = e.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+				ArmorFSB chestplate = (ArmorFSB)plate.getItem();
+				chestplate.handleAttack(event, chestplate);
+			}
 		}
     }
 

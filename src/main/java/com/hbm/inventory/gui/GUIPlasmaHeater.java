@@ -29,9 +29,9 @@ public class GUIPlasmaHeater extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 17, 16, 52, microwave.tanks[0]);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 17, 16, 52, microwave.tanks[1]);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 98, guiTop + 17, 16, 52, microwave.plasma);
+		microwave.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 17, 16, 52);
+		microwave.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 17, 16, 52);
+		microwave.plasma.renderTankInfo(this, mouseX, mouseY, guiLeft + 98, guiTop + 17, 16, 52);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 17, 16, 34, microwave.power, TileEntityMachinePlasmaHeater.maxPower);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
@@ -54,8 +54,8 @@ public class GUIPlasmaHeater extends GuiInfoContainer {
 		int i = (int)microwave.getPowerScaled(34);
 		drawTexturedModalRect(guiLeft + 8, guiTop + 51 - i, 176, 34 - i, 16, i);
 
-		FFUtils.drawLiquid(microwave.tanks[0], guiLeft, guiTop, zLevel, 16, 52, 62, 97);
-		FFUtils.drawLiquid(microwave.tanks[1], guiLeft, guiTop, zLevel, 16, 52, 134, 97);
-		FFUtils.drawLiquid(microwave.plasma, guiLeft, guiTop, zLevel, 16, 52, 98, 97);
+		microwave.tanks[0].renderTank(guiLeft + 62, guiTop + 69, this.zLevel, 16, 52);
+		microwave.tanks[1].renderTank(guiLeft + 134, guiTop + 69, this.zLevel, 16, 52);
+		microwave.plasma.renderTank(guiLeft + 98, guiTop + 69, this.zLevel, 16, 52);
 	}
 }

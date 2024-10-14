@@ -1,17 +1,14 @@
 package com.hbm.tileentity.machine;
 
+import api.hbm.energymk2.IEnergyProviderMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.MachineRecipes;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.Library;
-import com.hbm.packet.NBTPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 
-import api.hbm.energy.IEnergyGenerator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -27,11 +24,10 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityChungus extends TileEntityLoadedBase implements ITickable, IFluidHandler, IEnergyGenerator, INBTPacketReceiver {
+public class TileEntityChungus extends TileEntityLoadedBase implements ITickable, IFluidHandler, IEnergyProviderMK2, INBTPacketReceiver {
 
 	public long powerProduction = 0;
 	public long power;
@@ -85,7 +81,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 			networkPack();
 			this.fillFluidInit(tanks[1]);
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-			this.sendPower(world, pos.add(-dir.offsetX * 11, 0, -dir.offsetZ * 11), dir.getOpposite());
+			this.tryProvide(world, pos.getX() -dir.offsetX * 11, pos.getY(), pos.getZ() -dir.offsetZ * 11, dir.getOpposite());
 			
 		} else {
 			
@@ -220,6 +216,11 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir) {
+		return dir != ForgeDirection.UP && dir != ForgeDirection.DOWN && dir != ForgeDirection.UNKNOWN;
 	}
 
 	@Override

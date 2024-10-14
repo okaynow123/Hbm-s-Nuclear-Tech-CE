@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.inventory.fluid.Fluids;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCanister;
@@ -21,8 +22,8 @@ public class FluidCanisterRender extends TileEntityItemStackRenderer {
 	@Override
 	public void renderByItem(ItemStack stack) {
 		IBakedModel model = null;
-		if(FluidUtil.getFluidContained(stack) != null && EnumCanister.contains(FluidUtil.getFluidContained(stack).getFluid()))
-			model = EnumCanister.getEnumFromFluid(FluidUtil.getFluidContained(stack).getFluid()).getRenderModel();
+		if(FluidUtil.getFluidContained(stack) != null && EnumCanister.contains(Fluids.fromID(stack.getItemDamage())))
+			model = EnumCanister.getEnumFromFluid(Fluids.fromID(stack.getItemDamage())).getRenderModel();
 		if(model == null)
 			model = itemModel;
 		

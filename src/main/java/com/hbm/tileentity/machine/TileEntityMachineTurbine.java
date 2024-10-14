@@ -1,48 +1,46 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.interfaces.ITankPacketAcceptor;
-import com.hbm.inventory.MachineRecipes;
+import api.hbm.energymk2.IEnergyProviderMK2;
+import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.inventory.container.ContainerMachineTurbine;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.trait.FT_Coolable;
+import com.hbm.inventory.gui.GUIMachineTurbine;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.packet.AuxElectricityPacket;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.FluidTypePacketTest;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
 
-import api.hbm.energy.IBatteryItem;
-import api.hbm.energy.IEnergyGenerator;
+import api.hbm.energymk2.IBatteryItem;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityMachineTurbine extends TileEntityLoadedBase implements ITickable, IEnergyGenerator, ITankPacketAcceptor, IFluidHandler {
+public class TileEntityMachineTurbine extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider {
 
 	public ItemStackHandler inventory;
 
 	public long power;
 	public static final long maxPower = 1000000;
+	public int age = 0;
 	public FluidTank[] tanks;
-	public Fluid[] tankTypes;
 	//Drillgon200: Not even used but I'm too lazy to remove them
-	public boolean needsTankTypeUpdate;
 
 	// private static final int[] slots_top = new int[] {4};
 	// private static final int[] slots_bottom = new int[] {6};
@@ -77,118 +75,97 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			}
 		};
 		tanks = new FluidTank[2];
-		tankTypes = new Fluid[2];
-		tanks[0] = new FluidTank(64000);
-		tankTypes[0] = ModForgeFluids.steam;
-		tanks[1] = new FluidTank(128000);
-		tankTypes[1] = ModForgeFluids.spentsteam;
-		needsTankTypeUpdate = false;
+		tanks[0] = new FluidTank(Fluids.STEAM, 64000, 0);
+		tanks[1] = new FluidTank(Fluids.SPENTSTEAM, 128000, 1);
 	}
 
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			
-			if(inventory.getStackInSlot(0).getItem() == ModItems.forge_fluid_identifier && inventory.getStackInSlot(1).isEmpty()){
-				Fluid f = ItemForgeFluidIdentifier.getType(inventory.getStackInSlot(0));
-				if(isValidFluidForTank(0, new FluidStack(f, 1000))){
-					if(tankTypes[0] != f){
-						tankTypes[0] = f;
-						tanks[0].setFluid(null);
-						tanks[1].setFluid(null);
-					}
-					inventory.setStackInSlot(1, inventory.getStackInSlot(0));
-					inventory.setStackInSlot(0, ItemStack.EMPTY);
-				}
+
+			age++;
+			if(age >= 2) {
+				age = 0;
 			}
 
-			PacketDispatcher.wrapper.sendToAllAround(new FluidTankPacket(pos.getX(), pos.getY(), pos.getZ(), new FluidTank[] { tanks[0], tanks[1] }), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-			PacketDispatcher.wrapper.sendToAllAround(new FluidTypePacketTest(pos.getX(), pos.getY(), pos.getZ(), tankTypes), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
+			this.subscribeToAllAround(tanks[0].getTankType(), this);
 
+			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
+
+			tanks[0].setType(0, 1, inventory);
+			tanks[0].loadTank(2, 3, inventory);
 			power = Library.chargeItemsFromTE(inventory, 4, power, maxPower);
 
-			fillFluidInit(tanks[1]);
-			this.sendPower(world, pos);
-
-			if(inputValidForTank(0, 2))
-				if(FFUtils.fillFromFluidContainer(inventory, tanks[0], 2, 3)) {
-					if(tanks[0].getFluid() != null) {
-						tankTypes[0] = tanks[0].getFluid().getFluid();
-					}
+			FluidType in = tanks[0].getTankType();
+			boolean valid = false;
+			if(in.hasTrait(FT_Coolable.class)) {
+				FT_Coolable trait = in.getTrait(FT_Coolable.class);
+				double eff = trait.getEfficiency(FT_Coolable.CoolingType.TURBINE) * 0.85D; //small turbine is only 85% efficient
+				if(eff > 0) {
+					tanks[1].setTankType(trait.coolsTo);
+					int inputOps = tanks[0].getFill() / trait.amountReq;
+					int outputOps = (tanks[1].getMaxFill() - tanks[1].getFill()) / trait.amountProduced;
+					int cap = 6_000 / trait.amountReq;
+					int ops = Math.min(inputOps, Math.min(outputOps, cap));
+					tanks[0].setFill(tanks[0].getFill() - ops * trait.amountReq);
+					tanks[1].setFill(tanks[1].getFill() + ops * trait.amountProduced);
+					this.power += (ops * trait.heatEnergy * eff);
+					valid = true;
 				}
-
-			Object[] outs = MachineRecipes.getTurbineOutput(tanks[0].getFluid() == null ? null : tanks[0].getFluid().getFluid());
-
-			if(outs == null) {
-
-			} else {
-				tankTypes[1] = ((Fluid) outs[0]);
-
-				int processMax = 1200;																//the maximum amount of cycles based on the 1.2k cycle cap (subject to change)
-				int processSteam = tanks[0].getFluidAmount() / (Integer)outs[2];							//the maximum amount of cycles depending on steam
-				int processWater = (tanks[1].getCapacity() - tanks[1].getFluidAmount()) / (Integer)outs[1];	//the maximum amount of cycles depending on water
-
-				int cycles = Math.min(processMax, Math.min(processSteam, processWater));
-
-				tanks[0].drain((Integer)outs[2] * cycles, true);
-				tanks[1].fill(new FluidStack(tankTypes[1], (Integer)outs[1] * cycles), true);
-
-				power += (Integer)outs[3] * cycles;
-
-				if(power > maxPower)
-					power = maxPower;
 			}
+			if(!valid) tanks[1].setTankType(Fluids.NONE);
+			if(power > maxPower) power = maxPower;
 
-			FFUtils.fillFluidContainer(inventory, tanks[1], 5, 6);
+			this.sendFluidToAll(tanks[1], this);
 
-			detectAndSendChanges();
+			tanks[1].unloadTank(5, 6, inventory);
+
+			for(int i = 0; i < 2; i++)
+				tanks[i].updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
+
+			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 50));
 		}
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		if(nbt.hasKey("tankType0"))
-			tankTypes[0] = FluidRegistry.getFluid(nbt.getString("tankType0"));
-		else
-			tankTypes[0] = null;
-		if(nbt.hasKey("tankType1"))
-			tankTypes[1] = FluidRegistry.getFluid(nbt.getString("tankType1"));
-		else
-			tankTypes[1] = null;
-
-		power = nbt.getLong("power");
-		detectPower = power + 1;
-		if(nbt.hasKey("tanks"))
-			FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
-		if(nbt.hasKey("inventory"))
-			inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
-
 		super.readFromNBT(nbt);
+
+		tanks[0].readFromNBT(nbt, "water");
+		tanks[1].readFromNBT(nbt, "steam");
+		power = nbt.getLong("power");
+
+		NBTTagList list = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+
+		for (int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+			int slot = nbt1.getByte("Slot") & 255;
+			if (slot >= 0 && slot < inventory.getSlots()) {
+				inventory.setStackInSlot(slot, new ItemStack(nbt1));
+			}
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
-		nbt.setTag("inventory", inventory.serializeNBT());
-		if(tankTypes[0] != null)
-			nbt.setString("tankType0", tankTypes[0].getName());
-		if(tankTypes[1] != null)
-			nbt.setString("tankType1", tankTypes[1].getName());
+		super.writeToNBT(nbt);
+		tanks[0].writeToNBT(nbt, "water");
+		tanks[1].writeToNBT(nbt, "steam");
 		nbt.setLong("power", power);
-		return super.writeToNBT(nbt);
-	}
 
-	protected boolean inputValidForTank(int tank, int slot) {
-		if(inventory.getStackInSlot(slot) != ItemStack.EMPTY && tanks[tank] != null) {
-			return FFUtils.checkRestrictions(inventory.getStackInSlot(slot), f -> f.getFluid() == tankTypes[tank]);
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
+			if (!stack.isEmpty()) {
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setByte("Slot", (byte)i);
+				stack.writeToNBT(nbt1);
+				list.appendTag(nbt1);
+			}
 		}
-		return false;
-	}
-
-	private boolean isValidFluidForTank(int tank, FluidStack stack) {
-		if(stack == null || tanks[tank] == null)
-			return false;
-		return stack.getFluid() == ModForgeFluids.steam || stack.getFluid() == ModForgeFluids.hotsteam || stack.getFluid() == ModForgeFluids.superhotsteam || stack.getFluid() == ModForgeFluids.ultrahotsteam;
+		nbt.setTag("Items", list);
+		return nbt;
 	}
 
 	public String getInventoryName() {
@@ -215,102 +192,9 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 		return (power * i) / maxPower;
 	}
 
-	@Override
-	public void recievePacket(NBTTagCompound[] tags) {
-		if(tags.length != 2) {
-			return;
-		} else {
-			tanks[0].readFromNBT(tags[0]);
-			tanks[1].readFromNBT(tags[1]);
-		}
-
-	}
-
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		return new IFluidTankProperties[] { tanks[0].getTankProperties()[0], tanks[1].getTankProperties()[0] };
-	}
-
-	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		if(resource != null && resource.getFluid() == tankTypes[0] && resource.amount > 0) {
-			return tanks[0].fill(resource, doFill);
-		} else {
-			return 0;
-		}
-	}
-
-	public void fillFluidInit(FluidTank tank) {
-
-		FFUtils.fillFluid(this, tank, world, pos.east(), 64000);
-		FFUtils.fillFluid(this, tank, world, pos.west(), 64000);
-		FFUtils.fillFluid(this, tank, world, pos.up(), 64000);
-		FFUtils.fillFluid(this, tank, world, pos.down(), 64000);
-		FFUtils.fillFluid(this, tank, world, pos.south(), 64000);
-		FFUtils.fillFluid(this, tank, world, pos.north(), 64000);
-	}
-
-	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		if(resource != null && resource.getFluid() == tankTypes[1] && resource.amount > 0) {
-			return tanks[1].drain(resource.amount, doDrain);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		if(maxDrain > 0) {
-			return tanks[1].drain(maxDrain, doDrain);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing facing) {
-		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(cap, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory) : capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this) : super.getCapability(capability, facing);
-	}
-
 	private long detectPower;
 	private FluidTank[] detectTanks = new FluidTank[] { null, null };
 	private Fluid[] detectFluids = new Fluid[] { null, null };
-
-	private void detectAndSendChanges() {
-
-		boolean mark = false;
-		
-		PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-		
-		if(detectPower != power) {
-			mark = true;
-			detectPower = power;
-		}
-		if(!FFUtils.areTanksEqual(detectTanks[0], tanks[0])) {
-			mark = true;
-			detectTanks[0] = FFUtils.copyTank(tanks[0]);
-		}
-		if(!FFUtils.areTanksEqual(detectTanks[1], tanks[1])) {
-			mark = true;
-			detectTanks[1] = FFUtils.copyTank(tanks[1]);
-		}
-		if(detectFluids[0] != tankTypes[0]) {
-			mark = true;
-			detectFluids[0] = tankTypes[0];
-		}
-		if(detectFluids[1] != tankTypes[1]) {
-			mark = true;
-			detectFluids[1] = tankTypes[1];
-		}
-		if(mark)
-			markDirty();
-	}
 
 	@Override
 	public long getPower() {
@@ -325,5 +209,31 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 	@Override
 	public long getMaxPower() {
 		return maxPower;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineTurbine(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineTurbine(player.inventory, this);
+	}
+
+	@Override
+	public FluidTank[] getSendingTanks() {
+		return new FluidTank[] { tanks[1] };
+	}
+
+	@Override
+	public FluidTank[] getReceivingTanks() {
+		return new FluidTank[] { tanks[0] };
+	}
+
+	@Override
+	public FluidTank[] getAllTanks() {
+		return tanks;
 	}
 }

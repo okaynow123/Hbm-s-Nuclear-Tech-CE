@@ -4,18 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import api.hbm.energymk2.IEnergyReceiverMK2;
+import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.machine.MachineChemplant;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.handler.MultiblockHandler;
-import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.ChemplantRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
-import com.hbm.inventory.RecipesCommon.ComparableStack;
+import com.hbm.inventory.fluid.FluidStack;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemChemistryTemplate;
-import com.hbm.lib.Library;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.Library;
 import com.hbm.packet.AuxElectricityPacket;
 import com.hbm.packet.AuxParticlePacket;
 import com.hbm.packet.FluidTankPacket;
@@ -24,7 +28,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEChemplantPacket;
 import com.hbm.tileentity.TileEntityMachineBase;
 
-import api.hbm.energy.IEnergyUser;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -40,11 +44,6 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,7 +53,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyUser, ITankPacketAcceptor, ITickable {
+public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, ITickable {
 
 	public static final long maxPower = 2000000;
 	public long power;
@@ -65,7 +64,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	public boolean needsUpdate = false;
 	public boolean needsTankTypeUpdate = false;
 	public FluidTank[] tanks;
-	public Fluid[] tankTypes;
 	public ItemStack previousTemplate = ItemStack.EMPTY;
 	//Drillgon200: Yeah I don't even know what I was doing originally
 	public ItemStack previousTemplate2 = ItemStack.EMPTY;
@@ -87,11 +85,9 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			}
 		};
 		tanks = new FluidTank[4];
-		tanks[0] = new FluidTank(24000);
-		tanks[1] = new FluidTank(24000);
-		tanks[2] = new FluidTank(24000);
-		tanks[3] = new FluidTank(24000);
-		tankTypes = new Fluid[]{null, null, null, null};
+		for(int i = 0; i < 4; i++) {
+			tanks[i] = new FluidTank(Fluids.NONE, 24_000);
+		}
 	}
 
 	public void OnContentsChanged(int slot) {
@@ -109,39 +105,14 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		String[] types;
 
 		this.power = nbt.getLong("powerTime");
 		detectPower = power + 1;
 		isProgressing = nbt.getBoolean("progressing");
 		detectIsProgressing = !isProgressing;
 
-		tanks[0].readFromNBT(nbt.getCompoundTag("input1"));
-		tanks[1].readFromNBT(nbt.getCompoundTag("input2"));
-		tanks[2].readFromNBT(nbt.getCompoundTag("output1"));
-		tanks[3].readFromNBT(nbt.getCompoundTag("output2"));
-
-		types = new String[]{nbt.getString("tankType0"), nbt.getString("tankType1"), nbt.getString("tankType2"), nbt.getString("tankType3")};
-
-		if(!types[0].equals("empty")) {
-			tankTypes[0] = FluidRegistry.getFluid(types[0]);
-		} else {
-			tankTypes[0] = null;
-		}
-		if(!types[1].equals("empty")) {
-			tankTypes[1] = FluidRegistry.getFluid(types[1]);
-		} else {
-			tankTypes[1] = null;
-		}
-		if(!types[2].equals("empty")) {
-			tankTypes[2] = FluidRegistry.getFluid(types[2]);
-		} else {
-			tankTypes[2] = null;
-		}
-		if(!types[3].equals("empty")) {
-			tankTypes[3] = FluidRegistry.getFluid(types[3]);
-		} else {
-			tankTypes[3] = null;
+		for(int i = 0; i < tanks.length; i++) {
+			tanks[i].readFromNBT(nbt, "t" + i);
 		}
 		if(nbt.hasKey("inventory"))
 			inventory.deserializeNBT((NBTTagCompound) nbt.getTag("inventory"));
@@ -151,33 +122,40 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setLong("powerTime", power);
-		String[] types = new String[]{tankTypes[0] != null ? tankTypes[0].getName() : "empty", tankTypes[1] != null ? tankTypes[1].getName() : "empty", tankTypes[2] != null ? tankTypes[2].getName() : "empty", tankTypes[3] != null ? tankTypes[3].getName() : "empty"};
 
 		nbt.setBoolean("progressing", isProgressing);
 
-		NBTTagCompound input1 = new NBTTagCompound();
-		NBTTagCompound input2 = new NBTTagCompound();
-		NBTTagCompound output1 = new NBTTagCompound();
-		NBTTagCompound output2 = new NBTTagCompound();
-
-		tanks[0].writeToNBT(input1);
-		tanks[1].writeToNBT(input2);
-		tanks[2].writeToNBT(output1);
-		tanks[3].writeToNBT(output2);
-
-		nbt.setTag("input1", input1);
-		nbt.setTag("input2", input2);
-		nbt.setTag("output1", output1);
-		nbt.setTag("output2", output2);
-
-		nbt.setString("tankType0", types[0] != null ? types[0] : "empty");
-		nbt.setString("tankType1", types[1] != null ? types[1] : "empty");
-		nbt.setString("tankType2", types[2] != null ? types[2] : "empty");
-		nbt.setString("tankType3", types[3] != null ? types[3] : "empty");
+		for(int i = 0; i < tanks.length; i++) {
+			tanks[i].writeToNBT(nbt, "t" + i);
+		}
 
 		NBTTagCompound inv = inventory.serializeNBT();
 		nbt.setTag("inventory", inv);
 		return nbt;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeLong(power);
+		buf.writeInt(progress);
+		buf.writeInt(maxProgress);
+		buf.writeBoolean(isProgressing);
+
+		for(int i = 0; i < tanks.length; i++)
+			tanks[i].serialize(buf);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		power = buf.readLong();
+		progress = buf.readInt();
+		maxProgress = buf.readInt();
+		isProgressing = buf.readBoolean();
+
+		for(int i = 0; i < tanks.length; i++)
+			tanks[i].deserialize(buf);
 	}
 
 	public long getPowerScaled(long i) {
@@ -248,36 +226,29 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			int meta = world.getBlockState(pos).getValue(MachineChemplant.FACING);
 			isProgressing = false;
 
-			if(world.getTotalWorldTime() % 10 == 0) {
-				fillFluidInit(tanks[2]);
-				fillFluidInit(tanks[3]);
+			if(world.getTotalWorldTime() % 20 == 0) {
+				this.updateConnections();
 			}
-
-			this.updateConnections();
 
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
 
 			if(inputTankEmpty(0, 17) && inventory.getStackInSlot(19).isEmpty()){
-				FFUtils.fillFluidContainer(inventory, tanks[0], 17, 19);
+				tanks[0].loadTank(17, 19, inventory);
 				FFUtils.moveItems(inventory, 17, 19, false);
-			} if(inputValidForTank(0, 17)) {
-				FFUtils.fillFromFluidContainer(inventory, tanks[0], 17, 19);
 			}
 
 			if(inputTankEmpty(1, 18) && inventory.getStackInSlot(20).isEmpty()){
-				FFUtils.fillFluidContainer(inventory, tanks[1], 18, 20);
 				FFUtils.moveItems(inventory, 18, 20, false);
-			} else if(inputValidForTank(1, 18)){
-				FFUtils.fillFromFluidContainer(inventory, tanks[1], 18, 20);
+				tanks[1].loadTank(18, 20, inventory);
 			}
 
-			if((tankTypes[0] == FluidRegistry.WATER && inventory.getStackInSlot(17).getItem() == ModItems.inf_water) || inventory.getStackInSlot(17).getItem() == ModItems.fluid_barrel_infinite)
-				FFUtils.fillFromFluidContainer(inventory, tanks[0], 17, 19);
-			if((tankTypes[1] == FluidRegistry.WATER && inventory.getStackInSlot(18).getItem() == ModItems.inf_water) || inventory.getStackInSlot(18).getItem() == ModItems.fluid_barrel_infinite)
-				FFUtils.fillFromFluidContainer(inventory, tanks[1], 18, 20);
+			tanks[2].unloadTank(9, 11, inventory);
+			tanks[3].unloadTank(10, 12, inventory);
 
-			FFUtils.fillFluidContainer(inventory, tanks[2], 9, 11);
-			FFUtils.fillFluidContainer(inventory, tanks[3], 10, 12);
+			for(DirPos pos : getConPos()) {
+				if(tanks[2].getFill() > 0) this.sendFluid(tanks[2], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+				if(tanks[3].getFill() > 0) this.sendFluid(tanks[3], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			}
 
 			
 			ItemStack[] itemOutputs = ChemplantRecipes.getChemOutputFromTempate(inventory.getStackInSlot(4));
@@ -386,8 +357,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 							new TargetPoint(world.provider.getDimension(), pos.getX() + 1.625, pos.getY() + 3, pos.getZ() + 0.375, 50));
 				}
 			}
-
-			detectAndSendChanges();
 		}
 
 	}
@@ -439,32 +408,25 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	}
 
 	private void updateConnections() {
-		int meta = this.getBlockMetadata();
-		
-		if(meta == 5) {
-			this.trySubscribe(world, pos.add(-2, 0, 0), Library.NEG_X);
-			this.trySubscribe(world, pos.add(-2, 0, 1), Library.NEG_X);
-			this.trySubscribe(world, pos.add(3, 0, 0), Library.POS_X);
-			this.trySubscribe(world, pos.add(3, 0, 1), Library.POS_X);
-			
-		} else if(meta == 3) {
-			this.trySubscribe(world, pos.add(0, 0, -2), Library.NEG_Z);
-			this.trySubscribe(world, pos.add(-1, 0, -2), Library.NEG_Z);
-			this.trySubscribe(world, pos.add(0, 0, 3), Library.POS_Z);
-			this.trySubscribe(world, pos.add(-1, 0, 3), Library.POS_Z);
-			
-		} else if(meta == 4) {
-			this.trySubscribe(world, pos.add(2, 0, 0), Library.POS_X);
-			this.trySubscribe(world, pos.add(2, 0, -1), Library.POS_X);
-			this.trySubscribe(world, pos.add(-3, 0, 0), Library.NEG_X);
-			this.trySubscribe(world, pos.add(-3, 0, -1), Library.NEG_X);
-			
-		} else if(meta == 2) {
-			this.trySubscribe(world, pos.add(0, 0, 2), Library.POS_Z);
-			this.trySubscribe(world, pos.add(1, 0, 2), Library.POS_Z);
-			this.trySubscribe(world, pos.add(0, 0, -3), Library.NEG_Z);
-			this.trySubscribe(world, pos.add(1, 0, -3), Library.NEG_Z);
+
+		for(DirPos pos : getConPos()) {
+			this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			this.trySubscribe(tanks[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			this.trySubscribe(tanks[1].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 		}
+	}
+
+	public DirPos[] getConPos() {
+
+		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+
+		return new DirPos[] {
+				new DirPos(pos.getX() + rot.offsetX * 3,				pos.getY(),	pos.getZ() + rot.offsetZ * 3,				rot),
+				new DirPos(pos.getX() - rot.offsetX * 2,				pos.getY(),	pos.getZ() - rot.offsetZ * 2,				rot.getOpposite()),
+				new DirPos(pos.getX() + rot.offsetX * 3 + dir.offsetX,	pos.getY(),	pos.getZ() + rot.offsetZ * 3 + dir.offsetZ, rot),
+				new DirPos(pos.getX() - rot.offsetX * 2 + dir.offsetX,	pos.getY(),	pos.getZ() - rot.offsetZ * 2 + dir.offsetZ, rot.getOpposite())
+		};
 	}
 
 	private boolean validateTe(TileEntity te) {
@@ -487,28 +449,28 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			FluidStack[] fluidOutputs = ChemplantRecipes.getFluidOutputFromTempate(inventory.getStackInSlot(4));
 
 			if(fluidInputs != null){
-				tankTypes[0] = fluidInputs[0] == null ? null : fluidInputs[0].getFluid();
+				tanks[0].setTankType(fluidInputs[0] == null ? null : fluidInputs[0].type);
 				if(fluidInputs.length == 2){
-					tankTypes[1] = fluidInputs[1] == null ? null : fluidInputs[1].getFluid();
+					tanks[1].setTankType(fluidInputs[0] == null ? null : fluidInputs[0].type);
 				}
 			}
 			if(fluidOutputs != null){
-				tankTypes[2] = fluidOutputs[0] == null ? null : fluidOutputs[0].getFluid();
+				tanks[2].setTankType(fluidOutputs[0] == null ? null : fluidOutputs[0].type);
 				if(fluidOutputs.length == 2){
-					tankTypes[3] = fluidOutputs[1] == null ? null : fluidOutputs[1].getFluid();
+					tanks[3].setTankType(fluidOutputs[1] == null ? null : fluidOutputs[1].type);
 				}
 			}
 
 			if(fluidInputs != null){
-				if((fluidInputs[0] != null && tanks[0].getFluid() == null) || tanks[0].getFluid() != null && tanks[0].getFluid().getFluid() != tankTypes[0]) {
-					tanks[0].setFluid(null);
+				if(fluidInputs[0] != null || tanks[0].getTankType() != null) {
+					tanks[0].setTankType(Fluids.NONE);
 					if(needsTankTypeUpdate) {
 						needsTankTypeUpdate = false;
 					}
 				}
 				if(fluidInputs.length == 2){
-					if((fluidInputs[1] != null && tanks[1].getFluid() == null) || tanks[1].getFluid() != null && tanks[1].getFluid().getFluid() != tankTypes[1]) {
-						tanks[1].setFluid(null);
+					if(fluidInputs[1] != null || tanks[1].getTankType() != null) {
+						tanks[1].setTankType(Fluids.NONE);
 						if(needsTankTypeUpdate) {
 							needsTankTypeUpdate = false;
 						}
@@ -516,12 +478,12 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 				}
 			}
 			if(fluidOutputs != null){
-				if((fluidOutputs[0] != null && tanks[2].getFluid() == null) || tanks[2].getFluid() != null && tanks[2].getFluid().getFluid() != tankTypes[2]) {
-					tanks[2].setFluid(null);
+				if(fluidOutputs[0] != null || tanks[2].getTankType() != null) {
+					tanks[2].setTankType(Fluids.NONE);
 				}
 				if(fluidOutputs.length == 2){
-					if((fluidOutputs[1] != null && tanks[3].getFluid() == null) || tanks[3].getFluid() != null && tanks[3].getFluid().getFluid() != tankTypes[3]) {
-						tanks[3].setFluid(null);
+					if(fluidOutputs[1] != null || tanks[3].getTankType() != null) {
+						tanks[3].setTankType(Fluids.NONE);
 						if(needsTankTypeUpdate) {
 							needsTankTypeUpdate = false;
 						}
@@ -531,17 +493,8 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		}
 	}
 
-	protected boolean inputValidForTank(int tank, int slot) {
-		if(!inventory.getStackInSlot(slot).isEmpty() && tankTypes[tank] != null) {
-			return FFUtils.checkRestrictions(inventory.getStackInSlot(slot), f -> f.getFluid() == tankTypes[tank]);
-			//Drillgon200: I really hope fluid container registry comes back.
-		}
-
-		return false;
-	}
-
 	protected boolean inputTankEmpty(int tank, int slot) {
-		if(!inventory.getStackInSlot(slot).isEmpty() && tankTypes[tank] != null) {
+		if(!inventory.getStackInSlot(slot).isEmpty() && tanks[tank] != null) {
 			ItemStack c = inventory.getStackInSlot(slot).copy();
 			c.setCount(1);
 			return FFUtils.isEmtpyFluidTank(c);
@@ -555,10 +508,10 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		if(Library.isArrayEmpty(fluids))
 			return true;
 		if(fluids.length == 2){
-			if((fluids[0] == null || fluids[0].amount <= tanks[0].getFluidAmount()) && (fluids[1] == null || fluids[1].amount <= tanks[1].getFluidAmount()))
+			if((fluids[0] == null || fluids[0].fill <= tanks[0].getFill()) && (fluids[1] == null || fluids[1].fill <= tanks[1].getFill()))
 				return true;
 		}else{
-			if(fluids[0] == null || fluids[0].amount <= tanks[0].getFluidAmount())
+			if(fluids[0] == null || fluids[0].fill <= tanks[0].getFill())
 				return true;
 		}
 
@@ -569,10 +522,10 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		if(Library.isArrayEmpty(fluids))
 			return true;
 		if(fluids.length == 2){
-			if((fluids[0] == null || tanks[2].fill(fluids[0], false) == fluids[0].amount) && (fluids[1] == null || fluids[1] != null && tanks[3].fill(fluids[1], false) == fluids[1].amount))
+			if((fluids[0] == null || tanks[2].getFill() == fluids[0].fill) && (fluids[1] == null || fluids[1] != null && tanks[3].getFill() == fluids[1].fill))
 				return true;
 		}else{
-			if(fluids[0] == null || tanks[2].fill(fluids[0], false) == fluids[0].amount)
+			if(fluids[0] == null || tanks[2].getFill() == fluids[0].fill)
 				return true;
 		}
 		return false;
@@ -581,9 +534,9 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	public void removeFluids(FluidStack[] fluids) {
 		if(Library.isArrayEmpty(fluids))
 			return;
-		tanks[0].drain(fluids[0].amount, true);
+		tanks[0].setFill(tanks[0].getFill() - fluids[0].fill);
 		if(fluids.length == 2) {
-			tanks[1].drain(fluids[1].amount, true);
+			tanks[1].setFill(tanks[1].getFill() - fluids[1].fill);
 		}
 	}
 
@@ -629,10 +582,10 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	public void addFluids(FluidStack[] stacks) {
 
 		if(stacks != null){
-			tanks[2].fill(stacks[0], true);
+			tanks[2].setFill(tanks[2].getFill() + stacks[0].fill);
 			if(stacks.length == 2){
 				if(stacks[1] != null) {
-					tanks[3].fill(stacks[1], true);
+					tanks[3].setFill(tanks[3].getFill() + stacks[1].fill);
 				}
 			}
 		}
@@ -879,51 +832,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		return 65536.0D;
 	}
 
-	public void fillFluidInit(FluidTank tank) {
-		int meta = world.getBlockState(pos).getValue(MachineChemplant.FACING);
-		MutableBlockPos fill = new BlockPos.MutableBlockPos();
-		boolean update = false || needsUpdate;
-		if(meta == 5) {
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 2, pos.getY(), pos.getZ()), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 2, pos.getY(), pos.getZ() + 1), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 3, pos.getY(), pos.getZ()), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 3, pos.getY(), pos.getZ() + 1), 2000) || update;
-		}
-
-		if(meta == 3) {
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX(), pos.getY(), pos.getZ() - 2), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 1, pos.getY(), pos.getZ() - 2), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX(), pos.getY(), pos.getZ() + 3), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 1, pos.getY(), pos.getZ() + 3), 2000) || update;
-		}
-
-		if(meta == 2) {
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX(), pos.getY(), pos.getZ() + 2), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 1, pos.getY(), pos.getZ() + 2), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX(), pos.getY(), pos.getZ() - 3), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 1, pos.getY(), pos.getZ() - 3), 2000) || update;
-		}
-
-		if(meta == 4) {
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 2, pos.getY(), pos.getZ()), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() + 2, pos.getY(), pos.getZ() - 1), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 3, pos.getY(), pos.getZ()), 2000) || update;
-			update = FFUtils.fillFluid(this, tank, world, fill.setPos(pos.getX() - 3, pos.getY(), pos.getZ() - 1), 2000) || update;
-		}
-		needsUpdate = update;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new ChemplantFluidHandler(tanks, tankTypes)) :
-				super.getCapability(capability, facing);
-	}
-
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = new NBTTagCompound();
@@ -938,23 +846,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		readFromNBT(pkt.getNbtCompound());
 	}
 
-	@Override
-	public void recievePacket(NBTTagCompound[] tags) {
-		if(tags.length != 4) {
-			return;
-		} else {
-			tanks[0].readFromNBT(tags[0]);
-			tanks[1].readFromNBT(tags[1]);
-			tanks[2].readFromNBT(tags[2]);
-			tanks[3].readFromNBT(tags[3]);
-		}
-
-	}
-
-	public void haveNeedProess() {
-		this.needsProcess = true;
-	}
-
 	public ItemStack getStackInSlot(int i) {
 		return inventory.getStackInSlot(i);
 	}
@@ -964,100 +855,18 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		return "container.chemplant";
 	}
 
-	private void detectAndSendChanges() {
-
-		PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
-
-
-		boolean mark = false;
-
-		if(detectIsProgressing != isProgressing) {
-			mark = true;
-			detectIsProgressing = isProgressing;
-		}
-		PacketDispatcher.wrapper.sendToAllAround(new TEChemplantPacket(pos.getX(), pos.getY(), pos.getZ(), isProgressing), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
-		if(detectPower != power) {
-			mark = true;
-			detectPower = power;
-		}
-		PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
-		if(!FFUtils.areTanksEqual(detectTanks[0], tanks[0])) {
-			detectTanks[0] = FFUtils.copyTank(tanks[0]);
-			mark = true;
-			needsUpdate = true;
-		}
-		if(!FFUtils.areTanksEqual(detectTanks[1], tanks[1])) {
-			detectTanks[1] = FFUtils.copyTank(tanks[1]);
-			mark = true;
-			needsUpdate = true;
-		}
-		if(!FFUtils.areTanksEqual(detectTanks[2], tanks[2])) {
-			detectTanks[2] = FFUtils.copyTank(tanks[2]);
-			mark = true;
-			needsUpdate = true;
-		}
-		if(!FFUtils.areTanksEqual(detectTanks[3], tanks[3])) {
-			detectTanks[3] = FFUtils.copyTank(tanks[3]);
-			mark = true;
-			needsUpdate = true;
-		}
-		PacketDispatcher.wrapper.sendToAllAround(new FluidTankPacket(pos.getX(), pos.getY(), pos.getZ(), new FluidTank[]{tanks[0], tanks[1], tanks[2], tanks[3]}), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
-
-		if(mark)
-			markDirty();
+	@Override
+	public FluidTank[] getSendingTanks() {
+		return new FluidTank[] {tanks[2], tanks[3]};
 	}
 
-	private class ChemplantFluidHandler implements IFluidHandler {
+	@Override
+	public FluidTank[] getReceivingTanks() {
+		return new FluidTank[] {tanks[0], tanks[1]};
+	}
 
-		private FluidTank[] tanks;
-		private Fluid[] tankTypes;
-
-		public ChemplantFluidHandler(FluidTank[] tanks, Fluid[] tankTypes) {
-			this.tanks = tanks;
-			this.tankTypes = tankTypes;
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties() {
-			return new IFluidTankProperties[]{tanks[0].getTankProperties()[0], tanks[1].getTankProperties()[0], tanks[2].getTankProperties()[0], tanks[3].getTankProperties()[0]};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill) {
-			needsProcess = true;
-			if(resource == null)
-				return 0;
-			if(tankTypes[0] != null && resource.getFluid() == tankTypes[0]) {
-				return tanks[0].fill(resource, doFill);
-			}
-			if(tankTypes[1] != null && resource.getFluid() == tankTypes[1]) {
-				return tanks[1].fill(resource, doFill);
-			}
-			return 0;
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
-			if(resource == null)
-				return null;
-			if(resource.isFluidEqual(tanks[2].getFluid())) {
-				return tanks[2].drain(resource.amount, doDrain);
-			}
-			if(resource.isFluidEqual(tanks[3].getFluid())) {
-				return tanks[3].drain(resource.amount, doDrain);
-			}
-			return null;
-		}
-
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
-			if(tanks[2].getFluid() != null) {
-				return tanks[2].drain(maxDrain, doDrain);
-			} else if(tanks[3].getFluid() != null) {
-				return tanks[3].drain(maxDrain, doDrain);
-			}
-			return null;
-		}
-
+	@Override
+	public FluidTank[] getAllTanks() {
+		return tanks;
 	}
 }

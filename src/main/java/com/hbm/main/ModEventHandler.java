@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import api.hbm.energymk2.Nodespace;
+import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 
@@ -612,6 +614,8 @@ public class ModEventHandler {
 		if(e.phase == Phase.START){
 			JetpackHandler.serverTick();
 			RTTYSystem.updateBroadcastQueue();
+			TileEntityMachineRadarNT.updateSystem();
+			Nodespace.updateNodespace();
 		} else {
 			EntityHitDataHandler.updateSystem();
 		}

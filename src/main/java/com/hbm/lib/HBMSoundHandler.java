@@ -46,6 +46,7 @@ public final class HBMSoundHandler {
 	public static SoundEvent reloadTurret;
 	public static SoundEvent planeShotDown;
 	public static SoundEvent bombWhistle;
+	public static SoundEvent mortarWhistle;
 	public static SoundEvent planeCrash;
 	public static SoundEvent missileTakeoff;
 	public static SoundEvent bomberSmallLoop;
@@ -142,6 +143,9 @@ public final class HBMSoundHandler {
 	public static SoundEvent nullMine;
 	public static SoundEvent openDoor;
 	public static SoundEvent closeDoor;
+	public static SoundEvent openC;
+	public static SoundEvent closeC;
+	public static SoundEvent steamEngineOperate;
 	public static SoundEvent bang;
 	public static SoundEvent slice;
 	public static SoundEvent kaping;
@@ -191,6 +195,7 @@ public final class HBMSoundHandler {
 	public static SoundEvent gluonHit;
 	public static SoundEvent jetpack;
 	public static SoundEvent mukeExplosion;
+	public static SoundEvent explosion_medium;
 	public static SoundEvent crucibleStart;
 	public static SoundEvent crucibleEnd;
 	public static SoundEvent crucibleSwing;
@@ -306,6 +311,7 @@ public final class HBMSoundHandler {
 		ciwsFiringLoop = register("weapon.ciwsFiringLoop");
 		planeShotDown = register("entity.planeShotDown");
 		bombWhistle = register("entity.bombWhistle");
+		mortarWhistle = register("entity.mortarWhistle");
 		planeCrash = register("entity.planeCrash");
 		missileTakeoff = register("weapon.missileTakeOff");
 		bomberSmallLoop = register("entity.bomberSmallLoop");
@@ -403,6 +409,9 @@ public final class HBMSoundHandler {
 		nullMine = register("misc.nullMine");
 		openDoor = register("block.openDoor");
 		closeDoor = register("block.closeDoor");
+		openC = register("block.openc");
+		closeC = register("block.closec");
+		steamEngineOperate = register("block.steamEngineOperate");
 		bang = register("weapon.bang");
 		slice = register("weapon.slice");
 		kaping = register("weapon.kapeng");
@@ -451,6 +460,7 @@ public final class HBMSoundHandler {
 		gluonHit = register("weapon.gluonhit");
 		jetpack = register("weapon.jetpack");
 		mukeExplosion = register("weapon.mukeExplosion");
+		explosion_medium = register("weapon.explosion_medium");
 		crucibleStart = register("weapon.crucible_start");
 		crucibleEnd = register("weapon.crucible_end");
 		crucibleSwing = register("weapon.crucible_swing");

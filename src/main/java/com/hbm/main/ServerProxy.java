@@ -70,6 +70,11 @@ public class ServerProxy
 	public void playSound(String sound, Object data) { }
 	
 	public void displayTooltip(String msg) { }
+
+	public void displayTooltipLegacy(String msg, int id) {
+		displayTooltipLegacy(msg, 1000, id);
+	}
+	public void displayTooltipLegacy(String msg, int time, int id) { }
 	
 	public void setRecoil(float rec){};
 	

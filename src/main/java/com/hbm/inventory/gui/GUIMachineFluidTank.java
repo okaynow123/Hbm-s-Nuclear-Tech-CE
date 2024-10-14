@@ -72,7 +72,7 @@ public class GUIMachineFluidTank extends GuiInfoContainer {
 		int i = tank.mode;
 		drawTexturedModalRect(guiLeft + 151, guiTop + 34, 176, i * 18, 18, 18);
 
-		FFUtils.drawLiquid(tank.tank, this.guiLeft, this.guiTop, this.zLevel, 34, 52, 71, 97);
+		tank.tank.renderTank(guiLeft + 71, guiTop + 69, this.zLevel, 34, 52);
 		this.mc.getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft + 71, guiTop + 17, 0, 204, 34, 52);
 
@@ -96,7 +96,8 @@ public class GUIMachineFluidTank extends GuiInfoContainer {
 			} else {
 				this.drawFluidInfo(new String[] { I18n.format("None"), "0/" + tank.tank.getCapacity() + "mB" }, mouseX, mouseY);
 			}*/
-			FFUtils.renderTankInfo(this, mouseX, mouseY, x, y, width, height, tank.tank);
+
+			tank.tank.renderTankInfo(this, mouseX, mouseY, x, y, width, height);
 
 		}
 	}

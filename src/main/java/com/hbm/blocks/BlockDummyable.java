@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.hbm.handler.MultiblockHandlerXR;
+import com.hbm.interfaces.ICopiable;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
@@ -20,6 +21,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,7 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockDummyable extends BlockContainer {
+public abstract class BlockDummyable extends BlockContainer implements ICopiable {
 
 	//Drillgon200: I'm far to lazy to figure out what all the meta values should be translated to in properties
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
@@ -336,6 +339,33 @@ public abstract class BlockDummyable extends BlockContainer {
 	
 	public int getHeightOffset() {
 		return 0;
+	}
+
+	@Override
+	public NBTTagCompound getSettings(World world, int x, int y, int z) {
+		int[] pos = findCore(world, x, y, z);
+		TileEntity tile = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+		if (tile instanceof ICopiable)
+			return ((ICopiable) tile).getSettings(world, pos[0], pos[1], pos[2]);
+		else
+			return null;
+	}
+
+	@Override
+	public void pasteSettings(NBTTagCompound nbt, int index, World world, EntityPlayer player, int x, int y, int z) {
+		int[] pos = findCore(world, x, y, z);
+		TileEntity tile = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+		if (tile instanceof ICopiable)
+			((ICopiable) tile).pasteSettings(nbt, index, world, player, pos[0], pos[1], pos[2]);
+	}
+
+	@Override
+	public String[] infoForDisplay(World world, int x, int y, int z) {
+		int[] pos = findCore(world, x, y, z);
+		TileEntity tile = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+		if (tile instanceof ICopiable)
+			return ((ICopiable) tile).infoForDisplay(world, x, y, z);
+		return null;
 	}
 
 }

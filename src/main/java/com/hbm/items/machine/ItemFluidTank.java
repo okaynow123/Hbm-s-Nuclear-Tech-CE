@@ -6,11 +6,13 @@ import java.util.Map.Entry;
 import com.hbm.forgefluid.HbmFluidHandlerItemStack;
 import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.config.GeneralConfig;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.forgefluid.FluidTypeHandler;
 
+import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -85,9 +87,9 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 			s1 = ("" + I18n.format(FluidUtil.getFluidContained(stack).getLocalizedName()).trim());
 		} else {
 			if(this == ModItems.fluid_tank_full)
-				return "Empty Universal Fluid Tank";
+				return I18nUtil.resolveKey("item.fluid_tank_empty.name");
 			else if(this == ModItems.fluid_barrel_full)
-				return "Empty Fluid Barrel";
+				return I18nUtil.resolveKey("item.fluid_barrel_empty.name");
 		}
 
 		if (s1 != null) {
@@ -124,25 +126,25 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 
 	}
 	
-	public static ItemStack getFullBarrel(Fluid f, int amount){
+	public static ItemStack getFullBarrel(FluidType f, int amount){
 		ItemStack stack = new ItemStack(ModItems.fluid_barrel_full, amount, 0);
 		stack.setTagCompound(new NBTTagCompound());
-		stack.getTagCompound().setTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY, new FluidStack(f, 16000).writeToNBT(new NBTTagCompound()));
+		stack.getTagCompound().setTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY, f.writeToNBT(new NBTTagCompound()));
 		return stack;
 	}
 	
-	public static ItemStack getFullBarrel(Fluid f){
+	public static ItemStack getFullBarrel(FluidType f){
 		return getFullBarrel(f, 1);
 	}
 	
-	public static ItemStack getFullTank(Fluid f, int amount){
+	public static ItemStack getFullTank(FluidType f, int amount){
 		ItemStack stack = new ItemStack(ModItems.fluid_tank_full, amount, 0);
 		stack.setTagCompound(new NBTTagCompound());
-		stack.getTagCompound().setTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY, new FluidStack(f, 1000).writeToNBT(new NBTTagCompound()));
+		stack.getTagCompound().setTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY, f.writeToNBT(new NBTTagCompound()));
 		return stack;
 	}
 	
-	public static ItemStack getFullTank(Fluid f){
+	public static ItemStack getFullTank(FluidType f){
 		return getFullTank(f, 1);
 	}
 	

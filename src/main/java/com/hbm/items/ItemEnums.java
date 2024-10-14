@@ -11,8 +11,11 @@ public class ItemEnums {
 
 	public static enum EnumTarType {
 		CRUDE,
-		// CRACK,
-		// COAL
+		CRACK,
+		COAL,
+		WOOD,
+		WAX,
+		PARAFFIN
 	}
 
 	public static enum EnumLegendaryType {
@@ -23,6 +26,7 @@ public class ItemEnums {
 
 	public static enum EnumPlantType {
 		TOBACCO,
-		ROPE
+		ROPE,
+		MUSTARDWILLOW
 	}
 }

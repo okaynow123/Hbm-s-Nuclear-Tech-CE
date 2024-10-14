@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.YellowBarrel;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityBarrel;
@@ -23,6 +25,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -107,6 +112,21 @@ public class BlockFluidBarrel extends BlockContainer {
 			player.openGui(MainRegistry.instance, ModBlocks.guiID_barrel, world, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 			
+		} else if(player.isSneaking()){
+			TileEntityBarrel mileEntity = (TileEntityBarrel) world.getTileEntity(pos);
+
+			if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof IItemFluidIdentifier) {
+				FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, pos.getX(), pos.getY(), pos.getZ(), player.getHeldItem(hand));
+
+				mileEntity.tank.setTankType(type);
+				mileEntity.markDirty();
+				player.sendMessage(new TextComponentString("Changed type to ")
+								.setStyle(new Style().setColor(TextFormatting.YELLOW))
+						.appendSibling(new TextComponentTranslation(type.getConditionalName()))
+						.appendSibling(new TextComponentString("!")));
+			}
+			return true;
+
 		} else {
 			return false;
 		}

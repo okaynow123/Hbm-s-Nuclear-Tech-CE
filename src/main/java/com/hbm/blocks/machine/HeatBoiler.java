@@ -9,6 +9,8 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.inventory.HeatRecipes;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.items.machine.ItemForgeFluidIdentifier;
 import com.hbm.tileentity.TileEntityProxyCombo;
@@ -83,14 +85,10 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
                     return false;
 
                 TileEntityHeatBoiler boiler = (TileEntityHeatBoiler) te;
-                Fluid type = ItemForgeFluidIdentifier.getType(player.getHeldItem(hand));
-                if(!HeatRecipes.hasBoilRecipe(type)){
-                    player.sendMessage(new TextComponentString("§cNo recipe found for §e"+type.getLocalizedName(new FluidStack(type, 1))));
-                    return false;
-                }
-                boiler.setTankType(0, type);
+                FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
+                boiler.tanks[0].setTankType(type);
                 boiler.markDirty();
-                player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getLocalizedName(new FluidStack(type, 1))));
+                player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getConditionalName()));
 
                 return true;
             }
@@ -139,9 +137,8 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
 
         List<String> text = new ArrayList();
 
-        for(int i = 0; i < boiler.types.length; i++)
-            if(boiler.types[i] != null)
-                text.add((i < 1 ? "§a-> " : "§c<- ") + "§r" + boiler.types[i].getLocalizedName(new FluidStack(boiler.types[i], 1)) + ": " + boiler.tanks[i].getFluidAmount() + "/" + boiler.tanks[i].getCapacity() + "mB");
+        for(int i = 0; i < boiler.tanks.length; i++)
+            text.add((i < 1 ? "§a-> " : "§c<- ") + "§r" + boiler.tanks[i].getTankType().getLocalizedName() + ": " + boiler.tanks[i].getFill() + "/" + boiler.tanks[i].getMaxFill() + "mB");
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
     }

@@ -30,7 +30,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ModForgeFluids {
 
 	public static HashMap<Fluid, Integer> fluidColors = new HashMap<Fluid, Integer>();
-	
+
+	public static Fluid none = new Fluid("none", new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/none"), new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/none"), null, Color.WHITE);
 	public static Fluid spentsteam = new Fluid("spentsteam", new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/spentsteam_still"), new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/spentsteam_flowing"), null, Color.WHITE).setTemperature(40 + 273);
 	public static Fluid steam = new Fluid("steam", new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/steam_still"), new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/steam_flowing"), null, Color.WHITE).setTemperature(100 + 273);
 	public static Fluid hotsteam = new Fluid("hotsteam", new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/hotsteam_still"), new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/hotsteam_flowing"), null, Color.WHITE).setTemperature(300 + 273);
