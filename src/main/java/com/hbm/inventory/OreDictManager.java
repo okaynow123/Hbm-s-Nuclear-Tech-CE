@@ -431,10 +431,10 @@ public class OreDictManager {
 		ANY_CONCRETE			.any(concrete, concrete_smooth, concrete_asbestos, ducrete, ducrete_smooth);
 
 		ANY_COKE																																																.block(block_coke)			.gem(fromAll(coke, EnumCokeType.class));
-		LIGNITE																																			.dust(powder_lignite)									.block(block_lignite)		.gem(lignite)																.ore(ore_lignite);
-		//COALCOKE																																																							.gem(fromOne(coke, EnumCokeType.COAL));
-		//PETCOKE																																																							.gem(fromOne(coke, EnumCokeType.PETROLEUM));
-		//LIGCOKE																																																								.gem(fromOne(coke, EnumCokeType.LIGNITE));
+		LIGNITE							.gem(lignite)									.dust(powder_lignite)							.ore(ore_lignite);
+		COALCOKE						.gem(fromOne(coke, EnumCokeType.COAL))									.block(fromOne(block_coke, EnumCokeType.COAL));
+		PETCOKE							.gem(fromOne(coke, EnumCokeType.PETROLEUM))								.block(fromOne(block_coke, EnumCokeType.PETROLEUM));
+		LIGCOKE							.gem(fromOne(coke, EnumCokeType.LIGNITE))								.block(fromOne(block_coke, EnumCokeType.LIGNITE));
 		CINNABAR																																																							.gem(cinnebar)		.crystal(crystal_cinnebar)								.ore(ore_cinnebar, ore_depth_cinnebar);
 		BORAX																																			.dust(powder_borax)																																				.ore(ore_depth_borax);
 		VOLCANIC																																																							.gem(gem_volcanic)															.ore(basalt_gem);
@@ -468,8 +468,8 @@ public class OreDictManager {
 		
 		for(String name : new String[] {"fuelCoke", "coke"}) {
 			OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.COAL));
-		// 	OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.LIGNITE));
-		// 	OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.PETROLEUM));
+		 	OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.LIGNITE));
+		 	OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.PETROLEUM));
 		}
 		
 		OreDictionary.registerOre(getReflector(), neutron_reflector);

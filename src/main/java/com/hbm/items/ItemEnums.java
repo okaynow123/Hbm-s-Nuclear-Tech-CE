@@ -5,8 +5,8 @@ public class ItemEnums {
 
 	public static enum EnumCokeType {
 		COAL,
-		// LIGNITE,
-		// PETROLEUM
+		LIGNITE,
+		PETROLEUM
 	}
 
 	public static enum EnumTarType {

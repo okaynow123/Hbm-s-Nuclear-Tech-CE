@@ -31,11 +31,14 @@ public abstract class SerializableRecipe {
 
     public static void registerAllHandlers() {
         recipeHandlers.add(new CrackRecipes());
+        recipeHandlers.add(new CokerRecipes());
         recipeHandlers.add(new CrystallizerRecipes());
-        recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new FractionRecipes());
+        recipeHandlers.add(new HydrotreatingRecipes());
         recipeHandlers.add(new LiquefactionRecipes());
+        recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new ReformingRecipes());
+        recipeHandlers.add(new SolidificationRecipes());
     }
 
     public static void initialize() {

@@ -3,6 +3,7 @@ package com.hbm.sound;
 public class AudioWrapper {
 	
 	public void updatePosition(float x, float y, float z) { }
+	public void keepAlive() { }
 	
 	public void updateVolume(float volume) { }
 	
@@ -17,5 +18,7 @@ public class AudioWrapper {
 	public void startSound() { }
 	
 	public void stopSound() { }
+
+	public boolean isPlaying() { return false; }
 
 }
