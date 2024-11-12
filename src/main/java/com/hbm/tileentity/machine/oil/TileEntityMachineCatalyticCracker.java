@@ -2,12 +2,10 @@ package com.hbm.tileentity.machine.oil;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.CrackRecipes;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.INBTPacketReceiver;
@@ -15,36 +13,28 @@ import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.Tuple;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase implements INBTPacketReceiver, ITickable, IFluidStandardTransceiver {
 	
-	public FluidTank[] tanks;
+	public FluidTankNTM[] tanks;
 	
 	public TileEntityMachineCatalyticCracker() {
 		super();
-		tanks = new FluidTank[5];
+		tanks = new FluidTankNTM[5];
 
-		tanks[0] = new FluidTank(Fluids.BITUMEN, 4000);
+		tanks[0] = new FluidTankNTM(Fluids.BITUMEN, 4000);
 
-		tanks[1] = new FluidTank(Fluids.STEAM, 8000);
+		tanks[1] = new FluidTankNTM(Fluids.STEAM, 8000);
 
-		tanks[2] = new FluidTank(Fluids.OIL, 4000);
+		tanks[2] = new FluidTankNTM(Fluids.OIL, 4000);
 
-		tanks[3] = new FluidTank(Fluids.PETROLEUM, 4000);
+		tanks[3] = new FluidTankNTM(Fluids.PETROLEUM, 4000);
 
-		tanks[4] = new FluidTank(Fluids.SPENTSTEAM, 4000);
+		tanks[4] = new FluidTankNTM(Fluids.SPENTSTEAM, 4000);
 	}
 
 	@Override
@@ -198,17 +188,17 @@ public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase impl
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] {tanks[2], tanks[3], tanks[4]};
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {tanks[2], tanks[3], tanks[4]};
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] {tanks[0], tanks[1]};
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {tanks[0], tanks[1]};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
+	public FluidTankNTM[] getAllTanks() {
 		return tanks;
 	}
 }

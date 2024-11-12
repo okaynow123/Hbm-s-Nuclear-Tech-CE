@@ -367,6 +367,10 @@ public class BobMathUtil {
 		return (((int)r & 0xFF) << 16) | (((int)g & 0xFF) << 8) | ((int)b & 0xFF);
 	}
 
+	public static double interp(double x, double y, float interp) {
+		return x + (y - x) * interp;
+	}
+
 	// I am sick of trying to remember the ridiculous quirks of Java 8
 	// so I wrote this thing that can shit any int-ish list-ish into a regular fucking int[]
 	// made by mellow, thrown here by 70k, thrown into 1.12.2 by Th3_Sl1ze

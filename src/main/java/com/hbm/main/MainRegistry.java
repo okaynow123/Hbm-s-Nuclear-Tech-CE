@@ -9,6 +9,8 @@ import java.util.Random;
 
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
+import com.hbm.handler.*;
+import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
@@ -178,17 +180,8 @@ import com.hbm.entity.particle.EntityTSmokeFX;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.forgefluid.FFPipeNetwork;
-import com.hbm.forgefluid.FluidContainerRegistry;
 import com.hbm.forgefluid.FluidTypeHandler;
 import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.handler.ArmorUtil;
-import com.hbm.handler.BobmazonOfferFactory;
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.GuiHandler;
-import com.hbm.handler.HTTPHandler;
-import com.hbm.handler.HazmatRegistry;
-import com.hbm.handler.HbmKeybinds;
-import com.hbm.handler.MultiblockBBHandler;
 import com.hbm.handler.crt.NTMCraftTweaker;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.inventory.control_panel.ControlEvent;
@@ -283,9 +276,6 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -293,10 +283,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -453,6 +441,7 @@ public class MainRegistry {
 		MinecraftForge.EVENT_BUS.register(new ModEventHandler());
 		MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandler());
 		MinecraftForge.ORE_GEN_BUS.register(new ModEventHandler());
+		MinecraftForge.EVENT_BUS.register(new PollutionHandler());
 		
 		if(event.getSide() == Side.CLIENT) {
 			HbmKeybinds keyHandler = new HbmKeybinds();
@@ -569,6 +558,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityDummyFluidPort.class, new ResourceLocation(RefStrings.MODID, "tileentity_dummy_fluid_port"));
 		GameRegistry.registerTileEntity(TileEntityMachineFluidTank.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_fluidtank"));
 		GameRegistry.registerTileEntity(TileEntityCableSwitch.class, new ResourceLocation(RefStrings.MODID, "tileentity_cable_switch"));
+		GameRegistry.registerTileEntity(TileEntityMachineVacuumDistill.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_vacuum_distill"));
 		GameRegistry.registerTileEntity(TileEntityMachineRefinery.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_refinery"));
 		GameRegistry.registerTileEntity(TileEntityMachineCyclotron.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_cyclotron"));
 		GameRegistry.registerTileEntity(TileEntityMachineSchrabidiumTransmutator.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_schrabidium_transmutator"));
@@ -599,6 +589,9 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityMachinePumpjack.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_pumpjack"));
 		GameRegistry.registerTileEntity(TileEntityMachineFrackingTower.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_fracking_tower"));
 		GameRegistry.registerTileEntity(TileEntityMachineCatalyticCracker.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_catalytic_cracker"));
+		GameRegistry.registerTileEntity(TileEntityMachineCatalyticReformer.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_catalytic_reformer"));
+		GameRegistry.registerTileEntity(TileEntityMachineCoker.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_coker"));
+		GameRegistry.registerTileEntity(TileEntityMachineHydrotreater.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_hydrotreater"));
 		GameRegistry.registerTileEntity(TileEntityMachineGasFlare.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_gas_flare"));
 		GameRegistry.registerTileEntity(TileEntityMachineExcavator.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_excavator"));
 		GameRegistry.registerTileEntity(TileEntityMachineTurbofan.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_turbofan"));
@@ -643,6 +636,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityMachineSatLinker.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_sat_linker"));
 		GameRegistry.registerTileEntity(TileEntityMachineSatDock.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_sat_dock"));
 		GameRegistry.registerTileEntity(TileEntityMachineDiesel.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_diesel"));
+		GameRegistry.registerTileEntity(TileEntitySawmill.class, new ResourceLocation(RefStrings.MODID, "tileentity_sawmill"));
 		GameRegistry.registerTileEntity(TileEntityForceField.class, new ResourceLocation(RefStrings.MODID, "tileentity_force_field"));
 		GameRegistry.registerTileEntity(TileEntityMachineRadarNT.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_radar"));
 		GameRegistry.registerTileEntity(TileEntityMachineRadarLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_radar_large"));
@@ -737,6 +731,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityMachineOrbus.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_orbus"));
 		GameRegistry.registerTileEntity(TileEntityCondenser.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_condenser"));
 		GameRegistry.registerTileEntity(TileEntityMachineLiquefactor.class, new ResourceLocation(RefStrings.MODID, "tileentity_liquefactor"));
+		GameRegistry.registerTileEntity(TileEntityMachineSolidifier.class, new ResourceLocation(RefStrings.MODID, "tileentity_solidifier"));
 		GameRegistry.registerTileEntity(TileEntityChungus.class, new ResourceLocation(RefStrings.MODID, "tileentity_chungus"));
 		GameRegistry.registerTileEntity(TileEntitySpacer.class, new ResourceLocation(RefStrings.MODID, "tileentity_spacer"));
 		GameRegistry.registerTileEntity(TileEntityMachineFractionTower.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_frac_tower"));
@@ -934,6 +929,7 @@ public class MainRegistry {
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_firework_ball"), EntityFireworks.class, "entity_firework_ball", i++, MainRegistry.instance, 1000, 1, true);
 		
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_rbmk_debris"), EntityRBMKDebris.class, "entity_rbmk_debris", i++, MainRegistry.instance, 1000, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_sawblade"), EntitySawblade.class, "entity_sawblade", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_spear"), EntitySpear.class, "entity_spear", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_volcano"), EntityMissileVolcano.class, "entity_missile_volcano", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_ntm_ufo"), EntityUFO.class, "entity_ntm_ufo", i++, MainRegistry.instance, 1000, 1, true, 0x00FFFF, 0x606060);
@@ -1006,7 +1002,6 @@ public class MainRegistry {
 		BreederRecipes.registerFuels();
 		BreederRecipes.registerRecipes();
 		AssemblerRecipes.loadRecipes();
-		ChemplantRecipes.registerRecipes();
 		ExplosionNukeGeneric.loadSoliniumFromFile();
 		CyclotronRecipes.register();
 		HadronRecipes.register();
@@ -1017,6 +1012,7 @@ public class MainRegistry {
 		AnvilRecipes.register();
 		WasteDrumRecipes.registerRecipes();
 		RefineryRecipes.registerRefinery();
+		FluidContainerRegistry.register();
 		TileEntityNukeCustom.registerBombItems();
 		ArmorUtil.register();
 		RBMKFuelRecipes.registerRecipes();
@@ -1028,16 +1024,8 @@ public class MainRegistry {
 		FluidCombustionRecipes.registerFluidCombustionRecipes();
 		HbmDetox.init();
 
-		FluidContainerRegistry.registerContainer(Item.getItemFromBlock(ModBlocks.lox_barrel), ModItems.tank_steel, new FluidStack(ModForgeFluids.oxygen, 10000));
-		FluidContainerRegistry.registerContainer(Item.getItemFromBlock(ModBlocks.pink_barrel), ModItems.tank_steel, new FluidStack(ModForgeFluids.kerosene, 10000));
-		FluidContainerRegistry.registerContainer(Item.getItemFromBlock(ModBlocks.red_barrel), ModItems.tank_steel, new FluidStack(ModForgeFluids.diesel, 10000));
-		FluidContainerRegistry.registerContainer(ModItems.iv_xp, ModItems.iv_xp_empty, new FluidStack(ModForgeFluids.experience, 100));
-		FluidContainerRegistry.registerContainer(ModItems.nugget_mercury, null, new FluidStack(ModForgeFluids.mercury, 125));
-		FluidContainerRegistry.registerContainer(ModItems.bottle_mercury, Items.GLASS_BOTTLE, new FluidStack(ModForgeFluids.mercury, 1000));
-		FluidContainerRegistry.registerContainer(ModItems.particle_hydrogen, ModItems.particle_empty, new FluidStack(ModForgeFluids.hydrogen, 1000));
-		FluidContainerRegistry.registerContainer(ModItems.particle_amat, ModItems.particle_empty, new FluidStack(ModForgeFluids.amat, 1000));
-		FluidContainerRegistry.registerContainer(ModItems.particle_aschrab, ModItems.particle_empty, new FluidStack(ModForgeFluids.aschrab, 1000));
-		FluidContainerRegistry.registerContainer(Item.getItemFromBlock(ModBlocks.ore_gneiss_gas), Item.getItemFromBlock(ModBlocks.stone_gneiss), new FluidStack(ModForgeFluids.petroleum, 250));
+		// Load compatibility for OC.
+		CompatHandler.init();
 		
 		//Drillgon200: expand the max entity radius for the hunter chopper
 		if(World.MAX_ENTITY_RADIUS < 5)

@@ -6,7 +6,7 @@ import com.hbm.inventory.CokerRecipes;
 import com.hbm.inventory.container.ContainerMachineCoker;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineCoker;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
@@ -38,13 +38,13 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     public static int maxHeat = 100_000;
     public static double diffusion = 0.25D;
 
-    public FluidTank[] tanks;
+    public FluidTankNTM[] tanks;
 
     public TileEntityMachineCoker() {
         super(2);
-        tanks = new FluidTank[2];
-        tanks[0] = new FluidTank(Fluids.HEAVYOIL, 16_000);
-        tanks[1] = new FluidTank(Fluids.OIL_COKER, 8_000);
+        tanks = new FluidTankNTM[2];
+        tanks[0] = new FluidTankNTM(Fluids.HEAVYOIL, 16_000);
+        tanks[1] = new FluidTankNTM(Fluids.OIL_COKER, 8_000);
     }
 
     @Override
@@ -238,18 +238,18 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
+    public FluidTankNTM[] getAllTanks() {
         return tanks;
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] { tanks[1] };
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] { tanks[1] };
     }
 
     @Override
-    public FluidTank[] getReceivingTanks() {
-        return new FluidTank[] { tanks[0] };
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] { tanks[0] };
     }
 
     AxisAlignedBB bb = null;

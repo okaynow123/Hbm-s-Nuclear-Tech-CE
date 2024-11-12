@@ -9,7 +9,7 @@ import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineGasFlare;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUIMachineGasFlare;
@@ -44,7 +44,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 	public long power;
 	public static final long maxPower = 1000000;
 	public Fluid tankType;
-	public FluidTank tank;
+	public FluidTankNTM tank;
 	public boolean isOn = false;
 	public boolean doesBurn = false;
 	protected int fluidUsed = 0;
@@ -55,7 +55,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 	public TileEntityMachineGasFlare() {
 		super(6);
 		tankType = ModForgeFluids.gas;
-		tank = new FluidTank(Fluids.GAS, 64000);
+		tank = new FluidTankNTM(Fluids.GAS, 64000);
 	}
 
 	@Override
@@ -248,13 +248,13 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] { tank };
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] { tank };
 	}
 
 	@Override

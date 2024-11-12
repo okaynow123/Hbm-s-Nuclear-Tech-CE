@@ -43,6 +43,7 @@ public class FFIdentifierRender extends TEISRBase {
 		GL11.glTranslated(0.5, 0.5, 0.5);
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
 		if(stack.getItem() instanceof ItemForgeFluidIdentifier){
+			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 			int color = Fluids.fromID(stack.getMetadata()).getColor();
 
 			if(overlaySprite == null){
@@ -56,6 +57,7 @@ public class FFIdentifierRender extends TEISRBase {
 			RenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, PIX, true);
 			RenderHelper.draw();
 			RenderHelper.resetColor();
+			GL11.glPopAttrib();
 		}
 		GL11.glPopMatrix();
 		super.renderByItem(stack);

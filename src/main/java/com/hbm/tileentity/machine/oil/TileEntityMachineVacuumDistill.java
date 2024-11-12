@@ -7,7 +7,7 @@ import com.hbm.inventory.container.ContainerMachineVacuumDistill;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineVacuumDistill;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -36,7 +36,7 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     public long power;
     public static final long maxPower = 1_000_000;
 
-    public FluidTank[] tanks;
+    public FluidTankNTM[] tanks;
 
     private AudioWrapper audio;
     private int audioTime;
@@ -45,12 +45,12 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     public TileEntityMachineVacuumDistill() {
         super(10);
 
-        this.tanks = new FluidTank[5];
-        this.tanks[0] = new FluidTank(Fluids.OIL, 64_000).withPressure(2);
-        this.tanks[1] = new FluidTank(Fluids.HEAVYOIL_VACUUM, 24_000);
-        this.tanks[2] = new FluidTank(Fluids.REFORMATE, 24_000);
-        this.tanks[3] = new FluidTank(Fluids.LIGHTOIL_VACUUM, 24_000);
-        this.tanks[4] = new FluidTank(Fluids.SOURGAS, 24_000);
+        this.tanks = new FluidTankNTM[5];
+        this.tanks[0] = new FluidTankNTM(Fluids.OIL, 64_000).withPressure(2);
+        this.tanks[1] = new FluidTankNTM(Fluids.HEAVYOIL_VACUUM, 24_000);
+        this.tanks[2] = new FluidTankNTM(Fluids.REFORMATE, 24_000);
+        this.tanks[3] = new FluidTankNTM(Fluids.LIGHTOIL_VACUUM, 24_000);
+        this.tanks[4] = new FluidTankNTM(Fluids.SOURGAS, 24_000);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS pos.getX(), pos.getY(), pos.getZ(), 0.25F, 15F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 15F);
     }
 
     @Override
@@ -257,18 +257,18 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
+    public FluidTankNTM[] getAllTanks() {
         return tanks;
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] {tanks[1], tanks[2], tanks[3], tanks[4]};
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] {tanks[1], tanks[2], tanks[3], tanks[4]};
     }
 
     @Override
-    public FluidTank[] getReceivingTanks() {
-        return new FluidTank[] {tanks[0]};
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] {tanks[0]};
     }
 
     @Override

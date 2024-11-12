@@ -1,10 +1,11 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerChemfac;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIChemfac;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
@@ -24,6 +25,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
@@ -38,15 +40,22 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	public float rot;
 	public float prevRot;
 
-	public FluidTank water;
-	public FluidTank steam;
+	public FluidTankNTM waterNew;
+	public FluidTankNTM steamNew;
+	public TypedFluidTank water;
+	public TypedFluidTank steam;
+
+	private boolean converted;
 	private final UpgradeManager upgradeManager;
 
 	public TileEntityMachineChemfac() {
 		super(77);
 
-		water = new FluidTank(Fluids.WATER, 64_000, tanks.length);
-		steam = new FluidTank(Fluids.SPENTSTEAM, 64_000, tanks.length + 1);
+		waterNew = new FluidTankNTM(Fluids.WATER, 64_000, tanksNew.length);
+		steamNew = new FluidTankNTM(Fluids.SPENTSTEAM, 64_000, tanksNew.length + 1);
+
+		water = new TypedFluidTank(ModForgeFluids.coolant, new FluidTank(6400));
+		steam = new TypedFluidTank(ModForgeFluids.coolant_hot, new FluidTank(6400));
 
 		inventory = new ItemStackHandler(77) {
 			@Override
@@ -69,13 +78,17 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	@Override
 	public void update() {
 		super.update();
-
+		if(!converted){
+			convertAndSetFluid(steam.getType(), steam.getTank(), steamNew);
+			convertAndSetFluid(water.getType(), water.getTank(), waterNew);
+			converted = true;
+		}
 		if(!world.isRemote) {
 			if(world.getTotalWorldTime() % 60 == 0) {
 				for(DirPos pos : getConPos()) {
 					this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 
-					for(FluidTank tank : inTanks()) {
+					for(FluidTankNTM tank : inTanks()) {
 						if(tank.getTankType() != Fluids.NONE) {
 							this.trySubscribe(tank.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 						}
@@ -83,7 +96,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 				}
 			}
 
-			for(DirPos pos : getConPos()) for(FluidTank tank : outTanks()) {
+			for(DirPos pos : getConPos()) for(FluidTankNTM tank : outTanks()) {
 				if(tank.getTankType() != Fluids.NONE && tank.getFill() > 0) {
 					this.sendFluid(tank, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 				}
@@ -160,10 +173,10 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 		buf.writeBoolean(isProgressing);
 
-		for(int i = 0; i < tanks.length; i++) tanks[i].serialize(buf);
+		for(int i = 0; i < tanksNew.length; i++) tanksNew[i].serialize(buf);
 
-		water.serialize(buf);
-		steam.serialize(buf);
+		waterNew.serialize(buf);
+		steamNew.serialize(buf);
 	}
 
 	@Override
@@ -177,10 +190,10 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 		isProgressing = buf.readBoolean();
 
-		for(int i = 0; i < tanks.length; i++) tanks[i].deserialize(buf);
+		for(int i = 0; i < tanksNew.length; i++) tanksNew[i].deserialize(buf);
 
-		water.deserialize(buf);
-		steam.deserialize(buf);
+		waterNew.deserialize(buf);
+		steamNew.deserialize(buf);
 	}
 
 	private int getWaterRequired() {
@@ -190,14 +203,14 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 	@Override
 	protected boolean canProcess(int index) {
-		return super.canProcess(index) && this.water.getFill() >= getWaterRequired() && this.steam.getFill() + getWaterRequired() <= this.steam.getMaxFill();
+		return super.canProcess(index) && this.waterNew.getFill() >= getWaterRequired() && this.steamNew.getFill() + getWaterRequired() <= this.steamNew.getMaxFill();
 	}
 
 	@Override
 	protected void process(int index) {
 		super.process(index);
-		this.water.setFill(this.water.getFill() - getWaterRequired());
-		this.steam.setFill(this.steam.getFill() + getWaterRequired());
+		this.waterNew.setFill(this.waterNew.getFill() - getWaterRequired());
+		this.steamNew.setFill(this.steamNew.getFill() + getWaterRequired());
 	}
 
 	protected List<DirPos> conPos;
@@ -299,32 +312,49 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		water.readFromNBT(nbt, "w");
-		steam.readFromNBT(nbt, "s");
+		if(!converted){
+			water.tank.readFromNBT(nbt.getCompoundTag("water"));
+			steam.tank.readFromNBT(nbt.getCompoundTag("steam"));
+		} else {
+			waterNew.readFromNBT(nbt, "w");
+			steamNew.readFromNBT(nbt, "s");
+			if(nbt.hasKey("water")) nbt.removeTag("water");
+			if(nbt.hasKey("steam")) nbt.removeTag("steam");
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		water.writeToNBT(nbt, "w");
-		steam.writeToNBT(nbt, "s");
+		if(!converted) {
+			NBTTagCompound tankWater = new NBTTagCompound();
+			water.tank.writeToNBT(tankWater);
+			nbt.setTag("water", tankWater);
+
+			NBTTagCompound tankSteam = new NBTTagCompound();
+			steam.tank.writeToNBT(tankSteam);
+			nbt.setTag("steam", tankSteam);
+		} else {
+			waterNew.writeToNBT(nbt, "w");
+			steamNew.writeToNBT(nbt, "s");
+		}
 		return nbt;
 	}
 
 	@Override
-	protected List<FluidTank> inTanks() {
+	protected List<FluidTankNTM> inTanks() {
 
-		List<FluidTank> inTanks = super.inTanks();
-		inTanks.add(water);
+		List<FluidTankNTM> inTanks = super.inTanks();
+		inTanks.add(waterNew);
 
 		return inTanks;
 	}
 
 	@Override
-	protected List<FluidTank> outTanks() {
+	protected List<FluidTankNTM> outTanks() {
 
-		List<FluidTank> outTanks = super.outTanks();
-		outTanks.add(steam);
+		List<FluidTankNTM> outTanks = super.outTanks();
+		outTanks.add(steamNew);
 
 		return outTanks;
 	}

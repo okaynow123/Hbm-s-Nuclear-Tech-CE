@@ -116,8 +116,9 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 			allStacks.add(stack);
 		}
     	//Chemistry Templates
-    	for (int i: ChemplantRecipes.recipeNames.keySet()){
-			allStacks.add(new ItemStack(ModItems.chemistry_template, 1, i));
+		for(int i = 0; i < ChemplantRecipes.recipes.size(); i++) {
+			ChemplantRecipes.ChemRecipe chem = ChemplantRecipes.recipes.get(i);
+			allStacks.add(new ItemStack(ModItems.chemistry_template, 1, chem.getId()));
 		}
 
 		// Fluid IDs

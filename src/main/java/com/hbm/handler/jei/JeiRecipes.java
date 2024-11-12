@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.hbm.blocks.ModBlocks;
-import com.hbm.config.GeneralConfig;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCell;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCanister;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
@@ -30,7 +27,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
-import com.hbm.items.machine.ItemChemistryTemplate;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.machine.ItemFluidTank;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
@@ -38,9 +34,7 @@ import com.hbm.items.special.ItemCell;
 import com.hbm.items.tool.ItemFluidCanister;
 import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.lib.Library;
-import com.hbm.main.MainRegistry;
 import com.hbm.util.WeightedRandomObject;
-import com.hbm.util.Tuple.Quartet;
 import com.hbm.util.Tuple.Pair;
 import com.hbm.util.I18nUtil;
 
@@ -52,12 +46,8 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraft.util.text.TextFormatting;
 
 public class JeiRecipes {
@@ -680,10 +670,12 @@ public class JeiRecipes {
         	//Adding template item
         	ItemStack template = new ItemStack(ModItems.chemistry_template, 1, i);
 
-        	List<AStack> listIn = ChemplantRecipes.getChemInputFromTempate(template);
-        	FluidStack[] fluidIn = ChemplantRecipes.getFluidInputFromTempate(template);
-        	ItemStack[] listOut = ChemplantRecipes.getChemOutputFromTempate(template);
-        	FluidStack[] fluidOut = ChemplantRecipes.getFluidOutputFromTempate(template);
+		   ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(template.getItemDamage());
+
+        	List<AStack> listIn = ChemplantRecipes.ChemRecipe.getChemInputFromTempate(recipe, template);
+        	FluidStack[] fluidIn = ChemplantRecipes.ChemRecipe.getFluidInputFromTempate(recipe, template);
+        	ItemStack[] listOut = ChemplantRecipes.ChemRecipe.getChemOutputFromTempate(recipe, template);
+        	FluidStack[] fluidOut = ChemplantRecipes.ChemRecipe.getFluidOutputFromTempate(recipe, template);
 
         	inputs.set(6, new ComparableStack(template));
 
@@ -1063,12 +1055,8 @@ public class JeiRecipes {
 			fluidEquivalences.add(new FluidRecipeInverse(ItemFluidIcon.make(f, 1), ItemFluidTank.getFullBarrel(f)));
 
 			if(EnumCanister.contains(f)){
-				fluidEquivalences.add(new FluidRecipe(ItemFluidIcon.make(f, 1), ItemFluidCanister.getFullCanister(f)));
-				fluidEquivalences.add(new FluidRecipeInverse(ItemFluidIcon.make(f, 1), ItemFluidCanister.getFullCanister(f)));
-			}
-			if(EnumGasCanister.contains(f)){
-				fluidEquivalences.add(new FluidRecipe(ItemFluidIcon.make(f, 1), ItemGasCanister.getFullCanister(f)));
-				fluidEquivalences.add(new FluidRecipeInverse(ItemFluidIcon.make(f, 1), ItemGasCanister.getFullCanister(f)));
+				fluidEquivalences.add(new FluidRecipe(ItemFluidIcon.make(f, 1), new ItemStack(ModItems.canister_generic, 1, f.getID())));
+				fluidEquivalences.add(new FluidRecipeInverse(ItemFluidIcon.make(f, 1), new ItemStack(ModItems.canister_generic, 1, f.getID())));
 			}
 			if(EnumCell.contains(f)){
 				fluidEquivalences.add(new FluidRecipe(ItemFluidIcon.make(f, 1), ItemCell.getFullCell(f)));

@@ -2,12 +2,11 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerOreSlopper;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIOreSlopper;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -25,7 +24,6 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
@@ -72,16 +70,16 @@ public class TileEntityMachineOreSlopper extends TileEntityMachineBase implement
     public float prevFan;
     public int delay;
 
-    public FluidTank[] tanks;
+    public FluidTankNTM[] tanks;
     public double[] ores = new double[BedrockOreType.values().length];
 
     private final UpgradeManager manager = new UpgradeManager();
 
     public TileEntityMachineOreSlopper() {
         super(11);
-        tanks = new FluidTank[2];
-        tanks[0] = new FluidTank(Fluids.WATER, 16_000);
-        tanks[1] = new FluidTank(Fluids.SLOP, 16_000);
+        tanks = new FluidTankNTM[2];
+        tanks[0] = new FluidTankNTM(Fluids.WATER, 16_000);
+        tanks[1] = new FluidTankNTM(Fluids.SLOP, 16_000);
     }
 
     @Override
@@ -344,9 +342,9 @@ public class TileEntityMachineOreSlopper extends TileEntityMachineBase implement
     @Override public void setPower(long power) { this.power = power; }
     @Override public long getMaxPower() { return maxPower; }
 
-    @Override public FluidTank[] getAllTanks() { return tanks; }
-    @Override public FluidTank[] getSendingTanks() { return new FluidTank[] {tanks[1]}; }
-    @Override public FluidTank[] getReceivingTanks() { return new FluidTank[] {tanks[0]}; }
+    @Override public FluidTankNTM[] getAllTanks() { return tanks; }
+    @Override public FluidTankNTM[] getSendingTanks() { return new FluidTankNTM[] {tanks[1]}; }
+    @Override public FluidTankNTM[] getReceivingTanks() { return new FluidTankNTM[] {tanks[0]}; }
 
     AxisAlignedBB bb = null;
 

@@ -9,7 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 public class FluidLoaderStandard extends FluidLoadingHandler {
 
 	@Override
-	public boolean fillItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		
 		if(tank.pressure != 0) return false;
 		
@@ -46,7 +46,7 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 	}
 
 	@Override
-	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		
 		if(slots.getStackInSlot(in) == ItemStack.EMPTY)
 			return true;

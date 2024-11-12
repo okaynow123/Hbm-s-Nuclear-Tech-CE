@@ -254,7 +254,7 @@ public class ItemAmmoArty extends Item {
         this.itemTypes[CARGO] = new ArtilleryShell("ammo_arty_cargo", SpentCasing.COLOR_CASE_16INCH) { public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
             if(mop.typeOfHit == RayTraceResult.Type.BLOCK) {
                 shell.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
-                shell.getStuck(mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ(), mop.sideHit.ordinal());
+                shell.getStuck(mop.getBlockPos(), mop.sideHit.ordinal());
             }
         }};
 

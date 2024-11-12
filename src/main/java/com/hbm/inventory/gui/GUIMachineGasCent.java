@@ -6,7 +6,6 @@ import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.inventory.container.ContainerMachineGasCent;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineGasCent;
@@ -94,7 +93,7 @@ public class GUIMachineGasCent extends GuiInfoContainer {
 
 		y += height;
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(diFurnace.tank.getTankType().getTexture());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(diFurnace.tankNew.getTankType().getTexture());
 
 		int i = (fluid * height) / maxFluid;
 

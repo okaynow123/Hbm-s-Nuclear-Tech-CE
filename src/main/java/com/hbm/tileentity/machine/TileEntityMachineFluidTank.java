@@ -2,23 +2,20 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.HbmCapability;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidContainer;
 import com.hbm.interfaces.IFluidSource;
-import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityMachineBase;
 
@@ -31,19 +28,18 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import scala.actors.threadpool.Arrays;
 
 import java.util.*;
 
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidContainer, IFluidSource, IFluidAcceptor, IFluidStandardTransceiver, IBufPacketReceiver, IControllable {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidContainer, IFluidSource, IFluidAcceptor, IFluidStandardTransceiver, IBufPacketReceiver, IControllable, IFFtoNTMF {
 
+	public FluidTankNTM tankNew;
 	public FluidTank tank;
+	public Fluid oldFluid;
 
 	public short mode = 0;
 	public static final short modes = 4;
@@ -51,10 +47,13 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public int age = 0;
 	public List<IFluidAcceptor> list = new ArrayList();
 	public static int[] slots = { 2 };
+
+	private static boolean converted = false;
 	
 	public TileEntityMachineFluidTank() {
 		super(6);
-		tank = new FluidTank(Fluids.NONE, 256000);
+		tank = new FluidTank(256000);
+		tankNew = new FluidTankNTM(Fluids.NONE, 256000);
 	}
 	
 	public String getName() {
@@ -63,14 +62,17 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
-		tank.readFromNBT(compound, "tank");
+		if(!converted) {
+			tank.readFromNBT(compound);
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+		} else tankNew.readFromNBT(compound, "tank");
 		mode = compound.getShort("mode");
 		super.readFromNBT(compound);
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		tank.writeToNBT(compound, "tank");
+		if(!converted) tank.writeToNBT(compound); else tankNew.writeToNBT(compound, "tank");
 		compound.setShort("mode", mode);
 		return super.writeToNBT(compound);
 	}
@@ -83,6 +85,10 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	@Override
 	public void update() {
 		if (!world.isRemote) {
+			if(!converted){
+				convertAndSetFluid(oldFluid, tank, tankNew);
+				converted = true;
+			}
 			age++;
 			if (age >= 20) {
 				age = 0;
@@ -90,18 +96,18 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 			}
 
 			this.sendingBrake = true;
-			tank.setFill(TileEntityBarrel.transmitFluidFairly(world, tank, this, tank.getFill(), this.mode == 0 || this.mode == 1, this.mode == 1 || this.mode == 2, getConPos()));
+			tankNew.setFill(TileEntityBarrel.transmitFluidFairly(world, tankNew, this, tankNew.getFill(), this.mode == 0 || this.mode == 1, this.mode == 1 || this.mode == 2, getConPos()));
 			this.sendingBrake = false;
 
 			if ((mode == 1 || mode == 2) && (age == 9 || age == 19))
-				fillFluidInit(tank.getTankType());
+				fillFluidInit(tankNew.getTankType());
 			
-			if(tank.getTankType() != Fluids.NONE && (tank.getTankType().isAntimatter() || tank.getTankType().hasTrait(FT_Corrosive.class) && tank.getTankType().getTrait(FT_Corrosive.class).isHighlyCorrosive())) {
+			if(tankNew.getTankType() != Fluids.NONE && (tankNew.getTankType().isAntimatter() || tankNew.getTankType().hasTrait(FT_Corrosive.class) && tankNew.getTankType().getTrait(FT_Corrosive.class).isHighlyCorrosive())) {
 				world.destroyBlock(pos, false);
 				world.newExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, true, true);
 			}
 
-			tank.unloadTank(4, 5, inventory);
+			tankNew.unloadTank(4, 5, inventory);
 
 			this.networkPackNT(150);
 		}
@@ -122,14 +128,14 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
 		buf.writeShort(mode);
-		tank.serialize(buf);
+		tankNew.serialize(buf);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
 		super.deserialize(buf);
 		mode = buf.readShort();
-		tank.deserialize(buf);
+		tankNew.deserialize(buf);
 	}
 	
 	@Override
@@ -172,12 +178,12 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 	@Override
 	public void setFillForSync(int fill, int index) {
-		tank.setFill(fill);
+		tankNew.setFill(fill);
 	}
 
 	@Override
 	public void setTypeForSync(FluidType type, int index) {
-		tank.setTankType(type);
+		tankNew.setTankType(type);
 	}
 
 	@Override
@@ -186,7 +192,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if(mode == 2 || mode == 3 || this.sendingBrake)
 			return 0;
 
-		return type.getName().equals(this.tank.getTankType().getName()) ? tank.getMaxFill() : 0;
+		return type.getName().equals(this.tankNew.getTankType().getName()) ? tankNew.getMaxFill() : 0;
 	}
 
 	@Override
@@ -217,13 +223,13 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 	@Override
 	public int getFluidFill(FluidType type) {
-		return type.getName().equals(this.tank.getTankType().getName()) ? tank.getFill() : 0;
+		return type.getName().equals(this.tankNew.getTankType().getName()) ? tankNew.getFill() : 0;
 	}
 
 	@Override
 	public void setFluidFill(int i, FluidType type) {
-		if(type.getName().equals(tank.getTankType().getName()))
-			tank.setFill(i);
+		if(type.getName().equals(tankNew.getTankType().getName()))
+			tankNew.setFill(i);
 	}
 
 	@Override
@@ -239,7 +245,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	@Override
 	public long transferFluid(FluidType type, int pressure, long fluid) {
 		long toTransfer = Math.min(getDemand(type, pressure), fluid);
-		tank.setFill(tank.getFill() + (int) toTransfer);
+		tankNew.setFill(tankNew.getFill() + (int) toTransfer);
 		return fluid - toTransfer;
 	}
 
@@ -249,25 +255,25 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if(this.mode == 2 || this.mode == 3 || this.sendingBrake)
 			return 0;
 
-		if(tank.getPressure() != pressure) return 0;
+		if(tankNew.getPressure() != pressure) return 0;
 
-		return type == tank.getTankType() ? tank.getMaxFill() - tank.getFill() : 0;
+		return type == tankNew.getTankType() ? tankNew.getMaxFill() - tankNew.getFill() : 0;
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return (mode == 1 || mode == 2) ? new FluidTank[] {tank} : new FluidTank[0];
+	public FluidTankNTM[] getSendingTanks() {
+		return (mode == 1 || mode == 2) ? new FluidTankNTM[] {tankNew} : new FluidTankNTM[0];
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		if(this.sendingBrake) return new FluidTank[0];
-		return (mode == 0 || mode == 1) ? new FluidTank[] {tank} : new FluidTank[0];
+	public FluidTankNTM[] getReceivingTanks() {
+		if(this.sendingBrake) return new FluidTankNTM[0];
+		return (mode == 0 || mode == 1) ? new FluidTankNTM[] {tankNew} : new FluidTankNTM[0];
 	}
 
 	// control panel
@@ -276,10 +282,10 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public Map<String, DataValue> getQueryData() {
 		Map<String, DataValue> data = new HashMap<>();
 
-		if (tank.getTankType() != Fluids.NONE) {
-			data.put("t0_fluidType", new DataValueString(tank.getTankType().getLocalizedName()));
+		if (tankNew.getTankType() != Fluids.NONE) {
+			data.put("t0_fluidType", new DataValueString(tankNew.getTankType().getLocalizedName()));
 		}
-		data.put("t0_fluidAmount", new DataValueFloat(tank.getFill()));
+		data.put("t0_fluidAmount", new DataValueFloat(tankNew.getFill()));
 		data.put("mode", new DataValueFloat(mode));
 
 		return data;

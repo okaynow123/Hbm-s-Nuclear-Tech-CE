@@ -4,7 +4,6 @@ import api.hbm.entity.RadarEntry;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.util.BobMathUtil;
@@ -12,7 +11,10 @@ import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -146,20 +148,20 @@ public class GUIMachineRadarNT extends GuiScreen {
         }
 
         if(radar.showMap) {
-            Tessellator tess = Tessellator.instance;
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buf = tess.getBuffer();
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            tess.startDrawingQuads();
-            for(int i = 0; i < 40_000; i++) {
+            buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+            for (int i = 0; i < 40_000; i++) {
                 int iX = i % 200;
                 int iZ = i / 200;
                 byte b = radar.map[i];
-                if(b > 0) {
+                if (b > 0) {
                     int color = ((b - 50) * 255 / 78) << 8;
-                    tess.setColorOpaque_I(color);
-                    tess.addVertex(guiLeft + 8 + iX,	guiTop + 18 + iZ,	this.zLevel);
-                    tess.addVertex(guiLeft + 9 + iX,	guiTop + 18 + iZ,	this.zLevel);
-                    tess.addVertex(guiLeft + 9 + iX,	guiTop + 17 + iZ,	this.zLevel);
-                    tess.addVertex(guiLeft + 8 + iX,	guiTop + 17 + iZ,	this.zLevel);
+                    buf.pos(guiLeft + 8 + iX, guiTop + 18 + iZ, this.zLevel).color((color >> 16) & 255, (color >> 8) & 255, color & 255, 255).endVertex();
+                    buf.pos(guiLeft + 9 + iX, guiTop + 18 + iZ, this.zLevel).color((color >> 16) & 255, (color >> 8) & 255, color & 255, 255).endVertex();
+                    buf.pos(guiLeft + 9 + iX, guiTop + 17 + iZ, this.zLevel).color((color >> 16) & 255, (color >> 8) & 255, color & 255, 255).endVertex();
+                    buf.pos(guiLeft + 8 + iX, guiTop + 17 + iZ, this.zLevel).color((color >> 16) & 255, (color >> 8) & 255, color & 255, 255).endVertex();
                 }
             }
             tess.draw();
@@ -178,12 +180,13 @@ public class GUIMachineRadarNT extends GuiScreen {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glShadeModel(GL11.GL_SMOOTH);
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
-        tess.setColorRGBA_I(0x00ff00, 0);	tess.addVertex(guiLeft + 108,				guiTop + 117,				this.zLevel);
-        tess.setColorRGBA_I(0x00ff00, 255);	tess.addVertex(guiLeft + 108 + tr.xCoord,	guiTop + 117 + tr.yCoord,	this.zLevel);
-        tess.setColorRGBA_I(0x00ff00, 0);	tess.addVertex(guiLeft + 108 + tl.xCoord,	guiTop + 117 + tl.yCoord,	this.zLevel);
-        tess.setColorRGBA_I(0x00ff00, 0);	tess.addVertex(guiLeft + 108 + bl.xCoord,	guiTop + 117 + bl.yCoord,	this.zLevel);
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
+        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buf.pos(guiLeft + 108, guiTop + 117, this.zLevel).color(0, 255, 0, 0).endVertex();
+        buf.pos(guiLeft + 108 + tr.xCoord, guiTop + 117 + tr.yCoord, this.zLevel).color(0, 255, 0, 255).endVertex();
+        buf.pos(guiLeft + 108 + tl.xCoord, guiTop + 117 + tl.yCoord, this.zLevel).color(0, 255, 0, 0).endVertex();
+        buf.pos(guiLeft + 108 + bl.xCoord, guiTop + 117 + bl.yCoord, this.zLevel).color(0, 255, 0, 0).endVertex();
         tess.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -203,13 +206,14 @@ public class GUIMachineRadarNT extends GuiScreen {
     public void drawTexturedModalRectDouble(double x, double y, int sourceX, int sourceY, int sizeX, int sizeY) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x,			y + sizeY,	this.zLevel,	(sourceX + 0) * f,		(sourceY + sizeY) * f1);
-        tessellator.addVertexWithUV(x + sizeX,	y + sizeY,	this.zLevel,	(sourceX + sizeX) * f,	(sourceY + sizeY) * f1);
-        tessellator.addVertexWithUV(x + sizeX,	y,			this.zLevel,	(sourceX + sizeX) * f,	(sourceY + 0) * f1);
-        tessellator.addVertexWithUV(x,			y,			this.zLevel,	(sourceX + 0) * f,		(sourceY + 0) * f1);
-        tessellator.draw();
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
+        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buf.pos(x, y + sizeY, this.zLevel).tex((sourceX + 0) * f, (sourceY + sizeY) * f1).endVertex();
+        buf.pos(x + sizeX, y + sizeY, this.zLevel).tex((sourceX + sizeX) * f, (sourceY + sizeY) * f1).endVertex();
+        buf.pos(x + sizeX, y, this.zLevel).tex((sourceX + sizeX) * f, (sourceY + 0) * f1).endVertex();
+        buf.pos(x, y, this.zLevel).tex((sourceX + 0) * f, (sourceY + 0) * f1).endVertex();
+        tess.draw();
     }
 
     protected boolean checkClick(int x, int y, int left, int top, int sizeX, int sizeY) {

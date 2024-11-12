@@ -2,28 +2,21 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
-import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.HbmCapability;
-import com.hbm.capability.HbmLivingCapability;
-import com.hbm.capability.HbmLivingProps;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.CrystallizerRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerCrystallizer;
-import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUICrystallizer;
-import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 
@@ -39,17 +32,15 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.List;
 
-public class TileEntityMachineCrystallizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider {
+public class TileEntityMachineCrystallizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFFtoNTMF {
 
 	public long power;
 	public static final long maxPower = 1000000;
@@ -61,12 +52,15 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 	public float angle;
 	public float prevAngle;
 
+	public FluidTankNTM tankNew;
 	public FluidTank tank;
-	public UpgradeManager manager;
+	private Fluid oldFluid = ModForgeFluids.none;
+	private static boolean converted = false;
+	public UpgradeManager manager = new UpgradeManager();
 
 	public TileEntityMachineCrystallizer() {
 		super(0);
-		inventory = new ItemStackHandler(7){
+		inventory = new ItemStackHandler(8){
 			@Override
 			protected void onContentsChanged(int slot) {
 				super.onContentsChanged(slot);
@@ -79,7 +73,8 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		};
-		tank = new FluidTank(Fluids.PEROXIDE, 8000);
+		tankNew = new FluidTankNTM(Fluids.PEROXIDE, 8000);
+		tank = new FluidTank(16000);
 	}
 
 	@Override
@@ -91,7 +86,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 
 		for(DirPos pos : getConPos()) {
 			this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-			this.trySubscribe(tank.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			this.trySubscribe(tankNew.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 		}
 	}
 
@@ -111,17 +106,20 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 
 	@Override
 	public void update() {
+		if(!converted){
+			this.resizeInventory(8);
+			convertAndSetFluid(oldFluid, tank, tankNew);
+			converted = true;
+		}
+		manager.eval(inventory, 5, 6);
 		if(!world.isRemote) {
-
 			this.isOn = false;
 
 			this.updateConnections();
 
 			power = Library.chargeTEFromItems(inventory, 1, power, maxPower);
-			tank.setType(7, inventory);
-			tank.loadTank(3, 4, inventory);
-
-			manager.eval(inventory, 5, 6);
+			tankNew.setType(7, inventory);
+			tankNew.loadTank(3, 4, inventory);
 
 			for(int i = 0; i < getCycleCount(); i++) {
 
@@ -177,7 +175,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		buf.writeShort(getDuration());
 		buf.writeLong(power);
 		buf.writeBoolean(isOn);
-		tank.serialize(buf);
+		tankNew.serialize(buf);
 	}
 
 	@Override
@@ -187,12 +185,12 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		duration = buf.readShort();
 		power = buf.readLong();
 		isOn = buf.readBoolean();
-		tank.deserialize(buf);
+		tankNew.deserialize(buf);
 	}
 
 	private void processItem() {
 
-		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tank.getTankType());
+		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tankNew.getTankType());
 
 		if(result == null) //never happens but you can't be sure enough
 			return;
@@ -204,7 +202,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		else if(inventory.getStackInSlot(2).getCount() + stack.getCount() <= inventory.getStackInSlot(2).getMaxStackSize())
 			inventory.getStackInSlot(2).setCount(inventory.getStackInSlot(2).getCount() + stack.getCount());
 
-		tank.setFill(tank.getFill() - getRequiredAcid(result.acidAmount));
+		tankNew.setFill(tankNew.getFill() - getRequiredAcid(result.acidAmount));
 
 		float freeChance = this.getFreeChance();
 
@@ -221,7 +219,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		if(power < getPowerRequired())
 			return false;
 
-		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tank.getTankType());
+		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tankNew.getTankType());
 
 		//Or output?
 		if(result == null)
@@ -231,7 +229,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		if(inventory.getStackInSlot(0).getCount() < result.itemAmount)
 			return false;
 
-		if(tank.getFill() < getRequiredAcid(result.acidAmount)) return false;
+		if(tankNew.getFill() < getRequiredAcid(result.acidAmount)) return false;
 
 		ItemStack stack = result.output.copy();
 
@@ -263,7 +261,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 	}
 
 	public short getDuration() {
-		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tank.getTankType());
+		CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(inventory.getStackInSlot(0), tankNew.getTankType());
 		int base = result != null ? result.duration : 600;
 		int speed = Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.SPEED), 3);
 		if(speed > 0) {
@@ -284,7 +282,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 	
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
-		return slot == 0 && CrystallizerRecipes.getOutput(itemStack, this.tank.getTankType()) != null;
+		return slot == 0 && CrystallizerRecipes.getOutput(itemStack, this.tankNew.getTankType()) != null;
 	}
 	
 	@Override
@@ -313,7 +311,13 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		super.readFromNBT(nbt);
 
 		power = nbt.getLong("power");
-		tank.readFromNBT(nbt, "tank");
+		if(!converted){
+			tank.readFromNBT(nbt.getCompoundTag("tank"));
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+		} else {
+			tankNew.readFromNBT(nbt, "tankNew");
+			nbt.removeTag("tank");
+		}
 	}
 
 	@Override
@@ -321,7 +325,11 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		super.writeToNBT(nbt);
 
 		nbt.setLong("power", power);
-		tank.writeToNBT(nbt, "tank");
+		if(!converted){
+			nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		} else {
+			tankNew.writeToNBT(nbt, "tankNew");
+		}
 		return nbt;
 	}
 
@@ -349,13 +357,13 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] {tank};
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class RenderFluidBarrel extends TileEntitySpecialRenderer<TileEntityBarre
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 		GL11.glEnable(GL11.GL_LIGHTING);
-		FluidType type = barrel.tank.getTankType();
+		FluidType type = barrel.tankNew.getTankType();
 
 		if(type != null && type != Fluids.NONE) {
 			RenderHelper.disableStandardItemLighting();

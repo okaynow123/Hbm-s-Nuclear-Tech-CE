@@ -5,19 +5,13 @@ import java.util.Map;
 import api.hbm.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.RBMKOutgasserRecipes;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.util.ContaminationUtil;
-import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemFluidIcon;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
@@ -25,23 +19,17 @@ import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.Tuple;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, IRBMKLoadable {
 
-	public FluidTank gas;
+	public FluidTankNTM gas;
 	public double progress = 0;
 	public double usedFlux = 0;
 	public int duration = 10000;
 
 	public TileEntityRBMKOutgasser() {
 		super(2);
-		gas = new FluidTank(Fluids.TRITIUM, 64000);
+		gas = new FluidTankNTM(Fluids.TRITIUM, 64000);
 	}
 
 	@Override
@@ -254,13 +242,13 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] {gas};
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {gas};
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] {gas};
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {gas};
 	}
 
 	// control panel

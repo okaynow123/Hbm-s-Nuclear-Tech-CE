@@ -5,12 +5,13 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidUser;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.tileentity.machine.TileEntityDummy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class CompatExternal {
      * This method will be updated in the event that other multiblock systems or dummies are added to retrain the intended functionality.
      * @return the core tile entity if the given position holds a dummy, the tile entity at that position if it doesn't or null if there is no tile entity
      */
-    public static TileEntity getCoreFromPos(World world, BlockPos pos) {
+    public static TileEntity getCoreFromPos(IBlockAccess world, BlockPos pos) {
 
         Block b = world.getBlockState(pos).getBlock();
 
@@ -118,7 +119,7 @@ public class CompatExternal {
 
         IFluidUser container = (IFluidUser) tile;
 
-        for(FluidTank tank : container.getAllTanks()) {
+        for(FluidTankNTM tank : container.getAllTanks()) {
             FluidType type = tank.getTankType();
             list.add(new Object[] {
                     type.getConditionalName(),

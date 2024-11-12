@@ -6,21 +6,19 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.CentrifugeRecipes;
 import com.hbm.inventory.CrystallizerRecipes;
 import com.hbm.inventory.ShredderRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.packet.LoopedSoundPacket;
@@ -43,8 +41,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -52,11 +49,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardSender, IMiningDrill {
+public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardSender, IMiningDrill, IFFtoNTMF {
 
 	public long power;
 	public static final long maxPower = 100000000;
 	public static final int consumption = 10000;
+	public FluidTankNTM tankNew;
 	public FluidTank tank;
 
 	public boolean isOn;
@@ -70,6 +68,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	boolean lock = false;
 	double breakProgress;
 	private UpgradeManager manager;
+	private static boolean converted = false;
 
 	public TileEntityMachineMiningLaser() {
 		super(0);
@@ -89,7 +88,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		};
-		tank = new FluidTank(Fluids.OIL, 64000, 0);
+		tankNew = new FluidTankNTM(Fluids.OIL, 64000, 0);
+		tank = new FluidTank(64000);
 	}
 
 	@Override
@@ -100,16 +100,19 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-
+			if(!converted){
+				convertAndSetFluid(ModForgeFluids.oil, tank, tankNew);
+				converted = true;
+			}
 			this.trySubscribe(world, pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP);
 
-			this.sendFluid(tank, world, pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X);
-			this.sendFluid(tank, world, pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X);
-			this.sendFluid(tank, world, pos.getX(), pos.getY() + 2, pos.getZ(), Library.POS_Z);
-			this.sendFluid(tank, world, pos.getX(), pos.getY() - 2, pos.getZ(), Library.NEG_Z);
+			this.sendFluid(tankNew, world, pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X);
+			this.sendFluid(tankNew, world, pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X);
+			this.sendFluid(tankNew, world, pos.getX(), pos.getY() + 2, pos.getZ(), Library.POS_Z);
+			this.sendFluid(tankNew, world, pos.getX(), pos.getY() - 2, pos.getZ(), Library.NEG_Z);
 
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
-			tank.updateTank(pos.getX(), pos.getY(), pos.getZ(), this.world.provider.getDimension());
+			tankNew.updateTank(pos.getX(), pos.getY(), pos.getZ(), this.world.provider.getDimension());
 
 			//reset progress if the position changes
 			if(lastTargetX != targetX ||
@@ -360,11 +363,11 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			
 			if(item.getItem().getItem() == Item.getItemFromBlock(ModBlocks.ore_oil)) {
 
-				tank.setTankType(Fluids.OIL); //just to be sure
+				tankNew.setTankType(Fluids.OIL); //just to be sure
 
-				tank.setFill(tank.getFill() + 500);
-				if(tank.getFill() > tank.getMaxFill())
-					tank.setFill(tank.getMaxFill());
+				tankNew.setFill(tankNew.getFill() + 500);
+				if(tankNew.getFill() > tankNew.getMaxFill())
+					tankNew.setFill(tankNew.getMaxFill());
 
 				item.setDead();
 				continue;
@@ -608,13 +611,18 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		tank.readFromNBT(compound, "oil");
+		if(!converted) {
+			tank.readFromNBT(compound.getCompoundTag("tank"));
+		} else {
+			tankNew.readFromNBT(compound, "oil");
+			if(compound.hasKey("tank")) compound.removeTag("tank");
+		}
 		isOn = compound.getBoolean("isOn");
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		tank.writeToNBT(compound, "oil");
+		if(!converted) compound.setTag("tank", tank.writeToNBT(new NBTTagCompound())); else tankNew.writeToNBT(compound, "oil");
 		compound.setBoolean("isOn", isOn);
 		return super.writeToNBT(compound);
 	}
@@ -630,12 +638,12 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 }

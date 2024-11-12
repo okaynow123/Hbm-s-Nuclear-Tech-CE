@@ -3,11 +3,14 @@ package com.hbm.tileentity.machine;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.forgefluid.FFUtils;
+import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerHeaterHeatex;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.gui.GUIHeaterHeatex;
 import com.hbm.lib.DirPos;
@@ -24,26 +27,40 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHeatSource, IControlReceiver, IGUIProvider, IFluidStandardTransceiver, INBTPacketReceiver, ITickable {
+public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHeatSource, IControlReceiver, IGUIProvider, IFluidStandardTransceiver, INBTPacketReceiver, ITickable, IFFtoNTMF {
 
+    public FluidTankNTM[] tanksNew;
     public FluidTank[] tanks;
+    public Fluid[] tankTypes;
 
     public int amountToCool = 1;
     public int tickDelay = 1;
     public int heatGen;
     public int heatEnergy;
+    private boolean converted;
 
     public TileEntityHeaterHeatex() {
         super(1);
 
+        this.tanksNew = new FluidTankNTM[2];
+        this.tanksNew[0] = new FluidTankNTM(Fluids.COOLANT_HOT, 24_000, 0);
+        this.tanksNew[1] = new FluidTankNTM(Fluids.COOLANT, 24_000, 1);
+
         this.tanks = new FluidTank[2];
-        this.tanks[0] = new FluidTank(Fluids.COOLANT_HOT, 24_000, 0);
-        this.tanks[1] = new FluidTank(Fluids.COOLANT, 24_000, 1);
+        this.tankTypes = new Fluid[2];
+
+        this.tanks[0] = new FluidTank(ModForgeFluids.coolant_hot, 0, 24_000);
+        this.tankTypes[0] = ModForgeFluids.coolant_hot;
+        this.tanks[1] = new FluidTank(ModForgeFluids.coolant, 0, 24_000);
+        this.tankTypes[1] = ModForgeFluids.coolant;
     }
 
     @Override
@@ -55,33 +72,36 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
     public void update() {
 
         if (!world.isRemote) {
-
+            if(!converted){
+                convertAndSetFluids(tankTypes, tanks, tanksNew);
+                converted = true;
+            }
             // first, update current tank settings
-            this.tanks[0].setType(0, inventory);
+            this.tanksNew[0].setType(0, inventory);
             this.setupTanks();
             this.updateConnections();
 
             this.heatEnergy *= 0.999;
 
             NBTTagCompound data = new NBTTagCompound();
-            tanks[0].writeToNBT(data, "0");
+            tanksNew[0].writeToNBT(data, "0");
             this.tryConvert();
-            tanks[1].writeToNBT(data, "1");
+            tanksNew[1].writeToNBT(data, "1");
             data.setInteger("heat", heatEnergy);
             data.setInteger("toCool", amountToCool);
             data.setInteger("delay", tickDelay);
             INBTPacketReceiver.networkPack(this, data, 25);
 
             for(DirPos pos : getConPos()) {
-                if(this.tanks[1].getFill() > 0) this.sendFluid(tanks[1], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                if(this.tanksNew[1].getFill() > 0) this.sendFluid(tanksNew[1], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
         }
     }
 
     @Override
     public void networkUnpack(NBTTagCompound nbt) {
-        tanks[0].readFromNBT(nbt, "0");
-        tanks[1].readFromNBT(nbt, "1");
+        tanksNew[0].readFromNBT(nbt, "0");
+        tanksNew[1].readFromNBT(nbt, "1");
         this.heatEnergy = nbt.getInteger("heat");
         this.amountToCool = nbt.getInteger("toCool");
         this.tickDelay = nbt.getInteger("delay");
@@ -89,40 +109,40 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
 
     protected void setupTanks() {
 
-        if(tanks[0].getTankType().hasTrait(FT_Coolable.class)) {
-            FT_Coolable trait = tanks[0].getTankType().getTrait(FT_Coolable.class);
+        if(tanksNew[0].getTankType().hasTrait(FT_Coolable.class)) {
+            FT_Coolable trait = tanksNew[0].getTankType().getTrait(FT_Coolable.class);
             if(trait.getEfficiency(FT_Coolable.CoolingType.HEATEXCHANGER) > 0) {
-                tanks[1].setTankType(trait.coolsTo);
+                tanksNew[1].setTankType(trait.coolsTo);
                 return;
             }
         }
 
-        tanks[0].setTankType(Fluids.NONE);
-        tanks[1].setTankType(Fluids.NONE);
+        tanksNew[0].setTankType(Fluids.NONE);
+        tanksNew[1].setTankType(Fluids.NONE);
     }
 
     protected void updateConnections() {
 
         for(DirPos pos : getConPos()) {
-            this.trySubscribe(tanks[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            this.trySubscribe(tanksNew[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
         }
     }
 
     protected void tryConvert() {
 
-        if(!tanks[0].getTankType().hasTrait(FT_Coolable.class)) return;
+        if(!tanksNew[0].getTankType().hasTrait(FT_Coolable.class)) return;
         if(tickDelay < 1) tickDelay = 1;
         if(world.getTotalWorldTime() % tickDelay != 0) return;
 
-        FT_Coolable trait = tanks[0].getTankType().getTrait(FT_Coolable.class);
+        FT_Coolable trait = tanksNew[0].getTankType().getTrait(FT_Coolable.class);
 
-        int inputOps = tanks[0].getFill() / trait.amountReq;
-        int outputOps = (tanks[1].getMaxFill() - tanks[1].getFill()) / trait.amountProduced;
+        int inputOps = tanksNew[0].getFill() / trait.amountReq;
+        int outputOps = (tanksNew[1].getMaxFill() - tanksNew[1].getFill()) / trait.amountProduced;
         int opCap = this.amountToCool;
 
         int ops = Math.min(inputOps, Math.min(outputOps, opCap));
-        tanks[0].setFill(tanks[0].getFill() - trait.amountReq * ops);
-        tanks[1].setFill(tanks[1].getFill() + trait.amountProduced * ops);
+        tanksNew[0].setFill(tanksNew[0].getFill() - trait.amountReq * ops);
+        tanksNew[1].setFill(tanksNew[1].getFill() + trait.amountProduced * ops);
         this.heatEnergy += trait.heatEnergy * ops * trait.getEfficiency(FT_Coolable.CoolingType.HEATEXCHANGER);
         this.markDirty();
     }
@@ -142,9 +162,21 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-
-        this.tanks[0].readFromNBT(nbt, "0");
-        this.tanks[1].readFromNBT(nbt, "1");
+        if(!converted){
+            if (nbt.hasKey("tanks")) {
+                FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
+            }
+            if(nbt.hasKey("tankTypes0")) tankTypes[0] = FluidRegistry.getFluid(nbt.getString("tankTypes0"));
+            if(nbt.hasKey("tankTypes1")) tankTypes[1] = FluidRegistry.getFluid(nbt.getString("tankTypes1"));
+        } else {
+            this.tanksNew[0].readFromNBT(nbt, "0");
+            this.tanksNew[1].readFromNBT(nbt, "1");
+            if (nbt.hasKey("tanks")) {
+                nbt.removeTag("tanks");
+                nbt.removeTag("tankTypes0");
+                nbt.removeTag("tankTypes1");
+            }
+        }
         this.heatEnergy = nbt.getInteger("heatEnergy");
         this.amountToCool = nbt.getInteger("toCool");
         this.tickDelay = nbt.getInteger("delay");
@@ -153,9 +185,14 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-
-        this.tanks[0].writeToNBT(nbt, "0");
-        this.tanks[1].writeToNBT(nbt, "1");
+        if(!converted) {
+            nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
+            nbt.setString("tankTypes0", tankTypes[0].getName());
+            nbt.setString("tankTypes1", tankTypes[1].getName());
+        } else {
+            this.tanksNew[0].writeToNBT(nbt, "0");
+            this.tanksNew[1].writeToNBT(nbt, "1");
+        }
         nbt.setInteger("heatEnergy", heatEnergy);
         nbt.setInteger("toCool", amountToCool);
         nbt.setInteger("delay", tickDelay);
@@ -173,18 +210,18 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
-        return tanks;
+    public FluidTankNTM[] getAllTanks() {
+        return tanksNew;
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] {tanks[1]};
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] {tanksNew[1]};
     }
 
     @Override
-    public FluidTank[] getReceivingTanks() {
-        return new FluidTank[] {tanks[0]};
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] {tanksNew[0]};
     }
 
     @Override
@@ -230,7 +267,7 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
 
     @Override
     public void receiveControl(NBTTagCompound data) {
-        if(data.hasKey("toCool")) this.amountToCool = MathHelper.clamp(data.getInteger("toCool"), 1, tanks[0].getMaxFill());
+        if(data.hasKey("toCool")) this.amountToCool = MathHelper.clamp(data.getInteger("toCool"), 1, tanksNew[0].getMaxFill());
         if(data.hasKey("delay")) this.tickDelay = Math.max(data.getInteger("delay"), 1);
 
         this.markDirty();

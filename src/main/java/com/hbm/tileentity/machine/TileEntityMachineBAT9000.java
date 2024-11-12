@@ -26,7 +26,7 @@ public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 	
 	@Override
 	public void checkFluidInteraction() {
-		if(tank.getTankType().isAntimatter()) {
+		if(tankNew.getTankType().isAntimatter()) {
 			world.destroyBlock(pos, false);
 			world.newExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 10, true, true);
 		}
@@ -44,18 +44,6 @@ public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 				new DirPos(pos.getX() + 3, pos.getY(), pos.getZ() - 1, Library.POS_X),
 				new DirPos(pos.getX() - 3, pos.getY(), pos.getZ() - 1, Library.NEG_X)
 		};
-	}
-
-	@Override
-	public void fillFluidInit(FluidType type) {
-		fillFluid(this.pos.getX() + 1, this.pos.getY(), this.pos.getZ() + 3, getTact(), type);
-		fillFluid(this.pos.getX() - 1, this.pos.getY(), this.pos.getZ() + 3, getTact(), type);
-		fillFluid(this.pos.getX() + 1, this.pos.getY(), this.pos.getZ() - 3, getTact(), type);
-		fillFluid(this.pos.getX() - 1, this.pos.getY(), this.pos.getZ() - 3, getTact(), type);
-		fillFluid(this.pos.getX() + 3, this.pos.getY(), this.pos.getZ() + 1, getTact(), type);
-		fillFluid(this.pos.getX() - 3, this.pos.getY(), this.pos.getZ() + 1, getTact(), type);
-		fillFluid(this.pos.getX() + 3, this.pos.getY(), this.pos.getZ() - 1, getTact(), type);
-		fillFluid(this.pos.getX() - 3, this.pos.getY(), this.pos.getZ() - 1, getTact(), type);
 	}
 	
 	AxisAlignedBB bb = null;

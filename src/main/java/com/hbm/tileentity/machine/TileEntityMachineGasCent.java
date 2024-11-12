@@ -1,29 +1,19 @@
 package com.hbm.tileentity.machine;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.forgefluid.FFUtils;
+import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.GasCentrifugeRecipes;
-import com.hbm.inventory.MachineRecipes;
-import com.hbm.inventory.MachineRecipes.GasCentOutput;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.AuxElectricityPacket;
-import com.hbm.packet.AuxGaugePacket;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.LoopedSoundPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityMachineBase;
 
 import com.hbm.util.BufferUtil;
@@ -35,13 +25,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityMachineGasCent extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver {
+public class TileEntityMachineGasCent extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IFFtoNTMF {
 
 	
 	public long power;
@@ -51,13 +40,18 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	public static final int processingSpeed = 150;
 	public boolean needsUpdate = false;
 	
+	public FluidTankNTM tankNew;
 	public FluidTank tank;
+	public Fluid oldFluid;
 	public PseudoFluidTank inputTank;
 	public PseudoFluidTank outputTank;
+
+	private static boolean converted = false;
 	
 	public TileEntityMachineGasCent() {
 		super(9);
-		tank = new FluidTank(Fluids.UF6, 2000);
+		tank = new FluidTank(8000);
+		tankNew = new FluidTankNTM(Fluids.UF6, 2000);
 		inputTank = new PseudoFluidTank(GasCentrifugeRecipes.PseudoFluidType.NUF6, 8000);
 		outputTank = new PseudoFluidTank(GasCentrifugeRecipes.PseudoFluidType.LEUF6, 8000);
 	}
@@ -70,7 +64,10 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	public void readFromNBT(NBTTagCompound nbt) {
 		power = nbt.getLong("power");
 		progress = nbt.getShort("progress");
-		tank.readFromNBT(nbt, "tank");
+		if (!converted) {
+			tank.readFromNBT(nbt);
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+		} else tankNew.readFromNBT(nbt, "tank");
 		inputTank.readFromNBT(nbt, "inputTank");
 		outputTank.readFromNBT(nbt, "outputTank");
 		if(nbt.hasKey("inventory"))
@@ -83,7 +80,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setLong("power", power);
 		nbt.setShort("progress", (short) progress);
-		tank.writeToNBT(nbt, "tank");
+		if(!converted) tank.writeToNBT(nbt); else tankNew.writeToNBT(nbt, "tank");
 		inputTank.writeToNBT(nbt, "inputTank");
 		outputTank.writeToNBT(nbt, "outputTank");
 		nbt.setTag("inventory", inventory.serializeNBT());
@@ -128,10 +125,10 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	}
 
 	private void attemptConversion() {
-		if(inputTank.getFill() < inputTank.getMaxFill() && tank.getFill() > 0) {
-			int fill = Math.min(inputTank.getMaxFill() - inputTank.getFill(), tank.getFill());
+		if(inputTank.getFill() < inputTank.getMaxFill() && tankNew.getFill() > 0) {
+			int fill = Math.min(inputTank.getMaxFill() - inputTank.getFill(), tankNew.getFill());
 
-			tank.setFill(tank.getFill() - fill);
+			tankNew.setFill(tankNew.getFill() - fill);
 			inputTank.setFill(inputTank.getFill() + fill);
 		}
 	}
@@ -140,7 +137,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		if(te instanceof TileEntityMachineGasCent) {
 			TileEntityMachineGasCent cent = (TileEntityMachineGasCent) te;
 
-			if(cent.tank.getFill() == 0 && cent.tank.getTankType() == tank.getTankType()) {
+			if(cent.tankNew.getFill() == 0 && cent.tankNew.getTankType() == tankNew.getTankType()) {
 				if(cent.inputTank.getTankType() != outputTank.getTankType() && outputTank.getTankType() != GasCentrifugeRecipes.PseudoFluidType.NONE) {
 					cent.inputTank.setTankType(outputTank.getTankType());
 					cent.outputTank.setTankType(outputTank.getTankType().getOutputType());
@@ -165,7 +162,10 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	public void update() {
 		
 		if(!world.isRemote) {
-
+			if(!converted){
+				convertAndSetFluid(oldFluid, tank, tankNew);
+				converted = true;
+			}
 			updateConnections();
 
 			power = Library.chargeTEFromItems(inventory, 4, power, maxPower);
@@ -228,7 +228,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		BufferUtil.writeString(buf, inputTank.getTankType().name); //cough cough
 		BufferUtil.writeString(buf, outputTank.getTankType().name);
 
-		tank.serialize(buf);
+		tankNew.serialize(buf);
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		inputTank.setTankType(GasCentrifugeRecipes.PseudoFluidType.types.get(BufferUtil.readString(buf)));
 		outputTank.setTankType(GasCentrifugeRecipes.PseudoFluidType.types.get(BufferUtil.readString(buf)));
 
-		tank.deserialize(buf);
+		tankNew.deserialize(buf);
 	}
 
 	private void updateConnections() {
@@ -251,7 +251,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 			this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 
 			if(GasCentrifugeRecipes.fluidConversions.containsValue(inputTank.getTankType())) {
-				this.trySubscribe(tank.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+				this.trySubscribe(tankNew.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 			}
 		}
 	}
@@ -272,13 +272,13 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 			IItemFluidIdentifier id = (IItemFluidIdentifier) inventory.getStackInSlot(in).getItem();
 			FluidType newType = id.getType(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(in));
 
-			if(tank.getTankType() != newType) {
+			if(tankNew.getTankType() != newType) {
 				GasCentrifugeRecipes.PseudoFluidType pseudo = GasCentrifugeRecipes.fluidConversions.get(newType);
 
 				if(pseudo != null) {
 					inputTank.setTankType(pseudo);
 					outputTank.setTankType(pseudo.getOutputType());
-					tank.setTankType(newType);
+					tankNew.setTankType(newType);
 				}
 			}
 
@@ -324,13 +324,13 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] { tank };
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {tankNew};
 	}
 
 	public class PseudoFluidTank {

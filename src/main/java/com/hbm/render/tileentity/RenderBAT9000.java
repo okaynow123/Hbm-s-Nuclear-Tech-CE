@@ -34,7 +34,7 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
 		ResourceManager.bat9000.renderAll();
 		GL11.glShadeModel(GL11.GL_FLAT);
 
-		FluidType type = bat.tank.getTankType();
+		FluidType type = bat.tankNew.getTankType();
 
 		if(type != null && type != Fluids.NONE) {
 
@@ -66,7 +66,7 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
 		GL11.glColor3f(1F, 1F, 1F);
 		Tessellator tess = Tessellator.instance;
 
-		double height = bat.tank.getFill() * 1.5D / bat.tank.getMaxFill();
+		double height = bat.tankNew.getFill() * 1.5D / bat.tankNew.getMaxFill();
 		double off = 2.2;
 
 		tess.startDrawingQuads();

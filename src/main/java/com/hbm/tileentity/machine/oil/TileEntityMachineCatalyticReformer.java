@@ -8,7 +8,7 @@ import com.hbm.inventory.container.ContainerMachineCatalyticReformer;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineCatalyticReformer;
 import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
@@ -34,16 +34,16 @@ public class TileEntityMachineCatalyticReformer extends TileEntityMachineBase im
     public long power;
     public static final long maxPower = 1_000_000;
 
-    public FluidTank[] tanks;
+    public FluidTankNTM[] tanks;
 
     public TileEntityMachineCatalyticReformer() {
         super(11);
 
-        this.tanks = new FluidTank[4];
-        this.tanks[0] = new FluidTank(Fluids.NAPHTHA, 64_000);
-        this.tanks[1] = new FluidTank(Fluids.REFORMATE, 24_000);
-        this.tanks[2] = new FluidTank(Fluids.PETROLEUM, 24_000);
-        this.tanks[3] = new FluidTank(Fluids.HYDROGEN, 24_000);
+        this.tanks = new FluidTankNTM[4];
+        this.tanks[0] = new FluidTankNTM(Fluids.NAPHTHA, 64_000);
+        this.tanks[1] = new FluidTankNTM(Fluids.REFORMATE, 24_000);
+        this.tanks[2] = new FluidTankNTM(Fluids.PETROLEUM, 24_000);
+        this.tanks[3] = new FluidTankNTM(Fluids.HYDROGEN, 24_000);
     }
 
     @Override
@@ -204,18 +204,18 @@ public class TileEntityMachineCatalyticReformer extends TileEntityMachineBase im
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
+    public FluidTankNTM[] getAllTanks() {
         return tanks;
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] {tanks[1], tanks[2], tanks[3]};
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] {tanks[1], tanks[2], tanks[3]};
     }
 
     @Override
-    public FluidTank[] getReceivingTanks() {
-        return new FluidTank[] {tanks[0]};
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] {tanks[0]};
     }
 
     @Override

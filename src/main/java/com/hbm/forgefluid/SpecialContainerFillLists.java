@@ -67,7 +67,7 @@ public class SpecialContainerFillLists {
 			return false;
 		}
 		public static EnumCanister getEnumFromFluid(FluidType f){
-			if(f == null)
+			if(f == null || f == Fluids.NONE)
 				return EnumCanister.EMPTY;
 			for(EnumCanister e : EnumCanister.values()){
 				if(e.getFluid() == f){

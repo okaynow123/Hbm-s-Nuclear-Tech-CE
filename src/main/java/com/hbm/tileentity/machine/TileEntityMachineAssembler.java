@@ -23,6 +23,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -187,6 +188,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 			int meta = this.getBlockMetadata();
 			TileEntity te = null;
 			TileEntity te2 = null;
+			boolean canFill;
 			if(meta == 2) {
 				te2 = world.getTileEntity(pos.add(-2, 0, 0));
 				te = world.getTileEntity(pos.add(3, 0, -1));
@@ -203,6 +205,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 				te2 = world.getTileEntity(pos.add(0, 0, -2));
 				te = world.getTileEntity(pos.add(1, 0, 3));
 			}
+			canFill = !(te2 instanceof TileEntityDummyPort);
 
 			if(!isProgressing){
 				tryExchangeTemplates(te, te2);
@@ -228,10 +231,12 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 						tryFillAssemblerCap(cap, slots, (TileEntityMachineBase)te2);
 					}
 					else if(cap != null){
-						slots = new int[cap.getSlots()];
-						for(int i = 0; i< slots.length; i++)
-							slots[i] = i;
-						tryFillAssemblerCap(cap, slots, null);
+						if(canFill) {
+							slots = new int[cap.getSlots()];
+							for (int i = 0; i < slots.length; i++)
+								slots[i] = i;
+							tryFillAssemblerCap(cap, slots, null);
+						}
 					}
 					
 				}

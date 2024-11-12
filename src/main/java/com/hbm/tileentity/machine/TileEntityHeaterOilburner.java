@@ -2,23 +2,17 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.tile.IHeatSource;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.inventory.FluidCombustionRecipes;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
-import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIOilburner;
-import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 
@@ -26,27 +20,23 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-
-public class TileEntityHeaterOilburner extends TileEntityMachineBase implements IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, ITickable {
+public class TileEntityHeaterOilburner extends TileEntityMachineBase implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF {
     public boolean isOn = false;
 
+    public FluidTankNTM tankNew;
     public FluidTank tank;
+    public Fluid fluidType;
 
     private int cacheHeat = 0;
 
@@ -55,18 +45,21 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     public int heatEnergy = 0;
 
     public static final int maxHeatEnergy = 1_000_000;
-    public FluidTank smoke;
-    public FluidTank smoke_leaded;
-    public FluidTank smoke_poison;
+    public FluidTankNTM smoke;
+    public FluidTankNTM smoke_leaded;
+    public FluidTankNTM smoke_poison;
     public int buffer;
+    private static boolean converted = false;
 
     public TileEntityHeaterOilburner() {
         super(3);
 
-        tank = new FluidTank(Fluids.HEATINGOIL, 16000);
-        smoke = new FluidTank(Fluids.SMOKE, buffer);
-        smoke_leaded = new FluidTank(Fluids.SMOKE_LEADED, buffer);
-        smoke_poison = new FluidTank(Fluids.SMOKE_POISON, buffer);
+        tankNew = new FluidTankNTM(Fluids.HEATINGOIL, 16000);
+        tank = new FluidTank(16000);
+        fluidType = ModForgeFluids.gas;
+        smoke = new FluidTankNTM(Fluids.SMOKE, buffer);
+        smoke_leaded = new FluidTankNTM(Fluids.SMOKE_LEADED, buffer);
+        smoke_poison = new FluidTankNTM(Fluids.SMOKE_POISON, buffer);
     }
 
     public DirPos[] getConPos() {
@@ -82,25 +75,28 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     public void update() {
 
         if(!world.isRemote) {
-
-            tank.loadTank(0, 1, inventory);
-            tank.setType(2, inventory);
+            if(!converted){
+                convertAndSetFluid(fluidType, tank, tankNew);
+                converted = true;
+            }
+            tankNew.loadTank(0, 1, inventory);
+            tankNew.setType(2, inventory);
 
             for(DirPos pos : this.getConPos()) {
-                this.trySubscribe(tank.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                this.trySubscribe(tankNew.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             boolean shouldCool = true;
 
             if(this.isOn && this.heatEnergy < maxHeatEnergy) {
 
-                if(tank.getTankType().hasTrait(FT_Flammable.class)) {
-                    FT_Flammable type = tank.getTankType().getTrait(FT_Flammable.class);
+                if(tankNew.getTankType().hasTrait(FT_Flammable.class)) {
+                    FT_Flammable type = tankNew.getTankType().getTrait(FT_Flammable.class);
 
                     int burnRate = setting;
-                    int toBurn = Math.min(burnRate, tank.getFill());
+                    int toBurn = Math.min(burnRate, tankNew.getFill());
 
-                    tank.setFill(tank.getFill() - toBurn);
+                    tankNew.setFill(tankNew.getFill() - toBurn);
 
                     int heat = (int)(type.getHeatEnergy() / 1000);
 
@@ -123,7 +119,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
-        tank.serialize(buf);
+        tankNew.serialize(buf);
 
         buf.writeBoolean(isOn);
         buf.writeInt(heatEnergy);
@@ -133,7 +129,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
-        tank.deserialize(buf);
+        tankNew.deserialize(buf);
 
         isOn = buf.readBoolean();
         heatEnergy = buf.readInt();
@@ -148,7 +144,13 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        tank.readFromNBT(nbt, "tank");
+        if(!converted){
+            tank.readFromNBT(nbt);
+            if(nbt.hasKey("fluidType")) fluidType = FluidRegistry.getFluid(nbt.getString("fluidType"));
+        } else{
+            tankNew.readFromNBT(nbt, "tank");
+            if(nbt.hasKey("fluidType")) nbt.removeTag("fluidType");
+        }
         isOn = nbt.getBoolean("isOn");
         heatEnergy = nbt.getInteger("heatEnergy");
         setting = nbt.getByte("setting");
@@ -156,12 +158,16 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-        tank.writeToNBT(nbt, "tank");
+        if(!converted){
+            tank.writeToNBT(nbt);
+            if(fluidType != null) {
+                nbt.setString("fluidType", fluidType.getName());
+            }
+        } else tankNew.writeToNBT(nbt, "tank");
         nbt.setBoolean("isOn", isOn);
         nbt.setInteger("heatEnergy", heatEnergy);
         nbt.setByte("setting", (byte) this.setting);
-        return nbt;
+        return super.writeToNBT(nbt);
     }
 
     public void toggleSettingUp() {
@@ -181,8 +187,8 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     }
 
     @Override
-    public FluidTank[] getReceivingTanks()  {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getReceivingTanks()  {
+        return new FluidTankNTM[] {tankNew};
     }
 
     @Override
@@ -245,12 +251,12 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getAllTanks() {
+        return new FluidTankNTM[] {tankNew};
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] {smoke, smoke_leaded, smoke_poison};
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] {smoke, smoke_leaded, smoke_poison};
     }
 }

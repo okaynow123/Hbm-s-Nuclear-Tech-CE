@@ -6,17 +6,16 @@ import api.hbm.fluid.IFillableItem;
 import com.hbm.inventory.fluid.FluidType;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class FluidLoaderFillableItem extends FluidLoadingHandler {
 
 	@Override
-	public boolean fillItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		return fill(slots.getStackInSlot(in), tank);
 	}
 	
-	public boolean fill(ItemStack stack, FluidTank tank) {
+	public boolean fill(ItemStack stack, FluidTankNTM tank) {
 		
 		if(tank.pressure != 0) return false;
 		
@@ -46,11 +45,11 @@ public class FluidLoaderFillableItem extends FluidLoadingHandler {
 	}
 
 	@Override
-	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		return empty(slots.getStackInSlot(in), tank);
 	}
 	
-	public boolean empty(ItemStack stack, FluidTank tank) {
+	public boolean empty(ItemStack stack, FluidTankNTM tank) {
 
 		FluidType type = tank.getTankType();
 		

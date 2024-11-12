@@ -5,7 +5,7 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.inventory.RefineryRecipes;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -28,16 +28,17 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 	public static final int maxSulfur = 100;
 	public static final long maxPower = 1000;
 	public boolean isOn;
-	public FluidTank[] tanks;
+	public FluidTankNTM[] tanks;
+	public boolean converted = false;
 
 	public TileEntityMachineRefinery() {
-		super(12);
-		tanks = new FluidTank[5];
-		tanks[0] = new FluidTank(Fluids.HOTOIL, 64_000);
-		tanks[1] = new FluidTank(Fluids.HEAVYOIL, 24_000);
-		tanks[2] = new FluidTank(Fluids.NAPHTHA, 24_000);
-		tanks[3] = new FluidTank(Fluids.LIGHTOIL, 24_000);
-		tanks[4] = new FluidTank(Fluids.PETROLEUM, 24_000);
+		super(13);
+		tanks = new FluidTankNTM[5];
+		tanks[0] = new FluidTankNTM(Fluids.HOTOIL, 64_000);
+		tanks[1] = new FluidTankNTM(Fluids.HEAVYOIL, 24_000);
+		tanks[2] = new FluidTankNTM(Fluids.NAPHTHA, 24_000);
+		tanks[3] = new FluidTankNTM(Fluids.LIGHTOIL, 24_000);
+		tanks[4] = new FluidTankNTM(Fluids.PETROLEUM, 24_000);
 	}
 
 	public String getName() {
@@ -74,6 +75,9 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 
 	@Override
 	public void update() {
+		if(!converted){
+			resizeInventory(13);
+		}
 		if (!world.isRemote) {
 			this.updateConnections();
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
@@ -205,17 +209,17 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 	public double getMaxRenderDistanceSquared() {return 65536.0D;}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] { tanks[1], tanks[2], tanks[3], tanks[4] };
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] { tanks[1], tanks[2], tanks[3], tanks[4] };
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] { tanks[0] };
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] { tanks[0] };
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
+	public FluidTankNTM[] getAllTanks() {
 		return tanks;
 	}
 }

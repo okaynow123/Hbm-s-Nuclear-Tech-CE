@@ -5,7 +5,7 @@ import com.hbm.blocks.IPersistentInfoProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.oil.TileEntityMachineCatalyticReformer;
@@ -27,10 +27,6 @@ public class MachineCatalyticReformer extends BlockDummyable implements IPersist
 
     public MachineCatalyticReformer(Material mat, String s) {
         super(mat, s);
-        this.setUnlocalizedName(s);
-        this.setRegistryName(s);
-
-        ModBlocks.ALL_BLOCKS.add(this);
     }
 
     @Override
@@ -82,7 +78,7 @@ public class MachineCatalyticReformer extends BlockDummyable implements IPersist
     public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {
 
         for(int i = 0; i < 4; i++) {
-            FluidTank tank = new FluidTank(Fluids.NONE, 0);
+            FluidTankNTM tank = new FluidTankNTM(Fluids.NONE, 0);
             tank.readFromNBT(persistentTag, "" + i);
             list.add(ChatFormatting.YELLOW + "" + tank.getFill() + "/" + tank.getMaxFill() + "mB " + tank.getTankType().getLocalizedName());
         }

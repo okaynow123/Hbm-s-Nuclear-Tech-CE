@@ -26,20 +26,6 @@ public class TileEntityMachineOrbus extends TileEntityBarrel {
 	@Override
 	public void checkFluidInteraction() { } //NO!
 
-	@Override
-	public void fillFluidInit(FluidType type) {
-
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
-		ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
-
-		for(int i = -1; i < 6; i += 6) {
-			this.fillFluid(pos.getX(), pos.getY() + i, pos.getZ(), this.getTact(), this.tank.getTankType());
-			this.fillFluid(pos.getX() + dir.offsetX, pos.getY() + i, pos.getZ() + dir.offsetZ, this.getTact(), this.tank.getTankType());
-			this.fillFluid(pos.getX() + rot.offsetX, pos.getY() + i, pos.getZ() + rot.offsetZ, this.getTact(), this.tank.getTankType());
-			this.fillFluid(pos.getX() + dir.offsetX + rot.offsetX, pos.getY() + i, pos.getZ() + dir.offsetZ + rot.offsetZ, this.getTact(), this.tank.getTankType());
-		}
-	}
-
 	protected DirPos[] conPos;
 
 	@Override

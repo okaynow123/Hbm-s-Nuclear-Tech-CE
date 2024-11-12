@@ -2,7 +2,6 @@ package com.hbm.tileentity.machine.oil;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardSender;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidSource;
 import com.hbm.inventory.LiquefactionRecipes;
@@ -11,7 +10,7 @@ import com.hbm.inventory.container.ContainerLiquefactor;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUILiquefactor;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
@@ -43,13 +42,13 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     public boolean needsUpdate = false;
     public int processTime;
 
-    public FluidTank tank;
+    public FluidTankNTM tank;
 
     private final UpgradeManager upgradeManager = new UpgradeManager();
 
     public TileEntityMachineLiquefactor() {
         super(4);
-        tank = new FluidTank(Fluids.NONE, 24000, 0);
+        tank = new FluidTankNTM(Fluids.NONE, 24000, 0);
     }
 
     @Override
@@ -279,13 +278,13 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     }
 
     @Override
-    public FluidTank[] getSendingTanks() {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] { tank };
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getAllTanks() {
+        return new FluidTankNTM[] { tank };
     }
 
 

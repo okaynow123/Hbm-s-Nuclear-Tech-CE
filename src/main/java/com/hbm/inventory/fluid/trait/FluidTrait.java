@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.*;
 
 import net.minecraft.world.World;
@@ -22,6 +22,7 @@ public abstract class FluidTrait {
 		registerTrait("corrosive", FT_Corrosive.class);
 		registerTrait("flammable", FT_Flammable.class);
 		registerTrait("combustible", FT_Combustible.class);
+		registerTrait("polluting", FT_Polluting.class);
 		registerTrait("heatable", FT_Heatable.class);
 		registerTrait("coolable", FT_Coolable.class);
 		registerTrait("pwrmoderator", FT_PWRModerator.class);
@@ -53,7 +54,7 @@ public abstract class FluidTrait {
 	/* General names of simple traits which are displayed when holding shift */
 	public void addInfoHidden(List<String> info) { }
 	
-	public void onFluidRelease(World world, int x, int y, int z, FluidTank tank, int overflowAmount, FluidReleaseType type) { }
+	public void onFluidRelease(World world, int x, int y, int z, FluidTankNTM tank, int overflowAmount, FluidReleaseType type) { }
 
 	public void serializeJSON(JsonWriter writer) throws IOException { }
 	public void deserializeJSON(JsonObject obj) { }

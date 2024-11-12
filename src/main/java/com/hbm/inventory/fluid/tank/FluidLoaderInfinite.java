@@ -13,7 +13,7 @@ public class FluidLoaderInfinite extends FluidLoadingHandler {
 	private static Random rand = new Random();
 
 	@Override
-	public boolean fillItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		
 		if(slots.getStackInSlot(in) == ItemStack.EMPTY || !(slots.getStackInSlot(in).getItem() instanceof ItemFluidContainerInfinite)) return false;
 
@@ -30,7 +30,7 @@ public class FluidLoaderInfinite extends FluidLoadingHandler {
 	}
 
 	@Override
-	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTank tank) {
+	public boolean emptyItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
 		
 		if(slots.getStackInSlot(in) == ItemStack.EMPTY || !(slots.getStackInSlot(in).getItem() instanceof ItemFluidContainerInfinite) || tank.getTankType() == Fluids.NONE) return false;
 

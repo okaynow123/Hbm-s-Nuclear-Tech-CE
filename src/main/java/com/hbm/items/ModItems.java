@@ -477,12 +477,18 @@ public class ModItems {
 	public static final Item upgrade_stack_3 = new ItemMachineUpgrade("upgrade_stack_3", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	
 	//Fluid handling items
+	public static final Item canister_empty = new ItemCustomLore("canister_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item canister_generic = new ItemFluidCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
 	public static final Item canister_napalm = new ItemCustomLore("canister_napalm").setCreativeTab(MainRegistry.controlTab);
-	
-	public static final Item gas_canister = new ItemGasCanister("gas_empty", 4000).setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item gas_empty = new ItemBase("gas_empty").setCreativeTab(MainRegistry.controlTab);
+	public static final Item gas_full = new ItemGasCanister("gas_full").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.gas_empty);
 	public static final Item cell = new ItemCell("cell").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item fluid_tank_empty = new ItemBase("fluid_tank_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item fluid_tank_full = new ItemFluidTank("fluid_tank_full", 1000).setCreativeTab(MainRegistry.controlTab);
+	public static final Item fluid_tank_lead_empty = new ItemBase("fluid_tank_lead_empty").setCreativeTab(MainRegistry.controlTab);
+	public static final Item fluid_tank_lead_full = new ItemFluidTank("fluid_tank_lead_full", 1000).setCreativeTab(MainRegistry.controlTab);
+	public static final Item fluid_barrel_empty = new ItemBase("fluid_barrel_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item fluid_barrel_full = new ItemFluidTank("fluid_barrel_full", 16000).setCreativeTab(MainRegistry.controlTab);
 	public static final Item fluid_barrel_infinite = new ItemFluidContainerInfinite(null, 1_000_000_000, "fluid_barrel_infinite").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item inf_water = new ItemFluidContainerInfinite(Fluids.WATER, 50, "inf_water").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
@@ -939,7 +945,9 @@ public class ModItems {
 	public static final Item ingot_polymer = new ItemCustomLore("ingot_polymer").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_bakelite = new ItemCustomLore("ingot_bakelite").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_rubber = new ItemCustomLore("ingot_rubber").setCreativeTab(MainRegistry.partsTab);
-	public static final Item ingot_biorubber = new ItemCustomLore("ingot_biorubber").setCreativeTab(MainRegistry.partsTab);	
+	public static final Item ingot_biorubber = new ItemCustomLore("ingot_biorubber").setCreativeTab(MainRegistry.partsTab);
+	public static final Item ingot_pc = new ItemCustomLore("ingot_pc").setCreativeTab(MainRegistry.partsTab);
+	public static final Item ingot_pvc = new ItemCustomLore("ingot_pvc").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_desh = new ItemCustomLore("ingot_desh").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_saturnite = new ItemCustomLore("ingot_saturnite").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_ferrouranium = new ItemHazard("ingot_ferrouranium").addRadiation(ItemHazard.u * 0.5F).toItem().setCreativeTab(MainRegistry.partsTab);
@@ -1529,6 +1537,7 @@ public class ModItems {
 	public static final Item ballistite = new ItemHazard("ballistite").addExplosive(1).toItem().setCreativeTab(MainRegistry.partsTab);
 	public static final Item ball_dynamite = new ItemHazard("ball_dynamite").addExplosive(2).toItem().setCreativeTab(MainRegistry.partsTab);
 	public static final Item ball_tnt = new ItemHazard("ball_tnt").addExplosive(3).toItem().setCreativeTab(MainRegistry.partsTab);
+	public static final Item ball_tatb = new ItemHazard("ball_tatb").addExplosive(3).toItem().setCreativeTab(MainRegistry.partsTab);
 	public static final Item ball_fireclay = new ItemBase("ball_fireclay").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_pneumatic = new ItemBase("piston_pneumatic").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_hydraulic = new ItemBase("piston_hydraulic").setCreativeTab(MainRegistry.partsTab);
@@ -1575,6 +1584,8 @@ public class ModItems {
 	
 	public static final Item coal_infernal = new ItemFuelHazard("coal_infernal", 4800, true).addCoal(10).toItem().setCreativeTab(MainRegistry.partsTab);
 	public static final Item cinnebar = new ItemBase("cinnebar").setCreativeTab(MainRegistry.partsTab);
+	public static final Item powder_ash = new ItemBase("powder_ash").setCreativeTab(MainRegistry.partsTab);
+	public static final Item powder_cement = new ItemLemon(2, 0.5F, false, "powder_cement").setCreativeTab(MainRegistry.partsTab);
 	
 	//Misc/crafting items
 	public static final Item toothpicks = new ItemBase("toothpicks").setCreativeTab(MainRegistry.partsTab);

@@ -1,7 +1,7 @@
 package api.hbm.fluid;
 
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
@@ -10,12 +10,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public interface IFluidUser extends IFluidConnector {
 
-    public default void sendFluid(FluidTank tank, World world, int x, int y, int z, ForgeDirection dir) {
+    public default void sendFluid(FluidTankNTM tank, World world, int x, int y, int z, ForgeDirection dir) {
         sendFluid(tank.getTankType(), tank.getPressure(), world, x, y, z, dir);
     }
 
@@ -87,7 +86,7 @@ public interface IFluidUser extends IFluidConnector {
     }
 
     /** Use more common conPos method instead */
-    @Deprecated public default void sendFluidToAll(FluidTank tank, TileEntity te) {
+    @Deprecated public default void sendFluidToAll(FluidTankNTM tank, TileEntity te) {
         sendFluidToAll(tank.getTankType(), tank.getPressure(), te);
     }
 
@@ -127,5 +126,5 @@ public interface IFluidUser extends IFluidConnector {
      * The array is either composed of the original tank or outright the original tank array, so changes done to this array will extend to the IFluidUser.
      * @return
      */
-    public FluidTank[] getAllTanks();
+    public FluidTankNTM[] getAllTanks();
 }

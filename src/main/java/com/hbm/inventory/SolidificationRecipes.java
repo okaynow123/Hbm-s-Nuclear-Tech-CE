@@ -64,9 +64,7 @@ public class SolidificationRecipes extends SerializableRecipe {
         registerRecipe(BIOGAS,		250,			ModItems.biomass_compressed);
         registerRecipe(SALIENT,		1280,			new ItemStack(ModItems.bio_wafer, 8)); //4 (food val) * 2 (sat mod) * 2 (constant) * 10 (quanta) * 8 (batch size)
         registerRecipe(ENDERJUICE,	100,			Items.ENDER_PEARL);
-        registerRecipe(WATZ,		1000,			ModItems.ingot_mud);
         registerRecipe(REDMUD,		1000,			Items.IRON_INGOT);
-        registerRecipe(SODIUM,		100,			ModItems.powder_sodium);
         registerRecipe(SLOP,		250,			ModBlocks.ore_oil_sand);
 
         registerRecipe(OIL,				SF_OIL,			OreDictManager.DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.CRUDE));
@@ -78,8 +76,6 @@ public class SolidificationRecipes extends SerializableRecipe {
         registerRecipe(COALCREOSOTE,	SF_CREOSOTE,	OreDictManager.DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.COAL));
         registerRecipe(WOODOIL,			SF_WOOD,		OreDictManager.DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.WOOD));
         registerRecipe(LUBRICANT,		SF_LUBE,		OreDictManager.DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.PARAFFIN));
-
-        registerRecipe(BALEFIRE,		250,			ModItems.solid_fuel_bf);
 
         registerSFAuto(SMEAR);
         registerSFAuto(HEATINGOIL);
@@ -109,7 +105,6 @@ public class SolidificationRecipes extends SerializableRecipe {
         registerSFAuto(UNSATURATEDS);
         registerSFAuto(REFORMATE);
         registerSFAuto(XYLENE);
-        registerSFAuto(BALEFIRE, 24_000_000L, ModItems.solid_fuel_bf); //holy shit this is energy dense*/
 
     }
 

@@ -24,6 +24,15 @@ public class ItemEnums {
 		TIER3
 	}
 
+	public static enum EnumAshType {
+		WOOD,
+		COAL,
+		MISC,
+		FLY,
+		SOOT,
+		FULLERENE
+	}
+
 	public static enum EnumPlantType {
 		TOBACCO,
 		ROPE,

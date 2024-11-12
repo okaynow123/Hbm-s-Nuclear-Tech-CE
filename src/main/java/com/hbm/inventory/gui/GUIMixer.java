@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerMixer;
 import com.hbm.lib.RefStrings;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.tileentity.machine.TileEntityMachineMixer;
 
 import net.minecraft.client.Minecraft;
@@ -36,7 +35,7 @@ public class GUIMixer extends GuiInfoContainer {
 		
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 23, guiTop + 22, 16, 52, mixer.getPower(), mixer.getMaxPower());
 
-		MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanks[2].getTankType());
+		MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanksNew[2].getTankType());
 
 		if(recipes != null && recipes.length > 1) {
 			List<String> label = new ArrayList();
@@ -50,9 +49,9 @@ public class GUIMixer extends GuiInfoContainer {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 22, 12, 12, mouseX, mouseY, labelArray);
 		}
 
-		mixer.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 43, guiTop + 23, 7, 52);
-		mixer.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 52, guiTop + 23, 7, 52);
-		mixer.tanks[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 117, guiTop + 23, 16, 52);
+		mixer.tanksNew[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 43, guiTop + 23, 7, 52);
+		mixer.tanksNew[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 52, guiTop + 23, 7, 52);
+		mixer.tanksNew[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 117, guiTop + 23, 16, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 

@@ -452,14 +452,14 @@ public class TileEntityMachineCyclotron extends TileEntityMachineBase implements
 		int rand = world.rand.nextInt(10);
 
 		if(rand < 2) {
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int)(BombConfig.fatmanRadius * 1.5), pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5).mute());
+			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int)(BombConfig.fatmanRadius * 1.5), pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5));
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "muke");
 			PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 250));
 			world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.mukeExplosion, SoundCategory.BLOCKS, 15.0F, 1.0F);
 		} else if(rand < 4) {
-			EntityBalefire bf = new EntityBalefire(world).mute();
+			EntityBalefire bf = new EntityBalefire(world);
 			bf.posX = pos.getX() + 0.5;
 			bf.posY = pos.getY() + 1.5;
 			bf.posZ = pos.getZ() + 0.5;

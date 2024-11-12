@@ -261,8 +261,8 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     }
 
     @Override
-    public float getGravityVelocity() {
-        return 9.81F * 0.05F;
+    public double getGravityVelocity() {
+        return 9.81 * 0.05;
     }
 
     @Override

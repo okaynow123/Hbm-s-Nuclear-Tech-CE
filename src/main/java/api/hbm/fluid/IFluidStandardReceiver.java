@@ -1,15 +1,14 @@
 package api.hbm.fluid;
 
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.tank.FluidTank;
-import net.minecraftforge.fluids.Fluid;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 
 public interface IFluidStandardReceiver extends IFluidUser {
 
     @Override
     public default long transferFluid(FluidType type, int pressure, long amount) {
 
-        for(FluidTank tank : getReceivingTanks()) {
+        for(FluidTankNTM tank : getReceivingTanks()) {
             if(tank.getTankType() == type && tank.getPressure() == pressure) {
                 tank.setFill(tank.getFill() + (int) amount);
 
@@ -26,12 +25,12 @@ public interface IFluidStandardReceiver extends IFluidUser {
         return amount;
     }
 
-    public FluidTank[] getReceivingTanks();
+    public FluidTankNTM[] getReceivingTanks();
 
     @Override
     public default long getDemand(FluidType type, int pressure) {
 
-        for(FluidTank tank : getReceivingTanks()) {
+        for(FluidTankNTM tank : getReceivingTanks()) {
             if(tank.getTankType() == type && tank.getPressure() == pressure) {
                 return tank.getMaxFill() - tank.getFill();
             }

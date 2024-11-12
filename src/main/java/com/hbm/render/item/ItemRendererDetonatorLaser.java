@@ -19,6 +19,7 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
 
     @Override
     public void renderByItem(ItemStack itemStackIn) {
+        GL11.glPushMatrix();
         GlStateManager.enableCull();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.detonator_laser_tex);
@@ -43,8 +44,9 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
                 GL11.glRotatef(-20F, 1.0F, 0.0F, 0.0F);
                 GL11.glTranslatef(1.0F, 0.5F, 3.0F);
                 if(type == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND) {
-                    GL11.glRotated(18, 0, 1, 0);
-                    GL11.glRotated(-2, 0, 0, 1);
+                    GL11.glRotated(205, 0, 0, 1);
+                    GL11.glTranslated(0.2, 1.1, 0.8);
+                    GL11.glRotated(-25, 0, 0, 1);
                 }
                 break;
             case THIRD_PERSON_LEFT_HAND:
@@ -52,13 +54,12 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
             case GROUND:
             case FIXED:
             case HEAD:
-                double s1 = 0.375D;
-                GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
-                GL11.glScaled(s1, s1, s1);
+                GL11.glScalef(0.375F, 0.375F, 0.375F);
+                GL11.glTranslated(1.75, -0.5, 0.4);
+                GL11.glRotated(180, 1, 0, 1);
                 break;
             case GUI:
                 GL11.glTranslated(0.26, 0.23, 0);
-                GL11.glRotated(180, 0, 0, 1);
                 GL11.glRotated(90, 0, 1, 0);
                 GL11.glRotated(45, 1, 0, 0);
                 GL11.glScaled(0.2, 0.2, 0.2);
@@ -105,7 +106,6 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
             tess.addVertex(0, px * 0.25 + h0, len * i);
             tess.addVertex(0, -px * 0.25 + h0, len * i);
         }
-        tess.setColorOpaque_F(1F, 1F, 1F);
 
         tess.draw();
 
@@ -134,6 +134,8 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
 
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopAttrib();
+        GL11.glPopMatrix();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
         GL11.glPopMatrix();
     }
 }

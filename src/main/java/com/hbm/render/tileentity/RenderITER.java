@@ -53,7 +53,7 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER> {
         ResourceManager.iter.renderPart("Solenoid");
 		GL11.glPopMatrix();
         
-		if(iter.plasma.getFill() > 0) {
+		if(iter.plasmaNew.getFill() > 0) {
 	        GL11.glPushMatrix();
 	        GL11.glRotated(iter.lastRotor + (iter.rotor - iter.lastRotor) * partialTicks, 0, 1, 0);
 
@@ -63,10 +63,10 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER> {
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 	        GlStateManager.depthMask(false);
 
-	        int color = iter.plasma.getTankType().getColor();
+	        int color = iter.plasmaNew.getTankType().getColor();
 
 		    
-	        double alpha = (double)iter.plasma.getFill() / (double)iter.plasma.getMaxFill();
+	        double alpha = (double)iter.plasmaNew.getFill() / (double)iter.plasmaNew.getMaxFill();
 	        int r = (int) (((color & 0xFF0000) >> 16) / 2F * alpha);
 		    int g = (int) (((color & 0xFF00) >> 8) / 2F * alpha);
 		    int b = (int) ((color & 0xFF) / 2F * alpha);

@@ -8,7 +8,9 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.forgefluid.FFUtils;
 
+import com.hbm.lib.RefStrings;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,6 +23,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemFluidIcon extends Item {
+
+	public static final ModelResourceLocation fluidIconModel = new ModelResourceLocation(RefStrings.MODID + ":forge_fluid_identifier", "inventory");
 
 	public ItemFluidIcon(String s) {
 		this.setUnlocalizedName(s);

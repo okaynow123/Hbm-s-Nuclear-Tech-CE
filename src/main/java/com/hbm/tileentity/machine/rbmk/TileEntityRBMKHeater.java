@@ -5,7 +5,7 @@ import java.util.Map;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.lib.DirPos;
@@ -19,13 +19,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements IFluidStandardTransceiver {
 
-	public FluidTank feed;
-	public FluidTank steam;
+	public FluidTankNTM feed;
+	public FluidTankNTM steam;
 	
 	public TileEntityRBMKHeater() {
 		super(1);
-		this.feed = new FluidTank(Fluids.COOLANT, 16_000, 0);
-		this.steam = new FluidTank(Fluids.COOLANT_HOT, 16_000, 1);
+		this.feed = new FluidTankNTM(Fluids.COOLANT, 16_000, 0);
+		this.steam = new FluidTankNTM(Fluids.COOLANT_HOT, 16_000, 1);
 	}
 
 	@Override
@@ -154,18 +154,18 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return new FluidTank[] {feed, steam};
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[] {feed, steam};
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] {steam};
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {steam};
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] {feed};
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {feed};
 	}
 
 	// control panel

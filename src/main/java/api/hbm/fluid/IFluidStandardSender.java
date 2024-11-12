@@ -1,16 +1,16 @@
 package api.hbm.fluid;
 
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 
 public interface IFluidStandardSender extends IFluidUser {
 
-    public FluidTank[] getSendingTanks();
+    public FluidTankNTM[] getSendingTanks();
 
     @Override
     public default long getTotalFluidForSend(FluidType type, int pressure) {
 
-        for(FluidTank tank : getSendingTanks()) {
+        for(FluidTankNTM tank : getSendingTanks()) {
             if(tank.getTankType() == type && tank.getPressure() == pressure) {
                 return tank.getFill();
             }
@@ -22,7 +22,7 @@ public interface IFluidStandardSender extends IFluidUser {
     @Override
     public default void removeFluidForTransfer(FluidType type, int pressure, long amount) {
 
-        for(FluidTank tank : getSendingTanks()) {
+        for(FluidTankNTM tank : getSendingTanks()) {
             if(tank.getTankType() == type && tank.getPressure() == pressure) {
                 tank.setFill(tank.getFill() - (int) amount);
                 return;

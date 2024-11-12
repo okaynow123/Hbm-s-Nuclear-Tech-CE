@@ -11,6 +11,7 @@ import com.hbm.interfaces.IItemFluidHandler;
 import com.hbm.inventory.FluidCombustionRecipes;
 import com.hbm.inventory.EngineRecipes;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackBase;
@@ -416,30 +417,6 @@ public class FFUtils {
 			in.shrink(1);
 			if(out.isEmpty()) {
 				slots.setStackInSlot(slot2, new ItemStack(ModItems.fluid_barrel_full));
-			} else {
-				out.grow(1);
-			}
-			return true;
-		}
-
-		// Canister override
-		if(in.getItem() == ModItems.canister_generic && tank.fill(FluidUtil.getFluidContained(in), false) == 1000 && ((ItemFluidCanister.isEmptyCanister(out) && out.getCount() < 64) || out.isEmpty())) {
-			tank.fill(FluidUtil.getFluidContained(in), true);
-			in.shrink(1);
-			if(out.isEmpty()) {
-				slots.setStackInSlot(slot2, new ItemStack(ModItems.canister_generic));
-			} else {
-				out.grow(1);
-			}
-			return true;
-		}
-
-		// Gas canister override
-		if(in.getItem() == ModItems.gas_canister && tank.fill(FluidUtil.getFluidContained(in), false) == 4000 && ((ItemGasCanister.isEmptyCanister(out) && out.getCount() < 64) || out.isEmpty())) {
-			tank.fill(FluidUtil.getFluidContained(in), true);
-			in.shrink(1);
-			if(out.isEmpty()) {
-				slots.setStackInSlot(slot2, new ItemStack(ModItems.gas_canister));
 			} else {
 				out.grow(1);
 			}
@@ -856,7 +833,7 @@ public class FFUtils {
 		}
 	}
 
-	public static boolean areTanksEqual(com.hbm.inventory.fluid.tank.FluidTank tank1, com.hbm.inventory.fluid.tank.FluidTank tank2){
+	public static boolean areTanksEqual(FluidTankNTM tank1, FluidTankNTM tank2){
 		if(tank1 == null && tank2 == null) {
 			return true;
 		}
@@ -875,10 +852,10 @@ public class FFUtils {
 		return false;
 	}
 
-	public static com.hbm.inventory.fluid.tank.FluidTank copyTank(com.hbm.inventory.fluid.tank.FluidTank tank){
+	public static FluidTankNTM copyTank(FluidTankNTM tank){
 		if(tank == null)
 			return null;
-		return new com.hbm.inventory.fluid.tank.FluidTank(tank.getTankType() != Fluids.NONE ? tank.getTankType() : null, tank.getMaxFill());
+		return new FluidTankNTM(tank.getTankType() != Fluids.NONE ? tank.getTankType() : null, tank.getMaxFill());
 	}
 
 	public static boolean checkFluidConnectables(World world, BlockPos pos, FFPipeNetwork net, @Nullable EnumFacing facing){

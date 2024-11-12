@@ -57,7 +57,7 @@ public class DiFurnaceRecipes {
 		addRecipe(new OreDictStack(CU.ingot()), new OreDictStack(REDSTONE.dust()), new ItemStack(ModItems.ingot_red_copper, 2));
 		addRecipe(new OreDictStack(CU.dust()), new OreDictStack(REDSTONE.dust()), new ItemStack(ModItems.ingot_red_copper, 2));
 
-		addRecipe(new NbtComparableStack(ItemFluidCanister.getFullCanister(Fluids.OIL)), new ComparableStack(Items.SLIME_BALL), new ItemStack(ModItems.canister_napalm, 1));
+		addRecipe(new ComparableStack(ModItems.canister_generic, 1, Fluids.OIL.getID()), new ComparableStack(Items.SLIME_BALL), new ItemStack(ModItems.canister_napalm, 1));
 		
 		addRecipe(new OreDictStack(MINGRADE.ingot()), new OreDictStack(STEEL.ingot()), new ItemStack(ModItems.ingot_advanced_alloy, 2));
 		addRecipe(new OreDictStack(MINGRADE.dust()), new OreDictStack(STEEL.ingot()), new ItemStack(ModItems.ingot_advanced_alloy, 2));
@@ -97,7 +97,7 @@ public class DiFurnaceRecipes {
 			addRecipe(new OreDictStack(IRON.ingot()), new OreDictStack(NETHERQUARTZ.gem()), new ItemStack(ModBlocks.test_render, 1));
 		}
 		if(GeneralConfig.enableBabyMode) {
-			addRecipe(new ComparableStack(ModItems.canister_generic), new OreDictStack(COAL.gem()), ItemFluidCanister.getFullCanister(Fluids.OIL));
+			addRecipe(new ComparableStack(ModItems.canister_generic), new OreDictStack(COAL.gem()), new ItemStack(ModItems.canister_generic, 1, Fluids.OIL.getID()));
 		}
 	}
 

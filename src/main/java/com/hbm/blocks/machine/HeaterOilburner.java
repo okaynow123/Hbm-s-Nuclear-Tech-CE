@@ -4,7 +4,6 @@ import api.hbm.block.IToolable;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
-import com.hbm.inventory.FluidCombustionRecipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.items.tool.ItemTooling;
@@ -25,7 +24,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -110,7 +108,7 @@ public class HeaterOilburner extends BlockDummyable implements ITooltipProvider,
 
         List<String> text = new ArrayList();
         text.add(ChatFormatting.GREEN + "-> " + ChatFormatting.RESET + heater.setting + " mB/t");
-        FluidType type = heater.tank.getTankType();
+        FluidType type = heater.tankNew.getTankType();
         if(type.hasTrait(FT_Flammable.class)) {
             int heat = (int)(type.getTrait(FT_Flammable.class).getHeatEnergy() * heater.setting / 1000);
             text.add(ChatFormatting.RED + "<- " + ChatFormatting.RESET + String.format(Locale.US, "%,d", heat) + " TU/t");

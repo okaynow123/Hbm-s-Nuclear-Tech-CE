@@ -10,6 +10,7 @@ import static com.hbm.items.ModItems.*;
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.DictFrame.*;
 import static com.hbm.inventory.OreNames.*;
+import static com.hbm.items.ModItems.powder_ash;
 
 
 import com.hbm.config.GeneralConfig;
@@ -17,8 +18,10 @@ import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardEntry;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
+import com.hbm.items.ItemEnums;
 import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumTarType;
+import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 
 
@@ -304,6 +307,7 @@ public class OreDictManager {
 	public static final DictGroup ANY_TAR = new DictGroup("Tar", KEY_OIL_TAR, KEY_COAL_TAR, KEY_CRACK_TAR);
 	/** Any special psot-RBMK gating material, namely bismuth and arsenic */
 	public static final DictFrame ANY_BISMOID = new DictFrame("AnyBismoid");
+	public static final DictFrame ANY_ASH = new DictFrame("Ash");
 	
 
 	// order: nugget billet ingot dust dustTiny block crystal plate gem ore oreNether
@@ -431,6 +435,7 @@ public class OreDictManager {
 		ANY_CONCRETE			.any(concrete, concrete_smooth, concrete_asbestos, ducrete, ducrete_smooth);
 
 		ANY_COKE																																																.block(block_coke)			.gem(fromAll(coke, EnumCokeType.class));
+		ANY_ASH					.any(fromOne(ModItems.powder_ash, ItemEnums.EnumAshType.WOOD), fromOne(ModItems.powder_ash, ItemEnums.EnumAshType.COAL), fromOne(ModItems.powder_ash, ItemEnums.EnumAshType.MISC), fromOne(ModItems.powder_ash, ItemEnums.EnumAshType.FLY), fromOne(ModItems.powder_ash, ItemEnums.EnumAshType.SOOT));
 		LIGNITE							.gem(lignite)									.dust(powder_lignite)							.ore(ore_lignite);
 		COALCOKE						.gem(fromOne(coke, EnumCokeType.COAL))									.block(fromOne(block_coke, EnumCokeType.COAL));
 		PETCOKE							.gem(fromOne(coke, EnumCokeType.PETROLEUM))								.block(fromOne(block_coke, EnumCokeType.PETROLEUM));
@@ -510,6 +515,13 @@ public class OreDictManager {
 		OreDictionary.registerOre("dyeBlack", fromOne(oil_tar, EnumTarType.CRUDE));
 		// OreDictionary.registerOre("dyeBlack", fromOne(oil_tar, EnumTarType.CRACK));
 		OreDictionary.registerOre("dye", oil_tar);
+		OreDictionary.registerOre("dyeLightGray", fromOne(powder_ash, ItemEnums.EnumAshType.WOOD));
+		OreDictionary.registerOre("dyeBlack", fromOne(powder_ash, ItemEnums.EnumAshType.COAL));
+		OreDictionary.registerOre("dyeGray", fromOne(powder_ash, ItemEnums.EnumAshType.MISC));
+		OreDictionary.registerOre("dyeBrown", fromOne(powder_ash, ItemEnums.EnumAshType.FLY));
+		OreDictionary.registerOre("dyeBlack", fromOne(powder_ash, ItemEnums.EnumAshType.SOOT));
+		OreDictionary.registerOre("dyeMagenta", fromOne(powder_ash, ItemEnums.EnumAshType.FULLERENE));
+		OreDictionary.registerOre("dye", new ItemStack(powder_ash, 1, OreDictionary.WILDCARD_VALUE));
 
 		OreDictionary.registerOre("blockGlass", glass_boron);
 		OreDictionary.registerOre("blockGlass", glass_lead);

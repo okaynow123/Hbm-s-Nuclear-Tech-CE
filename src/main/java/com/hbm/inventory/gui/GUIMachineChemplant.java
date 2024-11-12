@@ -3,7 +3,6 @@ package com.hbm.inventory.gui;
 import com.hbm.util.I18nUtil;
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.inventory.container.ContainerMachineChemplant;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
@@ -34,10 +33,10 @@ public class GUIMachineChemplant extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, f);
 		this.renderHoveredToolTip(mouseX, mouseY);
 
-		chemplant.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 52 - 34, 16, 34);
-		chemplant.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 52 - 34, 16, 34);
-		chemplant.tanks[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 52 - 34, 16, 34);
-		chemplant.tanks[3].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 52 - 34, 16, 34);
+		chemplant.tanksNew[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 52 - 34, 16, 34);
+		chemplant.tanksNew[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 52 - 34, 16, 34);
+		chemplant.tanksNew[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 52 - 34, 16, 34);
+		chemplant.tanksNew[3].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 52 - 34, 16, 34);
 		
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 44, guiTop + 70 - 52, 16, 52, chemplant.power, TileEntityMachineChemplant.maxPower);
 		
@@ -85,9 +84,9 @@ public class GUIMachineChemplant extends GuiInfoContainer {
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-		chemplant.tanks[0].renderTank(guiLeft + 8, guiTop + 52, this.zLevel, 16, 34);
-		chemplant.tanks[1].renderTank(guiLeft + 26, guiTop + 52, this.zLevel, 16, 34);
-		chemplant.tanks[2].renderTank(guiLeft + 134, guiTop + 52, this.zLevel, 16, 34);
-		chemplant.tanks[3].renderTank(guiLeft + 152, guiTop + 52, this.zLevel, 16, 34);
+		chemplant.tanksNew[0].renderTank(guiLeft + 8, guiTop + 52, this.zLevel, 16, 34);
+		chemplant.tanksNew[1].renderTank(guiLeft + 26, guiTop + 52, this.zLevel, 16, 34);
+		chemplant.tanksNew[2].renderTank(guiLeft + 134, guiTop + 52, this.zLevel, 16, 34);
+		chemplant.tanksNew[3].renderTank(guiLeft + 152, guiTop + 52, this.zLevel, 16, 34);
 	}
 }

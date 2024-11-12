@@ -7,7 +7,7 @@ import com.hbm.inventory.container.ContainerMachineHydrotreater;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineHydrotreater;
 import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
@@ -34,16 +34,16 @@ public class TileEntityMachineHydrotreater extends TileEntityMachineBase impleme
     public long power;
     public static final long maxPower = 1_000_000;
 
-    public FluidTank[] tanks;
+    public FluidTankNTM[] tanks;
 
     public TileEntityMachineHydrotreater() {
         super(9);
 
-        this.tanks = new FluidTank[4];
-        this.tanks[0] = new FluidTank(Fluids.OIL, 64_000);
-        this.tanks[1] = new FluidTank(Fluids.HYDROGEN, 64_000).withPressure(1);
-        this.tanks[2] = new FluidTank(Fluids.OIL_DS, 24_000);
-        this.tanks[3] = new FluidTank(Fluids.SOURGAS, 24_000);
+        this.tanks = new FluidTankNTM[4];
+        this.tanks[0] = new FluidTankNTM(Fluids.OIL, 64_000);
+        this.tanks[1] = new FluidTankNTM(Fluids.HYDROGEN, 64_000).withPressure(1);
+        this.tanks[2] = new FluidTankNTM(Fluids.OIL_DS, 24_000);
+        this.tanks[3] = new FluidTankNTM(Fluids.SOURGAS, 24_000);
     }
 
     @Override
@@ -58,15 +58,14 @@ public class TileEntityMachineHydrotreater extends TileEntityMachineBase impleme
 
             if(this.world.getTotalWorldTime() % 20 == 0) this.updateConnections();
             power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
-            tanks[0].setType(9, inventory);
+            tanks[0].setType(7, inventory);
 
             tanks[0].loadTank(1, 2, inventory);
-            tanks[1].loadTank(3, 4, inventory);
 
             if(world.getTotalWorldTime() % 2 == 0) reform();
 
-            tanks[2].unloadTank(5, 6, inventory);
-            tanks[3].unloadTank(7, 8, inventory);
+            tanks[2].unloadTank(3, 4, inventory);
+            tanks[3].unloadTank(5, 6, inventory);
 
             for(DirPos pos : getConPos()) {
                 for(int i = 2; i < 4; i++) {
@@ -193,9 +192,9 @@ public class TileEntityMachineHydrotreater extends TileEntityMachineBase impleme
     @Override public long getPower() { return power; }
     @Override public void setPower(long power) { this.power = power; }
     @Override public long getMaxPower() { return maxPower; }
-    @Override public FluidTank[] getAllTanks() { return tanks; }
-    @Override public FluidTank[] getSendingTanks() { return new FluidTank[] {tanks[2], tanks[3]}; }
-    @Override public FluidTank[] getReceivingTanks() { return new FluidTank[] {tanks[0], tanks[1]}; }
+    @Override public FluidTankNTM[] getAllTanks() { return tanks; }
+    @Override public FluidTankNTM[] getSendingTanks() { return new FluidTankNTM[] {tanks[2], tanks[3]}; }
+    @Override public FluidTankNTM[] getReceivingTanks() { return new FluidTankNTM[] {tanks[0], tanks[1]}; }
     @Override public boolean canConnect(ForgeDirection dir) { return dir != ForgeDirection.UNKNOWN && dir != ForgeDirection.DOWN; }
     @Override public boolean canConnect(FluidType type, ForgeDirection dir) { return dir != ForgeDirection.UNKNOWN && dir != ForgeDirection.DOWN; }
 
@@ -225,7 +224,7 @@ public class TileEntityMachineHydrotreater extends TileEntityMachineBase impleme
     }
 
     @Override
-    public FluidTank getTankToPaste() {
+    public FluidTankNTM getTankToPaste() {
         return tanks[0];
     }
 }

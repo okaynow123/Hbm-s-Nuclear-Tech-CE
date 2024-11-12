@@ -40,10 +40,12 @@ public final class HBMSoundHandler {
 	public static SoundEvent flamethrowerShoot;
 	public static SoundEvent tauShoot;
 	public static SoundEvent oldExplosion;
+	public static SoundEvent nuclearExplosion;
 	public static SoundEvent ciwsSpindown;
 	public static SoundEvent ciwsSpinup;
 	public static SoundEvent ciwsFiringLoop;
 	public static SoundEvent reloadTurret;
+	public static SoundEvent warnOverspeed;
 	public static SoundEvent planeShotDown;
 	public static SoundEvent bombWhistle;
 	public static SoundEvent mortarWhistle;
@@ -65,6 +67,7 @@ public final class HBMSoundHandler {
 	public static SoundEvent boatWeapon;
 	public static SoundEvent ricochet;
 	public static SoundEvent grenadeBounce;
+	public static SoundEvent boiler;
 	public static SoundEvent alarmGambit;
 	public static SoundEvent revolverShoot;
 	public static SoundEvent heavyShoot;
@@ -146,6 +149,8 @@ public final class HBMSoundHandler {
 	public static SoundEvent openC;
 	public static SoundEvent closeC;
 	public static SoundEvent steamEngineOperate;
+
+	public static SoundEvent chungusOperate;
 	public static SoundEvent bang;
 	public static SoundEvent slice;
 	public static SoundEvent kaping;
@@ -306,9 +311,12 @@ public final class HBMSoundHandler {
 		flamethrowerShoot = register("weapon.flamethrowerShoot");
 		tauShoot = register("weapon.tauShoot");
 		oldExplosion = register("entity.oldExplosion");
+		nuclearExplosion = register("weapon.nuclearExplosion");
+		boiler = register("block.boiler");
 		ciwsSpindown = register("weapon.ciwsSpindown");
 		ciwsSpinup = register("weapon.ciwsSpinup");
 		ciwsFiringLoop = register("weapon.ciwsFiringLoop");
+		warnOverspeed = register("block.warnOverspeed");
 		planeShotDown = register("entity.planeShotDown");
 		bombWhistle = register("entity.bombWhistle");
 		mortarWhistle = register("entity.mortarWhistle");
@@ -482,6 +490,7 @@ public final class HBMSoundHandler {
 		rbmk_explosion = register("block.rbmk_explosion");
 		rbmk_az5_cover = register("block.rbmk_az5_cover");
 		chungus_lever = register("block.chungusLever");
+		chungusOperate = register("block.chungusTurbineRunning");
 		dflash = register("weapon.dFlash");
 		cough = register("player.cough");
 		ufoBeam = register("entity.ufoBeam");

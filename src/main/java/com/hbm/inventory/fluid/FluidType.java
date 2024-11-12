@@ -11,13 +11,12 @@ import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.render.misc.EnumSymbol;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import com.hbm.config.GeneralConfig;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 
@@ -185,24 +184,24 @@ public class FluidType {
 	 * @param te
 	 * @param tank
 	 */
-	public void onTankBroken(TileEntity te, FluidTank tank) { }
+	public void onTankBroken(TileEntity te, FluidTankNTM tank) { }
 	/**
 	 * Called by the tile entity's update loop. Also has an arg for the fluid tank for possible tanks using child-classes that are shielded or treated differently.
 	 * @param te
 	 * @param tank
 	 */
-	public void onTankUpdate(TileEntity te, FluidTank tank) { }
+	public void onTankUpdate(TileEntity te, FluidTankNTM tank) { }
 	/**
 	 * For when the tile entity is releasing this fluid into the world, either by an overflow or (by proxy) when broken.
 	 * @param te
 	 * @param tank
 	 * @param overflowAmount
 	 */
-	public void onFluidRelease(TileEntity te, FluidTank tank, int overflowAmount) {
+	public void onFluidRelease(TileEntity te, FluidTankNTM tank, int overflowAmount) {
 		this.onFluidRelease(te.getWorld(), te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), tank, overflowAmount);
 	}
 	
-	public void onFluidRelease(World world, int x, int y, int z, FluidTank tank, int overflowAmount) { }
+	public void onFluidRelease(World world, int x, int y, int z, FluidTankNTM tank, int overflowAmount) { }
 	//public void onFluidTransmit(FluidNetwork net) { }
 	
 	@SideOnly(Side.CLIENT)

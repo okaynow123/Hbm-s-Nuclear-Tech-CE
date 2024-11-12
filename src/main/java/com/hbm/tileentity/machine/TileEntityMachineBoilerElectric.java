@@ -4,14 +4,19 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBoiler;
+import com.hbm.forgefluid.FFUtils;
+import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.IFFtoNTMF;
+import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.MachineRecipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.packet.AuxElectricityPacket;
 import com.hbm.packet.AuxGaugePacket;
+import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityMachineBase;
 
@@ -21,25 +26,34 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class TileEntityMachineBoilerElectric extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IEnergyReceiverMK2 {
+public class TileEntityMachineBoilerElectric extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IEnergyReceiverMK2, ITankPacketAcceptor, IFFtoNTMF {
 
 	public long power;
 	public int heat = 2000;
 	public static final long maxPower = 10000;
 	public static final int maxHeat = 80000;
+	public FluidTankNTM[] tanksNew;
 	public FluidTank[] tanks;
 
 	private static final int[] slots_top = new int[] {4};
 	private static final int[] slots_bottom = new int[] {6};
 	private static final int[] slots_side = new int[] {4};
 
+	private static boolean converted = false;
+
 	public TileEntityMachineBoilerElectric() {
 		super(7);
+		tanksNew = new FluidTankNTM[2];
+		tanksNew[0] = new FluidTankNTM(Fluids.OIL, 16000, 0);
+		tanksNew[1] = new FluidTankNTM(Fluids.HOTOIL, 16000, 1);
+
 		tanks = new FluidTank[2];
-		tanks[0] = new FluidTank(Fluids.OIL, 16000, 0);
-		tanks[1] = new FluidTank(Fluids.HOTOIL, 16000, 1);
+		tanks[0] = new FluidTank(16000);
+		tanks[1] = new FluidTank(16000);
 	}
 	
 	@Override
@@ -84,8 +98,13 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 		power = nbt.getLong("power");
 		if(nbt.hasKey("inventory"))
 			inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
-		tanks[0].readFromNBT(nbt, "water");
-		tanks[1].readFromNBT(nbt, "steam");
+		if (!converted) {
+			if (nbt.hasKey("tanks")) FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
+		} else{
+			tanksNew[0].readFromNBT(nbt, "water");
+			tanksNew[1].readFromNBT(nbt, "steam");
+			if (nbt.hasKey("tanks")) nbt.removeTag("tanks");
+		}
 		super.readFromNBT(nbt);
 	}
 
@@ -94,8 +113,12 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 		nbt.setInteger("heat", heat);
 		nbt.setLong("power", power);
 		nbt.setTag("inventory", inventory.serializeNBT());
-		tanks[0].writeToNBT(nbt, "water");
-		tanks[1].writeToNBT(nbt, "steam");
+		if(!converted){
+			nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
+		} else {
+			tanksNew[0].writeToNBT(nbt, "water");
+			tanksNew[1].writeToNBT(nbt, "steam");
+		}
 		return super.writeToNBT(nbt);
 	}
 
@@ -114,20 +137,26 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 		if(!world.isRemote) {
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
-			this.subscribeToAllAround(tanks[0].getTankType(), this);
-			this.sendFluidToAll(tanks[1], this);
+			this.subscribeToAllAround(tanksNew[0].getTankType(), this);
+			this.sendFluidToAll(tanksNew[1], this);
 
 			power = Library.chargeTEFromItems(inventory, 4, power, maxPower);
 
-			tanks[0].setType(0, 1, inventory);
-			tanks[0].loadTank(2, 3, inventory);
+			tanksNew[0].setType(0, 1, inventory);
+			tanksNew[0].loadTank(2, 3, inventory);
 
-			Object[] outs = MachineRecipes.getBoilerOutput(tanks[0].getTankType());
+			Object[] outs = MachineRecipes.getBoilerOutput(tanksNew[0].getTankType());
+
+			if(!converted) {
+				PacketDispatcher.wrapper.sendToAllAround(new FluidTankPacket(pos.getX(), pos.getY(), pos.getZ(), new FluidTank[]{tanks[0], tanks[1]}), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
+				convertAndSetFluids(getFluids(tanks), tanks, tanksNew);
+				converted = true;
+			}
 
 			if(outs == null) {
-				tanks[1].setTankType(Fluids.NONE);
+				tanksNew[1].setTankType(Fluids.NONE);
 			} else {
-				tanks[1].setTankType((FluidType) outs[0]);
+				tanksNew[1].setTankType((FluidType) outs[0]);
 			}
 
 			if(heat > 2000) {
@@ -157,9 +186,9 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 			if(outs != null) {
 
 				for(int i = 0; i < (heat / ((Integer)outs[3]).intValue()); i++) {
-					if(tanks[0].getFill() >= ((Integer)outs[2]).intValue() && tanks[1].getFill() + ((Integer)outs[1]).intValue() <= tanks[1].getMaxFill()) {
-						tanks[0].setFill(tanks[0].getFill() - ((Integer)outs[2]).intValue());
-						tanks[1].setFill(tanks[1].getFill() + ((Integer)outs[1]).intValue());
+					if(tanksNew[0].getFill() >= ((Integer)outs[2]).intValue() && tanksNew[1].getFill() + ((Integer)outs[1]).intValue() <= tanksNew[1].getMaxFill()) {
+						tanksNew[0].setFill(tanksNew[0].getFill() - ((Integer)outs[2]).intValue());
+						tanksNew[1].setFill(tanksNew[1].getFill() + ((Integer)outs[1]).intValue());
 
 						if(i == 0)
 							heat -= 35;
@@ -193,23 +222,49 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 	}
 
 	@Override
+	public void recievePacket(NBTTagCompound[] tags) {
+		if(tags.length != 2) {
+			return;
+		} else {
+			tanks[0].readFromNBT(tags[0]);
+			tanks[1].readFromNBT(tags[1]);
+		}
+	}
+
+	public Fluid[] getFluids(FluidTank[] tanks){
+		Fluid fluid1;
+		Fluid fluid2;
+		if(tanks[0].getFluid() != null) {
+			fluid1 = tanks[0].getFluid().getFluid();
+		} else {
+			fluid1 = ModForgeFluids.none;
+		}
+		if(tanks[1].getFluid() != null) {
+			fluid2 = tanks[1].getFluid().getFluid();
+		} else {
+			fluid2 = ModForgeFluids.none;
+		}
+		return new Fluid[]{fluid1, fluid2};
+	}
+
+	@Override
 	public long getMaxPower() {
 		return maxPower;
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] {tanks[1]};
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {tanksNew[1]};
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] {tanks[0]};
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {tanksNew[0]};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return tanks;
+	public FluidTankNTM[] getAllTanks() {
+		return tanksNew;
 	}
 
 }

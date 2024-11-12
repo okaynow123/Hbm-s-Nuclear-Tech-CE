@@ -7,7 +7,7 @@ import com.hbm.inventory.SolidificationRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerSolidifier;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUISolidifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
@@ -41,12 +41,12 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
     public static final int processTimeBase = 100;
     public int processTime;
 
-    public FluidTank tank;
-    public UpgradeManager manager;
+    public FluidTankNTM tank;
+    public UpgradeManager manager = new UpgradeManager();
 
     public TileEntityMachineSolidifier() {
         super(5);
-        tank = new FluidTank(Fluids.NONE, 24_000);
+        tank = new FluidTankNTM(Fluids.NONE, 24_000);
     }
 
     @Override
@@ -231,13 +231,13 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
     }
 
     @Override
-    public FluidTank[] getReceivingTanks() {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] { tank };
     }
 
     @Override
-    public FluidTank[] getAllTanks() {
-        return new FluidTank[] { tank };
+    public FluidTankNTM[] getAllTanks() {
+        return new FluidTankNTM[] { tank };
     }
 
     @Override
@@ -252,7 +252,7 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
     }
 
     @Override
-    public FluidTank getTankToPaste() {
+    public FluidTankNTM getTankToPaste() {
         return tank;
     }
 }

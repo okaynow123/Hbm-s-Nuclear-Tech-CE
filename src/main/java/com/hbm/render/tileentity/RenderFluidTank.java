@@ -1,7 +1,5 @@
 package com.hbm.render.tileentity;
 
-import java.io.IOException;
-
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
@@ -9,19 +7,12 @@ import com.hbm.render.misc.DiamondPronter;
 import net.minecraft.client.renderer.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.machine.TileEntityMachineFluidTank;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public class RenderFluidTank extends TileEntitySpecialRenderer<TileEntityMachineFluidTank> {
 	
@@ -38,13 +29,13 @@ public class RenderFluidTank extends TileEntitySpecialRenderer<TileEntityMachine
 			case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
 			case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
 		}
-		FluidType type = tank.tank.getTankType();
+		FluidType type = tank.tankNew.getTankType();
 
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		bindTexture(ResourceManager.tank_tex);
 
 		ResourceManager.fluidtank.renderPart("Frame");
-		bindTexture(new ResourceLocation(RefStrings.MODID, getTextureFromType(tank.tank.getTankType())));
+		bindTexture(new ResourceLocation(RefStrings.MODID, getTextureFromType(tank.tankNew.getTankType())));
 		ResourceManager.fluidtank.renderPart("Tank");
 
 		GL11.glColor3d(1D, 1D, 1D);

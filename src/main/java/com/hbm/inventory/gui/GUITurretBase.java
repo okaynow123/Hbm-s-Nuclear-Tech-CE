@@ -47,7 +47,6 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 		super.initGui();
 
 		Keyboard.enableRepeatEvents(true);
-		MainRegistry.logger.debug("Player: {}", mc.player);
 		if (mc.player != null) {
 			TileEntityTurretBaseNT.openInventory(mc.player);
 		}

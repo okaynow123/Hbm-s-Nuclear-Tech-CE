@@ -2,8 +2,6 @@ package com.hbm.inventory.gui;
 
 import java.io.IOException;
 
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerMiningLaser;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.AuxButtonPacket;
@@ -49,7 +47,7 @@ public class GUIMiningLaser extends GuiInfoContainer {
 				" -Scream (4xSpeed, 4xCylces, 20xConsumption)",
 				" -Nullifier"};
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 87, guiTop + 31, 8, 8, guiLeft + 141, guiTop + 39 + 16, text);
-		laser.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 35, guiTop + 124 - 52, 7, 52);
+		laser.tankNew.renderTankInfo(this, mouseX, mouseY, guiLeft + 35, guiTop + 124 - 52, 7, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 
@@ -93,6 +91,6 @@ public class GUIMiningLaser extends GuiInfoContainer {
 
 		this.drawInfoPanel(guiLeft + 87, guiTop + 31, 8, 8, 8);
 
-		laser.tank.renderTank(guiLeft + 35, guiTop + 124, this.zLevel, 7, 52);
+		laser.tankNew.renderTank(guiLeft + 35, guiTop + 124, this.zLevel, 7, 52);
 	}
 }

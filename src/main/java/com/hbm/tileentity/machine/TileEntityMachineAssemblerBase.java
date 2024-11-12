@@ -351,17 +351,13 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
     }
 
     private void loadItems(int index) {
-        int templateIdx = getTemplateIndex(index);
-        ItemStack templateStack = inventory.getStackInSlot(templateIdx);
-        if(templateStack.isEmpty() || templateStack.getItem() != ModItems.chemistry_template) {
+        int template = getTemplateIndex(index);
+        if(inventory.getStackInSlot(template).isEmpty() || inventory.getStackInSlot(template).getItem() != ModItems.chemistry_template)
             return;
-        }
 
-        if(ChemplantRecipes.hasRecipe(templateStack)) {
-            List<RecipesCommon.AStack> itemInputs = ChemplantRecipes.getChemInputFromTempate(templateStack);
-            if(itemInputs == null) {
-                return;
-            }
+        ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(inventory.getStackInSlot(template).getItemDamage());
+
+        if(recipe != null) {
 
             ImmutablePair<BlockPos, ForgeDirection>[] positions = getInputPositions();
             int[] indices = getSlotIndicesFromIndex(index);
@@ -375,12 +371,12 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
                     if(te instanceof TileEntityMachineBase) {
                         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
                         slots = ((TileEntityMachineBase) te).getAccessibleSlotsFromSide(dir.toEnumFacing());
-                        tryFillAssemblerCap(cap, slots, (TileEntityMachineBase) te, indices[0], indices[1], itemInputs);
+                        tryFillAssemblerCap(cap, slots, (TileEntityMachineBase) te, indices[0], indices[1], recipe.inputs);
                     } else {
                         slots = new int[cap.getSlots()];
                         for(int i = 0; i < slots.length; i++)
                             slots[i] = i;
-                        tryFillAssemblerCap(cap, slots, null, indices[0], indices[1], itemInputs);
+                        tryFillAssemblerCap(cap, slots, null, indices[0], indices[1], recipe.inputs);
                     }
                 }
             }
@@ -426,7 +422,7 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
         return false;
     }
 
-    public boolean tryFillAssemblerCap(IItemHandler container, int[] allowedSlots, TileEntityMachineBase te, int minSlot, int maxSlot, List<RecipesCommon.AStack> recipeIngredients) {
+    public boolean tryFillAssemblerCap(IItemHandler container, int[] allowedSlots, TileEntityMachineBase te, int minSlot, int maxSlot, RecipesCommon.AStack[] recipeIngredients) {
         if(allowedSlots.length < 1)
             return false;
 
@@ -447,9 +443,9 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
                 return false;
             }
 
-            for(int ig = 0; ig < recipeIngredients.size(); ig++) {
+            for(int ig = 0; ig < recipeIngredients.length; ig++) {
 
-                RecipesCommon.AStack nextIngredient = recipeIngredients.get(ig).copy(); // getting new ingredient
+                RecipesCommon.AStack nextIngredient = recipeIngredients[ig].copy(); // getting new ingredient
 
                 int ingredientSlot = getValidSlot(nextIngredient, minSlot, maxSlot);
 

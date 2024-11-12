@@ -6,6 +6,7 @@ import com.hbm.entity.projectile.EntitySawblade;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
@@ -121,7 +122,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
                     if(overspeed > 60 && warnCooldown == 0) {
                         warnCooldown = 100;
-                        world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, "hbm:block.warnOverspeed", SoundCategory.BLOCKS, 2.0F, 1.0F);
+                        world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, HBMSoundHandler.warnOverspeed, SoundCategory.BLOCKS, 2.0F, 1.0F);
                     }
 
                     if(overspeed > 300) {
@@ -130,13 +131,13 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
                         int orientation = this.getBlockMetadata() - BlockDummyable.offset;
                         ForgeDirection dir = ForgeDirection.getOrientation(orientation);
-                        EntitySawblade cog = new EntitySawblade(worldObj, xCoord + 0.5 + dir.offsetX, yCoord + 1, zCoord + 0.5 + dir.offsetZ).setOrientation(orientation);
+                        EntitySawblade cog = new EntitySawblade(world, pos.getX() + 0.5 + dir.offsetX, pos.getY() + 1, pos.getZ() + 0.5 + dir.offsetZ).setOrientation(orientation);
                         ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 
                         cog.motionX = rot.offsetX;
                         cog.motionY = 1 + (heat - 100) * 0.0001D;
                         cog.motionZ = rot.offsetZ;
-                        worldObj.spawnEntityInWorld(cog);
+                        world.spawnEntity(cog);
 
                         this.markDirty();
                     }
@@ -195,8 +196,9 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
         for(int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound nbt1 = list.getCompoundTagAt(i);
             byte b0 = nbt1.getByte("slot");
-            if(b0 >= 0 && b0 < inventory.length) {
-                inventory.setStackInSlot(b0, );
+            if (b0 >= 0 && b0 < inventory.getSlots()) {
+                ItemStack stack = new ItemStack(nbt1);
+                inventory.setStackInSlot(b0, stack);
             }
         }
     }
@@ -209,10 +211,10 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setBoolean("hasBlade", hasBlade);
         nbt.setInteger("progress", progress);
+        return super.writeToNBT(nbt);
     }
 
     protected void tryPullHeat() {
@@ -236,7 +238,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        return i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(1).getCount() && getOutput(stack).isEmpty();
+        return i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(1).getCount() == 1 && getOutput(stack).isEmpty();
     }
 
     @Override
@@ -251,7 +253,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     public ItemStack getOutput(ItemStack input) {
 
-        if(input == null)
+        if(input.isEmpty())
             return null;
 
         craftingInventory.setInventorySlotContents(0, input);
@@ -263,13 +265,12 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
         }
 
         if(names.contains("logWood")) {
-            for(Object o : CraftingManager.getRecipeList()) {
-                IRecipe recipe = (IRecipe) o;
+            for(IRecipe recipe : CraftingManager.REGISTRY) {
                 if(recipe.matches(craftingInventory, world)) {
                     ItemStack out = recipe.getCraftingResult(craftingInventory);
                     if(out.isEmpty()) {
                         out = out.copy(); //for good measure
-                        out.setCount((int) out.getCount() * 6 / 4); //4 planks become 6
+                        out.setCount((int) (out.getCount() * 6 / 4)); //4 planks become 6
                         return out;
                     }
                 }

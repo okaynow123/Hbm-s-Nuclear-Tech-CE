@@ -29,74 +29,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemGasCanister extends Item implements IHasCustomModel {
 
 	public static final ModelResourceLocation fluidCanisterModel = new ModelResourceLocation(RefStrings.MODID + ":gas_empty", "inventory");
-	public int cap;
 	
 	
-	public ItemGasCanister(String s, int cap){
+	public ItemGasCanister(String s){
 		this.setUnlocalizedName(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(cap);
-		this.cap = cap;
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
 		
 		ModItems.ALL_ITEMS.add(this);
-	}
-	
-	
-	@Override
-	public int getItemStackLimit(ItemStack stack){
-		return isFullOrEmpty(stack) ? 64 : 1;
-	}
-	
-	public static boolean isFullOrEmpty(ItemStack stack){
-		if(stack.hasTagCompound() && stack.getItem() == ModItems.gas_canister){
-			FluidStack f = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("HbmFluidKey"));
-			if(f == null)
-				return true;
-			return f.amount == 4000 || f.amount == 0;
-			
-		} else if(stack.getItem() == ModItems.gas_canister){
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isEmptyCanister(ItemStack out) {
-		if(out.getItem() == ModItems.gas_canister && FluidUtil.getFluidContained(out) == null)
-			return true;
-		return false;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
-		FluidType f = Fluids.fromID(stack.getItemDamage());
-		if(f == null || f.hasNoID()) {
-			return I18n.format("item.gas_empty.name");
-		} else {
-			EnumGasCanister canister = EnumGasCanister.getEnumFromFluid(f);
-			if(canister == null)
-				return I18n.format("item.gas_null.name");
-			return I18n.format(canister.getTranslateKey());
+		String s = ("" + I18n.format(this.getUnlocalizedName() + ".name")).trim();
+		String s1 = ("" + I18n.format(Fluids.fromID(stack.getItemDamage()).getConditionalName())).trim();
+
+		if(s1 != null) {
+			s = s + " " + s1;
 		}
+
+		return s;
 	}
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		FluidStack f = FluidUtil.getFluidContained(stack);
-		tooltip.add((f == null ? "0" : f.amount) + "/" + cap + " mb");
+		tooltip.add((f == null ? "0" : f.amount) + "/" + 4000 + " mb");
 	}
 	
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if(tab == this.getCreativeTab() || tab == CreativeTabs.SEARCH){
-			for(FluidType f : EnumGasCanister.getFluids()){
-				ItemStack stack = new ItemStack(this, 1, 0);
-				stack.setTagCompound(new NBTTagCompound());
-				if(f != null)
-					stack.getTagCompound().setTag("HbmFluidKey", f.writeToNBT(new NBTTagCompound()));
-				items.add(stack);
+		if (this.isInCreativeTab(tab)) {
+			FluidType[] order = Fluids.getInNiceOrder();
+			for (int i = 1; i < order.length; ++i) {
+				FluidType type = order[i];
+
+				if (type.getContainer(Fluids.CD_Gastank.class) != null) {
+					items.add(new ItemStack(this, 1, type.getID()));
+				}
 			}
 		}
 	}
@@ -104,21 +78,5 @@ public class ItemGasCanister extends Item implements IHasCustomModel {
 	@Override
 	public ModelResourceLocation getResourceLocation() {
 		return fluidCanisterModel;
-	}
-	
-	public static boolean isFullCanister(ItemStack stack, Fluid fluid){
-		if(stack != null){
-			if(stack.getItem() instanceof ItemGasCanister && FluidUtil.getFluidContained(stack) != null && FluidUtil.getFluidContained(stack).getFluid() == fluid && FluidUtil.getFluidContained(stack).amount == ((ItemGasCanister)stack.getItem()).cap)
-				return true;
-		}
-		return false;
-	}
-	
-	public static ItemStack getFullCanister(FluidType f){
-		ItemStack stack = new ItemStack(ModItems.gas_canister, 1, 0);
-		stack.setTagCompound(new NBTTagCompound());
-		if(f != null && EnumGasCanister.contains(f))
-			stack.getTagCompound().setTag("HbmFluidKey", f.writeToNBT(new NBTTagCompound()));
-		return stack;
 	}
 }

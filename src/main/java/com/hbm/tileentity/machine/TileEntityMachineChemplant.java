@@ -10,24 +10,27 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.machine.MachineChemplant;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.handler.MultiblockHandler;
+import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.ChemplantRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemChemistryTemplate;
+import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.AuxElectricityPacket;
+import com.hbm.main.MainRegistry;
 import com.hbm.packet.AuxParticlePacket;
-import com.hbm.packet.FluidTankPacket;
-import com.hbm.packet.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.TEChemplantPacket;
+import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityMachineBase;
 
+import com.hbm.util.InventoryUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -36,14 +39,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,46 +54,58 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, ITickable {
+public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, ITickable, IFFtoNTMF {
 
-	public static final long maxPower = 2000000;
 	public long power;
+	public static final long maxPower = 100000;
 	public int progress;
-	public boolean needsProcess = true;
 	public int maxProgress = 100;
 	public boolean isProgressing;
-	public boolean needsUpdate = false;
-	public boolean needsTankTypeUpdate = false;
+	private AudioWrapper audio;
 	public FluidTank[] tanks;
+	public Fluid[] tankTypes;
+	public FluidTankNTM[] tanksNew;
 	public ItemStack previousTemplate = ItemStack.EMPTY;
 	//Drillgon200: Yeah I don't even know what I was doing originally
 	public ItemStack previousTemplate2 = ItemStack.EMPTY;
+	//upgraded stats
 	int consumption = 100;
 	int speed = 100;
-	private long detectPower;
-	private boolean detectIsProgressing;
-	private FluidTank[] detectTanks = new FluidTank[]{null, null, null, null};
+	public UpgradeManager manager = new UpgradeManager();
+
+	private boolean converted;
 
 	public TileEntityMachineChemplant() {
 		super(21);
-		// Consumer<Integer> OnContentsChanged = this::OnContentsChanged;
-		inventory = new ItemStackHandler(21) {
-			@Override
-			protected void onContentsChanged(int slot) {
-				markDirty();
-				OnContentsChanged(slot);
-				super.onContentsChanged(slot);
-			}
-		};
-		tanks = new FluidTank[4];
+		/*
+		 * 0 Battery
+		 * 1-3 Upgrades
+		 * 4 Schematic
+		 * 5-8 Output
+		 * 9-10 FOut In
+		 * 11-12 FOut Out
+		 * 13-16 Input
+		 * 17-18 FIn In
+		 * 19-20 FIn Out
+		 */
+		tanksNew = new FluidTankNTM[4];
 		for(int i = 0; i < 4; i++) {
-			tanks[i] = new FluidTank(Fluids.NONE, 24_000);
+			tanksNew[i] = new FluidTankNTM(Fluids.NONE, 24_000);
 		}
+
+		tanks = new FluidTank[4];
+		tanks[0] = new FluidTank(24000);
+		tanks[1] = new FluidTank(24000);
+		tanks[2] = new FluidTank(24000);
+		tanks[3] = new FluidTank(24000);
+		tankTypes = new Fluid[]{null, null, null, null};
 	}
 
-	public void OnContentsChanged(int slot) {
-		this.needsProcess = true;
-	}
+	// last successful load
+	int lsl0 = 0;
+	int lsl1 = 0;
+	int lsu0 = 0;
+	int lsu1 = 0;
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		if(world.getTileEntity(pos) != this) {
@@ -105,14 +118,50 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
+		String[] types;
 		this.power = nbt.getLong("powerTime");
-		detectPower = power + 1;
 		isProgressing = nbt.getBoolean("progressing");
-		detectIsProgressing = !isProgressing;
+		if(!converted) {
+			tanks[0].readFromNBT(nbt.getCompoundTag("input1"));
+			tanks[1].readFromNBT(nbt.getCompoundTag("input2"));
+			tanks[2].readFromNBT(nbt.getCompoundTag("output1"));
+			tanks[3].readFromNBT(nbt.getCompoundTag("output2"));
 
-		for(int i = 0; i < tanks.length; i++) {
-			tanks[i].readFromNBT(nbt, "t" + i);
+			types = new String[]{nbt.getString("tankType0"), nbt.getString("tankType1"), nbt.getString("tankType2"), nbt.getString("tankType3")};
+			if(!types[0].equals("empty")) {
+				tankTypes[0] = FluidRegistry.getFluid(types[0]);
+			} else {
+				tankTypes[0] = null;
+			}
+			if(!types[1].equals("empty")) {
+				tankTypes[1] = FluidRegistry.getFluid(types[1]);
+			} else {
+				tankTypes[1] = null;
+			}
+			if(!types[2].equals("empty")) {
+				tankTypes[2] = FluidRegistry.getFluid(types[2]);
+			} else {
+				tankTypes[2] = null;
+			}
+			if(!types[3].equals("empty")) {
+				tankTypes[3] = FluidRegistry.getFluid(types[3]);
+			} else {
+				tankTypes[3] = null;
+			}
+		} else {
+			for (int i = 0; i < tanksNew.length; i++) {
+				tanksNew[i].readFromNBT(nbt, "t" + i);
+			}
+			if(nbt.hasKey("input1")){
+				nbt.removeTag("input1");
+				nbt.removeTag("input2");
+				nbt.removeTag("output1");
+				nbt.removeTag("output2");
+				nbt.removeTag("tankType0");
+				nbt.removeTag("tankType1");
+				nbt.removeTag("tankType2");
+				nbt.removeTag("tankType3");
+			}
 		}
 		if(nbt.hasKey("inventory"))
 			inventory.deserializeNBT((NBTTagCompound) nbt.getTag("inventory"));
@@ -124,9 +173,32 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		nbt.setLong("powerTime", power);
 
 		nbt.setBoolean("progressing", isProgressing);
+		if(!converted){
+			String[] types = new String[]{tankTypes[0] != null ? tankTypes[0].getName() : "empty", tankTypes[1] != null ? tankTypes[1].getName() : "empty", tankTypes[2] != null ? tankTypes[2].getName() : "empty", tankTypes[3] != null ? tankTypes[3].getName() : "empty"};
 
-		for(int i = 0; i < tanks.length; i++) {
-			tanks[i].writeToNBT(nbt, "t" + i);
+			NBTTagCompound input1 = new NBTTagCompound();
+			NBTTagCompound input2 = new NBTTagCompound();
+			NBTTagCompound output1 = new NBTTagCompound();
+			NBTTagCompound output2 = new NBTTagCompound();
+
+			tanks[0].writeToNBT(input1);
+			tanks[1].writeToNBT(input2);
+			tanks[2].writeToNBT(output1);
+			tanks[3].writeToNBT(output2);
+
+			nbt.setTag("input1", input1);
+			nbt.setTag("input2", input2);
+			nbt.setTag("output1", output1);
+			nbt.setTag("output2", output2);
+
+			nbt.setString("tankType0", types[0] != null ? types[0] : "empty");
+			nbt.setString("tankType1", types[1] != null ? types[1] : "empty");
+			nbt.setString("tankType2", types[2] != null ? types[2] : "empty");
+			nbt.setString("tankType3", types[3] != null ? types[3] : "empty");
+		} else {
+			for (int i = 0; i < tanksNew.length; i++) {
+				tanksNew[i].writeToNBT(nbt, "t" + i);
+			}
 		}
 
 		NBTTagCompound inv = inventory.serializeNBT();
@@ -143,7 +215,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		buf.writeBoolean(isProgressing);
 
 		for(int i = 0; i < tanks.length; i++)
-			tanks[i].serialize(buf);
+			tanksNew[i].serialize(buf);
 	}
 
 	@Override
@@ -155,7 +227,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		isProgressing = buf.readBoolean();
 
 		for(int i = 0; i < tanks.length; i++)
-			tanks[i].deserialize(buf);
+			tanksNew[i].deserialize(buf);
 	}
 
 	public long getPowerScaled(long i) {
@@ -167,129 +239,61 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	}
 
 	@Override
-	public void update() {
-		needsTankTypeUpdate = previousTemplate2 != inventory.getStackInSlot(4);
-		previousTemplate2 = inventory.getStackInSlot(4);
-		this.consumption = 100;
-		this.speed = 100;
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chemplantOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F);
+	}
 
+	@Override
+	public void onChunkUnload() {
 
-		double c = 100;
-		double s = 100;
-
-		for(int i = 1; i < 4; i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
-
-			if(!stack.isEmpty()) {
-				if(stack.getItem() == ModItems.upgrade_speed_1) {
-					s *= 0.75;
-					c *= 3;
-				}
-				if(stack.getItem() == ModItems.upgrade_speed_2) {
-					s *= 0.65;
-					c *= 6;
-				}
-				if(stack.getItem() == ModItems.upgrade_speed_3) {
-					s *= 0.5;
-					c *= 9;
-				}
-				if(stack.getItem() == ModItems.upgrade_power_1) {
-					c *= 0.8;
-					s *= 1.25;
-				}
-				if(stack.getItem() == ModItems.upgrade_power_2) {
-					c *= 0.4;
-					s *= 1.5;
-				}
-				if(stack.getItem() == ModItems.upgrade_power_3) {
-					c *= 0.2;
-					s *= 2;
-				}
-			}
+		if(audio != null) {
+			audio.stopSound();
+			audio = null;
 		}
-		this.speed = (int) s;
-		this.consumption = (int) c;
+	}
 
+	@Override
+	public void invalidate() {
 
-		if(speed < 2)
-			speed = 2;
-		if(consumption < 1)
-			consumption = 1;
-		if(this.needsTankTypeUpdate)
-			setContainers();
+		super.invalidate();
 
+		if(audio != null) {
+			audio.stopSound();
+			audio = null;
+		}
+	}
+
+	@Override
+	public void update() {
+		if(!converted){
+			convertAndSetFluids(tankTypes, tanks, tanksNew);
+			converted = true;
+		}
 
 		if(!world.isRemote) {
-			if(needsUpdate) {
-				needsUpdate = false;
-			}
 			int meta = world.getBlockState(pos).getValue(MachineChemplant.FACING);
-			isProgressing = false;
 
-			if(world.getTotalWorldTime() % 20 == 0) {
-				this.updateConnections();
-			}
+			this.speed = 100;
+			this.consumption = 100;
 
-			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
+			this.isProgressing = false;
+			this.power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
 
-			if(inputTankEmpty(0, 17) && inventory.getStackInSlot(19).isEmpty()){
-				tanks[0].loadTank(17, 19, inventory);
-				FFUtils.moveItems(inventory, 17, 19, false);
-			}
+			int fluidDelay = 40;
 
-			if(inputTankEmpty(1, 18) && inventory.getStackInSlot(20).isEmpty()){
-				FFUtils.moveItems(inventory, 18, 20, false);
-				tanks[1].loadTank(18, 20, inventory);
-			}
+			if(lsu0 >= fluidDelay && tanksNew[0].loadTank(17, 19, inventory)) lsl0 = 0;
+			if(lsu1 >= fluidDelay && tanksNew[1].loadTank(18, 20, inventory)) lsl1 = 0;
 
-			tanks[2].unloadTank(9, 11, inventory);
-			tanks[3].unloadTank(10, 12, inventory);
+			if(lsl0 >= fluidDelay && !inventory.getStackInSlot(17).isEmpty() && !FluidTankNTM.noDualUnload.contains(inventory.getStackInSlot(17).getItem())) if(tanksNew[0].unloadTank(17, 19, inventory)) lsu0 = 0;
+			if(lsl1 >= fluidDelay && !inventory.getStackInSlot(18).isEmpty() && !FluidTankNTM.noDualUnload.contains(inventory.getStackInSlot(18).getItem())) if(tanksNew[1].unloadTank(18, 20, inventory)) lsu1 = 0;
 
-			for(DirPos pos : getConPos()) {
-				if(tanks[2].getFill() > 0) this.sendFluid(tanks[2], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-				if(tanks[3].getFill() > 0) this.sendFluid(tanks[3], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-			}
+			tanksNew[2].unloadTank(9, 11, inventory);
+			tanksNew[3].unloadTank(10, 12, inventory);
 
-			
-			ItemStack[] itemOutputs = ChemplantRecipes.getChemOutputFromTempate(inventory.getStackInSlot(4));
-			FluidStack[] fluidOutputs = ChemplantRecipes.getFluidOutputFromTempate(inventory.getStackInSlot(4));
-			
-			if(needsProcess && (itemOutputs != null || !Library.isArrayEmpty(fluidOutputs))) {
-
-				List<AStack> itemInputs = ChemplantRecipes.getChemInputFromTempate(inventory.getStackInSlot(4));
-				FluidStack[] fluidInputs = ChemplantRecipes.getFluidInputFromTempate(inventory.getStackInSlot(4));
-				int duration = ChemplantRecipes.getProcessTime(inventory.getStackInSlot(4));
-
-				this.maxProgress = (duration * speed) / 100;
-				if(removeItems(itemInputs, cloneItemStackProper(inventory)) && hasFluidsStored(fluidInputs)) {
-					if(power >= consumption) {
-						if(hasSpaceForItems(itemOutputs) && hasSpaceForFluids(fluidOutputs)) {
-							progress++;
-							isProgressing = true;
-
-							if(progress >= maxProgress) {
-								progress = 0;
-								if(itemOutputs != null)
-									addItems(itemOutputs);
-								if(fluidOutputs != null)
-									addFluids(fluidOutputs);
-
-								removeItems(itemInputs, inventory);
-								removeFluids(fluidInputs);
-								if(inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_machined)
-									inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_treated));
-							}
-
-							power -= consumption;
-						}
-					}
-				} else {
-					progress = 0;
-					needsProcess = false;
-				}
-			} else {
-				progress = 0;
-			}
+			if(lsl0 < fluidDelay) lsl0++;
+			if(lsl1 < fluidDelay) lsl1++;
+			if(lsu0 < fluidDelay) lsu0++;
+			if(lsu1 < fluidDelay) lsu1++;
 
 
 			TileEntity te1 = null;
@@ -310,10 +314,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			if(meta == 5) {
 				te1 = world.getTileEntity(pos.add(0, 0, -2));
 				te2 = world.getTileEntity(pos.add(1, 0, 3));
-			}
-
-			if(!isProgressing) {
-				tryExchangeTemplates(te1, te2);
 			}
 
 			if(te1 != null && te1.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY())) {
@@ -357,62 +357,74 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 							new TargetPoint(world.provider.getDimension(), pos.getX() + 1.625, pos.getY() + 3, pos.getZ() + 0.375, 50));
 				}
 			}
-		}
 
-	}
+			if(world.getTotalWorldTime() % 20 == 0) {
+				this.updateConnections();
+			}
 
-	public boolean tryExchangeTemplates(TileEntity te1, TileEntity te2) {
-		//validateTe sees if it's a valid inventory tile entity
-		boolean te1Valid = validateTe(te1);
-		boolean te2Valid = validateTe(te2);
+			for(DirPos pos : getConPos()) {
+				if(tanksNew[2].getFill() > 0) this.sendFluid(tanksNew[2], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+				if(tanksNew[3].getFill() > 0) this.sendFluid(tanksNew[3], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			}
 
-		if(te1Valid && te2Valid) {
-			IItemHandler iTe1 = te1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			IItemHandler iTe2e = te2.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-			if(!(iTe2e instanceof IItemHandlerModifiable))
-				return false;
-			IItemHandlerModifiable iTe2 = (IItemHandlerModifiable) iTe2e;
-			boolean openSlot = false;
-			boolean existingTemplate = false;
-			boolean filledContainer = false;
-			//Check if there's an existing template and an open slot
-			for(int i = 0; i < iTe1.getSlots(); i++) {
-				if(iTe1.getStackInSlot(i) == null || iTe1.getStackInSlot(i) == ItemStack.EMPTY) {
-					openSlot = true;
+			manager.eval(inventory, 1, 3);
 
+			int speedLevel = Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.SPEED), 3);
+			int powerLevel = Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.POWER), 3);
+			int overLevel = manager.getLevel(ItemMachineUpgrade.UpgradeType.OVERDRIVE);
+
+			this.speed -= speedLevel * 25;
+			this.consumption += speedLevel * 300;
+			this.speed += powerLevel * 5;
+			this.consumption -= powerLevel * 20;
+			this.speed /= (overLevel + 1);
+			this.consumption *= (overLevel + 1);
+
+			if(this.speed <= 0) {
+				this.speed = 1;
+			}
+
+			if(!canProcess()) {
+				this.progress = 0;
+			} else {
+				isProgressing = true;
+				process();
+			}
+
+			this.networkPackNT(150);
+		} else {
+
+			float volume = this.getVolume(1F);
+
+			if(isProgressing && volume > 0) {
+
+				if(audio == null) {
+					audio = this.createAudioLoop();
+					audio.updateVolume(volume);
+					audio.startSound();
+				} else if(!audio.isPlaying()) {
+					audio = rebootAudio(audio);
+					audio.updateVolume(volume);
 				}
 
-			}
-			if(this.inventory.getStackInSlot(4) != ItemStack.EMPTY && inventory.getStackInSlot(4).getItem() instanceof ItemChemistryTemplate) {
-				existingTemplate = true;
-			}
-			//Check if there's a template in input
-			for(int i = 0; i < iTe2.getSlots(); i++) {
-				iTe2.getStackInSlot(i);
-				if(iTe2.getStackInSlot(i) != ItemStack.EMPTY && iTe2.getStackInSlot(i).getItem() instanceof ItemChemistryTemplate) {
-					if(openSlot && existingTemplate) {
-						filledContainer = tryFillContainerCap(iTe1, 4);
+			} else {
 
-					}
-					if(filledContainer || !existingTemplate) {
-						ItemStack copy = iTe2.getStackInSlot(i).copy();
-						iTe2.setStackInSlot(i, ItemStack.EMPTY);
-						this.inventory.setStackInSlot(4, copy);
-					}
+				if(audio != null) {
+					audio.stopSound();
+					audio = null;
 				}
-
 			}
 		}
-		return false;
-
 	}
+
+
 
 	private void updateConnections() {
 
 		for(DirPos pos : getConPos()) {
 			this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-			this.trySubscribe(tanks[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-			this.trySubscribe(tanks[1].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			this.trySubscribe(tanksNew[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+			this.trySubscribe(tanksNew[1].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 		}
 	}
 
@@ -429,165 +441,101 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		};
 	}
 
-	private boolean validateTe(TileEntity te) {
-		return te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-	}
+	private boolean canProcess() {
 
-	private void setContainers() {
-		if(inventory.getStackInSlot(4) == ItemStack.EMPTY || (inventory.getStackInSlot(4) != ItemStack.EMPTY && !(inventory.getStackInSlot(4).getItem() instanceof ItemChemistryTemplate))) {
-		} else {
-			needsTankTypeUpdate = true;
-			if(previousTemplate != ItemStack.EMPTY && ItemStack.areItemStacksEqual(previousTemplate, inventory.getStackInSlot(4))) {
+		if(inventory.getStackInSlot(4).isEmpty() || inventory.getStackInSlot(4).getItem() != ModItems.chemistry_template)
+			return false;
 
-				needsTankTypeUpdate = false;
+		ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(inventory.getStackInSlot(4).getItemDamage());
 
-			} else {
+		if(recipe == null)
+			return false;
 
-			}
-			previousTemplate = inventory.getStackInSlot(4).copy();
-			FluidStack[] fluidInputs = ChemplantRecipes.getFluidInputFromTempate(inventory.getStackInSlot(4));
-			FluidStack[] fluidOutputs = ChemplantRecipes.getFluidOutputFromTempate(inventory.getStackInSlot(4));
+		setupTanks(recipe);
 
-			if(fluidInputs != null){
-				tanks[0].setTankType(fluidInputs[0] == null ? null : fluidInputs[0].type);
-				if(fluidInputs.length == 2){
-					tanks[1].setTankType(fluidInputs[0] == null ? null : fluidInputs[0].type);
-				}
-			}
-			if(fluidOutputs != null){
-				tanks[2].setTankType(fluidOutputs[0] == null ? null : fluidOutputs[0].type);
-				if(fluidOutputs.length == 2){
-					tanks[3].setTankType(fluidOutputs[1] == null ? null : fluidOutputs[1].type);
-				}
-			}
+		if(this.power < this.consumption) return false;
+		if(!hasRequiredFluids(recipe)) return false;
+		if(!hasSpaceForFluids(recipe)) return false;
+		if(!hasRequiredItems(recipe)) return false;
+		if(!hasSpaceForItems(recipe)) return false;
 
-			if(fluidInputs != null){
-				if(fluidInputs[0] != null || tanks[0].getTankType() != null) {
-					tanks[0].setTankType(Fluids.NONE);
-					if(needsTankTypeUpdate) {
-						needsTankTypeUpdate = false;
-					}
-				}
-				if(fluidInputs.length == 2){
-					if(fluidInputs[1] != null || tanks[1].getTankType() != null) {
-						tanks[1].setTankType(Fluids.NONE);
-						if(needsTankTypeUpdate) {
-							needsTankTypeUpdate = false;
-						}
-					}
-				}
-			}
-			if(fluidOutputs != null){
-				if(fluidOutputs[0] != null || tanks[2].getTankType() != null) {
-					tanks[2].setTankType(Fluids.NONE);
-				}
-				if(fluidOutputs.length == 2){
-					if(fluidOutputs[1] != null || tanks[3].getTankType() != null) {
-						tanks[3].setTankType(Fluids.NONE);
-						if(needsTankTypeUpdate) {
-							needsTankTypeUpdate = false;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	protected boolean inputTankEmpty(int tank, int slot) {
-		if(!inventory.getStackInSlot(slot).isEmpty() && tanks[tank] != null) {
-			ItemStack c = inventory.getStackInSlot(slot).copy();
-			c.setCount(1);
-			return FFUtils.isEmtpyFluidTank(c);
-			//Drillgon200: I really hope fluid container registry comes back.
-		}
-
-		return false;
-	}
-
-	public boolean hasFluidsStored(FluidStack[] fluids) {
-		if(Library.isArrayEmpty(fluids))
-			return true;
-		if(fluids.length == 2){
-			if((fluids[0] == null || fluids[0].fill <= tanks[0].getFill()) && (fluids[1] == null || fluids[1].fill <= tanks[1].getFill()))
-				return true;
-		}else{
-			if(fluids[0] == null || fluids[0].fill <= tanks[0].getFill())
-				return true;
-		}
-
-		return false;
-	}
-
-	public boolean hasSpaceForFluids(FluidStack[] fluids) {
-		if(Library.isArrayEmpty(fluids))
-			return true;
-		if(fluids.length == 2){
-			if((fluids[0] == null || tanks[2].getFill() == fluids[0].fill) && (fluids[1] == null || fluids[1] != null && tanks[3].getFill() == fluids[1].fill))
-				return true;
-		}else{
-			if(fluids[0] == null || tanks[2].getFill() == fluids[0].fill)
-				return true;
-		}
-		return false;
-	}
-
-	public void removeFluids(FluidStack[] fluids) {
-		if(Library.isArrayEmpty(fluids))
-			return;
-		tanks[0].setFill(tanks[0].getFill() - fluids[0].fill);
-		if(fluids.length == 2) {
-			tanks[1].setFill(tanks[1].getFill() - fluids[1].fill);
-		}
-	}
-
-	public boolean hasSpaceForItems(ItemStack[] stacks) {
-		if(stacks == null)
-			return true;
-		if(stacks != null && Library.isArrayEmpty(stacks))
-			return true;
-
-		//checking first slot
-		for(int i = 0; i < stacks.length; i++){
-			if(inventory.getStackInSlot(5+i) == ItemStack.EMPTY) { // is the slot empty?
-				continue; // ok it is empty lets check the next one
-			} else {
-				
-				if(Library.areItemStacksCompatible(stacks[i].copy(), inventory.getStackInSlot(5+i).copy(), false)){ // oof there is some item there - is it the same tho?
-					if(inventory.getStackInSlot(5+i).getCount() + stacks[i].getCount() <= inventory.getStackInSlot(5+i).getMaxStackSize()){ // ok it is the same item but is the stack full already?
-						continue;
-					}
-				}
-				return false;
-			}
-		}
 		return true;
 	}
 
-	public void addItems(ItemStack[] stacks) {
-		if(stacks == null)
-			return;
-		if(stacks != null && Library.isArrayEmpty(stacks))
-			return;
+	private void setupTanks(ChemplantRecipes.ChemRecipe recipe) {
+		if(recipe.inputFluids[0] != null) tanksNew[0].withPressure(recipe.inputFluids[0].pressure).setTankType(recipe.inputFluids[0].type);	else tanksNew[0].setTankType(Fluids.NONE);
+		if(recipe.inputFluids[1] != null) tanksNew[1].withPressure(recipe.inputFluids[1].pressure).setTankType(recipe.inputFluids[1].type);	else tanksNew[1].setTankType(Fluids.NONE);
+		if(recipe.outputFluids[0] != null) tanksNew[2].withPressure(recipe.outputFluids[0].pressure).setTankType(recipe.outputFluids[0].type);	else tanksNew[2].setTankType(Fluids.NONE);
+		if(recipe.outputFluids[1] != null) tanksNew[3].withPressure(recipe.outputFluids[1].pressure).setTankType(recipe.outputFluids[1].type);	else tanksNew[3].setTankType(Fluids.NONE);
+	}
 
-		for(int i = 0; i<stacks.length; i++){
-			if(inventory.getStackInSlot(5+i) == ItemStack.EMPTY){ // if the slot is empty then create a new stack otherwise make the existing one bigger
-				inventory.setStackInSlot(5+i, stacks[i].copy());
-			}
-			else{
-				inventory.getStackInSlot(5+i).setCount(inventory.getStackInSlot(5+i).getCount() + stacks[i].getCount());
-			}
+	private boolean hasRequiredFluids(ChemplantRecipes.ChemRecipe recipe) {
+		if(recipe.inputFluids[0] != null && tanksNew[0].getFill() < recipe.inputFluids[0].fill) return false;
+		if(recipe.inputFluids[1] != null && tanksNew[1].getFill() < recipe.inputFluids[1].fill) return false;
+		return true;
+	}
+
+	private boolean hasSpaceForFluids(ChemplantRecipes.ChemRecipe recipe) {
+		if(recipe.outputFluids[0] != null && tanksNew[2].getFill() + recipe.outputFluids[0].fill > tanksNew[2].getMaxFill()) return false;
+		if(recipe.outputFluids[1] != null && tanksNew[3].getFill() + recipe.outputFluids[1].fill > tanksNew[3].getMaxFill()) return false;
+		return true;
+	}
+
+	private boolean hasRequiredItems(ChemplantRecipes.ChemRecipe recipe) {
+		return InventoryUtil.doesArrayHaveIngredients(inventory, 13, 16, recipe.inputs);
+	}
+
+	private boolean hasSpaceForItems(ChemplantRecipes.ChemRecipe recipe) {
+		return InventoryUtil.doesArrayHaveSpace(inventory, 5, 8, recipe.outputs);
+	}
+
+	private void process() {
+
+		this.power -= this.consumption;
+		this.progress++;
+
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_machined)
+			inventory.setStackInSlot(0, ModItems.meteorite_sword_treated.getDefaultInstance()); //fisfndmoivndlmgindgifgjfdnblfm
+
+		ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(inventory.getStackInSlot(4).getItemDamage());
+
+		this.maxProgress = recipe.getDuration() * this.speed / 100;
+
+		if(maxProgress <= 0) maxProgress = 1;
+
+		if(this.progress >= this.maxProgress) {
+			consumeFluids(recipe);
+			produceFluids(recipe);
+			consumeItems(recipe);
+			produceItems(recipe);
+			this.progress = 0;
+			this.markDirty();
 		}
 	}
 
-	public void addFluids(FluidStack[] stacks) {
+	private void consumeFluids(ChemplantRecipes.ChemRecipe recipe) {
+		if(recipe.inputFluids[0] != null) tanksNew[0].setFill(tanksNew[0].getFill() - recipe.inputFluids[0].fill);
+		if(recipe.inputFluids[1] != null) tanksNew[1].setFill(tanksNew[1].getFill() - recipe.inputFluids[1].fill);
+	}
 
-		if(stacks != null){
-			tanks[2].setFill(tanks[2].getFill() + stacks[0].fill);
-			if(stacks.length == 2){
-				if(stacks[1] != null) {
-					tanks[3].setFill(tanks[3].getFill() + stacks[1].fill);
-				}
-			}
+	private void produceFluids(ChemplantRecipes.ChemRecipe recipe) {
+		if(recipe.outputFluids[0] != null) tanksNew[2].setFill(tanksNew[2].getFill() + recipe.outputFluids[0].fill);
+		if(recipe.outputFluids[1] != null) tanksNew[3].setFill(tanksNew[3].getFill() + recipe.outputFluids[1].fill);
+	}
+
+	private void consumeItems(ChemplantRecipes.ChemRecipe recipe) {
+
+		for(AStack in : recipe.inputs) {
+			if(in != null)
+				InventoryUtil.tryConsumeAStack(inventory, 13, 16, in);
+		}
+	}
+
+	private void produceItems(ChemplantRecipes.ChemRecipe recipe) {
+
+		for(ItemStack out : recipe.outputs) {
+			if(out != null)
+				InventoryUtil.tryAddItemToInventory(inventory, 5, 8, out.copy());
 		}
 	}
 
@@ -671,7 +619,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	public boolean tryFillAssemblerCap(IItemHandler container, int[] allowedSlots, TileEntityMachineBase te) {
 		if(allowedSlots.length < 1)
 			return false;
-		List<AStack> recipeIngredients = ChemplantRecipes.getChemInputFromTempate(inventory.getStackInSlot(4));//Loading Ingredients
+		List<AStack> recipeIngredients = null;//Loading Ingredients
 		if(recipeIngredients == null) //No recipe template found
 			return false;
 		else {
@@ -730,7 +678,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 							} else {
 								inventory.getStackInSlot(ingredientSlot).grow(foundCount); // transfer complete
 							}
-							needsProcess = true;
 						} else {
 							break; // ingredientSlot filled
 						}
@@ -856,17 +803,17 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] {tanks[2], tanks[3]};
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] {tanksNew[2], tanksNew[3]};
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] {tanks[0], tanks[1]};
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] {tanksNew[0], tanksNew[1]};
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
-		return tanks;
+	public FluidTankNTM[] getAllTanks() {
+		return tanksNew;
 	}
 }

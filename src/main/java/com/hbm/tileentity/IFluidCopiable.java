@@ -4,7 +4,7 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.fluid.IFluidUser;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,7 +23,7 @@ public interface IFluidCopiable extends ICopiable {
         IFluidUser tile = (IFluidUser) this;
         ArrayList<Integer> types = new ArrayList<>();
 
-        for(FluidTank tank : tile.getAllTanks()) {
+        for(FluidTankNTM tank : tile.getAllTanks()) {
             if(!tank.getTankType().hasNoID())
                 types.add(tank.getTankType().getID());
         }
@@ -31,7 +31,7 @@ public interface IFluidCopiable extends ICopiable {
         return BobMathUtil.intCollectionToArray(types);
     }
 
-    default FluidTank getTankToPaste() {
+    default FluidTankNTM getTankToPaste() {
         TileEntity te = (TileEntity) this;
         if(te instanceof IFluidStandardTransceiver) {
             IFluidStandardTransceiver tile = (IFluidStandardTransceiver) this;

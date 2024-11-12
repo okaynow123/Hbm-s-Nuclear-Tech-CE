@@ -1,6 +1,7 @@
 package com.hbm.particle;
 
 import com.hbm.main.ResourceManager;
+import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.Tuple;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -14,7 +15,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,7 +22,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.awt.*;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,31 +30,29 @@ import java.util.Random;
 public class ParticleSpentCasing extends Particle {
 
     public static final Random rand = new Random();
-    private static float dScale = 0.05F, smokeJitter = 0.001F;
+    public static float dScale = 0.05F, smokeJitter = 0.001F;
 
     private int maxSmokeGen = 120;
     private double smokeLift = 0.5D;
     private int nodeLife = 30;
 
-    private final List<Tuple.Pair<Vec3d, Double>> smokeNodes = new ArrayList();
+    private final List<Tuple.Pair<Vec3, Double>> smokeNodes = new ArrayList();
 
     private final TextureManager textureManager;
 
     private final SpentCasing config;
-    private boolean isSmoking;
+    public boolean isSmoking;
 
-    private float momentumPitch, momentumYaw;
-    private boolean onGroundPreviously = false;
-    private double maxHeight;
+    public float momentumPitch, momentumYaw;
 
     public float rotationPitch, rotationYaw;
-    private float prevRotationPitch, prevRotationYaw;
+    public float prevRotationPitch, prevRotationYaw;
 
     private boolean isInWater() {
         return this.world.getBlockState(new BlockPos(this.posX, this.posY, this.posZ)).getMaterial() == Material.WATER;
     }
 
-    public ParticleSpentCasing(TextureManager textureManager, World world, double x, double y, double z, double mx, double my, double mz, float momentumPitch, float momentumYaw, SpentCasing config) {
+    public ParticleSpentCasing(TextureManager textureManager, World world, double x, double y, double z, double mx, double my, double mz, float momentumPitch, float momentumYaw, SpentCasing config, boolean smoking, int smokeLife, double smokeLift, int nodeLife) {
         super(world, x, y, z, 0, 0, 0);
         this.textureManager = textureManager;
         this.momentumPitch = momentumPitch;
@@ -63,10 +60,11 @@ public class ParticleSpentCasing extends Particle {
         this.config = config;
 
         this.particleMaxAge = config.getMaxAge();
-        this.isSmoking = rand.nextFloat() < config.getSmokeChance();
-        this.maxSmokeGen = config.getSmokeDuration();
-        this.smokeLift = config.getSmokeLift();
-        this.nodeLife = config.getSmokeNodeLife();
+
+        this.isSmoking = smoking;
+        this.maxSmokeGen = smokeLife;
+        this.smokeLift = smokeLift;
+        this.nodeLife = nodeLife;
 
         this.prevPosX = x;
         this.prevPosY = y;
@@ -76,9 +74,7 @@ public class ParticleSpentCasing extends Particle {
         this.motionY = my;
         this.motionZ = mz;
 
-        particleGravity = 8F;
-
-        maxHeight = y;
+        particleGravity = 1F;
     }
 
     @Override
@@ -88,24 +84,33 @@ public class ParticleSpentCasing extends Particle {
 
     @Override
     public void onUpdate() {
-        super.onUpdate();
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
 
-        if(motionY > 0 && posY > maxHeight)
-            maxHeight = posY;
+        if(this.particleAge++ >= this.particleMaxAge) {
+            this.setExpired();
+        }
 
-        if(!onGroundPreviously && onGround)
-            tryPlayBounceSound();
+        this.motionY -= 0.04D * (double) this.particleGravity;
+        double prevMotionY = this.motionY;
+        this.move(this.motionX, this.motionY, this.motionZ);
+        this.motionX *= 0.98D;
+        this.motionY *= 0.98D;
+        this.motionZ *= 0.98D;
 
-        if(!onGroundPreviously && onGround) {
+        if(this.onGround) {
+            this.motionX *= 0.7D;
+            this.motionZ *= 0.7D;
+        }
 
-            onGroundPreviously = true;
-            motionY = Math.log10(maxHeight - posY + 2);
-            momentumPitch = (float) rand.nextGaussian() * config.getBouncePitch();
-            momentumYaw = (float) rand.nextGaussian() * config.getBounceYaw();
-            maxHeight = posY;
+        if(onGround) {
+            this.onGround = false;
+            motionY = prevMotionY * -0.5;
+            this.rotationPitch = 0;
+            //momentumPitch = (float) rand.nextGaussian() * config.getBouncePitch();
+            //momentumYaw = (float) rand.nextGaussian() * config.getBounceYaw();
 
-        } else if(onGroundPreviously && !onGround) {
-            onGroundPreviously = false;
         }
 
         if(particleAge > maxSmokeGen && !smokeNodes.isEmpty())
@@ -113,23 +118,18 @@ public class ParticleSpentCasing extends Particle {
 
         if(isSmoking && particleAge <= maxSmokeGen) {
 
-            for(Tuple.Pair<Vec3d, Double> pair : smokeNodes) {
-                Vec3d node = pair.getKey();
+            for(Tuple.Pair<Vec3, Double> pair : smokeNodes) {
+                Vec3 node = pair.getKey();
 
-                double newX = node.x + rand.nextGaussian() * smokeJitter;
-                double newZ = node.z + rand.nextGaussian() * smokeJitter;
-                double newY = node.y + smokeLift * dScale;
+                node.xCoord += rand.nextGaussian() * smokeJitter;
+                node.zCoord += rand.nextGaussian() * smokeJitter;
+                node.yCoord += smokeLift * dScale;
 
-                Vec3d updatedNode = new Vec3d(newX, newY, newZ);
-                pair = new Tuple.Pair<>(updatedNode, pair.getValue());
-
-
-                Double value = pair.getValue();
-                value = Math.max(0, value - (1D / (double) nodeLife));
+                pair.value = Math.max(0, pair.value - (1D / (double) nodeLife));
             }
 
             if(particleAge < maxSmokeGen || isInWater()) {
-                smokeNodes.add(new Tuple.Pair<>(new Vec3d(0, 0, 0), smokeNodes.isEmpty() ? 0.0D : 1D));
+                smokeNodes.add(new Tuple.Pair<Vec3, Double>(Vec3.createVectorHelper(0, 0, 0), smokeNodes.isEmpty() ? 0.0D : 1D));
             }
         }
 
@@ -217,29 +217,26 @@ public class ParticleSpentCasing extends Particle {
             bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
             float scale = config.getScaleX() * 0.5F * dScale;
-            Vec3d vec = new Vec3d(scale, 0, 0);
+            Vec3 vec = Vec3.createVectorHelper(scale, 0, 0);
             float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * interp;
-            vec.rotateYaw((float) Math.toRadians(-yaw));
+            vec.rotateAroundY((float) Math.toRadians(-yaw));
 
             double deltaX = prevRenderX - pX;
             double deltaY = prevRenderY - pY;
             double deltaZ = prevRenderZ - pZ;
 
-            for(Tuple.Pair<Vec3d, Double> pair : smokeNodes) {
-                Vec3d pos = pair.getKey();
+            for(Tuple.Pair<Vec3, Double> pair : smokeNodes) {
+                Vec3 pos = pair.getKey();
                 double mult = 1D;
-                double newX = pos.x + deltaX * mult;
-                double newY = pos.y + deltaY * mult;
-                double newZ = pos.z + deltaZ * mult;
-                Vec3d newPos = new Vec3d(newX, newY, newZ);
-
-                pair = new Tuple.Pair<>(newPos, pair.getValue());
+                pos.xCoord += deltaX * mult;
+                pos.yCoord += deltaY * mult;
+                pos.zCoord += deltaZ * mult;
 
             }
 
             for(int i = 0; i < smokeNodes.size() - 1; i++) {
-                final Tuple.Pair<Vec3d, Double> node = smokeNodes.get(i), past = smokeNodes.get(i + 1);
-                final Vec3d nodeLoc = node.getKey(), pastLoc = past.getKey();
+                final Tuple.Pair<Vec3, Double> node = smokeNodes.get(i), past = smokeNodes.get(i + 1);
+                final Vec3 nodeLoc = node.getKey(), pastLoc = past.getKey();
                 float nodeAlpha = node.getValue().floatValue();
                 float pastAlpha = past.getValue().floatValue();
 
@@ -247,15 +244,15 @@ public class ParticleSpentCasing extends Particle {
                 nodeAlpha *= timeAlpha;
                 pastAlpha *= timeAlpha;
 
-                bufferbuilder.pos(nodeLoc.x, nodeLoc.y, nodeLoc.z).color(1F, 1F, 1F, nodeAlpha).endVertex();
-                bufferbuilder.pos(nodeLoc.x + vec.x, nodeLoc.y, nodeLoc.z + vec.z).color(1F, 1F, 1F, 0F).endVertex();
-                bufferbuilder.pos(pastLoc.x + vec.x, pastLoc.y, pastLoc.z + vec.z).color(1F, 1F, 1F, 0F).endVertex();
-                bufferbuilder.pos(pastLoc.x, pastLoc.y, pastLoc.z).color(1F, 1F, 1F, pastAlpha).endVertex();
+                bufferbuilder.pos(nodeLoc.xCoord, nodeLoc.yCoord, nodeLoc.zCoord).color(1F, 1F, 1F, nodeAlpha).endVertex();
+                bufferbuilder.pos(nodeLoc.xCoord + vec.xCoord, nodeLoc.yCoord, nodeLoc.zCoord + vec.zCoord).color(1F, 1F, 1F, 0F).endVertex();
+                bufferbuilder.pos(pastLoc.xCoord + vec.xCoord, pastLoc.yCoord, pastLoc.zCoord + vec.zCoord).color(1F, 1F, 1F, 0F).endVertex();
+                bufferbuilder.pos(pastLoc.xCoord, pastLoc.yCoord, pastLoc.zCoord).color(1F, 1F, 1F, pastAlpha).endVertex();
 
-                bufferbuilder.pos(nodeLoc.x, nodeLoc.y, nodeLoc.z).color(1F, 1F, 1F, nodeAlpha).endVertex();
-                bufferbuilder.pos(nodeLoc.x - vec.x, nodeLoc.y, nodeLoc.z - vec.z).color(1F, 1F, 1F, 0F).endVertex();
-                bufferbuilder.pos(pastLoc.x - vec.x, pastLoc.y, pastLoc.z - vec.z).color(1F, 1F, 1F, 0F).endVertex();
-                bufferbuilder.pos(pastLoc.x, pastLoc.y, pastLoc.z).color(1F, 1F, 1F, pastAlpha).endVertex();
+                bufferbuilder.pos(nodeLoc.xCoord, nodeLoc.yCoord, nodeLoc.zCoord).color(1F, 1F, 1F, nodeAlpha).endVertex();
+                bufferbuilder.pos(nodeLoc.xCoord - vec.xCoord, nodeLoc.yCoord, nodeLoc.zCoord - vec.zCoord).color(1F, 1F, 1F, 0F).endVertex();
+                bufferbuilder.pos(pastLoc.xCoord - vec.xCoord, pastLoc.yCoord, pastLoc.zCoord - vec.zCoord).color(1F, 1F, 1F, 0F).endVertex();
+                bufferbuilder.pos(pastLoc.xCoord, pastLoc.yCoord, pastLoc.zCoord).color(1F, 1F, 1F, pastAlpha).endVertex();
             }
 
             GL11.glAlphaFunc(GL11.GL_GREATER, 0F);
@@ -282,13 +279,13 @@ public class ParticleSpentCasing extends Particle {
     @Override
     @SideOnly(Side.CLIENT)
     public int getBrightnessForRender(float partialTicks) {
-        BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper.floor(this.posZ));
+        int x = MathHelper.floor(this.posX);
+        int z = MathHelper.floor(this.posZ);
 
-        if (this.world.isBlockLoaded(blockpos)) {
+        if(this.world.isBlockLoaded(new BlockPos(x, 0, z))) {
             double d0 = (this.getBoundingBox().maxY - this.getBoundingBox().minY) * 0.66D;
-            int k = MathHelper.floor(this.posY + d0);
-            blockpos.setY(k);
-            return this.world.getCombinedLight(blockpos, 0);
+            int y = MathHelper.floor(this.posY + d0);
+            return this.world.getCombinedLight(new BlockPos(x, y, z), 0);
         } else {
             return 0;
         }

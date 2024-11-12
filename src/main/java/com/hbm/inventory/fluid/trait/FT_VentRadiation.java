@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 
 import com.hbm.saveddata.RadiationSavedData;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -27,7 +27,7 @@ public class FT_VentRadiation extends FluidTrait {
 	}
 	
 	@Override
-	public void onFluidRelease(World world, int x, int y, int z, FluidTank tank, int overflowAmount, FluidReleaseType type) {
+	public void onFluidRelease(World world, int x, int y, int z, FluidTankNTM tank, int overflowAmount, FluidReleaseType type) {
 		RadiationSavedData.incrementRad(world, new BlockPos(x, y, z), overflowAmount * radPerMB, Integer.MAX_VALUE);
 	}
 	

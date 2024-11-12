@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -7,13 +8,18 @@ import java.util.Map.Entry;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.machine.*;
 import com.hbm.items.special.*;
 import com.hbm.items.weapon.*;
-import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
-import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.render.item.*;
+import com.hbm.wiaj.GuiWorldInAJar;
+import com.hbm.wiaj.cannery.CanneryBase;
+import com.hbm.wiaj.cannery.Jars;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -58,12 +64,7 @@ import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.gear.RedstoneSword;
-import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemCassette.TrackType;
-import com.hbm.items.machine.ItemChemistryTemplate;
-import com.hbm.items.machine.ItemFluidTank;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
-import com.hbm.items.machine.ItemRBMKPellet;
 import com.hbm.items.special.weapon.GunB92;
 import com.hbm.items.tool.ItemFluidCanister;
 import com.hbm.items.tool.ItemGuideBook;
@@ -211,6 +212,10 @@ public class ModEventHandlerClient {
 	public static float deltaMouseY;
 	
 	public static float currentFOV = 70;
+	public static final int flashDuration = 5_000;
+	public static long flashTimestamp;
+	public static final int shakeDuration = 1_500;
+	public static long shakeTimestamp;
 	
 	public static void updateMouseDelta() {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -230,15 +235,7 @@ public class ModEventHandlerClient {
 	public void registerModels(ModelRegistryEvent event) {
 
 		int i = 0;
-		ResourceLocation[] list = new ResourceLocation[EnumCanister.values().length];
-		for(EnumCanister e : EnumCanister.values()) {
-			list[i] = e.getResourceLocation();
-			i++;
-		}
-		ModelLoader.registerItemVariants(ModItems.canister_generic, list);
-
-		i = 0;
-		list = new ResourceLocation[EnumCell.values().length];
+		ResourceLocation[] list = new ResourceLocation[EnumCell.values().length];
 		for(EnumCell e : EnumCell.values()) {
 			list[i] = e.getResourceLocation();
 			i++;
@@ -260,18 +257,30 @@ public class ModEventHandlerClient {
 		ModelLoader.registerItemVariants(ModItems.ammo_arty, locations);
 
 		FluidType[] order = Fluids.getInNiceOrder();
-		for (i = 1; i < order.length; i++) {
+		for (i = 0; i < order.length; i++) {
 			if (!order[i].hasNoID()) {
 				ModelLoader.setCustomModelResourceLocation(ModItems.forge_fluid_identifier, order[i].getID(),
 						ItemForgeFluidIdentifier.identifierModel);
+				if(order[i].getContainer(Fluids.CD_Canister.class) != null) {
+					ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
+							FluidCanisterRender.INSTANCE.setModelLocation(ItemFluidCanister.getStackFromFluid(order[i])));
+				}
+				ModelLoader.setCustomModelResourceLocation(ModItems.fluid_icon, order[i].getID(),
+						ItemFluidIcon.fluidIconModel);
 			}
 		}
+		ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemFluidCanister.fluidCanisterModel);
 
 		((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
 		((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
 
 		for(Item item : ModItems.ALL_ITEMS) {
-			registerModel(item, 0);
+			try {
+				registerModel(item, 0);
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+				MainRegistry.logger.info("Failed to register model for " + item.getRegistryName());
+			}
 		}
 		for(Block block : ModBlocks.ALL_BLOCKS) {
 			registerBlockModel(block, 0);
@@ -308,8 +317,9 @@ public class ModEventHandlerClient {
 			return;
 
 		//Drillgon200: I hate myself for making this
+		//Th3_Sl1ze: Don't worry, I hate myself too
 		if(item == ModItems.chemistry_template){
-			ChemplantRecipes.registerRecipes();
+			ChemplantRecipes.register();
 		}
 
 		if(item == ModItems.chemistry_icon) {
@@ -321,7 +331,7 @@ public class ModEventHandlerClient {
 				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 			}
 		} else if(item == ModItems.siren_track) {
-			for(int i = 0; i < TrackType.values().length; i++) {
+			for (int i = 0; i < TrackType.values().length; i++) {
 				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 			}
 		} else if(item == ModItems.ingot_u238m2) {
@@ -504,7 +514,7 @@ public class ModEventHandlerClient {
 		swapModelsNoGui(ModItems.gun_uzi_saturnite_silencer, reg);
 		swapModelsNoGui(ModItems.gun_mp40, reg);
 		swapModels(ModItems.cell, reg);
-		swapModels(ModItems.gas_canister, reg);
+		swapModels(ModItems.gas_empty, reg);
 		swapModelsNoGui(ModItems.multitool_dig, reg);
 		swapModelsNoGui(ModItems.multitool_silk, reg);
 		swapModelsNoGui(ModItems.multitool_ext, reg);
@@ -806,6 +816,7 @@ public class ModEventHandlerClient {
 
 		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/ore_bedrock_layer"));
 		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_identifier_overlay"));
+		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_icon"));
 	}
 
 	@SubscribeEvent
@@ -1108,6 +1119,9 @@ public class ModEventHandlerClient {
 			RenderNTMSkybox.didLastRender = false;
 		}
 	}
+
+	private static long canneryTimestamp;
+	private static ComparableStack lastCannery = null;
 	
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent e) {
@@ -1159,6 +1173,55 @@ public class ModEventHandlerClient {
 		if(Minecraft.getMinecraft().player != null){
 			JetpackHandler.clientTick(e);
 		}
+
+		if(Keyboard.isKeyDown(Keyboard.KEY_F1) && Minecraft.getMinecraft().currentScreen != null) {
+
+			ComparableStack comp = canneryTimestamp > System.currentTimeMillis() - 100 ? lastCannery : null;
+
+			if(comp == null) {
+				ItemStack stack = getMouseOverStack();
+				if(stack != null) comp = new ComparableStack(stack).makeSingular();
+			}
+
+			if(comp != null) {
+				CanneryBase cannery = Jars.canneries.get(comp);
+				if(cannery != null) {
+					FMLCommonHandler.instance().showGuiScreen(new GuiWorldInAJar(cannery.createScript(), cannery.getName(), cannery.getIcon(), cannery.seeAlso()));
+				}
+			}
+		}
+	}
+
+	public static ItemStack getMouseOverStack() {
+
+		Minecraft mc = Minecraft.getMinecraft();
+		if(mc.currentScreen instanceof GuiContainer) {
+
+			ScaledResolution scaledresolution = new ScaledResolution(mc);
+			int width = scaledresolution.getScaledWidth();
+			int height = scaledresolution.getScaledHeight();
+			int mouseX = Mouse.getX() * width / mc.displayWidth;
+			int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
+
+			GuiContainer container = (GuiContainer) mc.currentScreen;
+
+			for(Object o : container.inventorySlots.inventorySlots) {
+				Slot slot = (Slot) o;
+
+				if(slot.getHasStack()) {
+					try {
+						Method isMouseOverSlot = ReflectionHelper.findMethod(GuiContainer.class, "func_146981_a", "isMouseOverSlot", Slot.class, int.class, int.class);
+
+						if((boolean) isMouseOverSlot.invoke(container, slot, mouseX, mouseY)) {
+							return slot.getStack();
+						}
+
+					} catch(Exception ex) { }
+				}
+			}
+		}
+
+		return null;
 	}
 	
 	//Sus
@@ -1652,6 +1715,33 @@ public class ModEventHandlerClient {
 	@SubscribeEvent
 	public void onOverlayRender(RenderGameOverlayEvent.Pre event) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
+
+		/// NUKE FLASH ///
+		if(event.getType() == ElementType.CROSSHAIRS && (flashTimestamp + flashDuration - System.currentTimeMillis()) > 0) {
+			int width = event.getResolution().getScaledWidth();
+			int height = event.getResolution().getScaledHeight();
+			int buff = -200; // that's for the shake effect - so the flash won't look like offset
+			net.minecraft.client.renderer.Tessellator tess = net.minecraft.client.renderer.Tessellator.getInstance();
+			BufferBuilder buffer = tess.getBuffer();
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+			GlStateManager.alphaFunc(516, 0.0F);
+			GlStateManager.depthMask(false);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+			float brightness = (flashTimestamp + flashDuration - System.currentTimeMillis()) / (float) flashDuration;
+			buffer.pos(width - buff, buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
+			buffer.pos(buff, buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
+			buffer.pos(buff, height - buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
+			buffer.pos(width - buff, height - buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
+			tess.draw();
+			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+			GL11.glDepthMask(true);
+			return;
+		}
+
 		if(event.getType() == ElementType.CROSSHAIRS && player.getHeldItemMainhand().getItem() == ModItems.gun_supershotgun && !ItemGunShotty.hasHookedEntity(player.world, player.getHeldItemMainhand())) {
 			float x1 = ItemGunShotty.prevScreenPos.x + (ItemGunShotty.screenPos.x - ItemGunShotty.prevScreenPos.x) * event.getPartialTicks();
 			float y1 = ItemGunShotty.prevScreenPos.y + (ItemGunShotty.screenPos.y - ItemGunShotty.prevScreenPos.y) * event.getPartialTicks();
@@ -1748,6 +1838,14 @@ public class ModEventHandlerClient {
 
 		if(helmet.getItem() instanceof ArmorFSB) {
 			((ArmorFSB)helmet.getItem()).handleOverlay(event, player);
+		}
+
+		// NUKE GUI SHAKE //
+		if(event.getType() == ElementType.HOTBAR && (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) > 0) {
+			double mult = (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) / (double) ModEventHandlerClient.shakeDuration * 2;
+			double horizontal = MathHelper.clamp(Math.sin(System.currentTimeMillis() * 0.02), -0.7, 0.7) * 15;
+			double vertical = MathHelper.clamp(Math.sin(System.currentTimeMillis() * 0.01 + 2), -0.7, 0.7) * 3;
+			GL11.glTranslated(horizontal * mult, vertical * mult, 0);
 		}
 	}
 	
@@ -2054,6 +2152,17 @@ public class ModEventHandlerClient {
 				list.add(TextFormatting.GOLD + I18nUtil.resolveKey("desc.nstagemult", entry.value, entry.type));
 		}
 
+		/// CREATE-ISH HELP (WIAJ) ///
+		try {
+			CanneryBase cannery = Jars.canneries.get(comp);
+			if(cannery != null) {
+				list.add(TextFormatting.GREEN + I18nUtil.resolveKey("cannery.f1"));
+				lastCannery = comp;
+				canneryTimestamp = System.currentTimeMillis();
+			}
+		} catch(Exception ex) {
+			list.add(TextFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
+		}
 		/// NEUTRON RADS ///
 		float activationRads = ContaminationUtil.getNeutronRads(stack);
 		if(activationRads > 0) {

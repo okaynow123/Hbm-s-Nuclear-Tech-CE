@@ -4,7 +4,7 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.inventory.FractionRecipes;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTank;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.packet.BufPacket;
@@ -24,15 +24,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMachineFractionTower extends TileEntityLoadedBase implements IBufPacketReceiver, IFluidStandardTransceiver, ITickable {
 	
-	public FluidTank[] tanks;
+	public FluidTankNTM[] tanks;
 	
 	public TileEntityMachineFractionTower() {
 		super();
 
-		tanks = new FluidTank[3];
-		tanks[0] = new FluidTank(Fluids.HEAVYOIL, 4000);
-		tanks[1] = new FluidTank(Fluids.BITUMEN, 4000);
-		tanks[2] = new FluidTank(Fluids.SMEAR, 4000);
+		tanks = new FluidTankNTM[3];
+		tanks[0] = new FluidTankNTM(Fluids.HEAVYOIL, 4000);
+		tanks[1] = new FluidTankNTM(Fluids.BITUMEN, 4000);
+		tanks[2] = new FluidTankNTM(Fluids.SMEAR, 4000);
 	}
 	
 	@Override
@@ -190,17 +190,17 @@ public class TileEntityMachineFractionTower extends TileEntityLoadedBase impleme
 	}
 
 	@Override
-	public FluidTank[] getSendingTanks() {
-		return new FluidTank[] { tanks[1], tanks[2] };
+	public FluidTankNTM[] getSendingTanks() {
+		return new FluidTankNTM[] { tanks[1], tanks[2] };
 	}
 
 	@Override
-	public FluidTank[] getReceivingTanks() {
-		return new FluidTank[] { tanks[0] };
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[] { tanks[0] };
 	}
 
 	@Override
-	public FluidTank[] getAllTanks() {
+	public FluidTankNTM[] getAllTanks() {
 		return tanks;
 	}
 }

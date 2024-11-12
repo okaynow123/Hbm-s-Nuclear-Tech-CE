@@ -17,6 +17,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,8 +30,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public abstract class BlockDummyable extends BlockContainer implements ICopiable {
 
@@ -289,6 +293,35 @@ public abstract class BlockDummyable extends BlockContainer implements ICopiable
 		}
 		InventoryHelper.dropInventoryItems(world, pos, world.getTileEntity(pos));
 		super.breakBlock(world, pos, state);
+	}
+
+	public boolean useDetailedHitbox() {
+		return !bounding.isEmpty();
+	}
+
+	public List<AxisAlignedBB> bounding = new ArrayList();
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean isActualState) {
+
+		if(!this.useDetailedHitbox()) {
+			super.addCollisionBoxToList(state, world, pos, entityBox, list, entityIn, isActualState);
+			return;
+		}
+
+		int[] corePos = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+
+		if(corePos == null)
+			return;
+		IBlockState coreState = world.getBlockState(new BlockPos(corePos[0], corePos[1], corePos[2]));
+
+		for(AxisAlignedBB aabb :this.bounding) {
+			AxisAlignedBB boxlet = getAABBRotationOffset(aabb, corePos[0] + 0.5, corePos[1], corePos[2] + 0.5, ForgeDirection.getOrientation(coreState.getBlock().getMetaFromState(state) - this.offset).getRotation(ForgeDirection.UP));
+
+			if(entityBox.intersects(boxlet)) {
+				list.add(boxlet);
+			}
+		}
 	}
 	
 	@Override

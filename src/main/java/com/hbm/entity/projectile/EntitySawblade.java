@@ -1,21 +1,32 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.items.ModItems;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntitySawblade extends EntityThrowableInterp {
-
+    public static final DataParameter<Integer> ORIENTATION = EntityDataManager.createKey(EntitySawblade.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> META = EntityDataManager.createKey(EntitySawblade.class, DataSerializers.VARINT);
     public EntitySawblade(World world) {
         super(world);
         this.setSize(1F, 1F);
@@ -29,22 +40,18 @@ public class EntitySawblade extends EntityThrowableInterp {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(10, new Integer(0));
-        this.dataWatcher.addObject(11, new Integer(0));
+        this.dataManager.register(ORIENTATION, 0);
+        this.dataManager.register(META, 0);
     }
 
     public EntitySawblade setOrientation(int rot) {
-        this.dataWatcher.updateObject(10, rot);
+        this.dataManager.set(ORIENTATION, rot);
         return this;
     }
 
-    public int getOrientation() {
-        return this.dataWatcher.getWatchableObjectInt(10);
-    }
+    public int getOrientation() { return this.dataManager.get(ORIENTATION); }
 
-    public int getMeta() {
-        return this.dataWatcher.getWatchableObjectInt(11);
-    }
+    public int getMeta() { return this.dataManager.get(META); }
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
@@ -78,28 +85,28 @@ public class EntitySawblade extends EntityThrowableInterp {
                 vdat.setInteger("cDiv", 5);
                 PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(vdat, e.posX, e.posY + e.height * 0.5, e.posZ), new NetworkRegistry.TargetPoint(e.dimension, e.posX, e.posY + e.height * 0.5, e.posZ, 150));
 
-                worldObj.playSoundEffect(e.posX, e.posY, e.posZ, "mob.zombie.woodbreak", 2.0F, 0.95F + worldObj.rand.nextFloat() * 0.2F);
+                world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, SoundCategory.NEUTRAL, 2.0F, 0.95F + world.rand.nextFloat() * 0.2F);
             }
         }
 
-        if(this.ticksExisted > 1 && worldObj != null && mop != null && mop.typeOfHit == MovingObjectType.BLOCK) {
+        if(this.ticksExisted > 1 && world != null && mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK) {
 
-            int orientation = this.dataWatcher.getWatchableObjectInt(10);
+            int orientation = this.getOrientation();
 
             if(orientation < 6) {
 
                 if(Vec3.createVectorHelper(motionX, motionY, motionZ).lengthVector() < 0.75) {
-                    this.dataWatcher.updateObject(10, orientation + 6);
+                    this.dataManager.set(ORIENTATION, orientation + 6);
                     orientation += 6;
                 } else {
-                    ForgeDirection side = ForgeDirection.getOrientation(mop.sideHit);
-                    this.motionX *= 1 - (Math.abs(side.offsetX) * 2);
-                    this.motionY *= 1 - (Math.abs(side.offsetY) * 2);
-                    this.motionZ *= 1 - (Math.abs(side.offsetZ) * 2);
-                    worldObj.createExplosion(this, posX, posY, posZ, 3F, false);
+                    EnumFacing side = mop.sideHit;
+                    this.motionX *= 1 - (Math.abs(side.getFrontOffsetX()) * 2);
+                    this.motionY *= 1 - (Math.abs(side.getFrontOffsetY()) * 2);
+                    this.motionZ *= 1 - (Math.abs(side.getFrontOffsetZ()) * 2);
+                    world.createExplosion(this, posX, posY, posZ, 3F, false);
 
-                    if(worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ).getExplosionResistance(this) < 50) {
-                        worldObj.func_147480_a(mop.blockX, mop.blockY, mop.blockZ, false);
+                    if(world.getBlockState(mop.getBlockPos()).getBlock().getExplosionResistance(this) < 50) {
+                        world.destroyBlock(mop.getBlockPos(), false);
                     }
                 }
             }
@@ -116,10 +123,10 @@ public class EntitySawblade extends EntityThrowableInterp {
     @Override
     public void onUpdate() {
 
-        if(!worldObj.isRemote) {
-            int orientation = this.dataWatcher.getWatchableObjectInt(10);
+        if(!world.isRemote) {
+            int orientation = this.getOrientation();
             if(orientation >= 6 && !this.inGround) {
-                this.dataWatcher.updateObject(10, orientation - 6);
+                this.setOrientation(orientation - 6);
             }
         }
 
