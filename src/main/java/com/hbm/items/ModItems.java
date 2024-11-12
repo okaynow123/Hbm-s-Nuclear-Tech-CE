@@ -1334,6 +1334,20 @@ public class ModItems {
 	public static final Item rod_dual_empty = new ItemBase("rod_dual_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item rod_quad_empty = new ItemBase("rod_quad_empty").setCreativeTab(MainRegistry.controlTab);
 
+	public static final Item rod_zirnox_empty = new ItemBase("rod_zirnox_empty").setMaxStackSize(64).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_zirnox_tritium = new ItemBase("rod_zirnox_tritium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox = (ItemEnumMulti) new ItemZirnoxRod().setUnlocalizedName("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item rod_zirnox_natural_uranium_fuel_depleted = new ItemBase("rod_zirnox_natural_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_uranium_fuel_depleted = new ItemBase("rod_zirnox_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_thorium_fuel_depleted = new ItemBase("rod_zirnox_thorium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_mox_fuel_depleted = new ItemBase("rod_zirnox_mox_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_plutonium_fuel_depleted =  new ItemBase("rod_zirnox_plutonium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_u233_fuel_depleted = new ItemBase("rod_zirnox_u233_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_u235_fuel_depleted = new ItemBase("rod_zirnox_u235_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_les_fuel_depleted = new ItemBase("rod_zirnox_les_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+	public static final Item rod_zirnox_zfb_mox_depleted = new ItemBase("rod_zirnox_zfb_mox_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+
 	
 	public static final Item rod_th232 = new ItemHazard(ItemHazard.th232 * ItemHazard.rod, "rod_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_th232 = new ItemHazard(ItemHazard.th232 * ItemHazard.rod_dual, "rod_dual_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
