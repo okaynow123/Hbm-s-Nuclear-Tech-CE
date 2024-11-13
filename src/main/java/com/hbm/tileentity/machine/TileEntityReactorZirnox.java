@@ -391,7 +391,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         }
 
         int[] dimensions = {1, 0, 2, 2, 2, 2,};
-        world.setBlockState(this.pos, ModBlocks.zirnox_destroyed, 3);
+        world.setBlockState(this.pos, ModBlocks.zirnox_destroyed.getDefaultState(), 3);
         MultiblockHandlerXR.fillSpace(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), dimensions, ModBlocks.zirnox_destroyed, ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset));
         world.playSound(null, pos.getX(), pos.getY() + 2, pos.getZ(), HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 10.0F, 1.0F);
         world.createExplosion(null, this.pos.getX(), this.pos.getY() + 3, this.pos.getZ(), 12.0F, true);

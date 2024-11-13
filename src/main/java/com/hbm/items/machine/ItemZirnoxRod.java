@@ -5,10 +5,14 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Locale;
@@ -78,13 +82,11 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {
-        Enum[] enums = theEnum.getEnumConstants();
-        this.icons = new IIcon[enums.length];
-
-        for(int i = 0; i < icons.length; i++) {
-            Enum num = enums[i];
-            this.icons[i] = reg.registerIcon(this.getIconString() + "_" + num.name().toLowerCase(Locale.US));
+    public void initModel() {
+        Enum<?>[] enums = theEnum.getEnumConstants();
+        for (Enum<?> num : enums) {
+            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(),
+                    new ModelResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US), "inventory"));
         }
     }
 

@@ -2,10 +2,12 @@ package com.hbm.items;
 
 import com.hbm.lib.RefStrings;
 import com.hbm.util.EnumUtil;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,7 +17,7 @@ import java.util.Locale;
 public class ItemEnumMulti extends Item {
 
     //hell yes, now we're thinking with enums!
-    protected Class<? extends Enum> theEnum;
+    protected static Class<? extends Enum> theEnum;
     protected boolean multiName;
     protected boolean multiTexture;
 
@@ -43,34 +45,16 @@ public class ItemEnumMulti extends Item {
         return this;
     }
 
-    protected IIcon[] icons;
-
-    @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister reg) {
-
-        if(multiTexture) {
-            Enum[] enums = theEnum.getEnumConstants();
-            this.icons = new IIcon[enums.length];
-
-            for(int i = 0; i < icons.length; i++) {
-                Enum num = enums[i];
-                this.icons[i] = reg.registerIcon(this.getIconString() + "." + num.name().toLowerCase(Locale.US));
+    public void initModel() {
+        if (multiTexture) {
+            Enum<?>[] enums = theEnum.getEnumConstants();
+            for (Enum<?> num : enums) {
+                ModelLoader.setCustomModelResourceLocation(this, num.ordinal(),
+                        new ModelResourceLocation(this.getRegistryName() + "." + num.name().toLowerCase(Locale.US), "inventory"));
             }
         } else {
-            this.itemIcon = reg.registerIcon(this.getIconString());
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int meta) {
-
-        if(multiTexture) {
-            Enum num = EnumUtil.grabEnumSafely(theEnum, meta);
-            return this.icons[num.ordinal()];
-        } else {
-            return this.itemIcon;
+            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
         }
     }
 

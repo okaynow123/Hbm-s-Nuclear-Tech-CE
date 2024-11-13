@@ -34,11 +34,7 @@ public class EntityZirnoxDebris extends EntityDebrisBase {
 
             switch(this.getType()) {
                 case BLANK: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_metal))) this.setDead(); break;
-                case ELEMENT: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_element))) this.setDead(); break;
-                case SHRAPNEL: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_shrapnel))) this.setDead(); break;
                 case GRAPHITE: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_graphite))) this.setDead(); break;
-                case CONCRETE: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_concrete))) this.setDead(); break;
-                case EXCHANGER: if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.debris_exchanger))) this.setDead(); break;
             }
 
             player.inventoryContainer.detectAndSendChanges();
