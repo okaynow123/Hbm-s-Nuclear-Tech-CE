@@ -67,26 +67,16 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
 
         EnumZirnoxType num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
-        list.add(ChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.depletion", ((int)((((double)getLifeTime(stack)) / (double)num.maxLife) * 100000)) / 1000D + "%"));
+        list.add(ChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.depletion", ((int) ((((double) getLifeTime(stack)) / (double) num.maxLife) * 100000)) / 1000D + "%"));
         String[] loc;
 
-        if(num.breeding)
+        if (num.breeding)
             loc = I18nUtil.resolveKeyArray("desc.item.zirnoxBreedingRod", BobMathUtil.getShortNumber(num.maxLife));
         else
             loc = I18nUtil.resolveKeyArray("desc.item.zirnoxRod", num.heat, BobMathUtil.getShortNumber(num.maxLife));
 
-        for(String s : loc) {
+        for (String s : loc) {
             list.add(s);
-        }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        Enum<?>[] enums = theEnum.getEnumConstants();
-        for (Enum<?> num : enums) {
-            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(),
-                    new ModelResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US), "inventory"));
         }
     }
 

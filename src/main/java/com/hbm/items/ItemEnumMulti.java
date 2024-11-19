@@ -45,19 +45,6 @@ public class ItemEnumMulti extends Item {
         return this;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        if (multiTexture) {
-            Enum<?>[] enums = theEnum.getEnumConstants();
-            for (Enum<?> num : enums) {
-                ModelLoader.setCustomModelResourceLocation(this, num.ordinal(),
-                        new ModelResourceLocation(this.getRegistryName() + "." + num.name().toLowerCase(Locale.US), "inventory"));
-            }
-        } else {
-            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
-        }
-    }
-
     /** Returns null when the wrong enum is passed. Only really used for recipes anyway so it's good. */
     public ItemStack stackFromEnum(int count, Enum num) {
 
@@ -69,6 +56,13 @@ public class ItemEnumMulti extends Item {
 
     public ItemStack stackFromEnum(Enum num) {
         return stackFromEnum(1, num);
+    }
+
+    public boolean isMultiTexture() {
+        return multiTexture;
+    }
+    public Class<? extends Enum> getTheEnum() {
+        return theEnum;
     }
 
     @Override

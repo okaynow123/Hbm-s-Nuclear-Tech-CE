@@ -13,6 +13,8 @@ import com.hbm.handler.*;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.ItemEnumMulti;
+import com.hbm.render.modelgenerator.ItemGen;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
 import com.hbm.tileentity.network.*;
 import com.hbm.tileentity.turret.*;
@@ -451,6 +453,7 @@ public class MainRegistry {
 		PacketDispatcher.registerPackets();
 
 		HbmPotion.init();
+		genItemModels(event);
 
 		CapabilityManager.INSTANCE.register(HbmLivingCapability.IEntityHbmProps.class, new HbmLivingCapability.EntityHbmPropsStorage(), HbmLivingCapability.EntityHbmProps.FACTORY);
 		CapabilityManager.INSTANCE.register(HbmCapability.IHBMData.class, new HbmCapability.HBMDataStorage(), HbmCapability.HBMData.FACTORY);
@@ -975,6 +978,10 @@ public class MainRegistry {
 		config.load();
 		CompatibilityConfig.loadFromConfig(config);
 		config.save();
+	}
+
+	public static void genItemModels(FMLPreInitializationEvent event) {
+		ItemGen.generateEnumItemModels((ItemEnumMulti) ModItems.rod_zirnox, event);
 	}
 
 	@EventHandler
