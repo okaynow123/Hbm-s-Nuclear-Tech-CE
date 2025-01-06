@@ -3,18 +3,33 @@ package com.hbm.main;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import api.hbm.energymk2.Nodespace;
 import com.hbm.config.RadiationConfig;
+import com.hbm.dim.CelestialBody;
+import com.hbm.dim.DebugTeleporter;
+import com.hbm.dim.Ike.BiomeGenIke;
+import com.hbm.dim.WorldGeneratorCelestial;
+import com.hbm.dim.WorldProviderCelestial;
+import com.hbm.dim.dres.biome.BiomeGenBaseDres;
+import com.hbm.dim.duna.biome.BiomeGenBaseDuna;
+import com.hbm.dim.eve.biome.BiomeGenBaseEve;
+import com.hbm.dim.laythe.biome.BiomeGenBaseLaythe;
+import com.hbm.dim.minmus.biome.BiomeGenBaseMinmus;
+import com.hbm.dim.moho.biome.BiomeGenBaseMoho;
+import com.hbm.dim.moon.BiomeGenMoon;
+import com.hbm.dim.orbit.BiomeGenOrbit;
+import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.potion.HbmPotion;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
+import com.hbm.util.ParticleUtil;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 
@@ -245,6 +260,7 @@ public class ModEventHandler {
 			addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.scrumpy), 1, 1, 1));
 		}
 	}
+
 
 	private void addWeightedRandomToLootTable(LootTableLoadEvent e, ResourceLocation loc, WeightedRandomChestContentFrom1710 content){
 		if(e.getName().equals(loc)){
@@ -582,10 +598,35 @@ public class ModEventHandler {
 			PacketDispatcher.wrapper.sendToAll(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
 		}
 
+		if(event.phase == Phase.END) {
+			DebugTeleporter.runQueuedTeleport();
+			if(event.world.getTotalWorldTime() % 20 == 0) {
+				CelestialBody.updateChemistry(event.world);
+			}
+		}
+
+		if(event.phase == Phase.START && event.world.provider instanceof WorldProviderCelestial && event.world.provider.getDimension() != 0) {
+			if(event.world.getGameRules().getBoolean("doDaylightCycle")) {
+				event.world.provider.setWorldTime(event.world.provider.getWorldTime() + 1L);
+			}
+		}
+
 		if(event.phase == Phase.START) {
 			BossSpawnHandler.rollTheDice(event.world);
 			TimedGenerator.automaton(event.world, 100);
+			updateWaterOpacity(event.world);
 		}
+	}
+
+	private void updateWaterOpacity(World world) {
+		// Per world water opacity!
+		int waterOpacity = 3;
+		if(world.provider instanceof WorldProviderCelestial) {
+			waterOpacity = ((WorldProviderCelestial) world.provider).getWaterOpacity();
+		}
+
+		Blocks.WATER.setLightOpacity(waterOpacity);
+		Blocks.FLOWING_WATER.setLightOpacity(waterOpacity);
 	}
 	
 	@SubscribeEvent
@@ -673,6 +714,17 @@ public class ModEventHandler {
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
 		EntityPlayer player = event.player;
 
+		if(player.posY > 300 && player.posY <1000) {
+			Vec3 vec = Vec3.createVectorHelper(3 * rand.nextDouble(), 0, 0);
+			CBT_Atmosphere thatmosphere = CelestialBody.getTrait(player.world, CBT_Atmosphere.class);
+
+			if(thatmosphere != null && thatmosphere.getPressure() > 0.05 && !player.isRiding()) {
+				if(Math.abs(player.motionX) > 1 || Math.abs(player.motionY) > 1 || Math.abs(player.motionZ) > 1) {
+					ParticleUtil.spawnGasFlame(player.world, player.posX - 1 + vec.xCoord, player.posY + vec.yCoord, player.posZ + vec.zCoord, 0, 0, 0);
+				}
+			}
+		}
+
 		if(!player.world.isRemote && event.phase == TickEvent.Phase.START) {
 
 			/// GHOST FIX START ///
@@ -721,6 +773,13 @@ public class ModEventHandler {
 		}
 		if(event.phase == Phase.END){
 			JetpackHandler.postPlayerTick(event.player);
+		}
+	}
+
+	@SubscribeEvent
+	public void onGenerateOre(OreGenEvent.GenerateMinable event) {
+		if(event.getWorld().provider instanceof WorldProviderCelestial && event.getWorld().provider.getDimension() != 0) {
+			WorldGeneratorCelestial.onGenerateOre(event);
 		}
 	}
 

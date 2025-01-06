@@ -25,7 +25,7 @@ public class GUIMachineVacuumDistill extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float f) {
         super.drawScreen(mouseX, mouseY, f);
-
+        super.renderHoveredToolTip(mouseX, mouseY);
         refinery.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 44, guiTop + 70 - 52, 16, 52);
         refinery.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 80, guiTop + 70 - 52, 16, 52);
         refinery.tanks[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 98, guiTop + 70 - 52, 16, 52);

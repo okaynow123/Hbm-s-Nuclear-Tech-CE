@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.hbm.config.*;
+import com.hbm.dim.CommandSpaceTP;
+import com.hbm.dim.SolarSystem;
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
@@ -14,10 +17,13 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnumMulti;
-import com.hbm.render.modelgenerator.ItemGen;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
 import com.hbm.tileentity.network.*;
 import com.hbm.tileentity.turret.*;
+import com.hbm.world.ModBiomes;
+import com.hbm.world.PlanetGen;
+import com.hbm.world.biome.BiomeGenCraterBase;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.Logger;
 
 import com.hbm.blocks.ModBlocks;
@@ -30,17 +36,6 @@ import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.command.CommandHbm;
 import com.hbm.command.CommandRadiation;
-import com.hbm.config.BombConfig;
-import com.hbm.config.GeneralConfig;
-import com.hbm.config.MachineConfig;
-import com.hbm.config.MobConfig;
-import com.hbm.config.PotionConfig;
-import com.hbm.config.RadiationConfig;
-import com.hbm.config.ToolConfig;
-import com.hbm.config.WeaponConfig;
-import com.hbm.config.CompatibilityConfig;
-import com.hbm.config.WorldConfig;
-import com.hbm.config.BedrockOreJsonConfig;
 import com.hbm.creativetabs.ResourceTab;
 import com.hbm.creativetabs.BlockTab;
 import com.hbm.creativetabs.ConsumableTab;
@@ -443,6 +438,8 @@ public class MainRegistry {
 		MinecraftForge.EVENT_BUS.register(new ModEventHandler());
 		MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandler());
 		MinecraftForge.ORE_GEN_BUS.register(new ModEventHandler());
+		MinecraftForge.EVENT_BUS.register(new ModEventHandlerImpact());
+		MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandlerImpact());
 		MinecraftForge.EVENT_BUS.register(new PollutionHandler());
 		
 		if(event.getSide() == Side.CLIENT) {
@@ -453,7 +450,6 @@ public class MainRegistry {
 		PacketDispatcher.registerPackets();
 
 		HbmPotion.init();
-		genItemModels(event);
 
 		CapabilityManager.INSTANCE.register(HbmLivingCapability.IEntityHbmProps.class, new HbmLivingCapability.EntityHbmPropsStorage(), HbmLivingCapability.EntityHbmProps.FACTORY);
 		CapabilityManager.INSTANCE.register(HbmCapability.IHBMData.class, new HbmCapability.HBMDataStorage(), HbmCapability.HBMData.FACTORY);
@@ -529,6 +525,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityDiode.class, new ResourceLocation(RefStrings.MODID, "tileentity_cable_diode"));
 		GameRegistry.registerTileEntity(TileEntityCableGauge.class, new ResourceLocation(RefStrings.MODID, "tileentity_cable_gauge"));
 		GameRegistry.registerTileEntity(TileEntityBedrockOre.class, new ResourceLocation(RefStrings.MODID, "tileentity_ore_bedrock"));
+		GameRegistry.registerTileEntity(TileEntityMachineDrain.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_fluid_drain"));
 		GameRegistry.registerTileEntity(TileEntityMachineBattery.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_battery"));
 		GameRegistry.registerTileEntity(TileEntityMachineTransformer.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_transformer"));
 		GameRegistry.registerTileEntity(TileEntityConverterHeRf.class, new ResourceLocation(RefStrings.MODID, "tileentity_converter_he_rf"));
@@ -578,6 +575,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntitySafe.class, new ResourceLocation(RefStrings.MODID, "tileentity_safe"));
 		GameRegistry.registerTileEntity(TileEntityMachineKeyForge.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_key_forge"));
 		GameRegistry.registerTileEntity(TileEntityNukeFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_nuke_furnace"));
+		GameRegistry.registerTileEntity(TileEntityOrbitalStation.class, new ResourceLocation(RefStrings.MODID, "tileentity_orbital_station"));
 		GameRegistry.registerTileEntity(TileEntityRtgFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_rtg_furnace"));
 		GameRegistry.registerTileEntity(TileEntityMachineSeleniumEngine.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_selenium"));
 		GameRegistry.registerTileEntity(TileEntityReactorControl.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_reactor_control"));
@@ -967,6 +965,7 @@ public class MainRegistry {
 		ToolConfig.loadFromConfig(config);
 		WeaponConfig.loadFromConfig(config);
 		MobConfig.loadFromConfig(config);
+		SpaceConfig.loadFromConfig(config);
 		config.save();
 		reloadCompatConfig();
 		WorldConfig.loadFromCompatibilityConfig();
@@ -978,10 +977,6 @@ public class MainRegistry {
 		config.load();
 		CompatibilityConfig.loadFromConfig(config);
 		config.save();
-	}
-
-	public static void genItemModels(FMLPreInitializationEvent event) {
-		ItemGen.generateEnumItemModels((ItemEnumMulti) ModItems.rod_zirnox, event);
 	}
 
 	@EventHandler
@@ -998,6 +993,9 @@ public class MainRegistry {
 	public void postInit(FMLPostInitializationEvent event) {
 		ModItems.postInit();
 		ModBlocks.postInit();
+		ModBiomes.init();
+		SolarSystem.init();
+		PlanetGen.init();
 		BlockCrate.setDrops();
 		BedrockOreRegistry.registerBedrockOres();
 		FluidTypeHandler.registerFluidProperties();
@@ -1055,6 +1053,7 @@ public class MainRegistry {
 		RBMKDials.createDials(evt.getServer().getEntityWorld());
 		evt.registerServerCommand(new CommandRadiation());
 		evt.registerServerCommand(new CommandHbm());
+		evt.registerServerCommand(new CommandSpaceTP());
 		AdvancementManager.init(evt.getServer());
 		//MUST be initialized AFTER achievements!!
 		BobmazonOfferFactory.reset();

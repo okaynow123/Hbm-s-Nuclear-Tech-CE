@@ -30,6 +30,7 @@ public abstract class FluidTrait {
 		registerTrait("toxin", FT_Toxin.class);
 		registerTrait("ventradiation", FT_VentRadiation.class);
 		registerTrait("pheromone", FT_Pheromone.class);
+		registerTrait("rocket", FT_Rocket.class);
 		//simple traits, "tags"
 		registerTrait("gaseous", FT_Gaseous.class);
 		registerTrait("gaseous_art", FT_Gaseous_ART.class);

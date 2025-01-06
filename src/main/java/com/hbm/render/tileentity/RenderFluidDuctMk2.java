@@ -26,8 +26,9 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 		FluidType type = Fluids.NONE;
 
 		if(te instanceof TileEntityPipeBaseNT) {
-			color = te.getType().getColor();
 			type = te.getType();
+			if (type == null) type = Fluids.NONE;
+			color = type.getColor();
 		}
 		if (type != Fluids.NONE) FFUtils.setRGBFromHex(color);
 

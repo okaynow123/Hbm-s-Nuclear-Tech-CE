@@ -10,6 +10,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class FT_Coolable extends FluidTrait {
@@ -42,20 +43,20 @@ public class FT_Coolable extends FluidTrait {
 	
 	@Override
 	public void addInfoHidden(List<String> info) {
-		info.add(ChatFormatting.RED + "Thermal capacity: " + heatEnergy + " TU");
+		info.add(I18nUtil.resolveKey("trait.thermalcap", heatEnergy));
 		for(CoolingType type : CoolingType.values()) {
 			
 			double eff = getEfficiency(type);
 			
 			if(eff > 0) {
-				info.add(ChatFormatting.YELLOW + "[" + type.name + "] " + ChatFormatting.AQUA + "Efficiency: " + ((int) (eff * 100D)) + "%");
+				info.add(I18nUtil.resolveKey("trait.chefficiency", I18nUtil.resolveKey(type.name), ((int) (eff * 100D))) + "%");
 			}
 		}
 	}
 	
 	public static enum CoolingType {
-		TURBINE("Turbine Steam"),
-		HEATEXCHANGER("Coolable");
+		TURBINE("trait.ctype.turbine"),
+		HEATEXCHANGER("trait.ctype.heatexch");
 		
 		public String name;
 		

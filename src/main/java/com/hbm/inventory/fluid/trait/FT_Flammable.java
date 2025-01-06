@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class FT_Flammable extends FluidTrait {
@@ -27,10 +28,10 @@ public class FT_Flammable extends FluidTrait {
 	public void addInfo(List<String> info) {
 		super.addInfo(info);
 		
-		info.add(ChatFormatting.YELLOW + "[Flammable]");
+		info.add(ChatFormatting.YELLOW + "[" + I18nUtil.resolveKey("trait.flammable") + "]");
 		
 		if(energy > 0)
-			info.add(ChatFormatting.YELLOW + "Provides " + ChatFormatting.RED + "" + BobMathUtil.getShortNumber(energy) + "TU " + ChatFormatting.YELLOW + "per bucket");
+			info.add(I18nUtil.resolveKey("trait.flammable.desc", BobMathUtil.getShortNumber(energy)));
 	}
 
 	@Override

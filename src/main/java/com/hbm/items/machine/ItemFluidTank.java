@@ -5,13 +5,13 @@ import java.util.List;
 import com.hbm.forgefluid.HbmFluidHandlerItemStack;
 import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.config.GeneralConfig;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 
-import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,9 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -48,16 +45,10 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setHasSubtypes(true);
-		this.setMaxDamage(cap);
-		this.setMaxStackSize(1);
+		this.setMaxDamage(0);
 		this.cap = cap;
 
 		ModItems.ALL_ITEMS.add(this);
-	}
-	
-	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return isFullOrEmpty(stack) ? 64 : 1;
 	}
 
 	@Override
@@ -100,13 +91,6 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-		if(stack.getTagCompound() == null)
-			stack.setTagCompound(new NBTTagCompound());
-		return new HbmFluidHandlerItemStack(stack, cap);
-	}
-
-	@Override
 	public ModelResourceLocation getResourceLocation() {
 		if(this == ModItems.fluid_tank_full)
 			return fluidTankModel;
@@ -120,14 +104,15 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		
-		FluidStack f = FluidUtil.getFluidContained(stack);
-		String s = (f == null ? "0" : f.amount) + "/" + cap + " mB";
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		FluidType f = Fluids.fromID(stack.getMetadata());
+		int fill = FluidContainerRegistry.getFluidContent(stack, f);
+		String s = (f == null ? "0" : fill) + "/" + cap + " mB";
 		if(stack.getCount() > 1)
 			s = stack.getCount() + "x " + s;
-		list.add(s);
+		tooltip.add(s);
 
+		Fluids.fromID(stack.getMetadata()).addInfoItemTanks(tooltip);
 	}
 	
 	public static ItemStack getFullBarrel(FluidType f, int amount){
@@ -151,47 +136,15 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 	public static ItemStack getFullTank(FluidType f){
 		return getFullTank(f, 1);
 	}
-	
-	public static boolean isFullOrEmpty(ItemStack stack){
-		if(stack.hasTagCompound() && stack.getItem() == ModItems.fluid_barrel_full){
-			FluidStack f = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY));
-			if(f == null)
-				return true;
-			return f.amount == 16000 || f.amount == 0;
-			
-		} else if(stack.hasTagCompound() && stack.getItem() == ModItems.fluid_tank_full){
-			FluidStack f = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(HbmFluidHandlerItemStack.FLUID_NBT_KEY));
-			if(f == null)
-				return true;
-			return f.amount == 1000 || f.amount == 0;
-		} else if(stack.getItem() == ModItems.fluid_barrel_full || stack.getItem() == ModItems.fluid_tank_full){
-			return true;
-		}
-		return false;
-	}
 
 	public static boolean isEmptyTank(ItemStack out) {
 		if(out.getItem() == ModItems.fluid_tank_full && FluidUtil.getFluidContained(out) == null)
 			return true;
 		return false;
 	}
-
-	public static boolean isFullTank(ItemStack stack, Fluid fluid) {
-		FluidStack f = FluidUtil.getFluidContained(stack);
-		if(stack.getItem() == ModItems.fluid_tank_full && f != null && f.getFluid() == fluid && f.amount == 1000)
-			return true;
-		return false;
-	}
 	
 	public static boolean isEmptyBarrel(ItemStack out) {
 		if(out.getItem() == ModItems.fluid_barrel_full && FluidUtil.getFluidContained(out) == null)
-			return true;
-		return false;
-	}
-
-	public static boolean isFullBarrel(ItemStack stack, Fluid fluid) {
-		FluidStack f = FluidUtil.getFluidContained(stack);
-		if(stack.getItem() == ModItems.fluid_barrel_full && f != null && f.getFluid() == fluid && f.amount == 16000)
 			return true;
 		return false;
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class FT_Combustible extends FluidTrait {
@@ -24,11 +25,11 @@ public class FT_Combustible extends FluidTrait {
 	public void addInfo(List<String> info) {
 		super.addInfo(info);
 
-		info.add(ChatFormatting.GOLD + "[Combustible]");
+		info.add(ChatFormatting.GOLD + "[" + I18nUtil.resolveKey("trait.combustable") + "]");
 		
 		if(combustionEnergy > 0) {
-			info.add(ChatFormatting.GOLD + "Provides " + ChatFormatting.RED + "" + BobMathUtil.getShortNumber(combustionEnergy) + "HE " + ChatFormatting.GOLD + "per bucket");
-			info.add(ChatFormatting.GOLD + "Fuel grade: " + ChatFormatting.RED + this.fuelGrade.getGrade());
+			info.add(I18nUtil.resolveKey("trait.combustable.desc", BobMathUtil.getShortNumber(combustionEnergy)));
+			info.add(I18nUtil.resolveKey("trait.combustable.desc2", I18nUtil.resolveKey(this.fuelGrade.getGrade())));
 		}
 	}
 	
@@ -41,11 +42,11 @@ public class FT_Combustible extends FluidTrait {
 	}
 	
 	public static enum FuelGrade {
-		LOW("Low"),			//heating and industrial oil				< star engine, iGen
-		MEDIUM("Medium"),	//petroil									< diesel generator
-		HIGH("High"),		//diesel, gasoline							< HP engine
-		AERO("Aviation"),	//kerosene and other light aviation fuels	< turbofan
-		GAS("Gaseous");		//fuel gasses like NG, PG and syngas		< gas turbine
+		LOW("trait.combustable.low"),			//heating and industrial oil				< star engine, iGen
+		MEDIUM("trait.combustable.medium"),	//petroil									< diesel generator
+		HIGH("trait.combustable.high"),		//diesel, gasoline							< HP engine
+		AERO("trait.combustable.avi"),	//kerosene and other light aviation fuels	< turbofan
+		GAS("trait.combustable.gas");		//fuel gasses like NG, PG and syngas		< gas turbine
 		
 		private String grade;
 		

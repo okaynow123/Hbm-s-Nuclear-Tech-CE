@@ -12,6 +12,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
+import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -91,7 +92,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 
 	@Override
 	public void update() {
-		if(!converted){
+		if(!converted && tankNew.getTankType() == Fluids.NONE) {
 			this.resizeInventory(6);
 			convertAndSetFluid(oldFluid, tank, tankNew);
 			converted = true;
@@ -245,9 +246,10 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setShort("mode", mode);
-		if(!converted){
+		if(!converted && tankNew.getTankType() == Fluids.NONE){
 			compound.setInteger("cap", tank.getCapacity());
 			tank.writeToNBT(compound);
+			compound.setBoolean("converted", true);
 		} else tankNew.writeToNBT(compound, "tank");
 		return compound;
 	}
@@ -256,7 +258,9 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		mode = compound.getShort("mode");
-		if (!converted){
+		converted = compound.getBoolean("converted");
+		tankNew.readFromNBT(compound,"tank");
+		if (!converted && tankNew.getTankType() == Fluids.NONE){
 			if(tank == null || tank.getCapacity() <= 0)
 				tank = new FluidTank(compound.getInteger("cap"));
 			tank.readFromNBT(compound);
@@ -264,7 +268,6 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 				oldFluid = tank.getFluid().getFluid();
 			}
 		} else {
-			tankNew.readFromNBT(compound,"tank");
 			if(compound.hasKey("cap")) compound.removeTag("cap");
 		}
 	}

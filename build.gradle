@@ -37,6 +37,108 @@ tasks.withType(JavaCompile) {
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+tasks.register('generateItemModels') {
+    // Th3_Sl1ze: okay, now that's the fucking "Lazy Model Generator 3000".
+    // It does the notorious ctrl+c ctrl+v models job for me. Item version.
+    // Just put any desired registry item in modelNames and it will do the work while building the mod itself.
+    // Maybe I should do a block version too.
+    // Put the item registry names in modelGenerateNames/itemModels.txt
+    def modelNamesFile = file('modelGenerateNames/itemModels.txt')
+    def modelNames = modelNamesFile.readLines()
+
+    doLast {
+        modelNames.each { itemName ->
+            def jsonContent = """{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "hbm:items/${itemName}"
+    }
+}"""
+            def file = file("src/main/resources/assets/hbm/models/item/${itemName}.json")
+            file.parentFile.mkdirs()
+            file.text = jsonContent
+            println "Generated model for ${itemName}"
+        }
+    }
+}
+
+tasks.register('generateObjBlockFiles') {
+    // Th3_Sl1ze: basically the same thing above but does blockstate file+block/item model files for any block with an .obj model.
+    def modelNamesFile = file('modelGenerateNames/objBlocks.txt')
+    def modelNames = modelNamesFile.readLines()
+
+    doLast {
+        modelNames.each { blockName ->
+            def blockstateContent = """{
+    "variants": {
+        "normal": { "model": "hbm:${blockName}" }
+    }
+}"""
+            def blockModelContent = """{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "hbm:blocks/block_steel"
+    }
+}"""
+            def itemModelContent = """{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "hbm:block/block_steel"
+    }
+}"""
+            def blockstate = file("src/main/resources/assets/hbm/blockstates/${blockName}.json")
+            def blockmodel = file("src/main/resources/assets/hbm/models/block/${blockName}.json")
+            def itemmodel = file("src/main/resources/assets/hbm/models/item/${blockName}.json")
+            blockstate.parentFile.mkdirs()
+            blockmodel.parentFile.mkdirs()
+            itemmodel.parentFile.mkdirs()
+            blockstate.text = blockstateContent
+            blockmodel.text = blockModelContent
+            itemmodel.text = itemModelContent
+            println "Generated model files and blockstate for ${blockName}"
+        }
+    }
+}
+
+tasks.register('generateBlockFiles') {
+    // Th3_Sl1ze: basically the same thing above but does blockstate file+block/item model files for any block with an .obj model.
+    def modelNamesFile = file('modelGenerateNames/blockModels.txt')
+    def modelNames = modelNamesFile.readLines()
+
+    doLast {
+        modelNames.each { blockName ->
+            def blockstateContent = """{
+    "variants": {
+        "normal": { "model": "hbm:${blockName}" }
+    }
+}"""
+            def blockModelContent = """{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "hbm:blocks/${blockName}"
+    }
+}"""
+            def itemModelContent = """{
+    "parent": "hbm:block/${blockName}"
+}"""
+            def blockstate = file("src/main/resources/assets/hbm/blockstates/${blockName}.json")
+            def blockmodel = file("src/main/resources/assets/hbm/models/block/${blockName}.json")
+            def itemmodel = file("src/main/resources/assets/hbm/models/item/${blockName}.json")
+            blockstate.parentFile.mkdirs()
+            blockmodel.parentFile.mkdirs()
+            itemmodel.parentFile.mkdirs()
+            blockstate.text = blockstateContent
+            blockmodel.text = blockModelContent
+            itemmodel.text = itemModelContent
+            println "Generated model files and blockstate for ${blockName}"
+        }
+    }
+}
+
+compileJava.dependsOn generateItemModels
+compileJava.dependsOn generateObjBlockFiles
+compileJava.dependsOn generateBlockFiles
+
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.

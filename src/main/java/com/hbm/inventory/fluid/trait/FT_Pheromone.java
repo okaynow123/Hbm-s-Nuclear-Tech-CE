@@ -2,6 +2,7 @@ package com.hbm.inventory.fluid.trait;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 
@@ -24,9 +25,9 @@ public class FT_Pheromone extends  FluidTrait{
 	public void addInfo(List<String> info) {
 
 		if(type == 1) {
-			info.add(ChatFormatting.AQUA + "[Glyphid Pheromones]");
+			info.add(ChatFormatting.AQUA + "[" + I18nUtil.resolveKey("trait.pherg") + "]");
 		} else {
-			info.add(ChatFormatting.BLUE + "[Modified Pheromones]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.pherm") + "]");
 		}
 	}
 

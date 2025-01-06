@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import java.io.IOException;
@@ -41,13 +42,13 @@ public class FT_Heatable extends FluidTrait {
 
 	@Override
 	public void addInfoHidden(List<String> info) {
-		info.add(ChatFormatting.RED + "Thermal capacity: " + this.getFirstStep().heatReq + " TU");
+		info.add(I18nUtil.resolveKey("trait.thermalcap", this.getFirstStep().heatReq));
 		for(HeatingType type : HeatingType.values()) {
 			
 			double eff = getEfficiency(type);
 			
 			if(eff > 0) {
-				info.add(ChatFormatting.YELLOW + "[" + type.name + "] " + ChatFormatting.AQUA + "Efficiency: " + ((int) (eff * 100D)) + "%");
+				info.add(I18nUtil.resolveKey("trait.chefficiency", I18nUtil.resolveKey(type.name), ((int) (eff * 100D))) + "%");
 			}
 		}
 	}
@@ -67,10 +68,10 @@ public class FT_Heatable extends FluidTrait {
 	}
 	
 	public static enum HeatingType {
-		BOILER("Boilable"),
-		HEATEXCHANGER("Heatable"),
-		PWR("PWR Coolant"),
-		ICF("ICF Coolant");
+		BOILER("trait.htype.boiler"),
+		HEATEXCHANGER("trait.htype.heatexch"),
+		PWR("trait.htype.pwr"),
+		ICF("trait.htype.icf");
 		
 		public String name;
 		

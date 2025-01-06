@@ -56,6 +56,11 @@ public final class HBMSoundHandler {
 	public static SoundEvent stingerLockon;
 	public static SoundEvent trainHorn;
 	public static SoundEvent bombDet;
+	public static SoundEvent rumble;
+	public static SoundEvent pipeFail;
+	public static SoundEvent rocketIgnition;
+	public static SoundEvent rocketFlyLight;
+	public static SoundEvent rocketFlyHeavy;
 	public static SoundEvent rocketTakeoff;
 	public static SoundEvent silencerShoot;
 	public static SoundEvent rpgReload;
@@ -327,7 +332,12 @@ public final class HBMSoundHandler {
 		stingerLockon = register("weapon.stingerLockOn");
 		trainHorn = register("alarm.trainhorn");
 		bombDet = register("entity.bombDet");
+		rumble = register("misc.rumble");
+		pipeFail = register("entity.pipefail");
 		rocketTakeoff = register("entity.rocketTakeoff");
+		rocketIgnition = register("entity.rocketIgnition");
+		rocketFlyLight = register("entity.rocketFlyLight");
+		rocketFlyHeavy = register("entity.rocketFlyHeavy");
 		silencerShoot = register("weapon.silencerShoot");
 		GunConfiguration.RSOUND_LAUNCHER = rpgReload = register("weapon.rpgReload");
 		GunConfiguration.RSOUND_GRENADE = reloadGrenade = register("weapon.hkReload");

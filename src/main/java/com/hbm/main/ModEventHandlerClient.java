@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.machine.*;
 import com.hbm.items.special.*;
 import com.hbm.items.weapon.*;
@@ -103,7 +104,6 @@ import com.hbm.render.tileentity.RenderMultiblock;
 import com.hbm.render.tileentity.RenderSoyuzMultiblock;
 import com.hbm.render.tileentity.RenderStructureMarker;
 import com.hbm.render.util.RenderOverhead;
-import com.hbm.render.world.RenderNTMSkybox;
 import com.hbm.sound.GunEgonSoundHandler;
 import com.hbm.sound.MovingSoundChopper;
 import com.hbm.sound.MovingSoundChopperMine;
@@ -265,12 +265,19 @@ public class ModEventHandlerClient {
 					ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
 							FluidCanisterRender.INSTANCE.setModelLocation(ItemFluidCanister.getStackFromFluid(order[i])));
 				}
+				ModelLoader.setCustomModelResourceLocation(ModItems.fluid_tank_lead_full, order[i].getID(),
+							ItemFluidTank.fluidTankLeadFullModel);
+				ModelLoader.setCustomModelResourceLocation(ModItems.fluid_tank_full, order[i].getID(),
+						ItemFluidTank.fluidTankModel);
+				ModelLoader.setCustomModelResourceLocation(ModItems.fluid_barrel_full, order[i].getID(),
+						ItemFluidTank.fluidBarrelModel);
 				ModelLoader.setCustomModelResourceLocation(ModItems.fluid_icon, order[i].getID(),
 						ItemFluidIcon.fluidIconModel);
 			}
 		}
 		ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemFluidCanister.fluidCanisterModel);
-
+		((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
+		((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
 		((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
 		((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
 
@@ -428,18 +435,6 @@ public class ModEventHandlerClient {
 			ItemRenderGunAnim.INSTANCE.b92ItemModel = model;
 			evt.getModelRegistry().putObject(GunB92.b92Model, new B92BakedModel());
 		}
-		Object object4 = evt.getModelRegistry().getObject(ItemFluidTank.fluidTankModel);
-		if(object4 instanceof IBakedModel) {
-			IBakedModel model = (IBakedModel) object4;
-			FluidTankRender.INSTANCE.itemModel = model;
-			evt.getModelRegistry().putObject(ItemFluidTank.fluidTankModel, new FluidTankBakedModel());
-		}
-		Object object5 = evt.getModelRegistry().getObject(ItemFluidTank.fluidBarrelModel);
-		if(object5 instanceof IBakedModel) {
-			IBakedModel model = (IBakedModel) object5;
-			FluidBarrelRender.INSTANCE.itemModel = model;
-			evt.getModelRegistry().putObject(ItemFluidTank.fluidBarrelModel, new FluidBarrelBakedModel());
-		}
 		Object object6 = evt.getModelRegistry().getObject(ItemFluidCanister.fluidCanisterModel);
 		if(object6 instanceof IBakedModel) {
 			IBakedModel model = (IBakedModel) object6;
@@ -590,6 +585,10 @@ public class ModEventHandlerClient {
 		swapModels(ModItems.detonator_laser, reg);
 
 		swapModels(ModItems.forge_fluid_identifier, reg);
+		swapModels(ModItems.fluid_barrel_full, reg);
+		swapModels(ModItems.fluid_tank_full, reg);
+		swapModels(ModItems.fluid_tank_lead_full, reg);
+
 		
 		for(Entry<Item, ItemRenderBase> entry : ItemRenderLibrary.renderers.entrySet()){
 			swapModels(entry.getKey(), reg);
@@ -816,6 +815,9 @@ public class ModEventHandlerClient {
 
 		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/ore_bedrock_layer"));
 		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_identifier_overlay"));
+		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_barrel_overlay"));
+		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_overlay"));
+		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_lead_overlay"));
 		map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_icon"));
 	}
 
@@ -1100,24 +1102,6 @@ public class ModEventHandlerClient {
 			}
 		}
 		JetpackHandler.inputUpdate(e);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void setNTMSkybox(ClientTickEvent event){
-		if(event.phase == Phase.START && GeneralConfig.enableSkybox) {
-			
-			World world = Minecraft.getMinecraft().world;
-			
-			if(world != null && world.provider instanceof WorldProviderSurface && !RenderNTMSkybox.didLastRender) {
-				
-				IRenderHandler sky = world.provider.getSkyRenderer();
-				if(!(sky instanceof RenderNTMSkybox)) {
-					world.provider.setSkyRenderer(new RenderNTMSkybox(sky));
-				}
-			}
-			
-			RenderNTMSkybox.didLastRender = false;
-		}
 	}
 
 	private static long canneryTimestamp;

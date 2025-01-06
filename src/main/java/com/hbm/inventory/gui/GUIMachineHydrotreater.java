@@ -30,7 +30,7 @@ public class GUIMachineHydrotreater extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float f) {
         super.drawScreen(mouseX, mouseY, f);
-
+        super.renderHoveredToolTip(mouseX, mouseY);
         hydrotreater.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 35, guiTop + 70 - 52, 16, 52);
         hydrotreater.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 53, guiTop + 70 - 52, 16, 52);
         hydrotreater.tanks[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 125, guiTop + 70 - 52, 16, 52);

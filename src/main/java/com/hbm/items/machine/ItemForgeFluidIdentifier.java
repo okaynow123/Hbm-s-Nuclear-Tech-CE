@@ -113,8 +113,8 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 		}
 		if(duct != null){
 			if(player.isSneaking()){
-				if(null != duct.getType()){
-					spreadType(worldIn, pos, null, duct.getType(), 256);
+				if(Fluids.NONE != duct.getType()){
+					spreadType(worldIn, pos, Fluids.NONE, duct.getType(), 256);
 				}
 			}else{
 				if(getType(worldIn, pos.getX(), pos.getY(), pos.getZ(), player.getHeldItem(hand)) != duct.getType()){

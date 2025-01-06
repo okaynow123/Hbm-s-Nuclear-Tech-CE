@@ -346,7 +346,16 @@ public class PollutionHandler {
     }
 
     public static enum PollutionType {
-        SOOT, POISON, HEAVYMETAL, FALLOUT;
+        SOOT("trait.ptype.soot"),
+        POISON("trait.ptype.poison"),
+        HEAVYMETAL("trait.ptype.heavymetal"),
+        FALLOUT("trait.ptype.fallout");
+
+        public String name;
+
+        private PollutionType(String name) {
+            this.name = name;
+        }
     }
 
     ////////////////////////////////////////////

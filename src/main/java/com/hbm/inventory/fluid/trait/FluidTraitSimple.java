@@ -1,5 +1,6 @@
 package com.hbm.inventory.fluid.trait;
 
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import java.util.List;
@@ -8,57 +9,57 @@ public class FluidTraitSimple {
 
 	public static class FT_Gaseous extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.BLUE + "[Gaseous]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.gaseous") + "]");
 		}
 	}
 
 	/** gaseous at room temperature, for cryogenic hydrogen for example */
 	public static class FT_Gaseous_ART extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.BLUE + "[Gaseous at Room Temperature]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.gaseousroom") + "]");
 		}
 	}
 
 	public static class FT_Liquid extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.BLUE + "[Liquid]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.liquid") + "]");
 		}
 	}
 
 	/** to viscous to be sprayed/turned into a mist */
 	public static class FT_Viscous extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.BLUE + "[Viscous]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.viscous") + "]");
 		}
 	}
 
 	public static class FT_Plasma extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.LIGHT_PURPLE + "[Plasma]");
+			info.add(ChatFormatting.LIGHT_PURPLE + "[" + I18nUtil.resolveKey("trait.plasma") + "]");
 		}
 	}
 
 	public static class FT_Amat extends FluidTrait {
 		@Override public void addInfo(List<String> info) {
-			info.add(ChatFormatting.DARK_RED + "[Antimatter]");
+			info.add(ChatFormatting.DARK_RED + "[" + I18nUtil.resolveKey("trait.antimatterliq") + "]");
 		}
 	}
 
 	public static class FT_LeadContainer extends FluidTrait {
 		@Override public void addInfo(List<String> info) {
-			info.add(ChatFormatting.DARK_RED + "[Requires hazardous material tank to hold]");
+			info.add(ChatFormatting.DARK_RED + "[" + I18nUtil.resolveKey("trait.haztank") + "]");
 		}
 	}
 
 	public static class FT_Delicious extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.DARK_GREEN + "[Delicious]");
+			info.add(ChatFormatting.DARK_GREEN +"[" + I18nUtil.resolveKey("trait.delicious") + "]");
 		}
 	}
 
 	public static class FT_Unsiphonable extends FluidTrait {
 		@Override public void addInfoHidden(List<String> info) {
-			info.add(ChatFormatting.BLUE + "[Ignored by siphon]");
+			info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.nosiphon") + "]");
 		}
 	}
 

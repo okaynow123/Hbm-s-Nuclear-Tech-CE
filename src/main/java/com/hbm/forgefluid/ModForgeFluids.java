@@ -19,8 +19,10 @@ import com.hbm.blocks.fluid.VolcanicFluid;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -131,6 +133,7 @@ public class ModForgeFluids {
 	public static Fluid schrabidic = new SchrabidicFluid("schrabidic").setDensity(31200).setViscosity(500);
 	public static Fluid corium_fluid = new CoriumFluid().setDensity(31200).setViscosity(2000).setTemperature(3000);
 	public static Fluid volcanic_lava_fluid = new VolcanicFluid().setLuminosity(15).setDensity(3000).setViscosity(3000).setTemperature(1300);
+	public static Fluid bromine_fluid = new Fluid("bromine_fluid", new ResourceLocation(RefStrings.MODID, "blocks/bromine_still"), new ResourceLocation(RefStrings.MODID, "blocks/bromine_flowing"), null, Color.WHITE).setDensity(3000).setViscosity(3000).setTemperature(273);
 	
 	public static void init() {
 		if(!FluidRegistry.registerFluid(spentsteam))
@@ -302,6 +305,8 @@ public class ModForgeFluids {
 			corium_fluid = FluidRegistry.getFluid("corium_fluid");
 		if(!FluidRegistry.registerFluid(volcanic_lava_fluid))
 			volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
+		if(!FluidRegistry.registerFluid(bromine_fluid))
+			bromine_fluid = FluidRegistry.getFluid("bromine_fluid");
 
 		ModBlocks.toxic_block = new ToxicBlock(ModForgeFluids.toxic_fluid, ModBlocks.fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
 		ModBlocks.radwater_block = new RadWaterBlock(ModForgeFluids.radwater_fluid, ModBlocks.fluidradwater, ModDamageSource.radiation, "radwater_block").setResistance(500F);
@@ -309,12 +314,18 @@ public class ModForgeFluids {
 		ModBlocks.schrabidic_block = new SchrabidicBlock(schrabidic, ModBlocks.fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
 		ModBlocks.corium_block = new CoriumBlock(corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
 		ModBlocks.volcanic_lava_block = new VolcanicBlock(volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
+		ModBlocks.mercury_block = new BlockFluidClassic(mercury, Material.WATER).setResistance(500F);
+		ModBlocks.bromine_block = new BlockFluidClassic(bromine_fluid, Material.WATER).setResistance(500F);
+		ModBlocks.bromine_block = new BlockFluidClassic(sulfuric_acid, Material.WATER).setResistance(500F);
 		toxic_fluid.setBlock(ModBlocks.toxic_block);
 		radwater_fluid.setBlock(ModBlocks.radwater_block);
 		mud_fluid.setBlock(ModBlocks.mud_block);
 		schrabidic.setBlock(ModBlocks.schrabidic_block);
 		corium_fluid.setBlock(ModBlocks.corium_block);
 		volcanic_lava_fluid.setBlock(ModBlocks.volcanic_lava_block);
+		mercury.setBlock(ModBlocks.mercury_block);
+		bromine_fluid.setBlock(ModBlocks.bromine_block);
+		sulfuric_acid.setBlock(ModBlocks.sulfuric_acid_block);
 		FluidRegistry.addBucketForFluid(toxic_fluid);
 		FluidRegistry.addBucketForFluid(radwater_fluid);
 		FluidRegistry.addBucketForFluid(mud_fluid);

@@ -7,9 +7,12 @@ import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,7 +68,6 @@ public class ItemZirnoxRod extends ItemEnumMulti {
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
 
-
         EnumZirnoxType num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
         list.add(ChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.depletion", ((int) ((((double) getLifeTime(stack)) / (double) num.maxLife) * 100000)) / 1000D + "%"));
         String[] loc;
@@ -77,6 +79,17 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
         for (String s : loc) {
             list.add(s);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(ModelRegistryEvent event) {
+        Enum[] enums = theEnum.getEnumConstants();
+
+        for (Enum num : enums) {
+            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(
+                    new ResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US)), "inventory");
+            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(), modelResourceLocation);
         }
     }
 

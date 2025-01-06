@@ -34,7 +34,7 @@ public interface IFFtoNTMF {
      */
     default void convertAndSetFluid(Fluid oldFluid, FluidTank tankOld, FluidTankNTM tank) {
         FluidType newFluid = convertFluid(oldFluid);
-        tank.changeTankSize(tankOld.getCapacity());
+        if(tankOld.getCapacity() != 0) tank.changeTankSize(tankOld.getCapacity());
         tank.setTankType(newFluid);
         tank.setFill(tankOld.getFluidAmount());
     }

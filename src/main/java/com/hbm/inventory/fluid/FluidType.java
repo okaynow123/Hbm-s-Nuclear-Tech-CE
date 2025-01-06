@@ -229,6 +229,33 @@ public class FluidType {
 			info.add(I18nUtil.resolveKey("desc.tooltip.hold", "LSHIFT"));
 		}
 	}
+	// that is for inventory barrels, tanks and lead tanks - I want to hide everything to SHIFT
+	@SideOnly(Side.CLIENT)
+	public void addInfoItemTanks(List<String> info) {
+
+		boolean shiftHeld = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+
+		List<String> hidden = new ArrayList();
+
+		for(Class<? extends FluidTrait> clazz : FluidTrait.traitList) {
+			FluidTrait trait = this.getTrait(clazz);
+			if(trait != null) {
+				if(shiftHeld){
+					if(temperature != ROOM_TEMPERATURE) {
+						if(temperature < 0) info.add(ChatFormatting.BLUE + "" + temperature + "°C");
+						if(temperature > 0) info.add(ChatFormatting.RED + "" + temperature + "°C");
+					}
+					trait.addInfo(info);
+					trait.addInfoHidden(info);
+					trait.addInfoHidden(hidden);
+				}
+			}
+		}
+
+		if(!shiftHeld) {
+			info.add(I18nUtil.resolveKey("desc.tooltip.hold", "LSHIFT"));
+		}
+	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{

@@ -52,7 +52,10 @@ public class BobMathUtil {
 		}
 		return "INFINTE";
 	}
-			
+
+	public static boolean getBlink() {
+		return System.currentTimeMillis() % 1000 < 500;
+	}
 	public static double getAngleFrom2DVecs(double x1, double z1, double x2, double z2) {
 
 		double upper = x1 * x2 + z1 * z2;
@@ -64,6 +67,14 @@ public class BobMathUtil {
 			result -= 180;
 
 		return result;
+	}
+
+	public static double clampedLerp(double start, double end, double delta) {
+		if (delta < 0.0D) {
+			return start;
+		} else {
+			return delta > 1.0D ? end : lerp(delta, start, end);
+		}
 	}
 	
 	public static double getCrossAngle(Vec3d vel, Vec3d rel) {
@@ -92,6 +103,22 @@ public class BobMathUtil {
 		return angle;
 	}
 
+	public static double perlinFade(double value) {
+		return value * value * value * (value * (value * 6.0D - 15.0D) + 10.0D);
+	}
+
+	public static double perlinFadeDerivative(double value) {
+		return 30.0D * value * value * (value - 1.0D) * (value - 1.0D);
+	}
+
+	public static Vec3 getDirectionFromAxisAngle(float pitch, float yaw, double length) {
+		double ox = (double) (-MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length);
+		double oz = (double) (MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length);
+		double oy = (double) (-MathHelper.sin(pitch / 180.0F * (float) Math.PI) * length);
+
+		return Vec3.createVectorHelper(ox, oy, oz);
+	}
+
 	public static float remap(float num, float min1, float max1, float min2, float max2){
 		return ((num - min1) / (max1 - min1)) * (max2 - min2) + min2;
 	}
@@ -104,11 +131,36 @@ public class BobMathUtil {
 		return MathHelper.clamp((num - min1) / (max1 - min1), 0, 1);
 	}
 
+	public static double lerp(double delta, double start, double end) {
+		return start + delta * (end - start);
+	}
+
 	public static Vec3d lerp(Vec3d vec0, Vec3d vec1, float interp){
 		return new Vec3d(
 				vec0.x + (vec1.x - vec0.x)*interp,
 				vec0.y + (vec1.y - vec0.y)*interp,
 				vec0.z + (vec1.z - vec0.z)*interp);
+	}
+
+	public static double clerp(double delta, double start, double end) {
+		double angle = ((((end - start) % 360) + 540) % 360) - 180;
+		return start + angle * delta;
+	}
+
+	public static double lerp2(double deltaX, double deltaY, double x0y0, double x1y0, double x0y1, double x1y1) {
+		return lerp(deltaY, lerp(deltaX, x0y0, x1y0), lerp(deltaX, x0y1, x1y1));
+	}
+
+	public static double lerp3(double deltaX, double deltaY, double deltaZ, double x0y0z0, double x1y0z0, double x0y1z0, double x1y1z0, double x0y0z1, double x1y0z1, double x0y1z1, double x1y1z1) {
+		return lerp(deltaZ, lerp2(deltaX, deltaY, x0y0z0, x1y0z0, x0y1z0, x1y1z0), lerp2(deltaX, deltaY, x0y0z1, x1y0z1, x0y1z1, x1y1z1));
+	}
+
+	public static double getLerpProgress(double value, double start, double end) {
+		return (value - start) / (end - start);
+	}
+
+	public static double lerpFromProgress(double lerpValue, double lerpStart, double lerpEnd, double start, double end) {
+		return lerp(getLerpProgress(lerpValue, lerpStart, lerpEnd), start, end);
 	}
 	
 	public static Vec3 getEulerAngles(Vec3 vec) {

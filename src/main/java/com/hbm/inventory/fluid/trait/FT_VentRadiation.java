@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 
 import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,7 +34,7 @@ public class FT_VentRadiation extends FluidTrait {
 	
 	@Override
 	public void addInfo(List<String> info) {
-		info.add(ChatFormatting.YELLOW + "[Radioactive]");
+		info.add(ChatFormatting.YELLOW + "[" + I18nUtil.resolveKey("trait.radioactive") + "]");
 	}
 
 	@Override

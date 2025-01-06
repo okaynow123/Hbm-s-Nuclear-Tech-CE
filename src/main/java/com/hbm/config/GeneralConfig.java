@@ -82,6 +82,8 @@ public class GeneralConfig {
 	public static boolean enableReflectorCompat = false;
 	public static int coltanRate = 2;
 	public static int bedrockRate = 50;
+	public static boolean enableThreadedAtmospheres = true;
+	public static boolean enableHardcoreDarkness = false;
 	
 	public static void loadFromConfig(Configuration config){
 		final String CATEGORY_GENERAL = "01_general";
@@ -193,6 +195,8 @@ public class GeneralConfig {
 		hintPos = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.36_infoOverlayPosition", "Positions where the info overlay will appear (from 0 to 3). 0: Top left\n1: Top right\n2: Center right\n3: Center Left", 0);
 		enableFluidContainerCompat = config.get(CATEGORY_GENERAL, "1.37_enableFluidContainerCompat", true, "If enabled, fluid containers will be oredicted and interchangable in recipes with other mods' containers. Should probably work with things like IE's/GC oil properly.").getBoolean(true);
 		decoToIngotRate = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.38_decoToIngotConversionRate", "Chance of successful turning a deco block into an ingot. Default is 25%", 25);
+		enableThreadedAtmospheres = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.39_threadedAtmospheres", "If enabled, will run atmosphere blobbing in a separate thread for performance", true);
+		enableHardcoreDarkness = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.40_hardcoreDarkness", "If enabled, sets night-time minimum fog to zero, to complement hardcore darkness mods", false);
 
 		final String CATEGORY_528 = "528";
 

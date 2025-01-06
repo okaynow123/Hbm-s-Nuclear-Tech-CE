@@ -36,6 +36,7 @@ public class AdvancementManager {
 	public static Advancement achStratum;
 	public static Advancement achMeltdown;
 	public static Advancement achZIRNOXBoom;
+	public static Advancement achDriveFail;
 	public static Advancement achOmega12;
 	public static Advancement digammaSee;
 	public static Advancement digammaFeel;
@@ -86,6 +87,7 @@ public class AdvancementManager {
 		progress_dfc = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "progress_dfc"));
 		progress_rbmk_boom = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "progress_rbmk_boom"));
 		achZIRNOXBoom = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achZIRNOXBoom"));
+		achDriveFail = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achDriveFail"));
 		
 		bossCreeper = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "bosscreeper"));
 		bossMeltdown = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "bossmeltdown"));

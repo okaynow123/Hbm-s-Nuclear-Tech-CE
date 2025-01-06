@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class FT_PWRModerator extends FluidTrait {
@@ -22,13 +23,13 @@ public class FT_PWRModerator extends FluidTrait {
 	
 	@Override
 	public void addInfo(List<String> info) {
-		info.add(ChatFormatting.BLUE + "[PWR Flux Multiplier]");
+		info.add(ChatFormatting.BLUE + "[" + I18nUtil.resolveKey("trait.pwrflux") + "]");
 	}
 
 	@Override
 	public void addInfoHidden(List<String> info) {
 		int mult = (int) (multiplier * 100 - 100);
-		info.add(ChatFormatting.BLUE + "Core flux " + (mult >= 0 ? "+" : "") + mult + "%");
+		info.add(ChatFormatting.BLUE + I18nUtil.resolveKey("trait.pwrflux.desc") + " " + (mult >= 0 ? "+" : "") + mult + "%");
 	}
 
 	@Override

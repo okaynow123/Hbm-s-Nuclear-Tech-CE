@@ -83,6 +83,11 @@ public class WasteEarth extends Block implements IItemHazard {
 		}
 		return Item.getItemFromBlock(this);
 	}
+
+	@Override
+	public Block setSoundType(SoundType sound){
+		return super.setSoundType(sound);
+	}
 	
 	@Override
 	public int quantityDropped(IBlockState state, int fortune, Random random) {

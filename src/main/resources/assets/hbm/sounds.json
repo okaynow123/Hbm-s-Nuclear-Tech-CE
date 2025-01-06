@@ -4,6 +4,7 @@
 	"misc.nullCrashing": {"category": "player", "sounds": [{"name": "hbm:misc/null", "stream": false}]},
 	"misc.nullMine": {"category": "player", "sounds": [{"name": "hbm:misc/null", "stream": false}]},
     "misc.nullRadar": {"category": "player", "sounds": [{"name": "hbm:misc/null", "stream": false}]},
+	"misc.rumble": {"category": "player", "sounds": [{"name": "hbm:misc/rumble", "stream": false}]},
 
 	"block.crateBreak": {"category": "block", "sounds": ["hbm:block/cratebreak1", "hbm:block/cratebreak2", "hbm:block/cratebreak3", "hbm:block/cratebreak4", "hbm:block/cratebreak5"]},
 	"block.shutdown": {"category": "block", "sounds": [{"name": "hbm:block/shutdown", "stream": false}]},
@@ -278,5 +279,10 @@
     "block.rbmk_az5_cover": {"category": "block", "sounds": [{"name": "hbm:block/rbmk_az5_cover", "stream": false}]},
     "block.chungusLever": {"category": "block", "sounds": [{"name": "hbm:block/chunguslever", "stream": false}]},
 	"item.upgradePlug": {"category": "player", "sounds": [{"name": "hbm:tool/upgradePlug", "stream": false}]},
-	"item.battery": {"category": "player", "sounds": [{"name": "hbm:tool/battery", "stream": false}]}
+	"item.battery": {"category": "player", "sounds": [{"name": "hbm:tool/battery", "stream": false}]},
+	
+	"entity.rocketFlyHeavy": {"category": "player", "sounds": [{"name": "hbm:entity/rocketFlyHeavy", "stream": false}]},
+	"entity.rocketFlyLight": {"category": "player", "sounds": [{"name": "hbm:entity/rocketFlyLight", "stream": false}]},
+	"entity.rocketIgnition": {"category": "player", "sounds": [{"name": "hbm:entity/rocketIgnition", "stream": false}]},
+	"entity.pipefail": {"category": "player", "sounds": [{"name": "hbm:entity/pipefail", "stream": false}]}
 }

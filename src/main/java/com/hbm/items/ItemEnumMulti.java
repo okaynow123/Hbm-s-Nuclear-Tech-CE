@@ -2,22 +2,18 @@ package com.hbm.items;
 
 import com.hbm.lib.RefStrings;
 import com.hbm.util.EnumUtil;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 import java.util.Locale;
 
 public class ItemEnumMulti extends Item {
 
     //hell yes, now we're thinking with enums!
-    protected static Class<? extends Enum> theEnum;
+    protected Class<? extends Enum> theEnum;
     protected boolean multiName;
     protected boolean multiTexture;
 
@@ -26,6 +22,7 @@ public class ItemEnumMulti extends Item {
         this.theEnum = theEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
+        ModItems.ALL_ITEMS.add(this);
     }
 
     @Override

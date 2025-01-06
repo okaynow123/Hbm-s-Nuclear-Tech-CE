@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class FT_Corrosive extends FluidTrait {
@@ -31,9 +32,9 @@ public class FT_Corrosive extends FluidTrait {
 	public void addInfo(List<String> info) {
 		
 		if(isHighlyCorrosive())
-			info.add(ChatFormatting.GOLD + "[Strongly Corrosive]");
+			info.add(ChatFormatting.GOLD + "[" + I18nUtil.resolveKey("trait.corrosiveIron") + "]");
 		else
-			info.add(ChatFormatting.YELLOW + "[Corrosive]");
+			info.add(ChatFormatting.YELLOW + "[" + I18nUtil.resolveKey("trait.corrosivePlastic") + "]");
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.hbm.render.item;
 import java.util.HashMap;
 
 import com.hbm.render.tileentity.RenderSawmill;
+import net.minecraft.entity.SharedMonsterAttributes;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.animloader.AnimationWrapper;
@@ -95,6 +96,42 @@ public class ItemRenderLibrary {
 		        bindTexture(ResourceManager.centrifuge_new_tex);
 		        ResourceManager.centrifuge.renderAll();
 		        GlStateManager.shadeModel(GL11.GL_FLAT);
+			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.orbital_station), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, 2, 0);
+				GL11.glScaled(2, 2, 2);
+			}
+			public void renderCommon() {
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.docking_port_tex);
+				ResourceManager.docking_port.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.orbital_station_port), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, 2, 0);
+				GL11.glScaled(2, 2, 2);
+			}
+			public void renderCommon() {
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.docking_port_tex);
+				ResourceManager.docking_port.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_drain), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(-1, -1, 0);
+				GL11.glScaled(5, 5, 5);
+			}
+			public void renderCommon() {
+				GL11.glRotatef(180, 0F, 1F, 0F);
+				GL11.glTranslated(0.75, 0, 0);
+				bindTexture(ResourceManager.drain_tex); ResourceManager.drain.renderAll();
 			}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_gascent), new ItemRenderBase() {
@@ -1777,6 +1814,20 @@ public class ItemRenderLibrary {
 				ResourceManager.chungus.renderPart("Body");
 				ResourceManager.chungus.renderPart("Lever");
 				ResourceManager.chungus.renderPart("Blades");
+				GlStateManager.shadeModel(GL11.GL_FLAT);
+			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.reactor_zirnox), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0.5, 0, 0);
+				GL11.glScaled(2.5, 2.5, 2.5);
+				GL11.glTranslated(0, -0.5, 0);
+			}
+			public void renderCommon() {
+				GL11.glScaled(0.75, 0.75, 0.75);
+				GL11.glRotated(90, 0, 1, 0);
+				bindTexture(ResourceManager.zirnox_tex);
+				GlStateManager.shadeModel(GL11.GL_SMOOTH);
+				ResourceManager.zirnox.renderAll();
 				GlStateManager.shadeModel(GL11.GL_FLAT);
 			}});
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_fel), new ItemRenderBase() {

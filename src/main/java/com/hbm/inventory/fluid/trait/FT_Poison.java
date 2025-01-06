@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 @Deprecated //use FT_Toxin instead
@@ -30,7 +31,7 @@ public class FT_Poison extends FluidTrait {
 	
 	@Override
 	public void addInfoHidden(List<String> info) {
-		info.add(ChatFormatting.GREEN + "[Toxic Fumes]");
+		info.add(ChatFormatting.GREEN + "[" + I18nUtil.resolveKey("trait.toxicfumes") + "]");
 	}
 	
 	@Override public void serializeJSON(JsonWriter writer) throws IOException {
