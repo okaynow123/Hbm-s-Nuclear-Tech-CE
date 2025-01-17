@@ -192,14 +192,23 @@ public class BlockSeal extends Block implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		int i = BlockSeal.getFrameSize(world, pos);
-		
-		if(i != 0)
-			if(BlockSeal.isSealClosed(world, pos, i))
-				BlockSeal.openSeal(world, pos, i);
-			else
-				BlockSeal.closeSeal(world, pos, i);
+	public BombReturnCode explode(World world, BlockPos pos) {
+
+		if(!world.isRemote) {
+			int i = BlockSeal.getFrameSize(world, pos);
+
+			if (i != 0) {
+				if (BlockSeal.isSealClosed(world, pos, i))
+					BlockSeal.openSeal(world, pos, i);
+				else
+					BlockSeal.closeSeal(world, pos, i);
+				return BombReturnCode.TRIGGERED;
+			}
+
+			return BombReturnCode.ERROR_INCOMPATIBLE;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

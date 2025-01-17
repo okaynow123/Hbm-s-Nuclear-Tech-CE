@@ -1,9 +1,9 @@
 package com.hbm.render.entity.missile;
 
+import com.hbm.entity.missile.EntityMissileTier2;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.render.tileentity.RenderLaunchPadTier1;
-import com.hbm.entity.missile.EntityMissileClusterStrong;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderHelper;
 
@@ -13,16 +13,16 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderMissileClusterStrong extends Render<EntityMissileClusterStrong> {
+public class RenderMissileClusterStrong extends Render<EntityMissileTier2.EntityMissileClusterStrong> {
 
-	public static final IRenderFactory<EntityMissileClusterStrong> FACTORY = (RenderManager man) -> {return new RenderMissileClusterStrong(man);};
+	public static final IRenderFactory<EntityMissileTier2.EntityMissileClusterStrong> FACTORY = (RenderManager man) -> {return new RenderMissileClusterStrong(man);};
 	
 	protected RenderMissileClusterStrong(RenderManager renderManager) {
 		super(renderManager);
 	}
 	
 	@Override
-	public void doRender(EntityMissileClusterStrong missile, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityMissileTier2.EntityMissileClusterStrong missile, double x, double y, double z, float entityYaw, float partialTicks) {
 		GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         GlStateManager.enableLighting();
@@ -44,7 +44,7 @@ public class RenderMissileClusterStrong extends Render<EntityMissileClusterStron
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityMissileClusterStrong entity) {
+	protected ResourceLocation getEntityTexture(EntityMissileTier2.EntityMissileClusterStrong entity) {
 		return ResourceManager.missileStrong_CL_tex;
 	}
 }

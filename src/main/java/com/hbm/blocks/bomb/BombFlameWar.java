@@ -28,10 +28,13 @@ public class BombFlameWar extends Block implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		ExplosionChaos.explode(world, pos.getX(), pos.getY(), pos.getZ(), 15);
-    	ExplosionChaos.spawnExplosion(world, pos.getX(), pos.getY(), pos.getZ(), 75);
-    	ExplosionChaos.flameDeath(world, pos, 100);
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			ExplosionChaos.explode(world, pos.getX(), pos.getY(), pos.getZ(), 15);
+			ExplosionChaos.spawnExplosion(world, pos.getX(), pos.getY(), pos.getZ(), 75);
+			ExplosionChaos.flameDeath(world, pos, 100);
+		}
+		return BombReturnCode.DETONATED;
 	}
 
 }

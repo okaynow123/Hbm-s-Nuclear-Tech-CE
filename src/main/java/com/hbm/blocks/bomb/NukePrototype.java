@@ -138,18 +138,23 @@ public class NukePrototype extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
 		TileEntityNukePrototype entity = (TileEntityNukePrototype) world.getTileEntity(pos);
         //if (world.isBlockIndirectlyGettingPowered(x, y, z))
-        {
         	if(entity.isReady())
         	{
         		this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
             	entity.clearSlots();
             	world.setBlockToAir(pos);
             	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
-        	}
-        }
+				return BombReturnCode.DETONATED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

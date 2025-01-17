@@ -107,17 +107,22 @@ public class NukeGadget extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeGadget entity = (TileEntityNukeGadget) world.getTileEntity(pos);
-		// if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
-		{
-			if (entity.isReady()) {
-				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-				entity.clearSlots();
-				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
-			}
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeGadget entity = (TileEntityNukeGadget) world.getTileEntity(pos);
+			// if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
+				if (entity.isReady()) {
+					this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+					entity.clearSlots();
+					world.setBlockToAir(pos);
+					igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
+					return BombReturnCode.DETONATED;
+				}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

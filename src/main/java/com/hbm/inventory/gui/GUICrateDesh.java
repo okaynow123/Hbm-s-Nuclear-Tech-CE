@@ -1,5 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
+import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerCrateDesh;
@@ -29,6 +31,21 @@ public class GUICrateDesh extends GuiContainer {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		super.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	public void initGui() {
+		super.initGui();
+		if (mc.player != null) {
+			TileEntityCrateBase.openInventory(mc.player);
+		}
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		if (mc.player != null) {
+			TileEntityCrateBase.closeInventory(mc.player);
+		}
 	}
 	
 	@Override

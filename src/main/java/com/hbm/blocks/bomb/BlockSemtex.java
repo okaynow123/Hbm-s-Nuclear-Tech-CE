@@ -58,11 +58,14 @@ public class BlockSemtex extends Block implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if(!world.isRemote) {
 			new ExplosionNT(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 50).overrideResolution(64).explode();
 			ExplosionLarge.spawnParticles(world, pos.getX(), pos.getY(), pos.getZ(), ExplosionLarge.cloudFunction(15));
+
+			return BombReturnCode.DETONATED;
 		}
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

@@ -138,7 +138,7 @@ public class TestObjTester extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if(!world.isRemote) {
     		/*world.setBlockToAir(pos);
     		ExplosionNT ex = new ExplosionNT(world, null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, 5);
@@ -187,6 +187,8 @@ public class TestObjTester extends BlockContainer implements IBomb {
             Minecraft.getMinecraft().effectRenderer.addEffect(new PhysicsTestParticle(world, r, creep.posX, creep.posY, creep.posZ));*/
             
     	}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 

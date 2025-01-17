@@ -191,18 +191,22 @@ public class NukeFleija extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeFleija entity = (TileEntityNukeFleija) world.getTileEntity(pos);
-        //if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
-        {
-        	if(entity.isReady())
-        	{
-        		this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-            	entity.clearSlots();
-            	world.setBlockToAir(pos);
-            	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
-        	}
-        }
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeFleija entity = (TileEntityNukeFleija) world.getTileEntity(pos);
+			//if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
+				if (entity.isReady()) {
+					this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+					entity.clearSlots();
+					world.setBlockToAir(pos);
+					igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
+					return BombReturnCode.DETONATED;
+				}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

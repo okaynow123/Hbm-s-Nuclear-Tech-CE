@@ -227,11 +227,19 @@ public class LaunchTable extends BlockContainer implements IMultiBlock, IBomb {
 
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityLaunchTable entity = (TileEntityLaunchTable) world.getTileEntity(pos);
-		
-		if(entity.canLaunch())
-			entity.launch();
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if (!world.isRemote) {
+			TileEntityLaunchTable entity = (TileEntityLaunchTable) world.getTileEntity(pos);
+
+			if (entity.canLaunch()) {
+				entity.launch();
+				return BombReturnCode.LAUNCHED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 
 }

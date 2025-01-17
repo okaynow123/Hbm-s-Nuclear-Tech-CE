@@ -149,7 +149,7 @@ public class BlockCrashedBomb extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if (!world.isRemote) {
         	
         	world.setBlockToAir(pos);
@@ -164,5 +164,6 @@ public class BlockCrashedBomb extends BlockContainer implements IBomb {
 				EntityNukeTorex.statFacBale(world, pos.getX() + 0.5, pos.getY() + 5, pos.getZ() + 0.5, (int) (BombConfig.fatmanRadius * 1.25));
 			}
         }
+		return BombReturnCode.DETONATED;
 	}
 }

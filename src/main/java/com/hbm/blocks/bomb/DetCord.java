@@ -51,7 +51,7 @@ public class DetCord extends Block implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if(!world.isRemote) {
 			
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
@@ -85,6 +85,7 @@ public class DetCord extends Block implements IBomb {
 				}
 			}
 		}
+		return BombReturnCode.DETONATED;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import com.hbm.entity.missile.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
@@ -21,10 +22,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.hbm.entity.missile.EntityCarrier;
-import com.hbm.entity.missile.EntityMissileCustom;
-import com.hbm.entity.missile.EntityMissileAntiBallistic;
-import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.lib.Library;
 import com.hbm.main.ClientProxy;
@@ -315,7 +312,7 @@ public class RenderHelper {
 	 * @param partialTicks - render partial ticks
 	 * @return A three element double array, containing the render pos x at index 0, y at index 1, and z at index 2
 	 */
-	public static double[] getRenderPosFromMissile(EntityMissileBaseAdvanced missile, float partialTicks){
+	public static double[] getRenderPosFromMissile(EntityMissileBaseNT missile, float partialTicks){
 		double d0 = missile.prevPosX + (missile.posX - missile.prevPosX) * partialTicks;
 		double d1 = missile.prevPosY + (missile.posY - missile.prevPosY) * partialTicks;
 		double d2 = missile.prevPosZ + (missile.posZ - missile.prevPosZ) * partialTicks;
@@ -324,6 +321,18 @@ public class RenderHelper {
 		double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
 		double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 		
+		return new double[]{d0 - d3, d1 - d4, d2 - d5};
+	}
+
+	public static double[] getRenderPosFromMissile(EntityMissileAntiBallistic missile, float partialTicks){
+		double d0 = missile.prevPosX + (missile.posX - missile.prevPosX) * partialTicks;
+		double d1 = missile.prevPosY + (missile.posY - missile.prevPosY) * partialTicks;
+		double d2 = missile.prevPosZ + (missile.posZ - missile.prevPosZ) * partialTicks;
+		Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
+		double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
+		double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
+		double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+
 		return new double[]{d0 - d3, d1 - d4, d2 - d5};
 	}
 

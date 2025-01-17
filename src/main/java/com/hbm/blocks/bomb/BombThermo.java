@@ -45,9 +45,7 @@ public class BombThermo extends Block implements IBomb {
 	
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		if(world.isRemote)
-			return;
+	public BombReturnCode explode(World world, BlockPos pos) {
 		world.setBlockState(pos, Blocks.AIR.getDefaultState());
     	if(this == ModBlocks.therm_endo)
     	{
@@ -62,6 +60,7 @@ public class BombThermo extends Block implements IBomb {
     	}
     	
     	world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 5.0F, true);
+		return BombReturnCode.DETONATED;
 	}
 
 }

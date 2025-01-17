@@ -79,14 +79,22 @@ public class BlastDoor extends BlockContainer implements IBomb, IMultiBlock, IPa
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityBlastDoor entity = (TileEntityBlastDoor) world.getTileEntity(pos);
-		if(entity != null)
-		{
-			if(!entity.isLocked()) {
-				entity.tryToggle();
+	public BombReturnCode explode(World world, BlockPos pos) {
+
+		if(!world.isRemote) {
+			TileEntityBlastDoor entity = (TileEntityBlastDoor) world.getTileEntity(pos);
+			if(entity != null) {
+
+				if(!entity.isLocked()) {
+					entity.tryToggle();
+					return BombReturnCode.TRIGGERED;
+				}
+
+				return BombReturnCode.ERROR_INCOMPATIBLE;
 			}
 		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

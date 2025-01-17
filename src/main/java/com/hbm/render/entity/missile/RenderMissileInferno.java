@@ -1,9 +1,9 @@
 package com.hbm.render.entity.missile;
 
+import com.hbm.entity.missile.EntityMissileTier3;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.render.tileentity.RenderLaunchPadTier1;
-import com.hbm.entity.missile.EntityMissileInferno;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderHelper;
 
@@ -13,16 +13,16 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderMissileInferno extends Render<EntityMissileInferno> {
+public class RenderMissileInferno extends Render<EntityMissileTier3.EntityMissileInferno> {
 	
-	public static final IRenderFactory<EntityMissileInferno> FACTORY = (RenderManager man) -> {return new RenderMissileInferno(man);};
+	public static final IRenderFactory<EntityMissileTier3.EntityMissileInferno> FACTORY = (RenderManager man) -> {return new RenderMissileInferno(man);};
 	
 	protected RenderMissileInferno(RenderManager renderManager) {
 		super(renderManager);
 	}
 	
 	@Override
-	public void doRender(EntityMissileInferno missile, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityMissileTier3.EntityMissileInferno missile, double x, double y, double z, float entityYaw, float partialTicks) {
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.enableLighting();
@@ -44,7 +44,7 @@ public class RenderMissileInferno extends Render<EntityMissileInferno> {
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityMissileInferno entity) {
+	protected ResourceLocation getEntityTexture(EntityMissileTier3.EntityMissileInferno entity) {
 		return ResourceManager.missileHuge_IN_tex;
 	}
 }

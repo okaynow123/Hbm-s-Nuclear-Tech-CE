@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerCrateSteel;
@@ -23,6 +24,21 @@ public class GUICrateSteel extends GuiContainer {
 		
 		this.xSize = 176;
 		this.ySize = 222;
+	}
+
+	public void initGui() {
+		super.initGui();
+		if (mc.player != null) {
+			TileEntityCrateBase.openInventory(mc.player);
+		}
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		if (mc.player != null) {
+			TileEntityCrateBase.closeInventory(mc.player);
+		}
 	}
 	
 	@Override

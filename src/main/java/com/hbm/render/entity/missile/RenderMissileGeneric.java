@@ -1,8 +1,8 @@
 package com.hbm.render.entity.missile;
 
+import com.hbm.entity.missile.EntityMissileTier1;
 import org.lwjgl.opengl.GL11;
 
-import com.hbm.entity.missile.EntityMissileGeneric;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderHelper;
 
@@ -12,9 +12,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderMissileGeneric extends Render<EntityMissileGeneric> {
+public class RenderMissileGeneric extends Render<EntityMissileTier1.EntityMissileGeneric> {
 
-	public static final IRenderFactory<EntityMissileGeneric> FACTORY = (RenderManager man) -> {return new RenderMissileGeneric(man);};
+	public static final IRenderFactory<EntityMissileTier1.EntityMissileGeneric> FACTORY = (RenderManager man) -> {return new RenderMissileGeneric(man);};
 	
 	protected RenderMissileGeneric(RenderManager renderManager) {
 		super(renderManager);
@@ -22,7 +22,7 @@ public class RenderMissileGeneric extends Render<EntityMissileGeneric> {
 	
 	//1.12.2 using generics won't let me use the same renderer for every missile with the same model apparently...
 	@Override
-	public void doRender(EntityMissileGeneric missile, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityMissileTier1.EntityMissileGeneric missile, double x, double y, double z, float entityYaw, float partialTicks) {
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.enableLighting();
@@ -43,7 +43,7 @@ public class RenderMissileGeneric extends Render<EntityMissileGeneric> {
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityMissileGeneric entity) {
+	protected ResourceLocation getEntityTexture(EntityMissileTier1.EntityMissileGeneric entity) {
 		return ResourceManager.missileV2_HE_tex;
 	}
 

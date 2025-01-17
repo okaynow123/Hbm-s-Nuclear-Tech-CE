@@ -197,24 +197,30 @@ public class NukeCustom extends BlockContainer implements IBomb {
 	}
 	
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeCustom entity = (TileEntityNukeCustom) world.getTileEntity(pos);
-		
-		if(!entity.isFalling()) {
-			
-			entity.clearSlots();
-			world.destroyBlock(pos, false);
-			NukeCustom.explodeCustom(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, entity.tnt, entity.nuke, entity.hydro, entity.bale, entity.dirty, entity.schrab, entity.sol, entity.euph);
-			
-		} else {
-			
-			EntityFallingNuke bomb = new EntityFallingNuke(world, entity.tnt, entity.nuke, entity.hydro, entity.bale, entity.dirty, entity.schrab, entity.sol, entity.euph);
-			bomb.getDataManager().set(EntityFallingNuke.FACING, world.getBlockState(pos).getValue(FACING));
-			bomb.setPositionAndRotation(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
-			entity.clearSlots();
-			world.setBlockToAir(pos);
-			world.spawnEntity(bomb);
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeCustom entity = (TileEntityNukeCustom) world.getTileEntity(pos);
+
+			if (!entity.isFalling()) {
+
+				entity.clearSlots();
+				world.destroyBlock(pos, false);
+				NukeCustom.explodeCustom(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, entity.tnt, entity.nuke, entity.hydro, entity.bale, entity.dirty, entity.schrab, entity.sol, entity.euph);
+				return BombReturnCode.TRIGGERED;
+
+			} else {
+
+				EntityFallingNuke bomb = new EntityFallingNuke(world, entity.tnt, entity.nuke, entity.hydro, entity.bale, entity.dirty, entity.schrab, entity.sol, entity.euph);
+				bomb.getDataManager().set(EntityFallingNuke.FACING, world.getBlockState(pos).getValue(FACING));
+				bomb.setPositionAndRotation(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				world.spawnEntity(bomb);
+				return BombReturnCode.TRIGGERED;
+			}
 		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

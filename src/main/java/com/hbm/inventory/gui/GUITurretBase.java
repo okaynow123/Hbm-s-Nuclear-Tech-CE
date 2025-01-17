@@ -60,7 +60,6 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		MainRegistry.logger.debug("Player: {}", mc.player);
 		if (mc.player != null) {
 			TileEntityTurretBaseNT.closeInventory(mc.player);
 		}

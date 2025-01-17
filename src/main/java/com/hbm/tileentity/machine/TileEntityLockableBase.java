@@ -78,24 +78,25 @@ public class TileEntityLockableBase extends TileEntity {
 	}
 	
 	public boolean canAccess(EntityPlayer player) {
-		
-		if(player == null) { //!isLocked || 
-			return false;
-		} else {
-			ItemStack stack = player.getHeldItemMainhand();
-			
-			if(stack.getItem() instanceof ItemKeyPin && ItemKeyPin.getPins(stack) == this.lock) {
-	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
-				return true;
-			}
-			
-			if(stack.getItem() == ModItems.key_red) {
-	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
-				return true;
-			}
-			
-			return tryPick(player);
+		if(!isLocked) {
+			return true;
 		}
+		if(player == null) { //!isLocked ||
+			return false;
+		}
+
+		ItemStack stack = player.getHeldItemMainhand();
+
+		if(stack.getItem() instanceof ItemKeyPin && ItemKeyPin.getPins(stack) == this.lock) {
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			return true;
+		}
+
+		if(stack.getItem() == ModItems.key_red) {
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			return true;
+		}
+		return tryPick(player);
 	}
 
 	public static int hasLockPickTools(EntityPlayer player){

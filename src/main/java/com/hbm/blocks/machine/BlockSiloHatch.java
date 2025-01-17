@@ -66,14 +66,18 @@ public class BlockSiloHatch extends BlockContainer implements IBomb, IMultiBlock
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntitySiloHatch entity = (TileEntitySiloHatch) world.getTileEntity(pos);
-		if(entity != null)
-		{
-			if(!entity.isLocked()) {
-				entity.tryToggle();
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntitySiloHatch entity = (TileEntitySiloHatch) world.getTileEntity(pos);
+			if (entity != null) {
+				if (!entity.isLocked()) {
+					entity.tryToggle();
+					return BombReturnCode.TRIGGERED;
+				}
+				return BombReturnCode.ERROR_INCOMPATIBLE;
 			}
 		}
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

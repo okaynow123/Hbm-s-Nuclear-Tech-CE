@@ -191,13 +191,16 @@ public class BombMulti extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityBombMulti entity = (TileEntityBombMulti) world.getTileEntity(pos);
-    	if(/*entity.getExplosionType() != 0*/entity.isLoaded())
-    	{
-    		this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-        	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
-    	}
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityBombMulti entity = (TileEntityBombMulti) world.getTileEntity(pos);
+			if (/*entity.getExplosionType() != 0*/entity.isLoaded()) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
+			}
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
+		}
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

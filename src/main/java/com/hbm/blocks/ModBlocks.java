@@ -3,41 +3,7 @@ package com.hbm.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hbm.blocks.bomb.Balefire;
-import com.hbm.blocks.bomb.BlockCloudResidue;
-import com.hbm.blocks.bomb.BlockCrashedBomb;
-import com.hbm.blocks.bomb.BlockFireworks;
-import com.hbm.blocks.bomb.BlockSemtex;
-import com.hbm.blocks.bomb.BlockTaint;
-import com.hbm.blocks.bomb.BlockVolcano;
-import com.hbm.blocks.bomb.BombFlameWar;
-import com.hbm.blocks.bomb.BombFloat;
-import com.hbm.blocks.bomb.BombMulti;
-import com.hbm.blocks.bomb.BombThermo;
-import com.hbm.blocks.bomb.CheaterVirus;
-import com.hbm.blocks.bomb.CheaterVirusSeed;
-import com.hbm.blocks.bomb.CompactLauncher;
-import com.hbm.blocks.bomb.CrystalPulsar;
-import com.hbm.blocks.bomb.CrystalVirus;
-import com.hbm.blocks.bomb.DetCord;
-import com.hbm.blocks.bomb.DetMiner;
-import com.hbm.blocks.bomb.DigammaFlame;
-import com.hbm.blocks.bomb.DigammaMatter;
-import com.hbm.blocks.bomb.Landmine;
-import com.hbm.blocks.bomb.LaunchPad;
-import com.hbm.blocks.bomb.LaunchTable;
-import com.hbm.blocks.bomb.NukeBalefire;
-import com.hbm.blocks.bomb.NukeBoy;
-import com.hbm.blocks.bomb.NukeCustom;
-import com.hbm.blocks.bomb.NukeFleija;
-import com.hbm.blocks.bomb.NukeGadget;
-import com.hbm.blocks.bomb.NukeMan;
-import com.hbm.blocks.bomb.NukeMike;
-import com.hbm.blocks.bomb.NukeN2;
-import com.hbm.blocks.bomb.NukePrototype;
-import com.hbm.blocks.bomb.NukeSolinium;
-import com.hbm.blocks.bomb.NukeTsar;
-import com.hbm.blocks.bomb.RailgunPlasma;
+import com.hbm.blocks.bomb.*;
 import com.hbm.blocks.gas.*;
 import com.hbm.blocks.generic.*;
 import com.hbm.blocks.generic.BlockHazard.ExtDisplayEffect;
@@ -904,9 +870,11 @@ public class ModBlocks {
 	public static final int guiID_crate_tungsten = 107;
 	public static final int guiID_crate_desh = 128;
 	public static final int guiID_crate_template = 136;
-	public static final int guiID_mass_storage = 140;
 	public static final int guiID_safe = 70;
 	public static final Block mass_storage = new BlockMassStorage(Material.IRON, "mass_storage").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block mass_storage_wood = new BlockMassStorage(Material.IRON, "mass_storage_wood").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block mass_storage_iron = new BlockMassStorage(Material.IRON, "mass_storage_iron").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block mass_storage_desh = new BlockMassStorage(Material.IRON, "mass_storage_desh").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 
 	public static final Block machine_keyforge = new MachineKeyForge(Material.IRON, "machine_keyforge").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
@@ -1102,6 +1070,7 @@ public class ModBlocks {
 	public static final int guiID_machine_selenium = 63;
 	
 	public static final Block launch_pad = new LaunchPad(Material.IRON, "launch_pad").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
+	public static final Block launch_pad_large = new LaunchPadLarge("launch_pad_large", Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
 	public static final int guiID_launch_pad = 19;
 	
 	public static final Block machine_centrifuge = new MachineCentrifuge(Material.IRON, "machine_centrifuge").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1287,6 +1256,7 @@ public class ModBlocks {
 	public static final Block watz_hatch = new WatzHatch(Material.IRON, "watz_hatch").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_conductor = new BlockCableConnect(Material.IRON, "watz_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_core = new WatzCore(Material.IRON, "watz_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block watz = new Watz("watz").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_watz_multiblock = 32;
 	
 	//Fwatz stuff

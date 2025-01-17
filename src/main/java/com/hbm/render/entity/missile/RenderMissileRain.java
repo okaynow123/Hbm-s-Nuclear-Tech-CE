@@ -1,9 +1,9 @@
 package com.hbm.render.entity.missile;
 
+import com.hbm.entity.missile.EntityMissileTier3;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.render.tileentity.RenderLaunchPadTier1;
-import com.hbm.entity.missile.EntityMissileRain;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderHelper;
 
@@ -13,16 +13,16 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
-public class RenderMissileRain extends Render<EntityMissileRain> {
+public class RenderMissileRain extends Render<EntityMissileTier3.EntityMissileRain> {
 	
-	public static final IRenderFactory<EntityMissileRain> FACTORY = (RenderManager man) -> {return new RenderMissileRain(man);};
+	public static final IRenderFactory<EntityMissileTier3.EntityMissileRain> FACTORY = (RenderManager man) -> {return new RenderMissileRain(man);};
 	
 	protected RenderMissileRain(RenderManager renderManager) {
 		super(renderManager);
 	}
 	
 	@Override
-	public void doRender(EntityMissileRain missile, double x, double y, double z, float entityYaw, float partialTicks) {
+	public void doRender(EntityMissileTier3.EntityMissileRain missile, double x, double y, double z, float entityYaw, float partialTicks) {
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.enableLighting();
@@ -44,7 +44,7 @@ public class RenderMissileRain extends Render<EntityMissileRain> {
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityMissileRain entity) {
+	protected ResourceLocation getEntityTexture(EntityMissileTier3.EntityMissileRain entity) {
 		return ResourceManager.missileHuge_CL_tex;
 	}
 }

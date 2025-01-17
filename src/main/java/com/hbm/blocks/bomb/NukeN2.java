@@ -109,15 +109,22 @@ public class NukeN2 extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeN2 entity = (TileEntityNukeN2) world.getTileEntity(pos);
-		int charges = entity.countCharges();
-		if(charges > 0) {
-			this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-			entity.clearSlots();
-			world.setBlockToAir(pos);
-			igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeN2 entity = (TileEntityNukeN2) world.getTileEntity(pos);
+			int charges = entity.countCharges();
+			if(charges > 0) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
+				return BombReturnCode.DETONATED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

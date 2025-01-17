@@ -153,10 +153,14 @@ public class CompactLauncher extends BlockContainer implements IMultiBlock, IBom
 	}
 	
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		TileEntityCompactLauncher entity = (TileEntityCompactLauncher) world.getTileEntity(pos);
-		if(entity.canLaunch())
+		if(entity.canLaunch()) {
 			entity.launch();
+			return BombReturnCode.LAUNCHED;
+		}
+
+		return BombReturnCode.ERROR_MISSING_COMPONENT;
 	}
 	
 	@Override

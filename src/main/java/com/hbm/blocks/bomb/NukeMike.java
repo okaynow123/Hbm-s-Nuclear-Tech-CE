@@ -113,21 +113,29 @@ public class NukeMike extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeMike entity = (TileEntityNukeMike) world.getTileEntity(pos);
-		if(entity.isReady() && !entity.isFilled()) {
-			this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-			entity.clearSlots();
-			world.setBlockToAir(pos);
-			igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeMike entity = (TileEntityNukeMike) world.getTileEntity(pos);
+			if (entity.isReady() && !entity.isFilled()) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
+				return BombReturnCode.DETONATED;
+			}
+
+			if (entity.isFilled()) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
+				return BombReturnCode.DETONATED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
 
-		if(entity.isFilled()) {
-			this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-			entity.clearSlots();
-			world.setBlockToAir(pos);
-			igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
-		}
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

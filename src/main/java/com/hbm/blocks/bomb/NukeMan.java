@@ -199,20 +199,25 @@ public class NukeMan extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		if(!(world.getTileEntity(pos) instanceof TileEntityNukeMan))
-			return;
-		TileEntityNukeMan entity = (TileEntityNukeMan) world.getTileEntity(pos);
-        //if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
-        {
-        	if(entity.isReady())
-        	{
-        		this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-            	entity.clearSlots();
-            	world.setBlockToAir(pos);
-            	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
-        	}
-        }
+	public BombReturnCode explode(World world, BlockPos pos) {
+
+		if (world.isRemote) {
+			if (!(world.getTileEntity(pos) instanceof TileEntityNukeMan))
+				return BombReturnCode.UNDEFINED;
+			TileEntityNukeMan entity = (TileEntityNukeMan) world.getTileEntity(pos);
+			//if (p_149695_1_.isBlockIndirectlyGettingPowered(x, y, z))
+			if (entity.isReady()) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
+				return BombReturnCode.DETONATED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 
 	@Override

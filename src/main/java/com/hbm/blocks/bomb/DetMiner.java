@@ -33,7 +33,7 @@ public class DetMiner extends Block implements IBomb {
 	}
 	
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if(!world.isRemote) {
 
 			world.destroyBlock(pos, false);
@@ -44,6 +44,8 @@ public class DetMiner extends Block implements IBomb {
 
 			ExplosionLarge.spawnParticles(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 30);
 		}
+
+		return BombReturnCode.DETONATED;
 	}
 	
 	@Override

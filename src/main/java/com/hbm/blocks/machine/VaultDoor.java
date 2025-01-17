@@ -67,11 +67,19 @@ public class VaultDoor extends BlockContainer implements IBomb, IMultiBlock, IRa
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityVaultDoor te = (TileEntityVaultDoor) world.getTileEntity(pos);
-		
-		if(!te.isLocked())
-			te.tryToggle();
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityVaultDoor te = (TileEntityVaultDoor) world.getTileEntity(pos);
+
+			if (!te.isLocked()) {
+				te.tryToggle();
+				return BombReturnCode.TRIGGERED;
+			}
+
+			return BombReturnCode.ERROR_INCOMPATIBLE;
+		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

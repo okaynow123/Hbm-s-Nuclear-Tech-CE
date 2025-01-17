@@ -119,14 +119,21 @@ public class NukeSolinium extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
-		TileEntityNukeSolinium entity = (TileEntityNukeSolinium) world.getTileEntity(pos);
-		if(entity.isReady()) {
-			this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
-			entity.clearSlots();
-			world.setBlockToAir(pos);
-			igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
+	public BombReturnCode explode(World world, BlockPos pos) {
+		if(!world.isRemote) {
+			TileEntityNukeSolinium entity = (TileEntityNukeSolinium) world.getTileEntity(pos);
+			if (entity.isReady()) {
+				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				entity.clearSlots();
+				world.setBlockToAir(pos);
+				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
+				return BombReturnCode.DETONATED;
+			}
+
+			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
+
+		return BombReturnCode.UNDEFINED;
 	}
 	
 	@Override

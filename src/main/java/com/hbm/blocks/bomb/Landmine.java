@@ -179,7 +179,7 @@ public class Landmine extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public void explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos) {
 		if(!world.isRemote) {
 			int x = pos.getX();
 			int y = pos.getY();
@@ -209,5 +209,7 @@ public class Landmine extends BlockContainer implements IBomb {
 	            }
 			}
 		}
+
+		return BombReturnCode.DETONATED;
 	}
 }
