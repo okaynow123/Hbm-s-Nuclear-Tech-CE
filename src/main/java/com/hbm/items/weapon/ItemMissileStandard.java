@@ -1,19 +1,15 @@
 package com.hbm.items.weapon;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.hbm.config.BombConfig;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCustomLore;
-import com.hbm.main.MainRegistry;
-
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemMissileStandard extends ItemCustomLore {
 

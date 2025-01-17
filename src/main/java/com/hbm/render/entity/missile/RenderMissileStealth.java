@@ -1,7 +1,6 @@
 package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityMissileStealth;
-import com.hbm.entity.missile.EntityMissileTier0;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;

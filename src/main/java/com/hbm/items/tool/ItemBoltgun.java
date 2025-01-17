@@ -2,7 +2,6 @@ package com.hbm.items.tool;
 
 import api.hbm.block.IToolable;
 import api.hbm.block.IToolable.ToolType;
-import com.hbm.inventory.material.Mats;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;

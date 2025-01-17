@@ -2,14 +2,10 @@ package com.hbm.tileentity.machine.storage;
 
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ItemStackHandlerWrapper;
-import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;

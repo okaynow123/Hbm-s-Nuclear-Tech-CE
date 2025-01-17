@@ -1,14 +1,11 @@
 package com.hbm.items.tool;
 
-import java.util.List;
-
 import api.hbm.item.IDesignatorItem;
 import com.hbm.blocks.bomb.LaunchPad;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -25,6 +22,8 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemDesignatorRange extends Item implements IDesignatorItem {
 

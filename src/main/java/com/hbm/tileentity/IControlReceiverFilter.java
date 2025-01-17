@@ -1,18 +1,14 @@
 package com.hbm.tileentity;
 
 import com.hbm.interfaces.IControlReceiver;
-
 import com.hbm.interfaces.ICopiable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import static com.hbm.render.tileentity.RenderPress.pos;
 
 public interface IControlReceiverFilter extends IControlReceiver, ICopiable {
 

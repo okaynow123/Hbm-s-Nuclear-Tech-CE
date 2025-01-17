@@ -1,8 +1,5 @@
 package com.hbm.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hbm.blocks.bomb.*;
 import com.hbm.blocks.gas.*;
 import com.hbm.blocks.generic.*;
@@ -12,55 +9,18 @@ import com.hbm.blocks.machine.pile.BlockGraphite;
 import com.hbm.blocks.machine.pile.BlockGraphiteFuel;
 import com.hbm.blocks.machine.pile.BlockGraphiteRod;
 import com.hbm.blocks.machine.pile.BlockGraphiteSource;
-import com.hbm.blocks.machine.rbmk.RBMKAbsorber;
-import com.hbm.blocks.machine.rbmk.RBMKBlank;
-import com.hbm.blocks.machine.rbmk.RBMKBoiler;
-import com.hbm.blocks.machine.rbmk.RBMKConsole;
-import com.hbm.blocks.machine.rbmk.RBMKControl;
-import com.hbm.blocks.machine.rbmk.RBMKControlAuto;
-import com.hbm.blocks.machine.rbmk.RBMKDebris;
-import com.hbm.blocks.machine.rbmk.RBMKDebrisBurning;
-import com.hbm.blocks.machine.rbmk.RBMKDebrisDigamma;
-import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
-import com.hbm.blocks.machine.rbmk.RBMKInlet;
-import com.hbm.blocks.machine.rbmk.RBMKModerator;
-import com.hbm.blocks.machine.rbmk.RBMKOutgasser;
-import com.hbm.blocks.machine.rbmk.RBMKOutlet;
-import com.hbm.blocks.machine.rbmk.RBMKReflector;
-import com.hbm.blocks.machine.rbmk.RBMKRod;
-import com.hbm.blocks.machine.rbmk.RBMKRodReaSim;
-import com.hbm.blocks.machine.rbmk.RBMKStorage;
-import com.hbm.blocks.machine.rbmk.RBMKCooler;
-import com.hbm.blocks.machine.rbmk.RBMKHeater;
-import com.hbm.blocks.machine.rbmk.RBMKCraneConsole;
+import com.hbm.blocks.machine.rbmk.*;
 import com.hbm.blocks.network.*;
-import com.hbm.blocks.network.energy.BlockCable;
-import com.hbm.blocks.network.energy.CableSwitch;
-import com.hbm.blocks.network.energy.CableDiode;
-import com.hbm.blocks.network.energy.CableDetector;
-import com.hbm.blocks.network.energy.PowerDetector;
-import com.hbm.blocks.network.energy.PylonRedWire;
-import com.hbm.blocks.network.energy.PylonLarge;
-import com.hbm.blocks.network.energy.Substation;
-import com.hbm.blocks.network.energy.WireCoated;
-import com.hbm.blocks.network.energy.WireCoatedRadResistant;
-import com.hbm.blocks.network.energy.BlockConverterRfHe;
-import com.hbm.blocks.network.energy.BlockConverterHeRf;
-import com.hbm.blocks.network.energy.BlockCableGauge;
+import com.hbm.blocks.network.energy.*;
 import com.hbm.blocks.test.KeypadTest;
 import com.hbm.blocks.test.TestObjTester;
 import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
-import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.special.ItemHazard;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.DoorDecl;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -69,8 +29,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModBlocks {
 

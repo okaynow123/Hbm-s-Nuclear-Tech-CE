@@ -1,18 +1,16 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
-import org.lwjgl.opengl.GL11;
-
 import com.hbm.inventory.container.ContainerCrateTungsten;
-import com.hbm.lib.RefStrings;
 import com.hbm.lib.Library;
+import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrateTungsten;
-
+import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class GUICrateTungsten extends GuiContainer {
 
