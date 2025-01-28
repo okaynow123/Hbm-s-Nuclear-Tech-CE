@@ -75,7 +75,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 		this.motionY = 2;
 
 		Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
-		accelXZ = decelY = 1 / vector.lengthVector();
+		accelXZ = decelY = 1 / vector.length();
 		decelY *= 2;
 		velocity = 0;
 
@@ -263,7 +263,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 
 		ItemMissile part = (ItemMissile) Item.getItemById(this.dataManager.get(FUSELAGE));
 		PartSize top = part.top;

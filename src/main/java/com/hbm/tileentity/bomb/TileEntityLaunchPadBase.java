@@ -255,7 +255,7 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 
 	public void updateRedstonePower(int x, int y, int z) {
 		BlockPos pos = new BlockPos(x, y, z);
-		boolean powered = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean powered = world.getStrongPower(pos) > 0;
 		boolean contained = activatedBlocks.contains(pos);
 		if(!contained && powered){
 			activatedBlocks.add(pos);
@@ -494,8 +494,8 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getFluid(Context context, Arguments args) {
 		return new Object[] {
-				this.tanks[0].getFill(), this.tanks[0].getMaxFill(), this.tanks[0].getTankType().getUnlocalizedName(),
-				this.tanks[1].getFill(), this.tanks[1].getMaxFill(), this.tanks[1].getTankType().getUnlocalizedName()
+				this.tanks[0].getFill(), this.tanks[0].getMaxFill(), this.tanks[0].getTankType().getTranslationKey(),
+				this.tanks[1].getFill(), this.tanks[1].getMaxFill(), this.tanks[1].getTankType().getTranslationKey()
 		};
 	}
 

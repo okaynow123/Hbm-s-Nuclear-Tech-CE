@@ -26,7 +26,7 @@ public class ItemColtanCompass extends Item {
 	public long lease = 0;
 	
 	public ItemColtanCompass(String s){
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.addPropertyOverride(new ResourceLocation("angle"), new IItemPropertyGetter(){
 
@@ -120,7 +120,7 @@ public class ItemColtanCompass extends Item {
 				lease = System.currentTimeMillis() + 1000;
 				
 				Vec3 vec = Vec3.createVectorHelper(entity.posX - lastX, 0, entity.posZ - lastZ);
-				MainRegistry.proxy.displayTooltip(((int) vec.lengthVector()) + "m");
+				MainRegistry.proxy.displayTooltip(((int) vec.length()) + "m");
 			}
 			
 			if(ItemColtanCompass.this.lease < System.currentTimeMillis()) {

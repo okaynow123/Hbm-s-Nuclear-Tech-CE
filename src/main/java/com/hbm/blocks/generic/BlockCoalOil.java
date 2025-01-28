@@ -23,7 +23,7 @@ public class BlockCoalOil extends BlockOre {
 
 	public BlockCoalOil(String s) {
 		super();
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -60,7 +60,7 @@ public class BlockCoalOil extends BlockOre {
 	}
 
 	@Override
-	public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+	public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
 		worldIn.setBlockState(pos, Blocks.FIRE.getDefaultState());
 	}
 

@@ -21,7 +21,7 @@ public class ItemFluidContainerInfinite extends Item {
 	}
 	
 	public ItemFluidContainerInfinite(FluidType type, int amount, int chance, String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.type = type;
 		this.amount = amount;

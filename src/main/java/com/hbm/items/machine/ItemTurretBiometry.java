@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemTurretBiometry extends Item {
 
 	public ItemTurretBiometry(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.weaponTab);
 		

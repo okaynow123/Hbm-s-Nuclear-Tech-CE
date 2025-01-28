@@ -21,7 +21,7 @@ public interface IBlockSealable {
             BlockDummyable block = (BlockDummyable)this;
             int meta = world.getBlockState(new BlockPos(x, y, z)).getBlock().getMetaFromState(world.getBlockState(new BlockPos(x, y, z)));
 
-            int[] rot = MultiblockHandlerXR.rotate(block.getDimensions(), EnumFacing.getFront(meta - BlockDummyable.offset));
+            int[] rot = MultiblockHandlerXR.rotate(block.getDimensions(), EnumFacing.byIndex(meta - BlockDummyable.offset));
     
             for(int a = x - rot[4]; a <= x + rot[5]; a++) {
                 for(int b = y - rot[1]; b <= y + rot[0]; b++) {

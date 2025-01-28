@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemDesignatorManual extends Item implements IDesignatorItem {
 
 	public ItemDesignatorManual(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.missileTab);
 		

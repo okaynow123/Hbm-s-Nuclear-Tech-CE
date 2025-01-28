@@ -20,7 +20,7 @@ public class ItemCapacitor extends Item {
 	private int dura;
 	
 	public ItemCapacitor(int dura, String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.dura = dura;
 		

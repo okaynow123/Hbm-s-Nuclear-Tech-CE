@@ -66,7 +66,7 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
         for(EntityLivingBase e : entities) {
 
             Vec3 vec = Vec3.createVectorHelper(e.posX - (x + 0.5), (e.posY + e.getEyeHeight()) - (y + 0.5), e.posZ - (z + 0.5));
-            double len = vec.lengthVector();
+            double len = vec.length();
             vec = vec.normalize();
 
             float res = 0;

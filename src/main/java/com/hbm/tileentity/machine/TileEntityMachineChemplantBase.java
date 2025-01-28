@@ -116,7 +116,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 	}
 
 	public Fluid[] getFluidsTyped(TypedFluidTank[] tanks){
-		Fluid[] fluid = new Fluid[tanks.length - 1];
+		Fluid[] fluid = new Fluid[tanks.length];
 		for(int i = 0; i < tanks.length; i++){
 			if (tanks[i].getType() != null) fluid[i] = tanks[i].getType();
 					else fluid[i] = ModForgeFluids.none;
@@ -125,7 +125,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 	}
 
 	public FluidTank[] getTanks(TypedFluidTank[] tanksTyped){
-		FluidTank[] tanks = new FluidTank[tanksTyped.length - 1];
+		FluidTank[] tanks = new FluidTank[tanksTyped.length];
 		for(int i = 0; i < tanksTyped.length; i++){
 			tanks[i] = tanksTyped[i].getTank();
 		}

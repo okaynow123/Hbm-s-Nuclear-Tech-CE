@@ -31,7 +31,7 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 	public static final ModelResourceLocation identifierModel = new ModelResourceLocation(RefStrings.MODID + ":forge_fluid_identifier", "inventory");
 
 	public ItemForgeFluidIdentifier(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.partsTab);
 

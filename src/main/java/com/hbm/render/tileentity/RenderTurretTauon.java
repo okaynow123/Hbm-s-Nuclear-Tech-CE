@@ -16,7 +16,7 @@ public class RenderTurretTauon extends RenderTurretBase<TileEntityTurretTauon> {
 	@Override
 	public void render(TileEntityTurretTauon te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		TileEntityTurretTauon turret = (TileEntityTurretTauon)te;
-		Vec3d off = turret.getHorizontalOffset();
+		Vec3d off = turret.byHorizontalIndexOffset();
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + off.x, y, z + off.z);

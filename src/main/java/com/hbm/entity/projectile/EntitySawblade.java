@@ -95,14 +95,14 @@ public class EntitySawblade extends EntityThrowableInterp {
 
             if(orientation < 6) {
 
-                if(Vec3.createVectorHelper(motionX, motionY, motionZ).lengthVector() < 0.75) {
+                if(Vec3.createVectorHelper(motionX, motionY, motionZ).length() < 0.75) {
                     this.dataManager.set(ORIENTATION, orientation + 6);
                     orientation += 6;
                 } else {
                     EnumFacing side = mop.sideHit;
-                    this.motionX *= 1 - (Math.abs(side.getFrontOffsetX()) * 2);
-                    this.motionY *= 1 - (Math.abs(side.getFrontOffsetY()) * 2);
-                    this.motionZ *= 1 - (Math.abs(side.getFrontOffsetZ()) * 2);
+                    this.motionX *= 1 - (Math.abs(side.getXOffset()) * 2);
+                    this.motionY *= 1 - (Math.abs(side.getYOffset()) * 2);
+                    this.motionZ *= 1 - (Math.abs(side.getZOffset()) * 2);
                     world.createExplosion(this, posX, posY, posZ, 3F, false);
 
                     if(world.getBlockState(mop.getBlockPos()).getBlock().getExplosionResistance(this) < 50) {

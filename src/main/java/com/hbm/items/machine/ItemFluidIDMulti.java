@@ -37,7 +37,7 @@ import java.util.List;
 public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IItemControlReceiver, IGUIProvider {
 
     public ItemFluidIDMulti(String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(MainRegistry.partsTab);
 
@@ -78,9 +78,9 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(I18nUtil.resolveKey(getUnlocalizedName() + ".info"));
+        tooltip.add(I18nUtil.resolveKey(getTranslationKey() + ".info"));
         tooltip.add("   " + getType(stack, true).getLocalizedName());
-        tooltip.add(I18nUtil.resolveKey(getUnlocalizedName() + ".info2"));
+        tooltip.add(I18nUtil.resolveKey(getTranslationKey() + ".info2"));
         tooltip.add("   " + getType(stack, false).getLocalizedName());
     }
 

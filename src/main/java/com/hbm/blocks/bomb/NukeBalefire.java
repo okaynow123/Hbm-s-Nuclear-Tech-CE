@@ -65,7 +65,7 @@ public class NukeBalefire extends BlockMachineBase implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		if (world.isBlockIndirectlyGettingPowered(pos) > 0) {
+		if (world.getStrongPower(pos) > 0) {
 			explode(world, pos);
 		}
 	}

@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemMultiDetonator extends Item {
 
 	public ItemMultiDetonator(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		

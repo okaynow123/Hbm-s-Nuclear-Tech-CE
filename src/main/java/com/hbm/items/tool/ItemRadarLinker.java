@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class ItemRadarLinker extends ItemCoordinateBase {
 
     public ItemRadarLinker(String s){
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
 
         ModItems.ALL_ITEMS.add(this);

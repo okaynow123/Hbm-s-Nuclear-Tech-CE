@@ -62,7 +62,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 	public ItemGunBase(GunConfiguration config, String s) {
 		mainConfig = config;
 		this.setMaxStackSize(1);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModItems.ALL_ITEMS.add(this);
@@ -468,7 +468,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 			list.add("Ammo: §6Belt");
 		}
 
-		list.add("Ammo Type: §e" + I18n.format(ammo.getUnlocalizedName() + ".name"));
+		list.add("Ammo Type: §e" + I18n.format(ammo.getTranslationKey() + ".name"));
 
 		int dura = mainConfig.durability - getItemWear(stack);
 
@@ -696,7 +696,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 		BusAnimation animation = config.animations.get(type);
 
 		if(animation != null) {
-			HbmAnimations.hotbar[slot] = new Animation(stack.getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+			HbmAnimations.hotbar[slot] = new Animation(stack.getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 		}
 	}
 	

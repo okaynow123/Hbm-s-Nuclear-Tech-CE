@@ -442,7 +442,7 @@ public class CelestialBody {
 
 
 
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return name;
 	}
 
@@ -540,7 +540,7 @@ public class CelestialBody {
 		}
 		
 		// Load OR generate the desired chunk
-		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+		Chunk chunk = world.getChunk(chunkX, chunkZ);
 		return chunk.getHeightMap();
 	}
 

@@ -23,7 +23,7 @@ public class CoriumBlock extends BlockFluidClassic {
 
 	public CoriumBlock(Fluid fluid, Material material, String s) {
 		super(fluid, material);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		setQuantaPerBlock(5);
 		setCreativeTab(null);
@@ -56,7 +56,7 @@ public class CoriumBlock extends BlockFluidClassic {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity){
+	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity){
 		entity.setInWeb();
 		entity.setFire(3);
 		entity.attackEntityFrom(ModDamageSource.radiation, 200F);

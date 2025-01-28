@@ -36,7 +36,7 @@ public class NukeBoy extends BlockContainer implements IBomb {
 
 	public NukeBoy(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -71,9 +71,9 @@ public class NukeBoy extends BlockContainer implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntityNukeBoy entity = (TileEntityNukeBoy) worldIn.getTileEntity(pos);
-		if(worldIn.isBlockIndirectlyGettingPowered(pos) > 0) {
+		if(worldIn.getStrongPower(pos) > 0) {
 			if(entity.isReady() && !worldIn.isRemote) {
-				this.onBlockDestroyedByPlayer(worldIn, pos, state);
+				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
 				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -104,7 +104,7 @@ public class NukeBoy extends BlockContainer implements IBomb {
 		if(!world.isRemote) {
 			TileEntityNukeBoy entity = (TileEntityNukeBoy) world.getTileEntity(pos);
 			if (entity.isReady()) {
-				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
 				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
@@ -159,7 +159,7 @@ public class NukeBoy extends BlockContainer implements IBomb {
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {

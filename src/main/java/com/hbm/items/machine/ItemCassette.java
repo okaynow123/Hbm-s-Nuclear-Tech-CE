@@ -71,7 +71,7 @@ public class ItemCassette extends Item {
 	};
 
 	public ItemCassette(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);

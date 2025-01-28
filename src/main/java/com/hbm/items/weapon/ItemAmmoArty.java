@@ -56,7 +56,7 @@ public class ItemAmmoArty extends Item {
     public final int CHLORINE = 9;
 
     public ItemAmmoArty(String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setHasSubtypes(true);
         this.setCreativeTab(MainRegistry.weaponTab);
@@ -134,7 +134,7 @@ public class ItemAmmoArty extends Item {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         return "item." + itemTypes[Math.abs(stack.getItemDamage()) % itemTypes.length].name;
     }
 

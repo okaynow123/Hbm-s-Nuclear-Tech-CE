@@ -122,7 +122,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
 
                 if(te instanceof ISidedInventory && !(te instanceof TileEntityCraneExtractor)) {
                     sided = (ISidedInventory) te;
-                    access = masquerade(sided, EnumFacing.getFront(inputSide.getOpposite().ordinal()));
+                    access = masquerade(sided, EnumFacing.byIndex(inputSide.getOpposite().ordinal()));
                 }
 
                 //collect matching items
@@ -139,7 +139,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
                             int index = access == null ? i : access[i];
                             ItemStack stack = inv.getStackInSlot(index);
 
-                            if(stack != ItemStack.EMPTY && (sided == null || canExtractItemCE(index, stack, EnumFacing.getFront(inputSide.getOpposite().ordinal()), sided))){
+                            if(stack != ItemStack.EMPTY && (sided == null || canExtractItemCE(index, stack, EnumFacing.byIndex(inputSide.getOpposite().ordinal()), sided))){
 
                                 boolean match = this.matchesFilter(stack);
 
@@ -165,7 +165,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
                     for(int index : allowed_slots) {
                         ItemStack stack = inventory.getStackInSlot(index);
                     try {
-                        if (stack != ItemStack.EMPTY && (sided == null || canExtractItemCE(index, stack, EnumFacing.getFront(inputSide.getOpposite().ordinal()), sided))) {
+                        if (stack != ItemStack.EMPTY && (sided == null || canExtractItemCE(index, stack, EnumFacing.byIndex(inputSide.getOpposite().ordinal()), sided))) {
 
                             boolean match = this.matchesFilter(stack);
 
@@ -300,7 +300,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
         int xCoord = pos.getX();
         int yCoord = pos.getY();
         int zCoord = pos.getZ();
-        return new Vec3d(xCoord - player.posX, yCoord - player.posY, zCoord - player.posZ).lengthVector() < 20;
+        return new Vec3d(xCoord - player.posX, yCoord - player.posY, zCoord - player.posZ).length() < 20;
     }
 
     @Override

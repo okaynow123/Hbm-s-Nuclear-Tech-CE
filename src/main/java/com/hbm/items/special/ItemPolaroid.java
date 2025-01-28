@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemPolaroid extends Item {
 
 	public ItemPolaroid(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.consumableTab);
 		

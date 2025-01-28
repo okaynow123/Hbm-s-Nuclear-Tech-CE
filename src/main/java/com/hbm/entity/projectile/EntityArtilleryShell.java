@@ -147,7 +147,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
                 this.setPosition(this.posX, this.posY, this.posZ);
             }
 
-            if(new Vec3d(this.syncPosX - this.posX, this.syncPosY - this.posY, this.syncPosZ - this.posZ).lengthVector() < 0.2) {
+            if(new Vec3d(this.syncPosX - this.posX, this.syncPosY - this.posY, this.syncPosZ - this.posZ).length() < 0.2) {
                 world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5, posZ, 0.0, 0.1, 0.0);
             }
         }

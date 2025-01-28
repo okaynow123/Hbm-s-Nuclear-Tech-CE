@@ -26,7 +26,7 @@ public class BlockGeysir extends BlockContainer {
 
     public BlockGeysir(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(null);
 

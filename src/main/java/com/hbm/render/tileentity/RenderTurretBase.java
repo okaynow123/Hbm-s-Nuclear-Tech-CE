@@ -22,7 +22,7 @@ public abstract class RenderTurretBase<T extends TileEntityTurretBaseNT> extends
 	protected void renderConnectors(TileEntityTurretBaseNT turret, boolean power, boolean fluid, Fluid type) {
 
 		bindTexture(ResourceManager.turret_connector_tex);
-		Vec3d pos = turret.getHorizontalOffset();
+		Vec3d pos = turret.byHorizontalIndexOffset();
 		int x = (int)(turret.getPos().getX() + pos.x);
 		int y = turret.getPos().getY();
 		int z = (int)(turret.getPos().getZ() + pos.z);

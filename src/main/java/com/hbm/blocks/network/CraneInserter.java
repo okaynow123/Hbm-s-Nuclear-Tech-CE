@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
     public CraneInserter(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         ModBlocks.ALL_BLOCKS.add(this);
     }

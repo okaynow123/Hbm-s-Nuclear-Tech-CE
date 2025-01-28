@@ -30,7 +30,7 @@ public class LaunchPad extends BlockContainer implements IBomb {
 	public LaunchPad(Material materialIn, String s) {
 		super(materialIn);
 		this.setRegistryName(s);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setCreativeTab(MainRegistry.missileTab);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -64,7 +64,7 @@ public class LaunchPad extends BlockContainer implements IBomb {
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		if (worldIn.isBlockIndirectlyGettingPowered(pos) > 0 && !worldIn.isRemote) {
+		if (worldIn.getStrongPower(pos) > 0 && !worldIn.isRemote) {
 			this.explode(worldIn, pos);
 		}
 	}

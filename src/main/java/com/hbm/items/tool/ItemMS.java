@@ -20,7 +20,7 @@ import java.util.Random;
 public class ItemMS extends Item {
 
 	public ItemMS(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModItems.ALL_ITEMS.add(this);

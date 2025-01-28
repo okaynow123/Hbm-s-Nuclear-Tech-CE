@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemBoltgun extends Item implements IAnimatedItem {
 
 	public ItemBoltgun(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MainRegistry.controlTab);

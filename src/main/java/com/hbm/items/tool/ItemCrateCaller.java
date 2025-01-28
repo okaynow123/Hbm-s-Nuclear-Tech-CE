@@ -26,7 +26,7 @@ public class ItemCrateCaller extends Item {
 	Random rand = new Random();
 	
 	public ItemCrateCaller(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.canRepair = false;
 		this.setMaxDamage(4);

@@ -24,7 +24,7 @@ public class BlockLayering extends Block {
 
     public BlockLayering(Material material, String s) {
         super(material);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setHarvestLevel("pickaxe", 0);
         this.setCreativeTab(MainRegistry.controlTab);
@@ -81,7 +81,7 @@ public class BlockLayering extends Block {
     public boolean isReplaceable(IBlockAccess world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
         int meta = state.getBlock().getMetaFromState(state);
-        return meta < 7 && this.blockMaterial.isReplaceable();
+        return meta < 7 && this.material.isReplaceable();
     }
 
     @SideOnly(Side.CLIENT)

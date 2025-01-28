@@ -141,7 +141,7 @@ public class ChunkAtmosphereHandler {
 		if(GeneralConfig.enableDebugMode && entity instanceof EntityPlayer && entity.world.getTotalWorldTime() % 20 == 0) {
 			if(atmosphere != null && atmosphere.fluids.size() > 0) {
 				for(FluidEntry entry : atmosphere.fluids) {
-					MainRegistry.logger.info("Atmosphere: " + entry.fluid.getUnlocalizedName() + " - " + entry.pressure + "bar");
+					MainRegistry.logger.info("Atmosphere: " + entry.fluid.getTranslationKey() + " - " + entry.pressure + "bar");
 				}
 			} else {
 				MainRegistry.logger.info("Atmosphere: TOTAL VACUUM");

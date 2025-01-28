@@ -53,7 +53,7 @@ public class DebugTeleporter extends Teleporter {
 				}
 			}
 		} else {
-			targetServer.getChunkFromBlockCoords(new BlockPos(ix, MathHelper.clamp(iy, 1, 255), iz)); // dummy load to maybe gen chunk
+			targetServer.getChunk(new BlockPos(ix, MathHelper.clamp(iy, 1, 255), iz)); // dummy load to maybe gen chunk
 		}
 
 		entity.setPositionAndUpdate(x, y, z);

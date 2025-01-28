@@ -41,7 +41,7 @@ public class ItemBedrockOreNew extends Item {
     public TextureAtlasSprite[] overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
 
     public ItemBedrockOreNew(String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(MainRegistry.partsTab);
         this.setHasSubtypes(true);

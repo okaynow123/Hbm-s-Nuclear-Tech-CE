@@ -23,7 +23,7 @@ public class BlockMutatorBulkie implements IBlockMutator {
 	public void mutatePre(ExplosionVNT explosion, Block block, int meta, int x, int y, int z) {
 		if(!block.isNormalCube(block.getDefaultState(), explosion.world, new BlockPos(x, y, z))) return;
 		Vec3 vec = Vec3.createVectorHelper(x + 0.5 - explosion.posX, y + 0.5 - explosion.posY, z + 0.5 - explosion.posZ);
-		if(vec.lengthVector() >= explosion.size - 0.5) {
+		if(vec.length() >= explosion.size - 0.5) {
 			explosion.world.setBlockState(new BlockPos(x, y, z), metaBlock.block.getDefaultState(), metaBlock.meta);
 		}
 	}

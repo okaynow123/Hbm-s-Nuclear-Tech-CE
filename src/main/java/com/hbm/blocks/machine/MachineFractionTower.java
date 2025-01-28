@@ -74,7 +74,7 @@ public class MachineFractionTower extends BlockDummyable implements ILookOverlay
 						player.sendMessage(new TextComponentTranslation("chat.fractioning.y", pos[1]));
 
 						for(int i = 0; i < frac.tanks.length; i++)
-							player.sendMessage(new TextComponentTranslation(frac.tanks[i].getTankType().getUnlocalizedName()).appendSibling(new TextComponentString(": " + frac.tanks[i].getFill() + "/" + frac.tanks[i].getMaxFill() + "mB")));
+							player.sendMessage(new TextComponentTranslation(frac.tanks[i].getTankType().getTranslationKey()).appendSibling(new TextComponentString(": " + frac.tanks[i].getFill() + "/" + frac.tanks[i].getMaxFill() + "mB")));
 					}
 				} else {
 					
@@ -134,6 +134,6 @@ public class MachineFractionTower extends BlockDummyable implements ILookOverlay
 			}
 		}
 
-		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

@@ -27,7 +27,7 @@ public class BlockGlyph extends Block {
 
     public BlockGlyph(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
@@ -35,7 +35,7 @@ public class BlockGlyph extends Block {
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (tab == this.getCreativeTabToDisplayOn() || tab == CreativeTabs.SEARCH) {
+        if (tab == this.getCreativeTab() || tab == CreativeTabs.SEARCH) {
             for (int i = 0; i < 16; ++i) {
                 items.add(new ItemStack(this, 1, i));
             }
@@ -43,8 +43,8 @@ public class BlockGlyph extends Block {
     }
 
     @Override
-    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-        super.onBlockDestroyedByExplosion(worldIn, pos, explosionIn);
+    public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
+        super.onExplosionDestroy(worldIn, pos, explosionIn);
     }
 
     @Override

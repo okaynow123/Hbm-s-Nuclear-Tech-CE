@@ -10,7 +10,7 @@ public class RenderTurretFriendly extends RenderTurretBase<TileEntityTurretFrien
 
 	@Override
 	public void render(TileEntityTurretFriendly turret, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		Vec3d pos = turret.getHorizontalOffset();
+		Vec3d pos = turret.byHorizontalIndexOffset();
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + pos.x, y, z + pos.z);

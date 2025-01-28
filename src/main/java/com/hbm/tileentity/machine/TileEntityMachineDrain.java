@@ -61,7 +61,7 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
                 if(toSpill >= 100 && world.rand.nextInt(20) == 0 && tank.getTankType().hasTrait(FluidTraitSimple.FT_Liquid.class) && tank.getTankType().hasTrait(FluidTraitSimple.FT_Viscous.class) && tank.getTankType().hasTrait(FT_Flammable.class)) {
                     ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
                     Vec3d start = new Vec3d(pos.getX() + 0.5 - dir.offsetX * 3, pos.getY() + 0.5, pos.getZ() + 0.5 - dir.offsetZ * 3);
-                    Vec3d end = start.addVector(world.rand.nextGaussian() * 5, -25, world.rand.nextGaussian() * 5);
+                    Vec3d end = start.add(world.rand.nextGaussian() * 5, -25, world.rand.nextGaussian() * 5);
                     RayTraceResult mop = world.rayTraceBlocks(start, end, false, true, false);
 
                     if (mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK && mop.sideHit == EnumFacing.UP) {

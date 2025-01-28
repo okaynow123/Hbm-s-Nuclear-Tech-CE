@@ -33,7 +33,7 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return "radar.target.tier3";
 	}
 

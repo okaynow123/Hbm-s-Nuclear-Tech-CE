@@ -265,7 +265,7 @@ public class ModEventHandlerImpact {
 		TomSaveData data = TomSaveData.forWorld(event.getWorld());
 		
 		if(data.impact) {
-			Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());
+			Chunk chunk = event.getWorld().getChunk(event.getChunkX(), event.getChunkZ());
 			
 			for(ExtendedBlockStorage storage : chunk.getBlockStorageArray()) {
 				

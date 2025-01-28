@@ -6,7 +6,7 @@ public class ItemBlades extends ItemHazard {
 	public ItemBlades(String s, int i){
 		super(s);
 		this.setMaxStackSize(1);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setMaxDamage(i);
 	}
 }

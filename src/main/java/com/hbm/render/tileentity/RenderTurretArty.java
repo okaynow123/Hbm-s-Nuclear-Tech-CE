@@ -11,7 +11,7 @@ public class RenderTurretArty extends TileEntitySpecialRenderer<TileEntityTurret
 
     @Override
     public void render(TileEntityTurretArty turret, double x, double y, double z, float interp, int destroyStage, float alpha) {
-        Vec3d pos = turret.getHorizontalOffset();
+        Vec3d pos = turret.byHorizontalIndexOffset();
 
         GL11.glPushMatrix();
         GL11.glTranslated(x + pos.x, y, z + pos.z);

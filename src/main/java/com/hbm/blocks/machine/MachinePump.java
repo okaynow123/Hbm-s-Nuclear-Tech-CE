@@ -98,6 +98,6 @@ public class MachinePump extends BlockDummyable implements ITooltipProvider, ILo
             text.add("&[" + ( System.currentTimeMillis() % 1000 < 500 ? 0xff0000 : 0xffff00) + "&]! ! ! NO VALID GROUND ! ! !");
         }
 
-        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 }

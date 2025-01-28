@@ -22,7 +22,7 @@ import java.util.List;
 public class ItemDigammaDiagnostic extends Item implements IBauble {
 
 	public ItemDigammaDiagnostic(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModItems.ALL_ITEMS.add(this);

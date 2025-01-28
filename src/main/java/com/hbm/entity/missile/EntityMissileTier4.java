@@ -31,7 +31,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return "radar.target.tier4";
 	}
 
@@ -112,7 +112,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		}
 		@Override public List<ItemStack> getDebris() { return null; }
 		@Override public ItemStack getDebrisRareDrop() { return null; }
-		@Override public String getUnlocalizedName() { return "radar.target.doomsday"; }
+		@Override public String getTranslationKey() { return "radar.target.doomsday"; }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_doomsday); }
 	}
 	

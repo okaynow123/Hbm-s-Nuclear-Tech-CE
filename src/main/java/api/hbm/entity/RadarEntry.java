@@ -33,7 +33,7 @@ public class RadarEntry {
     }
 
     public RadarEntry(IRadarDetectableNT detectable, Entity entity, boolean redstone) {
-        this(detectable.getUnlocalizedName(), detectable.getBlipLevel(), (int) Math.floor(entity.posX), (int) Math.floor(entity.posY), (int) Math.floor(entity.posZ), entity.dimension, entity.getEntityId(), redstone);
+        this(detectable.getTranslationKey(), detectable.getBlipLevel(), (int) Math.floor(entity.posX), (int) Math.floor(entity.posY), (int) Math.floor(entity.posZ), entity.dimension, entity.getEntityId(), redstone);
     }
 
     public RadarEntry(IRadarDetectable detectable, Entity entity) {

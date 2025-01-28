@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemChemistryIcon extends Item {
 
 	public ItemChemistryIcon(String s){
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(null);
 		this.setHasSubtypes(true);
@@ -29,7 +29,7 @@ public class ItemChemistryIcon extends Item {
 		if(recipe == null) {
 			return ChatFormatting.RED + "Broken Template" + ChatFormatting.RESET;
 		} else {
-			String s = ("" + I18n.format(ModItems.chemistry_template.getUnlocalizedName() + ".name")).trim();
+			String s = ("" + I18n.format(ModItems.chemistry_template.getTranslationKey() + ".name")).trim();
 			String s1 = ("" + I18n.format("chem." + recipe.name)).trim();
 
 			if (s1 != null) {

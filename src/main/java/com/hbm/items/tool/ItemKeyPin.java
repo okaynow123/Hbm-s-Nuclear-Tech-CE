@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemKeyPin extends Item {
 
 	public ItemKeyPin(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModItems.ALL_ITEMS.add(this);

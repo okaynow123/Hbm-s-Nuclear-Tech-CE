@@ -29,7 +29,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 	public static final ModelResourceLocation chemModel = new ModelResourceLocation(RefStrings.MODID + ":chemistry_template", "inventory");
 	
 	public ItemChemistryTemplate(String s){
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -45,7 +45,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 		if(recipe == null) {
 			return ChatFormatting.RED + "Broken Template" + ChatFormatting.RESET;
 		} else {
-			String s = ("" + I18n.format(this.getUnlocalizedName() + ".name")).trim();
+			String s = ("" + I18n.format(this.getTranslationKey() + ".name")).trim();
 			String s1 = ("" + I18n.format("chem." + recipe.name)).trim();
 
 			if (s1 != null) {

@@ -18,7 +18,7 @@ import java.util.List;
 public class ItemRag extends Item {
 
 	public ItemRag(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		ModItems.ALL_ITEMS.add(this);
 

@@ -40,7 +40,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 				(secondPos.zCoord) - (firstPos.zCoord)
 		);
 
-		return len >= delta.lengthVector() ? 0 : 3;
+		return len >= delta.length() ? 0 : 3;
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 		if(mounts == null || mounts.length == 0)
 			return Vec3.createVectorHelper(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
-		return mounts[0].addVector(pos.getX(), pos.getY(), pos.getZ());
+		return mounts[0].add(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	@Override

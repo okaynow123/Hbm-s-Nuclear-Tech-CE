@@ -14,7 +14,7 @@ import java.util.List;
 public class ItemAmmo extends Item {
 
 	public ItemAmmo(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 

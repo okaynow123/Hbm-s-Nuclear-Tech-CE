@@ -19,7 +19,7 @@ import java.util.List;
 public class WeaponizedCell extends Item {
 
 	public WeaponizedCell(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModItems.ALL_ITEMS.add(this);

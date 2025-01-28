@@ -13,7 +13,7 @@ public class ItemHot extends Item {
 	
 	public ItemHot(int heat, String s) {
 		ItemHot.heat = heat;
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModItems.ALL_ITEMS.add(this);

@@ -26,7 +26,7 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
 
         Vec3d pos = this.getTurretPos();
         Vec3d delta = new Vec3d(x - pos.x, y - pos.y, z - pos.z);
-        if(delta.lengthVector() <= this.getDecetorRange()) {
+        if(delta.length() <= this.getDecetorRange()) {
             this.targetQueue.add(new Vec3d(x, y, z));
         }
     }
@@ -43,7 +43,7 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
             Vec3d pos = this.getTurretPos();
             Vec3d ent = this.getEntityPos(e);
             Vec3d delta = new Vec3d(ent.x - pos.x, ent.y - pos.y, ent.z - pos.z);
-            double length = delta.lengthVector();
+            double length = delta.length();
 
             if(length < this.getDecetorGrace() || length > this.getDecetorRange() * 1.1) //the latter statement is only relevant for entities that have already been detected
                 return false;

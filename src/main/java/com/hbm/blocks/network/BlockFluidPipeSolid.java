@@ -21,7 +21,7 @@ public class BlockFluidPipeSolid extends BlockContainer implements ILookOverlay 
 	
 	public BlockFluidPipeSolid(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -48,6 +48,6 @@ public class BlockFluidPipeSolid extends BlockContainer implements ILookOverlay 
 
 		List<String> text = new ArrayList();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
-		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}
 }

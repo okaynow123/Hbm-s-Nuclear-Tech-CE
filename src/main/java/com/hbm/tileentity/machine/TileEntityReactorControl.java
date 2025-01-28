@@ -144,7 +144,7 @@ public class TileEntityReactorControl extends TileEntity implements ITickable {
         			lastRods = rods;
         		
         		if(!redstoned) {
-        			if(world.isBlockIndirectlyGettingPowered(pos) > 0) {
+        			if(world.getStrongPower(pos) > 0) {
         				redstoned = true;
         				
         				if(rods == 0)
@@ -153,7 +153,7 @@ public class TileEntityReactorControl extends TileEntity implements ITickable {
         					rods = 0;
         			}
         		} else {
-        			if(world.isBlockIndirectlyGettingPowered(pos) == 0) {
+        			if(world.getStrongPower(pos) == 0) {
         				redstoned = false;
         			}
         		}
