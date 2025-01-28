@@ -115,6 +115,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		}
 	}
 
+	//Norwood: Why the fuck was the fluid array downsized by one? that causes out of bounds you know?
 	public Fluid[] getFluidsTyped(TypedFluidTank[] tanks){
 		Fluid[] fluid = new Fluid[tanks.length];
 		for(int i = 0; i < tanks.length; i++){
