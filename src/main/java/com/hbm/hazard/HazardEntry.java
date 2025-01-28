@@ -3,6 +3,7 @@ package com.hbm.hazard;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.hazard.type.HazardTypeBase;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -16,23 +17,23 @@ public class HazardEntry {
 	/*
 	 * Modifiers are evaluated in the order they're being applied to the entry.
 	 */
-	List<HazardModifier> mods = new ArrayList<>();
+	List<HazardModifier> mods = new ArrayList();
 	
-	public HazardEntry(HazardTypeBase type) {
+	public HazardEntry(final HazardTypeBase type) {
 		this(type, 1F);
 	}
 	
-	public HazardEntry(HazardTypeBase type, float level) {
+	public HazardEntry(final HazardTypeBase type, final float level) {
 		this.type = type;
 		this.baseLevel = level;
 	}
 	
-	public HazardEntry addMod(HazardModifier mod) {
+	public HazardEntry addMod(final HazardModifier mod) {
 		this.mods.add(mod);
 		return this;
 	}
 	
-	public void applyHazard(ItemStack stack, EntityLivingBase entity) {
+	public void applyHazard(final ItemStack stack, final EntityLivingBase entity) {
 		type.onUpdate(entity, HazardModifier.evalAllModifiers(stack, entity, baseLevel, mods), stack);
 	}
 	
@@ -44,8 +45,8 @@ public class HazardEntry {
 		return clone(1F);
 	}
 	
-	public HazardEntry clone(float mult) {
-		HazardEntry clone = new HazardEntry(type, baseLevel * mult);
+	public HazardEntry clone(final float mult) {
+		final HazardEntry clone = new HazardEntry(type, baseLevel * mult);
 		clone.mods = this.mods;
 		return clone;
 	}

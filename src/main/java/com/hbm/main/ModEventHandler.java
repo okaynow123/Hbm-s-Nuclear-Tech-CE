@@ -23,6 +23,7 @@ import com.hbm.dim.moon.BiomeGenMoon;
 import com.hbm.dim.orbit.BiomeGenOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.potion.HbmPotion;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.util.ParticleUtil;
@@ -175,6 +176,7 @@ import net.minecraftforge.registries.DataSerializerEntry;
 
 public class ModEventHandler {
 
+	public static final int HAZARD_POLL_RATE = RadiationConfig.hazardRate;
 	public static final ResourceLocation ENT_HBM_PROP_ID = new ResourceLocation(RefStrings.MODID, "HBMLIVINGPROPS");
 	public static final ResourceLocation DATA_LOC = new ResourceLocation(RefStrings.MODID, "HBMDATA");
 
@@ -533,7 +535,7 @@ public class ModEventHandler {
 		//'enableDebugMode' which is    |  |                                              |            |  |
 		//only set once by the mod's    |  |                                              |            |  |
 		//config and is disabled by     |  |                                              |            |  |
-		//default. "debug" is not a     |  |                                              |            |  |
+		//default. "debug" is not a     |  |                                              |            |  |:
 		//substring of the message, nor |  |                                              |            |  |
 		//something that can be toggled |  |                                              |            |  |
 		//in any other way except for   |  |                                              |            |  |
@@ -577,6 +579,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void worldTick(WorldTickEvent event) {
+		if (event.world == null || event.world.isRemote) return;
+		List<Object> entityList = new ArrayList<>(event.world.loadedEntityList);
 		if(!MainRegistry.allPipeNetworks.isEmpty() && !event.world.isRemote) {
 			Iterator<FFPipeNetwork> itr = MainRegistry.allPipeNetworks.iterator();
 			while(itr.hasNext()) {
@@ -605,6 +609,8 @@ public class ModEventHandler {
 			}
 		}
 
+
+
 		if(event.phase == Phase.START && event.world.provider instanceof WorldProviderCelestial && event.world.provider.getDimension() != 0) {
 			if(event.world.getGameRules().getBoolean("doDaylightCycle")) {
 				event.world.provider.setWorldTime(event.world.provider.getWorldTime() + 1L);
@@ -615,6 +621,12 @@ public class ModEventHandler {
 			BossSpawnHandler.rollTheDice(event.world);
 			TimedGenerator.automaton(event.world, 100);
 			updateWaterOpacity(event.world);
+		}
+
+		for (final Object e : entityList) {
+			if (e instanceof EntityItem) {
+				HazardSystem.updateDroppedItem((EntityItem) e);
+			}
 		}
 	}
 
@@ -647,7 +659,7 @@ public class ModEventHandler {
 	public void onEntityHurt(LivingHurtEvent e) {
 		EntityLivingBase ent = e.getEntityLiving();
 		if(e.getEntityLiving() instanceof EntityPlayer) {
-			if(ArmorUtil.checkArmor((EntityPlayer) e.getEntityLiving(), ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+			if(ArmorUtil.checkArmor(e.getEntityLiving(), ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
 				e.setCanceled(true);
 			}
 		}
@@ -655,7 +667,7 @@ public class ModEventHandler {
 		
 		/// V1 ///
 		if(EntityDamageUtil.wasAttackedByV1(e.getSource())) {
-			EntityPlayer attacker = (EntityPlayer) ((EntityDamageSource)e.getSource()).getImmediateSource();
+			EntityPlayer attacker = (EntityPlayer) e.getSource().getImmediateSource();
 					
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "vanillaburst");
@@ -690,7 +702,7 @@ public class ModEventHandler {
 	public void onEntityAttacked(LivingAttackEvent event) {
 		EntityLivingBase e = event.getEntityLiving();
 
-		if(e instanceof EntityPlayer && ArmorUtil.checkArmor((EntityPlayer) e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+		if(e instanceof EntityPlayer && ArmorUtil.checkArmor(e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
 			if(event.getSource() != ModDamageSource.digamma){
 				e.world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
 				event.setCanceled(true);
@@ -774,6 +786,9 @@ public class ModEventHandler {
 		if(event.phase == Phase.END){
 			JetpackHandler.postPlayerTick(event.player);
 		}
+		/// NEW ITEM SYS START ///
+		if(player.ticksExisted % HAZARD_POLL_RATE == 0)
+			HazardSystem.updatePlayerInventory(player);
 	}
 
 	@SubscribeEvent

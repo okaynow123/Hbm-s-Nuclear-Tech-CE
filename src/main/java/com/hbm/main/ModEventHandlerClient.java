@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.hbm.hazard.HazardSystem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemVOTVdrive;
@@ -2165,6 +2166,9 @@ public class ModEventHandlerClient {
 			if(stack.getTagCompound().getBoolean("ntmContagion"))
 				list.add("§4§l[" + I18nUtil.resolveKey("trait.mkuinfected") + "§4§l]");
 		}
+
+				//HAZARD
+		HazardSystem.addFullTooltip(stack, event.getEntityPlayer(), list);
 	}
 	
 	private static final ResourceLocation poster = new ResourceLocation(RefStrings.MODID + ":textures/models/misc/poster.png");

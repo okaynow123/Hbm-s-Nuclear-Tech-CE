@@ -28,6 +28,16 @@ public class RadiationConfig {
 	public static int digammaX = 16;
 	public static int digammaY = 18;
 
+	public static int hazardRate = 5;
+	public static boolean disableAsbestos = false;
+	public static boolean disableBlinding = false;
+	public static boolean disableCoal = false;
+	public static boolean disableExplosive = false;
+	public static boolean disableHydro = false;
+	public static boolean disableHot = false;
+	public static boolean disableCold = false;
+	public static boolean disableToxic = false;
+
 	public static boolean enablePollution = true;
 	public static boolean enableLeadFromBlocks = true;
 	public static boolean enableLeadPoisoning = true;
