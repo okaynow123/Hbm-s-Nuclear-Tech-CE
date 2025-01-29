@@ -148,10 +148,12 @@ public class HazardRegistry {
 	public static final float plateCast = plate * 3;
 	public static final float powder_mult = 3.0F;
 	public static final float powder = ingot * powder_mult;
+	public static final float part = powder / 4F;
 	public static final float powder_tiny = nugget * powder_mult;
 	public static final float ore = ingot;
 	public static final float block = 10.0F;
 	public static final float crystal = block;
+	public static final float bolt = 0.5F;
 	public static final float billet = 0.5F;
 	public static final float rtg = billet * 3;
 	public static final float rod = 0.5F;
@@ -177,7 +179,6 @@ public class HazardRegistry {
 		//Vanilla crap
 		HazardSystem.register(Items.GUNPOWDER, makeData(EXPLOSIVE, 1F));
 		HazardSystem.register(Blocks.TNT, makeData(EXPLOSIVE, 4F));
-		HazardSystem.register(Items.COAL, makeData(COAL, powder) );
 
 		//Cold stuff
 		HazardSystem.register(powder_ice, makeData(COLD,1F));
@@ -275,7 +276,6 @@ public class HazardRegistry {
 //		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 5), makeData(RADIATION, 10F));
 
 		//Amazing naming scheme (fucking why)
-		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_slaked), makeData(RADIATION, 2.5F));
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_0), makeData(RADIATION, 5.0F));
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_1), makeData(RADIATION, 10.0F));
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_2), makeData(RADIATION, 20.0F));
@@ -283,6 +283,12 @@ public class HazardRegistry {
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_4), makeData().addEntry(RADIATION, 80.0F).addEntry(HOT, 2));
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_core), makeData().addEntry(RADIATION,2000.0F).addEntry(HOT, 4));
 
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_0), makeData(RADIATION, 5.0F));
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_1), makeData(RADIATION, 10.0F));
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_2), makeData(RADIATION, 20.0F));
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_3), makeData().addEntry(RADIATION, 40.0F).addEntry(HOT, 1));
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_4), makeData().addEntry(RADIATION, 80.0F).addEntry(HOT, 2));
+		HazardSystem.register(ItemStackUtil.itemStackFrom(baleonitite_core), makeData().addEntry(RADIATION,2000.0F).addEntry(HOT, 4));
 		//Doesn't exist yet
 //		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
 //		HazardSystem.register(ItemStackUtil.itemStackFrom(ModItems.gem_rad), makeData(RADIATION, 25F));
@@ -362,46 +368,6 @@ public class HazardRegistry {
 //		HazardSystem.register(debris_shrapnel, makeData(RADIATION, 2.5F));
 //		HazardSystem.register(debris_element, makeData(RADIATION, 100F));
 		
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.URANIUM_FUEL), makeData(RADIATION, uf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.URANIUM_FUEL), makeData(RADIATION, uf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.URANIUM_FUEL), makeData(RADIATION, uf * ingot));
-//		HazardSystem.register(block_uranium_fuel, makeData(RADIATION, uf * block));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.PLUTONIUM_FUEL), makeData(RADIATION, puf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.PLUTONIUM_FUEL), makeData(RADIATION, puf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.PLUTONIUM_FUEL), makeData(RADIATION, puf * ingot));
-//		HazardSystem.register(block_plutonium_fuel, makeData(RADIATION, puf * block));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.THORIUM_FUEL), makeData(RADIATION, thf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.THORIUM_FUEL), makeData(RADIATION, thf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.THORIUM_FUEL), makeData(RADIATION, thf * ingot));
-//		HazardSystem.register(block_thorium_fuel, makeData(RADIATION, thf * block));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.NEPTUNIUM_FUEL), makeData(RADIATION, npf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.NEPTUNIUM_FUEL), makeData(RADIATION, npf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.NEPTUNIUM_FUEL), makeData(RADIATION, npf * ingot));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.MOX_FUEL), makeData(RADIATION, mox * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.MOX_FUEL), makeData(RADIATION, mox * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.MOX_FUEL), makeData(RADIATION, mox * ingot));
-//		HazardSystem.register(block_mox_fuel, makeData(RADIATION, mox * block));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.AMERICIUM_FUEL), makeData(RADIATION, amf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.AMERICIUM_FUEL), makeData(RADIATION, amf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.AMERICIUM_FUEL), makeData(RADIATION, amf * ingot));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.SCHRABIDIUM_FUEL), makeData().addEntry(RADIATION, saf * nugget).addEntry(BLINDING, 5F * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.SCHRABIDIUM_FUEL), makeData().addEntry(RADIATION, saf * billet).addEntry(BLINDING, 5F * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.SCHRABIDIUM_FUEL), makeData().addEntry(RADIATION, saf * ingot).addEntry(BLINDING, 5F * ingot));
-//		HazardSystem.register(block_schrabidium_fuel, makeData().addEntry(RADIATION, saf * block).addEntry(BLINDING, 5F * block));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.HES), makeData(RADIATION, saf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.HES), makeData(RADIATION, saf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.HES), makeData(RADIATION, saf * ingot));
-//
-//		HazardSystem.register(ModItems.nugget.getItemStack(MaterialMineral.LES), makeData(RADIATION, saf * nugget));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.LES), makeData(RADIATION, saf * billet));
-//		HazardSystem.register(ModItems.ingot.getItemStack(MaterialMineral.LES), makeData(RADIATION, saf * ingot));
 //
 //		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.BALEFIRE_GOLD), makeData(RADIATION, au198 * billet));
 //		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.FLASHLEAD), makeData().addEntry(RADIATION, pb209 * 1.25F * billet).addEntry(HOT, 7F));
@@ -624,16 +590,7 @@ public class HazardRegistry {
 		HazardSystem.register(tile_lab_broken, makeData(ASBESTOS, 1F));
 		HazardSystem.register(powder_coltan_ore, makeData(ASBESTOS, 3F));
 		
-		//crystals
-//		HazardSystem.register(crystal_uranium, makeData(RADIATION, u * crystal));
-//		HazardSystem.register(crystal_thorium, makeData(RADIATION, th232 * crystal));
-//		HazardSystem.register(crystal_plutonium, makeData(RADIATION, pu * crystal));
-//		HazardSystem.register(crystal_schraranium, makeData(RADIATION, sr * crystal));
-//		HazardSystem.register(crystal_schrabidium, makeData(RADIATION, sa326 * crystal));
-//		HazardSystem.register(crystal_phosphorus, makeData(HOT, 2F * crystal));
-//		HazardSystem.register(crystal_lithium, makeData(HYDROACTIVE, 1F * crystal));
-//		HazardSystem.register(crystal_trixite, makeData(RADIATION, trx * crystal));
-		
+
 		//nuke parts
 		HazardSystem.register(boy_propellant, makeData(EXPLOSIVE, 2F));
 		
@@ -664,6 +621,7 @@ public class HazardRegistry {
 
 		
 
+		//TODO: make that work but with CEU
 /*
 		if(Compat.isModLoaded(Compat.MOD_GT6)) {
 			
