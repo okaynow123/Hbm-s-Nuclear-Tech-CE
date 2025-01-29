@@ -70,6 +70,16 @@ public class HazardRegistry {
 	public static final float gen_1B = 0.5F;
 	public static final float gen_10B = 0.1F;
 
+	public static final float u_fuel = 0.5F;
+	public static final float th_fuel = 1.75F;
+	public static final float pu_fuel = 4.25F;
+	public static final float np_fuel = 1.5F;
+	public static final float mox_fuel = 2.5F;
+	public static final float am_fuel = 4.75F;
+	public static final float sch_fuel = 5.85F;
+	public static final float hes_fuel = sch_fuel;
+	public static final float les_fuel = sch_fuel;
+
 	public static final float co60 = 30.0F;
 	public static final float sr90 = 15.0F;
 	public static final float tc99 = 2.75F;

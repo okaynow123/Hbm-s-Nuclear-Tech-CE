@@ -17,5 +17,6 @@ public class OreNames {
 	public static final String BILLET = "billet";
 	public static final String BLOCK = "block";
 	public static final String ORE = "ore";
+	public static final String WIRE = "wireFine"; //it has same ratio as GT wires hence such prefix
 	public static final String ORENETHER = "oreNether";
 }

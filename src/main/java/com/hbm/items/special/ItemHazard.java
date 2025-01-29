@@ -145,12 +145,12 @@ public class ItemHazard extends ItemCustomLore implements IItemHazard {
 //			super.addInformation(stack, world, list, flagIn);
 		}
 		
-		@Override
-		public boolean onEntityItemUpdate(EntityItem item){
-			boolean m = this.module.onEntityItemUpdate(item);
-			boolean i = super.onEntityItemUpdate(item);
-			return m || i;
-		}
+//		@Override
+//		public boolean onEntityItemUpdate(EntityItem item){
+//			boolean m = this.module.onEntityItemUpdate(item);
+//			boolean i = super.onEntityItemUpdate(item);
+//			return m || i;
+//		}
 		
 		/*
 		 * DEPRECATED CTORS
