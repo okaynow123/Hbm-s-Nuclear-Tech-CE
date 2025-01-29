@@ -43,13 +43,13 @@ public class WatzFuel extends ItemHazard {
 	
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
-		if(this.irad > 0F){
-			list.add("§a[Radioactive]§r");
-			list.add("§e" + this.irad + " RAD/s§r");
-		}
-		if(this.iblind){
-			list.add("§3[Blinding]§r");
-		}
+//		if(this.irad > 0F){
+//			list.add("§a[Radioactive]§r");
+//			list.add("§e" + this.irad + " RAD/s§r");
+//		}
+//		if(this.iblind){
+//			list.add("§3[Blinding]§r");
+//		}
 		list.add("Max age:          " + this.lifeTime/100 + " ticks");
 		list.add("Power per tick:  " + (power) + "HE");
 		list.add("Power multiplier: " + (powerMultiplier >= 1 ? "+" : "") + (Math.round(powerMultiplier * 1000) * .10 - 100) + "%");

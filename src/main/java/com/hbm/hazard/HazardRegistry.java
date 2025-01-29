@@ -555,11 +555,11 @@ public class HazardRegistry {
 		HazardSystem.register(DictFrame.fromOne(ModItems.watz_pellet, ItemWatzPellet.EnumWatzType.NQD), makeData(RADIATION, u235 * ingot * 4));
 		HazardSystem.register(DictFrame.fromOne(ModItems.watz_pellet, ItemWatzPellet.EnumWatzType.NQR), makeData(RADIATION, pu239 * ingot * 4));
 
-		HazardSystem.register(pellet_schrabidium, makeData(RADIATION, sa326 * ingot * 4));
-		HazardSystem.register(pellet_hes, makeData(RADIATION, saf * ingot * 4));
-		HazardSystem.register(pellet_mes, makeData(RADIATION, saf * ingot * 4));
-		HazardSystem.register(pellet_les, makeData(RADIATION, saf * ingot * 4));
-		HazardSystem.register(pellet_neptunium, makeData(RADIATION, saf * ingot * 4));
+		HazardSystem.register(pellet_schrabidium,   makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, sa326 * ingot * 4));
+		HazardSystem.register(pellet_hes, 			makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
+		HazardSystem.register(pellet_mes, 			makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
+		HazardSystem.register(pellet_les, 			makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
+		HazardSystem.register(pellet_neptunium, 	makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
 
 
 		//TODO:Add PWR reactors

@@ -22,7 +22,7 @@ public class HazardTypeHot extends HazardTypeBase {
 		final boolean wetOrReacher = HazardHelper.isHoldingReacher(target) || target.isWet() ;
 		if(RadiationConfig.disableHot && !wetOrReacher) return;
 
-		target.setFire((int) Math.ceil(level));
+		target.setFire((int) Math.ceil(level)*hazardRate);
 	}
 
 	@Override
