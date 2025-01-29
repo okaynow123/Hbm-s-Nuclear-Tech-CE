@@ -54,7 +54,7 @@ public class ExplosionVanillaNewTechnologyCompressedAffectedBlockPositionDataFor
             int j1 = buf.readByte() + j;
             int k1 = buf.readByte() + k;
             int l1 = buf.readByte() + l;
-            this.affectedBlocks.add(new ChunkPos(new BlockPos(j1, k1, l1)));
+            this.affectedBlocks.add(new BlockPos(j1, k1, l1)); //What the fuck? why was this new chunk and block pos???
         }
     }
 
