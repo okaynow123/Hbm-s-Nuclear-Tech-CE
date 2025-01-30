@@ -2,6 +2,8 @@ package com.hbm.explosion.vanillant.standard;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.IBlockMutator;
@@ -16,23 +18,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockProcessorStandard implements IBlockProcessor {
-	
+
 	protected IDropChanceMutator chance;
 	protected IFortuneMutator fortune;
 	protected IBlockMutator convert;
-	
+
 	public BlockProcessorStandard() { }
-	
+
 	public BlockProcessorStandard withChance(IDropChanceMutator chance) {
 		this.chance = chance;
 		return this;
 	}
-	
+
 	public BlockProcessorStandard withFortune(IFortuneMutator fortune) {
 		this.fortune = fortune;
 		return this;
 	}
-	
+
 	public BlockProcessorStandard withBlockEffect(IBlockMutator convert) {
 		this.convert = convert;
 		return this;
@@ -40,50 +42,44 @@ public class BlockProcessorStandard implements IBlockProcessor {
 
 	@Override
 	public void process(ExplosionVNT explosion, World world, double x, double y, double z, HashSet<BlockPos> affectedBlocks) {
-
-		Iterator iterator = affectedBlocks.iterator();
+		Iterator<BlockPos> iterator = affectedBlocks.iterator();
 		float dropChance = 1.0F / explosion.size;
-		
-		while(iterator.hasNext()) {
-			BlockPos chunkposition = (BlockPos) iterator.next();
-			int blockX = chunkposition.getX();
-			int blockY = chunkposition.getY();
-			int blockZ = chunkposition.getZ();
-			IBlockState state = world.getBlockState(chunkposition);
+
+		List<BlockPos> blocksToRemove = new ArrayList<>();
+
+		while (iterator.hasNext()) {
+			BlockPos pos = iterator.next();
+			IBlockState state = world.getBlockState(pos);
 			Block block = state.getBlock();
-			
-			if(block.getMaterial(state) != Material.AIR) {
-				if(block.canDropFromExplosion(null)) {
-					
-					if(chance != null) {
-						dropChance = chance.mutateDropChance(explosion, block, blockX, blockY, blockZ, dropChance);
+
+			if (!world.isAirBlock(pos)) {
+				if (block.canDropFromExplosion(explosion.compat)) {
+
+					if (chance != null) {
+						dropChance = chance.mutateDropChance(explosion, block, pos.getX(), pos.getY(), pos.getZ(), dropChance);
 					}
-					
-					int dropFortune = fortune == null ? 0 : fortune.mutateFortune(explosion, block, blockX, blockY, blockZ);
-					
-					block.dropBlockAsItemWithChance(world, chunkposition, state, dropChance, dropFortune);
+
+					int dropFortune = (fortune == null) ? 0 : fortune.mutateFortune(explosion, block, pos.getX(), pos.getY(), pos.getZ());
+
+					block.dropBlockAsItemWithChance(world, pos, state, dropChance, dropFortune);
 				}
-				
-				block.onBlockExploded(world, chunkposition, explosion.compat);
-				if(this.convert != null) this.convert.mutatePre(explosion, block, block.getMetaFromState(state), blockX, blockY, blockZ);
+
+				block.onBlockExploded(world, pos, explosion.compat);
+
+				if (convert != null) {
+					convert.mutatePre(explosion, state, pos);
+				}
 			} else {
-				iterator.remove();
+				blocksToRemove.add(pos);
 			}
 		}
-		
-		
-		if(this.convert != null) {
-			iterator = affectedBlocks.iterator();
-			
-			while(iterator.hasNext()) {
-				BlockPos chunkposition = (BlockPos) iterator.next();
-				int blockX = chunkposition.getX();
-				int blockY = chunkposition.getY();
-				int blockZ = chunkposition.getZ();
-				Block block = world.getBlockState(chunkposition).getBlock();
-				
-				if(block.getMaterial(world.getBlockState(chunkposition)) == Material.AIR) {
-					this.convert.mutatePost(explosion, blockX, blockY, blockZ);
+
+		affectedBlocks.removeAll(blocksToRemove);
+
+		if (convert != null) {
+			for (BlockPos pos : affectedBlocks) {
+				if (world.isAirBlock(pos)) {
+					convert.mutatePost(explosion, pos);
 				}
 			}
 		}
@@ -93,17 +89,14 @@ public class BlockProcessorStandard implements IBlockProcessor {
 		this.chance = new DropChanceMutatorStandard(0F);
 		return this;
 	}
+
 	public BlockProcessorStandard setAllDrop() {
 		this.chance = new DropChanceMutatorStandard(1F);
 		return this;
 	}
+
 	public BlockProcessorStandard setFortune(int fortune) {
-		this.fortune = new IFortuneMutator() { //no standard class because we only have one case thus far
-			@Override
-			public int mutateFortune(ExplosionVNT explosion, Block block, int x, int y, int z) {
-				return fortune;
-			}
-		};
+		this.fortune = (explosion, block, x, y, z) -> fortune;
 		return this;
 	}
 }

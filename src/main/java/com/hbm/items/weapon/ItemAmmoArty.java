@@ -264,7 +264,7 @@ public class ItemAmmoArty extends Item {
                 shell.killAndClear();
                 Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
                 shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 5F, false);
-                ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z, 15, 1.25, 0);
+                ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 15, 1.25, 0);
             }
         };
 
