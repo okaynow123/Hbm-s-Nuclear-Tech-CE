@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -1134,6 +1135,7 @@ public class ClientProxy extends ServerProxy {
 		if(world == null)
 			return;
 		EntityPlayer player = Minecraft.getMinecraft().player;
+		int particleSetting = Minecraft.getMinecraft().gameSettings.particleSetting;
 		Random rand = world.rand;
 		String type = data.getString("type");
 		double x = data.getDouble("posX");
@@ -1688,13 +1690,23 @@ public class ClientProxy extends ServerProxy {
 		}
 		
 		if("tower".equals(type)) {
-			ParticleCoolingTower fx = new ParticleCoolingTower(world, x, y, z, data.getFloat("base"));
-			fx.setLift(data.getFloat("lift"));
-			fx.setBaseScale(data.getFloat("base"));
-			fx.setMaxScale(data.getFloat("max"));
-			fx.setLife(data.getInteger("life"));
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-			return;
+			if(particleSetting == 0 || (particleSetting == 1 && rand.nextBoolean())) {
+				ParticleCoolingTower fx = new ParticleCoolingTower(world, x, y, z);
+				fx.setLift(data.getFloat("lift"));
+				fx.setBaseScale(data.getFloat("base"));
+				fx.setMaxScale(data.getFloat("max"));
+				fx.setLife(data.getInteger("life") / (particleSetting + 1));
+				if(data.hasKey("noWind")) fx.noWind();
+				if(data.hasKey("strafe")) fx.setStrafe(data.getFloat("strafe"));
+				if(data.hasKey("alpha")) fx.alphaMod(data.getFloat("alpha"));
+
+				if(data.hasKey("color")) {
+					Color color = new Color(data.getInteger("color"));
+					fx.setRBGColorF(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+				}
+
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+			}
 		}
 		
 		if("jetpack".equals(type)) {

@@ -114,6 +114,8 @@ public class EntityMist extends Entity {
 
             for(Entity e : affected) {
                 this.affect(e, intensity);
+                if(e instanceof EntityLivingBase)
+                    MainRegistry.logger.info("Affecting entity: " + e);
             }
         } else {
 
