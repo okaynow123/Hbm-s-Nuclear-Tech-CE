@@ -221,6 +221,11 @@ public class HbmLivingProps {
 		return getData(e).getContaminationEffectList();
 	}
 
+	/// OIL //
+	public static int getOil(EntityLivingBase entity) { return getData(entity).getOil(); }
+	public static void setOil(EntityLivingBase entity, int oil) { getData(entity).setOil(oil);}
+
+
 	public static class ContaminationEffect {
 
 		public float maxRad;

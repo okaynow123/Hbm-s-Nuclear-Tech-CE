@@ -1,6 +1,7 @@
 package com.hbm.items.weapon;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.entity.effect.EntityMist;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityArtilleryShell;
@@ -8,6 +9,7 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
@@ -54,6 +56,9 @@ public class ItemAmmoArty extends Item {
     public final int PHOSPHORUS_MULTI = 7;
     public final int CARGO = 8;
     public final int CHLORINE = 9;
+//    public final int PHOSGENE = 10;
+//    public final int MUSTARD = 11;
+
 
     public ItemAmmoArty(String s) {
         this.setTranslationKey(s);
@@ -264,7 +269,12 @@ public class ItemAmmoArty extends Item {
                 shell.killAndClear();
                 Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
                 shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 5F, false);
-                ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 15, 1.25, 0);
+                //ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 15, 1.25, 0);
+                EntityMist mist = new EntityMist(shell.world);
+                mist.setType(Fluids.CHLORINE);
+                mist.setPosition(mop.hitVec.x - vec.x , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z);
+                mist.setArea(15, 7.5F);
+                shell.world.spawnEntity(mist);
             }
         };
 
