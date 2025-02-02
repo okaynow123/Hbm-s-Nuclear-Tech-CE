@@ -2,6 +2,7 @@ package com.hbm.entity.effect;
 
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
@@ -82,7 +83,9 @@ public class EntityMist extends Entity {
     public void onEntityUpdate() {
 
         float height = this.dataManager.get(HEIGHT);
-        this.setSize(this.dataManager.get(WIDTH), height);
+        float width = this.dataManager.get(WIDTH);
+
+        this.setSize(-width, height);
         this.setPosition(this.posX, this.posY, this.posZ);
 
         if(!world.isRemote) {
@@ -110,20 +113,20 @@ public class EntityMist extends Entity {
             }
 
             AxisAlignedBB aabb = this.getEntityBoundingBox();
-            List<Entity> affected = world.getEntitiesWithinAABBExcludingEntity(this, aabb.offset(-this.width / 2, 0, -this.width / 2));
+            List<Entity> affected = world.getEntitiesWithinAABBExcludingEntity(this, aabb); //It has no offset now
 
             for(Entity e : affected) {
-                this.affect(e, intensity);
-                if(e instanceof EntityLivingBase)
-                    MainRegistry.logger.info("Affecting entity: " + e);
+                if(!(e instanceof EntityMist))
+                    this.affect(e, intensity);
             }
         } else {
 
             for(int i = 0; i < 2; i++) {
                 AxisAlignedBB boundingBox = this.getEntityBoundingBox();
-                double x = boundingBox.minX + (rand.nextDouble() - 0.5) * (boundingBox.maxX - boundingBox.minX);
+                double x = boundingBox.minX + rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
                 double y = boundingBox.minY + rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                double z = boundingBox.minZ + (rand.nextDouble() - 0.5) * (boundingBox.maxZ - boundingBox.minZ);
+                double z = boundingBox.minZ + rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+
 
                 NBTTagCompound fx = new NBTTagCompound();
                 fx.setString("type", "tower");
@@ -182,7 +185,7 @@ public class EntityMist extends Entity {
         if(type.hasTrait(FT_Corrosive.class)) {
             FT_Corrosive trait = type.getTrait(FT_Corrosive.class);
 
-            if(living != null) {
+            if(living != null && living instanceof EntityPlayer) {
                 EntityDamageUtil.attackEntityFromIgnoreIFrame(living, ModDamageSource.acid, trait.getRating() / 60F);
                 for(int i = 0; i < 4; i++) {
                     ArmorUtil.damageSuit((EntityPlayer) living, i, trait.getRating() / 50);

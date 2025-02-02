@@ -268,11 +268,12 @@ public class ItemAmmoArty extends Item {
             public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
                 shell.killAndClear();
                 Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
-                shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 5F, false);
+                shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 0F, false);
                 //ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 15, 1.25, 0);
                 EntityMist mist = new EntityMist(shell.world);
+                //Norwood: The entity works, it spawns in correct spot, but particles are not visible. Don't know why. I am not that good at it.
                 mist.setType(Fluids.CHLORINE);
-                mist.setPosition(mop.hitVec.x - vec.x , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z);
+                mist.setPosition(mop.hitVec.x - vec.x -7.5 , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z -7.5);
                 mist.setArea(15, 7.5F);
                 shell.world.spawnEntity(mist);
             }
