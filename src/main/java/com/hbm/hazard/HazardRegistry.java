@@ -192,6 +192,7 @@ public class HazardRegistry {
 		HazardSystem.register(ingot_semtex, makeData(EXPLOSIVE, 2.5F));
 		HazardSystem.register(block_semtex, makeData(EXPLOSIVE, 2.5F*9));
 		HazardSystem.register(ingot_c4, makeData(EXPLOSIVE, 2.5F));
+		HazardSystem.register(ball_tatb, makeData(EXPLOSIVE, 2.5F));
 
 		HazardSystem.register(cordite, makeData(EXPLOSIVE, 2F));
 		HazardSystem.register(ballistite, makeData(EXPLOSIVE, 1F));
@@ -222,6 +223,7 @@ public class HazardRegistry {
 		HazardSystem.register(apple_schrabidium2, makeData().addEntry(RADIATION,  sa326*block*8F).addEntry(BLINDING,50F));
 
 		HazardSystem.register(insert_polonium, makeData(RADIATION, 100F));
+		HazardSystem.register(billet_am_mix , makeData(RADIATION, amrg*billet));
 
 		HazardSystem.register(demon_core_open, makeData(RADIATION, 5F));
 		HazardSystem.register(demon_core_closed, makeData(RADIATION, 100_000F));
@@ -233,8 +235,15 @@ public class HazardRegistry {
 //		HazardSystem.register(cell_sas3, makeData().addEntry(RADIATION, sas3).addEntry(BLINDING, 60F));
 //		HazardSystem.register(cell_balefire, makeData(RADIATION, 50F));
 		HazardSystem.register(powder_balefire, makeData(RADIATION, 500F));
-		HazardSystem.register(egg_balefire_shard, makeData(RADIATION, bf * nugget));
-		HazardSystem.register(egg_balefire, makeData(RADIATION, bf * ingot));
+		HazardSystem.register(egg_balefire_shard, makeData(RADIATION, bf * nugget).addEntry(HOT, 5F));
+		HazardSystem.register(egg_balefire, makeData(RADIATION, bf * ingot).addEntry(HOT, 5F));
+
+		//Odd unregular items
+		HazardSystem.register(billet_flashlead, makeData(RADIATION, 6250F).addEntry(HOT, 5F));
+		HazardSystem.register(billet_balefire_gold, makeData(RADIATION, 250F));
+		HazardSystem.register(billet_po210be, makeData(RADIATION, pobe * billet));
+		HazardSystem.register(billet_ra226be, makeData(RADIATION, rabe * billet));
+		HazardSystem.register(billet_pu238be, makeData(RADIATION, pube * billet));
 
 //		HazardSystem.register(solid_fuel_bf, makeData(RADIATION, 1000)); //roughly the amount of the balefire shard diluted in 250mB of rocket fuel
 //		HazardSystem.register(solid_fuel_presto_bf, makeData(RADIATION, 2000));
@@ -293,7 +302,6 @@ public class HazardRegistry {
 //		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
 //		HazardSystem.register(ItemStackUtil.itemStackFrom(ModItems.gem_rad), makeData(RADIATION, 25F));
 
-		//TODO: add that fucker
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal(), u * rod_dual, wst * rod_dual * 11.5F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.URANIUM_FUEL.ordinal(), uf * rod_dual, wst * rod_dual * 10F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.TH232.ordinal(), th232 * rod_dual, thf * rod_dual, false);
@@ -560,6 +568,8 @@ public class HazardRegistry {
 		HazardSystem.register(pellet_mes, 			makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
 		HazardSystem.register(pellet_les, 			makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
 		HazardSystem.register(pellet_neptunium, 	makeData().addEntry(BLINDING, 50F).addEntry(RADIATION, saf * ingot * 4));
+
+		HazardSystem.register(blades_schrabidium, makeData(RADIATION, sa326 * ingot * 3));
 
 
 		//TODO:Add PWR reactors

@@ -235,6 +235,7 @@ public class OreDictManager {
 	/*
 	 * HAZARDS, MISC
 	 */
+	public static final DictFrame RADSPICE = new DictFrame("RadSpice");
 	/** LITHIUM */ 
 	public static final DictFrame LI = new DictFrame("Lithium");
 	/** SODIUM */
@@ -408,7 +409,7 @@ public class OreDictManager {
 		PU_FUEL .rad(HazardRegistry.pu_fuel)							.nugget(nugget_plutonium_fuel) .billet(billet_plutonium_fuel) .ingot(ingot_plutonium_fuel) .block(block_plutonium_fuel);
 		NP_FUEL .rad(HazardRegistry.np_fuel)							.nugget(nugget_neptunium_fuel) .billet(billet_neptunium_fuel) .ingot(ingot_neptunium_fuel);
 		MOX_FUEL.rad(HazardRegistry.np_fuel)							.nugget(nugget_mox_fuel) .billet(billet_mox_fuel) .ingot(ingot_mox_fuel) .block(block_mox_fuel);
-		AM_FUEL .rad(HazardRegistry.am_fuel)							.nugget(nugget_americium_fuel)  .ingot(ingot_americium_fuel);
+		AM_FUEL .rad(HazardRegistry.am_fuel)							.nugget(nugget_americium_fuel)  .ingot(ingot_americium_fuel) .billet(billet_americium_fuel);
 		SCH_FUEL .rad(HazardRegistry.sch_fuel) .blinding(50F) 		.nugget(nugget_schrabidium_fuel) .billet(billet_schrabidium_fuel) .ingot(ingot_schrabidium_fuel) .block(block_schrabidium_fuel);
 		LES_FUEL .rad(HazardRegistry.les_fuel) .blinding(50F) 		.nugget(nugget_les) .billet(billet_les) .ingot(ingot_les);
 		HES_FUEL .rad(HazardRegistry.hes_fuel) .blinding(50F) 		.nugget(nugget_hes) .billet(billet_hes) .ingot(ingot_hes);
@@ -440,6 +441,7 @@ public class OreDictManager {
 		UNOBTAINIUM													.nugget(nugget_unobtainium)	.billet(billet_unobtainium)	.ingot(ingot_unobtainium)	.dust(powder_unobtainium)								.block(block_unobtainium)																				.ore(ore_unobtainium);
 		VERTICIUM													.nugget(nugget_verticium)								.ingot(ingot_verticium)		.dust(powder_verticium)									.block(block_verticium)																					.ore(ore_verticium);
 		DAFFERGON													.nugget(nugget_daffergon)								.ingot(ingot_daffergon)		.dust(powder_daffergon)									.block(block_daffergon)																					.ore(ore_daffergon);
+		RADSPICE .rad(HazardRegistry.radspice) .hot(15) .blinding(50F) .hydro(10) .toxic(2) .nugget(nugget_radspice) .dustSmall(powder_radspice_tiny) .ingot(ingot_radspice) .dust(powder_radspice) .block(block_radspice);
 
 		//COLLECTIONS
 		ANY_GUNPOWDER																																	.dust(Items.GUNPOWDER, ballistite, cordite);

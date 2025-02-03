@@ -204,6 +204,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+
 public class ModEventHandlerClient {
 
 	public static Set<EntityLivingBase> specialDeathEffectEntities = new HashSet<>();
@@ -2155,7 +2156,7 @@ public class ModEventHandlerClient {
 			list.add(TextFormatting.GREEN + "[" + I18nUtil.resolveKey("trait.radioactive") + "]");
 			float stackRad = activationRads / stack.getCount();
 			list.add(TextFormatting.YELLOW + (Library.roundFloat(ItemHazardModule.getNewValue(stackRad), 3) + ItemHazardModule.getSuffix(stackRad) + " " + I18nUtil.resolveKey("desc.rads")));
-			
+
 			if(stack.getCount() > 1) {
 				list.add(TextFormatting.YELLOW + (I18nUtil.resolveKey("desc.stack") + " " + Library.roundFloat(ItemHazardModule.getNewValue(activationRads), 3) + ItemHazardModule.getSuffix(activationRads) + " " + I18nUtil.resolveKey("desc.rads")));
 			}

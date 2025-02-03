@@ -20,7 +20,7 @@ public class RadiationConfig {
 	public static int railgunBuffer = 500000000;
 	public static int railgunUse = 250000000;
 	public static int fireDuration = 4 * 20;
-	public static boolean neutronActivation = true;
+	public static boolean neutronActivation = false;
 	public static int neutronActivationThreshold = 15;
 
 	public static int geigerX = 16;
@@ -89,7 +89,8 @@ public class RadiationConfig {
 		
 		fogCh = CommonConfig.setDef(RadiationConfig.fogCh, 20);
 
-		neutronActivation = CommonConfig.createConfigBool(config, CATEGORY_RAD, "7.01_itemContamination", "Whether high radiation levels should radiate items in inventory", true);
+		//TODO either completely depricate this or make it work
+		neutronActivation = CommonConfig.createConfigBool(config, CATEGORY_RAD, "7.01_itemContamination", "Whether high radiation levels should radiate items in inventory. WARNING: extremely laggy and and buggy. Keep it off unless you know what you are doing", false);
 		neutronActivationThreshold = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.01_itemContaminationThreshold", "Minimum recieved Rads/s threshold at which items get irradiated", 15);
 		
 		geigerX = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.02_geigerX", "X Coordinate of the geiger counter gui (x=0 is on the right)", 16);

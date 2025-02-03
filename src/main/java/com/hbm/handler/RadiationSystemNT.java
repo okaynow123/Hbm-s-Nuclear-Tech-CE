@@ -327,7 +327,7 @@ public class RadiationSystemNT {
 							}
 						}
 
-						float eRad = (float)HbmLivingProps.getRadiation(entity);
+						float eRad = HbmLivingProps.getRadiation(entity);
 
 						if(eRad >= 200 && entity.getHealth() > 0 && entity instanceof EntityCreeper) {
 
