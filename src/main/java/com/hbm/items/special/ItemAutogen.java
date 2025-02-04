@@ -130,6 +130,7 @@ public class ItemAutogen extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
 
         NTMMaterial mat = Mats.matById.get(stack.getItemDamage());

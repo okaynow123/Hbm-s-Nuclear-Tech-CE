@@ -55,6 +55,7 @@ public class ItemFluidIcon extends Item {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
 		FluidType fluidType = Fluids.fromID(stack.getMetadata());
 		if (fluidType != null) {
