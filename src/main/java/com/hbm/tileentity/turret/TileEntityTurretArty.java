@@ -155,6 +155,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         double upperLower = mode == MODE_CANNON ? -1 : 1;
         double targetPitch = Math.atan((v02 + Math.sqrt(v02 * v02 - g * (g * x * x + 2 * y * v02)) * upperLower) / (g * x));
 
+
         this.turnTowardsAngle(targetPitch, targetYaw);
     }
 

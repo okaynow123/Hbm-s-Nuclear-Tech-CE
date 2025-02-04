@@ -44,7 +44,7 @@ import java.util.Random;
 public class ItemAmmoArty extends Item {
 
     public static Random rand = new Random();
-    public static ArtilleryShell[] itemTypes =	new ArtilleryShell[ /* >>> */ 10 /* <<< */ ];
+    public static ArtilleryShell[] itemTypes =	new ArtilleryShell[ /* >>> */ 11 /* <<< */ ];
     /* item types */
     public final int NORMAL = 0;
     public final int CLASSIC = 1;
@@ -56,8 +56,8 @@ public class ItemAmmoArty extends Item {
     public final int PHOSPHORUS_MULTI = 7;
     public final int CARGO = 8;
     public final int CHLORINE = 9;
-//    public final int PHOSGENE = 10;
 //    public final int MUSTARD = 11;
+//    public final int PHOSGENE = 10;
 
 
     public ItemAmmoArty(String s) {
@@ -269,11 +269,9 @@ public class ItemAmmoArty extends Item {
                 shell.killAndClear();
                 Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
                 shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 0F, false);
-                //ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 15, 1.25, 0);
                 EntityMist mist = new EntityMist(shell.world);
-                //Norwood: The entity works, it spawns in correct spot, but particles are not visible. Don't know why. I am not that good at it.
                 mist.setType(Fluids.CHLORINE);
-                mist.setPosition(mop.hitVec.x - vec.x -7.5 , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z -7.5);
+                mist.setPosition(mop.hitVec.x - vec.x , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z);
                 mist.setArea(15, 7.5F);
                 shell.world.spawnEntity(mist);
             }
