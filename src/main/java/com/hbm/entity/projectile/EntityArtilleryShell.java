@@ -177,6 +177,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     protected void onImpact(RayTraceResult mop) {
 
         if(!world.isRemote) {
+            MainRegistry.logger.info("########################\n Artillery shell hit at " + posX + ", " + posY + ", " + posZ + "\n########################");
 
             if(mop.typeOfHit == mop.typeOfHit.ENTITY && mop.entityHit instanceof EntityArtilleryShell) return;
             this.getType().onImpact(this, mop);

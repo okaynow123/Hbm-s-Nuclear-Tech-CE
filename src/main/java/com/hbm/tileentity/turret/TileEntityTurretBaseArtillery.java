@@ -21,6 +21,10 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
         this.enqueueTarget(target.posX, target.posY, target.posZ);
         return true;
     }
+    @Override
+    public Vec3d getEntityPos(Entity e) {
+        return new Vec3d(e.posX, e.posY + e.height * 0.5 - e.getYOffset(), e.posZ);
+    }
 
     public void enqueueTarget(double x, double y, double z) {
 

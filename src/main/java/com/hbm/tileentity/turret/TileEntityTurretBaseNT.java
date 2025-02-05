@@ -5,6 +5,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.entity.missile.EntityMissileCustom;
+import com.hbm.entity.projectile.EntityArtilleryShell;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
@@ -456,8 +457,15 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		
 		Vec3d pos = this.getTurretPos();
 		double range = this.getDecetorRange();
-		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(range, range, range));
-		
+		List<Entity> allEntities = world.getEntitiesWithinAABB(Entity.class,
+				new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(range, range, range));
+
+		List<Entity> entities = new ArrayList<>(allEntities.size()); // Pre-size the list to avoid resizes
+		for (Entity e : allEntities) {
+			if (!(e instanceof EntityArtilleryShell)) {
+				entities.add(e);
+			}
+		}
 		Entity target = null;
 		double closest = range;
 		

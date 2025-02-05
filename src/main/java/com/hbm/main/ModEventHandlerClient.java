@@ -282,6 +282,7 @@ public class ModEventHandlerClient {
 		((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
 		((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
 		((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
+		((ItemAmmoArty) ModItems.ammo_arty).registerModels();
 
 		for(Item item : ModItems.ALL_ITEMS) {
 			try {

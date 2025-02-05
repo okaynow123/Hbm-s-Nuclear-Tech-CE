@@ -156,6 +156,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         double targetPitch = Math.atan((v02 + Math.sqrt(v02 * v02 - g * (g * x * x + 2 * y * v02)) * upperLower) / (g * x));
 
 
+        MainRegistry.logger.info("TurretPos: " + pos + "\nBarrel: " + barrel + "\nTarget: " + tPos + "\nDelta: " + delta + "\nTargetYaw: " + targetYaw + "\nTargetPitch: " + targetPitch);
         this.turnTowardsAngle(targetPitch, targetYaw);
     }
 

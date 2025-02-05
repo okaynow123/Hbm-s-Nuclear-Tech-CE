@@ -162,7 +162,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
         }
     }
     @Override
-    public void onUpdate() {
+    public void onUpdate() { //FIXME: This wont work for 1.12 due to 1.9 physics changes
         super.onUpdate();
 
         if(this.throwableShake > 0) {

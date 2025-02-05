@@ -1,6 +1,5 @@
 package com.hbm.handler.pollution;
 
-import cofh.core.util.helpers.MathHelper;
 import com.hbm.config.MobConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -13,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.ChunkProviderServer;
@@ -46,7 +46,7 @@ public class PollutionHandler {
     ///////////////////////
     public static void incrementPollution(World world, BlockPos pos, PollutionType type, float amount) {
 
-        if(!RadiationConfig.enablePollution) return;
+        if(!RadiationConfig.enablePollution || pos == null) return; //FIXME: This is a temporary fix for a crash, pos should never be null
 
         PollutionPerWorld ppw = perWorld.get(world);
         if(ppw == null) return;
