@@ -77,7 +77,7 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
                 int iy = (int)Math.floor(y + 0.5 + vec.yCoord * i);
                 int iz = (int)Math.floor(z + 0.5 + vec.zCoord * i);
 
-                res += world.getBlockState(new BlockPos(ix, iy, iz)).getPlayerRelativeBlockHardness(null, world, pos);
+                res += world.getBlockState(new BlockPos(ix, iy, iz)).getBlockHardness( world, pos); //Norwood: getPlayerRelativeBlockHardness crashes the game when player is null, why would you ever do that?
             }
 
             if(res < 1)
