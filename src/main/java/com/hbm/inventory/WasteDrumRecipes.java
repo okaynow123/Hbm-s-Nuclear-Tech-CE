@@ -15,11 +15,11 @@ public class WasteDrumRecipes {
 	public static void registerRecipes() {
 
 		//input, output
-		addRecipe(ModItems.waste_uranium_hot, new ItemStack(ModItems.waste_uranium, 1));
-		addRecipe(ModItems.waste_thorium_hot, new ItemStack(ModItems.waste_thorium, 1));
-		addRecipe(ModItems.waste_plutonium_hot, new ItemStack(ModItems.waste_plutonium, 1));
-		addRecipe(ModItems.waste_mox_hot, new ItemStack(ModItems.waste_mox, 1));
-		addRecipe(ModItems.waste_schrabidium_hot, new ItemStack(ModItems.waste_schrabidium, 1));
+		addRecipe(ModItems.waste_uranium_hot, new ItemStack(ModItems.waste_uranium_legacy, 1));
+		addRecipe(ModItems.waste_thorium_hot, new ItemStack(ModItems.waste_thorium_legacy, 1));
+		addRecipe(ModItems.waste_plutonium_hot, new ItemStack(ModItems.waste_plutonium_legacy, 1));
+		addRecipe(ModItems.waste_mox_hot, new ItemStack(ModItems.waste_mox_legacy, 1));
+		addRecipe(ModItems.waste_schrabidium_hot, new ItemStack(ModItems.waste_schrabidium_legacy, 1));
 	}
 
 	public static void addRecipe(ItemStack input, ItemStack output){

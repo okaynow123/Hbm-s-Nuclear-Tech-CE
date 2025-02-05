@@ -220,13 +220,13 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
             int r = this.rand.nextInt(3);
             
             if(r == 0) {
-                this.dropItem(this.isWet() ? ModItems.waste_uranium : ModItems.rod_uranium_fuel_depleted, 1);
+                this.dropItem(this.isWet() ? ModItems.waste_uranium_legacy : ModItems.rod_uranium_fuel_depleted, 1);
                 
             } else if(r == 1) {
-                this.dropItem(this.isWet() ? ModItems.waste_mox : ModItems.rod_mox_fuel_depleted, 1);
+                this.dropItem(this.isWet() ? ModItems.waste_mox_legacy : ModItems.rod_mox_fuel_depleted, 1);
                 
             } else if(r == 2) {
-                this.dropItem(this.isWet() ? ModItems.waste_plutonium : ModItems.rod_plutonium_fuel_depleted, 1);
+                this.dropItem(this.isWet() ? ModItems.waste_plutonium_legacy : ModItems.rod_plutonium_fuel_depleted, 1);
                 
             }
         }

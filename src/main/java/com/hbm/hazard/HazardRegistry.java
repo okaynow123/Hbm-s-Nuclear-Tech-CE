@@ -330,11 +330,11 @@ public class HazardRegistry {
 		HazardSystem.register(rod_zirnox_zfb_mox_depleted, makeData(RADIATION, wst * rod_dual * 5F));
 
 		//TODO: add Oredict to Waste
-		HazardSystem.register(waste_uranium, makeData().addEntry( RADIATION, wst * billet * 10F));
-		HazardSystem.register(waste_thorium, makeData().addEntry( RADIATION,wst * billet * 7.5F));
-		HazardSystem.register(waste_mox, makeData().addEntry( RADIATION,wst * billet * 10F));
-		HazardSystem.register(waste_plutonium, makeData().addEntry( RADIATION, wst * billet * 12.5F));
-		HazardSystem.register(waste_schrabidium, makeData().addEntry( RADIATION,wst * billet * 15F).addEntry(BLINDING, 50F));
+		HazardSystem.register(waste_uranium_legacy, makeData().addEntry( RADIATION, wst * billet * 10F));
+		HazardSystem.register(waste_thorium_legacy, makeData().addEntry( RADIATION,wst * billet * 7.5F));
+		HazardSystem.register(waste_mox_legacy, makeData().addEntry( RADIATION,wst * billet * 10F));
+		HazardSystem.register(waste_plutonium_legacy, makeData().addEntry( RADIATION, wst * billet * 12.5F));
+		HazardSystem.register(waste_schrabidium_legacy, makeData().addEntry( RADIATION,wst * billet * 15F).addEntry(BLINDING, 50F));
 
 		HazardSystem.register(waste_uranium_hot, makeData().addEntry( RADIATION, wst * billet * 10F).addEntry(HOT, 5F));
 		HazardSystem.register(waste_thorium_hot, makeData().addEntry( RADIATION,wst * billet * 7.5F).addEntry(HOT, 5F));
@@ -342,10 +342,15 @@ public class HazardRegistry {
 		HazardSystem.register(waste_plutonium_hot, makeData().addEntry( RADIATION, wst * billet * 12.5F).addEntry(HOT, 5F));
 		HazardSystem.register(waste_schrabidium_hot, makeData().addEntry( RADIATION,wst * billet * 15F).addEntry(HOT, 5F).addEntry(BLINDING, 50F));
 
-//		registerOtherWaste(waste_natural_uranium, wst * billet * 11.5F);
-//		registerOtherWaste(waste_u233, wst * billet * 10F);
-//		registerOtherWaste(waste_u235, wst * billet * 11F);
-//		registerOtherWaste(waste_zfb_mox, wst * billet * 5F);
+		registerOtherWaste(waste_uranium,  wst * billet * 10F);
+		registerOtherWaste(waste_thorium,  wst * billet * 7.5F);
+		registerOtherWaste(waste_mox, wst * billet * 10F);
+		registerOtherWaste(waste_plutonium,wst * billet * 12.5F);
+		registerOtherWaste(waste_schrabidium,wst * billet * 15F);
+		registerOtherWaste(waste_natural_uranium, wst * billet * 11.5F);
+		registerOtherWaste(waste_u233, wst * billet * 10F);
+		registerOtherWaste(waste_u235, wst * billet * 11F);
+		registerOtherWaste(waste_zfb_mox, wst * billet * 5F);
 
 //		registerOtherFuel(plate_fuel_u233, u233 * ingot, wst * ingot * 13F, false);
 //		registerOtherFuel(plate_fuel_u235, u235 * ingot, wst * ingot * 10F, false);
@@ -758,6 +763,8 @@ public class HazardRegistry {
 		final HazardData data = new HazardData();
 		data.addEntry(new HazardEntry(RADIATION, base));
 		data.addEntry(new HazardEntry(HOT, 5F));
+		if(waste == waste_schrabidium)
+			data.addEntry(new HazardEntry(BLINDING, 50F));
 		HazardSystem.register(ItemStackUtil.itemStackFrom(waste, 1, 1), data);
 	}
 	

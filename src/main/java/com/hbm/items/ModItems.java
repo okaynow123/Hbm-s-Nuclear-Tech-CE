@@ -1250,11 +1250,11 @@ public class ModItems {
 	public static final Item nuclear_waste_tiny = new ItemContaminating(ItemHazard.wst * ItemHazard.powder_tiny, "nuclear_waste_tiny").setCreativeTab(MainRegistry.partsTab);
 	public static final Item nuclear_waste_vitrified = new ItemContaminating(ItemHazard.wstv * ItemHazard.powder, "nuclear_waste_vitrified").setCreativeTab(MainRegistry.partsTab);
 	public static final Item nuclear_waste_vitrified_tiny = new ItemContaminating(ItemHazard.wstv * ItemHazard.powder_tiny, "nuclear_waste_vitrified_tiny").setCreativeTab(MainRegistry.partsTab);
-	public static final Item waste_uranium = new ItemContaminating(15F, "waste_uranium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item waste_thorium = new ItemContaminating(10F, "waste_thorium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item waste_plutonium = new ItemContaminating(15F, "waste_plutonium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item waste_mox = new ItemContaminating(15F, "waste_mox").setCreativeTab(MainRegistry.partsTab);
-	public static final Item waste_schrabidium = new ItemContaminating(40F, false, true, "waste_schrabidium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_uranium_legacy = new ItemContaminating(15F, "waste_uranium_legacy").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_thorium_legacy = new ItemContaminating(10F, "waste_thorium_legacy").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plutonium_legacy = new ItemContaminating(15F, "waste_plutonium_legacy").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_mox_legacy = new ItemContaminating(15F, "waste_mox_legacy").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_schrabidium_legacy = new ItemContaminating(40F, false, true, "waste_schrabidium_legacy").setCreativeTab(MainRegistry.partsTab);
 	public static final Item waste_uranium_hot = new ItemContaminating(15F, true, "waste_uranium_hot").setCreativeTab(MainRegistry.partsTab);
 	public static final Item waste_thorium_hot = new ItemContaminating(10F, true, "waste_thorium_hot").setCreativeTab(MainRegistry.partsTab);
 	public static final Item waste_plutonium_hot = new ItemContaminating(15F, true, "waste_plutonium_hot").setCreativeTab(MainRegistry.partsTab);
@@ -1292,6 +1292,16 @@ public class ModItems {
 	public static final Item rod_zirnox_u235_fuel_depleted = new ItemBase("rod_zirnox_u235_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final Item rod_zirnox_les_fuel_depleted = new ItemBase("rod_zirnox_les_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final Item rod_zirnox_zfb_mox_depleted = new ItemBase("rod_zirnox_zfb_mox_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
+
+	public static final Item waste_natural_uranium = new ItemDepletedFuel("waste_natural_uranium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_uranium = new ItemDepletedFuel("waste_uranium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_thorium = new ItemDepletedFuel("waste_thorium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_mox = new ItemDepletedFuel("waste_mox").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plutonium = new ItemDepletedFuel("waste_plutonium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_u233 = new ItemDepletedFuel("waste_u233").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_u235 = new ItemDepletedFuel("waste_u235").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_schrabidium = new ItemDepletedFuel("waste_schrabidium").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_zfb_mox = new ItemDepletedFuel("waste_zfb_mox").setCreativeTab(MainRegistry.partsTab);
 
 	
 	public static final Item rod_th232 = new ItemBase( "rod_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);

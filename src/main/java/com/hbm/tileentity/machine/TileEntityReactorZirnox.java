@@ -383,14 +383,15 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
 
     }
 
-    private void meltdown() {
+    private void meltdown() { //FIXME: this doesnt work properly
 
         for (int i = 0; i < inventory.getSlots(); i++) {
             this.inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
 
         int[] dimensions = {1, 0, 2, 2, 2, 2,};
-        world.setBlockState(this.pos, ModBlocks.zirnox_destroyed.getDefaultState(), 3);
+        world.setBlockState(this.pos, ModBlocks.zirnox_destroyed.getDefaultState(), 2);
+
         MultiblockHandlerXR.fillSpace(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), dimensions, ModBlocks.zirnox_destroyed, ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset));
         world.playSound(null, pos.getX(), pos.getY() + 2, pos.getZ(), HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 10.0F, 1.0F);
         world.createExplosion(null, this.pos.getX(), this.pos.getY() + 3, this.pos.getZ(), 12.0F, true);

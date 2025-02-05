@@ -332,6 +332,15 @@ public class ModEventHandlerClient {
 			ChemplantRecipes.register();
 		}
 
+
+		if( item instanceof ItemDepletedFuel) {
+			for (int i = 0; i <= 1; i++) {
+				ModelLoader.setCustomModelResourceLocation(item, i,
+						new ModelResourceLocation(item.getRegistryName(), "inventory"));
+			}
+			((ItemDepletedFuel) item).registerColorHandler();
+		}
+
 		if(item == ModItems.chemistry_icon) {
 			for(int i: ChemplantRecipes.recipeNames.keySet()){
 				ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(RefStrings.MODID + ":chem_icon_" + ChemplantRecipes.getName(i).toLowerCase(), "inventory"));
