@@ -18,6 +18,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnumMulti;
+import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
 import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
@@ -924,6 +925,7 @@ public class MainRegistry {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
+		ItemDepletedFuel.registerColorHandlers();
 		ModBlocks.init();
 		HazmatRegistry.registerHazmats();
 		registerReactorFuels();
@@ -960,6 +962,7 @@ public class MainRegistry {
 		SerializableRecipe.initialize();
 		AnvilRecipes.register();
 		WasteDrumRecipes.registerRecipes();
+		ItemDepletedFuel.registerPoolRecepies();
 		RefineryRecipes.registerRefinery();
 		FluidContainerRegistry.register();
 		TileEntityNukeCustom.registerBombItems();

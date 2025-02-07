@@ -7,10 +7,12 @@ import net.minecraft.item.ItemStack;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
+import static com.hbm.inventory.RecipesCommon.*;
+
 public class WasteDrumRecipes {
 
-	public static LinkedHashMap<Item, ItemStack> recipes = new LinkedHashMap<>();
-	private static HashSet<Item> outputs = new HashSet<>();
+	public static LinkedHashMap<ComparableStack, ItemStack> recipes = new LinkedHashMap<>();
+	private static HashSet<ItemStack> outputs = new HashSet<>();
 	
 	public static void registerRecipes() {
 
@@ -22,14 +24,14 @@ public class WasteDrumRecipes {
 		addRecipe(ModItems.waste_schrabidium_hot, new ItemStack(ModItems.waste_schrabidium_legacy, 1));
 	}
 
-	public static void addRecipe(ItemStack input, ItemStack output){
-		recipes.put(input.getItem(), output);
-		outputs.add(output.getItem());
+	public static void addRecipe(ComparableStack input, ItemStack output){ //Dude what fucking moron made everything work on Item oppose to ItemStack
+		recipes.put(input, output);
+		outputs.add(output);
 	}
 
 	public static void addRecipe(Item input, ItemStack output){
-		recipes.put(input, output);
-		outputs.add(output.getItem());
+		recipes.put(new ComparableStack(input,1), output);
+		outputs.add(output);
 	}
 	
 	public static ItemStack getOutput(Item item) {
@@ -40,11 +42,15 @@ public class WasteDrumRecipes {
 		return recipes.get(item);
 	}
 
-	public static boolean hasRecipe(Item item){
-		return recipes.containsKey(item);
+	public static ItemStack getOutput(ItemStack item) {
+
+		if(item == null)
+			return null;
+
+		return recipes.get(item);
 	}
 
-	public static boolean isCold(Item item){
+	public static boolean isCold(ItemStack item){
 		return outputs.contains(item);
 	}
 }

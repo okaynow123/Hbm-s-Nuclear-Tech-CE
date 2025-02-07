@@ -26,7 +26,61 @@ public class CentrifugeRecipes {
 	private static List<CentrifugeRecipe> centrifugeRecipes = null;
 	
 	public static void register() {
-		
+		recipes.put(new ComparableStack(ModItems.waste_natural_uranium), new ItemStack[] {
+				new ItemStack(ModItems.nugget_u238, 1),
+				new ItemStack(ModItems.nugget_pu_mix, 2),
+				new ItemStack(ModItems.nugget_pu239, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 2) });
+
+		recipes.put(new ComparableStack(ModItems.waste_uranium), new ItemStack[] {
+				new ItemStack(ModItems.nugget_pu_mix, 2),
+				new ItemStack(ModItems.nugget_plutonium, 1),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 2) });
+
+		recipes.put(new ComparableStack(ModItems.waste_thorium), new ItemStack[] {
+				new ItemStack(ModItems.nugget_u238, 1),
+				new ItemStack(ModItems.nugget_th232, 1),
+				new ItemStack(ModItems.nugget_u233, 2),
+				new ItemStack(ModItems.nuclear_waste_tiny, 2) });
+
+		recipes.put(new ComparableStack(ModItems.waste_mox), new ItemStack[] {
+				new ItemStack(ModItems.nugget_pu_mix, 1),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nugget_u238, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 3) });
+
+		recipes.put(new ComparableStack(ModItems.waste_plutonium), new ItemStack[] {
+				new ItemStack(ModItems.nugget_pu_mix, 1),
+				new ItemStack(ModItems.nugget_pu_mix, 1),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 3) });
+
+		recipes.put(new ComparableStack(ModItems.waste_u233), new ItemStack[] {
+				new ItemStack(ModItems.nugget_u235, 1),
+				new ItemStack(ModItems.nugget_neptunium, 1),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 3) });
+
+		recipes.put(new ComparableStack(ModItems.waste_u235), new ItemStack[] {
+				new ItemStack(ModItems.nugget_pu238, 1),
+				new ItemStack(ModItems.nugget_neptunium, 1),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 3) });
+
+		recipes.put(new ComparableStack(ModItems.waste_schrabidium), new ItemStack[] {
+				new ItemStack(ModItems.nugget_beryllium, 2),
+				new ItemStack(ModItems.nugget_pu239, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 2) });
+
+		recipes.put(new ComparableStack(ModItems.waste_zfb_mox), new ItemStack[] {
+				new ItemStack(ModItems.nugget_zirconium, 3),
+				new ItemStack(ModItems.nugget_technetium, 1),
+				new ItemStack(ModItems.nugget_pu_mix, 1),
+				new ItemStack(ModItems.nuclear_waste_tiny, 1) });
+
+		//TO REMOVE
 		recipes.put(new ComparableStack(ModItems.waste_uranium_legacy), new ItemStack[] {
 				new ItemStack(ModItems.nugget_pu_mix, 2),
 				new ItemStack(ModItems.nugget_plutonium, 1),
@@ -56,6 +110,7 @@ public class CentrifugeRecipes {
 				new ItemStack(ModItems.nugget_th232, 1),
 				new ItemStack(ModItems.nugget_u233, 2),
 				new ItemStack(ModItems.nuclear_waste_tiny, 2) });
+		//TO REMOVE
 		
 		recipes.put(new ComparableStack(ModItems.powder_cloud), new ItemStack[] {
 				new ItemStack(ModItems.powder_copper, 1),

@@ -338,7 +338,6 @@ public class ModEventHandlerClient {
 				ModelLoader.setCustomModelResourceLocation(item, i,
 						new ModelResourceLocation(item.getRegistryName(), "inventory"));
 			}
-			((ItemDepletedFuel) item).registerColorHandler();
 		}
 
 		if(item == ModItems.chemistry_icon) {

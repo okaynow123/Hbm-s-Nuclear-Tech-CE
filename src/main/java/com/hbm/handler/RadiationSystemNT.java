@@ -1418,7 +1418,7 @@ public class RadiationSystemNT {
 				List<Integer> indc = p.connectionIndices[e.ordinal()];
 				int size = buf.getShort();
 				for(int i = 0; i < size; i ++){
-					indc.add((int) buf.getShort());
+					indc.add((int) buf.getShort()); //FIXME: can cause BufferUnderflowException
 				}
 			}
 			return p;
