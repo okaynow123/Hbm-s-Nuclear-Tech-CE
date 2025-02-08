@@ -620,6 +620,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.waste_schrabidium_hot, 4), new Object[] { ModItems.rod_quad_schrabidium_fuel_depleted });
 		//TO REMOVE
 
+		addRecipeAuto(new ItemStack(ModItems.rod_zirnox_empty, 4), new Object[]{ "Z Z", "ZBZ", "Z Z", 'Z', ZR.nugget(), 'B', BE.ingot() });
 		addZIRNOXRod(U, EnumZirnoxType.NATURAL_URANIUM_FUEL);
 		addZIRNOXRod(ModItems.billet_uranium_fuel, EnumZirnoxType.URANIUM_FUEL);
 		addZIRNOXRod(TH232, EnumZirnoxType.TH232);

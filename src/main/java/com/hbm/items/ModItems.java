@@ -2508,9 +2508,15 @@ public class ModItems {
 	public static final Item rbmk_lid = new ItemRBMKLid("rbmk_lid").setCreativeTab(MainRegistry.machineTab);
 	public static final Item rbmk_lid_glass = new ItemRBMKLid("rbmk_lid_glass").setCreativeTab(MainRegistry.machineTab);
 	
-	public static final Item debris_graphite = new ItemHazard("debris_graphite").addRadiation(700F).toItem().setCreativeTab(MainRegistry.controlTab);
-	public static final Item debris_metal = new ItemHazard("debris_metal").addRadiation(50F).toItem().setCreativeTab(MainRegistry.controlTab);
-	public static final Item debris_fuel = new ItemHazard("debris_fuel").addRadiation(150000F).addFire(15).toItem().setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item debris_graphite = new ItemBase("debris_graphite").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_metal = new ItemBase("debris_metal").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_fuel = new ItemBase("debris_fuel").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_concrete = new ItemBase("debris_concrete").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_shrapnel = new ItemBase("debris_shrapnel").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_exchanger = new ItemBase("debris_exchanger").setCreativeTab(MainRegistry.controlTab);
+	public static final Item debris_element = new ItemBase("debris_element").setCreativeTab(MainRegistry.controlTab);
+
 	
 	public static final ItemRBMKPellet rbmk_pellet_zfb_bismuth = (ItemRBMKPellet) new ItemRBMKPellet("Zirconium Fast Breeder - LEU/HEP-241 -> Bi", "rbmk_pellet_zfb_bismuth").addRadiation(ItemHazard.zfb_bi * ItemHazard.billet).toItem();
 	public static final ItemRBMKPellet rbmk_pellet_zfb_pu241 = (ItemRBMKPellet) new ItemRBMKPellet("Zirconium Fast Breeder - HEU-235/HEP-240 -> Pu241", "rbmk_pellet_zfb_pu241").addRadiation(ItemHazard.zfb_pu241 * ItemHazard.billet).toItem();

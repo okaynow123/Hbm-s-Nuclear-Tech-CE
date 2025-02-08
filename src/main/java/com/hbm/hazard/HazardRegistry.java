@@ -372,6 +372,10 @@ public class HazardRegistry {
 		HazardSystem.register(debris_graphite, makeData().addEntry(RADIATION, 70F).addEntry(HOT, 5F));
 		HazardSystem.register(debris_metal, makeData(RADIATION, 5F));
 		HazardSystem.register(debris_fuel, makeData().addEntry(RADIATION, 500F).addEntry(HOT, 5F));
+		HazardSystem.register(debris_concrete, makeData(RADIATION, 30F));
+		HazardSystem.register(debris_exchanger, makeData(RADIATION, 25F));
+		HazardSystem.register(debris_shrapnel, makeData(RADIATION, 2.5F));
+		HazardSystem.register(debris_element, makeData(RADIATION, 100F).addEntry(HOT, 3));
 
 		HazardSystem.register(pribris, makeData().addEntry(RADIATION, 70F));
 		HazardSystem.register(pribris_burning, makeData().addEntry(RADIATION, 200F).addEntry(HOT, 5F));
@@ -380,18 +384,7 @@ public class HazardRegistry {
 		HazardSystem.register(ash_digamma, makeData().addEntry(DIGAMMA, 0.010F));
 		HazardSystem.register(debris_metal, makeData(RADIATION, 5F));
 		HazardSystem.register(debris_fuel, makeData().addEntry(RADIATION, 500F).addEntry(HOT, 5F));
-//		HazardSystem.register(debris_concrete, makeData(RADIATION, 30F));
-//		HazardSystem.register(debris_exchanger, makeData(RADIATION, 25F));
-//		HazardSystem.register(debris_shrapnel, makeData(RADIATION, 2.5F));
-//		HazardSystem.register(debris_element, makeData(RADIATION, 100F));
-		
-//
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.BALEFIRE_GOLD), makeData(RADIATION, au198 * billet));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.FLASHLEAD), makeData().addEntry(RADIATION, pb209 * 1.25F * billet).addEntry(HOT, 7F));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.PO210BE), makeData(RADIATION, pobe * billet));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.RA226BE), makeData(RADIATION, rabe * billet));
-//		HazardSystem.register(ModItems.billet.getItemStack(MaterialMineral.PU238BE), makeData(RADIATION, pube * billet));
-		
+
 		registerRTGPellet(pellet_rtg, pu238 * rtg, 0, 3F);
 		registerRTGPellet(pellet_rtg_radium, ra226 * rtg, 0);
 		registerRTGPellet(pellet_rtg_weak, (pu238 + (u238 * 2)) * billet, 0);

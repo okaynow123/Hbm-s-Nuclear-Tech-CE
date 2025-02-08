@@ -22,6 +22,9 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
+import com.hbm.main.MainRegistry;
+import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -41,6 +44,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -384,23 +388,34 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
     }
 
     private void meltdown() { //FIXME: this doesnt work properly
-
         for (int i = 0; i < inventory.getSlots(); i++) {
             this.inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
+        NBTTagCompound data = new NBTTagCompound();
+        data.setString("type", "rbmkmush");
+        data.setFloat("scale", 4);
+        PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data,pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX()+0.5,pos.getY()+0.5,pos.getZ()+0.5, 250));
+        MainRegistry.proxy.effectNT(data);
 
-        int[] dimensions = {1, 0, 2, 2, 2, 2,};
-        world.setBlockState(this.pos, ModBlocks.zirnox_destroyed.getDefaultState(), 2);
+        int meta = this.getBlockMetadata();
+        for (int ox = -2; ox <= 2; ox++) {
+            for (int oz = -2; oz <= 2; oz++) {
+                for (int oy = 2; ox <= 5; ox++) {
+                    world.setBlockToAir(pos.add(ox,oy,oz));
+                }
+            }
+        }
+        int[] dimensions = {1, 0, 2, 2, 2, 2};
 
-        MultiblockHandlerXR.fillSpace(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), dimensions, ModBlocks.zirnox_destroyed, ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset));
+        world.setBlockState(pos,ModBlocks.zirnox_destroyed.getStateFromMeta(meta),3);
+        MultiblockHandlerXR.fillSpace(world, pos.getX(),pos.getY(),pos.getZ(), dimensions, ModBlocks.zirnox_destroyed, ForgeDirection.getOrientation(meta - BlockDummyable.offset));
+
         world.playSound(null, pos.getX(), pos.getY() + 2, pos.getZ(), HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 10.0F, 1.0F);
-        world.createExplosion(null, this.pos.getX(), this.pos.getY() + 3, this.pos.getZ(), 12.0F, true);
+        world.createExplosion(null, pos.getX(), pos.getY() + 3, pos.getZ(), 6.0F, true);
         zirnoxDebris();
-        ExplosionNukeGeneric.waste(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), 35);
+        ExplosionNukeGeneric.waste(world, pos.getX(), pos.getY(), pos.getZ(), 35);
 
-        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class,
-                new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(100, 100, 100));
-
+        List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos).grow(100));
         for (EntityPlayer player : players) {
             AdvancementManager.grantAchievement(player, AdvancementManager.achZIRNOXBoom);
         }
