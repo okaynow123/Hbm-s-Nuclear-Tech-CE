@@ -1283,6 +1283,7 @@ public class ModItems {
 	public static final Item rod_zirnox_tritium = new ItemBase("rod_zirnox_tritium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final ItemEnumMulti rod_zirnox = (ItemEnumMulti) new ItemZirnoxRod().setTranslationKey("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
 	public static final ItemEnumMulti full_drive = (ItemEnumMulti) new ItemVOTVdrive().setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
+
 	//TODO: Make this metaitems
 	public static final Item rod_zirnox_natural_uranium_fuel_depleted = new ItemBase("rod_zirnox_natural_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final Item rod_zirnox_uranium_fuel_depleted = new ItemBase("rod_zirnox_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);

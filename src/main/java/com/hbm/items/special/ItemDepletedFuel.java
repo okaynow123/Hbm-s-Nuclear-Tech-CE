@@ -38,8 +38,10 @@ public class ItemDepletedFuel extends ItemNuclearWaste {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-        for(int i = 0; i < 2; i++) {
-            list.add(new ItemStack(this, 1, i));
+        if (this.isInCreativeTab(tab)) {
+            for (int i = 0; i < 2; i++) {
+                list.add(new ItemStack(this, 1, i));
+            }
         }
     }
 

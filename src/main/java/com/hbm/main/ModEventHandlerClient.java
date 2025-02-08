@@ -336,7 +336,7 @@ public class ModEventHandlerClient {
 		if( item instanceof ItemDepletedFuel) {
 			for (int i = 0; i <= 1; i++) {
 				ModelLoader.setCustomModelResourceLocation(item, i,
-						new ModelResourceLocation(item.getRegistryName(), "inventory"));
+						new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
 			}
 		}
 
