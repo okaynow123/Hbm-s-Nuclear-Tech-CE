@@ -18,12 +18,12 @@ public abstract class BlockMulti extends BlockBase implements IBlockMulti {
 
     public BlockMulti(Material mat) {
         super(mat);
-        this.setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
+        this.setDefaultState(this.getBlockState().getBaseState().withProperty(getVariantProperty(), 0));
     }
 
     @Override
     public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT);
+        return state.getValue(getVariantProperty());
     }
 
     @Override
@@ -35,23 +35,23 @@ public abstract class BlockMulti extends BlockBase implements IBlockMulti {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, rectify(meta));
+        return this.getDefaultState().withProperty(getVariantProperty(), rectify(meta));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT);
+        return state.getValue(getVariantProperty());
     }
 
     @Override
     protected @NotNull BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+        return new BlockStateContainer(this, getVariantProperty());
     }
 
     @Override
     public IBlockState getStateForPlacement(@NotNull World world, @NotNull BlockPos pos, @NotNull EnumFacing facing,
                                             float hitX, float hitY, float hitZ, int meta,
                                             @NotNull EntityLivingBase placer, @NotNull EnumHand hand) {
-        return this.getDefaultState().withProperty(VARIANT, rectify(meta));
+        return this.getDefaultState().withProperty(getVariantProperty(), rectify(meta));
     }
 }
