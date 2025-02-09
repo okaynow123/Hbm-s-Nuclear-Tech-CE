@@ -24,6 +24,16 @@ public class BlockBase extends Block {
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
 
+	public BlockBase(Material material) {
+		super(material);
+		ModBlocks.ALL_BLOCKS.add(this);
+	}
+
+	public BlockBase() {
+        super(Material.ROCK);
+        ModBlocks.ALL_BLOCKS.add(this);
+	}
+
 	public BlockBase(Material m, SoundType sound, String s){
 		super(m);
 		this.setTranslationKey(s);
