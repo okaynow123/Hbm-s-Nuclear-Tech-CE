@@ -24,6 +24,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -74,7 +76,7 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
                 if (!slot.isEmpty()) {
                     if (slot.getItem() == bolt.getItem() && slot.getItemDamage() == bolt.getItemDamage()) {
                         if (!world.isRemote) {
-                            world.playSound(player, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             player.inventory.decrStackSize(i, 1);
                             player.inventoryContainer.detectAndSendChanges();
                             EntityDamageUtil.attackEntityFromIgnoreIFrame(entity, DamageSource.causePlayerDamage(player).setDamageBypassesArmor(), 10F);

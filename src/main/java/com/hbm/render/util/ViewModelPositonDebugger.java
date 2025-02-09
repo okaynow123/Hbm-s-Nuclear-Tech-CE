@@ -16,7 +16,7 @@ import java.util.Map;
 //Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
 //https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
 public class ViewModelPositonDebugger {
-    static boolean debug = true;
+    static boolean debug = false;
     static boolean blockInput = false;
     public Map<TransformType, offset> offsetMap;
     protected int debugIndex = 0;
