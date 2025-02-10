@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -104,6 +105,20 @@ public class RecipesCommon {
 		@Override
 		public String toString() {
 			return "AStack: size, " + stacksize;
+		}
+
+		/**
+		 * Generates either an ItemStack or an ArrayList of ItemStacks
+		 * @return
+		 */
+		public abstract List<ItemStack> extractForJEI();
+
+		public ItemStack extractForCyclingDisplay(int cycle) {
+			List<ItemStack> list = extractForJEI();
+
+			cycle *= 50;
+
+			return list.get((int)(System.currentTimeMillis() % (cycle * list.size()) / cycle));
 		}
 	}
 
@@ -298,8 +313,13 @@ public class RecipesCommon {
 		public String toString() {
 			return "ComparableStack: { "+stacksize+" x "+item.getRegistryName()+"@"+meta+" }";
 		}
+
+		@Override
+		public List<ItemStack> extractForJEI() {
+			return Arrays.asList(this.toStack());
+		}
 	}
-	
+
 	public static class NbtComparableStack extends ComparableStack {
 		ItemStack stack;
 		public NbtComparableStack(ItemStack stack) {
@@ -474,6 +494,27 @@ public class RecipesCommon {
 		@Override
 		public String toString() {
 			return "OreDictStack: name, " + name + ", stacksize, " + stacksize;
+		}
+
+		@Override
+		public List<ItemStack> extractForJEI() {
+
+			List<ItemStack> fromDict = OreDictionary.getOres(name);
+			List<ItemStack> ores = new ArrayList();
+
+			for(ItemStack stack : fromDict) {
+
+				ItemStack copy = stack.copy();
+				copy.setCount(this.stacksize);
+
+				if(stack.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
+					ores.add(copy);
+				} else {
+					ores.addAll(MainRegistry.proxy.getSubItems(copy));
+				}
+			}
+
+			return ores;
 		}
 	}
 

@@ -35,7 +35,7 @@ public class BlockDirt extends Block {
 
     public BlockDirt(Material mat, boolean tick, String s) {
         super(mat);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setTickRandomly(tick);
         this.setSoundType(SoundType.GROUND);

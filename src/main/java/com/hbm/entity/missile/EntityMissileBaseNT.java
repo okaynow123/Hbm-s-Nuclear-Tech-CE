@@ -71,7 +71,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 		this.motionY = 2;
 		
 		Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
-		accelXZ = decelY = 1 / vector.lengthVector();
+		accelXZ = decelY = 1 / vector.length();
 		decelY *= 2;
 		velocity = 0;
 		
@@ -190,7 +190,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	
 	protected void spawnContraolWithOffset(double offsetX, double offsetY, double offsetZ) {
 		Vec3 vec = Vec3.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY, this.lastTickPosZ - this.posZ);
-		double len = vec.lengthVector();
+		double len = vec.length();
 		vec = vec.normalize();
 		Vec3 thrust = Vec3.createVectorHelper(0, 1, 0);
 		thrust.rotateAroundZ(this.rotationPitch * (float) Math.PI / 180F);
@@ -365,7 +365,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	}
 	
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		ItemStack item = this.getMissileItemForInfo();
 		if(item != null && item.getItem() instanceof ItemMissileStandard) {
 			ItemMissileStandard missile = (ItemMissileStandard) item.getItem();

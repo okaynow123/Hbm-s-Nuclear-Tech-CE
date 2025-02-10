@@ -114,7 +114,7 @@ public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachine
         if(chem.tanksNew[0].getTankType() != null) {
         	ResourceLocation test;
         	if(chem.tanksNew[0].getTankType() == Fluids.LAVA || chem.tanksNew[0].getTankType() == Fluids.WATER){
-        		test = new ResourceLocation(RefStrings.MODID, "textures/blocks/forgefluid/" + chem.tanksNew[0].getTankType().getUnlocalizedName().substring(11) + "_chemplant.png");
+        		test = new ResourceLocation(RefStrings.MODID, "textures/blocks/forgefluid/" + chem.tanksNew[0].getTankType().getTranslationKey().substring(11) + "_chemplant.png");
         	} else {
         	String s = chem.tanksNew[0].getTankType().getTexture().toString();
         	String textureBase = "textures/";
@@ -149,7 +149,7 @@ public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachine
         if(chem.tanksNew[1].getTankType() != null) {
            	ResourceLocation test;
 			if(chem.tanksNew[1].getTankType() == Fluids.LAVA || chem.tanksNew[1].getTankType() == Fluids.WATER){
-        		test = new ResourceLocation(RefStrings.MODID, "textures/blocks/forgefluid/" + chem.tanksNew[1].getTankType().getUnlocalizedName().substring(11) + "_chemplant.png");
+        		test = new ResourceLocation(RefStrings.MODID, "textures/blocks/forgefluid/" + chem.tanksNew[1].getTankType().getTranslationKey().substring(11) + "_chemplant.png");
         	} else {
         	String s = chem.tanksNew[1].getTankType().getTexture().toString();
         	String textureBase = "textures/";

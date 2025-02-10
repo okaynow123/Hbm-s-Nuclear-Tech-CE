@@ -328,7 +328,7 @@ public class RenderOverhead {
 				double aY = pY + (maxY - minY) / 2D;
 				double aZ = pZ + (maxZ - minZ) / 2D;
 				Vec3 vec = Vec3.createVectorHelper(x - aX, y - aY, z - aZ);
-				if(vec.lengthVector() > marker.maxDist) {
+				if(vec.length() > marker.maxDist) {
 					it.remove();
 				}
 			}

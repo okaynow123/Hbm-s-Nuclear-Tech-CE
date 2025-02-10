@@ -29,7 +29,7 @@ public class BlockClorine extends Block {
 
 	public BlockClorine(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setTickRandomly(true);
 
@@ -52,7 +52,7 @@ public class BlockClorine extends Block {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
 		if(!(entity instanceof EntityLivingBase))
 			return;
 
@@ -81,7 +81,7 @@ public class BlockClorine extends Block {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 

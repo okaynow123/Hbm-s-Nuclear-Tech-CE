@@ -43,7 +43,7 @@ public class AdvancedModelLoader {
     @SuppressWarnings("deprecation")
 	public static IModelCustom loadModel(ResourceLocation resource) throws IllegalArgumentException, ModelFormatException
     {
-        String name = resource.getResourcePath();
+        String name = resource.getPath();
         int i = name.lastIndexOf('.');
         if (i == -1)
         {

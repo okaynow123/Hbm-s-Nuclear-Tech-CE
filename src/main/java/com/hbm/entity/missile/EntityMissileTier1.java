@@ -43,7 +43,7 @@ public abstract class EntityMissileTier1 extends EntityMissileBaseNT {
 		public EntityMissileDecoy(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() { world.newExplosion(this, posX, posY, posZ, 4F, false, false); }
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.ingot_steel); }
-		@Override public String getUnlocalizedName() { return "radar.target.tier4"; }
+		@Override public String getTranslationKey() { return "radar.target.tier4"; }
 		@Override public int getBlipLevel() { return IRadarDetectableNT.TIER4; }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_decoy); }
 	}

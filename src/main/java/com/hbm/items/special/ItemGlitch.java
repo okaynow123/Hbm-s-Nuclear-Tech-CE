@@ -29,7 +29,7 @@ import java.util.List;
 public class ItemGlitch extends Item {
 
 	public ItemGlitch(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.maxStackSize = 1;
         this.setMaxDamage(1);

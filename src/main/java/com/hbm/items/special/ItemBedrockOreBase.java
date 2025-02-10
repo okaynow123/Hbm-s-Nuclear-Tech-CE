@@ -19,7 +19,7 @@ import java.util.Random;
 public class ItemBedrockOreBase extends Item {
 
     public ItemBedrockOreBase(String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(MainRegistry.partsTab);
 

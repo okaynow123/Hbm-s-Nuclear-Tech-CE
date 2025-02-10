@@ -12,10 +12,10 @@ public class HazardTransformerRadiationNBT extends HazardTransformerBase {
 	public static final String RAD_KEY = "hfrHazRadiation";
 
 	@Override
-	public void transformPre(ItemStack stack, List<HazardEntry> entries) { }
+	public void transformPre(final ItemStack stack, final List<HazardEntry> entries) { }
 
 	@Override
-	public void transformPost(ItemStack stack, List<HazardEntry> entries) {
+	public void transformPost(final ItemStack stack, final List<HazardEntry> entries) {
 		
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(RAD_KEY)) {
 			entries.add(new HazardEntry(HazardRegistry.RADIATION, stack.getTagCompound().getFloat(RAD_KEY)));

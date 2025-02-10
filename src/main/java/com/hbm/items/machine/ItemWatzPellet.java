@@ -27,7 +27,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 	public ItemWatzPellet(String s) {
 		super(EnumWatzType.class, true, true);
 		this.setMaxStackSize(16);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 	}
 
@@ -89,7 +89,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 			
 			for(int i = 0; i < EnumWatzType.values().length; i++) {
 				EnumWatzType type = EnumWatzType.values()[i];
-				String placeholderName = this.getIconString() + "-" + (type.name() + this.getUnlocalizedName());
+				String placeholderName = this.getIconString() + "-" + (type.name() + this.getTranslationKey());
 				int light = this == ModItems.watz_pellet_depleted ? desaturate(type.colorLight) : type.colorLight;
 				int dark = this == ModItems.watz_pellet_depleted ? desaturate(type.colorDark) : type.colorDark;
 				TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xD2D2D2, 0x333333, light, dark));

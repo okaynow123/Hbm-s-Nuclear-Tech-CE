@@ -134,22 +134,23 @@ public class ItemHazard extends ItemCustomLore implements IItemHazard {
 		
 		@Override
 		public void onUpdate(ItemStack stack, World worldIn, Entity entity, int itemSlot, boolean isSelected){
-			if(!worldIn.isRemote && entity instanceof EntityLivingBase)
-				this.module.applyEffects((EntityLivingBase) entity, stack.getCount(), itemSlot, isSelected, ((EntityLivingBase)entity).getHeldItem(EnumHand.MAIN_HAND) == stack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
+			//Bye bye
+			//if(!worldIn.isRemote && entity instanceof EntityLivingBase)
+				//this.module.applyEffects((EntityLivingBase) entity, stack.getCount(), itemSlot, isSelected, ((EntityLivingBase)entity).getHeldItem(EnumHand.MAIN_HAND) == stack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
 		}
 		
 		@Override
 		public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
-			this.module.addInformation(stack, list, flagIn);
-			super.addInformation(stack, world, list, flagIn);
+//			this.module.addInformation(stack, list, flagIn);
+//			super.addInformation(stack, world, list, flagIn);
 		}
 		
-		@Override
-		public boolean onEntityItemUpdate(EntityItem item){
-			boolean m = this.module.onEntityItemUpdate(item);
-			boolean i = super.onEntityItemUpdate(item);
-			return m || i;
-		}
+//		@Override
+//		public boolean onEntityItemUpdate(EntityItem item){
+//			boolean m = this.module.onEntityItemUpdate(item);
+//			boolean i = super.onEntityItemUpdate(item);
+//			return m || i;
+//		}
 		
 		/*
 		 * DEPRECATED CTORS

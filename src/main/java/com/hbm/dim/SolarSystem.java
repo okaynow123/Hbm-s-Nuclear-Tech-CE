@@ -307,7 +307,7 @@ public class SolarSystem {
 		Vec3 position = calculatePosition(orbiting, altitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
-				position = position.addVector(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				position = position.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
 				break;
 			}
 		}
@@ -336,10 +336,10 @@ public class SolarSystem {
 		Vec3 toPos = calculatePosition(to, toAltitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == from) {
-				fromPos = fromPos.addVector(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				fromPos = fromPos.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
 			}
 			if(metric.body == to) {
-				toPos = toPos.addVector(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				toPos = toPos.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
 			}
 		}
 
@@ -388,7 +388,7 @@ public class SolarSystem {
 		Vec3 parentPosition = parentMetric != null ? parentMetric.position : Vec3.createVectorHelper(0, 0, 0);
 
 		for(CelestialBody satellite : body.satellites) {
-			Vec3 position = calculatePosition(satellite, ticks).addVector(parentPosition.xCoord, parentPosition.yCoord, parentPosition.zCoord);
+			Vec3 position = calculatePosition(satellite, ticks).add(parentPosition.xCoord, parentPosition.yCoord, parentPosition.zCoord);
 			AstroMetric metric = new AstroMetric(satellite, position);
 
 			metrics.add(metric);
@@ -514,7 +514,7 @@ public class SolarSystem {
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
 				to = metric.position;
-				from = from.addVector(to.xCoord, to.yCoord, to.zCoord);
+				from = from.add(to.xCoord, to.yCoord, to.zCoord);
 				break;
 			}
 		}

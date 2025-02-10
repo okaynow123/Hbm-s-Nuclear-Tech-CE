@@ -16,16 +16,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Random;
 
 public class WasteDrum extends BlockContainer implements ITooltipProvider {
 
 	public WasteDrum(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -53,7 +57,35 @@ public class WasteDrum extends BlockContainer implements ITooltipProvider {
 			return false;
 		}
 	}
-	
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) { //TODO: Make this only happen when drum is actually cooling stuff
+		super.randomDisplayTick(state, world, pos, rand);
+
+		for (EnumFacing dir : EnumFacing.values()) {
+			if (dir == EnumFacing.DOWN)
+				continue;
+
+			BlockPos offsetPos = pos.offset(dir);
+			if (world.getBlockState(offsetPos).getMaterial() == Material.WATER) {
+				double ix = pos.getX() + 0.5F + dir.getXOffset() + rand.nextDouble() - 0.5D;
+				double iy = pos.getY() + 0.5F + dir.getYOffset() + rand.nextDouble() - 0.5D;
+				double iz = pos.getZ() + 0.5F + dir.getZOffset() + rand.nextDouble() - 0.5D;
+
+				if (dir.getXOffset() != 0)
+					ix = pos.getX() + 0.5F + dir.getXOffset() * 0.5 + rand.nextDouble() * 0.125 * dir.getXOffset();
+				if (dir.getYOffset() != 0)
+					iy = pos.getY() + 0.5F + dir.getYOffset() * 0.5 + rand.nextDouble() * 0.125 * dir.getYOffset();
+				if (dir.getZOffset() != 0)
+					iz = pos.getZ() + 0.5F + dir.getZOffset() * 0.5 + rand.nextDouble() * 0.125 * dir.getZOffset();
+
+				world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, ix, iy, iz, 0.0, 0.2, 0.0);
+			}
+		}
+	}
+
+
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(!world.isRemote)

@@ -10,30 +10,42 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 public class BlockMutatorDebris implements IBlockMutator {
-	
+
 	protected RecipesCommon.MetaBlock metaBlock;
-	
+
 	public BlockMutatorDebris(Block block) {
 		this(block, 0);
 	}
-	
+
 	public BlockMutatorDebris(Block block, int meta) {
 		this.metaBlock = new RecipesCommon.MetaBlock(block, meta);
 	}
 
-	@Override public void mutatePre(ExplosionVNT explosion, Block block, int meta, int x, int y, int z) { }
 
-	@Override public void mutatePost(ExplosionVNT explosion, int x, int y, int z) {
+	@Override
+	public void mutatePre(ExplosionVNT explosion, IBlockState blockState, BlockPos pos) {
 
+	}
+
+	@Override
+	public void mutatePost(ExplosionVNT explosion, BlockPos pos) {
 		World world = explosion.world;
-		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			IBlockState s = world.getBlockState(new BlockPos(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
-			Block b = s.getBlock();
-			if(b.isNormalCube(s) && (b != metaBlock.block || b.getMetaFromState(s) != metaBlock.meta)) {
-				world.setBlockState(new BlockPos(x, y, z), metaBlock.block.getStateFromMeta(metaBlock.meta), 3);
+
+		for (EnumFacing dir : EnumFacing.values()) {
+			IBlockState state = world.getBlockState(pos.offset(dir));
+			Block adjacentBlock = state.getBlock();
+
+			if (adjacentBlock.isNormalCube(state) && (adjacentBlock != metaBlock.block || adjacentBlock.getMetaFromState(state) != metaBlock.meta)) {
+				world.setBlockState(pos, metaBlock.block.getStateFromMeta(metaBlock.meta), 3);
 				return;
 			}
 		}
 	}
 }
+

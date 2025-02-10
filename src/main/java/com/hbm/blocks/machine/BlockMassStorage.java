@@ -45,7 +45,7 @@ public class BlockMassStorage extends BlockContainer implements ILookOverlay, IT
 
 	public BlockMassStorage(Material material, String s) {
 		super(material);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setSoundType(SoundType.METAL);
 
@@ -120,7 +120,7 @@ public class BlockMassStorage extends BlockContainer implements ILookOverlay, IT
 				nbt.setInteger("stack", storage.getStockpile());
 			}
 
-			if(!nbt.hasNoTags()) {
+			if(!nbt.isEmpty()) {
 				drop.setTagCompound(nbt);
 			}
 

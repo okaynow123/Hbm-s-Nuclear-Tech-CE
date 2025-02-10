@@ -30,7 +30,7 @@ public class BlockMarker extends BlockContainer {
 
     public BlockMarker(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
@@ -70,7 +70,7 @@ public class BlockMarker extends BlockContainer {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 

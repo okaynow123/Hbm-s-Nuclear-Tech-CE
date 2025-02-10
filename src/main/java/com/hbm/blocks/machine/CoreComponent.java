@@ -28,7 +28,7 @@ public class CoreComponent extends BlockContainer {
 	
 	public CoreComponent(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -120,7 +120,7 @@ public class CoreComponent extends BlockContainer {
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
 	}
 	

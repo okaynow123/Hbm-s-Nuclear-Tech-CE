@@ -306,9 +306,9 @@ public class ExplosionNukeGeneric {
 				world.setBlockState(pos, ModBlocks.sellafield_slaked.getStateFromMeta(world.rand.nextInt(4)));
 			}
 
-			else if(b == Blocks.BEDROCK){
-				world.setBlockState(pos.add(0, 1, 0), ModBlocks.toxic_block.getDefaultState());
-			}
+//			else if(b == Blocks.BEDROCK){
+//				world.setBlockState(pos.add(0, 1, 0), ModBlocks.toxic_block.getDefaultState());
+//			}
 
 			else if (b == Blocks.RED_MUSHROOM_BLOCK) {
 				if (bs.getValue(BlockHugeMushroom.VARIANT) == BlockHugeMushroom.EnumType.STEM) {

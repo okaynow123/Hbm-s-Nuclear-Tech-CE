@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.hbm.hazard.HazardSystem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemVOTVdrive;
@@ -203,6 +204,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+
 public class ModEventHandlerClient {
 
 	public static Set<EntityLivingBase> specialDeathEffectEntities = new HashSet<>();
@@ -280,6 +282,7 @@ public class ModEventHandlerClient {
 		((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
 		((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
 		((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
+		((ItemAmmoArty) ModItems.ammo_arty).registerModels();
 
 		for(Item item : ModItems.ALL_ITEMS) {
 			try {
@@ -327,6 +330,14 @@ public class ModEventHandlerClient {
 		//Th3_Sl1ze: Don't worry, I hate myself too
 		if(item == ModItems.chemistry_template){
 			ChemplantRecipes.register();
+		}
+
+
+		if( item instanceof ItemDepletedFuel) {
+			for (int i = 0; i <= 1; i++) {
+				ModelLoader.setCustomModelResourceLocation(item, i,
+						new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
+			}
 		}
 
 		if(item == ModItems.chemistry_icon) {
@@ -1312,7 +1323,7 @@ public class ModEventHandlerClient {
 			ssgChainPos = ssgChainPos.rotatePitch((float) Math.toRadians(-(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks)));
 			ssgChainPos = ssgChainPos.rotateYaw((float) Math.toRadians(-(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks)));
 
-			ssgChainPos = ssgChainPos.addVector(0, entity.getEyeHeight(), 0);
+			ssgChainPos = ssgChainPos.add(0, entity.getEyeHeight(), 0);
 			
 			double d0 = e.lastTickPosX + (e.posX - e.lastTickPosX) * (double) partialTicks;
 			double d1 = e.lastTickPosY + (e.posY - e.lastTickPosY) * (double) partialTicks;
@@ -1329,7 +1340,7 @@ public class ModEventHandlerClient {
 			GL11.glRotated(-pitch + 90, 0, 0, 1);
 			GL11.glScaled(0.125, 0.25, 0.125);
 			
-			double len = MathHelper.clamp(tester.lengthVector()*2, 0, 40);
+			double len = MathHelper.clamp(tester.length()*2, 0, 40);
 
 			RenderHelper.bindTexture(ResourceManager.universal);
 			GlStateManager.enableLighting();
@@ -1361,7 +1372,7 @@ public class ModEventHandlerClient {
 		
 		Vec3 vec = Vec3.createVectorHelper(x - d3, y - d4, z - d5);
 		
-		if(vec.lengthVector() < dist) {
+		if(vec.length() < dist) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(vec.xCoord, vec.yCoord, vec.zCoord);
 			
@@ -1550,7 +1561,7 @@ public class ModEventHandlerClient {
 				start = start.rotatePitch((float) Math.toRadians(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks)));
 				start = start.rotateYaw((float) Math.toRadians(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks)));
 
-				start = start.addVector(0, player.getEyeHeight(), 0);
+				start = start.add(0, player.getEyeHeight(), 0);
 				GL11.glTranslated(start.x, start.y, start.z);
 				BeamPronter.gluonBeam(new Vec3(0, 0, 0), new Vec3(hitPos.subtract(pos).subtract(start.subtract(0, player.getEyeHeight(), 0))), 0.4F);
 				GL11.glPopMatrix();
@@ -1800,7 +1811,7 @@ public class ModEventHandlerClient {
 					BlenderAnimation banim = ((BlenderAnimation)animation);
 					//duration = (int) Math.ceil(banim.wrapper.anim.length * (1F/Math.abs(banim.wrapper.speedScale)));
 					EnumHand hand = i < 9 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
-					if(!Minecraft.getMinecraft().player.getHeldItem(hand).getUnlocalizedName().equals(banim.key))
+					if(!Minecraft.getMinecraft().player.getHeldItem(hand).getTranslationKey().equals(banim.key))
 						HbmAnimations.hotbar[i] = null;
 					if(animation.animation != null){
 						if(time > animation.animation.getDuration()){
@@ -2154,7 +2165,7 @@ public class ModEventHandlerClient {
 			list.add(TextFormatting.GREEN + "[" + I18nUtil.resolveKey("trait.radioactive") + "]");
 			float stackRad = activationRads / stack.getCount();
 			list.add(TextFormatting.YELLOW + (Library.roundFloat(ItemHazardModule.getNewValue(stackRad), 3) + ItemHazardModule.getSuffix(stackRad) + " " + I18nUtil.resolveKey("desc.rads")));
-			
+
 			if(stack.getCount() > 1) {
 				list.add(TextFormatting.YELLOW + (I18nUtil.resolveKey("desc.stack") + " " + Library.roundFloat(ItemHazardModule.getNewValue(activationRads), 3) + ItemHazardModule.getSuffix(activationRads) + " " + I18nUtil.resolveKey("desc.rads")));
 			}
@@ -2165,6 +2176,9 @@ public class ModEventHandlerClient {
 			if(stack.getTagCompound().getBoolean("ntmContagion"))
 				list.add("§4§l[" + I18nUtil.resolveKey("trait.mkuinfected") + "§4§l]");
 		}
+
+				//HAZARD
+		HazardSystem.addFullTooltip(stack, event.getEntityPlayer(), list);
 	}
 	
 	private static final ResourceLocation poster = new ResourceLocation(RefStrings.MODID + ":textures/models/misc/poster.png");

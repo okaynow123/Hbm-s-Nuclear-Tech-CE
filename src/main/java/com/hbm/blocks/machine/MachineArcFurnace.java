@@ -37,7 +37,7 @@ public class MachineArcFurnace extends BlockContainer {
 
 	public MachineArcFurnace(Material materialIn, boolean active, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		isActive = active;
 
@@ -220,7 +220,7 @@ public class MachineArcFurnace extends BlockContainer {
 	public IBlockState getStateFromMeta(int meta) {
 		boolean rods = (meta & 1) == 1 ? true : false;
 		meta = meta >> 1;
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
 		if(enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;

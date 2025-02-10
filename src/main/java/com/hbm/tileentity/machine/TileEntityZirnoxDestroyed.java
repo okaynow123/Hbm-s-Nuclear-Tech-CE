@@ -66,7 +66,7 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
         for(EntityLivingBase e : entities) {
 
             Vec3 vec = Vec3.createVectorHelper(e.posX - (x + 0.5), (e.posY + e.getEyeHeight()) - (y + 0.5), e.posZ - (z + 0.5));
-            double len = vec.lengthVector();
+            double len = vec.length();
             vec = vec.normalize();
 
             float res = 0;
@@ -77,7 +77,7 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
                 int iy = (int)Math.floor(y + 0.5 + vec.yCoord * i);
                 int iz = (int)Math.floor(z + 0.5 + vec.zCoord * i);
 
-                res += world.getBlockState(new BlockPos(ix, iy, iz)).getPlayerRelativeBlockHardness(null, world, pos);
+                res += world.getBlockState(new BlockPos(ix, iy, iz)).getBlockHardness( world, pos); //Norwood: getPlayerRelativeBlockHardness crashes the game when player is null, why would you ever do that?
             }
 
             if(res < 1)

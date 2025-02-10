@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemClip extends Item {
 
 	public ItemClip(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setMaxDamage(1);
 		this.setMaxStackSize(32);

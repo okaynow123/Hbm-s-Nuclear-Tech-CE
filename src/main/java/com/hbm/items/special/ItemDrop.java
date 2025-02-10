@@ -33,7 +33,7 @@ import java.util.List;
 public class ItemDrop extends Item {
 
 	public ItemDrop(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModItems.ALL_ITEMS.add(this);

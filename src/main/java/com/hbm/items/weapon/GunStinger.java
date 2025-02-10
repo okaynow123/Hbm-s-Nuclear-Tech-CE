@@ -30,7 +30,7 @@ import java.util.List;
 public class GunStinger extends Item {
 
 	public GunStinger(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.maxStackSize = 1;
         if(this == ModItems.gun_stinger)

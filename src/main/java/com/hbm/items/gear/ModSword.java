@@ -13,7 +13,7 @@ public class ModSword extends ItemSword {
 
 	public ModSword(ToolMaterial t, String s){
 		super(t);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		ModItems.ALL_ITEMS.add(this);

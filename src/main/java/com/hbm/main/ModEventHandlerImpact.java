@@ -44,69 +44,55 @@ public class ModEventHandlerImpact {
 	
 	@SubscribeEvent
 	public void worldTick(TickEvent.WorldTickEvent event) {
+		if (event.world == null || event.world.isRemote || event.phase != TickEvent.Phase.START) {
+			return;
+		}
 
-		if(event.world != null && !event.world.isRemote && event.phase == TickEvent.Phase.START) {
-			float settle = 1F / 14400000F; 	// 600 days to completely clear all dust.
-			float cool = 1F / 24000F;		// One MC day between initial impact and total darkness.
-			
-			ImpactWorldHandler.impactEffects(event.world);
-			TomSaveData data = TomSaveData.forWorld(event.world);
-			
-			if(data.dust > 0 && data.fire == 0) {
-				data.dust = Math.max(0, data.dust - settle);
-				data.markDirty();
-			}
-			
-			if(data.fire > 0) {
-				data.fire = Math.max(0, (data.fire - cool));
-				data.dust = Math.min(1, (data.dust + cool));
-				data.markDirty();
-			}
-			
-			if(data.time > 0) {
-				data.time--;
-				if(data.time<=2400)
-				{
-					List<EntityPlayer> entities = event.world.playerEntities;
-					for(Iterator<EntityPlayer> en = new ArrayList<>(entities).iterator() ; en.hasNext();) {
-						EntityPlayer e = en.next();
-						Random rand = new Random();
-						if(rand.nextInt(100)==0)
-						{
-							BossSpawnHandler.spawnMeteorAtPlayer(e, false);
-						}	
+		float settle = 1F / 14400000F;  // 600 days to clear all dust
+		float cool = 1F / 24000F;       // One MC day for fire duration
+
+		ImpactWorldHandler.impactEffects(event.world);
+		TomSaveData data = TomSaveData.forWorld(event.world);
+
+		if (data.fire > 0) {
+			data.fire = Math.max(0, data.fire - cool);
+			data.dust = Math.min(1, data.dust + cool);
+			data.markDirty();
+		} else if (data.dust > 0) {
+			data.dust = Math.max(0, data.dust - settle);
+			data.markDirty();
+		}
+
+		if (data.time > 0) {
+			data.time--;
+			if (data.time <= 2400) {
+				for (EntityPlayer player : event.world.playerEntities) {
+					if (rand.nextInt(100) == 0) {
+						BossSpawnHandler.spawnMeteorAtPlayer(player, false);
 					}
 				}
-				if(data.time==data.dtime)
-				{
-					EntityTom tom = new EntityTom(event.world);
-					tom.setPosition(data.x + 0.5, 600, data.z + 0.5);
-					event.world.spawnEntity(tom);
-					IChunkProvider provider = event.world.getChunkProvider();
-					provider.provideChunk(data.x >> 4, data.z >> 4);
-				}
-				data.markDirty();
 			}
-			
-			if(!event.world.loadedEntityList.isEmpty()) {
-				
-				List<Object> oList = new ArrayList<Object>();
-				oList.addAll(event.world.loadedEntityList);
-				
-				for(Object e : oList) {
-					if(e instanceof EntityLivingBase) {
-						EntityLivingBase entity = (EntityLivingBase) e;
-						
-						if(entity.world.provider.getDimension() == 0 && data.fire > 0 && data.dust < 0.75f &&
-								event.world.getLightFor(EnumSkyBlock.SKY, entity.getPosition()) > 7) {
-							
-							entity.setFire(5);
-							entity.attackEntityFrom(DamageSource.ON_FIRE, 2);
-						}
-					}
+			if (data.time == data.dtime) {
+				EntityTom tom = new EntityTom(event.world);
+				tom.setPosition(data.x + 0.5, 600, data.z + 0.5);
+				event.world.spawnEntity(tom);
+				event.world.getChunkProvider().provideChunk(data.x >> 4, data.z >> 4);
+			}
+			data.markDirty();
+		}
+
+		if (data.fire > 0 && data.dust < 0.75f) {
+			int dimension = event.world.provider.getDimension();
+
+			List<EntityLivingBase> entities = event.world.getEntities(EntityLivingBase.class, input -> input != null && input.isEntityAlive());
+			for (EntityLivingBase entity : entities) {
+				if (dimension == 0 && event.world.getLightFor(EnumSkyBlock.SKY, entity.getPosition()) > 7) {
+					entity.setFire(5);
+					entity.attackEntityFrom(DamageSource.ON_FIRE, 2);
 				}
 			}
 		}
+
 	}
 
 	//data is always pooled out of the perWorld save data so resetting values isn't needed
@@ -265,7 +251,7 @@ public class ModEventHandlerImpact {
 		TomSaveData data = TomSaveData.forWorld(event.getWorld());
 		
 		if(data.impact) {
-			Chunk chunk = event.getWorld().getChunkFromChunkCoords(event.getChunkX(), event.getChunkZ());
+			Chunk chunk = event.getWorld().getChunk(event.getChunkX(), event.getChunkZ());
 			
 			for(ExtendedBlockStorage storage : chunk.getBlockStorageArray()) {
 				

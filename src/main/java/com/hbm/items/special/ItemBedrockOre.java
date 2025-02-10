@@ -27,7 +27,7 @@ import java.util.List;
 public class ItemBedrockOre extends Item {
 
 	public ItemBedrockOre(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(MainRegistry.controlTab);
@@ -57,7 +57,7 @@ public class ItemBedrockOre extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
-		return I18n.format(this.getUnlocalizedName() + ".name", BedrockOreRegistry.getOreName(getOreTag(stack)));
+		return I18n.format(this.getTranslationKey() + ".name", BedrockOreRegistry.getOreName(getOreTag(stack)));
 	}
 
 	public static int getColor(ItemStack stack){

@@ -47,7 +47,7 @@ public class BlockSpinnyLight extends BlockContainer {
 
 	public BlockSpinnyLight(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -165,7 +165,7 @@ public class BlockSpinnyLight extends BlockContainer {
             world.setBlockToAir(pos);
             return;
         }
-		if(world.isBlockIndirectlyGettingPowered(pos) > 0) {
+		if(world.getStrongPower(pos) > 0) {
 			if(state.getValue(POWERED) == false){
 				TileEntity te = world.getTileEntity(pos);
 				world.setBlockState(pos, state.withProperty(POWERED, true));
@@ -192,7 +192,7 @@ public class BlockSpinnyLight extends BlockContainer {
 	}
 	
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 

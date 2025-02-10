@@ -34,7 +34,7 @@ public class MachineRtgFurnace extends BlockContainer {
 	
 	public MachineRtgFurnace(boolean active, String s) {
 		super(Material.IRON);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		isActive = active;
 		
@@ -169,7 +169,7 @@ public class MachineRtgFurnace extends BlockContainer {
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {

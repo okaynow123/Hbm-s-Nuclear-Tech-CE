@@ -29,14 +29,14 @@ public class BarbedWire extends Block {
 
     public BarbedWire(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity ent) {
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity ent) {
         ent.setInWeb();
 
         if (this == ModBlocks.barbed_wire) {
@@ -83,7 +83,7 @@ public class BarbedWire extends Block {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -134,7 +134,7 @@ public class BarbedWire extends Block {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
             enumfacing = EnumFacing.NORTH;

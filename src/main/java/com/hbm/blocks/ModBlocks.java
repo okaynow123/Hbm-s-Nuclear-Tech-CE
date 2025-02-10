@@ -398,7 +398,7 @@ public class ModBlocks {
 	public static final Block ore_gas = new BlockNTMOre("ore_gas", 3).setCreativeTab(MainRegistry.blockTab).setBlockUnbreakable().setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_gas_empty = new BlockBase(Material.ROCK, "ore_gas_empty").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	
-	//Deco blocks
+	//Deco blocks TODO: Add CTM
 	public static final Block deco_titanium = new BlockBase(Material.IRON, "deco_titanium").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block deco_red_copper = new BlockBase(Material.IRON, "deco_red_copper").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block deco_tungsten = new BlockBase(Material.IRON, "deco_tungsten").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);

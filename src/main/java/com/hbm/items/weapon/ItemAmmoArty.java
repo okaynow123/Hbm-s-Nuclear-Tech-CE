@@ -1,6 +1,7 @@
 package com.hbm.items.weapon;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.entity.effect.EntityMist;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityArtilleryShell;
@@ -8,6 +9,8 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
+import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
@@ -15,6 +18,7 @@ import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.particle.SpentCasing;
 import com.hbm.potion.HbmPotion;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -31,6 +35,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,7 +48,7 @@ import java.util.Random;
 public class ItemAmmoArty extends Item {
 
     public static Random rand = new Random();
-    public static ArtilleryShell[] itemTypes =	new ArtilleryShell[ /* >>> */ 10 /* <<< */ ];
+    public static ArtilleryShell[] itemTypes =	new ArtilleryShell[ /* >>> */ 12 /* <<< */ ];
     /* item types */
     public final int NORMAL = 0;
     public final int CLASSIC = 1;
@@ -54,9 +60,12 @@ public class ItemAmmoArty extends Item {
     public final int PHOSPHORUS_MULTI = 7;
     public final int CARGO = 8;
     public final int CHLORINE = 9;
+    public final int PHOSGENE = 10;
+    public final int MUSTARD = 11;
+
 
     public ItemAmmoArty(String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setHasSubtypes(true);
         this.setCreativeTab(MainRegistry.weaponTab);
@@ -74,6 +83,33 @@ public class ItemAmmoArty extends Item {
             }
         }
     }
+
+    public void registerModels() {
+        for (int i = 0; i <= 11; i++) {
+            ModelLoader.setCustomModelResourceLocation(this, i,
+                    new ModelResourceLocation("hbm:ammo_arty_" + getShellName(i), "inventory"));
+        }
+    }
+
+    private String getShellName(int meta) {
+        switch (meta) {
+            case 0: return "normal";
+            case 1: return "classic";
+            case 2: return "he";
+            case 3: return "mini_nuke";
+            case 4: return "nuke";
+            case 5: return "phosphorus";
+            case 6: return "mini_nuke_multi";
+            case 7: return "phosphorus_multi";
+            case 8: return "cargo";
+            case 9: return "chlorine";
+            case 10: return "phosgene";
+            case 11: return "mustard_gas";
+            default: return "normal";
+        }
+    }
+
+
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
@@ -112,9 +148,20 @@ public class ItemAmmoArty extends Item {
                 list.add(TextFormatting.RED + "Splits x5");
                 break;
             case NUKE:
-                list.add(TextFormatting.RED + "☠");
-                list.add(TextFormatting.RED + "(that is the best skull and crossbones");
-                list.add(TextFormatting.RED + "minecraft's unicode has to offer)");
+                  list.add(TextFormatting.RED + "Billions must die");
+//                list.add(TextFormatting.RED + "☠");
+//                list.add(TextFormatting.RED + "(that is the best skull and crossbones");
+//                list.add(TextFormatting.RED + "minecraft's unicode has to offer)");
+                break;
+            case CHLORINE:
+                list.add(TextFormatting.RED + "Releases chlorine gas");
+                list.add(TextFormatting.YELLOW + "Low area of effect, extremely toxic");
+                list.add(TextFormatting.BLUE + "Does not destroy blocks");
+                break;
+            case MUSTARD:
+                list.add(TextFormatting.RED + "Releases mustard gas");
+                list.add(TextFormatting.YELLOW + "High area of effect, toxic");
+                list.add(TextFormatting.BLUE + "Does not destroy blocks");
                 break;
             case CARGO:
                 NBTTagCompound nbt = stack.getTagCompound();
@@ -134,7 +181,7 @@ public class ItemAmmoArty extends Item {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         return "item." + itemTypes[Math.abs(stack.getItemDamage()) % itemTypes.length].name;
     }
 
@@ -263,8 +310,57 @@ public class ItemAmmoArty extends Item {
             public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
                 shell.killAndClear();
                 Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
+                shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 0F, false);
+                EntityMist mist = new EntityMist(shell.world);
+                mist.setType(Fluids.CHLORINE);
+                mist.setPosition(mop.hitVec.x - vec.x , mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z);
+                mist.setArea(15, 7.5F);
+                shell.world.spawnEntity(mist);
+                PollutionHandler.incrementPollution(shell.world, mop.getBlockPos(), PollutionHandler.PollutionType.HEAVYMETAL, 5F);
+            }
+        };
+        this.itemTypes[PHOSGENE] = new ArtilleryShell("ammo_arty_phosgene", SpentCasing.COLOR_CASE_16INCH_NUKE) {
+            public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
+                shell.killAndClear();
+                Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
                 shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 5F, false);
-                ExplosionChaos.spawnChlorine(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y - 3, mop.hitVec.z - vec.z, 15, 1.25, 0);
+                for(int i = 0; i < 3; i++) {
+                    EntityMist mist = new EntityMist(shell.world);
+                    mist.setType(Fluids.PHOSGENE);
+                    double x = mop.hitVec.x - vec.x;
+                    double z = mop.hitVec.z - vec.z;
+                    if(i > 0) {
+                        x += rand.nextGaussian() * 15;
+                        z += rand.nextGaussian() * 15;
+                    }
+                    mist.setPosition(x, mop.hitVec.y - vec.y - 5, z);
+                    mist.setArea(15, 10);
+                    shell.world.spawnEntity(mist);
+                }
+                PollutionHandler.incrementPollution(shell.world, mop.getBlockPos(), PollutionHandler.PollutionType.HEAVYMETAL, 10F);
+                PollutionHandler.incrementPollution(shell.world, mop.getBlockPos(), PollutionHandler.PollutionType.POISON, 15F);
+            }
+        };
+        this.itemTypes[MUSTARD] = new ArtilleryShell("ammo_arty_mustard_gas", SpentCasing.COLOR_CASE_16INCH_NUKE) {
+            public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
+                shell.killAndClear();
+                Vec3d vec =  new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
+                shell.world.createExplosion(shell, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, 5F, false);
+                for(int i = 0; i < 5; i++) {
+                    EntityMist mist = new EntityMist(shell.world);
+                    mist.setType(Fluids.MUSTARDGAS);
+                    double x = mop.hitVec.x - vec.x;
+                    double z = mop.hitVec.z - vec.z;
+                    if(i > 0) {
+                        x += rand.nextGaussian() * 25;
+                        z += rand.nextGaussian() * 25;
+                    }
+                    mist.setPosition(x, mop.hitVec.y - vec.y - 5, z);
+                    mist.setArea(20, 10);
+                    shell.world.spawnEntity(mist);
+                }
+                PollutionHandler.incrementPollution(shell.world, mop.getBlockPos(), PollutionHandler.PollutionType.HEAVYMETAL, 15F);
+                PollutionHandler.incrementPollution(shell.world, mop.getBlockPos(), PollutionHandler.PollutionType.POISON, 30F);
             }
         };
 

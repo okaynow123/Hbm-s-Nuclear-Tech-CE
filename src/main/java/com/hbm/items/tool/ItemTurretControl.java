@@ -34,7 +34,7 @@ import java.util.List;
 public class ItemTurretControl extends Item {
 
 	public ItemTurretControl(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.weaponTab);
 

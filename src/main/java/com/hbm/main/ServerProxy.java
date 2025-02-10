@@ -1,6 +1,8 @@
 package com.hbm.main;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -82,5 +85,12 @@ public class ServerProxy
 	
 	public boolean isVanished(Entity e) {
 		return false;
+	}
+
+	public List<ItemStack> getSubItems(ItemStack stack) {
+
+		List<ItemStack> list = new ArrayList();
+		list.add(stack);
+		return list;
 	}
 }

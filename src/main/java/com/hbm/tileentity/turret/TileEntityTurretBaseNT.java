@@ -5,6 +5,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.entity.missile.EntityMissileCustom;
+import com.hbm.entity.projectile.EntityArtilleryShell;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
@@ -456,8 +457,15 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		
 		Vec3d pos = this.getTurretPos();
 		double range = this.getDecetorRange();
-		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(range, range, range));
-		
+		List<Entity> allEntities = world.getEntitiesWithinAABB(Entity.class,
+				new AxisAlignedBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).grow(range, range, range));
+
+		List<Entity> entities = new ArrayList<>(allEntities.size()); // Pre-size the list to avoid resizes
+		for (Entity e : allEntities) {
+			if (!(e instanceof EntityArtilleryShell)) {
+				entities.add(e);
+			}
+		}
 		Entity target = null;
 		double closest = range;
 		
@@ -466,7 +474,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			Vec3d ent = this.getEntityPos(entity);
 			Vec3d delta = new Vec3d(ent.x - pos.x, ent.y - pos.y, ent.z - pos.z);
 			
-			double dist = delta.lengthVector();
+			double dist = delta.length();
 			
 			//check if it's in range
 			if(dist > range)
@@ -509,7 +517,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		Vec3d pos = this.getTurretPos();
 		Vec3d delta = new Vec3d(ent.x - pos.x, ent.y - pos.y, ent.z - pos.z);
 
-		double targetPitch = Math.asin(delta.y / delta.lengthVector());
+		double targetPitch = Math.asin(delta.y / delta.length());
 		double targetYaw = -Math.atan2(delta.x, delta.z);
 
 		this.turnTowardsAngle(targetPitch, targetYaw);
@@ -582,13 +590,13 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		Vec3d pos = this.getTurretPos();
 		Vec3d ent = this.getEntityPos(e);
 		Vec3d delta = new Vec3d(ent.x - pos.x, ent.y - pos.y, ent.z - pos.z);
-		double length = delta.lengthVector();
+		double length = delta.length();
 		
 		if(length < this.getDecetorGrace() || length > this.getDecetorRange() * 1.1) //the latter statement is only relevant for entities that have already been detected
 			return false;
 		
 		delta = delta.normalize();
-		double pitch = Math.asin(delta.y / delta.lengthVector());
+		double pitch = Math.asin(delta.y / delta.length());
 		double pitchDeg = Math.toDegrees(pitch);
 		
 		//check if the entity is within swivel range
@@ -747,7 +755,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	 * @return
 	 */
 	public Vec3d getTurretPos() {
-		Vec3d offset = getHorizontalOffset();
+		Vec3d offset = byHorizontalIndexOffset();
 		return new Vec3d(pos.getX() + offset.x, pos.getY() + getHeightOffset(), pos.getZ() + offset.z);
 	}
 	
@@ -755,7 +763,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	 * The XZ offset for a standard 2x2 turret base
 	 * @return
 	 */
-	public Vec3d getHorizontalOffset() {
+	public Vec3d byHorizontalIndexOffset() {
 		int meta = this.getBlockMetadata() - BlockDummyable.offset;
 
 		if(meta == 2)

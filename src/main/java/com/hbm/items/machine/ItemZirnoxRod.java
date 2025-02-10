@@ -93,9 +93,9 @@ public class ItemZirnoxRod extends ItemEnumMulti {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         Enum num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
-        return super.getUnlocalizedName() + "_" + num.name().toLowerCase(Locale.US);
+        return super.getTranslationKey() + "_" + num.name().toLowerCase(Locale.US);
     }
 
     public static enum EnumZirnoxType {

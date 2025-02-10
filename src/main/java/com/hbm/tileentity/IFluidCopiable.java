@@ -63,7 +63,7 @@ public interface IFluidCopiable extends ICopiable {
         int[] ids = getFluidIDToCopy();
         String[] names = new String[ids.length];
         for(int i = 0; i < ids.length; i++) {
-            names[i] = Fluids.fromID(ids[i]).getUnlocalizedName();
+            names[i] = Fluids.fromID(ids[i]).getTranslationKey();
         }
         return names;
     }

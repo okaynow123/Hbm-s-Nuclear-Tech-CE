@@ -105,7 +105,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 				this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
 			
-			if(power >= 100 && !(world.isBlockIndirectlyGettingPowered(pos) > 0)) {
+			if(power >= 100 && !(world.getStrongPower(pos) > 0)) {
 
 				int speed = 25;
 				

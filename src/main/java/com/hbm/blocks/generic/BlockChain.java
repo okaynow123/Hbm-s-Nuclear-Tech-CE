@@ -25,7 +25,7 @@ public class BlockChain extends Block {
 
     public BlockChain(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setDefaultState(this.blockState.getBaseState().withProperty(WALL, false).withProperty(END, false).withProperty(FACING, EnumFacing.NORTH));
 
@@ -169,7 +169,7 @@ public class BlockChain extends Block {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 

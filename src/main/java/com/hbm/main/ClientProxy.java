@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.hbm.blocks.generic.*;
+import com.hbm.entity.effect.*;
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.missile.*;
 import com.hbm.entity.projectile.*;
@@ -18,6 +20,8 @@ import com.hbm.items.IAnimatedItem;
 import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.particle.*;
 import com.hbm.particle.helper.ParticleCreators;
+import com.hbm.particle_instanced.*;
+import com.hbm.render.entity.effect.*;
 import com.hbm.render.entity.item.RenderMovingPackage;
 import com.hbm.render.entity.missile.*;
 import com.hbm.render.entity.projectile.*;
@@ -50,18 +54,6 @@ import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.effect.EntityBlackHole;
-import com.hbm.entity.effect.EntityCloudFleija;
-import com.hbm.entity.effect.EntityCloudFleijaRainbow;
-import com.hbm.entity.effect.EntityCloudSolinium;
-import com.hbm.entity.effect.EntityCloudTom;
-import com.hbm.entity.effect.EntityEMPBlast;
-import com.hbm.entity.effect.EntityFalloutRain;
-import com.hbm.entity.effect.EntityNukeTorex;
-import com.hbm.entity.effect.EntityQuasar;
-import com.hbm.entity.effect.EntityRagingVortex;
-import com.hbm.entity.effect.EntitySpear;
-import com.hbm.entity.effect.EntityVortex;
 import com.hbm.entity.grenade.EntityGrenadeASchrab;
 import com.hbm.entity.grenade.EntityGrenadeBlackHole;
 import com.hbm.entity.grenade.EntityGrenadeBreach;
@@ -105,7 +97,6 @@ import com.hbm.entity.grenade.EntityGrenadeSolinium;
 import com.hbm.entity.grenade.EntityGrenadeZOMG;
 import com.hbm.entity.item.EntityFireworks;
 import com.hbm.entity.item.EntityMovingItem;
-import com.hbm.entity.effect.EntityFalloutUnderGround;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.entity.logic.EntityDeathBlast;
 import com.hbm.entity.logic.EntityEMP;
@@ -163,10 +154,6 @@ import com.hbm.particle.bullet_hit.ParticleBloodParticle;
 import com.hbm.particle.bullet_hit.ParticleBulletImpact;
 import com.hbm.particle.bullet_hit.ParticleHitDebris;
 import com.hbm.particle.bullet_hit.ParticleSmokeAnim;
-import com.hbm.particle_instanced.InstancedParticleRenderer;
-import com.hbm.particle_instanced.ParticleContrailInstanced;
-import com.hbm.particle_instanced.ParticleExSmokeInstanced;
-import com.hbm.particle_instanced.ParticleRocketFlameInstanced;
 import com.hbm.render.GLCompat;
 import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -229,10 +216,6 @@ import com.hbm.render.entity.RenderWormBody;
 import com.hbm.render.entity.RenderWormHead;
 import com.hbm.render.entity.SpillRenderer;
 import com.hbm.render.entity.TSmokeRenderer;
-import com.hbm.render.entity.effect.RenderCloudTom;
-import com.hbm.render.entity.effect.RenderQuasar;
-import com.hbm.render.entity.effect.RenderTorex;
-import com.hbm.render.entity.effect.RenderSpear;
 import com.hbm.render.entity.item.RenderMovingItem;
 import com.hbm.render.entity.mob.RenderBalls;
 import com.hbm.render.entity.mob.RenderGlowingOne;
@@ -512,7 +495,7 @@ public class ClientProxy extends ServerProxy {
 	
 	@Override
 	public File getDataDir() {
-		return Minecraft.getMinecraft().mcDataDir;
+		return Minecraft.getMinecraft().gameDir;
 	}
 	
 	@Override
@@ -895,13 +878,16 @@ public class ClientProxy extends ServerProxy {
 	    RenderingRegistry.registerEntityRenderingHandler(EntityRADBeast.class, RenderRADBeast.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityFireworks.class, RenderShrapnel.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityRBMKDebris.class, RenderRBMKDebris.FACTORY);
+		RenderingRegistry.registerEntityRenderingHandler(EntityZirnoxDebris.class, RenderZirnoxDebris.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityArtilleryShell.class, RenderArtilleryShell.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntitySawblade.class, RenderSawblade.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntitySpear.class, RenderSpear.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityMissileTier4.EntityMissileVolcano.class, RenderMissileNuclear.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityUFO.class, RenderUFO.FACTORY);
 	    RenderingRegistry.registerEntityRenderingHandler(EntityQuasar.class, RenderQuasar.FACTORY);
-		
+		RenderingRegistry.registerEntityRenderingHandler(EntityMist.class, RenderMist.FACTORY);
+
+
 		ModelLoader.setCustomStateMapper(ModBlocks.toxic_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
 		ModelLoader.setCustomStateMapper(ModBlocks.radwater_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
 		ModelLoader.setCustomStateMapper(ModBlocks.door_bunker, new StateMap.Builder().ignore(BlockModDoor.POWERED).build());
@@ -1147,6 +1133,7 @@ public class ClientProxy extends ServerProxy {
 		if(world == null)
 			return;
 		EntityPlayer player = Minecraft.getMinecraft().player;
+		int particleSetting = Minecraft.getMinecraft().gameSettings.particleSetting;
 		Random rand = world.rand;
 		String type = data.getString("type");
 		double x = data.getDouble("posX");
@@ -1160,7 +1147,7 @@ public class ClientProxy extends ServerProxy {
 
 		if("missileContrail".equals(type)) {
 
-			if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).lengthVector() > 350) return;
+			if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350) return;
 
 			float scale = data.hasKey("scale") ? data.getFloat("scale") : 1F;
 			double mX = data.getDouble("moX");
@@ -1313,7 +1300,7 @@ public class ClientProxy extends ServerProxy {
 			String mode = data.getString("mode");
 			
 			if("soyuz".equals(mode)) {
-				if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).lengthVector() > 350)
+				if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
 					return;
 				
 				int count = Math.max(1, data.getInteger("count"));
@@ -1335,7 +1322,7 @@ public class ClientProxy extends ServerProxy {
 			
 			if("meteor".equals(mode)) {
 				
-				if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).lengthVector() > 350)
+				if(Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
 					return;
 	
 				int count = Math.max(1, data.getInteger("count"));
@@ -1661,7 +1648,7 @@ public class ClientProxy extends ServerProxy {
 					newDirection.rotateAroundX((float) Math.toRadians(angles.yCoord-90));
 					newDirection.rotateAroundY((float) Math.toRadians(angles.xCoord));
 					//Multiply it by the original vector's length to ensure it has the right magnitude
-					newDirection = newDirection.mult((float) direction.lengthVector()+rand.nextFloat()*velocityRand);
+					newDirection = newDirection.mult((float) direction.length()+rand.nextFloat()*velocityRand);
 					Particle fx = new ParticleSpark(world, x, y, z, length+rand.nextFloat()*randLength, width, lifetime + rand.nextInt(randLifeTime), gravity).color(r, g, b, a).motion((float)newDirection.xCoord, (float)newDirection.yCoord, (float)newDirection.zCoord);
 					Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 				}
@@ -1701,13 +1688,23 @@ public class ClientProxy extends ServerProxy {
 		}
 		
 		if("tower".equals(type)) {
-			ParticleCoolingTower fx = new ParticleCoolingTower(world, x, y, z, data.getFloat("base"));
-			fx.setLift(data.getFloat("lift"));
-			fx.setBaseScale(data.getFloat("base"));
-			fx.setMaxScale(data.getFloat("max"));
-			fx.setLife(data.getInteger("life"));
-			Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-			return;
+			if(particleSetting == 0 || (particleSetting == 1 && rand.nextBoolean())) {
+				ParticleCoolingTower fx = new ParticleCoolingTower(world, x, y, z);
+				fx.setLift(data.getFloat("lift"));
+				fx.setBaseScale(data.getFloat("base"));
+				fx.setMaxScale(data.getFloat("max"));
+				fx.setLife(data.getInteger("life") / (particleSetting + 1));
+				if(data.hasKey("noWind")) fx.noWind();
+				if(data.hasKey("strafe")) fx.setStrafe(data.getFloat("strafe"));
+				if(data.hasKey("alpha")) fx.alphaMod(data.getFloat("alpha"));
+
+				if(data.hasKey("color")) {
+					Color color = new Color(data.getInteger("color"));
+					fx.setRBGColorF(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+				}
+
+				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+			}
 		}
 		
 		if("jetpack".equals(type)) {
@@ -1921,7 +1918,7 @@ public class ClientProxy extends ServerProxy {
 			String mode = data.getString("mode");
 			if("crucible".equals(name)){
 				if("equip".equals(mode)){
-					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), 1, ResourceManager.crucible_equip, new EndResult(EndType.STAY));
+					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), 1, ResourceManager.crucible_equip, new EndResult(EndType.STAY));
 				}
 				if("crucible".equals(mode)) {
 					BusAnimation animation = new BusAnimation()
@@ -1930,7 +1927,7 @@ public class ClientProxy extends ServerProxy {
 									.addKeyframe(new BusAnimationKeyframe(90, 0, 1, 800))
 									.addKeyframe(new BusAnimationKeyframe(0, 0, 1, 50)));
 
-					HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+					HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 				}
 				if("swing".equals(mode)){
 					BusAnimation animation = new BusAnimation()
@@ -1941,7 +1938,7 @@ public class ClientProxy extends ServerProxy {
 						HbmAnimations.hotbar[slot].animation = animation;
 						HbmAnimations.hotbar[slot].startMillis = System.currentTimeMillis();
 					} else {
-						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 					}
 				}
 				if("cSwing".equals(mode)) {
@@ -1966,13 +1963,13 @@ public class ClientProxy extends ServerProxy {
 							HbmAnimations.hotbar[slot].animation = animation;
 							HbmAnimations.hotbar[slot].startMillis = System.currentTimeMillis();
 						} else {
-							HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+							HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 						}
 					}
 				}
 			} else if("hs_sword".equals(name)){
 				if("equip".equals(mode)){
-					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), 1, ResourceManager.hs_sword_equip, new EndResult(EndType.STAY));
+					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), 1, ResourceManager.hs_sword_equip, new EndResult(EndType.STAY));
 				} else if("swing".equals(mode)){
 					BusAnimation animation = new BusAnimation()
 							.addBus("SWING", new BusAnimationSequence()
@@ -1982,12 +1979,12 @@ public class ClientProxy extends ServerProxy {
 						HbmAnimations.hotbar[slot].animation = animation;
 						HbmAnimations.hotbar[slot].startMillis = System.currentTimeMillis();
 					} else {
-						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 					}
 				}
 			} else if("hf_sword".equals(name)){
 				if("equip".equals(mode)){
-					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), 1, ResourceManager.hf_sword_equip, new EndResult(EndType.STAY));
+					HbmAnimations.hotbar[slot] = new BlenderAnimation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), 1, ResourceManager.hf_sword_equip, new EndResult(EndType.STAY));
 				} else if("swing".equals(mode)){
 					BusAnimation animation = new BusAnimation()
 							.addBus("SWING", new BusAnimationSequence()
@@ -1997,7 +1994,7 @@ public class ClientProxy extends ServerProxy {
 						HbmAnimations.hotbar[slot].animation = animation;
 						HbmAnimations.hotbar[slot].startMillis = System.currentTimeMillis();
 					} else {
-						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), animation);
+						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), animation);
 					}
 				}
 			}
@@ -2010,7 +2007,7 @@ public class ClientProxy extends ServerProxy {
 					BusAnimation anim = item.getAnimation(data, stack);
 
 					if(anim != null) {
-						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getUnlocalizedName(), System.currentTimeMillis(), anim);
+						HbmAnimations.hotbar[slot] = new Animation(player.getHeldItem(hand).getItem().getTranslationKey(), System.currentTimeMillis(), anim);
 					}
 				}
 			}

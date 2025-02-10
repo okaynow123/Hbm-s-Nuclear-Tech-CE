@@ -19,7 +19,7 @@ import java.util.Random;
 public class BlockNTMDirt extends BlockDirt {
 
 	public BlockNTMDirt(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -39,7 +39,7 @@ public class BlockNTMDirt extends BlockDirt {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getLocalizedName() {
-		return ("" + I18n.format(Blocks.DIRT.getUnlocalizedName()) + ".name").trim();
+		return ("" + I18n.format(Blocks.DIRT.getTranslationKey()) + ".name").trim();
 	}
 
 	@Override

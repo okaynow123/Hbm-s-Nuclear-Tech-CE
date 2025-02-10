@@ -61,7 +61,7 @@ public class ItemCustomRocket extends ItemBase implements ISatChip {
 
 		if(rocket == null) return;
 
-		list.add(ChatFormatting.BOLD + "Payload: " + ChatFormatting.GRAY + I18nUtil.resolveKey(rocket.capsule.part.getUnlocalizedName() + ".name"));
+		list.add(ChatFormatting.BOLD + "Payload: " + ChatFormatting.GRAY + I18nUtil.resolveKey(rocket.capsule.part.getTranslationKey() + ".name"));
 		list.add(ChatFormatting.BOLD + "Stages: " + ChatFormatting.GRAY + rocket.stages.size());
 
 		if(hasFuel(stack)) {

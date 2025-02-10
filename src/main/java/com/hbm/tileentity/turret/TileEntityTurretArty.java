@@ -128,13 +128,12 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
     }
 
     @Override
-    protected void alignTurret() {
-
+    protected void alignTurret() { //FIXME: pitch is too high, thing keeps overshooting
         Vec3d pos = this.getTurretPos();
+        Vec3d barrel = new Vec3d(this.getBarrelLength(), 0, 0)
+                .rotatePitch((float) -this.rotationPitch)
+                .rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
 
-        Vec3d barrel = new Vec3d(this.getBarrelLength(), 0, 0);
-        barrel.rotatePitch((float) -this.rotationPitch);
-        barrel.rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
         /*
          * This is done to compensate for the barrel length, as this small deviation has a huge impact in both modes at longer ranges.
          * The consequence of this is that using the >before< angle of the barrel as an approximation can lead to problems at closer range,
@@ -154,8 +153,10 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         double v02 = v0 * v0;
         double g = 9.81 * 0.05;
         double upperLower = mode == MODE_CANNON ? -1 : 1;
-        double targetPitch = Math.atan((v02 + Math.sqrt(v02*v02 - g*(g*x*x + 2*y*v02)) * upperLower) / (g*x));
+        double targetPitch = Math.atan((v02 + Math.sqrt(v02 * v02 - g * (g * x * x + 2 * y * v02)) * upperLower) / (g * x));
 
+
+        MainRegistry.logger.info("TurretPos: " + pos + "\nBarrel: " + barrel + "\nTarget: " + tPos + "\nDelta: " + delta + "\nTargetYaw: " + targetYaw + "\nTargetPitch: " + targetPitch);
         this.turnTowardsAngle(targetPitch, targetYaw);
     }
 
@@ -205,6 +206,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         proj.setType(type.getItemDamage());
 
         if(type.getItemDamage() == 8 && type.hasTagCompound()) {
+            assert type.getTagCompound() != null;
             NBTTagCompound cargo = type.getTagCompound().getCompoundTag("cargo");
 
             if(cargo != null) {

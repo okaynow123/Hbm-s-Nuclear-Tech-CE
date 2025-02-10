@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemGuideBook extends Item {
 
 	public ItemGuideBook(String s){
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);

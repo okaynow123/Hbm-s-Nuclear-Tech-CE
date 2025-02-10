@@ -119,7 +119,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 			Vec3 vec = Vec3.createVectorHelper(e.posX - posX, e.posY - posY, e.posZ - posZ);
 
-			if(vec.lengthVector() < dist) {
+			if(vec.length() < dist) {
 				closest = e;
 			}
 		}
@@ -131,11 +131,11 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	protected void aimAtTarget() {
 
 		Vec3 delta = Vec3.createVectorHelper(tracking.posX - posX, tracking.posY - posY, tracking.posZ - posZ);
-		double intercept = delta.lengthVector() / (this.baseSpeed * this.velocity);
+		double intercept = delta.length() / (this.baseSpeed * this.velocity);
 		Vec3 predicted = Vec3.createVectorHelper(tracking.posX + (tracking.posX - tracking.lastTickPosX) * intercept, tracking.posY + (tracking.posY - tracking.lastTickPosY) * intercept, tracking.posZ + (tracking.posZ - tracking.lastTickPosZ) * intercept);
 		Vec3 motion = Vec3.createVectorHelper(predicted.xCoord - posX, predicted.yCoord - posY, predicted.zCoord - posZ).normalize();
 
-		if(delta.lengthVector() < 10 && activationTimer >= 40) {
+		if(delta.length() < 10 && activationTimer >= 40) {
 			this.setDead();
 			ExplosionLarge.explode(world, posX, posY, posZ, 15F, true, false, false);
 
@@ -241,7 +241,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return "radar.target.abm";
 	}
 

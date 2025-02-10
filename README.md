@@ -1,15 +1,15 @@
-# <u>**HBM Nuclear Tech Mod - 1.12.2 Extended Edition**</u>
+# <u>**HBM Nuclear Tech Mod - 1.12.2 Warfactory fork**</u>
 
-This is my 1.12.2 custom version of the mod
-
+This is my 1.12.2 custom version abandoned HBM 1.12.2 Extended editon by Alcater
 which is forked from the fork made by [TheOriginalGolem](https://github.com/TheOriginalGolem/Hbm-s-Nuclear-Tech-GIT)
 which is forked from the port made by [Drillgon200](https://github.com/Drillgon200/Hbm-s-Nuclear-Tech-GIT)
 which is ported from the original mod made by [HBMTheBobcat](https://github.com/HbmMods/Hbm-s-Nuclear-Tech-GIT).
 
+Goal of the project is to:
+– Prepare it for Warfactory 1.12 event 
+– Address poor quality code of the project
 
-The latest version can be found on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/hbms-nuclear-tech-mod-extended-edition) or [Modrinth](https://modrinth.com/mod/ntm-extended) or under the [Releases page](https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/releases).
-
-If you have question or suggestions you can post them on our [NTM Extended Discord](https://discord.gg/Auq95eCEtD)
+We welcome attempts at porting stuff though we do not provide support outside context of warfactory.
 
 ### **Want to contribute?**
 
@@ -22,17 +22,15 @@ You can see all our NTM-related plans [here.](https://github.com/users/TheSlize/
 
 ### **Build Guide:**
 
-Download the repository, then open a shell prompt in that folder, then type the following:
+Project
 
-`.\gradlew build`
-
-Press enter.
 
 Now just wait for the build to finish and the new Jar file will be in `Hbm-s-Nuclear-Tech-GIT\build\libs`.
 
 
 #### Discords:
 
+[Warfactory Offical](https://discord.gg/VqVYYWEGrE)
 Alcater#2644
 Golem#9568
 Drillgon200#0288

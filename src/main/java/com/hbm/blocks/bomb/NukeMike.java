@@ -36,7 +36,7 @@ public class NukeMike extends BlockContainer implements IBomb {
 
 	public NukeMike(Material materialIn, String s) {
 		super(materialIn);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -76,16 +76,16 @@ public class NukeMike extends BlockContainer implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntityNukeMike entity = (TileEntityNukeMike) worldIn.getTileEntity(pos);
-		if(worldIn.isBlockIndirectlyGettingPowered(pos) > 0 && !worldIn.isRemote) {
+		if(worldIn.getStrongPower(pos) > 0 && !worldIn.isRemote) {
 			if(entity.isReady() && !entity.isFilled()) {
-				this.onBlockDestroyedByPlayer(worldIn, pos, state);
+				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
 				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
 			}
 
 			if(entity.isFilled()) {
-				this.onBlockDestroyedByPlayer(worldIn, pos, state);
+				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
 				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
@@ -111,7 +111,7 @@ public class NukeMike extends BlockContainer implements IBomb {
 		if(!world.isRemote) {
 			TileEntityNukeMike entity = (TileEntityNukeMike) world.getTileEntity(pos);
 			if (entity.isReady() && !entity.isFilled()) {
-				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
 				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
@@ -119,7 +119,7 @@ public class NukeMike extends BlockContainer implements IBomb {
 			}
 
 			if (entity.isFilled()) {
-				this.onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
 				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
@@ -174,7 +174,7 @@ public class NukeMike extends BlockContainer implements IBomb {
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {

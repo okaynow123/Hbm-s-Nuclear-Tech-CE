@@ -23,7 +23,7 @@ public interface IPersistentNBT {
         ItemStack stack = new ItemStack(b);
         NBTTagCompound data = new NBTTagCompound();
         writeNBT(data);
-        if(!data.hasNoTags())
+        if(!data.isEmpty())
             stack.setTagCompound(data);
         list.add(stack);
         return list;

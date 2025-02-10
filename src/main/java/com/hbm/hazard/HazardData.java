@@ -20,28 +20,28 @@ public class HazardData {
 	 */
 	int mutexBits = 0b0000_0000_0000_0000_0000_0000_0000_0000;
 	
-	List<HazardEntry> entries = new ArrayList<>();
+	List<HazardEntry> entries = new ArrayList();
 	
-	public HazardData addEntry(HazardTypeBase hazard) {
+	public HazardData addEntry(final HazardTypeBase hazard) {
 		return this.addEntry(hazard, 1F, false);
 	}
 	
-	public HazardData addEntry(HazardTypeBase hazard, float level) {
+	public HazardData addEntry(final HazardTypeBase hazard, final float level) {
 		return this.addEntry(hazard, level, false);
 	}
 	
-	public HazardData addEntry(HazardTypeBase hazard, float level, boolean override) {
+	public HazardData addEntry(final HazardTypeBase hazard, final float level, final boolean override) {
 		this.entries.add(new HazardEntry(hazard, level));
 		this.doesOverride = override;
 		return this;
 	}
 	
-	public HazardData addEntry(HazardEntry entry) {
+	public HazardData addEntry(final HazardEntry entry) {
 		this.entries.add(entry);
 		return this;
 	}
 	
-	public HazardData setMutex(int mutex) {
+	public HazardData setMutex(final int mutex) {
 		this.mutexBits = mutex;
 		return this;
 	}

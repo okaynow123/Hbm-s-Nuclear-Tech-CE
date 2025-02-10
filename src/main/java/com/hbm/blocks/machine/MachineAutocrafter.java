@@ -24,7 +24,7 @@ public class MachineAutocrafter extends BlockContainer {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public MachineAutocrafter(Material m, String s) {
         super(m);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
@@ -94,7 +94,7 @@ public class MachineAutocrafter extends BlockContainer {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 

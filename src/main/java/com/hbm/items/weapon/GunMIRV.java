@@ -30,7 +30,7 @@ import java.util.UUID;
 public class GunMIRV extends Item {
 
 	public GunMIRV(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.weaponTab);
 		this.maxStackSize = 1;

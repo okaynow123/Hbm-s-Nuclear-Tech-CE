@@ -34,7 +34,7 @@ public class ItemAutogen extends Item {
     private String overrideUnlocalizedName = null;
 
     public ItemAutogen(MaterialShapes shape, String s) {
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setHasSubtypes(true);
         this.shape = shape;
@@ -69,7 +69,7 @@ public class ItemAutogen extends Item {
     public void registerSprites(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
             if (!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || Arrays.asList(mat.shapes).contains(this.shape))) {
-                String spriteName = RefStrings.MODID + ":items/" + this.getRegistryName().getResourcePath() + "-" + mat.names[0];
+                String spriteName = RefStrings.MODID + ":items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
                 TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
                 map.setTextureEntry(sprite);
                 spriteMap.put(mat, sprite);
@@ -138,12 +138,12 @@ public class ItemAutogen extends Item {
             return "UNDEFINED";
         }
 
-        String matName = I18n.format(mat.getUnlocalizedName());
+        String matName = I18n.format(mat.getTranslationKey());
         return I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name", matName);
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return overrideUnlocalizedName != null ? "item." + overrideUnlocalizedName : super.getUnlocalizedName(stack);
+    public String getTranslationKey(ItemStack stack) {
+        return overrideUnlocalizedName != null ? "item." + overrideUnlocalizedName : super.getTranslationKey(stack);
     }
 }

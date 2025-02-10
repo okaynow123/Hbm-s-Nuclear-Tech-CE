@@ -26,7 +26,7 @@ import java.util.List;
 public class ItemDesignator extends Item implements IDesignatorItem {
 
 	public ItemDesignator(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.missileTab);
 		

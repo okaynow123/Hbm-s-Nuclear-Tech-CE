@@ -31,7 +31,7 @@ public class WorldUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Chunk chunk = provider.id2ChunkMap.get(chunkCoord);
+        Chunk chunk = provider.loadedChunks.get(chunkCoord);
         AnvilChunkLoader loader = null;
 
         if(provider.chunkLoader instanceof AnvilChunkLoader) {

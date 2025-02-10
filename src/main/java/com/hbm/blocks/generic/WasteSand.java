@@ -30,7 +30,7 @@ public class WasteSand extends BlockFalling implements IItemHazard {
 
     public WasteSand(Material materialIn, String s) {
         super(materialIn);
-        this.setUnlocalizedName(s);
+        this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(MainRegistry.controlTab);
         this.setTickRandomly(false);

@@ -71,6 +71,7 @@ public class ExplosionVNT {
 	}
 	
 	public void explode() {
+
 		
 		boolean processBlocks = blockAllocator != null && blockProcessor != null;
 		boolean processEntities = entityProcessor != null && playerProcessor != null;

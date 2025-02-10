@@ -32,7 +32,7 @@ public class NTMAnvil extends BlockFalling {
 
 	public NTMAnvil(Material mat, int tier, String s) {
 		super(mat);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setSoundType(SoundType.ANVIL);
 		this.setHardness(5.0F);
@@ -116,7 +116,7 @@ public class NTMAnvil extends BlockFalling {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;

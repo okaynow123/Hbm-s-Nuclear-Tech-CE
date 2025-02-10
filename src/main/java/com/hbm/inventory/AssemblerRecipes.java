@@ -358,7 +358,7 @@ public class AssemblerRecipes {
 			new OreDictStack(P_RED.dust(), 12), 
 			new OreDictStack(GRAPHITE.ingot(), 6), 
 			new OreDictStack(RA226.nugget(), 2), }, 400);
-		makeRecipe(new ComparableStack(ModBlocks.machine_saturnite_battery, 1), new AStack[] { 
+		makeRecipe(new ComparableStack(ModBlocks.machine_saturnite_battery, 1), new AStack[] {
 			new OreDictStack(BIGMT.ingot(), 8), 
 			new OreDictStack(DURA.dust(), 12), 
 			new OreDictStack(ZR.dust(), 12), 

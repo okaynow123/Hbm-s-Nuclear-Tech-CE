@@ -183,7 +183,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 					} else {
 						if(this.map[index] == 0 && chunkLoads < chunkLoadCap) {
 							if(this.generateChunks) {
-								world.getChunkFromChunkCoords(x >> 4, z >> 4);
+								world.getChunk(x >> 4, z >> 4);
 								this.map[index] = (byte) MathHelper.clamp(world.getHeight(x, z), 50, 128);
 								chunkLoads++;
 							} else {

@@ -19,7 +19,7 @@ public interface IRadarDetectableNT {
     public static final int SPECIAL =	13;
 
     /** Name use for radar display, uses I18n for lookup */
-    public String getUnlocalizedName();
+    public String getTranslationKey();
     /** The type of dot to show on the radar as well as the redstone level in tier mode */
     public int getBlipLevel();
     /** Whether the object can be seen by this type of radar */

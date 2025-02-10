@@ -25,7 +25,7 @@ public class ItemFluidIcon extends Item {
 	public static final ModelResourceLocation fluidIconModel = new ModelResourceLocation(RefStrings.MODID + ":forge_fluid_identifier", "inventory");
 
 	public ItemFluidIcon(String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -58,7 +58,7 @@ public class ItemFluidIcon extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		FluidType fluidType = Fluids.fromID(stack.getMetadata());
 		if (fluidType != null) {
-			String unlocalizedName = fluidType.getUnlocalizedName();
+			String unlocalizedName = fluidType.getTranslationKey();
 			String localizedName = I18n.format(unlocalizedName).trim();
 
 			if (!localizedName.isEmpty()) {

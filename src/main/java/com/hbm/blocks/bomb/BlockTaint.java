@@ -31,7 +31,7 @@ public class BlockTaint extends Block {
 	public BlockTaint(Material m, String s) {
 		super(m);
 		this.setTickRandomly(true);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TEXTURE, 0));
@@ -105,7 +105,7 @@ public class BlockTaint extends Block {
 
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
 		int meta = world.getBlockState(pos).getBlock().getMetaFromState(state);
 		int level = 15 - meta;
 		

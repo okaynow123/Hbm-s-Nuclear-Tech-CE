@@ -10,6 +10,7 @@ import java.util.Random;
 import com.hbm.config.*;
 import com.hbm.dim.CommandSpaceTP;
 import com.hbm.dim.SolarSystem;
+import com.hbm.entity.effect.*;
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
@@ -17,6 +18,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnumMulti;
+import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
 import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
@@ -48,19 +50,6 @@ import com.hbm.creativetabs.NukeTab;
 import com.hbm.creativetabs.PartsTab;
 import com.hbm.creativetabs.TemplateTab;
 import com.hbm.creativetabs.WeaponTab;
-import com.hbm.entity.effect.EntityBlackHole;
-import com.hbm.entity.effect.EntityCloudFleija;
-import com.hbm.entity.effect.EntityCloudFleijaRainbow;
-import com.hbm.entity.effect.EntityCloudSolinium;
-import com.hbm.entity.effect.EntityCloudTom;
-import com.hbm.entity.effect.EntityEMPBlast;
-import com.hbm.entity.effect.EntityFalloutRain;
-import com.hbm.entity.effect.EntityFalloutUnderGround;
-import com.hbm.entity.effect.EntityNukeTorex;
-import com.hbm.entity.effect.EntityQuasar;
-import com.hbm.entity.effect.EntityRagingVortex;
-import com.hbm.entity.effect.EntitySpear;
-import com.hbm.entity.effect.EntityVortex;
 import com.hbm.entity.grenade.EntityGrenadeASchrab;
 import com.hbm.entity.grenade.EntityGrenadeBlackHole;
 import com.hbm.entity.grenade.EntityGrenadeBreach;
@@ -889,7 +878,9 @@ public class MainRegistry {
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_volcano"), EntityMissileTier4.EntityMissileVolcano.class, "entity_missile_volcano", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_ntm_ufo"), EntityUFO.class, "entity_ntm_ufo", i++, MainRegistry.instance, 1000, 1, true, 0x00FFFF, 0x606060);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_digamma_quasar"), EntityQuasar.class, "entity_digamma_quasar", i++, MainRegistry.instance, 1000, 1, true);
-		
+		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_mist"), EntityMist.class, "entity_mist", i++, MainRegistry.instance, 1000, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_zirnox_debris"), EntityZirnoxDebris.class, "entity_zirnox_debris", i++, MainRegistry.instance, 1000, 1, true);
+
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback() {
 
 			@Override
@@ -935,6 +926,7 @@ public class MainRegistry {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
+		ItemDepletedFuel.registerColorHandlers();
 		ModBlocks.init();
 		HazmatRegistry.registerHazmats();
 		registerReactorFuels();
@@ -971,6 +963,7 @@ public class MainRegistry {
 		SerializableRecipe.initialize();
 		AnvilRecipes.register();
 		WasteDrumRecipes.registerRecipes();
+		ItemDepletedFuel.registerPoolRecepies();
 		RefineryRecipes.registerRefinery();
 		FluidContainerRegistry.register();
 		TileEntityNukeCustom.registerBombItems();

@@ -103,10 +103,10 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
     @Override
     public boolean load(IResourceManager man, ResourceLocation resourcelocation, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
 
-        String pathName = resourcelocation.getResourcePath();
+        String pathName = resourcelocation.getPath();
         String undashedPath = pathName.substring(0, pathName.indexOf('-')); // remove the dash and everything trailing it
         String truncatedPath = undashedPath.substring(undashedPath.indexOf('/') + 1); // remove the slash and everything before it
-        resourcelocation = new ResourceLocation(resourcelocation.getResourceDomain(), truncatedPath);
+        resourcelocation = new ResourceLocation(resourcelocation.getNamespace(), truncatedPath);
         ResourceLocation resourcelocation1 = this.completeResourceLocation(resourcelocation);
         MainRegistry.logger.info("Loading texture " + resourcelocation1);
 
@@ -134,7 +134,7 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
 
     //whatever the fuck this is
     private ResourceLocation completeResourceLocation(ResourceLocation loc) {
-        return new ResourceLocation(loc.getResourceDomain(), String.format("%s/%s%s", new Object[] { this.basePath, loc.getResourcePath(), ".png" }));
+        return new ResourceLocation(loc.getNamespace(), String.format("%s/%s%s", new Object[] { this.basePath, loc.getPath(), ".png" }));
     }
 
     //yeah yeah, at least that should work

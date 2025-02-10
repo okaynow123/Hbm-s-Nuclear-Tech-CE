@@ -88,6 +88,6 @@ public class MachineDrain extends BlockDummyable implements ILookOverlay {
         TileEntityMachineDrain drain = (TileEntityMachineDrain) te;
         List<String> text = new ArrayList();
         text.add(ChatFormatting.GREEN + "-> " + ChatFormatting.RESET + drain.tank.getTankType().getLocalizedName() + ": " + drain.tank.getFill() + "/" + drain.tank.getMaxFill() + "mB");
-        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 }

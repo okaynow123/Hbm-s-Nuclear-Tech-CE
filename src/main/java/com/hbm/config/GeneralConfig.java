@@ -84,6 +84,18 @@ public class GeneralConfig {
 	public static int bedrockRate = 50;
 	public static boolean enableThreadedAtmospheres = true;
 	public static boolean enableHardcoreDarkness = false;
+
+	public static boolean enableLBSM = true;
+	public static boolean enableLBSMSafeMEDrives = false;
+	public static boolean enableLBSMSafeCrates = false;
+
+	public static boolean disableAsbestos = false;
+	public static boolean disableBlinding = false;
+	public static boolean disableCoal = false;
+	public static boolean disableExplosive = false;
+	public static boolean disableHydro = false;
+	public static boolean disableHot = false;
+	public static boolean disableCold = false;
 	
 	public static void loadFromConfig(Configuration config){
 		final String CATEGORY_GENERAL = "01_general";

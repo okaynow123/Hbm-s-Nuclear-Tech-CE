@@ -24,7 +24,7 @@ public class ItemRBMKPellet extends Item implements IItemHazard {
 	ItemHazardModule module;
 
 	public ItemRBMKPellet(String fullName, String s) {
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.fullName = fullName;
 		this.setHasSubtypes(true);
@@ -69,11 +69,11 @@ public class ItemRBMKPellet extends Item implements IItemHazard {
 		this.module.addInformation(stack, tooltip, flagIn);
 	}
 	
-	private boolean hasXenon(int meta) {
+	static public boolean hasXenon(int meta) {
 		return rectify(meta) >= 5;
 	}
 	
-	private int rectify(int meta) {
+	static public int rectify(int meta) {
 		return Math.abs(meta) % 10;
 	}
 
