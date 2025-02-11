@@ -3,6 +3,7 @@ package com.hbm.items;
 import api.hbm.block.IToolable.ToolType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockModDoor;
+import com.hbm.blocks.generic.BlockToolConversion;
 import com.hbm.blocks.items.ItemBlockHazard;
 import com.hbm.blocks.items.ItemBlockScrap;
 import com.hbm.blocks.machine.ItemSelfcharger;
@@ -3521,7 +3522,9 @@ public class ModItems {
 		}
 		
 		for(Block block : ModBlocks.ALL_BLOCKS){
-			if(block instanceof IItemHazard){
+			if(block instanceof BlockToolConversion){
+				((BlockToolConversion)block).registerItem();
+			} else if(block instanceof IItemHazard){
 				ForgeRegistries.ITEMS.register(new ItemBlockHazard(block).setRegistryName(block.getRegistryName()));
 			} else if(block == ModBlocks.block_scrap){
 				ForgeRegistries.ITEMS.register(new ItemBlockScrap(block).setRegistryName(block.getRegistryName()));

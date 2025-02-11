@@ -2,6 +2,8 @@ package com.hbm.items.tool;
 
 import api.hbm.block.IToolable;
 import api.hbm.block.IToolable.ToolType;
+import com.hbm.handler.NTMToolHandler;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
@@ -14,7 +16,10 @@ import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
 import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.util.EntityDamageUtil;
+import com.hbm.util.InventoryUtil;
+import com.hbm.util.Tuple.Pair;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,23 +29,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static com.hbm.inventory.RecipesCommon.*;
+import static com.hbm.inventory.RecipesCommon.AStack;
 
 public class ItemBoltgun extends Item implements IAnimatedItem {
 
     //Takes input block and tuple of oredict bolt, output block
-    public static Map<@NotNull String, Tuple<@NotNull String, @NotNull String>> ACTION = new HashMap<>();
-
     public ItemBoltgun(String s) {
         this.setTranslationKey(s);
         this.setRegistryName(s);
@@ -50,15 +51,6 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
         ToolType.BOLT.register(new ItemStack(this));
         ModItems.ALL_ITEMS.add(this);
     }
-
-    public static void addBlotAction(String blockInKey, String boltOredict, String blockOutKey) {
-        ACTION.put(blockInKey, new Tuple<>(boltOredict, blockOutKey));
-    }
-
-    public static void addBlotAction(Block blockIn, String boltOredict, Block blockOut) {
-        ACTION.put(blockIn.getTranslationKey(), new Tuple<>(boltOredict, blockOut.getTranslationKey()));
-    }
-
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 
@@ -118,39 +110,30 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
             if (!world.isRemote) {
                 processNetwork(world, pos, player, facing, hitX, hitY, hitZ);
             }
-            return EnumActionResult.SUCCESS;
-        } else if (ACTION.containsKey(b.getTranslationKey())) {
-            Tuple<String, String> action = ACTION.get(b.getTranslationKey());
-            String bolt = action.getFirst();
-            ItemStack output = new ItemStack(Objects.requireNonNull(Item.getByNameOrId(action.getSecond())));
+            return EnumActionResult.FAIL;
+        } else if (!world.isRemote && NTMToolHandler.getConversions().containsKey(new Pair<>(ToolType.BOLT, new MetaBlock(b, b.getMetaFromState(world.getBlockState(pos)))))) {
 
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                ItemStack slot = player.inventory.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    int[] oreIDs = OreDictionary.getOreIDs(slot);
-                    for (int id : oreIDs) {
-                        String oreName = OreDictionary.getOreName(id);
-                        if (bolt.equals(oreName)) {
-                            if (!world.isRemote) {
-                                world.setBlockState(pos, Block.getBlockFromItem(output.getItem()).getStateFromMeta(output.getItemDamage())); //TODO: Store meta too
-                                player.inventory.decrStackSize(i, 1);
-                                processNetwork(world, pos, player, facing, hitX, hitY, hitZ);
-                                return EnumActionResult.SUCCESS;
+            Pair<AStack[], MetaBlock> result = NTMToolHandler.getConversions().get(new Pair<>(ToolType.BOLT, new MetaBlock(b, b.getMetaFromState(world.getBlockState(pos)))));
 
-                            }
-                        }
-                    }
-                }
+            if (result == null) return EnumActionResult.FAIL;
+            List<AStack> materials = new ArrayList<>(Arrays.asList(result.getKey()));
+
+            if ((materials.isEmpty() || InventoryUtil.doesPlayerHaveAStacks(player, materials, true)) && result.value.block != null) {
+                IBlockState resultBlock = result.value.block.getStateFromMeta(result.value.meta);
+
+                world.setBlockState(pos, resultBlock, 3);
+
+                processNetwork(world, pos, player, facing, hitX, hitY, hitZ);
             }
-
+            return EnumActionResult.FAIL;
         }
         return EnumActionResult.FAIL;
     }
 
     private void processNetwork(World world, BlockPos pos, EntityPlayer player, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
         player.inventoryContainer.detectAndSendChanges();
         ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
         double off = 0.25;
@@ -171,9 +154,6 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
     @Override
     @SideOnly(Side.CLIENT)
     public BusAnimation getAnimation(NBTTagCompound data, ItemStack stack) {
-        return new BusAnimation()
-                .addBus("RECOIL", new BusAnimationSequence()
-                        .addKeyframe(new BusAnimationKeyframe(1, 0, 1, 50))
-                        .addKeyframe(new BusAnimationKeyframe(0, 0, 1, 100)));
+        return new BusAnimation().addBus("RECOIL", new BusAnimationSequence().addKeyframe(new BusAnimationKeyframe(1, 0, 1, 50)).addKeyframe(new BusAnimationKeyframe(0, 0, 1, 100)));
     }
 }

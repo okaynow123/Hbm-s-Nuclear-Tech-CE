@@ -1218,6 +1218,9 @@ public class ModBlocks {
 	public static final Block watz_hatch = new WatzHatch(Material.IRON, "watz_hatch").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_conductor = new BlockCableConnect(Material.IRON, "watz_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_core = new WatzCore(Material.IRON, "watz_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
+
+	public static final Block watz_casing = new BlockToolConversion(Material.IRON, "watz_casing").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz = new Watz("watz").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_watz_multiblock = 32;
 	
@@ -1489,10 +1492,9 @@ public class ModBlocks {
 	}
 	
 	public static void init(){
-		
 	}
 	
 	public static void postInit(){
-		
+
 	}
 }

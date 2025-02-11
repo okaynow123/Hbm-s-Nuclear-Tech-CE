@@ -3,6 +3,7 @@ package com.hbm.util;
 import com.hbm.interfaces.Spaghetti;
 
 @Spaghetti("alreay??") //i made this like a week ago and it's already eye-bleeding, what the fuck happened?!
+//Use minecraft tuples? why is this here
 public class Tuple {
 	
 	/*
