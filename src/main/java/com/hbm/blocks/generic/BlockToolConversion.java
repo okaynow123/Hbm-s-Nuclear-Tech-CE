@@ -2,12 +2,14 @@ package com.hbm.blocks.generic;
 
 import api.hbm.block.IToolable;
 import com.hbm.blocks.BlockBase;
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.handler.NTMToolHandler;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.MetaBlock;
-import com.hbm.main.MainRegistry;
+import com.hbm.items.IModelRegister;
+import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.Tuple.Pair;
@@ -17,6 +19,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,6 +32,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,9 +41,10 @@ import java.util.*;
 
 import static com.hbm.handler.NTMToolHandler.conversions;
 
-public class BlockToolConversion extends BlockBase implements IToolable, ILookOverlay {
+public class BlockToolConversion extends BlockBase implements IToolable, ILookOverlay, ICustomBlockItem {
 
     public static final PropertyBool TOOLED = PropertyBool.create("tooled");
+    public ItemBlock itemBlock;
 
     public BlockToolConversion(Material mat) {
         super(mat);
@@ -51,12 +56,11 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
         this.setDefaultState(this.blockState.getBaseState().withProperty(TOOLED, false));
     }
     public void registerItem(){
-        ItemBlock itemBlock = new BlockToolConversionItem(this);
-        MainRegistry.logger.info("Registering custom ItemBlock for " + this.getRegistryName());
+        itemBlock = new BlockToolConversionItem(this);
         itemBlock.setRegistryName(this.getRegistryName());
         ForgeRegistries.ITEMS.register(itemBlock);
-
     }
+
 
     public static ToolType quickLookup(ItemStack stack) {
         return ToolType.getType(stack);
@@ -142,7 +146,7 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
             }
         }
 
-        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(state.getBlock().getTranslationKey()), 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(state.getBlock().getTranslationKey()+".name"), 0xffff00, 0x404000, text);
     }
 
     public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
@@ -168,13 +172,14 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
 
         return recipes ? bufferedRecipes : bufferedTools;
     }
-    public static class BlockToolConversionItem extends ItemBlock {
+    public static class BlockToolConversionItem extends ItemBlock implements IModelRegister {
 
         public BlockToolConversionItem(Block block) {
             super(block);
             this.setHasSubtypes(true);
             this.canRepair = false;
         }
+
 
         @Override
         public int getMetadata(int damage) {
@@ -186,6 +191,11 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
             return super.getTranslationKey() + (stack.getMetadata() == 1 ? "_tooled" : "");
         }
 
+        @Override
+        public void registerModels() {
+            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "tooled=false"));
+            ModelLoader.setCustomModelResourceLocation(this, 1, new ModelResourceLocation(this.getRegistryName() + "_tooled", "tooled=true"));
+        }
     }
 }
 

@@ -6,9 +6,11 @@ import java.nio.IntBuffer;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.IModelRegister;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.machine.*;
 import com.hbm.items.special.*;
@@ -339,6 +341,8 @@ public class ModEventHandlerClient {
 						new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
 			}
 		}
+		if(item instanceof IModelRegister)
+			((IModelRegister) item).registerModels();
 
 		if(item == ModItems.chemistry_icon) {
 			for(int i: ChemplantRecipes.recipeNames.keySet()){

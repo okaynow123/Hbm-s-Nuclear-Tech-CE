@@ -15,6 +15,7 @@ import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.special.ItemDepletedFuel;
@@ -228,6 +229,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
+@Spaghetti("Total cluserfuck")
 public class MainRegistry {
 
 	static {
@@ -1124,9 +1126,9 @@ public class MainRegistry {
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_schrabidium, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
             {
-                return new EntityGrenadeSchrabidium(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeSchrabidium(world, position.getX(), position.getY(), position.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_nuke, new BehaviorProjectileDispense() {

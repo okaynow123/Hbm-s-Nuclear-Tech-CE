@@ -1,6 +1,7 @@
 package com.hbm.items;
 
 import api.hbm.block.IToolable.ToolType;
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.BlockToolConversion;
@@ -3522,8 +3523,8 @@ public class ModItems {
 		}
 		
 		for(Block block : ModBlocks.ALL_BLOCKS){
-			if(block instanceof BlockToolConversion){
-				((BlockToolConversion)block).registerItem();
+			if(block instanceof ICustomBlockItem){
+				((ICustomBlockItem)block).registerItem();
 			} else if(block instanceof IItemHazard){
 				ForgeRegistries.ITEMS.register(new ItemBlockHazard(block).setRegistryName(block.getRegistryName()));
 			} else if(block == ModBlocks.block_scrap){
