@@ -9,7 +9,6 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.MetaBlock;
 import com.hbm.items.IModelRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.Tuple.Pair;
@@ -44,26 +43,52 @@ import static com.hbm.handler.NTMToolHandler.conversions;
 public class BlockToolConversion extends BlockBase implements IToolable, ILookOverlay, ICustomBlockItem {
 
     public static final PropertyBool TOOLED = PropertyBool.create("tooled");
+    public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
+    public static HashMap<Object[], Object> bufferedTools = new HashMap();
     public ItemBlock itemBlock;
+    private boolean showMetaInCreative = true;
 
     public BlockToolConversion(Material mat) {
         super(mat);
         this.setDefaultState(this.blockState.getBaseState().withProperty(TOOLED, false));
     }
 
+
     public BlockToolConversion(Material mat, String s) {
         super(mat, s);
         this.setDefaultState(this.blockState.getBaseState().withProperty(TOOLED, false));
     }
-    public void registerItem(){
-        itemBlock = new BlockToolConversionItem(this);
-        itemBlock.setRegistryName(this.getRegistryName());
-        ForgeRegistries.ITEMS.register(itemBlock);
-    }
-
 
     public static ToolType quickLookup(ItemStack stack) {
         return ToolType.getType(stack);
+    }
+
+    public static HashMap<Object[], Object> getRecipes(boolean recipes) {
+
+        if (!bufferedRecipes.isEmpty()) return recipes ? bufferedRecipes : bufferedTools;
+
+        for (Map.Entry<Pair<ToolType, MetaBlock>, Pair<AStack[], MetaBlock>> entry : conversions.entrySet()) {
+
+            List<AStack> list = new ArrayList();
+
+            for (AStack stack : entry.getValue().getKey()) {
+                list.add(stack);
+            }
+            list.add(new RecipesCommon.ComparableStack(entry.getKey().getValue().block, 1, entry.getKey().getValue().meta));
+
+            Object[] inputInstance = list.toArray(new AStack[0]); // the instance has to match for the machine lookup to succeed
+            bufferedRecipes.put(inputInstance, new ItemStack(entry.getValue().getValue().block, 1, entry.getValue().getValue().meta));
+            bufferedTools.put(inputInstance, entry.getKey().getKey().stacksForDisplay.toArray(new ItemStack[0]));
+        }
+
+        return recipes ? bufferedRecipes : bufferedTools;
+    }
+
+    public void registerItem() {
+        itemBlock = new BlockToolConversionItem(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
+        ForgeRegistries.ITEMS.register(itemBlock);
     }
 
     @Override
@@ -96,6 +121,7 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(TOOLED, meta == 1);
     }
+
     @Override
     public boolean onScrew(World world, EntityPlayer player, int x, int y, int z,
                            EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool) {
@@ -146,33 +172,10 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
             }
         }
 
-        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(state.getBlock().getTranslationKey()+".name"), 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(state.getBlock().getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 
-    public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
-    public static HashMap<Object[], Object> bufferedTools = new HashMap();
-
-    public static HashMap<Object[], Object> getRecipes(boolean recipes) {
-
-        if(!bufferedRecipes.isEmpty()) return recipes ? bufferedRecipes : bufferedTools;
-
-        for(Map.Entry<Pair<ToolType, MetaBlock>, Pair<AStack[], MetaBlock>> entry : conversions.entrySet()) {
-
-            List<AStack> list = new ArrayList();
-
-            for(AStack stack : entry.getValue().getKey()) {
-                list.add(stack);
-            }
-            list.add(new RecipesCommon.ComparableStack(entry.getKey().getValue().block, 1, entry.getKey().getValue().meta));
-
-            Object[] inputInstance = list.toArray(new AStack[0]); // the instance has to match for the machine lookup to succeed
-            bufferedRecipes.put(inputInstance, new ItemStack(entry.getValue().getValue().block, 1, entry.getValue().getValue().meta));
-            bufferedTools.put(inputInstance, entry.getKey().getKey().stacksForDisplay.toArray(new ItemStack[0]));
-        }
-
-        return recipes ? bufferedRecipes : bufferedTools;
-    }
-    public static class BlockToolConversionItem extends ItemBlock implements IModelRegister {
+    public class BlockToolConversionItem extends ItemBlock implements IModelRegister {
 
         public BlockToolConversionItem(Block block) {
             super(block);
