@@ -1,6 +1,7 @@
 package com.hbm.items.special;
 
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
@@ -36,9 +37,9 @@ public class ItemBedrockOreNew extends Item {
     public static final ModelResourceLocation identifierModel = new ModelResourceLocation(RefStrings.MODID + ":bedrock_ore_new", "inventory");
 
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSpriteMutatable[] icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
+    public TextureAtlasSpriteMutatable[] icons;
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite[] overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
+    public TextureAtlasSprite[] overlays;
 
     public ItemBedrockOreNew(String s) {
         this.setTranslationKey(s);
@@ -81,6 +82,13 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
+    @SuppressWarnings("unused")
+    @SideOnly(Side.CLIENT)
+    public void registerSprites(TextureMap map) {
+        icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
+        overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
+    }
+
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         ModelLoader.setCustomMeshDefinition(this, stack -> identifierModel);
@@ -103,6 +111,7 @@ public class ItemBedrockOreNew extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
         int meta = stack.getItemDamage();
         String type = I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".type." + this.getType(meta).suffix + ".name");
@@ -110,8 +119,8 @@ public class ItemBedrockOreNew extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-
         for(ProcessingTrait trait : this.getGrade(stack.getItemDamage()).traits) {
             list.add(I18nUtil.resolveKey(this.getUnlocalizedNameInefficiently(stack) + ".trait." + trait.name().toLowerCase(Locale.US)));
         }
