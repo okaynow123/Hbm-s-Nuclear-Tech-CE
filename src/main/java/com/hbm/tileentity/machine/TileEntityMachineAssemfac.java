@@ -1,50 +1,42 @@
 package com.hbm.tileentity.machine;
 
+import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerAssemfac;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIAssemfac;
 import com.hbm.items.machine.ItemMachineUpgrade;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.LoopedSoundPacket;
-import com.hbm.packet.PacketDispatcher;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Random;
 
-public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase implements IFluidHandler, IGUIProvider {
+public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable {
 
     public AssemblerArm[] arms;
 
-    public TypedFluidTank water;
-    public TypedFluidTank steam;
+    public FluidTankNTM water;
+    public FluidTankNTM steam;
 
     private final UpgradeManager upgradeManager;
 
@@ -58,8 +50,8 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
             arms[i] = new AssemblerArm(i % 3 == 1 ? 1 : 0); //the second of every group of three becomes a welder
         }
 
-        water = new TypedFluidTank(FluidRegistry.WATER, new FluidTank(64000));
-        steam = new TypedFluidTank(ModForgeFluids.spentsteam, new FluidTank(64000));
+        water = new FluidTankNTM(Fluids.WATER, 64_000);
+        steam = new FluidTankNTM(Fluids.SPENTSTEAM, 64_000);
 
         inventory = new ItemStackHandler(invSize) {
             @Override
@@ -94,7 +86,6 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
             if(world.getTotalWorldTime() % 20 == 0) {
                 this.updateConnections();
             }
-            this.sendFluids();
 
             this.speed = 100;
             this.consumption = 100;
@@ -112,23 +103,11 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
             this.speed /= (overLevel + 1);
             this.consumption *= (overLevel + 1);
 
-            NBTTagCompound data = new NBTTagCompound();
-            data.setLong("power", this.power);
-            data.setIntArray("progress", this.progress);
-            data.setIntArray("maxProgress", this.maxProgress);
-            data.setBoolean("isProgressing", isProgressing);
+            for(DirPos pos : getConPos()) {
+                this.sendFluid(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            }
 
-            NBTTagCompound tankWater = new NBTTagCompound();
-            water.writeToNBT(tankWater);
-            data.setTag("water", tankWater);
-
-            NBTTagCompound tankSteam = new NBTTagCompound();
-            steam.writeToNBT(tankSteam);
-            data.setTag("steam", tankSteam);
-
-            PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
-
-            this.networkPack(data, 150);
+            this.networkPackNT(150);
 
         } else {
 
@@ -142,6 +121,32 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
     }
 
     @Override
+    public void serialize(ByteBuf buf) {
+        super.serialize(buf);
+        buf.writeLong(power);
+        for(int i = 0; i < getRecipeCount(); i++) {
+            buf.writeInt(progress[i]);
+            buf.writeInt(maxProgress[i]);
+        }
+        buf.writeBoolean(isProgressing);
+        water.serialize(buf);
+        steam.serialize(buf);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+        power = buf.readLong();
+        for(int i = 0; i < getRecipeCount(); i++) {
+            progress[i] = buf.readInt();
+            maxProgress[i] = buf.readInt();
+        }
+        isProgressing = buf.readBoolean();
+        water.deserialize(buf);
+        steam.deserialize(buf);
+    }
+
+    @Override
     public void networkUnpack(NBTTagCompound nbt) {
         super.networkUnpack(nbt);
 
@@ -150,8 +155,8 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
         this.maxProgress = nbt.getIntArray("maxProgress");
         this.isProgressing = nbt.getBoolean("isProgressing");
 
-        water.readFromNBT(nbt.getCompoundTag("water"));
-        steam.readFromNBT(nbt.getCompoundTag("steam"));
+        water.readFromNBT(nbt, "w");
+        steam.readFromNBT(nbt, "s");
     }
 
     private int getWaterRequired() {
@@ -160,47 +165,38 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
 
     @Override
     protected boolean canProcess(int index) {
-        return super.canProcess(index) && this.water.tank.getFluidAmount() >= getWaterRequired() && this.steam.tank.getFluidAmount() + getWaterRequired() <= this.steam.tank.getCapacity();
+        return super.canProcess(index) && this.water.getFill() >= getWaterRequired() && this.steam.getFill() + getWaterRequired() <= this.steam.getMaxFill();
     }
 
     @Override
     protected void process(int index) {
         super.process(index);
-        this.water.tank.drain(getWaterRequired(), true);
-        this.steam.tank.fill(new FluidStack(ModForgeFluids.spentsteam, getWaterRequired()), true);
+        this.water.setFill(this.water.getFill() - getWaterRequired());
+        this.steam.setFill(this.steam.getFill() + getWaterRequired());
     }
 
     private void updateConnections() {
-        for (Pair<BlockPos, ForgeDirection> pos : getConPos()) {
-            this.trySubscribe(world, pos.getLeft().getX(), pos.getLeft().getY(), pos.getLeft().getZ(), pos.getRight());
+        for(DirPos pos : getConPos()) {
+            this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            this.trySubscribe(water.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
         }
     }
 
-    private void sendFluids() {
-        for (Pair<BlockPos, ForgeDirection> pos : getConPos()) {
-            for (TypedFluidTank tank : outTanks()) {
-                if(tank.type != null && tank.tank.getFluidAmount() > 0) {
-                    FFUtils.fillFluid(this, tank.tank, world, pos.getLeft(), tank.tank.getFluidAmount());
-                }
-            }
-        }
-    }
-
-    public ImmutablePair<BlockPos, ForgeDirection>[] getConPos() {
+    public DirPos[] getConPos() {
 
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-        return new ImmutablePair[]{
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 3 + rot.offsetX * 5, getPos().getY(), getPos().getZ() - dir.offsetZ * 3 + rot.offsetZ * 5), rot),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 2 + rot.offsetX * 5, getPos().getY(), getPos().getZ() - dir.offsetZ * 2 + rot.offsetZ * 5), rot),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 3 + rot.offsetX * 4, getPos().getY(), getPos().getZ() - dir.offsetZ * 3 + rot.offsetZ * 4), rot.getOpposite()),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 2 + rot.offsetX * 4, getPos().getY(), getPos().getZ() - dir.offsetZ * 2 + rot.offsetZ * 4), rot.getOpposite()),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 5 + rot.offsetX * 3, getPos().getY(), getPos().getZ() - dir.offsetZ * 5 + rot.offsetZ * 3), dir.getOpposite()),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 5 + rot.offsetX * 2, getPos().getY(), getPos().getZ() - dir.offsetZ * 5 + rot.offsetZ * 2), dir.getOpposite()),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 4 + rot.offsetX * 3, getPos().getY(), getPos().getZ() - dir.offsetZ * 4 + rot.offsetZ * 3), dir),
-                ImmutablePair.of(new BlockPos(getPos().getX() - dir.offsetX * 4 + rot.offsetX * 2, getPos().getY(), getPos().getZ() - dir.offsetZ * 4 + rot.offsetZ * 2), dir)
-        };
 
+        return new DirPos[] {
+                new DirPos(pos.getX() - dir.offsetX * 3 + rot.offsetX * 5, pos.getY(), pos.getZ() - dir.offsetZ * 3 + rot.offsetZ * 5, rot),
+                new DirPos(pos.getX() + dir.offsetX * 2 + rot.offsetX * 5, pos.getY(), pos.getZ() + dir.offsetZ * 2 + rot.offsetZ * 5, rot),
+                new DirPos(pos.getX() - dir.offsetX * 3 - rot.offsetX * 4, pos.getY(), pos.getZ() - dir.offsetZ * 3 - rot.offsetZ * 4, rot.getOpposite()),
+                new DirPos(pos.getX() + dir.offsetX * 2 - rot.offsetX * 4, pos.getY(), pos.getZ() + dir.offsetZ * 2 - rot.offsetZ * 4, rot.getOpposite()),
+                new DirPos(pos.getX() - dir.offsetX * 5 + rot.offsetX * 3, pos.getY(), pos.getZ() - dir.offsetZ * 5 + rot.offsetZ * 3, dir.getOpposite()),
+                new DirPos(pos.getX() - dir.offsetX * 5 - rot.offsetX * 2, pos.getY(), pos.getZ() - dir.offsetZ * 5 - rot.offsetZ * 2, dir.getOpposite()),
+                new DirPos(pos.getX() + dir.offsetX * 4 + rot.offsetX * 3, pos.getY(), pos.getZ() + dir.offsetZ * 4 + rot.offsetZ * 3, dir),
+                new DirPos(pos.getX() + dir.offsetX * 4 - rot.offsetX * 2, pos.getY(), pos.getZ() + dir.offsetZ * 4 - rot.offsetZ * 2, dir)
+        };
     }
 
     public static class AssemblerArm {
@@ -440,79 +436,18 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        NBTTagCompound tankWater = new NBTTagCompound();
-        water.writeToNBT(tankWater);
-        nbt.setTag("water", tankWater);
-
-        NBTTagCompound tankSteam = new NBTTagCompound();
-        steam.writeToNBT(tankSteam);
-        nbt.setTag("steam", tankSteam);
-
-        return super.writeToNBT(nbt);
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] { steam };
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-
-        water.readFromNBT(nbt.getCompoundTag("water"));
-        steam.readFromNBT(nbt.getCompoundTag("steam"));
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[] { water };
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return new IFluidTankProperties[]{water.tank.getTankProperties()[0], steam.tank.getTankProperties()[0]};
-    }
-
-    @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        if(resource != null && resource.getFluid() == FluidRegistry.WATER){
-            return water.tank.fill(resource, doFill);
-        }
-        return 0;
-    }
-    @Override
-    protected List<TypedFluidTank> inTanks() {
-        List<TypedFluidTank> inTanks = super.inTanks();
-        inTanks.add(water);
-
-        return inTanks;
-    }
-    @Override
-    public List<TypedFluidTank> outTanks() {
-        List<TypedFluidTank> outTanks = super.outTanks();
-        outTanks.add(steam);
-
-        return outTanks;
-    }
-
-    @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        return steam.tank.drain(resource, doDrain);
-    }
-
-    @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        return steam.tank.drain(maxDrain, doDrain);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
-        }
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return true;
-        }
-
-        return super.hasCapability(capability, facing);
+    public FluidTankNTM[] getAllTanks() {
+        return new FluidTankNTM[] { water, steam };
     }
 
     @Override
@@ -524,5 +459,10 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIAssemfac(player.inventory, this);
+    }
+
+    @Override
+    public FluidTankNTM getTankToPaste() {
+        return null;
     }
 }

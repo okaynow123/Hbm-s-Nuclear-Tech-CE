@@ -10,7 +10,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-
+// that won't be converted to NTMF. please just stop using it
+@Deprecated
 public class TileEntityWatzHatch extends TileEntity implements IFluidHandler {
 
 	@Override

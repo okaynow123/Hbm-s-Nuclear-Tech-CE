@@ -26,23 +26,6 @@ public class ItemRenderLibrary {
 	public static HashMap<Item, ItemRenderBase> renderers = new HashMap<>();
 
 	public static void init() {
-		renderers.put(Item.getItemFromBlock(ModBlocks.machine_selenium), new ItemRenderBase() {
-			public void renderInventory() {
-				GL11.glTranslated(0, -4, 0);
-				GL11.glScaled(4, 4, 4);
-			}
-			public void renderCommon() {
-				GL11.glScaled(2, 2, 2);
-		        GlStateManager.disableCull();
-		        bindTexture(ResourceManager.selenium_body_tex); ResourceManager.selenium_body.renderAll();
-		        GL11.glTranslated(0.0D, 1.0D, 0.0D);
-		        bindTexture(ResourceManager.selenium_rotor_tex); ResourceManager.selenium_rotor.renderAll();
-		        bindTexture(ResourceManager.selenium_piston_tex);
-		        for(int i = 0; i < 7; i++) {
-		            ResourceManager.selenium_piston.renderAll(); GL11.glRotatef(360F/7F, 0, 0, 1);
-		        }
-		        GlStateManager.enableCull();
-			}});
 		renderers.put(Item.getItemFromBlock(ModBlocks.obj_tester), new ItemRenderBase() {
 			public void renderInventory() {
 				GL11.glTranslated(0, -4, 0);
@@ -1730,6 +1713,57 @@ public class ItemRenderLibrary {
 				bindTexture(ResourceManager.bat9000_tex); ResourceManager.bat9000.renderAll();
 				GlStateManager.shadeModel(GL11.GL_FLAT);
 			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_lpw2), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(1, -1, 0);
+				GL11.glScaled(1.6, 1.6, 1.6);
+			}
+			public void renderCommon() {
+				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.lpw2_tex);
+				ResourceManager.lpw2.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_htr3), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -1, 0);
+				GL11.glScaled(1.5, 1.5, 1.5);
+			}
+			public void renderCommon() {
+				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.lpw2_tex);
+				ResourceManager.htr3.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_htrf4), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -1, 0);
+				GL11.glScaled(1.5, 1.5, 1.5);
+			}
+			public void renderCommon() {
+				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.lpw2_tex);
+				ResourceManager.htrf4.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
+			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_xenon_thruster), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -4, 0);
+				GL11.glScaled(4, 4, 4);
+			}
+			public void renderCommon() {
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.xenon_thruster_tex);
+				ResourceManager.xenon_thruster.renderPart("Thruster");
+				GL11.glShadeModel(GL11.GL_FLAT);
+			}});
 		
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_orbus), new ItemRenderBase() {
 			public void renderInventory() {
@@ -1739,17 +1773,6 @@ public class ItemRenderLibrary {
 			public void renderCommon() {
 				GlStateManager.shadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.orbus_tex); ResourceManager.orbus.renderAll();
-				GlStateManager.shadeModel(GL11.GL_FLAT);
-			}});
-
-		renderers.put(Item.getItemFromBlock(ModBlocks.uu_gigafactory), new ItemRenderBase() {
-			public void renderInventory() {
-				GL11.glTranslated(0, -1, 0);
-				GL11.glScaled(2, 2, 2);
-			}
-			public void renderCommon() {
-				GlStateManager.shadeModel(GL11.GL_SMOOTH);
-				bindTexture(ResourceManager.uu_creator_tex); ResourceManager.uu_creator.renderAll();
 				GlStateManager.shadeModel(GL11.GL_FLAT);
 			}});
 
@@ -1763,6 +1786,19 @@ public class ItemRenderLibrary {
 				bindTexture(ResourceManager.watz_tex); ResourceManager.watz.renderAll();
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.watz), new ItemRenderBase() {
+				public void renderInventory() {
+					GL11.glTranslated(0, -1.5, 0);
+					double scale = 5;
+					GL11.glScaled(scale, scale, scale);
+				}
+				public void renderCommon() {
+					GL11.glShadeModel(GL11.GL_SMOOTH);
+					bindTexture(ResourceManager.watz_pump_tex);
+					ResourceManager.watz_pump.renderAll();
+					GL11.glShadeModel(GL11.GL_FLAT);
+				}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_fraction_tower), new ItemRenderBase() {
 			public void renderInventory() {

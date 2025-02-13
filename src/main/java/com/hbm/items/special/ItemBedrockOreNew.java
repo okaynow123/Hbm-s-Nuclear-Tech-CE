@@ -68,6 +68,7 @@ public class ItemBedrockOreNew extends Item {
         for(int i = 0; i < BedrockOreGrade.values().length; i++) { BedrockOreGrade grade = BedrockOreGrade.values()[i];
             for(int j = 0; j < BedrockOreType.values().length; j++) { BedrockOreType type = BedrockOreType.values()[j];
                 String placeholderName = RefStrings.MODID + ":bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                MainRegistry.logger.info("placeholderName: " + placeholderName);
                 TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
                 map.setTextureEntry(mutableIcon);
                 this.icons[i * BedrockOreType.values().length + j] = mutableIcon;

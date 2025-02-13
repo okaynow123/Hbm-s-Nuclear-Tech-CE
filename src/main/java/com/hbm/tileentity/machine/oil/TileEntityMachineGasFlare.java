@@ -11,6 +11,8 @@ import com.hbm.inventory.container.ContainerMachineGasFlare;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
+import com.hbm.inventory.fluid.trait.FT_Polluting;
+import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUIMachineGasFlare;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
@@ -18,6 +20,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,7 +42,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 
-public class TileEntityMachineGasFlare extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardReceiver, IGUIProvider, IControlReceiver {
+public class TileEntityMachineGasFlare extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardReceiver, IGUIProvider, IControlReceiver, IFluidCopiable {
 	public long power;
 	public static final long maxPower = 1000000;
 	public Fluid tankType;
@@ -153,6 +156,13 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 							e.setFire(5);
 							e.attackEntityFrom(DamageSource.ON_FIRE, 5F);
 						}
+
+						if(world.getTotalWorldTime() % 3 == 0)
+							this.world.playSound(null, this.pos.getX(), this.pos.getY() + 11, this.pos.getZ(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, getVolume(1.5F), 0.75F);
+
+						if(world.getTotalWorldTime() % 5 == 0 && eject > 0) {
+							FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tank.getTankType(), FluidTrait.FluidReleaseType.BURN, eject * 5);
+						}
 					}
 				}
 			}
@@ -163,6 +173,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 			data.setLong("power", this.power);
 			data.setBoolean("isOn", isOn);
 			data.setBoolean("doesBurn", doesBurn);
+			tank.writeToNBT(data, "t");
 			this.networkPack(data, 50);
 
 		} else {
@@ -218,6 +229,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 		this.power = nbt.getLong("power");
 		this.isOn = nbt.getBoolean("isOn");
 		this.doesBurn = nbt.getBoolean("doesBurn");
+		tank.readFromNBT(nbt, "t");
 	}
 
 	@Override
@@ -292,5 +304,22 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 		if(data.hasKey("valve")) this.isOn = !this.isOn;
 		if(data.hasKey("dial")) this.doesBurn = !this.doesBurn;
 		markDirty();
+	}
+
+	@Override
+	public NBTTagCompound getSettings(World world, int x, int y, int z) {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setIntArray("fluidID", new int[]{tank.getTankType().getID()});
+		tag.setBoolean("isOn", isOn);
+		tag.setBoolean("doesBurn", doesBurn);
+		return tag;
+	}
+
+	@Override
+	public void pasteSettings(NBTTagCompound nbt, int index, World world, EntityPlayer player, int x, int y, int z) {
+		int id = nbt.getIntArray("fluidID")[index];
+		tank.setTankType(Fluids.fromID(id));
+		if(nbt.hasKey("isOn")) isOn = nbt.getBoolean("isOn");
+		if(nbt.hasKey("doesBurn")) doesBurn = nbt.getBoolean("doesBurn");
 	}
 }

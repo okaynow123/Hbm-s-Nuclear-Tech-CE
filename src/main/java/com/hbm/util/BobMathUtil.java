@@ -2,9 +2,7 @@ package com.hbm.util;
 
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 import java.text.NumberFormat;
 import java.util.function.ToIntFunction;
 
@@ -12,6 +10,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Quat4f;
 
+import com.hbm.lib.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
@@ -144,6 +143,19 @@ public class BobMathUtil {
 	
 	public static float remap01_clamp(float num, float min1, float max1){
 		return MathHelper.clamp((num - min1) / (max1 - min1), 0, 1);
+	}
+
+	public static ForgeDirection[] getShuffledDirs() {
+
+		ForgeDirection[] dirs = new ForgeDirection[6];
+		List<Integer> indices = new ArrayList<Integer>() {{ add(0); add(1); add(2); add(3); add(4); add(5); }};
+		Collections.shuffle(indices);
+
+		for(int i = 0; i < 6; i++) {
+			dirs[i] = ForgeDirection.getOrientation(indices.get(i));
+		}
+
+		return dirs;
 	}
 
 	public static double lerp(double delta, double start, double end) {
@@ -451,5 +463,10 @@ public class BobMathUtil {
 
 	public static int[] collectionToIntArray(Collection<? extends Object> in, ToIntFunction<? super Object> mapper) {
 		return Arrays.stream(in.toArray()).mapToInt(mapper).toArray();
+	}
+
+	/** Soft peak sine */
+	public static double sps(double x) {
+		return Math.sin(Math.PI / 2D * Math.cos(x));
 	}
 }

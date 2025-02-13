@@ -83,7 +83,7 @@ public class GUIMachineGasFlare extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 79, guiTop + 49, 176, 10, 35, 14);
 		}
 
-		if(flare.isOn && flare.doesBurn && flare.tank.getFill() > 0 && FluidCombustionRecipes.hasFuelRecipe(flare.tankType))
+		if(flare.isOn && flare.doesBurn && flare.tank.getFill() > 0 && FluidCombustionRecipes.hasFuelRecipe(flare.tank.getTankType()))
 			drawTexturedModalRect(guiLeft + 88, guiTop + 29, 176, 24, 18, 18);
 
 		flare.tank.renderTank(guiLeft + 35, guiTop + 69, this.zLevel, 16, 52);

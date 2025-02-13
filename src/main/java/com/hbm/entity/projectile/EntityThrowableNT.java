@@ -170,7 +170,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
         }
 
         if(this.inGround) {
-            if(this.world.getBlockState(new BlockPos(this.stuckBlockX, this.stuckBlockY, this.stuckBlockZ)) == this.stuckBlock) {
+            if(this.world.getBlockState(new BlockPos(this.stuckBlockX, this.stuckBlockY, this.stuckBlockZ)).getBlock() == this.stuckBlock) {
                 ++this.ticksInGround;
 
                 if(this.groundDespawn() > 0 && this.ticksInGround == this.groundDespawn()) {
@@ -192,15 +192,15 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
         } else {
             ++this.ticksInAir;
 
-            Vec3d pos = new Vec3d(this.posX, this.posY, this.posZ);
-            Vec3d nextPos = new Vec3d(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
+            Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
             RayTraceResult mop = null;
-            if(!this.isSpectral()) mop = this.world.rayTraceBlocks(pos, nextPos, false, true, false);
-            pos = new Vec3d(this.posX, this.posY, this.posZ);
-            nextPos = new Vec3d(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
+            if(!this.isSpectral()) mop = this.world.rayTraceBlocks(pos.toVec3d(), nextPos.toVec3d(), false, true, false);
+            pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            nextPos = Vec3.createVectorHelper(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
 
             if(mop != null) {
-                nextPos = new Vec3d(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
+                nextPos = Vec3.createVectorHelper(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
             }
 
             if(!this.world.isRemote && this.doesImpactEntities()) {
@@ -217,7 +217,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                     if(entity.canBeCollidedWith() && (entity != thrower || this.ticksInAir >= this.selfDamageDelay())) {
                         double hitbox = 0.3F;
                         AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
-                        RayTraceResult hitMop = aabb.calculateIntercept(pos, nextPos);
+                        RayTraceResult hitMop = aabb.calculateIntercept(pos.toVec3d(), nextPos.toVec3d());
 
                         if(hitMop != null) {
 
@@ -225,8 +225,8 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                             if(this.doesPenetrate()) {
                                 this.onImpact(new RayTraceResult(entity, hitMop.hitVec));
                             } else {
-
-                                double dist = pos.distanceTo(hitMop.hitVec);
+                                Vec3 hitVec = Vec3.createVectorHelper(hitMop.hitVec.x, hitMop.hitVec.y, hitMop.hitVec.z);
+                                double dist = pos.distanceTo(hitVec);
 
                                 if(dist < nearest || nearest == 0.0D) {
                                     hitEntity = entity;

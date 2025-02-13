@@ -1,21 +1,35 @@
 package com.hbm.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.dim.CelestialBody;
+import com.hbm.dim.orbit.WorldProviderOrbit;
+import com.hbm.dim.trait.CBT_Atmosphere;
+import com.hbm.handler.atmosphere.AtmosphereBlob;
+import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.interfaces.Spaghetti;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.lib.DirPos;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import com.hbm.packet.BufPacket;
 import com.hbm.packet.NBTPacket;
 import com.hbm.packet.PacketDispatcher;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+
+import java.util.List;
 
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements INBTPacketReceiver, IBufPacketReceiver {
@@ -181,5 +195,45 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) || super.hasCapability(capability, facing);
+	}
+
+	public void updateRedstoneConnection(DirPos pos) {
+		BlockPos blockPos = pos.getPos();
+		IBlockState state1 = world.getBlockState(blockPos);
+		Block block1 = state1.getBlock();
+
+		block1.onNeighborChange(world, blockPos, this.getPos());
+
+		block1.neighborChanged(state1, world, blockPos, this.getBlockType(), this.getPos());
+
+		if (state1.isNormalCube()) {
+			BlockPos offsetPos = blockPos.offset(pos.getDir().toEnumFacing());
+			Block block2 = world.getBlockState(offsetPos).getBlock();
+
+			if (block2.getWeakChanges(world, offsetPos)) {
+				block2.onNeighborChange(world, offsetPos, this.getPos());
+				block2.neighborChanged(world.getBlockState(offsetPos), world, offsetPos, this.getBlockType(), this.getPos());
+			}
+		}
+	}
+
+	// TODO: Consume air from connected tanks if available
+	public boolean breatheAir(int amount) {
+		CBT_Atmosphere atmosphere = world.provider instanceof WorldProviderOrbit ? null : CelestialBody.getTrait(world, CBT_Atmosphere.class);
+		if(atmosphere != null) {
+			if(atmosphere.hasFluid(Fluids.AIR, 0.19) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09)) {
+				return true;
+			}
+		}
+
+		List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(world, pos.getX(), pos.getY(), pos.getZ());
+		for(AtmosphereBlob blob : blobs) {
+			if(blob.hasFluid(Fluids.AIR, 0.19) || blob.hasFluid(Fluids.OXYGEN, 0.09)) {
+				blob.consume(amount);
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

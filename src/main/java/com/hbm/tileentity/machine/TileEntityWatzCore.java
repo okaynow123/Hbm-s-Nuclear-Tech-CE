@@ -40,6 +40,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Random;
 
+// that won't be converted to NTMF. please just stop using it
+@Deprecated
 public class TileEntityWatzCore extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidHandler, ITankPacketAcceptor {
 
 	public long power;

@@ -18,11 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
@@ -34,62 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable, IFluidHandler {
+public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable {
 
     public long power;
     public int[] progress;
     public int[] maxProgress;
     public boolean isProgressing;
     public boolean[] needsTemplateSwitch;
-
-    public static class TypedFluidTank {
-        protected Fluid type;
-        protected final FluidTank tank;
-
-        protected TypedFluidTank(Fluid type, FluidTank tank) {
-            this.type = type;
-            this.tank = tank;
-        }
-
-        public void setType(@Nullable Fluid type) {
-            if(type == null) {
-                this.tank.setFluid(null);
-            }
-
-            if(this.type == type) {
-                return;
-            }
-
-            this.type = type;
-            this.tank.setFluid(null);
-        }
-
-        public void writeToNBT(NBTTagCompound nbt) {
-            if(this.type != null) {
-                nbt.setString("type", this.type.getName());
-            }
-
-            this.tank.writeToNBT(nbt);
-        }
-
-        public void readFromNBT(NBTTagCompound nbt) {
-            if(nbt.hasKey("type")) {
-                this.type = FluidRegistry.getFluid(nbt.getString("type"));
-            }
-            this.tank.readFromNBT(nbt);
-        }
-
-        public FluidTank getTank() {
-            return tank;
-        }
-
-        public Fluid getType() {
-            return type;
-        }
-    }
-
-
-    public TypedFluidTank[] tanks;
 
     int consumption = 100;
     int speed = 100;
@@ -208,146 +154,6 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
         if(out != null) {
             InventoryUtil.tryAddItemToInventory(this.inventory, indices[2], indices[2], out.copy());
         }
-    }
-
-    protected List<TypedFluidTank> inTanks() {
-        List<TypedFluidTank> inTanks = new ArrayList<>();
-        return inTanks;
-    }
-
-    public List<TypedFluidTank> outTanks() {
-        List<TypedFluidTank> outTanks = new ArrayList<>();
-        return outTanks;
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if(resource.amount <= 0) {
-            return null;
-        }
-        List<TypedFluidTank> send = new ArrayList<>();
-        for(TypedFluidTank tank : outTanks()) {
-            if(tank.type == resource.getFluid()) {
-                send.add(tank);
-            }
-        }
-
-        if(send.isEmpty()) {
-            return null;
-        }
-
-        int offer = 0;
-        List<Integer> weight = new ArrayList<>();
-        for(TypedFluidTank tank : send) {
-            int drainWeight = tank.tank.getFluidAmount();
-            if(drainWeight < 0) {
-                drainWeight = 0;
-            }
-
-            offer += drainWeight;
-            weight.add(drainWeight);
-        }
-
-        if(offer <= 0) {
-            return null;
-        }
-
-        if(!doDrain) {
-            return new FluidStack(resource.getFluid(), offer);
-        }
-
-        int needed = resource.amount;
-        for(int i = 0; i < send.size(); ++i) {
-            TypedFluidTank tank = send.get(i);
-            int fillWeight = weight.get(i);
-            int part = (int)(resource.amount * ((float)fillWeight / (float)offer));
-
-            FluidStack drained = tank.tank.drain(part, true);
-            if(drained != null) {
-                needed -= drained.amount;
-            }
-        }
-
-        for(int i = 0; i < 100 && needed > 0 && i < send.size(); i++) {
-            TypedFluidTank tank = send.get(i);
-            if(tank.tank.getFluidAmount() > 0) {
-                int total = Math.min(tank.tank.getFluidAmount(), needed);
-                tank.tank.drain(total, true);
-                needed -= total;
-            }
-        }
-
-        int drained = resource.amount - needed;
-        if(drained > 0) {
-            return new FluidStack(resource.getFluid(), drained);
-        }
-
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        for(TypedFluidTank tank : outTanks()) {
-            if(tank.type != null && tank.tank.getFluidAmount() > 0) {
-                return tank.tank.drain(maxDrain, doDrain);
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        int total = resource.amount;
-
-        if(total <= 0) {
-            return 0;
-        }
-
-        Fluid inType = resource.getFluid();
-        List<TypedFluidTank> rec = new ArrayList<>();
-        for(TypedFluidTank tank : inTanks()) {
-            if(tank.type == inType) {
-                rec.add(tank);
-            }
-        }
-
-        if(rec.isEmpty()) {
-            return 0;
-        }
-
-        int demand = 0;
-        List<Integer> weight = new ArrayList<>();
-        for(TypedFluidTank tank : rec) {
-            int fillWeight = tank.tank.getCapacity() - tank.tank.getFluidAmount();
-            if(fillWeight < 0) {
-                fillWeight = 0;
-            }
-
-            demand += fillWeight;
-            weight.add(fillWeight);
-        }
-
-        if(demand <= 0) {
-            return 0;
-        }
-
-        if(!doFill) {
-            return demand;
-        }
-
-        int fluidUsed = 0;
-
-        for(int i = 0; i < rec.size(); ++i) {
-            TypedFluidTank tank = rec.get(i);
-            int fillWeight = weight.get(i);
-            int part = (int) (Math.min(total, demand) * (float) fillWeight / (float) demand);
-            fluidUsed += tank.tank.fill(new FluidStack(resource.getFluid(), part), true);
-        }
-
-        return fluidUsed;
     }
 
     private void loadItems(int index) {

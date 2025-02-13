@@ -72,8 +72,11 @@ public class ResourceManager {
 	//ITER
 	public static final IModelCustom iter = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/reactors/iter.obj")).asVBO();
 
-	//UU
-	public static final IModelCustom uu_creator = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/uu_creator.obj"));
+	//Rocket Turbines
+	public static final IModelCustom lpw2 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/lpw2.obj")).asVBO();
+	public static final IModelCustom htr3 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/htr3.obj")).asVBO();
+	public static final IModelCustom htrf4 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/htrf4.obj")).asVBO();
+	public static final IModelCustom xenon_thruster = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/xenon_thruster.obj")).asVBO();
 
 	//Watz
 	public static final IModelCustom watz = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/reactors/watz.obj")).asVBO();
@@ -541,8 +544,14 @@ public class ResourceManager {
 	public static final ResourceLocation iter_torus_chlorophyte = new ResourceLocation(RefStrings.MODID, "textures/models/iter/torus_chlorophyte.png");
 	public static final ResourceLocation iter_torus_vaporwave = new ResourceLocation(RefStrings.MODID, "textures/models/iter/torus_vaporwave.png");
 
-	//UU
-	public static final ResourceLocation uu_creator_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/uu_creator.png");
+	//Fat Fuck
+	public static final ResourceLocation lpw2_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2.png");
+	public static final ResourceLocation lpw2_term_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2_term.png");
+	public static final ResourceLocation lpw2_error_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lpw2_term_error.png");
+
+	//Xenon
+	public static final ResourceLocation xenon_thruster_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/xenon_thruster.png");
+	public static final ResourceLocation xenon_exhaust_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/xenon_trail.png");
 	
 	//FENSU
 	public static final ResourceLocation[] fensu_tex = new ResourceLocation[] { 
@@ -835,12 +844,6 @@ public class ResourceManager {
 	public static final ResourceLocation rtg_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rtg.png");
 	public static final ResourceLocation rtg_cell_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rtg_cell.png");
 	public static final ResourceLocation rtg_polonium_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rtg_polonium.png");
-
-	//Anti Mass Spectrometer
-	public static final ResourceLocation ams_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ams_base.png");
-	public static final ResourceLocation ams_emitter_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ams_emitter.png");
-	public static final ResourceLocation ams_limiter_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ams_limiter.png");
-	public static final ResourceLocation ams_destroyed_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ams_destroyed.png");
 
 	//Dark Matter Core
 	public static final ResourceLocation dfc_emitter_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/core_emitter.png");
