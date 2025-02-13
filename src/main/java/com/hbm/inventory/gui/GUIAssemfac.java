@@ -34,8 +34,8 @@ public class GUIAssemfac extends GuiInfoContainer {
 
         this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 234, guiTop + 164, 16, 52, assemfac.power, assemfac.getMaxPower());
 
-        FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 209, guiTop + 181, 9, 54, assemfac.water.getTank(), FluidRegistry.WATER);
-        FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 218, guiTop + 181, 9, 54, assemfac.steam.getTank(), ModForgeFluids.spentsteam);
+        assemfac.water.renderTankInfo(this, mouseX, mouseY, guiLeft + 209, guiTop + 181, 9, 54);
+        assemfac.steam.renderTankInfo(this, mouseX, mouseY, guiLeft + 218, guiTop + 181, 9, 54);
 
         for(int i = 0; i < 8; i++) {
 
@@ -75,8 +75,8 @@ public class GUIAssemfac extends GuiInfoContainer {
         if(assemfac.power > 0)
             drawTexturedModalRect(guiLeft + 238, guiTop + 150, 0, 219, 9, 12);
 
-        FFUtils.drawLiquid(assemfac.water.getTank(), guiLeft, guiTop, this.zLevel, 7, 52, 210, 256);
-        FFUtils.drawLiquid(assemfac.steam.getTank(), guiLeft, guiTop, this.zLevel, 7, 52, 219, 256);
+        assemfac.water.renderTank(guiLeft + 210, guiTop + 234, this.zLevel, 7, 52);
+        assemfac.steam.renderTank(guiLeft + 219, guiTop + 234, this.zLevel, 7, 52);
 
         if(Keyboard.isKeyDown(Keyboard.KEY_LMENU))
             for(int i = 0; i < this.inventorySlots.inventorySlots.size(); i++) {

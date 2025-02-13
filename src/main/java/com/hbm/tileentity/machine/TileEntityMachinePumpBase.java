@@ -1,13 +1,18 @@
 package com.hbm.tileentity.machine;
 
+import api.hbm.fluid.IFluidStandardTransceiver;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.lib.ForgeDirection;
+import com.hbm.dim.CelestialBody;
+import com.hbm.dim.orbit.WorldProviderOrbit;
+import com.hbm.dim.trait.CBT_Water;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.block.Block;
@@ -19,23 +24,13 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
-public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase implements IFluidHandler, INBTPacketReceiver, IConfigurableMachine, ITickable {
+public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, INBTPacketReceiver, IConfigurableMachine, IFluidCopiable {
 
     public static final HashSet<Block> validBlocks = new HashSet();
 
@@ -49,9 +44,18 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
         validBlocks.add(ModBlocks.dirt_oily);
         validBlocks.add(ModBlocks.sand_dirty);
         validBlocks.add(ModBlocks.sand_dirty_red);
+        validBlocks.add(ModBlocks.eve_silt);
+        validBlocks.add(ModBlocks.eve_rock);
+        validBlocks.add(ModBlocks.ike_regolith);
+        validBlocks.add(ModBlocks.ike_stone);
+        validBlocks.add(ModBlocks.duna_sands);
+        validBlocks.add(ModBlocks.moon_turf);
+        validBlocks.add(ModBlocks.laythe_silt);
+        validBlocks.add(ModBlocks.moho_regolith);
+        validBlocks.add(ModBlocks.minmus_smooth);
     }
 
-    public TypedFluidTank water;
+    public FluidTankNTM water;
 
     public boolean isOn = false;
     public float rotor;
@@ -63,52 +67,7 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
     public static int groundDepth = 4;
     public static int steamSpeed = 1_000;
     public static int electricSpeed = 10_000;
-    //TODO: Make this class one separate instead of like three integrated in different tileentities
-    public static class TypedFluidTank {
-        protected Fluid type;
-        protected final FluidTank tank;
-
-        protected TypedFluidTank(Fluid type, FluidTank tank) {
-            this.type = type;
-            this.tank = tank;
-        }
-
-        public void setType(@Nullable Fluid type) {
-            if(type == null) {
-                this.tank.setFluid(null);
-            }
-
-            if(this.type == type) {
-                return;
-            }
-
-            this.type = type;
-            this.tank.setFluid(null);
-        }
-
-        public void writeToNBT(NBTTagCompound nbt) {
-            if(this.type != null) {
-                nbt.setString("type", this.type.getName());
-            }
-
-            this.tank.writeToNBT(nbt);
-        }
-
-        public void readFromNBT(NBTTagCompound nbt) {
-            if(nbt.hasKey("type")) {
-                this.type = FluidRegistry.getFluid(nbt.getString("type"));
-            }
-            this.tank.readFromNBT(nbt);
-        }
-
-        public FluidTank getTank() {
-            return tank;
-        }
-
-        public Fluid getType() {
-            return type;
-        }
-    }
+    public static int nonWaterDebuff = 100;
 
     @Override
     public String getConfigName() {
@@ -135,8 +94,8 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
     public void update() {
         if(!world.isRemote) {
 
-            for(Pair<BlockPos, ForgeDirection> pos : getConPos()) {
-                if(water.tank.getFluidAmount() > 0) FFUtils.fillFluid(this, water.tank, world, pos.getLeft(), water.tank.getFluidAmount());
+            for(DirPos pos : getConPos()) {
+                if(water.getFill() > 0) this.sendFluid(water, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             if(groundCheckDelay > 0) {
@@ -144,13 +103,14 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
             } else {
                 onGround = this.checkGround();
             }
+
             this.isOn = false;
             if(this.canOperate() && pos.getY() <= groundHeight && onGround) {
                 this.isOn = true;
                 this.operate();
             }
 
-            NBTTagCompound data = getSync();
+            NBTTagCompound data = this.getSync();
             INBTPacketReceiver.networkPack(this, data, 150);
 
         } else {
@@ -170,9 +130,12 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
 
     protected boolean checkGround() {
 
-        if(!world.provider.hasSkyLight()){
-            return false;
-        }
+        if(!world.provider.hasSkyLight()) return false;
+        if(world.provider instanceof WorldProviderOrbit) return false;
+        CBT_Water table = CelestialBody.getTrait(world, CBT_Water.class);
+        if(table == null) return false;
+
+        water.setTankType(table.fluid);
 
         int validBlocks = 0;
         int invalidBlocks = 0;
@@ -196,13 +159,11 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
         return validBlocks >= invalidBlocks; // valid block count has to be at least 50%
     }
 
-    public NBTTagCompound getSync() {
+    protected NBTTagCompound getSync() {
         NBTTagCompound data = new NBTTagCompound();
         data.setBoolean("isOn", isOn);
         data.setBoolean("onGround", onGround);
-        NBTTagCompound tankWater = new NBTTagCompound();
-        water.writeToNBT(tankWater);
-        data.setTag("water", tankWater);
+        water.writeToNBT(data, "w");
         return data;
     }
 
@@ -210,19 +171,34 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
     public void networkUnpack(NBTTagCompound nbt) {
         this.isOn = nbt.getBoolean("isOn");
         this.onGround = nbt.getBoolean("onGround");
-        water.readFromNBT(nbt.getCompoundTag("water"));
+        water.readFromNBT(nbt, "w");
     }
 
     protected abstract boolean canOperate();
     protected abstract void operate();
 
-    protected ImmutablePair<BlockPos, ForgeDirection>[] getConPos() {
-        return new ImmutablePair[] {
-                ImmutablePair.of(new BlockPos(pos.getX() + 2, pos.getY(), pos.getZ()), Library.POS_X),
-                ImmutablePair.of(new BlockPos(pos.getX() - 2, pos.getY(), pos.getZ()), Library.NEG_X),
-                ImmutablePair.of(new BlockPos(pos.getX(), pos.getY(), pos.getZ() + 2), Library.POS_Z),
-                ImmutablePair.of(new BlockPos(pos.getX(), pos.getY(), pos.getZ() - 2), Library.NEG_Z)
+    protected DirPos[] getConPos() {
+        return new DirPos[] {
+                new DirPos(pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X),
+                new DirPos(pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X),
+                new DirPos(pos.getX(), pos.getY(), pos.getZ() + 2, Library.POS_Z),
+                new DirPos(pos.getX(), pos.getY(), pos.getZ() - 2, Library.NEG_Z)
         };
+    }
+
+    @Override
+    public FluidTankNTM[] getAllTanks() {
+        return new FluidTankNTM[] {water};
+    }
+
+    @Override
+    public FluidTankNTM[] getSendingTanks() {
+        return new FluidTankNTM[] {water};
+    }
+
+    @Override
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[0];
     }
 
     AxisAlignedBB bb = null;
@@ -250,143 +226,8 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
         return 65536.0D;
     }
 
-    protected List<TypedFluidTank> inTanks() {
-        List<TypedFluidTank> inTanks = new ArrayList<>();
-        return inTanks;
-    }
-
-    public List<TypedFluidTank> outTanks() {
-        List<TypedFluidTank> outTanks = new ArrayList<>();
-        return outTanks;
-    }
-
-    @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if(resource.amount <= 0) {
-            return null;
-        }
-        List<TypedFluidTank> send = new ArrayList<>();
-        for(TypedFluidTank tank : outTanks()) {
-            if(tank.type == resource.getFluid()) {
-                send.add(tank);
-            }
-        }
-
-        if(send.isEmpty()) {
-            return null;
-        }
-
-        int offer = 0;
-        List<Integer> weight = new ArrayList<>();
-        for(TypedFluidTank tank : send) {
-            int drainWeight = tank.tank.getFluidAmount();
-            if(drainWeight < 0) {
-                drainWeight = 0;
-            }
-
-            offer += drainWeight;
-            weight.add(drainWeight);
-        }
-
-        if(offer <= 0) {
-            return null;
-        }
-
-        if(!doDrain) {
-            return new FluidStack(resource.getFluid(), offer);
-        }
-
-        int needed = resource.amount;
-        for(int i = 0; i < send.size(); ++i) {
-            TypedFluidTank tank = send.get(i);
-            int fillWeight = weight.get(i);
-            int part = (int)(resource.amount * ((float)fillWeight / (float)offer));
-
-            FluidStack drained = tank.tank.drain(part, true);
-            if(drained != null) {
-                needed -= drained.amount;
-            }
-        }
-
-        for(int i = 0; i < 100 && needed > 0 && i < send.size(); i++) {
-            TypedFluidTank tank = send.get(i);
-            if(tank.tank.getFluidAmount() > 0) {
-                int total = Math.min(tank.tank.getFluidAmount(), needed);
-                tank.tank.drain(total, true);
-                needed -= total;
-            }
-        }
-
-        int drained = resource.amount - needed;
-        if(drained > 0) {
-            return new FluidStack(resource.getFluid(), drained);
-        }
-
+    public FluidTankNTM getTankToPaste() {
         return null;
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        for(TypedFluidTank tank : outTanks()) {
-            if(tank.type != null && tank.tank.getFluidAmount() > 0) {
-                return tank.tank.drain(maxDrain, doDrain);
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        int total = resource.amount;
-
-        if(total <= 0) {
-            return 0;
-        }
-
-        Fluid inType = resource.getFluid();
-        List<TypedFluidTank> rec = new ArrayList<>();
-        for(TypedFluidTank tank : inTanks()) {
-            if(tank.type == inType) {
-                rec.add(tank);
-            }
-        }
-
-        if(rec.isEmpty()) {
-            return 0;
-        }
-
-        int demand = 0;
-        List<Integer> weight = new ArrayList<>();
-        for(TypedFluidTank tank : rec) {
-            int fillWeight = tank.tank.getCapacity() - tank.tank.getFluidAmount();
-            if(fillWeight < 0) {
-                fillWeight = 0;
-            }
-
-            demand += fillWeight;
-            weight.add(fillWeight);
-        }
-
-        if(demand <= 0) {
-            return 0;
-        }
-
-        if(!doFill) {
-            return demand;
-        }
-
-        int fluidUsed = 0;
-
-        for(int i = 0; i < rec.size(); ++i) {
-            TypedFluidTank tank = rec.get(i);
-            int fillWeight = weight.get(i);
-            int part = (int) (Math.min(total, demand) * (float) fillWeight / (float) demand);
-            fluidUsed += tank.tank.fill(new FluidStack(resource.getFluid(), part), true);
-        }
-
-        return fluidUsed;
     }
 }

@@ -20,6 +20,7 @@ public class AdvancementManager {
 	public static Advancement soyuz;
 	public static Advancement achRadPoison;
 	public static Advancement achRadDeath;
+	public static Advancement achInferno;
 
 	public static Advancement achSacrifice;
 	public static Advancement achPotato;
@@ -76,6 +77,7 @@ public class AdvancementManager {
 		soyuz = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "soyuz"));
 		achRadPoison = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achradpoison"));
 		achRadDeath = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achraddeath"));
+		achInferno = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achinferno"));
 		achStratum = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achstratum"));
 		achMeltdown = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achmeltdown"));
 		achOmega12 = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achomega12"));

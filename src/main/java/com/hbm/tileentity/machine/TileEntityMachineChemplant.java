@@ -31,9 +31,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
@@ -267,7 +269,6 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		}
 
 		if(!world.isRemote) {
-			int meta = world.getBlockState(pos).getValue(MachineChemplant.FACING);
 
 			this.speed = 100;
 			this.consumption = 100;
@@ -291,40 +292,24 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			if(lsu0 < fluidDelay) lsu0++;
 			if(lsu1 < fluidDelay) lsu1++;
 
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+			ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+			TileEntity te1 = world.getTileEntity(new BlockPos(pos.getX() - dir.offsetX * 2, pos.getY(), pos.getZ() - dir.offsetZ * 2));
+			TileEntity te2 = world.getTileEntity(new BlockPos(pos.getX() + dir.offsetX * 3 + rot.offsetX, pos.getY(), pos.getZ() + dir.offsetZ * 3 + rot.offsetZ));
 
-			TileEntity te1 = null;
-			TileEntity te2 = null;
-
-			if(meta == 2) {
-				te1 = world.getTileEntity(pos.add(-2, 0, 0));
-				te2 = world.getTileEntity(pos.add(3, 0, -1));
-			}
-			if(meta == 3) {
-				te1 = world.getTileEntity(pos.add(2, 0, 0));
-				te2 = world.getTileEntity(pos.add(-3, 0, 1));
-			}
-			if(meta == 4) {
-				te1 = world.getTileEntity(pos.add(0, 0, 2));
-				te2 = world.getTileEntity(pos.add(-1, 0, -3));
-			}
-			if(meta == 5) {
-				te1 = world.getTileEntity(pos.add(0, 0, -2));
-				te2 = world.getTileEntity(pos.add(1, 0, 3));
-			}
-
-			if(te1 != null && te1.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY())) {
-				IItemHandler cap = te1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
+			if(te1 != null && te1.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY())) {
+				IItemHandler cap = te1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY());
 				int[] outputSlots = new int[]{ 5, 6, 7, 8, 11, 12, 19, 20 };
 				for(int i : outputSlots) {
 					tryFillContainerCap(cap, i);
 				}
 			}
 
-			if(te2 != null && te2.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY())) {
-				IItemHandler cap = te2.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
+			if(te2 != null && te2.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY())) {
+				IItemHandler cap = te2.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY());
 				int[] slots;
 				if(te2 instanceof TileEntityMachineBase) {
-					slots = ((TileEntityMachineBase) te2).getAccessibleSlotsFromSide(MultiblockHandler.intToEnumFacing(meta).rotateY());
+					slots = ((TileEntityMachineBase) te2).getAccessibleSlotsFromSide(dir.toEnumFacing().rotateY());
 					tryFillAssemblerCap(cap, slots, (TileEntityMachineBase) te2);
 				} else {
 					slots = new int[cap.getSlots()];
@@ -335,23 +320,12 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 			}
 
 
-			if(isProgressing) {
-				if(meta == 2) {
-					PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacket(pos.getX() + 0.375, pos.getY() + 3, pos.getZ() - 0.625, 1),
-							new TargetPoint(world.provider.getDimension(), pos.getX() + 0.375, pos.getY() + 3, pos.getZ() - 0.625, 50));
-				}
-				if(meta == 3) {
-					PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacket(pos.getX() + 0.625, pos.getY() + 3, pos.getZ() + 1.625, 1),
-							new TargetPoint(world.provider.getDimension(), pos.getX() + 0.625, pos.getY() + 3, pos.getZ() + 1.625, 50));
-				}
-				if(meta == 4) {
-					PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacket(pos.getX() - 0.625, pos.getY() + 3, pos.getZ() + 0.625, 1),
-							new TargetPoint(world.provider.getDimension(), pos.getX() - 0.625, pos.getY() + 3, pos.getZ() + 0.625, 50));
-				}
-				if(meta == 5) {
-					PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacket(pos.getX() + 1.625, pos.getY() + 3, pos.getZ() + 0.375, 1),
-							new TargetPoint(world.provider.getDimension(), pos.getX() + 1.625, pos.getY() + 3, pos.getZ() + 0.375, 50));
-				}
+			if(isProgressing && this.world.getTotalWorldTime() % 3 == 0) {
+				ForgeDirection rotP = dir.getRotation(ForgeDirection.UP);
+				double x = pos.getX() + 0.5 + dir.offsetX * 1.125 + rotP.offsetX * 0.125;
+				double y = pos.getY() + 3;
+				double z = pos.getZ() + 0.5 + dir.offsetZ * 1.125 + rotP.offsetZ * 0.125;
+				world.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, 0.0, 0.1, 0.0);
 			}
 
 			if(world.getTotalWorldTime() % 20 == 0) {

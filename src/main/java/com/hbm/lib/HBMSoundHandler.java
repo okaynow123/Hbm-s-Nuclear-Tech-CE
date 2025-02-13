@@ -58,6 +58,12 @@ public final class HBMSoundHandler {
 	public static SoundEvent bombDet;
 	public static SoundEvent rumble;
 	public static SoundEvent pipeFail;
+	public static SoundEvent lpwstart;
+	public static SoundEvent lpwstop;
+	public static SoundEvent lpwloop;
+	public static SoundEvent htrstart;
+	public static SoundEvent htrstop;
+	public static SoundEvent htrloop;
 	public static SoundEvent rocketIgnition;
 	public static SoundEvent rocketFlyLight;
 	public static SoundEvent rocketFlyHeavy;
@@ -339,6 +345,12 @@ public final class HBMSoundHandler {
 		bombDet = register("entity.bombDet");
 		rumble = register("misc.rumble");
 		pipeFail = register("entity.pipefail");
+		lpwstart = register("misc.lpwstart");
+		lpwstop = register("misc.lpwstop");
+		lpwloop = register("misc.lpwloop");
+		htrstart = register("misc.htrstart");
+		htrstop = register("misc.htrstop");
+		htrloop = register("misc.htrloop");
 		rocketTakeoff = register("entity.rocketTakeoff");
 		rocketIgnition = register("entity.rocketIgnition");
 		rocketFlyLight = register("entity.rocketFlyLight");

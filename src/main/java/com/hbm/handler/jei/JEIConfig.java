@@ -30,7 +30,6 @@ import com.hbm.inventory.gui.GUISILEX;
 import com.hbm.inventory.gui.GUITestDiFurnace;
 import com.hbm.inventory.gui.GUIDiFurnaceRTG;
 import com.hbm.inventory.gui.GUIRBMKOutgasser;
-import com.hbm.inventory.gui.GUIFWatzCore;
 import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomMissile;
@@ -89,7 +88,6 @@ public class JEIConfig implements IModPlugin {
 	public static final String ANVIL = "hbm.anvil";
 	public static final String RBMKOUTGASSER = "hbm.rbmk_outgasser";
 	public static final String RBMKFUEL = "hbm.rbmkfueluncrafting";
-	public static final String SAFE_REACTOR = "hbm.safe_reactor";
 	public static final String DFC = "hbm.dfc";
 	public static final String TRANSMUTATION = "hbm.transmutation";
 
@@ -155,7 +153,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.anvil_steel), ANVIL);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_outgasser), RBMKOUTGASSER);
 		registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RBMKFUEL);
-		registry.addRecipeCatalyst(new ItemStack(ModBlocks.fwatz_core), SAFE_REACTOR);
 		registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), DFC);
 		
 		// registry.addRecipes(ItemAssemblyTemplate.recipes, ASSEMBLY);
@@ -194,7 +191,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipes(JeiRecipes.getAnvilRecipes(), ANVIL);
 		registry.addRecipes(RBMKOutgasserRecipes.getRBMKOutgasserRecipes(), RBMKOUTGASSER);
 		registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
-		registry.addRecipes(JeiRecipes.getSAFERecipes(), SAFE_REACTOR);
 		registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
 
 		registry.addRecipeClickArea(GUIMachineAssembler.class, 45, 83, 82, 30, ASSEMBLY);
@@ -219,7 +215,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUISILEX.class, 45, 82, 113-45, 125-82, SILEX);
 		registry.addRecipeClickArea(GUIAnvil.class, 34, 26, 52-34, 44-26, SMITHING);
 		registry.addRecipeClickArea(GUIAnvil.class, 12, 50, 48-12, 66-50, ANVIL);
-		registry.addRecipeClickArea(GUIFWatzCore.class, 52, 64, 72, 19, SAFE_REACTOR);
 		registry.addRecipeClickArea(GUIRBMKOutgasser.class, 64, 53, 48, 16, RBMKOUTGASSER);
 		registry.addRecipeClickArea(GUIMachineSchrabidiumTransmutator.class, 64, 56, 66, 31, TRANSMUTATION);
 
@@ -258,31 +253,8 @@ public class JEIConfig implements IModPlugin {
 			// blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
 			blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ams_core_thingy));
 		}
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_assembler));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_centrifuge));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_chemplant));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_cyclotron));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_flare));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_fluidtank));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_pumpjack));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_refinery));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_turbofan));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_well));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_ams_base));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_ams_emitter));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_ams_limiter));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_assembler));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_chemplant));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_cyclotron));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_flare));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_fluidtank));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_pumpjack));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_refinery));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_turbofan));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_well));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_ams_base));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_ams_emitter));
-		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_ams_limiter));
+		//Th3_Sl1ze: gladly we DON'T have old dummy blocks now.. and un-fucking-gladly..
+		//TODO: fix the newly-old ported dummyfied machines
 		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_silo_hatch));
 	}
 
@@ -326,7 +298,6 @@ public class JEIConfig implements IModPlugin {
 				new RBMKFuelRecipeHandler(help),
 				new FusionRecipeHandler(help),
 				new HadronRecipeHandler(help),
-				new SAFERecipeHandler(help),
 				new DFCRecipeHandler(help),
 				new BookRecipeHandler(help));
 	}

@@ -15,6 +15,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -79,15 +80,15 @@ public class MachinePump extends BlockDummyable implements ITooltipProvider, ILo
 
         if(te instanceof TileEntityMachinePumpSteam) {
             TileEntityMachinePumpSteam pump = (TileEntityMachinePumpSteam) te;
-            text.add(ChatFormatting.GREEN + "-> " + ChatFormatting.RESET + ModForgeFluids.steam.getLocalizedName(new FluidStack(ModForgeFluids.steam, 1)) + ": " + String.format(Locale.US, "%,d", pump.steam.getTank().getFluidAmount()) + " / " + String.format(Locale.US, "%,d", pump.steam.getTank().getCapacity()) + "mB");
-            text.add(ChatFormatting.RED + "<- " + ChatFormatting.RESET + ModForgeFluids.spentsteam.getLocalizedName(new FluidStack(ModForgeFluids.spentsteam, 1)) + ": " + String.format(Locale.US, "%,d", pump.lps.getTank().getFluidAmount()) + " / " + String.format(Locale.US, "%,d", pump.lps.getTank().getCapacity()) + "mB");
-            text.add(ChatFormatting.RED + "<- " + ChatFormatting.RESET + FluidRegistry.WATER.getLocalizedName(new FluidStack(FluidRegistry.WATER, 1)) + ": " + String.format(Locale.US, "%,d", pump.water.getTank().getFluidAmount()) + " / " + String.format(Locale.US, "%,d", pump.water.getTank().getCapacity()) + "mB");
+            text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + pump.steam.getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", pump.steam.getFill()) + " / " + String.format(Locale.US, "%,d", pump.steam.getMaxFill()) + "mB");
+            text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + pump.lps.getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", pump.lps.getFill()) + " / " + String.format(Locale.US, "%,d", pump.lps.getMaxFill()) + "mB");
+            text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + pump.water.getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", pump.water.getFill()) + " / " + String.format(Locale.US, "%,d", pump.water.getMaxFill()) + "mB");
         }
 
         if(te instanceof TileEntityMachinePumpElectric) {
             TileEntityMachinePumpElectric pump = (TileEntityMachinePumpElectric) te;
-            text.add(ChatFormatting.GREEN + "-> " + ChatFormatting.RESET + String.format(Locale.US, "%,d", pump.power) + " / " + String.format(Locale.US, "%,d", pump.maxPower) + "HE");
-            text.add(ChatFormatting.RED + "<- " + ChatFormatting.RESET + FluidRegistry.WATER.getLocalizedName(new FluidStack(FluidRegistry.WATER, 1)) + ": " + String.format(Locale.US, "%,d", pump.water.getTank().getFluidAmount()) + " / " + String.format(Locale.US, "%,d", pump.water.getTank().getCapacity()) + "mB");
+            text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + String.format(Locale.US, "%,d", pump.power) + " / " + String.format(Locale.US, "%,d", pump.maxPower) + "HE");
+            text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + pump.water.getTankType().getLocalizedName() + ": " + String.format(Locale.US, "%,d", pump.water.getFill()) + " / " + String.format(Locale.US, "%,d", pump.water.getMaxFill()) + "mB");
         }
 
         if(pos[1] > 70) {

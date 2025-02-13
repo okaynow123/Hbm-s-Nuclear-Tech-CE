@@ -8,7 +8,6 @@ import com.hbm.interfaces.IFluidPipe;
 import com.hbm.interfaces.IFluidPipeMk2;
 import com.hbm.interfaces.IFluidVisualConnectable;
 import com.hbm.interfaces.IItemFluidHandler;
-import com.hbm.inventory.FluidCombustionRecipes;
 import com.hbm.inventory.EngineRecipes;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -18,8 +17,6 @@ import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.machine.ItemFluidTank;
 import com.hbm.items.special.ItemCell;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.tool.ItemFluidCanister;
-import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.lib.Library;
 import com.hbm.render.RenderHelper;
 import com.hbm.tileentity.machine.TileEntityDummy;
@@ -228,14 +225,6 @@ public class FFUtils {
 				}
 			} else if(isKeyPressed){
 				texts.add("§a["+I18n.format("trait.corrosivePlastic")+"]");
-			}
-			hasInfo = true;
-		}
-
-		if (FluidCombustionRecipes.hasFuelRecipe(fluid)) {
-			if(isKeyPressed){
-				texts.add("§6["+I18n.format("trait.flammable")+"]");
-				texts.add(" "+I18n.format("trait.flammable.desc", Library.getShortNumber(FluidCombustionRecipes.getFlameEnergy(fluid) * 1000L)));
 			}
 			hasInfo = true;
 		}

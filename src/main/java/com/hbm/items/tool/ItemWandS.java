@@ -53,9 +53,6 @@ public class ItemWandS extends Item {
 			case 4:
 				tooltip.add(I18nUtil.resolveKey("desc.structurewand.watz"));
 				break;
-			case 5:
-				tooltip.add(I18nUtil.resolveKey("desc.structurewand.safe"));
-				break;
 			}
 		}
 	}
@@ -96,9 +93,6 @@ public class ItemWandS extends Item {
 				break;
 			case 4:
 				new WatzOld().generateReactor(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 12 : pos.getY(), pos.getZ()));
-				break;
-			case 5:
-				new FWatz().generateHull(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 18 : pos.getY(), pos.getZ()));
 				break;
 			}
 			
@@ -144,9 +138,6 @@ public class ItemWandS extends Item {
 						break;
 					case 4:
 						player.sendMessage(new TextComponentTranslation("chat.structurewand.set.watz"));
-						break;
-					case 5:
-						player.sendMessage(new TextComponentTranslation("chat.structurewand.set.safe"));
 						break;
 					default:
 						player.sendMessage(new TextComponentTranslation("chat.structurewand.set.factory"));

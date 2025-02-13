@@ -68,7 +68,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	public float rotor;
 	public float lastRotor;
 	public boolean isOn;
-	private boolean converted;
+	private static boolean converted = false;
 
 	public TileEntityITER() {
 		super(5);
@@ -93,12 +93,12 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 	@Override
 	public void update() {
+		if (!converted){
+			convertAndSetFluids(types, tanks, tanksNew);
+			convertAndSetFluid(plasmaType, plasma, plasmaNew);
+			converted = true;
+		}
 		if(!world.isRemote) {
-			if (!converted){
-				convertAndSetFluids(types, tanks, tanksNew);
-				convertAndSetFluid(plasmaType, plasma, plasmaNew);
-				converted = true;
-			}
 			age++;
 			if(age >= 20) {
 				age = 0;

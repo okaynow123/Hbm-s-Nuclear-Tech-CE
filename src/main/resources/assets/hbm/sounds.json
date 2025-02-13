@@ -5,6 +5,12 @@
 	"misc.nullMine": {"category": "player", "sounds": [{"name": "hbm:misc/null", "stream": false}]},
     "misc.nullRadar": {"category": "player", "sounds": [{"name": "hbm:misc/null", "stream": false}]},
 	"misc.rumble": {"category": "player", "sounds": [{"name": "hbm:misc/rumble", "stream": false}]},
+	"misc.lpwstart": {"category": "player", "sounds": [{"name": "hbm:misc/lpw2start", "stream": false}]},
+	"misc.lpwstop": {"category": "player", "sounds": [{"name": "hbm:misc/lpwstop", "stream": false}]},
+	"misc.lpwloop": {"category": "player", "sounds": [{"name": "hbm:misc/lpwloop", "stream": false}]},
+	"misc.htrstart": {"category": "player", "sounds": [{"name": "hbm:misc/htr3start", "stream": false}]},
+	"misc.htrstop": {"category": "player", "sounds": [{"name": "hbm:misc/htrstop", "stream": false}]},
+	"misc.htrloop": {"category": "player", "sounds": [{"name": "hbm:misc/htrloop", "stream": false}]},
 
 	"block.crateBreak": {"category": "block", "sounds": ["hbm:block/cratebreak1", "hbm:block/cratebreak2", "hbm:block/cratebreak3", "hbm:block/cratebreak4", "hbm:block/cratebreak5"]},
 	"block.shutdown": {"category": "block", "sounds": [{"name": "hbm:block/shutdown", "stream": false}]},

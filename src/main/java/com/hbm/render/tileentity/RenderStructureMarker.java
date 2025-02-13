@@ -2,7 +2,6 @@ package com.hbm.render.tileentity;
 
 import com.hbm.render.RenderHelper;
 import com.hbm.tileentity.machine.TileEntityStructureMarker;
-import com.hbm.world.FWatz;
 import com.hbm.world.FactoryTitanium;
 import com.hbm.world.NuclearReactor;
 import com.hbm.world.WatzOld;
@@ -260,51 +259,6 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 							texture = 7;
 						if(texture >= 0) {
 							renderSmolBlockAt(watz[texture][0], watz[texture][1], a, b, c);
-						}
-					}
-				}
-			}
-		}
-		if(type == 4) {
-			if(meta == 1) {
-				offsetZ = 0;
-				offsetX = 28;
-			}
-			if(meta == 2) {
-				offsetZ = 0;
-				offsetX = 8;
-			}
-			if(meta == 3) {
-				offsetX = 18;
-				offsetZ = -10;
-			}
-			if(meta == 4) {
-				offsetZ = 10;
-				offsetX = 18;
-			}
-			
-			GL11.glTranslatef(-9 + offsetX, 0, -9 + offsetZ);
-			for(int a = 0; a < 19; a++) {
-				for(int b = 0; b < 13; b++) {
-					for(int c = 0; c < 19; c++) {
-				
-						int texture = -1;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("X"))
-							texture = 0;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("H"))
-							texture = 1;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("S"))
-							texture = 2;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("T"))
-							texture = 3;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("M"))
-							texture = 4;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("C"))
-							texture = 5;
-						if(FWatz.fwatz[b][a].substring(c, c + 1).equals("#"))
-							texture = 6;
-						if(texture >= 0) {
-							renderSmolBlockAt(fwatz[texture][0], fwatz[texture][1], a, b, c);
 						}
 					}
 				}

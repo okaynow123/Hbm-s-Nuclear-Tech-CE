@@ -1,8 +1,0 @@
-rod_zirnox_lithium
-rod_zirnox_th232
-votv_f0
-votv_f1
-votv_f2
-votv_f3
-votv_f4
-cheese

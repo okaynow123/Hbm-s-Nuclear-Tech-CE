@@ -2,6 +2,9 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.forgefluid.FFUtils;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -23,19 +26,17 @@ public class TileEntityMachinePumpElectric extends TileEntityMachinePumpBase imp
 
     public TileEntityMachinePumpElectric() {
         super();
-        water = new TypedFluidTank(FluidRegistry.WATER, new FluidTank(electricSpeed * 100));
+        water = new FluidTankNTM(Fluids.WATER, electricSpeed * 100);
     }
 
     @Override
     public void update() {
-        super.update();
         if(!world.isRemote) {
-
-            if(world.getTotalWorldTime() % 20 == 0) for(Pair<BlockPos, ForgeDirection> pos : getConPos()) {
-                this.trySubscribe(world, pos.getLeft().getX(), pos.getLeft().getY(), pos.getLeft().getZ(), pos.getRight());
+            if(world.getTotalWorldTime() % 20 == 0) for(DirPos pos : getConPos()) {
+                this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
-            sendFluids();
         }
+        super.update();
     }
 
     public NBTTagCompound getSync() {
@@ -52,13 +53,14 @@ public class TileEntityMachinePumpElectric extends TileEntityMachinePumpBase imp
 
     @Override
     protected boolean canOperate() {
-        return power >= 1_000 && water.tank.getFluidAmount() < water.tank.getCapacity();
+        return power >= 1_000 && water.getFill() < water.getMaxFill();
     }
 
     @Override
     protected void operate() {
         this.power -= 1_000;
-        water.tank.fill(new FluidStack(FluidRegistry.WATER, electricSpeed), true);
+        int pumpSpeed = water.getTankType() == Fluids.WATER ? electricSpeed : electricSpeed / nonWaterDebuff;
+        water.setFill(Math.min(water.getFill() + pumpSpeed, water.getMaxFill()));
     }
 
     @Override
@@ -74,46 +76,5 @@ public class TileEntityMachinePumpElectric extends TileEntityMachinePumpBase imp
     @Override
     public void setPower(long power) {
         this.power = power;
-    }
-
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return new IFluidTankProperties[]{water.tank.getTankProperties()[0]};
-    }
-
-    @Override
-    public List<TypedFluidTank> outTanks() {
-        List<TypedFluidTank> outTanks = super.outTanks();
-        outTanks.add(water);
-
-        return outTanks;
-    }
-
-    private void sendFluids() {
-        for (Pair<BlockPos, ForgeDirection> pos : getConPos()) {
-            for (TypedFluidTank tank : outTanks()) {
-                if(tank.type != null && tank.tank.getFluidAmount() > 0) {
-                    FFUtils.fillFluid(this, tank.tank, world, pos.getLeft(), tank.tank.getFluidAmount());
-                }
-            }
-        }
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
-        }
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return true;
-        }
-
-        return super.hasCapability(capability, facing);
     }
 }

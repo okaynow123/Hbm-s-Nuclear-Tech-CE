@@ -79,8 +79,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 		
 		if(!world.isRemote && !updateLock()) {
 			
-			//boolean turnedOn = world.getBlockState(pos.add(0, 3, 0)).getBlock() == ModBlocks.watz_pump && world.getRedstonePower(pos.add(0, 5, 0), EnumFacing.DOWN) > 0;
-			boolean turnedOn = false;
+			boolean turnedOn = world.getBlockState(pos.add(0, 3, 0)).getBlock() == ModBlocks.watz_pump && world.getRedstonePower(pos.add(0, 5, 0), EnumFacing.DOWN) > 0;
 			List<TileEntityWatz> segments = new ArrayList<>();
 			segments.add(this);
 			this.subscribeToTop();

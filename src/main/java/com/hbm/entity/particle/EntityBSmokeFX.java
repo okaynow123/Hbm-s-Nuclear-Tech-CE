@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityBSmokeFX extends EntityModFX {
 
-
 	    public EntityBSmokeFX(World world) {
 	    	super(world, 0, 0, 0);
 	    }

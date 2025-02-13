@@ -72,6 +72,7 @@ public class GeneralConfig {
 	public static int decoToIngotRate = 25;
 	public static int crucibleMaxCharges = 16;
 	public static boolean enableReEval = true;
+	public static boolean enableSteamParticles = true;
 	
 	public static boolean enable528 = false;
 	public static boolean enable528ReasimBoilers = true;
@@ -153,6 +154,7 @@ public class GeneralConfig {
 		enableAsbestos = config.get(CATEGORY_GENERAL, "1.26_enableAsbestosDust", true).getBoolean(true);
 		
 		enableReEval = config.get(CATEGORY_GENERAL, "1.27_enableReEval", true, "Allows re-evaluating power networks on link remove instead of destroying and recreating").getBoolean(true);
+		enableSteamParticles = config.get(CATEGORY_GENERAL, "1.27.1_enableSteamParticles", true, "If disabled, auxiliary cooling towers and large cooling towers will not emit steam particles when in use.").getBoolean(true);
 		
 		recipes = config.get(CATEGORY_GENERAL, "1.28_enableRecipes", true).getBoolean(true);
 		shapeless = config.get(CATEGORY_GENERAL, "1.28_enableShapeless", true).getBoolean(true);

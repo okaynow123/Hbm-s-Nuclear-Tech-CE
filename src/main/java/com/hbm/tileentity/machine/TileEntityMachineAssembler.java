@@ -1,12 +1,15 @@
 package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.MultiblockHandler;
+import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
@@ -103,6 +106,27 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 	@Override
 	public void update() {
 		if(!world.isRemote) {
+
+			//meta below 12 means that it's an old multiblock configuration
+			if(this.getBlockMetadata() < 12) {
+				int meta = this.getBlockMetadata();
+				if(meta == 2 || meta == 14) meta = 4;
+				else if(meta == 4 || meta == 13) meta = 3;
+				else if(meta == 3 || meta == 15) meta = 5;
+				else if(meta == 5 || meta == 12) meta = 2;
+				//get old direction
+				ForgeDirection dir = ForgeDirection.getOrientation(meta);
+				//remove tile from the world to prevent inventory dropping
+				world.removeTileEntity(pos);
+				//use fillspace to create a new multiblock configuration
+				world.setBlockState(pos, ModBlocks.machine_assembler.getStateFromMeta(dir.ordinal() + 10), 3);
+				MultiblockHandlerXR.fillSpace(world, pos.getX(), pos.getY(), pos.getZ(), ((BlockDummyable) ModBlocks.machine_assembler).getDimensions(), ModBlocks.machine_assembler, dir);
+				//load the tile data to restore the old values
+				NBTTagCompound data = new NBTTagCompound();
+				this.writeToNBT(data);
+				world.getTileEntity(pos).readFromNBT(data);
+				return;
+			}
 
 			this.updateConnections();
 
