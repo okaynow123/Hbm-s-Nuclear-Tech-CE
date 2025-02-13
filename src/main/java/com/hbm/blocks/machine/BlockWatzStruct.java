@@ -23,6 +23,12 @@ public class BlockWatzStruct extends BlockContainer {
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityWatzStruct();
     }
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+
 
 
     @Override
