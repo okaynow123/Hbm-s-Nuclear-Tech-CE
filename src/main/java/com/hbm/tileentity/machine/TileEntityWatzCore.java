@@ -16,7 +16,7 @@ import com.hbm.packet.AuxElectricityPacket;
 import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityLoadedBase;
-import com.hbm.world.Watz;
+import com.hbm.world.WatzOld;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -192,7 +192,7 @@ public class TileEntityWatzCore extends TileEntityLoadedBase implements ITickabl
 	}
 
 	public boolean isStructureValid(World world) {
-		return Watz.checkHull(world, pos);
+		return WatzOld.checkHull(world, pos);
 	}
 
 	public boolean hasFuse() {

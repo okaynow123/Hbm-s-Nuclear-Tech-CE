@@ -71,6 +71,7 @@ public class ItemBedrockOreNew extends Item {
                 String placeholderName = RefStrings.MODID + ":bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
                 TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
                 map.setTextureEntry(mutableIcon);
+                if(overlays == null) return;
                 this.icons[i * BedrockOreType.values().length + j] = mutableIcon;
             }
         }

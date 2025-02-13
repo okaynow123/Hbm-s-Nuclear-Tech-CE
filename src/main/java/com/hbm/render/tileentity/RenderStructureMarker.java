@@ -5,7 +5,7 @@ import com.hbm.tileentity.machine.TileEntityStructureMarker;
 import com.hbm.world.FWatz;
 import com.hbm.world.FactoryTitanium;
 import com.hbm.world.NuclearReactor;
-import com.hbm.world.Watz;
+import com.hbm.world.WatzOld;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -242,21 +242,21 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 					for(int c = 0; c < 7; c++) {
 				
 						int texture = -1;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("C"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("C"))
 							texture = 0;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("A"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("A"))
 							texture = 1;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("R"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("R"))
 							texture = 2;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("S"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("S"))
 							texture = 3;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("I"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("I"))
 							texture = 4;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("#"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("#"))
 							texture = 5;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("K"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("K"))
 							texture = 6;
-						if(Watz.watz[b][a].substring(c, c + 1).equals("W"))
+						if(WatzOld.watz[b][a].substring(c, c + 1).equals("W"))
 							texture = 7;
 						if(texture >= 0) {
 							renderSmolBlockAt(watz[texture][0], watz[texture][1], a, b, c);

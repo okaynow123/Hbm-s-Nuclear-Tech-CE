@@ -137,7 +137,7 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
                 case 20:
                     return Item.getItemFromBlock(ModBlocks.fusion_core);
                 case 21:
-                    return Item.getItemFromBlock(ModBlocks.watz_element);
+                    return Item.getItemFromBlock(ModBlocks.watz_element_depricated);
                 case 22:
                     return Item.getItemFromBlock(ModBlocks.ore_rare);
                 case 23:

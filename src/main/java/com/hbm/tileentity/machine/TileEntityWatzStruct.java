@@ -50,15 +50,15 @@ public class TileEntityWatzStruct extends TileEntity implements ITickable {
 			if(!cbr(ModBlocks.watz_cooler, -1, i, -2)) return;
 			
 			for(int j = -1; j < 2; j++) {
-				if(!cbr(ModBlocks.watz_end, 1, 3, i, j)) return;
-				if(!cbr(ModBlocks.watz_end, 1, j, i, 3)) return;
-				if(!cbr(ModBlocks.watz_end, 1, -3, i, j)) return;
-				if(!cbr(ModBlocks.watz_end, 1, j, i, -3)) return;
+				if(!cbr(ModBlocks.watz_casing, 1, 3, i, j)) return;
+				if(!cbr(ModBlocks.watz_casing, 1, j, i, 3)) return;
+				if(!cbr(ModBlocks.watz_casing, 1, -3, i, j)) return;
+				if(!cbr(ModBlocks.watz_casing, 1, j, i, -3)) return;
 			}
-			if(!cbr(ModBlocks.watz_end, 1, 2, i, 2)) return;
-			if(!cbr(ModBlocks.watz_end, 1, 2, i, -2)) return;
-			if(!cbr(ModBlocks.watz_end, 1, -2, i, 2)) return;
-			if(!cbr(ModBlocks.watz_end, 1, -2, i, -2)) return;
+			if(!cbr(ModBlocks.watz_casing, 1, 2, i, 2)) return;
+			if(!cbr(ModBlocks.watz_casing, 1, 2, i, -2)) return;
+			if(!cbr(ModBlocks.watz_casing, 1, -2, i, 2)) return;
+			if(!cbr(ModBlocks.watz_casing, 1, -2, i, -2)) return;
 		}
 		
 		Watz watz = (Watz)ModBlocks.watz;

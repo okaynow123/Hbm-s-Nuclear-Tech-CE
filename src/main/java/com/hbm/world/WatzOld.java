@@ -12,7 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
-public class Watz {
+@Deprecated
+public class WatzOld {
 
 	public static String[][] watz = new String[][] {
 		{
@@ -147,28 +148,28 @@ public class Watz {
 					Block b = Blocks.AIR;
 
 					if(c.equals("W"))
-						b = ModBlocks.watz_element;
+						b = ModBlocks.watz_element_depricated;
 					else if(c.equals("R"))
-						b = ModBlocks.watz_control;
+						b = ModBlocks.watz_control_depricated;
 					else if(c.equals("S"))
-						b = ModBlocks.watz_end;
+						b = ModBlocks.watz_end_depricated;
 					else if(c.equals("K"))
 						b = ModBlocks.watz_cooler;
 					else if(c.equals("I"))
-						b = ModBlocks.watz_conductor;
+						b = ModBlocks.watz_conductor_depricated;
 					else if(c.equals("C"))
 						b = ModBlocks.reinforced_brick;
 					else if(c.equals("#"))
-						b = ModBlocks.watz_core;
+						b = ModBlocks.struct_watz_core;
 					
 					world.setBlockState(mPos.setPos(x + i, y + j, z + k), b.getDefaultState());
 				}
 			}
 		}
-		world.setBlockState(mPos.setPos(x + 3, y + 6, z + 0), ModBlocks.watz_hatch.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
-		world.setBlockState(mPos.setPos(x + 0, y + 6, z + 3), ModBlocks.watz_hatch.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[4]), 3);
-		world.setBlockState(mPos.setPos(x + 3, y + 6, z + 6), ModBlocks.watz_hatch.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
-		world.setBlockState(mPos.setPos(x + 6, y + 6, z + 3), ModBlocks.watz_hatch.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
+		world.setBlockState(mPos.setPos(x + 3, y + 6, z + 0), ModBlocks.watz_hatch_depricated.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
+		world.setBlockState(mPos.setPos(x + 0, y + 6, z + 3), ModBlocks.watz_hatch_depricated.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[4]), 3);
+		world.setBlockState(mPos.setPos(x + 3, y + 6, z + 6), ModBlocks.watz_hatch_depricated.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
+		world.setBlockState(mPos.setPos(x + 6, y + 6, z + 3), ModBlocks.watz_hatch_depricated.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
 		return true;
 	}
 
@@ -188,15 +189,15 @@ public class Watz {
 					boolean flag2 = false;
 
 					if(c.equals("W")){
-						b = ModBlocks.watz_element;
+						b = ModBlocks.watz_element_depricated;
 						flag2 = true;
 					}
 					else if(c.equals("R")){
-						b = ModBlocks.watz_control;
+						b = ModBlocks.watz_control_depricated;
 						flag2 = true;
 					}
 					else if(c.equals("S")){
-						b = ModBlocks.watz_end;
+						b = ModBlocks.watz_end_depricated;
 						flag2 = true;
 					}
 					else if(c.equals("K")){
@@ -204,7 +205,7 @@ public class Watz {
 						flag2 = true;
 					}
 					else if(c.equals("I")){
-						b = ModBlocks.watz_conductor;
+						b = ModBlocks.watz_conductor_depricated;
 						flag2 = true;
 					}
 					else if(c.equals("C")){
@@ -212,11 +213,11 @@ public class Watz {
 						flag2 = true;
 					}
 					else if(c.equals("A")){
-						b = ModBlocks.watz_hatch;
+						b = ModBlocks.watz_hatch_depricated;
 						flag2 = true;
 					}
 					else if(c.equals("#")){
-						b = ModBlocks.watz_core;
+						b = ModBlocks.struct_watz_core;
 						flag2 = true;
 					}
 

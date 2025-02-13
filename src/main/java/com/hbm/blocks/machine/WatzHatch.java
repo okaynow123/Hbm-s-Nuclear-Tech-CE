@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+@Deprecated
 public class WatzHatch extends BlockContainer {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
