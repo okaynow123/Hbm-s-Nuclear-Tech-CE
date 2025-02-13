@@ -1,87 +1,125 @@
 package com.hbm.blocks.generic;
 
 import api.hbm.block.IToolable;
-import com.hbm.blocks.BlockMulti;
+import com.hbm.blocks.BlockBase;
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.handler.NTMToolHandler;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.MetaBlock;
+import com.hbm.items.IModelRegister;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.Tuple.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class BlockToolConversion extends BlockMulti implements IToolable, ILookOverlay {
+import static com.hbm.handler.NTMToolHandler.conversions;
 
-    public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
-    public static HashMap<Pair<ToolType, MetaBlock>, Pair<AStack[], MetaBlock>> conversions = new HashMap<>();
-    private final List<String> names = new ArrayList<>();
+public class BlockToolConversion extends BlockBase implements IToolable, ILookOverlay, ICustomBlockItem {
+
+    public static final PropertyBool TOOLED = PropertyBool.create("tooled");
+    public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
+    public static HashMap<Object[], Object> bufferedTools = new HashMap();
+    public ItemBlock itemBlock;
+    private boolean showMetaInCreative = true;
 
     public BlockToolConversion(Material mat) {
         super(mat);
-        this.setDefaultState(this.getBlockState().getBaseState().withProperty(VARIANT, 0));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(TOOLED, false));
+    }
+
+
+    public BlockToolConversion(Material mat, String s) {
+        super(mat, s);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(TOOLED, false));
     }
 
     public static ToolType quickLookup(ItemStack stack) {
         return ToolType.getType(stack);
     }
 
-    public BlockToolConversion addVariant(String... name) {
-        Collections.addAll(names, name);
-        return this;
+    public static HashMap<Object[], Object> getRecipes(boolean recipes) {
+
+        if (!bufferedRecipes.isEmpty()) return recipes ? bufferedRecipes : bufferedTools;
+
+        for (Map.Entry<Pair<ToolType, MetaBlock>, Pair<AStack[], MetaBlock>> entry : conversions.entrySet()) {
+
+            List<AStack> list = new ArrayList();
+
+            for (AStack stack : entry.getValue().getKey()) {
+                list.add(stack);
+            }
+            list.add(new RecipesCommon.ComparableStack(entry.getKey().getValue().block, 1, entry.getKey().getValue().meta));
+
+            Object[] inputInstance = list.toArray(new AStack[0]); // the instance has to match for the machine lookup to succeed
+            bufferedRecipes.put(inputInstance, new ItemStack(entry.getValue().getValue().block, 1, entry.getValue().getValue().meta));
+            bufferedTools.put(inputInstance, entry.getKey().getKey().stacksForDisplay.toArray(new ItemStack[0]));
+        }
+
+        return recipes ? bufferedRecipes : bufferedTools;
     }
 
-    @Override
-    public int getSubCount() {
-        return names.size() + 1;
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, rectify(meta));
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT);
+    public void registerItem() {
+        itemBlock = new BlockToolConversionItem(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
+        ForgeRegistries.ITEMS.register(itemBlock);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+        return new BlockStateContainer(this, TOOLED);
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing,
-                                            float hitX, float hitY, float hitZ, int meta,
-                                            EntityLivingBase placer, EnumHand hand) {
-        return this.getDefaultState().withProperty(VARIANT, rectify(meta));
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        int meta = state.getValue(TOOLED) ? 1 : 0;
+        return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
-        int meta = stack.getItemDamage() - 1;
-        if (meta == -1 || meta >= names.size()) {
-            return super.getTranslationKey();
-        }
-        return super.getTranslationKey() + "." + names.get(meta);
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        int meta = stack.getMetadata();
+        world.setBlockState(pos, this.getStateFromMeta(meta), 3);
+    }
+
+    public String getTranslationKey(IBlockState state) {
+        return super.getTranslationKey() + (state.getValue(TOOLED) ? "_tooled" : "");
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(TOOLED) ? 1 : 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(TOOLED, meta == 1);
     }
 
     @Override
@@ -93,14 +131,14 @@ public class BlockToolConversion extends BlockMulti implements IToolable, ILookO
         IBlockState state = world.getBlockState(pos);
         int meta = getMetaFromState(state);
 
-        Pair<AStack[], MetaBlock> result = conversions.get(new Pair<>(tool, new MetaBlock(this, meta)));
+        Pair<AStack[], MetaBlock> result = NTMToolHandler.getConversions().get(new Pair<>(tool, new MetaBlock(this, meta)));
 
         if (result == null) return false;
 
         List<AStack> materials = new ArrayList<>(Arrays.asList(result.getKey()));
 
         if (materials.isEmpty() || InventoryUtil.doesPlayerHaveAStacks(player, materials, true)) {
-            world.setBlockState(pos, result.getValue().block.getStateFromMeta(result.getValue().meta), 3);
+            world.setBlockState(pos, getStateFromMeta(result.value.meta), 3);
             return true;
         }
 
@@ -118,7 +156,7 @@ public class BlockToolConversion extends BlockMulti implements IToolable, ILookO
         IBlockState state = world.getBlockState(pos);
         int meta = getMetaFromState(state);
 
-        Pair<AStack[], MetaBlock> result = conversions.get(new Pair<>(tool, new MetaBlock(this, meta)));
+        Pair<AStack[], MetaBlock> result = NTMToolHandler.getConversions().get(new Pair<>(tool, new MetaBlock(this, meta)));
 
         if (result == null) return;
 
@@ -134,7 +172,34 @@ public class BlockToolConversion extends BlockMulti implements IToolable, ILookO
             }
         }
 
-        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(this.getTranslationKey(new ItemStack(this, 1, meta))), 0xffff00, 0x404000, text);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(state.getBlock().getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
+    }
+
+    public class BlockToolConversionItem extends ItemBlock implements IModelRegister {
+
+        public BlockToolConversionItem(Block block) {
+            super(block);
+            this.setHasSubtypes(true);
+            this.canRepair = false;
+        }
+
+
+        @Override
+        public int getMetadata(int damage) {
+            return damage;
+        }
+
+        @Override
+        public String getTranslationKey(ItemStack stack) {
+            return super.getTranslationKey() + (stack.getMetadata() == 1 ? "_tooled" : "");
+        }
+
+        @Override
+        public void registerModels() {
+            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(this.getRegistryName(), "tooled=false"));
+            ModelLoader.setCustomModelResourceLocation(this, 1, new ModelResourceLocation(this.getRegistryName() + "_tooled", "tooled=true"));
+        }
     }
 }
+
 

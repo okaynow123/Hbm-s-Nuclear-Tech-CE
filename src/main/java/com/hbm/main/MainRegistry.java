@@ -15,9 +15,9 @@ import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ItemEnumMulti;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
@@ -26,8 +26,6 @@ import com.hbm.tileentity.network.*;
 import com.hbm.tileentity.turret.*;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
-import com.hbm.world.biome.BiomeGenCraterBase;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.Logger;
 
 import com.hbm.blocks.ModBlocks;
@@ -202,7 +200,6 @@ import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
@@ -218,7 +215,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -233,6 +229,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
+@Spaghetti("Total cluserfuck")
 public class MainRegistry {
 
 	static {
@@ -951,6 +948,7 @@ public class MainRegistry {
 		HadronRecipes.register();
 		MagicRecipes.register();
 		SILEXRecipes.register();
+		NTMToolHandler.register();
 		SerializableRecipe.registerAllHandlers();
 		SerializableRecipe.initialize();
 		AnvilRecipes.register();
@@ -1120,9 +1118,9 @@ public class MainRegistry {
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_schrabidium, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition position, ItemStack stack)
             {
-                return new EntityGrenadeSchrabidium(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeSchrabidium(world, position.getX(), position.getY(), position.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_nuke, new BehaviorProjectileDispense() {

@@ -6,14 +6,17 @@ import java.nio.IntBuffer;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.IModelRegister;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.machine.*;
 import com.hbm.items.special.*;
 import com.hbm.items.weapon.*;
 import com.hbm.render.item.*;
+import com.hbm.render.tileentity.RenderWatzMultiblock;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
@@ -339,6 +342,8 @@ public class ModEventHandlerClient {
 						new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
 			}
 		}
+		if(item instanceof IModelRegister)
+			((IModelRegister) item).registerModels();
 
 		if(item == ModItems.chemistry_icon) {
 			for(int i: ChemplantRecipes.recipeNames.keySet()){
@@ -908,6 +913,12 @@ public class ModEventHandlerClient {
 		RenderSoyuzMultiblock.blockIcons[0] = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/struct_launcher");
 		RenderSoyuzMultiblock.blockIcons[1] = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/concrete_smooth");
 		RenderSoyuzMultiblock.blockIcons[2] = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/struct_scaffold");
+
+		RenderWatzMultiblock.casingSprite = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_casing_tooled");
+		RenderWatzMultiblock.coolerSpriteSide = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_cooler_side");
+		RenderWatzMultiblock.coolerSpriteTop = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_cooler_top");
+		RenderWatzMultiblock.elementSpriteSide = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_element_side");
+		RenderWatzMultiblock.elementSpriteTop = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_element_top");
 	}
 
 	public static TextureAtlasSprite contrail;

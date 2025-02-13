@@ -54,11 +54,12 @@ dependencies {
     compileOnly rfg.deobf("cofh:CoFHCore:1.12.2-${version_cofhcore}:universal")
 
 
-    implementation rfg.deobf("curse.maven:groovyscript-687577:5562296")
     implementation rfg.deobf('curse.maven:had-enough-items-557549:5471944')
-    implementation rfg.deobf("curse.maven:mixin-booter-419286:5640857")
 
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:5640857")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:spark-361579:3542217")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
 
 
 
