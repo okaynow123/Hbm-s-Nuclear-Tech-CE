@@ -36,6 +36,11 @@ public class WatzPump extends BlockDummyable {
 	}
 
 	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+
+	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		IBlockState state = world.getBlockState(pos);
 		return side == EnumFacing.UP && getMetaFromState(state) == 1;
