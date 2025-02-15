@@ -31,6 +31,7 @@ import com.hbm.inventory.gui.GUITestDiFurnace;
 import com.hbm.inventory.gui.GUIDiFurnaceRTG;
 import com.hbm.inventory.gui.GUIRBMKOutgasser;
 import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
+import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
@@ -46,6 +47,7 @@ import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -256,6 +258,13 @@ public class JEIConfig implements IModPlugin {
 		//Th3_Sl1ze: gladly we DON'T have old dummy blocks now.. and un-fucking-gladly..
 		//TODO: fix the newly-old ported dummyfied machines
 		blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_silo_hatch));
+
+
+		for(Item item : ModItems.ALL_ITEMS) {
+			if(item instanceof EffectItem) {
+				blacklist.addIngredientToBlacklist(new ItemStack(item));
+			}
+		}
 	}
 
 	@Override

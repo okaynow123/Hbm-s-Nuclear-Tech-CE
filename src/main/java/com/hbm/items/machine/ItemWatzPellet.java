@@ -78,7 +78,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		}
 	}
 
-	/*@SideOnly(Side.CLIENT)
+/*@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister reg) {
 		
 		Enum[] enums = theEnum.getEnumConstants();
