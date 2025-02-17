@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.blocks.IStructTE;
 import com.hbm.blocks.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityMultiblock extends TileEntity implements ITickable {
+public class TileEntityMultiblock extends TileEntity implements ITickable, IStructTE<TileEntityMultiblock> {
 
 	@Override
 	public void update() {
@@ -203,4 +204,8 @@ public class TileEntityMultiblock extends TileEntity implements ITickable {
 		return 65536.0D;
 	}
 
+	@Override
+	public TileEntityMultiblock newInstance() {
+		return this;
+	}
 }

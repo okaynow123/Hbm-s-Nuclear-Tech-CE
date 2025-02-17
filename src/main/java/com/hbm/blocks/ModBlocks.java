@@ -21,6 +21,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.DoorDecl;
+import com.hbm.tileentity.machine.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -1163,15 +1164,15 @@ public class ModBlocks {
 	
 	public static final Block muffler = new BlockBase(Material.CLOTH, "muffler").setSoundType(SoundType.CLOTH).setHardness(0.8F).setCreativeTab(MainRegistry.blockTab);
 	
-	//Launcher Components TODO: Make a stuct abstract class
+	//Launcher Components
 	public static final Block struct_launcher = new BlockBase(Material.IRON, "struct_launcher").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
 	public static final Block struct_scaffold = new BlockBase(Material.IRON, "struct_scaffold").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
-	public static final Block struct_launcher_core = new BlockStruct(Material.IRON, "struct_launcher_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
-	public static final Block struct_launcher_core_large = new BlockStruct(Material.IRON, "struct_launcher_core_large").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
-	public static final Block struct_soyuz_core = new BlockSoyuzStruct(Material.IRON, "struct_soyuz_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
-	public static final Block struct_iter_core = new BlockITERStruct(Material.IRON, "struct_iter_core").setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block struct_plasma_core = new BlockPlasmaStruct(Material.IRON, "struct_plasma_core").setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block struct_watz_core = new BlockWatzStruct(Material.IRON, "struct_watz_core").setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block struct_launcher_core = new BlockStruct(Material.IRON, "struct_launcher_core", TileEntityMultiblock.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
+	public static final Block struct_launcher_core_large = new BlockStruct(Material.IRON, "struct_launcher_core_large", TileEntityMultiblock.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
+	public static final Block struct_soyuz_core = new BlockStruct(Material.IRON, "struct_soyuz_core", TileEntitySoyuzStruct.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
+	public static final Block struct_iter_core = new BlockStruct(Material.IRON, "struct_iter_core", TileEntityITERStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block struct_plasma_core = new BlockPlasmaStruct(Material.IRON, "struct_plasma_core", TileEntityPlasmaStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block struct_watz_core = new BlockStruct(Material.IRON, "struct_watz_core", TileEntityWatzStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	//Sin upon gods earth
 	public static final int guiID_factory_titanium = 24;
