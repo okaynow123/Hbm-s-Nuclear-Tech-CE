@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
+import static com.hbm.render.util.SmallBlockPronter.*;
+
 public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityITERStruct> {
 
 	@Override
@@ -64,7 +66,7 @@ public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityIT
 	            	case 4: active = glass; break;
 	            	}
 
-	            	SmallBlockPronter.renderSimpleBlockAt(active, ix - 6F, iy + 3, iz - 7F);
+	            	renderSimpleBlockAt(active, ix - 6F, iy + 3, iz - 7F);
 	            }
 	        }
         }
