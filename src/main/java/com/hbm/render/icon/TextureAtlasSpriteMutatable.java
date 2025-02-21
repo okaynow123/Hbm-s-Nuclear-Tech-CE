@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.compress.utils.IOUtils;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -36,8 +37,14 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
 
     @Override
     public void loadSpriteFrames(IResource resource, int mipmapLevels) throws IOException {
-        BufferedImage bufferedImage = TextureUtil.readBufferedImage(resource.getInputStream());
+        BufferedImage bufferedImage = ImageIO.read(resource.getInputStream());
+        if(bufferedImage == null) {
+            MainRegistry.logger.warn("Failed to load texture " + this.getIconName() + " from " + resource.getResourceLocation());
+        }
         AnimationMetadataSection animationMetadataSection = resource.getMetadata("animation");
+        if(animationMetadataSection == null) {
+            MainRegistry.logger.warn("No animation metadata found for " + this.getIconName());
+        }
         int[][] frameData = new int[mipmapLevels][];
         frameData[0] = new int[bufferedImage.getWidth() * bufferedImage.getHeight()];
         bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), frameData[0], 0, bufferedImage.getWidth());

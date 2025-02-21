@@ -3,7 +3,6 @@ package com.hbm.render.tileentity;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.render.RenderHelper;
 import com.hbm.render.util.IconUtil;
-import com.hbm.render.util.SmallBlockPronter;
 import com.hbm.tileentity.machine.TileEntityITERStruct;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -12,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import org.lwjgl.opengl.GL11;
 
-import static com.hbm.render.util.SmallBlockPronter.*;
+import static com.hbm.render.util.SmallBlockPronter.renderSimpleBlockAt;
 
 public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityITERStruct> {
 

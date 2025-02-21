@@ -47,6 +47,8 @@ public class ItemBedrockOreNew extends Item {
         this.setCreativeTab(MainRegistry.partsTab);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
+        this.icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
+        this.overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
 
         ModItems.ALL_ITEMS.add(this);
     }
@@ -66,13 +68,13 @@ public class ItemBedrockOreNew extends Item {
 
     @SideOnly(Side.CLIENT)
     public void registerTextures(TextureMap map) {
+
         for(int i = 0; i < BedrockOreGrade.values().length; i++) { BedrockOreGrade grade = BedrockOreGrade.values()[i];
             for(int j = 0; j < BedrockOreType.values().length; j++) { BedrockOreType type = BedrockOreType.values()[j];
                 String placeholderName = RefStrings.MODID + ":bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
                 MainRegistry.logger.info("placeholderName: " + placeholderName);
                 TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
                 map.setTextureEntry(mutableIcon);
-                if(overlays == null) return;
                 this.icons[i * BedrockOreType.values().length + j] = mutableIcon;
             }
         }
@@ -83,12 +85,7 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
-    @SuppressWarnings("unused")
-    @SideOnly(Side.CLIENT)
-    public void registerSprites(TextureMap map) {
-        icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
-        overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
-    }
+
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
