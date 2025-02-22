@@ -1,21 +1,36 @@
 package com.hbm.items.machine;
 
+import com.google.common.collect.ImmutableMap;
 import com.hbm.items.ItemEnumMulti;
 import com.hbm.items.ModItems;
+import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
+import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.Function;
 import com.hbm.util.Function.FunctionLinear;
 import com.hbm.util.Function.FunctionQuadratic;
 import com.hbm.util.Function.FunctionSqrt;
 import com.hbm.util.Function.FunctionSqrtFalling;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,11 +39,21 @@ import java.util.Locale;
  */
 public class ItemWatzPellet extends ItemEnumMulti {
 
+	final boolean isDesaturated;
 	public ItemWatzPellet(String s) {
 		super(EnumWatzType.class, true, true);
 		this.setMaxStackSize(16);
 		this.setTranslationKey(s);
 		this.setCreativeTab(MainRegistry.controlTab);
+		this.isDesaturated = false;
+	}
+
+	public ItemWatzPellet(String s, boolean isDesaturated) {
+		super(EnumWatzType.class, true, true);
+		this.setMaxStackSize(16);
+		this.setTranslationKey(s);
+		this.setCreativeTab(MainRegistry.controlTab);
+		this.isDesaturated = isDesaturated;
 	}
 
 	public static enum EnumWatzType {
@@ -100,7 +125,49 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		
 		this.itemIcon = reg.registerIcon(this.getIconString());
 	}*/
-	
+
+	public void registerModels() {
+		for (int i = 0; i < EnumWatzType.values().length; i++) {
+			if (this.isDesaturated) {
+				ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(RefStrings.MODID + ":items/watz_pellet_depleted-" + i, "inventory"));
+			} else {
+				ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(RefStrings.MODID +  ":items/watz_pellet-" + i, "inventory"));
+			}
+		}
+	}
+
+	public static void registerTextures(TextureMap map, boolean isDesaturated){
+		for(int i = 0; i < EnumWatzType.values().length; i++){
+			EnumWatzType type = EnumWatzType.values()[i];
+			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i));
+			int light = isDesaturated ? desaturate(type.colorLight) : type.colorLight;
+			int dark = isDesaturated ? desaturate(type.colorDark) : type.colorDark;
+			TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xD2D2D2, 0x333333, light, dark));
+			map.setTextureEntry(mutableIcon);
+		}
+	}
+
+	public static void bakeModels(ModelBakeEvent event, boolean isDesaturated){
+		try {
+			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));
+			for(int i = 0; i < EnumWatzType.values().length; i++){
+				ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i));
+				IModel retexturedModel = baseModel.retexture(
+						ImmutableMap.of(
+								"layer0", spriteLoc.toString()
+						)
+
+				);
+				IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+				ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID,  "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i)), "inventory");
+				event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+
+			}
+		}   catch (Exception e) {
+		e.printStackTrace();
+	}
+	}
+
 	public static int desaturate(int color) {
 		int r = (color & 0xff0000) >> 16;
 		int g = (color & 0x00ff00) >> 8;

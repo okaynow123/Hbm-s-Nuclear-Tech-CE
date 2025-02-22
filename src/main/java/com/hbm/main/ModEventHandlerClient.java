@@ -461,6 +461,8 @@ public class ModEventHandlerClient {
         ((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
+        ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
+        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
 
         for (Item item : ModItems.ALL_ITEMS) {
             try {
@@ -566,6 +568,8 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void modelBaking(ModelBakeEvent evt) {
+        ItemWatzPellet.bakeModels(evt, false);
+        ItemWatzPellet.bakeModels(evt, true);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -789,8 +793,10 @@ public class ModEventHandlerClient {
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
 
-        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerTextures(map);
+        //((ItemBedrockOreNew) ModItems.bedrock_ore).registerTextures(map);
         ((ItemAutogen) ModItems.bedrock_ore_fragment).registerSprites(map);
+        ((ItemWatzPellet) ModItems.watz_pellet).registerTextures(map, false);
+        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerTextures(map, true);
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
         DSmokeRenderer.sprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke3"));
