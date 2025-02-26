@@ -61,13 +61,6 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 				return slotlimit;
 			}
 
-			@Override
-			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-				if (!isItemValidForSlot(slot, stack)) {
-					return stack;
-				}
-				return super.insertItem(slot, stack, simulate);
-			}
 		};
 	}
 
@@ -153,7 +146,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 	}
 	
 	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
-		return isItemValidForSlot(slot, itemStack);
+		return this.isItemValidForSlot(slot, itemStack);
 	}
 
 	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
