@@ -807,8 +807,6 @@ public class ModEventHandlerClient {
         DSmokeRenderer.sprites[7] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke8"));
         ParticleDSmokeFX.sprites = DSmokeRenderer.sprites;
 
-        map.setTextureEntry(new TextureAtlasSpriteMutatable("hbm:textures/items/watz_pellet.png",
-                new RGBMutatorInterpolatedComponentRemap(0xD2D2D2, 0x333333, 0xFFBF00, 0xFFAC1C)));
 
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/steam_still"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/steam_flowing"));
