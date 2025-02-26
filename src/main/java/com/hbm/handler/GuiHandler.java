@@ -284,11 +284,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerReactorMultiblock(player.inventory, (TileEntityMachineReactorLarge) entity);
 			}
 			return null;
-		case ModBlocks.guiID_watz_multiblock:
-			if(entity instanceof TileEntityWatzCore) {
-				return new ContainerWatzCore(player, (TileEntityWatzCore) entity);
-			}
-			return null;
 		case ModBlocks.guiID_nuke_gadget:
 			if(entity instanceof TileEntityNukeGadget) {
 				return new ContainerNukeGadget(player.inventory, (TileEntityNukeGadget) entity);
@@ -816,11 +811,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_reactor_multiblock:
 			if(entity instanceof TileEntityMachineReactorLarge) {
 				return new GUIReactorMultiblock(player.inventory, (TileEntityMachineReactorLarge) entity);
-			}
-			return null;
-		case ModBlocks.guiID_watz_multiblock:
-			if(entity instanceof TileEntityWatzCore) {
-				return new GUIWatzCore(player, (TileEntityWatzCore) entity);
 			}
 			return null;
 		case ModBlocks.guiID_nuke_gadget:

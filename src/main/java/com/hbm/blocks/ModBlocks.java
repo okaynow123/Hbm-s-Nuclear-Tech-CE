@@ -1211,12 +1211,6 @@ public class ModBlocks {
 	public static final int guiID_plasma_heater = 101;
 	
 	//Watz Components
-	public static final Block watz_control_depricated = new BlockReactor(Material.IRON, "watz_control_depricated").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block watz_end_depricated = new BlockBase(Material.IRON, "watz_end_depricated").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block watz_hatch_depricated = new WatzHatch(Material.IRON, "watz_hatch_depricated").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block watz_conductor_depricated = new BlockCableConnect(Material.IRON, "watz_conductor_depricated").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block watz_element_depricated = new BlockReactor(Material.IRON, "watz_elementi_depricated").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-
 	public static final Block watz_element = new BlockBase(Material.IRON, "watz_element").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_cooler = new BlockBase(Material.IRON, "watz_cooler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block watz_casing = new BlockToolConversion(Material.IRON, "watz_casing").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

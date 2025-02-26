@@ -456,13 +456,6 @@ public class ModEventHandlerClient {
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemFluidCanister.fluidCanisterModel);
-        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
-        ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
-        ((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
-        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
-        ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
-        ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
-        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
 
         for (Item item : ModItems.ALL_ITEMS) {
             try {
@@ -476,6 +469,13 @@ public class ModEventHandlerClient {
             registerBlockModel(block, 0);
         }
 
+        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
+        ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
+        ((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
+        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
+        ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
+        ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
+        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
         registerBedrockOreModels();
     }
 

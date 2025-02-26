@@ -2,11 +2,9 @@ package com.hbm.render.icon;
 
 import com.google.common.collect.Lists;
 import com.hbm.main.MainRegistry;
-import com.mojang.authlib.yggdrasil.response.MinecraftTexturesPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.PngSizeInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.AnimationFrame;
@@ -23,9 +21,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Function;
-
-import static java.lang.Math.max;
-import static net.minecraft.util.math.MathHelper.log2;
 
 @SideOnly(Side.CLIENT)
 public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
@@ -132,12 +127,10 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
             this.mipmap = Minecraft.getMinecraft().getTextureMapBlocks().getMipmapLevels()+1;
 
             // Load the sprite frames directly
-            iresource = man.getResource(resourcelocation1); // Yeah ofc the fucking stream needs to get closed automatically after every method I call, why not
+            iresource = man.getResource(resourcelocation1);//Norwood: Yeah ofc the fucking stream needs to get closed automatically after every method I call, why not
             //TOTALLY HASN'T MADE ME SPEND 3 FUCKING DAYS DEBUGGING IT
             this.loadSpriteFrames(iresource, this.mipmap);
 
-            // Generate mipmaps
-            //this.generateMipmaps(this.mipmap);
         } catch (RuntimeException | IOException e) {
             net.minecraftforge.fml.client.FMLClientHandler.instance().trackBrokenTexture(resourcelocation1, e.getMessage());
             return true;
