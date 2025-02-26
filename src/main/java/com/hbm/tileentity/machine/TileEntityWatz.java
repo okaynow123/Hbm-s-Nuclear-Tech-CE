@@ -61,7 +61,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 	public ItemStack[] locks;
 	
 	public TileEntityWatz() {
-		super(24);
+		super(24, 1);
 		this.locks = new ItemStack[inventory.getSlots()];
 		this.tanks = new FluidTankNTM[3];
 		this.tanks[0] = new FluidTankNTM(Fluids.COOLANT, 64_000);
@@ -73,6 +73,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 	public String getName() {
 		return "container.watz";
 	}
+
 
 	@Override
 	public void update() {
@@ -336,6 +337,8 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 				new DirPos(pos.getX(), pos.getY() - 1, pos.getZ() - 2, ForgeDirection.DOWN)
 		};
 	}
+
+
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
