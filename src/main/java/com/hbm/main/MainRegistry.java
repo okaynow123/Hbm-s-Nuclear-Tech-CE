@@ -546,6 +546,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityReactorHatch.class, new ResourceLocation(RefStrings.MODID, "tileentity_reactor_hatch"));
 		GameRegistry.registerTileEntity(TileEntityFactoryHatch.class, new ResourceLocation(RefStrings.MODID, "tileentity_factory_hatch"));
 		GameRegistry.registerTileEntity(TileEntityMachineReactorLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_reactor_large"));
+		GameRegistry.registerTileEntity(TileEntityReactorResearch.class, new ResourceLocation(RefStrings.MODID, "tileentity_reactor_small_new"));
 		GameRegistry.registerTileEntity(TileEntityReactorZirnox.class, new ResourceLocation(RefStrings.MODID, "tileentity_zirnox"));
 		GameRegistry.registerTileEntity(TileEntityZirnoxDestroyed.class, new ResourceLocation(RefStrings.MODID, "tileentity_zirnox_destroyed"));
 		GameRegistry.registerTileEntity(TileEntityWatz.class, new ResourceLocation(RefStrings.MODID, "tileentity_watz"));
@@ -611,6 +612,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityTrappedBrick.class, new ResourceLocation(RefStrings.MODID, "tileentity_trapped_brick"));
 		GameRegistry.registerTileEntity(TileEntityPlasmaStruct.class, new ResourceLocation(RefStrings.MODID, "tileentity_plasma_struct"));
 		GameRegistry.registerTileEntity(TileEntityMachineLargeTurbine.class, new ResourceLocation(RefStrings.MODID, "tileentity_industrial_turbine"));
+		GameRegistry.registerTileEntity(TileEntityMachineReactorBreeding.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_reactor_breeding"));
 		GameRegistry.registerTileEntity(TileEntitySlidingBlastDoor.class, new ResourceLocation(RefStrings.MODID, "tileentity_sliding_blast_door"));
 		GameRegistry.registerTileEntity(TileEntityKeypadBase.class, new ResourceLocation(RefStrings.MODID, "tileentity_keypad_base"));
 		GameRegistry.registerTileEntity(TileEntitySlidingBlastDoorKeypad.class, new ResourceLocation(RefStrings.MODID, "tileentity_keypad_door"));
@@ -941,8 +943,6 @@ public class MainRegistry {
 		DiFurnaceRecipes.registerFuels();
 		CentrifugeRecipes.register();
 		PressRecipes.registerOverrides();
-		BreederRecipes.registerFuels();
-		BreederRecipes.registerRecipes();
 		AssemblerRecipes.loadRecipes();
 		ExplosionNukeGeneric.loadSoliniumFromFile();
 		CyclotronRecipes.register();

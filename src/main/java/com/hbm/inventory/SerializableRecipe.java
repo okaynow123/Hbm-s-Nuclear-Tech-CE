@@ -40,6 +40,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new ReformingRecipes());
         recipeHandlers.add(new SolidificationRecipes());
+        recipeHandlers.add(new BreederRecipes());
     }
 
     public static void initialize() {

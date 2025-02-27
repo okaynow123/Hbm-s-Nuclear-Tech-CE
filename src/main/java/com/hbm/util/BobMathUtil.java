@@ -1,11 +1,14 @@
 package com.hbm.util;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.FloatBuffer;
 import java.util.*;
 import java.text.NumberFormat;
 import java.util.function.ToIntFunction;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Quat4f;
@@ -65,6 +68,19 @@ public class BobMathUtil {
 	 */
 	public static double sqrt(double x) {
 		return Math.sqrt(x + 1D / ((x + 2D) * (x + 2D))) - 1D / (x + 2D);
+	}
+
+	/**
+	 * Rounds a number to so many significant digits
+	 * @param num The number to round
+	 * @param digits Amount of digits
+	 * @return The rounded double
+	 */
+	public static double roundDecimal(double num, @Nonnegative int digits) {
+		if(digits < 0)
+			throw new IllegalArgumentException("Attempted negative number in non-negative field! Attempted value: " + digits);
+
+		return new BigDecimal(num).setScale(digits, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public static boolean getBlink() {

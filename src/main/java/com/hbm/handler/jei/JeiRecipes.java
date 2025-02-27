@@ -60,7 +60,6 @@ public class JeiRecipes {
 	private static List<BoilerRecipe> boilerRecipes = null;
 	private static List<CMBFurnaceRecipe> cmbRecipes = null;
 	private static List<GasCentRecipe> gasCentRecipes = null;
-	private static List<ReactorRecipe> reactorRecipes = null;
 	private static List<WasteDrumRecipe> wasteDrumRecipes = null;
 	private static List<StorageDrumRecipe> storageDrumRecipes = null;
 	private static List<RBMKFuelRecipe> rbmkFuelRecipes = null;
@@ -245,33 +244,6 @@ public class JeiRecipes {
 		public void getIngredients(IIngredients ingredients) {
 			ingredients.setInput(VanillaTypes.ITEM, input);
 			ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-		}
-		
-	}
-	
-	public static class ReactorRecipe implements IRecipeWrapper {
-		
-		public static IDrawableStatic heatTex;
-		
-		private final ItemStack input;
-		private final ItemStack output;
-		public final int heat;
-		
-		public ReactorRecipe(ItemStack input, ItemStack output, int heat) {
-			this.input = input;
-			this.output = output; 
-			this.heat = heat;
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(VanillaTypes.ITEM, input);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
-		}
-		
-		@Override
-		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-			heatTex.draw(minecraft, 1, 20, 16-heat*4, 0, 0, 0);
 		}
 		
 	}
@@ -883,18 +855,6 @@ public class JeiRecipes {
 		}
 		return bookRecipes;
 	}
-	
-	public static List<ReactorRecipe> getReactorRecipes(){
-		if(reactorRecipes != null)
-			return reactorRecipes;
-		reactorRecipes = new ArrayList<ReactorRecipe>();
-		
-		for(Map.Entry<ItemStack, BreederRecipe> entry : BreederRecipes.getAllRecipes().entrySet()){
-			reactorRecipes.add(new ReactorRecipe(entry.getKey(), entry.getValue().output, entry.getValue().heat));
-		}
-		
-		return reactorRecipes;
-	}
 
 	public static List<WasteDrumRecipe> getWasteDrumRecipes(){
 		if(wasteDrumRecipes != null)
@@ -930,13 +890,6 @@ public class JeiRecipes {
 		}
 		
 		return transmutationRecipes;
-	}
-	
-	public static List<ItemStack> getReactorFuels(int heat){
-		if(reactorFuelMap.containsKey(heat))
-			return reactorFuelMap.get(heat);
-		reactorFuelMap.put(heat, BreederRecipes.getAllFuelsFromHEAT(heat));
-		return reactorFuelMap.get(heat);
 	}
 	
 

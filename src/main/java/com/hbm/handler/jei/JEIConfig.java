@@ -65,7 +65,6 @@ public class JEIConfig implements IModPlugin {
 	public static final String CENTRIFUGE = "hbm.centrifuge";
 	public static final String CMB = "hbm.cmb_furnace";
 	public static final String GAS_CENT = "hbm.gas_centrifuge";
-	public static final String REACTOR = "hbm.reactor";
 	public static final String REFINERY = "hbm.refinery";
 	public static final String CRACKING = "hbm.cracking";
 	public static final String FRACTIONING = "hbm.fracturing";
@@ -168,7 +167,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipes(CentrifugeRecipes.getCentrifugeRecipes(), CENTRIFUGE);
 		registry.addRecipes(JeiRecipes.getCMBRecipes(), CMB);
 		registry.addRecipes(JeiRecipes.getGasCentrifugeRecipes(), GAS_CENT);
-		registry.addRecipes(JeiRecipes.getReactorRecipes(), REACTOR);
 		registry.addRecipes(JeiRecipes.getWasteDrumRecipes(), WASTEDRUM);
 		registry.addRecipes(JeiRecipes.getStorageDrumRecipes(), STORAGEDRUM);
 		registry.addRecipes(JeiRecipes.getRefineryRecipe(), REFINERY);
@@ -290,7 +288,6 @@ public class JEIConfig implements IModPlugin {
 				new CyclotronRecipeHandler(help),
 				new TransmutationRecipeHandler(help),
 				new CMBFurnaceRecipeHandler(help),
-				new ReactorRecipeHandler(help),
 				new WasteDrumRecipeHandler(help),
 				new StorageDrumRecipeHandler(help),
 				new FluidRecipeHandler(help),

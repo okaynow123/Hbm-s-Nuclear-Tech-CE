@@ -35,8 +35,8 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 126, guiTop + 24, 16, 56, boiler.feed);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 89, guiTop + 39, 8, 28, boiler.steam);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 126, guiTop + 24, 16, 56, boiler.feedOld);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 89, guiTop + 39, 8, 28, boiler.steamOld);
 		
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
@@ -69,10 +69,10 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-		int i = boiler.feed.getFluidAmount() * 58 / boiler.feed.getCapacity();
+		int i = boiler.feedOld.getFluidAmount() * 58 / boiler.feedOld.getCapacity();
 		drawTexturedModalRect(guiLeft + 126, guiTop + 82 - i, 176, 58 - i, 14, i);
 		
-		int j = boiler.steam.getFluidAmount() * 22 / boiler.steam.getCapacity();
+		int j = boiler.steamOld.getFluidAmount() * 22 / boiler.steamOld.getCapacity();
 
 		if(j > 0) j++;
 		if(j > 22) j++;

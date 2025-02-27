@@ -1286,6 +1286,7 @@ public class ModItems {
 	public static final ItemEnumMulti full_drive = (ItemEnumMulti) new ItemVOTVdrive().setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
 
 	//TODO: Make this metaitems
+	// for now, let's just make it work before making it metaitems..
 	public static final Item rod_zirnox_natural_uranium_fuel_depleted = new ItemBase("rod_zirnox_natural_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final Item rod_zirnox_uranium_fuel_depleted = new ItemBase("rod_zirnox_uranium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 	public static final Item rod_zirnox_thorium_fuel_depleted = new ItemBase("rod_zirnox_thorium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
@@ -1306,7 +1307,29 @@ public class ModItems {
 	public static final Item waste_schrabidium = new ItemDepletedFuel("waste_schrabidium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item waste_zfb_mox = new ItemDepletedFuel("waste_zfb_mox").setCreativeTab(MainRegistry.partsTab);
 
-	
+	public static final Item waste_plate_u233 = new ItemDepletedFuel("waste_plate_u233").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_u235 = new ItemDepletedFuel("waste_plate_u235").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_mox = new ItemDepletedFuel("waste_plate_mox").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_pu239 = new ItemDepletedFuel("waste_plate_pu239").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_sa326 = new ItemDepletedFuel("waste_plate_sa326").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_ra226be = new ItemDepletedFuel("waste_plate_ra226be").setCreativeTab(MainRegistry.partsTab);
+	public static final Item waste_plate_pu238be = new ItemDepletedFuel("waste_plate_pu238be").setCreativeTab(MainRegistry.partsTab);
+
+	public static final Item plate_fuel_u233 = new ItemPlateFuel(2200000, "plate_fuel_u233").setFunction(ItemPlateFuel.FunctionEnum.SQUARE_ROOT, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_u235 = new ItemPlateFuel(2200000, "plate_fuel_u235").setFunction(ItemPlateFuel.FunctionEnum.SQUARE_ROOT, 40).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_mox = new ItemPlateFuel(2400000, "plate_fuel_mox").setFunction(ItemPlateFuel.FunctionEnum.LOGARITHM, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_pu239 = new ItemPlateFuel(2000000, "plate_fuel_pu239").setFunction(ItemPlateFuel.FunctionEnum.NEGATIVE_QUADRATIC, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_sa326 = new ItemPlateFuel(2000000, "plate_fuel_sa326").setFunction(ItemPlateFuel.FunctionEnum.LINEAR, 80).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_ra226be = new ItemPlateFuel(1300000, "plate_fuel_ra226be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 30).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+	public static final Item plate_fuel_pu238be = new ItemPlateFuel(1000000, "plate_fuel_pu238be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+
+	// Th3_Sl1ze: this is the temporary variant, I'm sincerely too tired and unwilling to do anything at 3 am to clean up the old rods
+	// because they all fucking need to be change in all recipes. Without the "_new" the game WILL crash because of the same registry names.
+	// TODO: Norwood, if you're reading this, remind me to clean this shithole below
+	public static final Item rod = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_new").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_dual = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_dual_new").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_quad = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_quad_new").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+
 	public static final Item rod_th232 = new ItemBase( "rod_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_th232 = new ItemBase( "rod_dual_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
 	public static final Item rod_quad_th232 = new ItemBase( "rod_quad_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
@@ -1374,28 +1397,27 @@ public class ModItems {
 	public static final Item rod_balefire_blazing = new ItemBase( "rod_balefire_blazing").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_balefire_blazing = new ItemBase( "rod_dual_balefire_blazing").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
 	public static final Item rod_quad_balefire_blazing = new ItemBase( "rod_quad_balefire_blazing").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
 
-	public static final Item rod_thorium_fuel = new ItemFuelRod(ItemHazard.thf * ItemHazard.rod, false, 400000, 15, "rod_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	public static final Item rod_dual_thorium_fuel = new ItemFuelRod(ItemHazard.thf * ItemHazard.rod_dual, false, 400000, 30, "rod_dual_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
-	public static final Item rod_quad_thorium_fuel = new ItemFuelRod(ItemHazard.thf * ItemHazard.rod_quad, false, 400000, 60, "rod_quad_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
-	public static final Item rod_uranium_fuel = new ItemFuelRod(ItemHazard.uf * ItemHazard.rod, false, 250000, 30, "rod_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	public static final Item rod_dual_uranium_fuel = new ItemFuelRod(ItemHazard.uf * ItemHazard.rod_dual, false, 250000, 60, "rod_dual_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
-	public static final Item rod_quad_uranium_fuel = new ItemFuelRod(ItemHazard.uf * ItemHazard.rod_quad, false, 250000, 120, "rod_quad_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
-	public static final Item rod_plutonium_fuel = new ItemFuelRod(ItemHazard.puf * ItemHazard.rod, false, 150000, 40, "rod_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	public static final Item rod_dual_plutonium_fuel = new ItemFuelRod(ItemHazard.puf * ItemHazard.rod_dual, false, 150000, 80, "rod_dual_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
-	public static final Item rod_quad_plutonium_fuel = new ItemFuelRod(ItemHazard.puf * ItemHazard.rod_quad, false, 150000, 160, "rod_quad_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
-	public static final Item rod_mox_fuel = new ItemFuelRod(ItemHazard.mox * ItemHazard.rod, false, 300000, 20, "rod_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	public static final Item rod_dual_mox_fuel = new ItemFuelRod(ItemHazard.mox * ItemHazard.rod_dual, false, 300000, 40, "rod_dual_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
-	public static final Item rod_quad_mox_fuel = new ItemFuelRod(ItemHazard.mox * ItemHazard.rod_quad, false, 300000, 80, "rod_quad_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
-	public static final Item rod_schrabidium_fuel = new ItemFuelRod(ItemHazard.sa326 * ItemHazard.rod, true, 100000, 125, "rod_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	public static final Item rod_dual_schrabidium_fuel = new ItemFuelRod(ItemHazard.sa326 * ItemHazard.rod_dual, true, 100000, 250, "rod_dual_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
-	public static final Item rod_quad_schrabidium_fuel = new ItemFuelRod(ItemHazard.sa326 * ItemHazard.rod_quad, true, 100000, 500, "rod_quad_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
-	
+	public static final Item rod_thorium_fuel = new ItemBase("rod_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
+	public static final Item rod_dual_thorium_fuel = new ItemBase("rod_dual_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
+	public static final Item rod_quad_thorium_fuel = new ItemBase("rod_quad_thorium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
+
+	public static final Item rod_uranium_fuel = new ItemBase("rod_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
+	public static final Item rod_dual_uranium_fuel = new ItemBase("rod_dual_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
+	public static final Item rod_quad_uranium_fuel = new ItemBase("rod_quad_uranium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
+
+	public static final Item rod_plutonium_fuel = new ItemBase("rod_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
+	public static final Item rod_dual_plutonium_fuel = new ItemBase("rod_dual_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
+	public static final Item rod_quad_plutonium_fuel = new ItemBase("rod_quad_plutonium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
+
+	public static final Item rod_mox_fuel = new ItemBase("rod_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
+	public static final Item rod_dual_mox_fuel = new ItemBase("rod_dual_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
+	public static final Item rod_quad_mox_fuel = new ItemBase("rod_quad_mox_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
+
+	public static final Item rod_schrabidium_fuel = new ItemBase("rod_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
+	public static final Item rod_dual_schrabidium_fuel = new ItemBase("rod_dual_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
+	public static final Item rod_quad_schrabidium_fuel = new ItemBase("rod_quad_schrabidium_fuel").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
+
 	public static final Item rod_thorium_fuel_depleted = new ItemHazard(10F, true, "rod_thorium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_thorium_fuel_depleted = new ItemHazard(20F, true, "rod_dual_thorium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
 	public static final Item rod_quad_thorium_fuel_depleted = new ItemHazard(40F, true, "rod_quad_thorium_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_quad_empty);
@@ -1454,7 +1476,7 @@ public class ModItems {
 
 	public static final Item rod_quad_euphemium = new ItemCustomLore("rod_quad_euphemium").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1).setContainerItem(ModItems.rod_quad_empty);
 	public static final Item rod_euphemium = new ItemCustomLore("rod_euphemium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
-	
+
 	public static final Item rod_reiium = new ItemCustomLore("rod_reiium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_weidanium = new ItemCustomLore("rod_weidanium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_australium = new ItemCustomLore("rod_australium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
@@ -2130,6 +2152,7 @@ public class ModItems {
 	public static final Item upgrade_template = new ItemCustomLore("upgrade_template").setMaxStackSize(1).setCreativeTab(MainRegistry.partsTab);
 	public static final Item deuterium_filter = new ItemBase("deuterium_filter").setCreativeTab(MainRegistry.partsTab);
 	public static final Item sawblade = new ItemBase("sawblade").setCreativeTab(MainRegistry.partsTab);
+	public static final Item crt_display = new ItemBase("crt_display").setCreativeTab(MainRegistry.partsTab);
 	public static final Item circuit_raw = new ItemBase("circuit_raw").setCreativeTab(MainRegistry.partsTab);
 	public static final Item circuit_aluminium = new ItemBase("circuit_aluminium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item circuit_copper = new ItemBase("circuit_copper").setCreativeTab(MainRegistry.partsTab);

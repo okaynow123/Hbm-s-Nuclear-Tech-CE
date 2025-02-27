@@ -1887,10 +1887,34 @@ public class ItemRenderLibrary {
 			public void renderCommon() {
 				GL11.glScaled(0.75, 0.75, 0.75);
 				GL11.glRotated(90, 0, 1, 0);
+				GL11.glTranslated(0.5, 1.0, -0.3);
 				bindTexture(ResourceManager.zirnox_tex);
 				GlStateManager.shadeModel(GL11.GL_SMOOTH);
 				ResourceManager.zirnox.renderAll();
 				GlStateManager.shadeModel(GL11.GL_FLAT);
+			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.reactor_research), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -4, 0);
+				GL11.glScaled(4, 4, 4);
+			}
+			public void renderCommon() {
+				bindTexture(ResourceManager.reactor_small_base_tex); ResourceManager.reactor_small_base.renderAll();
+				bindTexture(ResourceManager.reactor_small_rods_tex); ResourceManager.reactor_small_rods.renderAll();
+			}});
+
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_reactor_breeding), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -4, 0);
+				GL11.glScaled(4.5, 4.5, 4.5);
+			}
+			public void renderCommon() {
+				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
+				GL11.glDisable(GL11.GL_CULL_FACE);
+				bindTexture(ResourceManager.breeder_tex); ResourceManager.breeder.renderAll();
+				GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_fel), new ItemRenderBase() {
 			public void renderInventory() {
