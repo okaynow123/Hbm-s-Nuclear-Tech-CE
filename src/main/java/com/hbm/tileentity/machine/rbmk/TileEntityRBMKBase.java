@@ -1,5 +1,8 @@
 package com.hbm.tileentity.machine.rbmk;
 
+import api.hbm.fluid.IFluidConductor;
+import api.hbm.fluid.IFluidConnector;
+import api.hbm.fluid.IPipeNet;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.config.MachineConfig;
@@ -18,6 +21,7 @@ import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.NBTPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.INBTPacketReceiver;
+import com.hbm.tileentity.IOverpressurable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.I18nUtil;
@@ -426,6 +430,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	}
 	
 	public static HashSet<TileEntityRBMKBase> columns = new HashSet<>();
+	public static HashSet<IPipeNet> pipes = new HashSet();
 	
 	//assumes that !world.isRemote
 	public void meltdown() {
@@ -433,6 +438,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		RBMKBase.dropLids = false;
 		
 		columns.clear();
+		pipes.clear();
 		getFF(pos.getX(), pos.getY(), pos.getZ());
 		
 		int minX = pos.getX();
@@ -485,6 +491,45 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 									world.setBlockState(new BlockPos(x, y, z), ModBlocks.pribris_radiating.getDefaultState());
 							}
 						}
+					}
+				}
+			}
+		}
+
+		/* Hanlde overpressure event */
+		if(RBMKDials.getOverpressure(world) && !pipes.isEmpty()) {
+			HashSet<IFluidConductor> pipeBlocks = new HashSet();
+			HashSet<IFluidConnector> pipeReceivers = new HashSet();
+
+			//unify all parts into single sets to prevent redundancy
+			pipes.forEach(x -> {
+				pipeBlocks.addAll(x.getLinks());
+				pipeReceivers.addAll(x.getSubscribers());
+			});
+
+			int count = 0;
+			int max = Math.min(pipeBlocks.size() / 5, 100);
+			Iterator<IFluidConductor>  itPipes = pipeBlocks.iterator();
+			Iterator<IFluidConnector>  itReceivers = pipeReceivers.iterator();
+
+			while(itPipes.hasNext() && count < max) {
+				IFluidConductor pipe = itPipes.next();
+				if(pipe instanceof TileEntity) {
+					TileEntity tile = (TileEntity) pipe;
+					world.setBlockToAir(tile.getPos());
+				}
+				count++;
+			}
+
+			while(itReceivers.hasNext()) {
+				IFluidConnector con = itReceivers.next();
+				if(con instanceof TileEntity) {
+					TileEntity tile = (TileEntity) con;
+					if(con instanceof IOverpressurable) {
+						((IOverpressurable) con).explode(world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
+					} else {
+						world.setBlockToAir(tile.getPos());
+						world.newExplosion(null, tile.getPos().getX() + 0.5, tile.getPos().getY() + 0.5, tile.getPos().getZ() + 0.5, 5F, false, false);
 					}
 				}
 			}

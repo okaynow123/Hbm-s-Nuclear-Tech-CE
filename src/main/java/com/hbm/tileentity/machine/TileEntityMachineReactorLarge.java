@@ -958,7 +958,7 @@ public class TileEntityMachineReactorLarge extends TileEntity implements ITickab
 				//if it's a fuel rod that has been used up, multiply by damage and floor it
 				if(item.getItem() instanceof ItemFuelRod) {
 
-					double mult = 1D - ((double)ItemFuelRod.getLifeTime(item) / (double)((ItemFuelRod)item.getItem()).getMaxLifeTime());
+					double mult = 1D;
 					return (int)Math.floor(mult * value);
 				}
 

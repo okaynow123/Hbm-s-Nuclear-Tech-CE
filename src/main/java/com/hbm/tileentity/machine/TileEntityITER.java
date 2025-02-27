@@ -269,14 +269,16 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 		int level = FusionRecipes.getBreedingLevel(plasmaNew.getTankType());
 
-		if(out.heat > level) {
+		if(out.flux > level) {
 			this.progress = 0;
 			return;
-		}	
+		}
 
 		progress++;
 
 		if(progress > duration) {
+
+			this.progress = 0;
 
 			if(!inventory.getStackInSlot(2).isEmpty()) {
 				inventory.getStackInSlot(2).grow(1);

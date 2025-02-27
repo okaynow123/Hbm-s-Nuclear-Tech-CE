@@ -651,8 +651,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 
 			if(te instanceof TileEntityRBMKBoiler){
 				TileEntityRBMKBoiler boiler = (TileEntityRBMKBoiler)te;
-				data_table.put("water", boiler.feed.getFluidAmount());
-				data_table.put("steam", boiler.steam.getFluidAmount());
+				data_table.put("water", boiler.feedOld.getFluidAmount());
+				data_table.put("steam", boiler.steamOld.getFluidAmount());
 			}
 
 			if(te instanceof TileEntityRBMKOutgasser){

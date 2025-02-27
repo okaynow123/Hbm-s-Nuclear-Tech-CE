@@ -68,14 +68,7 @@ public class TileEntityNukeFurnace extends TileEntity implements ITickable {
 		if(stack == null) {
 			return 0;
 		} else {
-
-			int[] power = BreederRecipes.getFuelValue(stack);
-
-			if(power == null){
-				return (int)(Math.max(0, Math.sqrt(ContaminationUtil.getStackRads(stack))-7));
-			}
-
-			return power[0] * power[1] * 5;
+			return (int)(Math.max(0, Math.sqrt(ContaminationUtil.getStackRads(stack))-7));
 		}
 	}
 	

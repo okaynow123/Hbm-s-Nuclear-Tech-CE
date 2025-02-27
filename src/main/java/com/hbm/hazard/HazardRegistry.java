@@ -1,5 +1,7 @@
 package com.hbm.hazard;
+
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
 import com.hbm.util.ItemStackUtil;
@@ -26,6 +28,7 @@ import com.hbm.items.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 @SuppressWarnings("unused") //shut the fuck up
 public class HazardRegistry {
@@ -406,90 +409,22 @@ public class HazardRegistry {
 
 		//Breeder Rods
 		//Yes I am doing them by hand because fuck it
+		//Th3_Sl1ze: nuh-uh.
 
-		HazardSystem.register(rod_co60, makeData(RADIATION, co60*rod));
-		HazardSystem.register(rod_dual_co60, makeData(RADIATION, co60*rod_dual));
-		HazardSystem.register(rod_quad_co60, makeData(RADIATION, co60*rod_quad));
-
-		HazardSystem.register(rod_th232, makeData(RADIATION, th232*rod));
-		HazardSystem.register(rod_dual_th232, makeData(RADIATION, th232*rod_dual));
-		HazardSystem.register(rod_quad_th232, makeData(RADIATION, th232*rod_quad));
-
-		HazardSystem.register(rod_uranium, makeData(RADIATION, u*rod));
-		HazardSystem.register(rod_dual_uranium, makeData(RADIATION, u*rod_dual));
-		HazardSystem.register(rod_quad_uranium, makeData(RADIATION, u*rod_quad));
-
-		HazardSystem.register(rod_u233, makeData(RADIATION, u233*rod));
-		HazardSystem.register(rod_dual_u233, makeData(RADIATION, u233*rod_dual));
-		HazardSystem.register(rod_quad_u233, makeData(RADIATION, u233*rod_quad));
-
-		HazardSystem.register(rod_ac227, makeData(RADIATION, ac227*rod));
-		HazardSystem.register(rod_dual_ac227, makeData(RADIATION, ac227*rod_dual));
-		HazardSystem.register(rod_quad_ac227, makeData(RADIATION, ac227*rod_quad));
-
-		HazardSystem.register(rod_u235, makeData(RADIATION, u235*rod));
-		HazardSystem.register(rod_dual_u235, makeData(RADIATION, u235*rod_dual));
-		HazardSystem.register(rod_quad_u235, makeData(RADIATION, u235*rod_quad));
-
-		HazardSystem.register(rod_u238, makeData(RADIATION, u238*rod));
-		HazardSystem.register(rod_dual_u238, makeData(RADIATION, u238*rod_dual));
-		HazardSystem.register(rod_quad_u238, makeData(RADIATION, u238*rod_quad));
-
-		HazardSystem.register(rod_plutonium, makeData(RADIATION, pu*rod));
-		HazardSystem.register(rod_dual_plutonium, makeData(RADIATION, pu*rod_dual));
-		HazardSystem.register(rod_quad_plutonium, makeData(RADIATION, pu*rod_quad));
-
-		HazardSystem.register(rod_pu238, makeData(RADIATION, pu238*rod));
-		HazardSystem.register(rod_dual_pu238, makeData(RADIATION, pu238*rod_dual));
-		HazardSystem.register(rod_quad_pu238, makeData(RADIATION, pu238*rod_quad));
-
-		HazardSystem.register(rod_pu239, makeData(RADIATION, pu239*rod));
-		HazardSystem.register(rod_dual_pu239, makeData(RADIATION, pu239*rod_dual));
-		HazardSystem.register(rod_quad_pu239, makeData(RADIATION, pu239*rod_quad));
-
-		HazardSystem.register(rod_pu240, makeData(RADIATION, pu240*rod));
-		HazardSystem.register(rod_dual_pu240, makeData(RADIATION, pu240*rod_dual));
-		HazardSystem.register(rod_quad_pu240, makeData(RADIATION, pu240*rod_quad));
-
-		HazardSystem.register(rod_rgp, makeData(RADIATION, pu240*rod));
-		HazardSystem.register(rod_dual_rgp, makeData(RADIATION, purg*rod_dual));
-		HazardSystem.register(rod_quad_rgp, makeData(RADIATION, purg*rod_quad));
-
-		HazardSystem.register(rod_neptunium, 	  makeData(RADIATION, np237*rod));
-		HazardSystem.register(rod_dual_neptunium, makeData(RADIATION, np237*rod_dual));
-		HazardSystem.register(rod_quad_neptunium, makeData(RADIATION, np237*rod_quad));
-
-		HazardSystem.register(rod_polonium, 	  makeData(RADIATION, po210*rod));
-		HazardSystem.register(rod_dual_polonium, makeData(RADIATION, po210*rod_dual));
-		HazardSystem.register(rod_quad_polonium, makeData(RADIATION, po210*rod_quad));
-
-		HazardSystem.register(rod_schrabidium, 	  makeData().addEntry(RADIATION, sa326*rod).addEntry(BLINDING, 50F));
-		HazardSystem.register(rod_dual_schrabidium, makeData().addEntry(RADIATION, sa326 * rod_dual).addEntry(BLINDING, 50F));
-		HazardSystem.register(rod_quad_schrabidium, makeData().addEntry(RADIATION, sa326*rod_quad).addEntry(BLINDING, 50F));
-
-		HazardSystem.register(rod_solinium, 	  makeData(RADIATION, sa327*rod).addEntry(BLINDING, 50F));
-		HazardSystem.register(rod_dual_solinium, makeData(RADIATION, sa327*rod_dual).addEntry(BLINDING, 50F));
-		HazardSystem.register(rod_quad_solinium, makeData(RADIATION, sa327*rod_quad).addEntry(BLINDING, 50F));
-
-		HazardSystem.register(rod_balefire, 	  makeData(RADIATION,bf*rod));
-		HazardSystem.register(rod_dual_balefire, makeData(RADIATION, bf*rod_dual));
-		HazardSystem.register(rod_quad_balefire, makeData(RADIATION, bf*rod_quad));
-
-		HazardSystem.register(rod_balefire_blazing, 	  makeData(RADIATION,bf*rod*2).addEntry(HOT, 2*rod));
-		HazardSystem.register(rod_dual_balefire_blazing, makeData(RADIATION, bf*rod_dual*2).addEntry(HOT, 2*rod_dual));
-		HazardSystem.register(rod_quad_balefire_blazing, makeData(RADIATION, bf*rod_quad*2).addEntry(HOT, 2*rod_quad));
-
-		HazardSystem.register(rod_waste, makeData(RADIATION,wst*rod));
-		HazardSystem.register(rod_waste, makeData(RADIATION, wst*rod_dual));
-		HazardSystem.register(rod_waste, makeData(RADIATION, wst*rod_quad));
-
-		HazardSystem.register(rod_tritium, makeData(RADIATION,trn*rod));
-		HazardSystem.register(rod_dual_tritium, makeData(RADIATION, trn*rod_dual));
-		HazardSystem.register(rod_quad_tritium, makeData(RADIATION, trn*rod_quad));
-
-		HazardSystem.register(rod_ra226, makeData(RADIATION,ra226*rod));
-		HazardSystem.register(rod_dual_ra226, makeData(RADIATION, ra226*rod_dual));
-		HazardSystem.register(rod_quad_ra226, makeData(RADIATION, ra226*rod_quad));
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.TRITIUM, 0.001F);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.CO60, co60);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.RA226, ra226);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.AC227, ac227);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.TH232, th232);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.THF, thf);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.U235, u235);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.NP237, np237);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.U238, u238);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.PU238, pu238); //it's in a container :)
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.PU239, pu239);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.RGP, purg);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.WASTE, wst);
+		registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType.URANIUM, u);
 
 		registerRBMKRod(rbmk_fuel_ueu, u * rod_rbmk, wst * rod_rbmk * 20F);
 		registerRBMKRod(rbmk_fuel_meu, uf * rod_rbmk, wst * rod_rbmk * 21.5F);
@@ -695,11 +630,10 @@ public class HazardRegistry {
 		HazardSystem.register(rod, data);
 	}
 
-	private static void registerBreedingRodRadiation(final String type, final float base, final boolean isBlinding ) {
-		HazardSystem.register("rod_"+ type, makeData(RADIATION, base*rod));
-		HazardSystem.register("rod_dual_"+ type, makeData(RADIATION, base*rod_dual));
-		HazardSystem.register("rod_quad_"+ type, makeData(RADIATION, base*rod_quad));
-
+	private static void registerBreedingRodRadiation(ItemBreedingRod.BreedingRodType type, float base ) {
+		HazardSystem.register(new ItemStack(ModItems.rod, 1, type.ordinal()), makeData(RADIATION, base));
+		HazardSystem.register(new ItemStack(ModItems.rod_dual, 1, type.ordinal()), makeData(RADIATION, base * rod_dual));
+		HazardSystem.register(new ItemStack(ModItems.rod_quad, 1, type.ordinal()), makeData(RADIATION, base * rod_quad));
 	}
 
 	private static void registerOtherFuel(final Item fuel, final float base, final float target, final boolean blinding) {
