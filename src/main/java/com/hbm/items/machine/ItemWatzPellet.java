@@ -178,13 +178,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		return (r << 16) | (g << 8) | b;
 	}
 
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int meta) {
-		IIcon icon = super.getIconFromDamage(meta);
-		return icon == null ? this.itemIcon : icon; //fallback if TextureMap fails during register
-	}*/
-	
+
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
 		

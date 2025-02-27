@@ -1,5 +1,6 @@
 package com.hbm.items.special;
 
+import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
@@ -8,27 +9,31 @@ import com.hbm.lib.RefStrings;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ItemAutogen extends Item {
 
+    public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
-
     private HashMap<NTMMaterial, String> textureOverrides = new HashMap();
     private HashMap<NTMMaterial, TextureAtlasSprite> spriteMap = new HashMap<>();
     private String overrideUnlocalizedName = null;
@@ -40,13 +45,18 @@ public class ItemAutogen extends Item {
         this.shape = shape;
 
         ModItems.ALL_ITEMS.add(this);
+       INSTANCES.add(this);
+
     }
 
-    /** add override texture */
+    /**
+     * add override texture
+     */
     public ItemAutogen aot(NTMMaterial mat, String tex) {
         textureOverrides.put(mat, tex);
         return this;
     }
+
     public ItemAutogen oun(String overrideUnlocalizedName) {
         this.overrideUnlocalizedName = overrideUnlocalizedName;
         return this;
@@ -55,7 +65,7 @@ public class ItemAutogen extends Item {
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (NTMMaterial mat : Mats.orderedList) {
-            if (Arrays.asList(mat.shapes).contains(this.shape)) {
+            if (Arrays.asList(mat.autogen).contains(this.shape)) {
                 ModelResourceLocation location = new ModelResourceLocation(
                         new ResourceLocation(RefStrings.MODID, "material_item_" + mat.names[0]),
                         "inventory"
@@ -65,10 +75,34 @@ public class ItemAutogen extends Item {
         }
     }
 
+    public void bakeModels(ModelBakeEvent event) {
+        try {
+            IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
+            for (NTMMaterial mat : Mats.orderedList) {
+                if (Arrays.asList(mat.autogen).contains(this.shape)) {
+                    String pathIn = "items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
+                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, pathIn);
+                    IModel retexturedModel = baseModel.retexture(
+                            ImmutableMap.of(
+                                    "layer0", spriteLoc.toString()
+                            )
+
+                    );
+                    IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, pathIn), "inventory");
+                    event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @SideOnly(Side.CLIENT)
     public void registerSprites(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
-            if (!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || Arrays.asList(mat.shapes).contains(this.shape))) {
+            if (!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || Arrays.asList(mat.autogen).contains(this.shape))) {
                 String spriteName = RefStrings.MODID + ":items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
                 TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
                 map.setTextureEntry(sprite);
@@ -87,7 +121,7 @@ public class ItemAutogen extends Item {
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
             for (NTMMaterial mat : Mats.orderedList) {
-                if (Arrays.asList(mat.shapes).contains(this.shape)) {
+                if (Arrays.asList(mat.autogen).contains(this.shape)) {
                     items.add(new ItemStack(this, 1, mat.id));
                 }
             }
@@ -135,7 +169,7 @@ public class ItemAutogen extends Item {
 
         NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
 
-        if(mat == null) {
+        if (mat == null) {
             return "UNDEFINED";
         }
 

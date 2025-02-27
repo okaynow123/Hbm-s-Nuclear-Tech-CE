@@ -471,11 +471,12 @@ public class ModEventHandlerClient {
 
         ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
         ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
-        ((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
+        //((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
+        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
 
@@ -570,6 +571,7 @@ public class ModEventHandlerClient {
     public void modelBaking(ModelBakeEvent evt) {
         ItemWatzPellet.bakeModels(evt, false);
         ItemWatzPellet.bakeModels(evt, true);
+        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.bakeModels(evt); }
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -794,9 +796,10 @@ public class ModEventHandlerClient {
         TextureMap map = evt.getMap();
 
         //((ItemBedrockOreNew) ModItems.bedrock_ore).registerTextures(map);
-        ((ItemAutogen) ModItems.bedrock_ore_fragment).registerSprites(map);
+        //((ItemAutogen) ModItems.bedrock_ore_fragment).registerSprites(map);
         ((ItemWatzPellet) ModItems.watz_pellet).registerTextures(map, false);
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerTextures(map, true);
+        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerSprites(map); }
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
         DSmokeRenderer.sprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke3"));
