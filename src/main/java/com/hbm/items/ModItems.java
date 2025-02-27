@@ -1551,10 +1551,13 @@ public class ModItems {
 	public static final Item ore_bedrock_perfect = new ItemBedrockOre("ore_bedrock_perfect").setCreativeTab(MainRegistry.partsTab); //Acid High Solvent
 	public static final Item ore_bedrock_enriched = new ItemBedrockOre("ore_bedrock_enriched").setCreativeTab(MainRegistry.partsTab); //Final Product
 
+	//Autogen
+	public static final Item bolt = new ItemAutogen(MaterialShapes.BOLT, "bolt").oun("boltntm").setCreativeTab(MainRegistry.partsTab);
+
 	//Bedrock Ores (new, gottverdammt)
 	public static final Item bedrock_ore = new ItemBedrockOreNew("bedrock_ore_new").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bedrock_ore_base = new ItemBedrockOreBase("bedrock_ore_base").setCreativeTab(MainRegistry.partsTab);
-	public static final Item bedrock_ore_fragment = new ItemAutogen(MaterialShapes.FRAGMENT, "bedrock_ore_fragment").aot(Mats.MAT_BISMUTH, "bedrock_ore_fragment_bismuth").setCreativeTab(MainRegistry.partsTab);
+	//public static final Item bedrock_ore_fragment = new ItemAutogen(MaterialShapes.FRAGMENT, "bedrock_ore_fragment").aot(Mats.MAT_BISMUTH, "bedrock_ore_fragment_bismuth").setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item neutron_reflector = new ItemBase("neutron_reflector").setCreativeTab(MainRegistry.partsTab);
 	public static final Item rtg_unit = new ItemBase("rtg_unit").setCreativeTab(MainRegistry.partsTab);

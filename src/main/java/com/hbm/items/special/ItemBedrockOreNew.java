@@ -1,18 +1,23 @@
 package com.hbm.items.special;
 
+import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,7 +26,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -91,6 +99,29 @@ public class ItemBedrockOreNew extends Item {
     public void registerModels() {
         ModelLoader.setCustomMeshDefinition(this, stack -> identifierModel);
     }
+
+    public static void bakeModels(ModelBakeEvent event, boolean isDesaturated){
+        try {
+            IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));
+            for(int i = 0; i < ItemWatzPellet.EnumWatzType.values().length; i++){
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/" + (isDesaturated ? "_depleted-" + i : "-" + i));
+                IModel retexturedModel = baseModel.retexture(
+                        ImmutableMap.of(
+                                "layer0", spriteLoc.toString(),
+                                "layer1", spriteLoc.toString()
+                        )
+
+                );
+                IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID,  "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i)), "inventory");
+                event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+
+            }
+        }   catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @SideOnly(Side.CLIENT)
     public TextureAtlasSprite getBaseTexture(ItemStack stack) {
@@ -173,9 +204,9 @@ public class ItemBedrockOreNew extends Item {
         return null;
     }
 
-    public static ItemStack extract(BedrockOreOutput o, double amount) {
-        return new ItemStack(ModItems.bedrock_ore_fragment, Math.min((int) Math.ceil(o.amount * amount), 64), o.mat.id);
-    }
+//    public static ItemStack extract(BedrockOreOutput o, double amount) {
+//        return new ItemStack(ModItems.bedrock_ore_fragment, Math.min((int) Math.ceil(o.amount * amount), 64), o.mat.id);
+//    }
 
     public static final int none = 0xFFFFFF;
     public static final int roasted = 0xCFCFCF;
