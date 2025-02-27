@@ -297,7 +297,6 @@ public class ModItems {
 	public static final Item fuse = new ItemCustomLore("fuse").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);
 	public static final Item redcoil_capacitor = new ItemCapacitor(10, "redcoil_capacitor").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item euphemium_capacitor = new ItemCustomLore("euphemium_capacitor").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-	public static final Item titanium_filter = new ItemCapacitor(6 * 60 * 60 * 20, "titanium_filter").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item arc_electrode = new ItemCustomLore("arc_electrode").setMaxDamage(250).setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setFull3D();
 	public static final Item arc_electrode_burnt = new ItemBase("arc_electrode_burnt").setMaxStackSize(1).setFull3D();
 	public static final Item arc_electrode_desh = new ItemCustomLore("arc_electrode_desh").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setFull3D();
@@ -2876,18 +2875,10 @@ public class ModItems {
 			.addRadiation(1200000F)
 			.addDigamma(0.1F).toItem();
 
-	public static final Item watz_pellet = new ItemWatzPellet("watz_pellet");
-	public static final Item watz_pellet_depleted = new ItemWatzPellet("watz_pellet_depleted");
+	public static final Item watz_pellet = new ItemWatzPellet("watz_pellet", false);
+	public static final Item watz_pellet_depleted = new ItemWatzPellet("watz_pellet_depleted", true);
 
-	public static final Item pellet_schrabidium = new WatzFuel(ItemHazard.sa326 * 5F, true, 50000, 1400000, 0.975F, 200, 1.05F, 1.05F, "pellet_schrabidium").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_hes = new WatzFuel(ItemHazard.hes * 5F, true, 108000, 650000, 1F, 85, 1, 1.025F, "pellet_hes").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_mes = new WatzFuel(ItemHazard.mes * 5F, true, 216000, 230000, 1.025F, 50, 1, 1F, "pellet_mes").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_les = new WatzFuel(ItemHazard.les * 5F, true, 432000, 70000, 1.05F, 15, 1, 0.975F, "pellet_les").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_beryllium = new WatzFuel(0F, false, 864000, 500, 1.05F, 0, 0.95F, 1.025F, "pellet_beryllium").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_neptunium = new WatzFuel(ItemHazard.np237 * 5F, false, 216000, 30000, 1.1F, 25, 1.1F, 1.005F, "pellet_neptunium").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_lead = new WatzFuel(0F, false, 1728000, 0, 0.95F, 0, 0.95F, 0.95F, "pellet_lead").addToxic(7).toItem().setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	public static final Item pellet_advanced = new WatzFuel(0F, false, 216000, 1000, 1.1F, 0, 0.995F, 0.99F, "pellet_advanced").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-	
+
 	public static final Item particle_empty = new ItemBase("particle_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item particle_hydrogen = new ItemBase("particle_hydrogen").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
 	public static final Item particle_copper = new ItemBase("particle_copper").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
@@ -3382,135 +3373,135 @@ public class ModItems {
 	public static final Item telepad = new ItemBase("telepad").setCreativeTab(MainRegistry.partsTab);
 	public static final Item entanglement_kit = new ItemCustomLore("entanglement_kit").setCreativeTab(MainRegistry.partsTab);
 	
-	//Dummy texture items
-	public static final Item bob_metalworks = new ItemBase("bob_metalworks").setCreativeTab(null);
-	public static final Item bob_assembly = new ItemBase("bob_assembly").setCreativeTab(null);
-	public static final Item bob_chemistry = new ItemBase("bob_chemistry").setCreativeTab(null);
-	public static final Item bob_oil = new ItemBase("bob_oil").setCreativeTab(null);
-	public static final Item bob_nuclear = new ItemBase("bob_nuclear").setCreativeTab(null);
-	public static final Item digamma_see = new ItemBase("digamma_see").setCreativeTab(null);
-	public static final Item digamma_feel = new ItemBase("digamma_feel").setCreativeTab(null);
-	public static final Item digamma_know = new ItemBase("digamma_know").setCreativeTab(null);
-	public static final Item digamma_kauai_moho = new ItemBase("digamma_kauai_moho").setCreativeTab(null);
-	public static final Item digamma_up_on_top = new ItemBase("digamma_up_on_top").setCreativeTab(null);
+	//Dummy texture items; Note: Use EffectItem to autohide them from JEI
+	public static final Item bob_metalworks = new EffectItem("bob_metalworks").setCreativeTab(null);
+	public static final Item bob_assembly = new EffectItem("bob_assembly").setCreativeTab(null);
+	public static final Item bob_chemistry = new EffectItem("bob_chemistry").setCreativeTab(null);
+	public static final Item bob_oil = new EffectItem("bob_oil").setCreativeTab(null);
+	public static final Item bob_nuclear = new EffectItem("bob_nuclear").setCreativeTab(null);
+	public static final Item digamma_see = new EffectItem("digamma_see").setCreativeTab(null);
+	public static final Item digamma_feel = new EffectItem("digamma_feel").setCreativeTab(null);
+	public static final Item digamma_know = new EffectItem("digamma_know").setCreativeTab(null);
+	public static final Item digamma_kauai_moho = new EffectItem("digamma_kauai_moho").setCreativeTab(null);
+	public static final Item digamma_up_on_top = new EffectItem("digamma_up_on_top").setCreativeTab(null);
 	
-	public static final Item smoke1 = new ItemBase("smoke1").setCreativeTab(null);
-	public static final Item smoke2 = new ItemBase("smoke2").setCreativeTab(null);
-	public static final Item smoke3 = new ItemBase("smoke3").setCreativeTab(null);
-	public static final Item smoke4 = new ItemBase("smoke4").setCreativeTab(null);
-	public static final Item smoke5 = new ItemBase("smoke5").setCreativeTab(null);
-	public static final Item smoke6 = new ItemBase("smoke6").setCreativeTab(null);
-	public static final Item smoke7 = new ItemBase("smoke7").setCreativeTab(null);
-	public static final Item smoke8 = new ItemBase("smoke8").setCreativeTab(null);
+	public static final Item smoke1 = new EffectItem("smoke1").setCreativeTab(null);
+	public static final Item smoke2 = new EffectItem("smoke2").setCreativeTab(null);
+	public static final Item smoke3 = new EffectItem("smoke3").setCreativeTab(null);
+	public static final Item smoke4 = new EffectItem("smoke4").setCreativeTab(null);
+	public static final Item smoke5 = new EffectItem("smoke5").setCreativeTab(null);
+	public static final Item smoke6 = new EffectItem("smoke6").setCreativeTab(null);
+	public static final Item smoke7 = new EffectItem("smoke7").setCreativeTab(null);
+	public static final Item smoke8 = new EffectItem("smoke8").setCreativeTab(null);
 	
-	public static final Item b_smoke1 = new ItemBase("b_smoke1").setCreativeTab(null);
-	public static final Item b_smoke2 = new ItemBase("b_smoke2").setCreativeTab(null);
-	public static final Item b_smoke3 = new ItemBase("b_smoke3").setCreativeTab(null);
-	public static final Item b_smoke4 = new ItemBase("b_smoke4").setCreativeTab(null);
-	public static final Item b_smoke5 = new ItemBase("b_smoke5").setCreativeTab(null);
-	public static final Item b_smoke6 = new ItemBase("b_smoke6").setCreativeTab(null);
-	public static final Item b_smoke7 = new ItemBase("b_smoke7").setCreativeTab(null);
-	public static final Item b_smoke8 = new ItemBase("b_smoke8").setCreativeTab(null);
+	public static final Item b_smoke1 = new EffectItem("b_smoke1").setCreativeTab(null);
+	public static final Item b_smoke2 = new EffectItem("b_smoke2").setCreativeTab(null);
+	public static final Item b_smoke3 = new EffectItem("b_smoke3").setCreativeTab(null);
+	public static final Item b_smoke4 = new EffectItem("b_smoke4").setCreativeTab(null);
+	public static final Item b_smoke5 = new EffectItem("b_smoke5").setCreativeTab(null);
+	public static final Item b_smoke6 = new EffectItem("b_smoke6").setCreativeTab(null);
+	public static final Item b_smoke7 = new EffectItem("b_smoke7").setCreativeTab(null);
+	public static final Item b_smoke8 = new EffectItem("b_smoke8").setCreativeTab(null);
 	
-	public static final Item d_smoke1 = new ItemBase("d_smoke1").setCreativeTab(null);
-	public static final Item d_smoke2 = new ItemBase("d_smoke2").setCreativeTab(null);
-	public static final Item d_smoke3 = new ItemBase("d_smoke3").setCreativeTab(null);
-	public static final Item d_smoke4 = new ItemBase("d_smoke4").setCreativeTab(null);
-	public static final Item d_smoke5 = new ItemBase("d_smoke5").setCreativeTab(null);
-	public static final Item d_smoke6 = new ItemBase("d_smoke6").setCreativeTab(null);
-	public static final Item d_smoke7 = new ItemBase("d_smoke7").setCreativeTab(null);
-	public static final Item d_smoke8 = new ItemBase("d_smoke8").setCreativeTab(null);
+	public static final Item d_smoke1 = new EffectItem("d_smoke1").setCreativeTab(null);
+	public static final Item d_smoke2 = new EffectItem("d_smoke2").setCreativeTab(null);
+	public static final Item d_smoke3 = new EffectItem("d_smoke3").setCreativeTab(null);
+	public static final Item d_smoke4 = new EffectItem("d_smoke4").setCreativeTab(null);
+	public static final Item d_smoke5 = new EffectItem("d_smoke5").setCreativeTab(null);
+	public static final Item d_smoke6 = new EffectItem("d_smoke6").setCreativeTab(null);
+	public static final Item d_smoke7 = new EffectItem("d_smoke7").setCreativeTab(null);
+	public static final Item d_smoke8 = new EffectItem("d_smoke8").setCreativeTab(null);
 	
-	public static final Item cloud1 = new ItemBase("cloud1").setCreativeTab(null);
-	public static final Item cloud2 = new ItemBase("cloud2").setCreativeTab(null);
-	public static final Item cloud3 = new ItemBase("cloud3").setCreativeTab(null);
-	public static final Item cloud4 = new ItemBase("cloud4").setCreativeTab(null);
-	public static final Item cloud5 = new ItemBase("cloud5").setCreativeTab(null);
-	public static final Item cloud6 = new ItemBase("cloud6").setCreativeTab(null);
-	public static final Item cloud7 = new ItemBase("cloud7").setCreativeTab(null);
-	public static final Item cloud8 = new ItemBase("cloud8").setCreativeTab(null);
+	public static final Item cloud1 = new EffectItem("cloud1").setCreativeTab(null);
+	public static final Item cloud2 = new EffectItem("cloud2").setCreativeTab(null);
+	public static final Item cloud3 = new EffectItem("cloud3").setCreativeTab(null);
+	public static final Item cloud4 = new EffectItem("cloud4").setCreativeTab(null);
+	public static final Item cloud5 = new EffectItem("cloud5").setCreativeTab(null);
+	public static final Item cloud6 = new EffectItem("cloud6").setCreativeTab(null);
+	public static final Item cloud7 = new EffectItem("cloud7").setCreativeTab(null);
+	public static final Item cloud8 = new EffectItem("cloud8").setCreativeTab(null);
 	
-	public static final Item gasflame1 = new ItemBase("gasflame1").setCreativeTab(null);
-	public static final Item gasflame2 = new ItemBase("gasflame2").setCreativeTab(null);
-	public static final Item gasflame3 = new ItemBase("gasflame3").setCreativeTab(null);
-	public static final Item gasflame4 = new ItemBase("gasflame4").setCreativeTab(null);
-	public static final Item gasflame5 = new ItemBase("gasflame5").setCreativeTab(null);
-	public static final Item gasflame6 = new ItemBase("gasflame6").setCreativeTab(null);
-	public static final Item gasflame7 = new ItemBase("gasflame7").setCreativeTab(null);
-	public static final Item gasflame8 = new ItemBase("gasflame8").setCreativeTab(null);
+	public static final Item gasflame1 = new EffectItem("gasflame1").setCreativeTab(null);
+	public static final Item gasflame2 = new EffectItem("gasflame2").setCreativeTab(null);
+	public static final Item gasflame3 = new EffectItem("gasflame3").setCreativeTab(null);
+	public static final Item gasflame4 = new EffectItem("gasflame4").setCreativeTab(null);
+	public static final Item gasflame5 = new EffectItem("gasflame5").setCreativeTab(null);
+	public static final Item gasflame6 = new EffectItem("gasflame6").setCreativeTab(null);
+	public static final Item gasflame7 = new EffectItem("gasflame7").setCreativeTab(null);
+	public static final Item gasflame8 = new EffectItem("gasflame8").setCreativeTab(null);
 	
-	public static final Item flame_1 = new ItemBase("flame_1").setCreativeTab(null);
-	public static final Item flame_2 = new ItemBase("flame_2").setCreativeTab(null);
-	public static final Item flame_3 = new ItemBase("flame_3").setCreativeTab(null);
-	public static final Item flame_4 = new ItemBase("flame_4").setCreativeTab(null);
-	public static final Item flame_5 = new ItemBase("flame_5").setCreativeTab(null);
-	public static final Item flame_6 = new ItemBase("flame_6").setCreativeTab(null);
-	public static final Item flame_7 = new ItemBase("flame_7").setCreativeTab(null);
-	public static final Item flame_8 = new ItemBase("flame_8").setCreativeTab(null);
-	public static final Item flame_9 = new ItemBase("flame_9").setCreativeTab(null);
-	public static final Item flame_10 = new ItemBase("flame_10").setCreativeTab(null);
+	public static final Item flame_1 = new EffectItem("flame_1").setCreativeTab(null);
+	public static final Item flame_2 = new EffectItem("flame_2").setCreativeTab(null);
+	public static final Item flame_3 = new EffectItem("flame_3").setCreativeTab(null);
+	public static final Item flame_4 = new EffectItem("flame_4").setCreativeTab(null);
+	public static final Item flame_5 = new EffectItem("flame_5").setCreativeTab(null);
+	public static final Item flame_6 = new EffectItem("flame_6").setCreativeTab(null);
+	public static final Item flame_7 = new EffectItem("flame_7").setCreativeTab(null);
+	public static final Item flame_8 = new EffectItem("flame_8").setCreativeTab(null);
+	public static final Item flame_9 = new EffectItem("flame_9").setCreativeTab(null);
+	public static final Item flame_10 = new EffectItem("flame_10").setCreativeTab(null);
 	
-	public static final Item orange1 = new ItemBase("orange1").setCreativeTab(null);
-	public static final Item orange2 = new ItemBase("orange2").setCreativeTab(null);
-	public static final Item orange3 = new ItemBase("orange3").setCreativeTab(null);
-	public static final Item orange4 = new ItemBase("orange4").setCreativeTab(null);
-	public static final Item orange5 = new ItemBase("orange5").setCreativeTab(null);
-	public static final Item orange6 = new ItemBase("orange6").setCreativeTab(null);
-	public static final Item orange7 = new ItemBase("orange7").setCreativeTab(null);
-	public static final Item orange8 = new ItemBase("orange8").setCreativeTab(null);
+	public static final Item orange1 = new EffectItem("orange1").setCreativeTab(null);
+	public static final Item orange2 = new EffectItem("orange2").setCreativeTab(null);
+	public static final Item orange3 = new EffectItem("orange3").setCreativeTab(null);
+	public static final Item orange4 = new EffectItem("orange4").setCreativeTab(null);
+	public static final Item orange5 = new EffectItem("orange5").setCreativeTab(null);
+	public static final Item orange6 = new EffectItem("orange6").setCreativeTab(null);
+	public static final Item orange7 = new EffectItem("orange7").setCreativeTab(null);
+	public static final Item orange8 = new EffectItem("orange8").setCreativeTab(null);
 	
-	public static final Item pc1 = new ItemBase("pc1").setCreativeTab(null);
-	public static final Item pc2 = new ItemBase("pc2").setCreativeTab(null);
-	public static final Item pc3 = new ItemBase("pc3").setCreativeTab(null);
-	public static final Item pc4 = new ItemBase("pc4").setCreativeTab(null);
-	public static final Item pc5 = new ItemBase("pc5").setCreativeTab(null);
-	public static final Item pc6 = new ItemBase("pc6").setCreativeTab(null);
-	public static final Item pc7 = new ItemBase("pc7").setCreativeTab(null);
-	public static final Item pc8 = new ItemBase("pc8").setCreativeTab(null);
+	public static final Item pc1 = new EffectItem("pc1").setCreativeTab(null);
+	public static final Item pc2 = new EffectItem("pc2").setCreativeTab(null);
+	public static final Item pc3 = new EffectItem("pc3").setCreativeTab(null);
+	public static final Item pc4 = new EffectItem("pc4").setCreativeTab(null);
+	public static final Item pc5 = new EffectItem("pc5").setCreativeTab(null);
+	public static final Item pc6 = new EffectItem("pc6").setCreativeTab(null);
+	public static final Item pc7 = new EffectItem("pc7").setCreativeTab(null);
+	public static final Item pc8 = new EffectItem("pc8").setCreativeTab(null);
 	
-	public static final Item chlorine1 = new ItemBase("chlorine1").setCreativeTab(null);
-	public static final Item chlorine2 = new ItemBase("chlorine2").setCreativeTab(null);
-	public static final Item chlorine3 = new ItemBase("chlorine3").setCreativeTab(null);
-	public static final Item chlorine4 = new ItemBase("chlorine4").setCreativeTab(null);
-	public static final Item chlorine5 = new ItemBase("chlorine5").setCreativeTab(null);
-	public static final Item chlorine6 = new ItemBase("chlorine6").setCreativeTab(null);
-	public static final Item chlorine7 = new ItemBase("chlorine7").setCreativeTab(null);
-	public static final Item chlorine8 = new ItemBase("chlorine8").setCreativeTab(null);
+	public static final Item chlorine1 = new EffectItem("chlorine1").setCreativeTab(null);
+	public static final Item chlorine2 = new EffectItem("chlorine2").setCreativeTab(null);
+	public static final Item chlorine3 = new EffectItem("chlorine3").setCreativeTab(null);
+	public static final Item chlorine4 = new EffectItem("chlorine4").setCreativeTab(null);
+	public static final Item chlorine5 = new EffectItem("chlorine5").setCreativeTab(null);
+	public static final Item chlorine6 = new EffectItem("chlorine6").setCreativeTab(null);
+	public static final Item chlorine7 = new EffectItem("chlorine7").setCreativeTab(null);
+	public static final Item chlorine8 = new EffectItem("chlorine8").setCreativeTab(null);
 	
-	public static final Item ln2_1 = new ItemBase("ln2_1").setCreativeTab(null);
-	public static final Item ln2_2 = new ItemBase("ln2_2").setCreativeTab(null);
-	public static final Item ln2_3 = new ItemBase("ln2_3").setCreativeTab(null);
-	public static final Item ln2_4 = new ItemBase("ln2_4").setCreativeTab(null);
-	public static final Item ln2_5 = new ItemBase("ln2_5").setCreativeTab(null);
-	public static final Item ln2_6 = new ItemBase("ln2_6").setCreativeTab(null);
-	public static final Item ln2_7 = new ItemBase("ln2_7").setCreativeTab(null);
-	public static final Item ln2_8 = new ItemBase("ln2_8").setCreativeTab(null);
-	public static final Item ln2_9 = new ItemBase("ln2_9").setCreativeTab(null);
-	public static final Item ln2_10 = new ItemBase("ln2_10").setCreativeTab(null);
+	public static final Item ln2_1 = new EffectItem("ln2_1").setCreativeTab(null);
+	public static final Item ln2_2 = new EffectItem("ln2_2").setCreativeTab(null);
+	public static final Item ln2_3 = new EffectItem("ln2_3").setCreativeTab(null);
+	public static final Item ln2_4 = new EffectItem("ln2_4").setCreativeTab(null);
+	public static final Item ln2_5 = new EffectItem("ln2_5").setCreativeTab(null);
+	public static final Item ln2_6 = new EffectItem("ln2_6").setCreativeTab(null);
+	public static final Item ln2_7 = new EffectItem("ln2_7").setCreativeTab(null);
+	public static final Item ln2_8 = new EffectItem("ln2_8").setCreativeTab(null);
+	public static final Item ln2_9 = new EffectItem("ln2_9").setCreativeTab(null);
+	public static final Item ln2_10 = new EffectItem("ln2_10").setCreativeTab(null);
 	
-	public static final Item gas1 = new ItemBase("gas1").setCreativeTab(null);
-	public static final Item gas2 = new ItemBase("gas2").setCreativeTab(null);
-	public static final Item gas3 = new ItemBase("gas3").setCreativeTab(null);
-	public static final Item gas4 = new ItemBase("gas4").setCreativeTab(null);
-	public static final Item gas5 = new ItemBase("gas5").setCreativeTab(null);
-	public static final Item gas6 = new ItemBase("gas6").setCreativeTab(null);
-	public static final Item gas7 = new ItemBase("gas7").setCreativeTab(null);
-	public static final Item gas8 = new ItemBase("gas8").setCreativeTab(null);
+	public static final Item gas1 = new EffectItem("gas1").setCreativeTab(null);
+	public static final Item gas2 = new EffectItem("gas2").setCreativeTab(null);
+	public static final Item gas3 = new EffectItem("gas3").setCreativeTab(null);
+	public static final Item gas4 = new EffectItem("gas4").setCreativeTab(null);
+	public static final Item gas5 = new EffectItem("gas5").setCreativeTab(null);
+	public static final Item gas6 = new EffectItem("gas6").setCreativeTab(null);
+	public static final Item gas7 = new EffectItem("gas7").setCreativeTab(null);
+	public static final Item gas8 = new EffectItem("gas8").setCreativeTab(null);
 	
-	public static final Item spill1 = new ItemBase("spill1").setCreativeTab(null);
-	public static final Item spill2 = new ItemBase("spill2").setCreativeTab(null);
-	public static final Item spill3 = new ItemBase("spill3").setCreativeTab(null);
-	public static final Item spill4 = new ItemBase("spill4").setCreativeTab(null);
-	public static final Item spill5 = new ItemBase("spill5").setCreativeTab(null);
-	public static final Item spill6 = new ItemBase("spill6").setCreativeTab(null);
-	public static final Item spill7 = new ItemBase("spill7").setCreativeTab(null);
-	public static final Item spill8 = new ItemBase("spill8").setCreativeTab(null);
+	public static final Item spill1 = new EffectItem("spill1").setCreativeTab(null);
+	public static final Item spill2 = new EffectItem("spill2").setCreativeTab(null);
+	public static final Item spill3 = new EffectItem("spill3").setCreativeTab(null);
+	public static final Item spill4 = new EffectItem("spill4").setCreativeTab(null);
+	public static final Item spill5 = new EffectItem("spill5").setCreativeTab(null);
+	public static final Item spill6 = new EffectItem("spill6").setCreativeTab(null);
+	public static final Item spill7 = new EffectItem("spill7").setCreativeTab(null);
+	public static final Item spill8 = new EffectItem("spill8").setCreativeTab(null);
 	
-	public static final Item nothing = new ItemBase("nothing").setCreativeTab(null);
+	public static final Item nothing = new EffectItem("nothing").setCreativeTab(null);
 	
 	public static final Item ducc = new ItemBase("ducc").setCreativeTab(MainRegistry.controlTab);
 	
-	public static final Item discharge = new ItemBase("discharge").setCreativeTab(null);
+	public static final Item discharge = new EffectItem("discharge").setCreativeTab(null);
 	
 	public static final Item undefined = new ItemCustomLore("undefined").setCreativeTab(MainRegistry.partsTab);
 	

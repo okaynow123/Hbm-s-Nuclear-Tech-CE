@@ -36,6 +36,8 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
 	public ItemStackHandler inventory;
 
+
+
 	private String customName;
 
 	public TileEntityMachineBase(int scount) {
@@ -58,6 +60,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 			public int getSlotLimit(int slot) {
 				return slotlimit;
 			}
+
 		};
 	}
 
@@ -137,7 +140,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 			inventory.deserializeNBT(compound.getCompoundTag("inventory"));
 		super.readFromNBT(compound);
 	}
-	
+
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
 		return true;
 	}

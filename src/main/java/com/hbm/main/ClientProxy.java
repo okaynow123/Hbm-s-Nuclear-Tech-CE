@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.hbm.blocks.generic.*;
+import com.hbm.blocks.machine.WatzPump;
 import com.hbm.entity.effect.*;
 import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.missile.*;
@@ -450,7 +451,8 @@ public class ClientProxy extends ServerProxy {
 		//WATZ
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWatz.class, new RenderWatz());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWatzStruct.class, new RenderWatzMultiblock());
-		
+		ClientRegistry.bindTileEntitySpecialRenderer(WatzPump.TileEntityWatzPump.class, new RenderWatzPump());
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineBAT9000.class, new RenderBAT9000());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineOrbus.class, new RenderOrbus());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChungus.class, new RenderChungus());

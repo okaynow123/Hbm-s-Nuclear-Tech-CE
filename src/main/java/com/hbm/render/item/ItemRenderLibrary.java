@@ -1787,7 +1787,7 @@ public class ItemRenderLibrary {
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
 
-		renderers.put(Item.getItemFromBlock(ModBlocks.watz), new ItemRenderBase() {
+		renderers.put(Item.getItemFromBlock(ModBlocks.watz_pump), new ItemRenderBase() {
 				public void renderInventory() {
 					GL11.glTranslated(0, -1.5, 0);
 					double scale = 5;

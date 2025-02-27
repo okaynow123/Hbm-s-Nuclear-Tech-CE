@@ -2,9 +2,9 @@ package com.hbm.render.icon;
 
 import com.google.common.collect.Lists;
 import com.hbm.main.MainRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.PngSizeInfo;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.AnimationFrame;
@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.compress.utils.IOUtils;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -25,7 +26,7 @@ import java.util.function.Function;
 public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
 
     private RGBMutator mutator;
-    public String basePath = "textures/items";
+    public String basePath = "textures";
     private int mipmap = 0;
 
     public TextureAtlasSpriteMutatable(String iconName, RGBMutator mutator) {
@@ -36,8 +37,14 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
 
     @Override
     public void loadSpriteFrames(IResource resource, int mipmapLevels) throws IOException {
-        BufferedImage bufferedImage = TextureUtil.readBufferedImage(resource.getInputStream());
+        BufferedImage bufferedImage = ImageIO.read(resource.getInputStream());
+        if(bufferedImage == null) {
+            MainRegistry.logger.warn("Failed to load texture " + this.getIconName() + " from " + resource.getResourceLocation());
+        }
         AnimationMetadataSection animationMetadataSection = resource.getMetadata("animation");
+        if(animationMetadataSection == null) {
+            MainRegistry.logger.warn("No animation metadata found for " + this.getIconName());
+        }
         int[][] frameData = new int[mipmapLevels][];
         frameData[0] = new int[bufferedImage.getWidth() * bufferedImage.getHeight()];
         bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), frameData[0], 0, bufferedImage.getWidth());
@@ -113,15 +120,17 @@ public class TextureAtlasSpriteMutatable extends TextureAtlasSprite {
         IResource iresource = null;
         try {
             iresource = man.getResource(resourcelocation1);
+
             PngSizeInfo pngSizeInfo = PngSizeInfo.makeFromResource(iresource);
             boolean hasAnimation = iresource.getMetadata("animation") != null;
             this.loadSprite(pngSizeInfo, hasAnimation);
+            this.mipmap = Minecraft.getMinecraft().getTextureMapBlocks().getMipmapLevels()+1;
 
             // Load the sprite frames directly
-            this.loadSpriteFrames(iresource, this.mipmap + 1);
+            iresource = man.getResource(resourcelocation1);//Norwood: Yeah ofc the fucking stream needs to get closed automatically after every method I call, why not
+            //TOTALLY HASN'T MADE ME SPEND 3 FUCKING DAYS DEBUGGING IT
+            this.loadSpriteFrames(iresource, this.mipmap);
 
-            // Generate mipmaps
-            this.generateMipmaps(this.mipmap);
         } catch (RuntimeException | IOException e) {
             net.minecraftforge.fml.client.FMLClientHandler.instance().trackBrokenTexture(resourcelocation1, e.getMessage());
             return true;

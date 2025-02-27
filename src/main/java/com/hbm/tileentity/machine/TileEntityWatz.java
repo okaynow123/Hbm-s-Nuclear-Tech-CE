@@ -61,7 +61,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 	public ItemStack[] locks;
 	
 	public TileEntityWatz() {
-		super(24);
+		super(24, 1);
 		this.locks = new ItemStack[inventory.getSlots()];
 		this.tanks = new FluidTankNTM[3];
 		this.tanks[0] = new FluidTankNTM(Fluids.COOLANT, 64_000);
@@ -73,6 +73,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 	public String getName() {
 		return "container.watz";
 	}
+
 
 	@Override
 	public void update() {
@@ -336,6 +337,8 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 				new DirPos(pos.getX(), pos.getY() - 1, pos.getZ() - 2, ForgeDirection.DOWN)
 		};
 	}
+
+
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -468,18 +471,18 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 		world.setBlockState(pos.up(), ModBlocks.mud_block.getDefaultState());
 		world.setBlockState(pos.up(2), ModBlocks.mud_block.getDefaultState());
 		
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 1, 0);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 2, 0);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 0, 1);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 0, 2);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, -1, 0);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, -2, 0);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 0, -1);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 0, -2);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 1, 1);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, 1, -1);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, -1, 1);
-		setBrokenColumn(0, ModBlocks.watz_element_depricated, 0, -1, -1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 1, 0);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 2, 0);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 0, 1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 0, 2);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, -1, 0);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, -2, 0);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 0, -1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 0, -2);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 1, 1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, 1, -1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, -1, 1);
+		setBrokenColumn(0, ModBlocks.watz_element, 0, -1, -1);
 		setBrokenColumn(0, ModBlocks.watz_cooler, 0, 2, 1);
 		setBrokenColumn(0, ModBlocks.watz_cooler, 0, 2, -1);
 		setBrokenColumn(0, ModBlocks.watz_cooler, 0, 1, 2);
@@ -490,15 +493,15 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 		setBrokenColumn(0, ModBlocks.watz_cooler, 0, -1, -2);
 		
 		for(int j = -1; j < 2; j++) {
-			setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, 3, j);
-			setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, j, 3);
-			setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, -3, j);
-			setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, j, -3);
+			setBrokenColumn(1, ModBlocks.watz_casing, 1, 3, j);
+			setBrokenColumn(1, ModBlocks.watz_casing, 1, j, 3);
+			setBrokenColumn(1, ModBlocks.watz_casing, 1, -3, j);
+			setBrokenColumn(1, ModBlocks.watz_casing, 1, j, -3);
 		}
-		setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, 2, 2);
-		setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, 2, -2);
-		setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, -2, 2);
-		setBrokenColumn(1, ModBlocks.watz_end_depricated, 1, -2, -2);
+		setBrokenColumn(1, ModBlocks.watz_casing, 1, 2, 2);
+		setBrokenColumn(1, ModBlocks.watz_casing, 1, 2, -2);
+		setBrokenColumn(1, ModBlocks.watz_casing, 1, -2, 2);
+		setBrokenColumn(1, ModBlocks.watz_casing, 1, -2, -2);
 		
 		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(50, 50, 50));
 		

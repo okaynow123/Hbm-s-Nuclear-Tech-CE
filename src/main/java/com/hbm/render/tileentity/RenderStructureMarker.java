@@ -4,7 +4,6 @@ import com.hbm.render.RenderHelper;
 import com.hbm.tileentity.machine.TileEntityStructureMarker;
 import com.hbm.world.FactoryTitanium;
 import com.hbm.world.NuclearReactor;
-import com.hbm.world.WatzOld;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -216,56 +215,9 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 				}
 			}
 		}
-		if(type == 3) {
-
-			if(meta == 1) {
-				offsetZ = 0;
-				offsetX = 10;
-			}
-			if(meta == 2) {
-				offsetZ = 0;
-				offsetX = 2;
-			}
-			if(meta == 3) {
-				offsetX = 6;
-				offsetZ = -4;
-			}
-			if(meta == 4) {
-				offsetZ = 4;
-				offsetX = 6;
-			}
-
-			GL11.glTranslatef(-3 + offsetX, 0, -3 + offsetZ);
-			for(int a = 0; a < 7; a++) {
-				for(int b = 0; b < 13; b++) {
-					for(int c = 0; c < 7; c++) {
-				
-						int texture = -1;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("C"))
-							texture = 0;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("A"))
-							texture = 1;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("R"))
-							texture = 2;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("S"))
-							texture = 3;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("I"))
-							texture = 4;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("#"))
-							texture = 5;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("K"))
-							texture = 6;
-						if(WatzOld.watz[b][a].substring(c, c + 1).equals("W"))
-							texture = 7;
-						if(texture >= 0) {
-							renderSmolBlockAt(watz[texture][0], watz[texture][1], a, b, c);
-						}
-					}
-				}
-			}
-		}
 	}
 
+	//TODO: remove that
 	public void renderSmolBlockAt(TextureAtlasSprite loc1, TextureAtlasSprite loc2, int x, int y, int z) {
 		// GL11.glTranslatef(x, y, z);
 		GL11.glRotatef(180, 0F, 0F, 1F);

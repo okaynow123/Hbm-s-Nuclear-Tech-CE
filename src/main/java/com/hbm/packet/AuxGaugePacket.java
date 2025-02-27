@@ -21,7 +21,6 @@ import com.hbm.tileentity.machine.TileEntityMachineElectricFurnace;
 import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import com.hbm.tileentity.machine.TileEntityMachineReactorLarge;
 import com.hbm.tileentity.machine.TileEntitySlidingBlastDoor;
-import com.hbm.tileentity.machine.TileEntityWatzCore;
 import com.hbm.tileentity.turret.TileEntityTurretCIWS;
 import com.hbm.tileentity.turret.TileEntityTurretCheapo;
 
@@ -195,20 +194,6 @@ public class AuxGaugePacket implements IMessage {
 					} else if(te instanceof TileEntityCoreStabilizer) {
 						if(m.id == 0)
 							((TileEntityCoreStabilizer) te).beam = m.value;
-					} else if(te instanceof TileEntityWatzCore){
-						TileEntityWatzCore core = (TileEntityWatzCore) te;
-						if(m.id == 0)
-							core.powerList = m.value;
-						else if(m.id == 1)
-							core.heatList = m.value;
-						else if(m.id == 2)
-							core.decayMultiplier = m.value;
-						else if(m.id == 3)
-							core.powerMultiplier = m.value;
-						else if(m.id == 4)
-							core.heatMultiplier = m.value;
-						else if(m.id == 5)
-							core.heat = m.value;
 					} else if(te instanceof TileEntitySlidingBlastDoor){
 						((TileEntitySlidingBlastDoor) te).shouldUseBB = m.value == 1 ? true : false;
 					}
