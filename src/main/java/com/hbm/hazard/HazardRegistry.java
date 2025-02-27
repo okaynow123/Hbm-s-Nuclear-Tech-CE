@@ -1,4 +1,6 @@
 package com.hbm.hazard;
+
+import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
@@ -556,10 +558,11 @@ public class HazardRegistry {
 		/*
 		 * Blacklist
 		 */
-		for(final String ore : TH232.ores()) HazardSystem.blacklist(ore);
-		for(final String ore : U.ores()) HazardSystem.blacklist(ore);
+		for(String ore : TH232.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
+		for(String ore : U.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
 
-		
+
+
 
 		//TODO: make that work but with CEU
 /*
@@ -595,22 +598,6 @@ public class HazardRegistry {
 	private static HazardData makeData(final HazardTypeBase hazard, final float level, final boolean override) { return new HazardData().addEntry(hazard, level, override); }
 
 
-//	private static void registerMaterial(String material, float rad, float hot, float cold, boolean blinding,
-//										 boolean digamma, boolean coal, boolean asbestos, float hydroexplosive, float explosive,
-//										 float toxic){
-//		String[] oredictName = {"ingot", "powder", "crystal", "block", "nugget", "dust", "dustTiny", "part", "billet"};
-//		for(String item : oredictName) {
-//			String entry = oredictName+material;
-//			HazardData data = new HazardData();
-//			HazardSystem.register(entry, data);
-//			if (rad > 0)
-//				data.addEntry(RADIATION)
-//
-//
-//		}
-//
-//
-//	}
 
 //	private static void registerPWRFuel(EnumPWRFuel fuel, float baseRad) {
 //		HazardSystem.register(DictFrame.fromOne(ModItems.pwr_fuel, fuel), makeData(RADIATION, baseRad));
