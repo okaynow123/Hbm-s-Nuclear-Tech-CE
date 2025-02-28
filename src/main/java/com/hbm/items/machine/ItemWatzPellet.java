@@ -93,29 +93,6 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		}
 	}
 
-/*@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister reg) {
-		
-		Enum[] enums = theEnum.getEnumConstants();
-		this.icons = new IIcon[enums.length];
-		
-		if(reg instanceof TextureMap) {
-			TextureMap map = (TextureMap) reg;
-			
-			for(int i = 0; i < EnumWatzType.values().length; i++) {
-				EnumWatzType type = EnumWatzType.values()[i];
-				String placeholderName = this.getIconString() + "-" + (type.name() + this.getUnlocalizedName());
-				int light = this == ModItems.watz_pellet_depleted ? desaturate(type.colorLight) : type.colorLight;
-				int dark = this == ModItems.watz_pellet_depleted ? desaturate(type.colorDark) : type.colorDark;
-				TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xD2D2D2, 0x333333, light, dark));
-				map.setTextureEntry(placeholderName, mutableIcon);
-				icons[i] = mutableIcon;
-			}
-		}
-		
-		this.itemIcon = reg.registerIcon(this.getIconString());
-	}*/
-
 	public void registerModels() {
 		for (int i = 0; i < EnumWatzType.values().length; i++) {
 			if (this.isDesaturated) {

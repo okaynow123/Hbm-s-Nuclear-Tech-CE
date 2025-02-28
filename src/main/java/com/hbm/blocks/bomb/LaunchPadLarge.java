@@ -70,11 +70,12 @@ public class LaunchPadLarge extends BlockDummyable implements IBomb {
 		if(!world.isRemote){
 
 			int[] corePos = findCore(world, pos.getX(), pos.getY(), pos.getZ());
-			BlockPos cPos = new BlockPos(corePos[0], corePos[1], corePos[2]);
-			TileEntity core = world.getTileEntity(cPos);
-			if(core instanceof TileEntityLaunchPadLarge){
-				TileEntityLaunchPadLarge launchpad = (TileEntityLaunchPadLarge)core;
-				launchpad.updateRedstonePower(pos.getX(), pos.getY(), pos.getZ());
+			if(corePos != null) {
+				BlockPos cPos = new BlockPos(corePos[0], corePos[1], corePos[2]);
+				TileEntity core = world.getTileEntity(cPos);
+				if (core instanceof TileEntityLaunchPadLarge launchpad) {
+					launchpad.updateRedstonePower(pos.getX(), pos.getY(), pos.getZ());
+				}
 			}
 		}
 		super.neighborChanged(state, world, pos, blockIn, fromPos);

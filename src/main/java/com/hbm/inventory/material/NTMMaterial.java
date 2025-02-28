@@ -1,6 +1,7 @@
 package com.hbm.inventory.material;
 
 import com.hbm.inventory.OreDictManager.DictFrame;
+import com.hbm.main.MainRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -59,8 +60,18 @@ public class NTMMaterial {
 
 	/** Shapes for autogen */
 	public NTMMaterial setAutogen(MaterialShapes... shapes) {
-        this.autogen.addAll(Arrays.asList(shapes));
+		for (MaterialShapes shape : shapes) {
+			if (shape != null) {
+				this.autogen.add(shape);
+			} else {
+				MainRegistry.logger.warn("Warning: Null MaterialShape passed to setAutogen for " + this.names[0]);
+			}
+		}
 		return this;
+	}
+
+	public Set<MaterialShapes> getAutogen() {
+		return this.autogen;
 	}
 
 	/** Traits for recipe detection */

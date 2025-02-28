@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 public class Mats {
 
 	public static List<NTMMaterial> orderedList = new ArrayList();
-	public static HashMap<String, MaterialShapes> prefixByName = new HashMap();
 	public static HashMap<Integer, NTMMaterial> matById = new HashMap();
 	public static HashMap<String, NTMMaterial> matByName = new HashMap();
 	public static HashMap<ComparableStack, List<MaterialStack>> materialEntries = new HashMap();
@@ -45,8 +44,8 @@ public class Mats {
 	public static final int _ES = 20_000;
 
 	//Vanilla and vanilla-like
-//	public static final NTMMaterial MAT_WOOD			= makeNonSmeltable(_VS + 03,	WOOD,				0x896727, 0x281E0B, 0x896727).setAutogen(STOCK, GRIP).n();
-//	public static final NTMMaterial MAT_IVORY			= makeNonSmeltable(_VS + 04,	BONE,				0xFFFEEE, 0x797870, 0xEDEBCA).setAutogen(GRIP).n();
+	public static final NTMMaterial MAT_WOOD			= makeNonSmeltable(_VS + 03,	WOOD,				0x896727, 0x281E0B, 0x896727).setAutogen(STOCK, GRIP).n();
+	public static final NTMMaterial MAT_IVORY			= makeNonSmeltable(_VS + 04,	BONE,				0xFFFEEE, 0x797870, 0xEDEBCA).setAutogen(GRIP).n();
 	public static final NTMMaterial MAT_STONE			= makeSmeltable(_VS + 00,		df("Stone"),		0x7F7F7F, 0x353535, 0x4D2F23).n();
 	public static final NTMMaterial MAT_CARBON			= makeAdditive(	699,			CARBON,				0x363636, 0x030303, 0x404040).setAutogen(WIRE, BLOCK).n();
 	public static final NTMMaterial MAT_COAL			= makeNonSmeltable(600,			COAL, 				0x363636, 0x030303, 0x404040).setConversion(MAT_CARBON,  2, 1).setAutogen(FRAGMENT).n();
@@ -202,7 +201,7 @@ public class Mats {
 					break outer;
 				}
 				
-				for(Entry<String, MaterialShapes> prefixEntry : prefixByName.entrySet()) {
+				for(Entry<String, MaterialShapes> prefixEntry : MaterialShapes.prefixByName.entrySet()) {
 					String prefix = prefixEntry.getKey();
 						
 					if(name.startsWith(prefix)) {

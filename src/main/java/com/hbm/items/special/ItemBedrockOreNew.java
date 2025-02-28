@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
@@ -42,12 +43,7 @@ import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
 public class ItemBedrockOreNew extends Item {
 
-    public static final ModelResourceLocation identifierModel = new ModelResourceLocation(RefStrings.MODID + ":bedrock_ore_new", "inventory");
-
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSpriteMutatable[] icons;
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite[] overlays;
+    public TextureAtlasSprite[] overlays = new TextureAtlasSprite[ProcessingTrait.values().length];;
 
     public ItemBedrockOreNew(String s) {
         this.setTranslationKey(s);
@@ -55,8 +51,6 @@ public class ItemBedrockOreNew extends Item {
         this.setCreativeTab(MainRegistry.partsTab);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-        this.icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
-        this.overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
 
         ModItems.ALL_ITEMS.add(this);
     }
@@ -74,69 +68,56 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(TextureMap map) {
-
-        for(int i = 0; i < BedrockOreGrade.values().length; i++) { BedrockOreGrade grade = BedrockOreGrade.values()[i];
-            for(int j = 0; j < BedrockOreType.values().length; j++) { BedrockOreType type = BedrockOreType.values()[j];
-                String placeholderName = RefStrings.MODID + ":bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
-                MainRegistry.logger.info("placeholderName: " + placeholderName);
-                TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
-                map.setTextureEntry(mutableIcon);
-                this.icons[i * BedrockOreType.values().length + j] = mutableIcon;
+    public void registerModels() {
+        for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+            BedrockOreGrade grade = BedrockOreGrade.values()[i];
+            for (int j = 0; j < BedrockOreType.values().length; j++) {
+                BedrockOreType type = BedrockOreType.values()[j];
+                String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(placeholderName, "inventory"));
             }
         }
-
-        for (int i = 0; i < overlays.length; i++) {
-            ProcessingTrait trait = ProcessingTrait.values()[i];
-            this.overlays[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US)));
-        }
     }
 
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        ModelLoader.setCustomMeshDefinition(this, stack -> identifierModel);
-    }
-
-    public static void bakeModels(ModelBakeEvent event, boolean isDesaturated){
+    public static void bakeModels(ModelBakeEvent event){
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));
-            for(int i = 0; i < ItemWatzPellet.EnumWatzType.values().length; i++){
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/" + (isDesaturated ? "_depleted-" + i : "-" + i));
-                IModel retexturedModel = baseModel.retexture(
-                        ImmutableMap.of(
-                                "layer0", spriteLoc.toString(),
-                                "layer1", spriteLoc.toString()
-                        )
+            for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+                BedrockOreGrade grade = BedrockOreGrade.values()[i];
+                for (int j = 0; j < BedrockOreType.values().length; j++) {
+                    BedrockOreType type = BedrockOreType.values()[j];
+                    String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                    MainRegistry.logger.info("Model location: " + placeholderName);
+                    ResourceLocation spriteLoc = new ResourceLocation(placeholderName);
+                    IModel retexturedModel = baseModel.retexture(
+                            ImmutableMap.of(
+                                    "layer0", spriteLoc.toString()
+                            )
 
-                );
-                IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-                ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID,  "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i)), "inventory");
-                event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+                    );
+                    IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(placeholderName), "inventory");
+                    event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
 
+                }
             }
         }   catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite getBaseTexture(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        int icon = this.getGrade(meta).ordinal() * BedrockOreType.values().length + this.getType(meta).ordinal();
-        return icons[Math.abs(icon % icons.length)];
-    }
-
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite[] getOverlayTextures(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        BedrockOreGrade grade = getGrade(meta);
-        return Arrays.stream(grade.traits)
-                .map(trait -> overlays[trait.ordinal()])
-                .toArray(TextureAtlasSprite[]::new);
+    public void registerSprites(TextureMap map) {
+        for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+            BedrockOreGrade grade = BedrockOreGrade.values()[i];
+            for (int j = 0; j < BedrockOreType.values().length; j++) {
+                BedrockOreType type = BedrockOreType.values()[j];
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j));
+                MainRegistry.logger.info("Sprite location: " + spriteLoc.toString());
+                TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
+                map.setTextureEntry(sprite);
+            }
+        }
     }
 
     @Override
