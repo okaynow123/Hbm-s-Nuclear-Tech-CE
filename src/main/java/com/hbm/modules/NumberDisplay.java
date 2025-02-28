@@ -6,8 +6,10 @@ import java.util.Arrays;
 
 import javax.annotation.Nonnegative;
 
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -311,17 +313,23 @@ public class NumberDisplay {
      */
     private void renderSegment(int renX, int renY, int width, int height)
     {
-        final Tessellator tess = Tessellator.instance;
+        final Tessellator tess = Tessellator.getInstance();
+        final BufferBuilder buffer = tess.getBuffer();
         final float z = gui.getGuiTop();
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        tess.startDrawingQuads();
-        tess.setColorOpaque_I(color);
-        tess.addVertex(renX, renY + height, z);
-        tess.addVertex(renX + width, renY + height, z);
-        tess.addVertex(renX + width, renY + 0, z);
-        tess.addVertex(renX, renY, z);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(renX, renY + height, z).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, 255).endVertex();
+        buffer.pos(renX + width, renY + height, z).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, 255).endVertex();
+        buffer.pos(renX + width, renY, z).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, 255).endVertex();
+        buffer.pos(renX, renY, z).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, 255).endVertex();
+
         tess.draw();
+
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
