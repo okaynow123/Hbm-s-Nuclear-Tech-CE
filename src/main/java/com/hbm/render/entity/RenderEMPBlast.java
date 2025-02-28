@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityEMPBlast;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
@@ -21,7 +22,7 @@ public class RenderEMPBlast extends Render<EntityEMPBlast> {
 	
 	protected RenderEMPBlast(RenderManager renderManager) {
 		super(renderManager);
-		ringModel = AdvancedModelLoader.loadModel(ringModelRL);
+		ringModel = new HFRWavefrontObject(ringModelRL);
     	ringTexture = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/EMPBlast.png");
 	}
 	

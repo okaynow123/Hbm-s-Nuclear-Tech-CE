@@ -3,6 +3,7 @@ package com.hbm.render.entity;
 import com.hbm.entity.effect.EntityBlackHole;
 import com.hbm.entity.effect.EntityRagingVortex;
 import com.hbm.entity.effect.EntityVortex;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.NTMRenderHelper;
@@ -38,7 +39,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 	protected RenderBlackHole(RenderManager renderManager){
 		super(renderManager);
-		blastModel = AdvancedModelLoader.loadModel(objTesterModelRL);
+		blastModel = new HFRWavefrontObject(objTesterModelRL);
 	}
 
 	@Override

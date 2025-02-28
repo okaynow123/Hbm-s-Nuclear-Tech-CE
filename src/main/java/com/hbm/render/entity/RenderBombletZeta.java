@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityBombletZeta;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
@@ -20,7 +21,7 @@ public class RenderBombletZeta extends Render<EntityBombletZeta> {
 	
 	protected RenderBombletZeta(RenderManager renderManager) {
 		super(renderManager);
-		boyModel = AdvancedModelLoader.loadModel(objTesterModelRL);
+		boyModel = new HFRWavefrontObject(objTesterModelRL);
 		boyTexture = new ResourceLocation(RefStrings.MODID, "textures/models/projectiles/bombletZetaTexture.png");
 	}
 	

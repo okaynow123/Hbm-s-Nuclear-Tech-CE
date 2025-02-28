@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityCloudFleija;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
@@ -24,7 +25,7 @@ public class RenderCloudFleija extends Render<EntityCloudFleija> {
 	
 	protected RenderCloudFleija(RenderManager renderManager) {
 		super(renderManager);
-		blastModel = AdvancedModelLoader.loadModel(objTesterModelRL);
+		blastModel = new HFRWavefrontObject(objTesterModelRL);
     	blastTexture = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/BlastFleija.png");
     	scale = 0;
 	}

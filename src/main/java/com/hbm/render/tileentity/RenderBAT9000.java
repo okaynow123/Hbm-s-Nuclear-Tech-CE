@@ -8,6 +8,7 @@ import com.hbm.render.misc.DiamondPronter;
 import com.hbm.render.misc.EnumSymbol;
 import com.hbm.tileentity.machine.TileEntityMachineBAT9000;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -23,47 +24,45 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
 
 	@Override
 	public void render(TileEntityMachineBAT9000 bat, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5F, y, z + 0.5F);
+		GlStateManager.enableLighting();
+		GlStateManager.enableCull();
 
 		bindTexture(ResourceManager.bat9000_tex);
 
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		ResourceManager.bat9000.renderAll();
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 
 		FluidType type = bat.tankNew.getTankType();
 
-		if(type != null && type != Fluids.NONE) {
-
+		if (type != null && type != Fluids.NONE) {
 			RenderHelper.disableStandardItemLighting();
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			int poison = type.poison;
 			int flammability = type.flammability;
 			int reactivity = type.reactivity;
 			EnumSymbol symbol = type.symbol;
 
-			GL11.glRotatef(45, 0, 1, 0);
+			GlStateManager.rotate(45F, 0F, 1F, 0F);
 
-			for(int j = 0; j < 4; j++) {
-
-				GL11.glPushMatrix();
-				GL11.glTranslated(2.5, 2.25, 0);
-				GL11.glScalef(1.0F, 0.75F, 0.75F);
+			for (int j = 0; j < 4; j++) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(2.5F, 2.25F, 0F);
+				GlStateManager.scale(1.0F, 0.75F, 0.75F);
 				DiamondPronter.pront(poison, flammability, reactivity, symbol);
-				GL11.glPopMatrix();
-				GL11.glRotatef(90, 0, 1, 0);
+				GlStateManager.popMatrix();
+				GlStateManager.rotate(90F, 0F, 1F, 0F);
 			}
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			RenderHelper.enableStandardItemLighting();
 		}
 
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor3f(1F, 1F, 1F);
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableCull();
+		GlStateManager.disableLighting();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 
 		double height = bat.tankNew.getFill() * 1.5D / bat.tankNew.getMaxFill();
 		double off = 2.2;
@@ -71,7 +70,6 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
 
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buffer = tess.getBuffer();
-
 
 		int r = (color >> 16) & 0xFF;
 		int g = (color >> 8) & 0xFF;
@@ -86,11 +84,11 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
 
 		tess.draw();
 
+		GlStateManager.enableLighting();
+		GlStateManager.enableCull();
+		GlStateManager.enableTexture2D();
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.popMatrix();
 
-		GL11.glPopMatrix();
 	}
 }

@@ -2,6 +2,7 @@ package com.hbm.render.util;
 
 import glmath.glm.vec._3.d.Vec3d;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.Style;
@@ -68,8 +69,8 @@ public class ViewModelPositonDebugger {
         return offsetMap.get(transform);
     }
     public void applyCustomOffset(offset offset) {
-        GL11.glScaled(offset.scale,offset.scale,offset.scale);
-        GL11.glTranslated(-offset.position.x,offset.position.y,offset.position.z);
+        GlStateManager.scale(offset.scale,offset.scale,offset.scale);
+        GlStateManager.translate(-offset.position.x,offset.position.y,offset.position.z);
         GL11.glRotated(-offset.rotation.y,0,1,0);
         GL11.glRotated(offset.rotation.x,1,0,0);
         GL11.glRotated(-offset.rotation.z,0,0,1);
