@@ -7,7 +7,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.SatLaserPacket;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.saveddata.satellites.Satellite.InterfaceActions;
 import com.hbm.saveddata.satellites.Satellite.Interfaces;
 import net.minecraft.block.Block;
@@ -237,7 +237,7 @@ public class GUIScreenSatInterface extends GuiScreen {
 	private void prontMap() {
 		for(int x = 0; x < 200; x++) {
 			for(int z = 0; z < 200; z++) {
-				RenderHelper.setColor(map[x][z]);
+				NTMRenderHelper.setColor(map[x][z]);
 				drawTexturedModalRect(guiLeft + 8 + x, guiTop + 8 + z, 216, 216, 1, 1);
 			}
 		}

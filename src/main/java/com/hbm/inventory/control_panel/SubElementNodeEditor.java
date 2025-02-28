@@ -3,7 +3,7 @@ package com.hbm.inventory.control_panel;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -267,7 +267,7 @@ public class SubElementNodeEditor extends SubElement {
 		//GL11.glTranslated(scalePointX, scalePointY, 0);
 		//GL11.glScaled(gridScale, gridScale, 0);
 		//GL11.glTranslated(-scalePointX, -scalePointY, 0);
-		RenderHelper.drawGuiRectColor(gui.getGuiLeft(), gui.getGuiTop(), x, y, gui.getXSize(), gui.getYSize(), gridScale+x, gridScale+y, 0.2F, 0.2F, 0.2F, 1);
+		NTMRenderHelper.drawGuiRectColor(gui.getGuiLeft(), gui.getGuiTop(), x, y, gui.getXSize(), gui.getYSize(), gridScale+x, gridScale+y, 0.2F, 0.2F, 0.2F, 1);
 		//GL11.glPopMatrix();
 		//GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		
@@ -297,7 +297,7 @@ public class SubElementNodeEditor extends SubElement {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button){
 		if(addMenu != null && button == 0){
-			if(RenderHelper.intersects2DBox(mouseX, mouseY, addMenu.getBoundingBox())){
+			if(NTMRenderHelper.intersects2DBox(mouseX, mouseY, addMenu.getBoundingBox())){
 				addMenu.mouseClicked(mouseX, mouseY);
 			} else {
 				addMenu.close();

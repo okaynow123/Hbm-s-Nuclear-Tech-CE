@@ -2,7 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityFalloutRain;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -64,7 +64,7 @@ public class RenderFallout extends Render<EntityFalloutRain> {
         GlStateManager.disableCull();
         //Drillgon200: It doesn't work when I use GLStateManager...
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderHelper.resetColor();
+        NTMRenderHelper.resetColor();
         
         GlStateManager.disableLighting();
         Entity ent = this.mc.getRenderViewEntity();
@@ -141,7 +141,7 @@ public class RenderFallout extends Render<EntityFalloutRain> {
             }
  
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderHelper.resetColor();
+            NTMRenderHelper.resetColor();
             for (int l = i3 - b0; l <= i3 + b0; ++l) {
                 for (int i1 = k2 - b0; i1 <= k2 + b0; ++i1) {
                     int j1 = (l - i3 + 16) * 32 + i1 - k2 + 16;

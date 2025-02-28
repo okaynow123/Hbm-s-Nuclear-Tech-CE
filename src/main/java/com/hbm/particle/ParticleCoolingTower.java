@@ -1,7 +1,7 @@
 package com.hbm.particle;
 
 import com.hbm.lib.RefStrings;
-import com.hbm.main.ModEventHandlerClient;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -70,7 +70,7 @@ public class ParticleCoolingTower extends Particle {
 
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
-		com.hbm.render.RenderHelper.resetParticleInterpPos(entityIn, partialTicks);
+		NTMRenderHelper.resetParticleInterpPos(entityIn, partialTicks);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
 		GlStateManager.disableLighting();

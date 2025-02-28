@@ -2,7 +2,7 @@ package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityMissileAntiBallistic;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -23,7 +23,7 @@ public class RenderMissileAB extends Render<EntityMissileAntiBallistic> {
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.enableLighting();
-		double[] pos = RenderHelper.getRenderPosFromMissile(missile, partialTicks);
+		double[] pos = NTMRenderHelper.getRenderPosFromMissile(missile, partialTicks);
 		x = pos[0];
 		y = pos[1];
 		z = pos[2];

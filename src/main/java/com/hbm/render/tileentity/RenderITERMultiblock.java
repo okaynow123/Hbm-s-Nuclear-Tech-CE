@@ -1,7 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.util.IconUtil;
 import com.hbm.tileentity.machine.TileEntityITERStruct;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,8 +42,8 @@ public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityIT
         
         TextureAtlasSprite active = magnet;
         
-        RenderHelper.bindBlockTexture();
-        RenderHelper.startDrawingTexturedQuads();
+        NTMRenderHelper.bindBlockTexture();
+        NTMRenderHelper.startDrawingTexturedQuads();
 
         int[][][] layout = TileEntityITERStruct.layout;
 
@@ -70,7 +70,7 @@ public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityIT
 	        }
         }
 
-        RenderHelper.draw();
+        NTMRenderHelper.draw();
         
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();

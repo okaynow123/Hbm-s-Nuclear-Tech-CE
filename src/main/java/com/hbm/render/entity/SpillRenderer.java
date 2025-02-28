@@ -2,7 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.particle.EntityOilSpillFX;
 import com.hbm.items.ModItems;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -31,14 +31,14 @@ public class SpillRenderer extends Render<EntityOilSpillFX> {
 	@Override
 	public void doRender(EntityOilSpillFX fx, double x, double y, double z, float entityYaw, float partialTicks) {
 		if(textures.isEmpty()){
-			textures.put(ModItems.spill1, RenderHelper.getItemTexture(ModItems.spill1));
-			textures.put(ModItems.spill2, RenderHelper.getItemTexture(ModItems.spill2));
-			textures.put(ModItems.spill3, RenderHelper.getItemTexture(ModItems.spill3));
-			textures.put(ModItems.spill4, RenderHelper.getItemTexture(ModItems.spill4));
-			textures.put(ModItems.spill5, RenderHelper.getItemTexture(ModItems.spill5));
-			textures.put(ModItems.spill6, RenderHelper.getItemTexture(ModItems.spill6));
-			textures.put(ModItems.spill7, RenderHelper.getItemTexture(ModItems.spill7));
-			textures.put(ModItems.spill8, RenderHelper.getItemTexture(ModItems.spill8));
+			textures.put(ModItems.spill1, NTMRenderHelper.getItemTexture(ModItems.spill1));
+			textures.put(ModItems.spill2, NTMRenderHelper.getItemTexture(ModItems.spill2));
+			textures.put(ModItems.spill3, NTMRenderHelper.getItemTexture(ModItems.spill3));
+			textures.put(ModItems.spill4, NTMRenderHelper.getItemTexture(ModItems.spill4));
+			textures.put(ModItems.spill5, NTMRenderHelper.getItemTexture(ModItems.spill5));
+			textures.put(ModItems.spill6, NTMRenderHelper.getItemTexture(ModItems.spill6));
+			textures.put(ModItems.spill7, NTMRenderHelper.getItemTexture(ModItems.spill7));
+			textures.put(ModItems.spill8, NTMRenderHelper.getItemTexture(ModItems.spill8));
 		}
 		if (fx.particleAge <= fx.maxAge && fx.particleAge >= fx.maxAge / 8 * 7) {
 			renderItem = ModItems.spill8;
@@ -106,12 +106,12 @@ public class SpillRenderer extends Render<EntityOilSpillFX> {
 		float f6 = 0.25F;
 		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-		RenderHelper.startDrawingTexturedQuads();
-		RenderHelper.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, f, f3);
-		RenderHelper.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, f1, f3);
-		RenderHelper.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, f1, f2);
-		RenderHelper.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, f, f2);
-		RenderHelper.draw();
+		NTMRenderHelper.startDrawingTexturedQuads();
+		NTMRenderHelper.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, f, f3);
+		NTMRenderHelper.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, f1, f3);
+		NTMRenderHelper.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, f1, f2);
+		NTMRenderHelper.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, f, f2);
+		NTMRenderHelper.draw();
 	}
 
 	

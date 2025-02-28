@@ -2,7 +2,7 @@ package com.hbm.render.item;
 
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.machine.ItemForgeFluidIdentifier;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
@@ -31,12 +31,12 @@ public class FFIdentifierRender extends TEISRBase {
 			}
 
 			GL11.glTranslated(-0.5, -0.5, -HALF_A_PIXEL);
-			RenderHelper.setColor(color);
-			RenderHelper.startDrawingTexturedQuads();
-			RenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, 0, false);
-			RenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, PIX, true);
-			RenderHelper.draw();
-			RenderHelper.resetColor();
+			NTMRenderHelper.setColor(color);
+			NTMRenderHelper.startDrawingTexturedQuads();
+			NTMRenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, 0, false);
+			NTMRenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, PIX, true);
+			NTMRenderHelper.draw();
+			NTMRenderHelper.resetColor();
 			GL11.glPopAttrib();
 		}
 		GL11.glPopMatrix();

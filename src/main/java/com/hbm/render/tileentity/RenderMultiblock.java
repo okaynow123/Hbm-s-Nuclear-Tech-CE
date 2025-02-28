@@ -1,7 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityMultiblock;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
@@ -34,9 +34,9 @@ public class RenderMultiblock extends TileEntitySpecialRenderer<TileEntityMultib
         GlStateManager.disableAlpha();
 		
         Block b = te.getBlockType();
-        RenderHelper.bindBlockTexture();
+        NTMRenderHelper.bindBlockTexture();
         
-        RenderHelper.startDrawingTexturedQuads();
+        NTMRenderHelper.startDrawingTexturedQuads();
         
         if(b == ModBlocks.struct_launcher_core)
         	renderCompactLauncher();
@@ -44,7 +44,7 @@ public class RenderMultiblock extends TileEntitySpecialRenderer<TileEntityMultib
         if(b == ModBlocks.struct_launcher_core_large)
         	renderLaunchTable();
         
-        RenderHelper.draw();
+        NTMRenderHelper.draw();
         
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableBlend();

@@ -3,7 +3,7 @@ package com.hbm.render.tileentity;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.model.ModelGun;
 import com.hbm.render.model.ModelStatue;
 import com.hbm.tileentity.deco.TileEntityDecoBlockAlt;
@@ -70,7 +70,7 @@ public class RenderDecoBlockAlt extends TileEntitySpecialRenderer<TileEntityDeco
 			ItemStack stack = new ItemStack(ModItems.watch);
 			IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
 			model = ForgeHooksClient.handleCameraTransforms(model, TransformType.FIXED, false);
-			RenderHelper.bindBlockTexture();
+			NTMRenderHelper.bindBlockTexture();
 
 			Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
 			GL11.glPopMatrix();

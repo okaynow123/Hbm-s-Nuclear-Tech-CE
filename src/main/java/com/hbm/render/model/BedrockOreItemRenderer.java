@@ -2,7 +2,7 @@ package com.hbm.render.model;
 
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.item.TEISRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,13 +27,13 @@ public class BedrockOreItemRenderer extends TEISRBase {
             MainRegistry.logger.info("baseSprite: " + baseSprite);
             MainRegistry.logger.info("baseSprite icon name: " + baseSprite.getIconName());
             TextureAtlasSprite[] overlaySprites = item.getOverlayTextures(stack);
-            RenderHelper.startDrawingTexturedQuads();
-            RenderHelper.drawFullTexture(baseSprite, 0, 0, 1, 1, 0, false);
+            NTMRenderHelper.startDrawingTexturedQuads();
+            NTMRenderHelper.drawFullTexture(baseSprite, 0, 0, 1, 1, 0, false);
             GL11.glTranslated(-0.5, -0.5, -HALF_A_PIXEL);
             for (TextureAtlasSprite overlaySprite : overlaySprites) {
-                RenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, 0, false);
+                NTMRenderHelper.drawFullTexture(overlaySprite, 0, 0, 1, 1, 0, false);
             }
-            RenderHelper.draw();
+            NTMRenderHelper.draw();
             GL11.glPopMatrix();
         }
     }

@@ -1,6 +1,6 @@
 package com.hbm.render.tileentity;
 
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityWatzStruct;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,8 +30,8 @@ public class RenderWatzMultiblock extends TileEntitySpecialRenderer<TileEntityWa
         GL11.glTranslated(x, y, z);
 
         startDrawing();
-        RenderHelper.bindBlockTexture();
-        RenderHelper.startDrawingTexturedQuads();
+        NTMRenderHelper.bindBlockTexture();
+        NTMRenderHelper.startDrawingTexturedQuads();
 
         renderPilarBlockAt(coolerSpriteTop, coolerSpriteSide,  0F, 1F, 0F);
         renderPilarBlockAt(coolerSpriteTop, coolerSpriteSide,  0F, 2F, 0F);
@@ -69,7 +69,7 @@ public class RenderWatzMultiblock extends TileEntitySpecialRenderer<TileEntityWa
             renderSimpleBlockAt(casingSprite,  -2F, i, -2F);
         }
 
-        RenderHelper.draw();
+        NTMRenderHelper.draw();
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableLighting();

@@ -54,7 +54,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 @SideOnly(Side.CLIENT)
-public class RenderHelper {
+public class NTMRenderHelper {
 	
 	public static Field r_setTileEntities;
 	public static Field r_viewFrustum;
@@ -163,6 +163,15 @@ public class RenderHelper {
 	
 	public static TextureAtlasSprite getItemTexture(Item item, int meta){
 		return getItemTexture(new ItemStack(item, 1, meta));
+	}
+
+	//TODO: add some documentation
+	public static void addQuad(BufferBuilder buffer, double x1, double y1, double z1, double x2, double y2, double z2,
+                               double x3, double y3, double z3, double x4, double y4, double z4, int r, int g, int b) {
+		buffer.pos(x1, y1, z1).color(r, g, b, 255).endVertex();
+		buffer.pos(x2, y2, z2).color(r, g, b, 255).endVertex();
+		buffer.pos(x3, y3, z3).color(r, g, b, 255).endVertex();
+		buffer.pos(x4, y4, z4).color(r, g, b, 255).endVertex();
 	}
 	
 	public static TextureAtlasSprite getItemTexture(Item item){
@@ -541,7 +550,7 @@ public class RenderHelper {
 	
 	@Deprecated
 	public static void renderFlashlights(){
-		RenderHelper.renderingFlashlights = true;
+		NTMRenderHelper.renderingFlashlights = true;
 		if(height != Minecraft.getMinecraft().displayHeight || width != Minecraft.getMinecraft().displayWidth){
 			height = Minecraft.getMinecraft().displayHeight;
             width = Minecraft.getMinecraft().displayWidth;
@@ -550,7 +559,7 @@ public class RenderHelper {
         }
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, Minecraft.getMinecraft().getFramebuffer().framebufferObject);
     	GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, deferredFbo);
-    	GL30.glBlitFramebuffer(0, 0, RenderHelper.width, RenderHelper.height, 0, 0, RenderHelper.width, RenderHelper.height, GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+    	GL30.glBlitFramebuffer(0, 0, NTMRenderHelper.width, NTMRenderHelper.height, 0, 0, NTMRenderHelper.width, NTMRenderHelper.height, GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
 		
     	GL11.glPushMatrix();
     	//GL11.glTranslated(0, Minecraft.getMinecraft().getRenderViewEntity().getEyeHeight(), 0);
@@ -576,7 +585,7 @@ public class RenderHelper {
 		}
 		flashlightQueue.clear();
 		Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(true);
-		RenderHelper.renderingFlashlights = false;
+		NTMRenderHelper.renderingFlashlights = false;
 	}
 	
 	@Deprecated
@@ -721,7 +730,7 @@ public class RenderHelper {
         
         
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, deferredFbo);
-        GlStateManager.viewport(0, 0, RenderHelper.width, RenderHelper.height);
+        GlStateManager.viewport(0, 0, NTMRenderHelper.width, NTMRenderHelper.height);
         
         if(useFullPost){
         	GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, deferredFbo);

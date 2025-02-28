@@ -1,7 +1,7 @@
 package com.hbm.render.item;
 
 import com.hbm.items.machine.ItemFluidIcon;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
@@ -27,12 +27,12 @@ public class ItemRenderFluidIcon extends TEISRBase {
 				actualIcon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("hbm:items/fluid_icon");
 			}
 			GL11.glTranslated(-0.5, -0.5, -HALF_A_PIXEL);
-			RenderHelper.setColor(color);
-			RenderHelper.startDrawingTexturedQuads();
-			RenderHelper.drawFullTexture(actualIcon, 0, 0, 1, 1, -0.01, false);
-			RenderHelper.drawFullTexture(actualIcon, 0, 0, 1, 1, PIX + 0.01, true);
-			RenderHelper.draw();
-			RenderHelper.resetColor();
+			NTMRenderHelper.setColor(color);
+			NTMRenderHelper.startDrawingTexturedQuads();
+			NTMRenderHelper.drawFullTexture(actualIcon, 0, 0, 1, 1, -0.01, false);
+			NTMRenderHelper.drawFullTexture(actualIcon, 0, 0, 1, 1, PIX + 0.01, true);
+			NTMRenderHelper.draw();
+			NTMRenderHelper.resetColor();
 		}
 		GL11.glPopMatrix();
 		super.renderByItem(stack);
