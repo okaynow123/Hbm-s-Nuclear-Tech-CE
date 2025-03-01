@@ -30,6 +30,7 @@ public class ResourceManager {
 
 	//Drillgon200 model loading test
 	//Hey it worked! I wonder if I can edit the tessellator to call 1.12.2 builder buffer commands, because that's a lot less laggy.
+	//Tip: There is no reason not to spam VBO as far as I know, so just do it!
 	public static final IModelCustom press_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/press_body.obj")).asVBO();
 	public static final IModelCustom press_head = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/press_head.obj")).asVBO();
 	public static final IModelCustom epress_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/epress_body.obj")).asVBO();
