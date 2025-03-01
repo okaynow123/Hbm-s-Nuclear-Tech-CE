@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderBombletZeta extends Render<EntityBombletZeta> {
 
-	public static final IRenderFactory<EntityBombletZeta> FACTORY = (RenderManager man) -> {return new RenderBombletZeta(man);};
+	public static final IRenderFactory<EntityBombletZeta> FACTORY = (RenderManager man) -> new RenderBombletZeta(man);
 	
 	private static final ResourceLocation objTesterModelRL = new ResourceLocation(/*"/assets/" + */RefStrings.MODID, "models/bombletTheta.obj");
 	private IModelCustom boyModel;
