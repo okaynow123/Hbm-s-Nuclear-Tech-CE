@@ -3,7 +3,6 @@ package com.hbm.render.entity;
 import com.hbm.entity.projectile.EntityFallingNuke;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;

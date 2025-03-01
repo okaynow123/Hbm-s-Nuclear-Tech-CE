@@ -7,7 +7,6 @@ import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.client.renderer.BufferBuilder;
