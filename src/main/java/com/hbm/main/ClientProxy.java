@@ -66,7 +66,6 @@ import com.hbm.render.item.*;
 import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
 import com.hbm.render.item.weapon.*;
 import com.hbm.render.misc.MissilePart;
-import com.hbm.render.model.BedrockOreItemRenderer;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.tileentity.*;
 import com.hbm.render.util.RenderInfoSystemLegacy;
@@ -1991,7 +1990,6 @@ public class ClientProxy extends ServerProxy {
 		ModItems.ore_bedrock_exquisite.setTileEntityItemStackRenderer(new ItemRendererBedrockOre(0x797D81, 0.9F));
 		ModItems.ore_bedrock_perfect.setTileEntityItemStackRenderer(new ItemRendererBedrockOre(0x6C6E70, 1F));
 		ModItems.ore_bedrock_enriched.setTileEntityItemStackRenderer(new ItemRendererBedrockOre(0x55595D, 1F));
-        ModItems.bedrock_ore.setTileEntityItemStackRenderer(new BedrockOreItemRenderer());
         ModItems.detonator_laser.setTileEntityItemStackRenderer(new ItemRendererDetonatorLaser());
 
         ModItems.forge_fluid_identifier.setTileEntityItemStackRenderer(new FFIdentifierRender());

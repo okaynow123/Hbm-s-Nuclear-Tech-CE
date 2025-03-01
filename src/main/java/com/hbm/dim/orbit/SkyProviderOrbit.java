@@ -3,7 +3,9 @@ package com.hbm.dim.orbit;
 import java.util.List;
 
 import com.hbm.render.amlfrom1710.Vec3;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.dim.CelestialBody;
@@ -30,15 +32,15 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 		double progress = station.getTransferProgress(partialTicks);
 		float orbitalTilt = 80;
 
-		GL11.glDepthMask(false);
-		GL11.glDisable(GL11.GL_FOG);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.depthMask(false);
+		GlStateManager.disableFog();
+		GlStateManager.disableAlpha();
+		GlStateManager.enableTexture2D();
 
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.enableBlend();
 		RenderHelper.disableStandardItemLighting();
 
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		float celestialAngle = getCelestialAngle(world, partialTicks, station);
 		float celestialPhase = (1 - (celestialAngle + 0.5F) % 1) * 2 - 1;
@@ -47,17 +49,16 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 
 		renderStars(partialTicks, world, mc, starBrightness, celestialAngle, orbitalTilt);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		{
-
-			GL11.glRotatef(orbitalTilt, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(celestialAngle * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(orbitalTilt, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(celestialAngle * 360.0F, 1.0F, 0.0F, 0.0F);
 
 			// digma balls
 			renderDigamma(partialTicks, world, mc, celestialAngle);
 
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
 			double sunSize = SolarSystem.calculateSunSize(station.orbiting);
 			if(station.state != StationState.ORBIT) {
@@ -66,7 +67,7 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 			}
 			double coronaSize = sunSize * (3 - Library.smoothstep(Math.abs(celestialPhase), 0.7, 0.8));
 
-			renderSun(partialTicks, world, mc, sunSize, coronaSize, 1, 0);
+			renderSun(partialTicks, world, mc, station.orbiting.getStar(), sunSize, coronaSize, 1, 0);
 
 			CelestialBody orbiting = station.orbiting;
 
@@ -82,19 +83,17 @@ public class SkyProviderOrbit extends SkyProviderCelestial {
 				if(progress > 0.5) orbiting = station.target;
 			}
 
-			renderCelestials(partialTicks, world, mc, metrics, celestialAngle, null, Vec3.createVectorHelper(0, 0, 0), 1, 1, orbiting, 160);
-
+			renderCelestials(partialTicks, world, mc, metrics, celestialAngle, null, new Vec3d(0, 0, 0), 1, 1, orbiting, 160);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableFog();
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_FOG);
-
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDepthMask(true);
+		GlStateManager.enableTexture2D();
+		GlStateManager.depthMask(true);
 	}
 
 	// All angles within are normalized to -180/180

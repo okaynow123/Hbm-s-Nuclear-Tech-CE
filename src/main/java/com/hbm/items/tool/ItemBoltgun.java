@@ -4,6 +4,7 @@ import api.hbm.block.IToolable;
 import api.hbm.block.IToolable.ToolType;
 import com.hbm.handler.NTMToolHandler;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
@@ -59,7 +60,7 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
 
         //FIXME
         //ItemStack[] bolts = new ItemStack[]{ /*new ItemStack(ModItems.bolt_spike), Mats.MAT_STEEL.make(ModItems.bolt), Mats.MAT_TUNGSTEN.make(ModItems.bolt), Mats.MAT_DURA.make(ModItems.bolt)*/};
-        ItemStack[] bolts = new ItemStack[]{new ItemStack(ModItems.bolt_tungsten), new ItemStack(ModItems.bolt_dura_steel)};
+        ItemStack[] bolts = new ItemStack[]{new ItemStack(ModItems.bolt_tungsten), Mats.MAT_STEEL.make(ModItems.bolt), Mats.MAT_TUNGSTEN.make(ModItems.bolt), Mats.MAT_DURA.make(ModItems.bolt)};
 
         for (ItemStack bolt : bolts) {
             for (int i = 0; i < player.inventory.getSizeInventory(); i++) {

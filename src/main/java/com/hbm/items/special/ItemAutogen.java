@@ -8,7 +8,6 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -35,7 +34,6 @@ public class ItemAutogen extends Item {
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
     private HashMap<NTMMaterial, String> textureOverrides = new HashMap();
-    private HashMap<NTMMaterial, TextureAtlasSprite> spriteMap = new HashMap<>();
     private String overrideUnlocalizedName = null;
 
     public ItemAutogen(MaterialShapes shape, String s) {
@@ -45,7 +43,7 @@ public class ItemAutogen extends Item {
         this.shape = shape;
 
         ModItems.ALL_ITEMS.add(this);
-       INSTANCES.add(this);
+        INSTANCES.add(this);
 
     }
 
@@ -65,10 +63,10 @@ public class ItemAutogen extends Item {
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (NTMMaterial mat : Mats.orderedList) {
-            if (Arrays.asList(mat.autogen).contains(this.shape)) {
+            if (mat.autogen.contains(this.shape)) {
+                String texturePath = getTexturePath(mat);
                 ModelResourceLocation location = new ModelResourceLocation(
-                        new ResourceLocation(RefStrings.MODID, "material_item_" + mat.names[0]),
-                        "inventory"
+                        RefStrings.MODID + ":" + texturePath, "inventory"
                 );
                 ModelLoader.setCustomModelResourceLocation(this, mat.id, location);
             }
@@ -79,8 +77,8 @@ public class ItemAutogen extends Item {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (NTMMaterial mat : Mats.orderedList) {
-                if (Arrays.asList(mat.autogen).contains(this.shape)) {
-                    String pathIn = "items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
+                if (mat.autogen.contains(this.shape)) {
+                    String pathIn = getTexturePath(mat);
                     ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, pathIn);
                     IModel retexturedModel = baseModel.retexture(
                             ImmutableMap.of(
@@ -102,17 +100,23 @@ public class ItemAutogen extends Item {
     @SideOnly(Side.CLIENT)
     public void registerSprites(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
-            if (!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || Arrays.asList(mat.autogen).contains(this.shape))) {
-                String spriteName = RefStrings.MODID + ":items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
-                TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
+            if(!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || mat.autogen.contains(shape))) {
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/"+ this.getRegistryName().getPath() + "-" + mat.names[0]);
+                TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
                 map.setTextureEntry(sprite);
-                spriteMap.put(mat, sprite);
+            }
+            if(textureOverrides.containsKey(mat) && (shape == null || mat.autogen.contains(shape))) {
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/" + textureOverrides.get(mat));
+                map.registerSprite(spriteLoc);
             }
         }
+    }
 
-        for (Map.Entry<NTMMaterial, String> tex : textureOverrides.entrySet()) {
-            String spriteName = RefStrings.MODID + ":" + tex.getValue();
-            spriteMap.put(tex.getKey(), map.registerSprite(new ResourceLocation(spriteName)));
+    private String getTexturePath(NTMMaterial mat) {
+        if (textureOverrides.containsKey(mat)) {
+            return "items/" + textureOverrides.get(mat);
+        } else {
+            return "items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
         }
     }
 
@@ -121,46 +125,11 @@ public class ItemAutogen extends Item {
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
             for (NTMMaterial mat : Mats.orderedList) {
-                if (Arrays.asList(mat.autogen).contains(this.shape)) {
+                if (mat.autogen.contains(this.shape)) {
                     items.add(new ItemStack(this, 1, mat.id));
                 }
             }
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite getSprite(ItemStack stack) {
-        NTMMaterial mat = Mats.matById.get(stack.getMetadata());
-
-        if (mat != null) {
-            TextureAtlasSprite override = spriteMap.get(mat);
-            if (override != null) {
-                return override;
-            }
-        }
-
-        return getItemSprite(stack);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private TextureAtlasSprite getItemSprite(ItemStack stack) {
-        return Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-                .getItemModel(stack).getParticleTexture();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public int getColor(ItemStack stack, int tintIndex) {
-        if (getSprite(stack) != getItemSprite(stack)) {
-            return 0xffffff; // custom textures don't need tints
-        }
-
-        NTMMaterial mat = Mats.matById.get(stack.getMetadata());
-
-        if (mat != null) {
-            return mat.moltenColor;
-        }
-
-        return 0xffffff;
     }
 
     @Override

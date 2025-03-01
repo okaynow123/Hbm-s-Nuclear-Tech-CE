@@ -5,16 +5,18 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -30,24 +32,19 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static com.hbm.inventory.material.Mats.*;
 import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
 public class ItemBedrockOreNew extends Item {
 
-    public static final ModelResourceLocation identifierModel = new ModelResourceLocation(RefStrings.MODID + ":bedrock_ore_new", "inventory");
-
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSpriteMutatable[] icons;
-    @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite[] overlays;
+    private static final List<ItemBedrockOreNew> INSTANCES = new ArrayList<>();
 
     public ItemBedrockOreNew(String s) {
         this.setTranslationKey(s);
@@ -55,10 +52,12 @@ public class ItemBedrockOreNew extends Item {
         this.setCreativeTab(MainRegistry.partsTab);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-        this.icons = new TextureAtlasSpriteMutatable[BedrockOreType.values().length * BedrockOreGrade.values().length];
-        this.overlays = new TextureAtlasSprite[ProcessingTrait.values().length];
 
         ModItems.ALL_ITEMS.add(this);
+
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            INSTANCES.add(this);
+        }
     }
 
     @Override
@@ -74,69 +73,92 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerTextures(TextureMap map) {
-
-        for(int i = 0; i < BedrockOreGrade.values().length; i++) { BedrockOreGrade grade = BedrockOreGrade.values()[i];
-            for(int j = 0; j < BedrockOreType.values().length; j++) { BedrockOreType type = BedrockOreType.values()[j];
-                String placeholderName = RefStrings.MODID + ":bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
-                MainRegistry.logger.info("placeholderName: " + placeholderName);
-                TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(placeholderName, new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
-                map.setTextureEntry(mutableIcon);
-                this.icons[i * BedrockOreType.values().length + j] = mutableIcon;
+    public void registerModels() {
+        for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+            BedrockOreGrade grade = BedrockOreGrade.values()[i];
+            for (int j = 0; j < BedrockOreType.values().length; j++) {
+                BedrockOreType type = BedrockOreType.values()[j];
+                String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                ModelLoader.setCustomModelResourceLocation(this, grade.ordinal() << 4 | type.ordinal(), new ModelResourceLocation(placeholderName, "inventory"));
             }
         }
-
-        for (int i = 0; i < overlays.length; i++) {
-            ProcessingTrait trait = ProcessingTrait.values()[i];
-            this.overlays[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US)));
-        }
     }
 
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        ModelLoader.setCustomMeshDefinition(this, stack -> identifierModel);
-    }
-
-    public static void bakeModels(ModelBakeEvent event, boolean isDesaturated){
+    public static void bakeModels(ModelBakeEvent event){
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));
-            for(int i = 0; i < ItemWatzPellet.EnumWatzType.values().length; i++){
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/" + (isDesaturated ? "_depleted-" + i : "-" + i));
-                IModel retexturedModel = baseModel.retexture(
-                        ImmutableMap.of(
-                                "layer0", spriteLoc.toString(),
-                                "layer1", spriteLoc.toString()
-                        )
 
-                );
-                IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-                ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID,  "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i)), "inventory");
-                event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+            Map<ProcessingTrait, ResourceLocation> overlayLocations = new HashMap<>();
+            for (ProcessingTrait trait : ProcessingTrait.values()) {
+                String overlayName = RefStrings.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
+                overlayLocations.put(trait, new ResourceLocation(overlayName));
+            }
 
+            for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+                BedrockOreGrade grade = BedrockOreGrade.values()[i];
+                for (int j = 0; j < BedrockOreType.values().length; j++) {
+                    BedrockOreType type = BedrockOreType.values()[j];
+                    String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                    ResourceLocation spriteLoc = new ResourceLocation(placeholderName);
+                    ImmutableMap.Builder<String, String> textureMapBuilder = ImmutableMap.builder();
+                    textureMapBuilder.put("layer0", spriteLoc.toString());
+                    int layerIndex = 1;
+                    for (ProcessingTrait trait : grade.traits) {
+                        ResourceLocation overlayLoc = overlayLocations.get(trait);
+                        textureMapBuilder.put("layer" + layerIndex, overlayLoc.toString());
+                        layerIndex++;
+                    }
+
+                    IModel retexturedModel = baseModel.retexture(textureMapBuilder.build());
+                    IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(placeholderName), "inventory");
+                    event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+
+                }
             }
         }   catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite getBaseTexture(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        int icon = this.getGrade(meta).ordinal() * BedrockOreType.values().length + this.getType(meta).ordinal();
-        return icons[Math.abs(icon % icons.length)];
+    public void registerSprites(TextureMap map) {
+        for(int i = 0; i < BedrockOreGrade.values().length; i++) {
+            BedrockOreGrade grade = BedrockOreGrade.values()[i];
+            for (int j = 0; j < BedrockOreType.values().length; j++) {
+                BedrockOreType type = BedrockOreType.values()[j];
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j));
+                TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
+                map.setTextureEntry(sprite);
+            }
+        }
+
+        for (ProcessingTrait trait : ProcessingTrait.values()) {
+            String overlayName = RefStrings.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
+            map.registerSprite(new ResourceLocation(overlayName));
+        }
     }
 
     @SideOnly(Side.CLIENT)
-    public TextureAtlasSprite[] getOverlayTextures(ItemStack stack) {
-        int meta = stack.getItemDamage();
-        BedrockOreGrade grade = getGrade(meta);
-        return Arrays.stream(grade.traits)
-                .map(trait -> overlays[trait.ordinal()])
-                .toArray(TextureAtlasSprite[]::new);
+    public static void registerColorHandlers() {
+        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+        IItemColor handler = new BedrockOreColorHandler();
+
+        for (ItemBedrockOreNew item : INSTANCES) {
+            itemColors.registerItemColorHandler(handler, item);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static class BedrockOreColorHandler implements IItemColor {
+        @Override
+        public int colorMultiplier(ItemStack stack, int tintIndex) {
+            if (tintIndex != 0) return 0xFFFFFF;
+
+            ItemBedrockOreNew item = (ItemBedrockOreNew) stack.getItem();
+            BedrockOreGrade grade = item.getGrade(stack.getItemDamage());
+            return grade.tint;
+        }
     }
 
     @Override

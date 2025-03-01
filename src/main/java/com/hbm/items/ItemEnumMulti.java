@@ -47,7 +47,7 @@ public class ItemEnumMulti extends Item {
     public ItemStack stackFromEnum(int count, Enum num) {
 
         if(num.getClass() != this.theEnum)
-            return null;
+            return ItemStack.EMPTY;
 
         return new ItemStack(this, count, num.ordinal());
     }

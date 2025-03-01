@@ -1,13 +1,16 @@
 package com.hbm.inventory.material;
 
+import com.hbm.main.MainRegistry;
 import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MaterialShapes {
 
 	public static final List<MaterialShapes> allShapes = new ArrayList();
+	public static HashMap<String, MaterialShapes> prefixByName = new HashMap();
 
 	public static final MaterialShapes ANY = new MaterialShapes(0).noAutogen();
 	public static final MaterialShapes ONLY_ORE = new MaterialShapes(0, "ore").noAutogen();
@@ -75,9 +78,8 @@ public class MaterialShapes {
 		this.prefixes = prefixes;
 
 		for(String prefix : prefixes) {
-			Mats.prefixByName.put(prefix, this);
+			prefixByName.put(prefix, this);
 		}
-
 		allShapes.add(this);
 	}
 

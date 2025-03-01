@@ -96,6 +96,9 @@ public class OreDictManager {
 	/*
 	 * VANILLA
 	 */
+
+	public static final DictFrame WOOD = new DictFrame("Wood");
+	public static final DictFrame BONE = new DictFrame("Bone");
 	public static final DictFrame COAL = new DictFrame("Coal");
 	public static final DictFrame IRON = new DictFrame("Iron");
 	public static final DictFrame GOLD = new DictFrame("Gold");
@@ -338,7 +341,7 @@ public class OreDictManager {
 		//Raw Elements
 		TI																													.ingot(ingot_titanium)		.dust(powder_titanium)									.block(block_titanium)							.crystal(crystal_titanium)		.plate(plate_titanium)	.ore(ore_titanium, cluster_titanium, cluster_depth_titanium, ore_meteor_titanium);
 		CU																													.ingot(ingot_copper)		.dust(powder_copper)									.block(block_copper)							.crystal(crystal_copper)		.plate(plate_copper)	.ore(ore_copper, cluster_copper, ore_gneiss_copper, ore_meteor_copper) .wire(wire_copper) .part(part_copper);
-		W																													.ingot(ingot_tungsten)		.dust(powder_tungsten)									.block(block_tungsten)							.crystal(crystal_tungsten)								.ore(ore_tungsten, cluster_depth_tungsten, ore_nether_tungsten, ore_meteor_tungsten)	.oreNether(ore_nether_tungsten) .wire(wire_tungsten) .bolt(bolt_tungsten);
+		W																													.ingot(ingot_tungsten)		.dust(powder_tungsten)									.block(block_tungsten)							.crystal(crystal_tungsten)								.ore(ore_tungsten, cluster_depth_tungsten, ore_nether_tungsten, ore_meteor_tungsten)	.oreNether(ore_nether_tungsten) .wire(wire_tungsten);
 		AL																													.ingot(ingot_aluminium)		.dust(powder_aluminium)									.block(block_aluminium)							.crystal(crystal_aluminium)		.plate(plate_aluminium)	.ore(ore_aluminium, cluster_aluminium, ore_meteor_aluminium) .wire(wire_aluminium);
 		PB															.nugget(nugget_lead)									.ingot(ingot_lead)			.dust(powder_lead)										.block(block_lead)								.crystal(crystal_lead)			.plate(plate_lead)		.ore(ore_lead, ore_meteor_lead);
 		AS															.nugget(nugget_arsenic)									.ingot(ingot_arsenic);
@@ -372,7 +375,7 @@ public class OreDictManager {
 		TCALLOY																												.ingot(ingot_tcalloy)		.dust(powder_tcalloy);
 		CDALLOY																												.ingot(ingot_cdalloy)		.dust(powder_cdalloy);
 		GRAPHITE																											.ingot(ingot_graphite)																.block(block_graphite);
-		DURA																												.ingot(ingot_dura_steel)	.dust(powder_dura_steel)								.block(block_dura_steel) .bolt(bolt_dura_steel);
+		DURA																												.ingot(ingot_dura_steel)	.dust(powder_dura_steel)								.block(block_dura_steel);
 		POLYMER																												.ingot(ingot_polymer)		.dust(powder_polymer)									.block(block_polymer);
 		BAKELITE																											.ingot(ingot_bakelite)		.dust(powder_bakelite)									.block(block_bakelite);
 		RUBBER																												.ingot(ingot_rubber)																.block(block_rubber);
@@ -470,6 +473,10 @@ public class OreDictManager {
 //		for(EnumBedrockOre ore : EnumBedrockOre.values()) {
 //			OreDictionary.registerOre("ore" + ore.oreName, new ItemStack(ModItems.ore_enriched, 1, ore.ordinal()));
 //		}
+
+		for(NTMMaterial mat : Mats.orderedList) {
+			if(mat.autogen.contains(MaterialShapes.BOLT)) for(String name : mat.names) OreDictionary.registerOre(MaterialShapes.BOLT.name() + name, new ItemStack(ModItems.bolt, 1, mat.id));
+		}
 
 		OreDictionary.registerOre("itemRubber", ingot_rubber);
 

@@ -469,7 +469,6 @@ public class ModEventHandlerClient {
 
         ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
         ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
-        //((ItemAutogen) ModItems.bedrock_ore_fragment).registerModels();
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
@@ -569,6 +568,7 @@ public class ModEventHandlerClient {
     public void modelBaking(ModelBakeEvent evt) {
         ItemWatzPellet.bakeModels(evt, false);
         ItemWatzPellet.bakeModels(evt, true);
+        ItemBedrockOreNew.bakeModels(evt);
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.bakeModels(evt); }
 
         for (EnumCanister e : EnumCanister.values()) {
@@ -793,8 +793,7 @@ public class ModEventHandlerClient {
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
 
-        //((ItemBedrockOreNew) ModItems.bedrock_ore).registerTextures(map);
-        //((ItemAutogen) ModItems.bedrock_ore_fragment).registerSprites(map);
+        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerSprites(map);
         ((ItemWatzPellet) ModItems.watz_pellet).registerTextures(map, false);
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerTextures(map, true);
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerSprites(map); }
