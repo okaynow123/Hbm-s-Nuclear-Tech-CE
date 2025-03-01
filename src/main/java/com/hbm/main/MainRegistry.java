@@ -19,6 +19,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
@@ -919,6 +920,7 @@ public class MainRegistry {
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
 		ItemDepletedFuel.registerColorHandlers();
+		ItemBedrockOreNew.registerColorHandlers();
 		ModBlocks.init();
 		HazmatRegistry.registerHazmats();
 		registerReactorFuels();

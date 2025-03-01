@@ -7,6 +7,7 @@ public class WorldProviderEarth extends WorldProviderCelestial {
     @Override
     public void init() {
         this.biomeProvider = this.world.provider.getBiomeProvider();
+        this.hasSkyLight = true;
     }
 
     @Override
