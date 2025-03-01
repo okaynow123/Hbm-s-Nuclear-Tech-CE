@@ -1,12 +1,14 @@
 package com.hbm.render.item;
 
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Tessellator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,27 +89,30 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
         float px = 0.0625F;
         GL11.glTranslatef(0.5626F, px * 18, -px * 14);
 
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawing(GL11.GL_QUADS);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
         int sub = 32;
         double width = px * 8;
         double len = width / sub;
         double time = System.currentTimeMillis() / -100D;
         double amplitude = 0.075;
+        float red = 1.0F, green = 1.0F, blue = 0.0F; // Yellow color (0xFFFF00)
 
-        tess.setColorOpaque_I(0xffff00);
-
-        for(int i = 0; i < sub; i++) {
+        for (int i = 0; i < sub; i++) {
             double h0 = Math.sin(i * 0.5 + time) * amplitude;
             double h1 = Math.sin((i + 1) * 0.5 + time) * amplitude;
-            tess.addVertex(0, -px * 0.25 + h1, len * (i + 1));
-            tess.addVertex(0, px * 0.25 + h1, len * (i + 1));
-            tess.addVertex(0, px * 0.25 + h0, len * i);
-            tess.addVertex(0, -px * 0.25 + h0, len * i);
+
+            buffer.pos(0, -px * 0.25 + h1, len * (i + 1)).color(red, green, blue, 1.0F).endVertex();
+            buffer.pos(0, px * 0.25 + h1, len * (i + 1)).color(red, green, blue, 1.0F).endVertex();
+            buffer.pos(0, px * 0.25 + h0, len * i).color(red, green, blue, 1.0F).endVertex();
+            buffer.pos(0, -px * 0.25 + h0, len * i).color(red, green, blue, 1.0F).endVertex();
         }
 
-        tess.draw();
+        tessellator.draw();
+
 
         GL11.glPopMatrix();
 

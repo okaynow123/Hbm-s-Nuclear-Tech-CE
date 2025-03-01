@@ -2,7 +2,7 @@ package com.hbm.render.item;
 
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class ItemRenderGasCanister extends TEISRBase {
 		if(model == null){
 			model = itemModel;
 		}
-		RenderHelper.bindBlockTexture();
+		NTMRenderHelper.bindBlockTexture();
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(0.5, 0.5, 0.5);

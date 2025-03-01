@@ -11,7 +11,7 @@ import com.hbm.packet.GunFXPacket;
 import com.hbm.packet.GunFXPacket.FXType;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.particle.vortex.*;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations.AnimType;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
@@ -228,7 +228,7 @@ public class ItemGunVortex extends ItemGunBase {
 		GlStateManager.color(0.4F, 0.9F, 0.9F, 1.0F);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO);
-		RenderHelper.drawGuiRect(x - 11F, y - 11F, 0, 0, 22, 22, 1, 1);
+		NTMRenderHelper.drawGuiRect(x - 11F, y - 11F, 0, 0, 22, 22, 1, 1);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.vortex_hud_circle);
 		
 		//Running off of system time gives less wonky results than relying on server updating the nbt tag.

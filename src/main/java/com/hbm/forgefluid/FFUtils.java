@@ -18,7 +18,7 @@ import com.hbm.items.machine.ItemFluidTank;
 import com.hbm.items.special.ItemCell;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.lib.Library;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityDummy;
 
 import com.hbm.util.I18nUtil;
@@ -89,7 +89,7 @@ public class FFUtils {
 	public static void drawLiquid(FluidTank tank, int guiLeft, int guiTop, float zLevel, int sizeX, int sizeY, int offsetX, int offsetY, boolean log){
 		// This is retarded, but it would be too much of a pain to fix it
 		offsetY -= 44;
-		RenderHelper.bindBlockTexture();
+		NTMRenderHelper.bindBlockTexture();
 
 		if(tank.getFluid() != null) {
 			TextureAtlasSprite liquidIcon = getTextureFromFluid(tank.getFluid().getFluid());
@@ -116,7 +116,7 @@ public class FFUtils {
 	}
 
 	public static void drawLiquid(Fluid fluid, int guiLeft, int guiTop, float zLevel, int sizeX, int sizeY, int offsetX, int offsetY){
-		RenderHelper.bindBlockTexture();
+		NTMRenderHelper.bindBlockTexture();
 		if(fluid != null) {
 			TextureAtlasSprite liquidIcon = getTextureFromFluid(fluid);
 			if(liquidIcon != null) {
@@ -140,16 +140,16 @@ public class FFUtils {
 	 */
 	private static void drawFull(Fluid f, int guiLeft, int guiTop, float zLevel, TextureAtlasSprite liquidIcon, int level, int sizeX, int offsetX, int offsetY, int sizeY){
 		int color = f.getColor();
-		RenderHelper.setColor(color);
-		RenderHelper.startDrawingTexturedQuads();
+		NTMRenderHelper.setColor(color);
+		NTMRenderHelper.startDrawingTexturedQuads();
 		for(int i = 0; i < level; i += 16) {
 			for(int j = 0; j < sizeX; j += 16) {
 				int drawX = Math.min(16, sizeX - j);
 				int drawY = Math.min(16, level - i);
-				RenderHelper.drawScaledTexture(liquidIcon, guiLeft + offsetX + j, guiTop + offsetY - i + (16 - drawY), drawX, drawY, zLevel);
+				NTMRenderHelper.drawScaledTexture(liquidIcon, guiLeft + offsetX + j, guiTop + offsetY - i + (16 - drawY), drawX, drawY, zLevel);
 			}
 		}
-		RenderHelper.draw();
+		NTMRenderHelper.draw();
 	}
 
 	/**

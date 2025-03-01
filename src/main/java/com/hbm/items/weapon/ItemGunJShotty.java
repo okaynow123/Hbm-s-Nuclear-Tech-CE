@@ -11,7 +11,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.particle.ParticleBatchRenderer;
 import com.hbm.particle.bullet_hit.ParticleSmokeAnim;
 import com.hbm.render.LightRenderer;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.AnimType;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
@@ -97,7 +97,7 @@ public class ItemGunJShotty extends ItemGunBase {
 			Vec3d direction = player.getLook(partialTicks);
 			if(getFlashlightActive(player.getHeldItemMainhand())){
 				if(ItemRenderJShotgun.firstPersonFlashlightPos != null && player == Minecraft.getMinecraft().player && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0){
-					Vec3d world = RenderHelper.unproject_world(HbmShaderManager2.inv_ViewProjectionMatrix, ItemRenderJShotgun.firstPersonFlashlightPos[0], ItemRenderJShotgun.firstPersonFlashlightPos[1], 1);
+					Vec3d world = NTMRenderHelper.unproject_world(HbmShaderManager2.inv_ViewProjectionMatrix, ItemRenderJShotgun.firstPersonFlashlightPos[0], ItemRenderJShotgun.firstPersonFlashlightPos[1], 1);
 					Vec3d eyePos = player.getPositionEyes(partialTicks);
 					Entity ent = Minecraft.getMinecraft().getRenderViewEntity();
 					double rPosX = ent.prevPosX + (ent.posX-ent.prevPosX)*partialTicks;
@@ -142,7 +142,7 @@ public class ItemGunJShotty extends ItemGunBase {
 		        GlStateManager.enableBlend();
 		        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO);
 		        GlStateManager.color(0.7F, 1, 0.5F, 1);
-		        RenderHelper.drawGuiRect(x - 20F, y - 20F, 0, 0, 40, 40, 1, 1);
+		        NTMRenderHelper.drawGuiRect(x - 20F, y - 20F, 0, 0, 40, 40, 1, 1);
 		        GlStateManager.color(1, 1, 1, 1);
 		        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 		        GlStateManager.disableBlend();

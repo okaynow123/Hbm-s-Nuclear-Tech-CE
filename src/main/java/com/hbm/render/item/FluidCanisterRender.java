@@ -3,7 +3,7 @@ package com.hbm.render.item;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCanister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -32,7 +32,7 @@ public class FluidCanisterRender extends TileEntityItemStackRenderer {
 		if(model == null)
 			model = itemModel;
 		
-		RenderHelper.bindBlockTexture();
+		NTMRenderHelper.bindBlockTexture();
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(0.5, 0.5, 0.5);

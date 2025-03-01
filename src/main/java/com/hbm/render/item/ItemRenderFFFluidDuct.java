@@ -1,7 +1,7 @@
 package com.hbm.render.item;
 
 import com.hbm.items.machine.ItemFFFluidDuct;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +19,7 @@ public class ItemRenderFFFluidDuct extends TEISRBase {
 	public void renderByItem(ItemStack stack) {
 		GL11.glPushMatrix();
 		GlStateManager.enableAlpha();
-		RenderHelper.bindBlockTexture();
+		NTMRenderHelper.bindBlockTexture();
 
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
@@ -36,7 +36,7 @@ public class ItemRenderFFFluidDuct extends TEISRBase {
 			lava = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(f.getStill().toString());
 
 		if (lava != null) {
-			RenderHelper.setColor(f.getColor(new FluidStack(f, 1000)));
+			NTMRenderHelper.setColor(f.getColor(new FluidStack(f, 1000)));
 			GlStateManager.disableLighting();
 			float maxU = lava.getInterpolatedU(13);
 			float minU = lava.getInterpolatedU(3);

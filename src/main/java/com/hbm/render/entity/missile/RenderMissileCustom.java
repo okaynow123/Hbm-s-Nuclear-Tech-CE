@@ -2,7 +2,7 @@ package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.misc.MissileMultipart;
 import com.hbm.render.misc.MissilePart;
 import com.hbm.render.misc.MissilePronter;
@@ -25,7 +25,7 @@ public class RenderMissileCustom extends Render<EntityMissileCustom> {
 	@Override
 	public void doRender(EntityMissileCustom entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		GL11.glPushMatrix();
-		double[] pos = RenderHelper.getRenderPosFromMissile(entity, partialTicks);
+		double[] pos = NTMRenderHelper.getRenderPosFromMissile(entity, partialTicks);
 		x = pos[0];
 		y = pos[1];
 		z = pos[2];

@@ -52,15 +52,13 @@ import com.hbm.particle.ParticleDSmokeFX;
 import com.hbm.particle.ParticleFirstPerson;
 import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.render.LightRenderer;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.entity.DSmokeRenderer;
-import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
-import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.render.item.*;
 import com.hbm.render.item.weapon.*;
 import com.hbm.render.misc.BeamPronter;
@@ -1319,7 +1317,7 @@ public class ModEventHandlerClient {
 
             double len = MathHelper.clamp(tester.length() * 2, 0, 40);
 
-            RenderHelper.bindTexture(ResourceManager.universal);
+            NTMRenderHelper.bindTexture(ResourceManager.universal);
             GlStateManager.enableLighting();
             Tessellator.instance.startDrawing(GL11.GL_TRIANGLES);
             for (int i = 0; i < Math.ceil(len); i++) {
@@ -1719,11 +1717,11 @@ public class ModEventHandlerClient {
             float y1 = ItemGunShotty.prevScreenPos.y + (ItemGunShotty.screenPos.y - ItemGunShotty.prevScreenPos.y) * event.getPartialTicks();
             float x = BobMathUtil.remap(x1, 0, Minecraft.getMinecraft().displayWidth, 0, event.getResolution().getScaledWidth());
             float y = event.getResolution().getScaledHeight() - BobMathUtil.remap(y1, 0, Minecraft.getMinecraft().displayHeight, 0, event.getResolution().getScaledHeight());
-            RenderHelper.bindTexture(ResourceManager.meathook_marker);
+            NTMRenderHelper.bindTexture(ResourceManager.meathook_marker);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-            RenderHelper.drawGuiRect(x - 2.5F, y - 2.5F, 0, 0, 5, 5, 1, 1);
+            NTMRenderHelper.drawGuiRect(x - 2.5F, y - 2.5F, 0, 0, 5, 5, 1, 1);
             GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
             GlStateManager.disableBlend();
         }

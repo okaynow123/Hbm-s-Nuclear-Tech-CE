@@ -12,6 +12,11 @@ import java.nio.*;
 import java.util.PriorityQueue;
 
 @SideOnly(Side.CLIENT)
+// Norwood: DO NOT FUCKING USE THIS. It doesn't work well, its incompatible with 1.12 render and provides no value in the longterm.
+// We should forgo any of this stuff. Base minecraft uses VBO with its vertex buffers nowdays, and uses renderlists when VBOs are disabled.
+// And no, you can't just copy-paste stuff either as it breaks. If you struggle I propose a wrapper to make our time easier.
+// Please take your time to port stuff properly and address issues using minecraft renderer, not this frankestein  abomination
+@Deprecated()
 public class Tessellator
 {
     private static int nativeBufferSize = 0x200000;

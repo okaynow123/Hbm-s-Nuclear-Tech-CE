@@ -9,7 +9,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GLCompat;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.item.TEISRBase;
 import com.hbm.util.BobMathUtil;
@@ -81,7 +81,7 @@ public class ItemRenderJShotgun extends TEISRBase {
 						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(HBMSoundHandler.jsg_reload1, 1F, 0.15F));
 					}
 					if(modelName.startsWith("Main")){
-						firstPersonFlashlightPos = RenderHelper.project(1.31674F, -8.20808F, -1.57076F);
+						firstPersonFlashlightPos = NTMRenderHelper.project(1.31674F, -8.20808F, -1.57076F);
 						flashlightDirection = BobMathUtil.viewFromLocal(new Vector4f(0, -1, 0, 0))[0];
 					}
 					//Render

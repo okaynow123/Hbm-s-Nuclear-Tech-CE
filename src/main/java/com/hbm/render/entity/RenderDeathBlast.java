@@ -1,9 +1,9 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.logic.EntityDeathBlast;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
-import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -22,7 +22,7 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 
 	public static final IRenderFactory<EntityDeathBlast> FACTORY = (RenderManager man) -> {return new RenderDeathBlast(man);};
 	
-	private static final IModelCustom sphere = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/sphere.obj"));
+	private static final IModelCustom sphere = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/sphere.obj"));
 	
 	protected RenderDeathBlast(RenderManager renderManager) {
 		super(renderManager);

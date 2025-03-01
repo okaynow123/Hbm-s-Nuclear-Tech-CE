@@ -1,7 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.main.ResourceManager;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityMachineCrystallizer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -58,7 +58,7 @@ public class RenderCrystallizer extends TileEntitySpecialRenderer<TileEntityMach
        	GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 		
-		RenderHelper.setColor(crys.tankNew.getTankType().getColor());
+		NTMRenderHelper.setColor(crys.tankNew.getTankType().getColor());
 		ResourceManager.crystallizer.renderPart("Windows");
 
 		

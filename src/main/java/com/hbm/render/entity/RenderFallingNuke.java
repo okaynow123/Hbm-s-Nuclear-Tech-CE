@@ -1,8 +1,8 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityFallingNuke;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.AdvancedModelLoader;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -21,7 +21,7 @@ public class RenderFallingNuke extends Render<EntityFallingNuke> {
 	
 	protected RenderFallingNuke(RenderManager renderManager) {
 		super(renderManager);
-		boyModel = AdvancedModelLoader.loadModel(objTesterModelRL);
+		boyModel = new HFRWavefrontObject(objTesterModelRL);
 		boyTexture = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/CustomNuke.png");
 	}
 

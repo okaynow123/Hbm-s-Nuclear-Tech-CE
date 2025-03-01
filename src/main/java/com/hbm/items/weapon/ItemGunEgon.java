@@ -14,7 +14,7 @@ import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.particle.gluon.ParticleGluonFlare;
 import com.hbm.particle.gluon.ParticleGluonMuzzleSmoke;
 import com.hbm.particle.tau.ParticleTauParticle;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.item.weapon.ItemRenderGunEgon;
 import com.hbm.sound.GunEgonSoundHandler;
 import com.hbm.util.BobMathUtil;
@@ -213,8 +213,8 @@ public class ItemGunEgon extends ItemGunBase {
 		GlStateManager.color(0.9F, 0.9F, 0F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO);
-		RenderHelper.drawGuiRect(x - 2F, y - 2F, 0, 0, 4, 4, 1, 1);
-		RenderHelper.resetColor();
+		NTMRenderHelper.drawGuiRect(x - 2F, y - 2F, 0, 0, 4, 4, 1, 1);
+		NTMRenderHelper.resetColor();
 		GlStateManager.disableBlend();
 	}
 }

@@ -1,6 +1,6 @@
 package com.hbm.render.tileentity;
 
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.util.SmallBlockPronter;
 import com.hbm.tileentity.machine.TileEntityPlasmaStruct;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,8 +39,8 @@ public class RenderPlasmaMultiblock extends TileEntitySpecialRenderer<TileEntity
         GlStateManager.disableAlpha();
         GlStateManager.depthMask(false);
 		
-		RenderHelper.bindBlockTexture();
-		RenderHelper.startDrawingTexturedQuads();
+		NTMRenderHelper.bindBlockTexture();
+		NTMRenderHelper.startDrawingTexturedQuads();
 		
         for(int iy = 1; iy < 6; iy ++) {
 
@@ -60,7 +60,7 @@ public class RenderPlasmaMultiblock extends TileEntitySpecialRenderer<TileEntity
             for(int j = 2; j <= 3; j++)
             	SmallBlockPronter.renderSimpleBlockAt(RenderStructureMarker.fusion[1][1], i, j, 0);
         
-        RenderHelper.draw();
+        NTMRenderHelper.draw();
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();

@@ -2,7 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
@@ -100,7 +100,7 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
 	        int range = injector.beam;
 	        
 	        if(range > 0) {
-	        	RenderHelper.bindBlockTexture();
+	        	NTMRenderHelper.bindBlockTexture();
 	        	if(injector.tanks[0].getFluidAmount() > 0)
 	        		BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, ModForgeFluids.getFluidColor(injector.tanks[0].getFluid().getFluid()), 0x7F7F7F, (int)tileEntity.getWorld().getTotalWorldTime() * -2 % 360, range, 0.09F, 3, 0.0625F);
 	        	if(injector.tanks[1].getFluidAmount() > 0)

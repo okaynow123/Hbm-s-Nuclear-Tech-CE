@@ -1,6 +1,6 @@
 package com.hbm.render.tileentity;
 
-import com.hbm.render.RenderHelper;
+import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntitySoyuzStruct;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -33,8 +33,8 @@ public class RenderSoyuzMultiblock extends TileEntitySpecialRenderer<TileEntityS
         GlStateManager.disableAlpha();
         GlStateManager.disableLighting();
 
-        RenderHelper.bindBlockTexture();
-        RenderHelper.startDrawingTexturedQuads();
+        NTMRenderHelper.bindBlockTexture();
+        NTMRenderHelper.startDrawingTexturedQuads();
         
 		TextureAtlasSprite loc;
 
@@ -105,7 +105,7 @@ public class RenderSoyuzMultiblock extends TileEntitySpecialRenderer<TileEntityS
 		for(int j = 5; j <= 37; j++)
 			renderSimpleBlockAt(loc, 0, j, -7);
 
-		RenderHelper.draw();
+		NTMRenderHelper.draw();
 		
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();

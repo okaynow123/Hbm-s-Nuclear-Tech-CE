@@ -27,10 +27,10 @@ public class ItemPlateFuel extends ItemFuelRod {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-
+        String lifetime = BobMathUtil.getShortNumber(lifeTime);
         list.add(ChatFormatting.YELLOW + "[Research Reactor Plate Fuel]");
         list.add(ChatFormatting.DARK_AQUA + "   " + getFunctionDesc());
-        list.add(ChatFormatting.DARK_AQUA + "   Yield of " + BobMathUtil.getShortNumber(lifeTime) + " events");
+        list.add(ChatFormatting.DARK_AQUA + "   Yield of " + lifetime + " events");
 
         super.addInformation(stack, worldIn, list, flagIn);
     }
