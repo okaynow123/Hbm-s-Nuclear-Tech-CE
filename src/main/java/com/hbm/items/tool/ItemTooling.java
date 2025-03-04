@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemTooling extends Item {
+public class ItemTooling extends Item { //TODO: change parent class to Degradable
 
 	protected ToolType type;
 	
