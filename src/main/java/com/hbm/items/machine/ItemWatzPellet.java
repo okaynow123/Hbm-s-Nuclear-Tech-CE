@@ -29,6 +29,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +106,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void registerModels() {
 		for (int i = 0; i < EnumWatzType.values().length; i++) {
 			if (this.isDesaturated) {
@@ -114,6 +117,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerTextures(TextureMap map, boolean isDesaturated){
 		for(int i = 0; i < EnumWatzType.values().length; i++){
 			EnumWatzType type = EnumWatzType.values()[i];
@@ -125,6 +129,7 @@ public class ItemWatzPellet extends ItemEnumMulti {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void bakeModels(ModelBakeEvent event, boolean isDesaturated){
 		try {
 			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));

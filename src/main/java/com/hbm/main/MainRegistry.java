@@ -28,6 +28,7 @@ import com.hbm.tileentity.network.*;
 import com.hbm.tileentity.turret.*;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.logging.log4j.Logger;
 
 import com.hbm.blocks.ModBlocks;
@@ -919,8 +920,11 @@ public class MainRegistry {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
-		ItemDepletedFuel.registerColorHandlers();
-		ItemBedrockOreNew.registerColorHandlers();
+		//FIXME: This is a massive hack and I dont know how to resolve it atm
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			ItemDepletedFuel.registerColorHandlers();
+			ItemBedrockOreNew.registerColorHandlers();
+		}
 		ModBlocks.init();
 		HazmatRegistry.registerHazmats();
 		registerReactorFuels();

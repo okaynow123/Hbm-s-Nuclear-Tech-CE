@@ -43,7 +43,6 @@ import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
 public class ItemBedrockOreNew extends Item {
 
-    @SideOnly(Side.CLIENT)
     private static final List<ItemBedrockOreNew> INSTANCES = new ArrayList<>();
 
     public ItemBedrockOreNew(String s) {
@@ -73,6 +72,7 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public void registerModels() {
         for(int i = 0; i < BedrockOreGrade.values().length; i++) {
             BedrockOreGrade grade = BedrockOreGrade.values()[i];
@@ -84,6 +84,7 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static void bakeModels(ModelBakeEvent event){
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));

@@ -32,6 +32,8 @@ import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIDMulti;
+import com.hbm.items.special.ItemBedrockOreNew;
+import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -185,7 +187,13 @@ public class ClientProxy extends ServerProxy {
 	public File getDataDir() {
 		return Minecraft.getMinecraft().gameDir;
 	}
-	
+
+	@Override
+	public void init(FMLPreInitializationEvent evt) {
+		ItemDepletedFuel.registerColorHandlers();
+		ItemBedrockOreNew.registerColorHandlers();
+	}
+
 	@Override
 	public void registerRenderInfo()
 	{
