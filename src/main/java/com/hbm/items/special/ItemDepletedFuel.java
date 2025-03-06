@@ -24,7 +24,6 @@ import java.util.List;
 
 public class ItemDepletedFuel extends ItemNuclearWaste {
 
-    @SideOnly(Side.CLIENT)
     private static final List<ItemDepletedFuel> INSTANCES = new ArrayList<>();
 
     public ItemDepletedFuel(String s) {
