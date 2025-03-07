@@ -921,6 +921,7 @@ public class MainRegistry {
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
 		//FIXME: This is a massive hack and I dont know how to resolve it atm
+		//Putting it in ClientProxy seems to not work for some reason
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			ItemDepletedFuel.registerColorHandlers();
 			ItemBedrockOreNew.registerColorHandlers();
@@ -1062,65 +1063,65 @@ public class MainRegistry {
 	private void registerDispenserBehaviors(){
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_generic, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeGeneric(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeGeneric(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_strong, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeStrong(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeStrong(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_frag, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeFrag(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeFrag(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_fire, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeFire(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeFire(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_cluster, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeCluster(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeCluster(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_flare, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeFlare(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeFlare(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_electric, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeElectric(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeElectric(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_poison, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadePoison(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadePoison(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_gas, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeGas(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeGas(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_schrabidium, new BehaviorProjectileDispense() {
@@ -1132,226 +1133,226 @@ public class MainRegistry {
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_nuke, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeNuke(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeNuke(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_nuclear, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeNuclear(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeNuclear(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_pulse, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadePulse(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadePulse(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_plasma, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadePlasma(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadePlasma(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_tau, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeTau(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeTau(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_lemon, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeLemon(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeLemon(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_mk2, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeMk2(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeMk2(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_aschrab, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeASchrab(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeASchrab(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_zomg, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeZOMG(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeZOMG(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_solinium, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeSolinium(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeSolinium(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_shrapnel, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeShrapnel(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeShrapnel(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_black_hole, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeBlackHole(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeBlackHole(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_gascan, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeGascan(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeGascan(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_cloud, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeCloud(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeCloud(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_pink_cloud, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadePC(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadePC(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_smart, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeSmart(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeSmart(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_mirv, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeMIRV(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeMIRV(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_breach, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeBreach(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeBreach(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_burst, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeBurst(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeBurst(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_generic, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFGeneric(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFGeneric(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_he, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFHE(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFHE(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_bouncy, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFBouncy(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFBouncy(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_sticky, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFSticky(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFSticky(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_impact, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFImpact(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFImpact(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_incendiary, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFIncendiary(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFIncendiary(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_toxic, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFToxic(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFToxic(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_concussion, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFConcussion(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFConcussion(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_brimstone, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFBrimstone(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFBrimstone(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_mystery, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFMystery(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFMystery(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_spark, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFSpark(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFSpark(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_hopwire, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFHopwire(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFHopwire(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_if_null, new BehaviorProjectileDispense() {
 			@Override
-            protected IProjectile getProjectileEntity(World p_82499_1_, IPosition p_82499_2_, ItemStack stack)
+            protected IProjectile getProjectileEntity(World world, IPosition pos, ItemStack stack)
             {
-                return new EntityGrenadeIFNull(p_82499_1_, p_82499_2_.getX(), p_82499_2_.getY(), p_82499_2_.getZ());
+                return new EntityGrenadeIFNull(world, pos.getX(), pos.getY(), pos.getZ());
             }
         });
 	}

@@ -1346,9 +1346,9 @@ public class ModItems {
 	// Th3_Sl1ze: this is the temporary variant, I'm sincerely too tired and unwilling to do anything at 3 am to clean up the old rods
 	// because they all fucking need to be change in all recipes. Without the "_new" the game WILL crash because of the same registry names.
 	// TODO: Norwood, if you're reading this, remind me to clean this shithole below
-	public static final Item rod = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_new").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_dual = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_dual_new").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_quad = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_quad_new").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod = new ItemBreedingRod().setTranslationKey("rod_new").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_dual = new ItemBreedingRod().setTranslationKey("rod_dual_new").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_quad = new ItemBreedingRod().setTranslationKey("rod_quad_new").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
 
 	public static final Item rod_th232 = new ItemBase( "rod_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_th232 = new ItemBase( "rod_dual_th232").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
@@ -1741,7 +1741,7 @@ public class ModItems {
 	public static final Item fooditem = new ItemLemon(2, 5, false, "fooditem").setCreativeTab(null);
 	public static final Item twinkie = new ItemLemon(3, 5, false, "twinkie").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item static_sandwich = new ItemLemon(6, 5, false, "static_sandwich").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item canteen_13 = new ItemCanteen(1 * 60, "canteen_13").setCreativeTab(MainRegistry.consumableTab);
+	public static final Item canteen_13 = new ItemCanteen(60, "canteen_13").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item canteen_vodka = new ItemCanteen(3 * 60, "canteen_vodka").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item canteen_fab = new ItemCanteen(2 * 60, "canteen_fab").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item pancake = new ItemPancake(20, 20, false, "pancake").setCreativeTab(MainRegistry.consumableTab);
@@ -1796,8 +1796,8 @@ public class ModItems {
 	public static final Item can_mrsugar = new ItemEnergy("can_mrsugar").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item can_overcharge = new ItemEnergy("can_overcharge").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item can_luna = new ItemEnergy("can_luna").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-	public static final Item can_bepis = new ItemEnergy("can_bepis").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);;
-	public static final Item can_breen = new ItemEnergy("can_breen").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item can_bepis = new ItemEnergy("can_bepis").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_breen = new ItemEnergy("can_breen").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
 	
 	//Tools
 	public static final Item titanium_sword = new ItemSwordAbility(6.5F, 0, MainRegistry.enumToolMaterialTitanium, "titanium_sword").setMaxStackSize(1);
@@ -2614,9 +2614,9 @@ public class ModItems {
 	public static final ItemRBMKPellet rbmk_pellet_les = (ItemRBMKPellet) new ItemRBMKPellet("Low Enriched Schrabidium-326", "rbmk_pellet_les").addRadiation(ItemHazard.saf * ItemHazard.billet).toItem();
 	public static final ItemRBMKPellet rbmk_pellet_mes = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Schrabidium-326", "rbmk_pellet_mes").addRadiation(ItemHazard.saf * ItemHazard.billet).toItem();
 	public static final ItemRBMKPellet rbmk_pellet_hes = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Schrabidium-326", "rbmk_pellet_hes").addRadiation(ItemHazard.saf * ItemHazard.billet).toItem();
-	public static final ItemRBMKPellet rbmk_pellet_leaus = (ItemRBMKPellet) new ItemRBMKPellet("Low Enriched Australium (Tasmanite)", "rbmk_pellet_leaus");
-	public static final ItemRBMKPellet rbmk_pellet_heaus = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Australium (Ayerite)", "rbmk_pellet_heaus");
-	public static final ItemRBMKPellet rbmk_pellet_unobtainium = (ItemRBMKPellet) new ItemRBMKPellet("The Strongest Manmade Neutron Emitter", "rbmk_pellet_unobtainium");
+	public static final ItemRBMKPellet rbmk_pellet_leaus = new ItemRBMKPellet("Low Enriched Australium (Tasmanite)", "rbmk_pellet_leaus");
+	public static final ItemRBMKPellet rbmk_pellet_heaus = new ItemRBMKPellet("Highly Enriched Australium (Ayerite)", "rbmk_pellet_heaus");
+	public static final ItemRBMKPellet rbmk_pellet_unobtainium = new ItemRBMKPellet("The Strongest Manmade Neutron Emitter", "rbmk_pellet_unobtainium");
 	public static final ItemRBMKPellet rbmk_pellet_po210be = (ItemRBMKPellet) new ItemRBMKPellet("Polonium-210 & Beryllium Neutron Source", "rbmk_pellet_po210be").addRadiation(ItemHazard.pobe * ItemHazard.billet).toItem();
 	public static final ItemRBMKPellet rbmk_pellet_ra226be = (ItemRBMKPellet) new ItemRBMKPellet("Radium-226 & Beryllium Neutron Source", "rbmk_pellet_ra226be").addRadiation(ItemHazard.rabe * ItemHazard.billet).toItem();
 	public static final ItemRBMKPellet rbmk_pellet_pu238be = (ItemRBMKPellet) new ItemRBMKPellet("Plutonium-238 & Beryllium Neutron Source", "rbmk_pellet_pu238be").addRadiation(ItemHazard.pube * ItemHazard.billet).toItem();
@@ -2807,7 +2807,7 @@ public class ModItems {
 			.setFuelColor(0F, 0.580F, 0.651F)
 			.addRadiation(ItemHazard.saf * ItemHazard.rod_rbmk).toItem()
 			;
-	public static final ItemRBMKRod rbmk_fuel_leaus = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_leaus, "rbmk_fuel_leaus")
+	public static final ItemRBMKRod rbmk_fuel_leaus = new ItemRBMKRod(rbmk_pellet_leaus, "rbmk_fuel_leaus")
 			.setYield(100000000D)
 			.setStats(0.3)
 			.setFunction(EnumBurnFunc.SIGMOID)
@@ -2818,7 +2818,7 @@ public class ModItems {
 			.setFuelColor(0.929F, 0.812F, 0F)
 			.setCherenkovColor(1F, 0.9F, 0F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_heaus = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_heaus, "rbmk_fuel_heaus")
+	public static final ItemRBMKRod rbmk_fuel_heaus = new ItemRBMKRod(rbmk_pellet_heaus, "rbmk_fuel_heaus")
 			.setYield(100000000D)
 			.setStats(3.5)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)

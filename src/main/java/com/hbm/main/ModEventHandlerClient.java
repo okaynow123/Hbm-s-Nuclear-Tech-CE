@@ -467,8 +467,8 @@ public class ModEventHandlerClient {
             registerBlockModel(block, 0);
         }
 
-        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
-        ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
+        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels();
+        ((ItemVOTVdrive) ModItems.full_drive).registerModels();
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
@@ -566,10 +566,9 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void modelBaking(ModelBakeEvent evt) {
-        ItemWatzPellet.bakeModels(evt, false);
-        ItemWatzPellet.bakeModels(evt, true);
+        ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
-        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.bakeModels(evt); }
+        ItemAutogen.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -792,11 +791,10 @@ public class ModEventHandlerClient {
     @SubscribeEvent
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
+        ItemBedrockOreNew.registerSprites(map);
+        ItemWatzPellet.registerSprites(map);
+        ItemAutogen.registerSprites(map);
 
-        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerSprites(map);
-        ((ItemWatzPellet) ModItems.watz_pellet).registerTextures(map, false);
-        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerTextures(map, true);
-        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerSprites(map); }
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
         DSmokeRenderer.sprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke3"));

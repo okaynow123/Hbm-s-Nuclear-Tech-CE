@@ -19,6 +19,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -46,7 +47,7 @@ public class ServerProxy
 	
 	public void preInit(FMLPreInitializationEvent evt) {}
 
-	public void init(FMLPreInitializationEvent evt) {}
+	public void init(FMLInitializationEvent evt) {}
 
 	public void checkGLCaps(){};
 	

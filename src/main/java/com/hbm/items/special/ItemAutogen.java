@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
+import com.hbm.items.IDynamicModels;
+import com.hbm.items.IDynamicSprites;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
@@ -29,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class ItemAutogen extends Item {
+public class ItemAutogen extends Item implements IDynamicModels, IDynamicSprites {
 
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
@@ -73,7 +75,10 @@ public class ItemAutogen extends Item {
         }
     }
 
-    public void bakeModels(ModelBakeEvent event) {
+    public static void bakeModels(ModelBakeEvent event){for(ItemAutogen item : INSTANCES)item.bakeModel(event);}
+
+
+    public void bakeModel(ModelBakeEvent event) {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (NTMMaterial mat : Mats.orderedList) {
@@ -98,7 +103,10 @@ public class ItemAutogen extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerSprites(TextureMap map) {
+    public static void registerSprites(TextureMap map){for(ItemAutogen item : INSTANCES) item.registerSprite(map);}
+
+    @SideOnly(Side.CLIENT)
+    public void registerSprite(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
             if(!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || mat.autogen.contains(shape))) {
                 ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/"+ this.getRegistryName().getPath() + "-" + mat.names[0]);

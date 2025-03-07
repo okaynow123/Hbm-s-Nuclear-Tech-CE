@@ -82,7 +82,7 @@ public class ItemZirnoxRod extends ItemEnumMulti {
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerModels(ModelRegistryEvent event) {
+    public void registerModels() {
         Enum[] enums = theEnum.getEnumConstants();
 
         for (Enum num : enums) {
