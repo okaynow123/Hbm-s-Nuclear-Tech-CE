@@ -1,6 +1,14 @@
 package com.hbm.items.machine;
 
 import com.hbm.items.ItemEnumMulti;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Locale;
 
 public class ItemBreedingRod extends ItemEnumMulti {
 
@@ -29,5 +37,16 @@ public class ItemBreedingRod extends ItemEnumMulti {
 
         RA226,
         AC227
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(ModelRegistryEvent event) {
+        Enum[] enums = theEnum.getEnumConstants();
+
+        for (Enum num : enums) {
+            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(
+                    new ResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US)), "inventory");
+            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(), modelResourceLocation);
+        }
     }
 }
