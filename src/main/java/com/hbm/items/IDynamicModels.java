@@ -15,6 +15,8 @@ public interface IDynamicModels {
 
 
     @SideOnly(Side.CLIENT)
-    public void registerModels();
+    public static void registerModels() {
+
+    }
 
 }

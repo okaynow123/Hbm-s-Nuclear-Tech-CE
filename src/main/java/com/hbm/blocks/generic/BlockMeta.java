@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-@Untested
+@Deprecated //Not really that meta, better solution coming
 public class BlockMeta extends BlockBase implements ICustomBlockItem {
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
@@ -66,6 +66,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem {
         int meta = state.getValue(META);
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
     }
+
 
     public void registerItem() {
         ItemBlock itemBlock = new MetaBlockItem(this);

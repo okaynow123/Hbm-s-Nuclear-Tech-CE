@@ -4,6 +4,7 @@ import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOreMeta;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
@@ -473,6 +474,7 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
+        BlockOreMeta.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
@@ -569,6 +571,7 @@ public class ModEventHandlerClient {
         ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
+        BlockOreMeta.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -794,6 +797,7 @@ public class ModEventHandlerClient {
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
         ItemAutogen.registerSprites(map);
+        BlockOreMeta.registerSprites(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
