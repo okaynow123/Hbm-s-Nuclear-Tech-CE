@@ -10,6 +10,7 @@ import com.hbm.items.special.ItemAutogen;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
+import com.hbm.render.icon.TextureAtlasSpriteMultipass;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -80,12 +81,18 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     public static void registerSprites(TextureMap map){for(BlockOreMeta item : INSTANCES) item.registerSprite(map);}
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-                ResourceLocation baseLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.baseTextureName);
-                map.registerSprite(baseLoc);
-                for(String overlay : this.overlayNames){
-                    ResourceLocation overlayLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + overlay);
-                    map.registerSprite(overlayLoc);
+                for(String overlay : this.overlayNames) {
+                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + overlay);
+                    TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+baseTextureName, "blocks/" + overlay);
+                    map.setTextureEntry(layeredSprite);
                 }
+//                ResourceLocation baseLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.baseTextureName);
+//                map.registerSprite(baseLoc);
+//                for(String overlay : this.overlayNames){
+//                    ResourceLocation overlayLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + overlay);
+//                    map.registerSprite(overlayLoc);
+//                }
+
     }
 
     @Override
@@ -137,15 +144,12 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
 
             for (int meta = 0; meta <= META_COUNT - 1; meta++) {
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
+                String overlay = overlayNames[meta % overlayNames.length];
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + overlay);
 
                 // Base texture
-                textureMap.put("all", baseTexturePath.toString());
+                textureMap.put("all", spriteLoc.toString());
 
-                // Overlay
-                if (overlayNames.length > 0) {
-                    String overlay = overlayNames[meta % overlayNames.length];
-                    textureMap.put("all", RefStrings.MODID + ":blocks/" + overlay);
-                }
 
                 IModel retexturedModel = baseModel.retexture(textureMap.build());
                 IBakedModel bakedModel = retexturedModel.bake(
