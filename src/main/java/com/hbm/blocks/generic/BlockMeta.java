@@ -167,7 +167,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{META});
+        return new BlockStateContainer(this, new IProperty[]{this.META});
     }
 
     @Override

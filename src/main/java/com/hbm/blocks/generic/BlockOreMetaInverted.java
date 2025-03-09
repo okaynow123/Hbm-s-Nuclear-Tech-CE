@@ -44,12 +44,12 @@ import java.util.function.Function;
 
 //MrNorwood: Welp, and I made it backwards. No biggie, this is still incredibly useful
 //Overengieered it award
-public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBlockItem  {
+public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, ICustomBlockItem  {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
     public final short META_COUNT;
     public final  boolean showMetaInCreative;
-    public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
+    public static final List<BlockOreMetaInverted> INSTANCES = new ArrayList<>();
     public final String baseTextureName;
     public final OreType[] overlays;
 
@@ -80,7 +80,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     }
 
 
-    public BlockOreMeta(Material material, String name, String baseTexture, OreType... overlays) {
+    public BlockOreMetaInverted(Material material, String name, String baseTexture, OreType... overlays) {
         super(material, name);
         this.baseTextureName = baseTexture;
         this.overlays = overlays;
@@ -90,7 +90,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     }
 
     public static void bakeModels(ModelBakeEvent event) {
-        for (BlockOreMeta block : INSTANCES) {
+        for (BlockOreMetaInverted block : INSTANCES) {
             block.bakeModel(event);
         }
     }
@@ -101,7 +101,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     }
 
 
-    public static void registerSprites(TextureMap map){for(BlockOreMeta item : INSTANCES) item.registerSprite(map);}
+    public static void registerSprites(TextureMap map){for(BlockOreMetaInverted item : INSTANCES) item.registerSprite(map);}
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
                 for(OreType overlay : this.overlays) {
@@ -123,7 +123,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
 
     @SideOnly(Side.CLIENT)
     public static void registerModels() {
-        for (BlockOreMeta block : INSTANCES) {
+        for (BlockOreMetaInverted block : INSTANCES) {
             for (int meta = 0; meta <= block.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
                         Item.getItemFromBlock(block),
@@ -146,7 +146,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
 
 
     public void registerItem() {
-        ItemBlock itemBlock = new BlockOreMeta.MetaBlockOreItem(this);
+        ItemBlock itemBlock = new BlockOreMetaInverted.MetaBlockOreItem(this);
         itemBlock.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
         if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
@@ -186,7 +186,7 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     }
 
     public class MetaBlockOreItem extends ItemBlock implements IModelRegister {
-        BlockOreMeta metaBlock = (BlockOreMeta) this.block;
+        BlockOreMetaInverted metaBlock = (BlockOreMetaInverted) this.block;
 
         public MetaBlockOreItem(Block block) {
             super(block);

@@ -5,7 +5,8 @@ import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.generic.BlockOreMeta;
+import com.hbm.blocks.generic.BlockOreMetaInverted;
+import com.hbm.blocks.generic.BlockSellafield;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
@@ -475,7 +476,8 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
-        BlockOreMeta.registerModels();
+        BlockOreMetaInverted.registerModels();
+        ((BlockSellafield) ModBlocks.sellafield).registerModel();
         BlockMeta.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
@@ -573,8 +575,9 @@ public class ModEventHandlerClient {
         ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
-        BlockOreMeta.bakeModels(evt);
+        BlockOreMetaInverted.bakeModels(evt);
         BlockMeta.bakeModels(evt);
+        ((BlockSellafield) ModBlocks.sellafield).bakeModel(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -800,8 +803,9 @@ public class ModEventHandlerClient {
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
         ItemAutogen.registerSprites(map);
-        BlockOreMeta.registerSprites(map);
+        BlockOreMetaInverted.registerSprites(map);
         BlockMeta.registerSprites(map);
+        ((BlockSellafield) ModBlocks.sellafield).registerSprite(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));

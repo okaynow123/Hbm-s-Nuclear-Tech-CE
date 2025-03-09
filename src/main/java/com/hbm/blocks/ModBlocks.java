@@ -35,7 +35,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hbm.blocks.generic.BlockOreMeta.*;
+import static com.hbm.blocks.generic.BlockOreMetaInverted.*;
 
 public class ModBlocks {
 
@@ -207,7 +207,7 @@ public class ModBlocks {
 	public static final Block ore_uranium_scorched = new BlockOutgas(true, 15, true, "ore_uranium_scorched").addRadiation(0.5F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
-	public static final Block ore_sellafield =  new BlockOreMeta(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
+	public static final Block ore_sellafield =  new BlockOreMetaInverted(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
 	
 
 	public static final Block ore_thorium = new BlockNTMOre("ore_thorium", 2).addRadiation(ItemHazard.ore * ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
@@ -525,7 +525,8 @@ public class ModBlocks {
 	public static final Block block_tritium = new BlockRotatablePillarHazard(Material.GLASS, SoundType.GLASS, "block_tritium").addRadiation(4.5F).toBlock().setCreativeTab(MainRegistry.blockTab).setHardness(3.0F).setResistance(2.0F);
 	public static final Block block_smore = new BlockBase(Material.ROCK, "block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);
 	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag",  "block_slag", "block_slag_broken" ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
-	
+
+	public static final Block sellafield = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield").setCreativeTab(MainRegistry.blockTab);
 	public static final Block sellafield_slaked = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_slaked", (short) 3).addRadiation(2.5F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_0 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_0", (short) 3).addRadiation(5.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_1 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_1", (short) 3).addRadiation(10.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
