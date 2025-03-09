@@ -140,7 +140,6 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     private void bakeModel(ModelBakeEvent event) {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft:block/cube_all"));
-            ResourceLocation baseTexturePath = new ResourceLocation(RefStrings.MODID,  "blocks/" + this.baseTextureName);
 
             for (int meta = 0; meta <= META_COUNT - 1; meta++) {
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
