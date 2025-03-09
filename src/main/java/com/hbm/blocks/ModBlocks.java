@@ -18,11 +18,9 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.items.special.ItemHazard;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.machine.*;
-import glmath.jglm.Mat;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -36,6 +34,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hbm.blocks.generic.BlockOreMeta.*;
 
 public class ModBlocks {
 
@@ -207,7 +207,7 @@ public class ModBlocks {
 	public static final Block ore_uranium_scorched = new BlockOutgas(true, 15, true, "ore_uranium_scorched").addRadiation(0.5F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
-	public static final Block ore_sellafield =  new BlockOreMeta(Material.ROCK, "ore_sellafield", "sellafield_slaked", "ore_overlay_diamond", "ore_overlay_emerald", "ore_overlay_radgem");
+	public static final Block ore_sellafield =  new BlockOreMeta(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
 	
 
 	public static final Block ore_thorium = new BlockNTMOre("ore_thorium", 2).addRadiation(ItemHazard.ore * ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);

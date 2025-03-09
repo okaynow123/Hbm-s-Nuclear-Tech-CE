@@ -2195,7 +2195,8 @@ public class ModItems {
 	public static final Item gem_tantalium = new ItemCustomLore("gem_tantalium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item gem_volcanic = new ItemCustomLore("gem_volcanic").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
 	public static final Item gem_sodalite = new ItemCustomLore("gem_sodalite").setCreativeTab(MainRegistry.partsTab);
-	
+	public static final Item gem_rad = new ItemBase("gem_rad").setCreativeTab(MainRegistry.partsTab);
+
 	//Circuits
 	public static final Item upgrade_template = new ItemCustomLore("upgrade_template").setMaxStackSize(1).setCreativeTab(MainRegistry.partsTab);
 	public static final Item deuterium_filter = new ItemBase("deuterium_filter").setCreativeTab(MainRegistry.partsTab);

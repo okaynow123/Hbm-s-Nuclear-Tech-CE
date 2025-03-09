@@ -2,16 +2,12 @@ package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.BlockBase;
-import com.hbm.inventory.material.Mats;
-import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
-import com.hbm.items.special.ItemAutogen;
+import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMultipass;
-import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
@@ -20,12 +16,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -43,11 +38,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Function;
 
+//MrNorwood: Welp, and I made it backwards. No biggie, this is still incredibly useful
+//Overengieered it award
 public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBlockItem  {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
@@ -55,12 +51,39 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     public final  boolean showMetaInCreative;
     public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
     public final String baseTextureName;
-    public final String[] overlayNames;
+    public final OreType[] overlays;
 
-    public BlockOreMeta(Material material, String name, String baseTexture, String... overlays) {
+    public static enum OreType {
+        EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
+        DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
+        RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x));
+
+        public final String overlayTexture;
+        public final ItemStack drop;
+        private final Function<Integer, Integer> fortuneFunction;
+
+        public String getName(){
+           return overlayTexture;
+        }
+        public ItemStack getDrop(){
+            return drop;
+        }
+        public int getDropCount(int rand){
+            return fortuneFunction.apply(rand);
+        }
+
+        OreType(String overlayTexture, @Nullable ItemStack drop, Function<Integer, Integer> fortuneFunction) {
+            this.overlayTexture = overlayTexture;
+            this.drop = drop;
+            this.fortuneFunction = fortuneFunction;
+        }
+    }
+
+
+    public BlockOreMeta(Material material, String name, String baseTexture, OreType... overlays) {
         super(material, name);
         this.baseTextureName = baseTexture;
-        this.overlayNames = overlays;
+        this.overlays = overlays;
         META_COUNT = (short)overlays.length;
         INSTANCES.add(this);
         showMetaInCreative = true;
@@ -81,9 +104,9 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     public static void registerSprites(TextureMap map){for(BlockOreMeta item : INSTANCES) item.registerSprite(map);}
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-                for(String overlay : this.overlayNames) {
-                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + overlay);
-                    TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+baseTextureName, "blocks/" + overlay);
+                for(OreType overlay : this.overlays) {
+                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" + overlay.getName());
+                    TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+baseTextureName, "blocks/" + "ore_overlay_" + overlay);
                     map.setTextureEntry(layeredSprite);
                 }
     }
@@ -112,9 +135,15 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
     }
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        Random rand = ((World) world).rand;
         int meta = state.getValue(META);
-        return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
+        OreType typeEnum = this.overlays[meta];
+        if(typeEnum.getDrop() == null)
+            return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
+
+        return Collections.singletonList(new ItemStack(typeEnum.getDrop().getItem(), typeEnum.getDropCount(rand.nextInt(fortune+1)), typeEnum.drop.getMetadata()));
     }
+
 
     public void registerItem() {
         ItemBlock itemBlock = new BlockOreMeta.MetaBlockOreItem(this);
@@ -136,8 +165,8 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
 
             for (int meta = 0; meta <= META_COUNT - 1; meta++) {
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
-                String overlay = overlayNames[meta % overlayNames.length];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + overlay);
+                String overlay = overlays[meta % overlays.length].getName();
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" +overlay);
 
                 // Base texture
                 textureMap.put("all", spriteLoc.toString());
