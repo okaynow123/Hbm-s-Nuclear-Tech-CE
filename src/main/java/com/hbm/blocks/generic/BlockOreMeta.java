@@ -86,13 +86,6 @@ public class BlockOreMeta extends BlockBase implements IDynamicModels, ICustomBl
                     TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+baseTextureName, "blocks/" + overlay);
                     map.setTextureEntry(layeredSprite);
                 }
-//                ResourceLocation baseLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.baseTextureName);
-//                map.registerSprite(baseLoc);
-//                for(String overlay : this.overlayNames){
-//                    ResourceLocation overlayLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + overlay);
-//                    map.registerSprite(overlayLoc);
-//                }
-
     }
 
     @Override
