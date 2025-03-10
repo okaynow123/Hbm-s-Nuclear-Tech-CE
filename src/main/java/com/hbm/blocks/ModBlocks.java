@@ -526,19 +526,20 @@ public class ModBlocks {
 	public static final Block block_smore = new BlockBase(Material.ROCK, "block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);
 	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag",  "block_slag", "block_slag_broken" ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
-	public static final Block sellafield = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield").setCreativeTab(MainRegistry.blockTab);
+	//public static final Block sellafield = new BlockSellafieldBad(Material.ROCK, SoundType.STONE, "sellafield").setCreativeTab(MainRegistry.blockTab);
 
 	//public static final Block sellafield_slaked = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_slaked", (short) 3).addRadiation(2.5F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_slaked = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_0 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_0", (short) 3).addRadiation(5.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_1 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_1", (short) 3).addRadiation(10.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_2 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_2", (short) 3).addRadiation(20.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_3 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_3", (short) 3).addRadiation(40.0F).addFire(2).toBlock().setHardness(5.0F).setResistance(7F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_4 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_4", (short) 3).addRadiation(80.0F).addFire(10).toBlock().setHardness(5.0F).setResistance(8F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_core = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_core", (short) 3).addRadiation(2000.0F).addFire(15).toBlock().setHardness(10.0F).setResistance(9F).setCreativeTab(MainRegistry.resourceTab);
-	
-	public static final Block baleonitite_slaked = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_slaked").addRadiation(25F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 
+	//TODO: We need some kind of crafting recepie for purifying the higher meta blocks if we want them for building
+	public static final Block sellafield_slaked = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_0 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_0", 0).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_1 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_1", 1).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_2 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_2", 2).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_3 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_3", 3).setHardness(5.0F).setResistance(7F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_4 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_4", 4).setHardness(5.0F).setResistance(8F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_core = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_core", 5).setHardness(10.0F).setResistance(10F).setCreativeTab(MainRegistry.resourceTab);
+
+	public static final Block baleonitite_slaked = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_slaked").addRadiation(25F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block baleonitite_0 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_0").addRadiation(50.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block baleonitite_1 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_1").addRadiation(100.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block baleonitite_2 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_2").addRadiation(200.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
@@ -1457,6 +1458,6 @@ public class ModBlocks {
 	}
 	
 	public static void postInit(){
-
+		BlockSellafield.registerSellafieldLevels();
 	}
 }

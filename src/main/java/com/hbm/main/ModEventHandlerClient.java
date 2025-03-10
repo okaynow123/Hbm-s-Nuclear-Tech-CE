@@ -478,7 +478,7 @@ public class ModEventHandlerClient {
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
         BlockOreMetaInverted.registerModels();
-        ((BlockSellafield) ModBlocks.sellafield).registerModel();
+        BlockSellafieldSlaked.registerModels();
         BlockMeta.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
@@ -578,8 +578,7 @@ public class ModEventHandlerClient {
         ItemAutogen.bakeModels(evt);
         BlockOreMetaInverted.bakeModels(evt);
         BlockMeta.bakeModels(evt);
-        ((BlockSellafield) ModBlocks.sellafield).bakeModel(evt);
-        ((BlockSellafieldSlaked) ModBlocks.sellafield_slaked).bakeModel(evt);
+        BlockSellafieldSlaked.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -807,8 +806,7 @@ public class ModEventHandlerClient {
         ItemAutogen.registerSprites(map);
         BlockOreMetaInverted.registerSprites(map);
         BlockMeta.registerSprites(map);
-        ((BlockSellafield) ModBlocks.sellafield).registerSprite(map);
-        ((BlockSellafieldSlaked) ModBlocks.sellafield_slaked).registerSprite(map);
+        BlockSellafieldSlaked.registerSprites(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
