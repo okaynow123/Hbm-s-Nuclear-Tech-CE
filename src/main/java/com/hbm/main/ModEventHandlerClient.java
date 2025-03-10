@@ -7,6 +7,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.blocks.generic.BlockOreMetaInverted;
 import com.hbm.blocks.generic.BlockSellafield;
+import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
@@ -578,6 +579,7 @@ public class ModEventHandlerClient {
         BlockOreMetaInverted.bakeModels(evt);
         BlockMeta.bakeModels(evt);
         ((BlockSellafield) ModBlocks.sellafield).bakeModel(evt);
+        ((BlockSellafieldSlaked) ModBlocks.sellafield_slaked).bakeModel(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -806,6 +808,7 @@ public class ModEventHandlerClient {
         BlockOreMetaInverted.registerSprites(map);
         BlockMeta.registerSprites(map);
         ((BlockSellafield) ModBlocks.sellafield).registerSprite(map);
+        ((BlockSellafieldSlaked) ModBlocks.sellafield_slaked).registerSprite(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));

@@ -527,7 +527,9 @@ public class ModBlocks {
 	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag",  "block_slag", "block_slag_broken" ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
 	public static final Block sellafield = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield").setCreativeTab(MainRegistry.blockTab);
-	public static final Block sellafield_slaked = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_slaked", (short) 3).addRadiation(2.5F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+
+	//public static final Block sellafield_slaked = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_slaked", (short) 3).addRadiation(2.5F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_slaked = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_0 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_0", (short) 3).addRadiation(5.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_1 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_1", (short) 3).addRadiation(10.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_2 = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_2", (short) 3).addRadiation(20.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
@@ -536,6 +538,7 @@ public class ModBlocks {
 	public static final Block sellafield_core = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_core", (short) 3).addRadiation(2000.0F).addFire(15).toBlock().setHardness(10.0F).setResistance(9F).setCreativeTab(MainRegistry.resourceTab);
 	
 	public static final Block baleonitite_slaked = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_slaked").addRadiation(25F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+
 	public static final Block baleonitite_0 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_0").addRadiation(50.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block baleonitite_1 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_1").addRadiation(100.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block baleonitite_2 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_2").addRadiation(200.0F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
