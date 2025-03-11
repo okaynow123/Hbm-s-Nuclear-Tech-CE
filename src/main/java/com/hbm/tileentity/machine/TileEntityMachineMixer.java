@@ -67,6 +67,11 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 		this.tanks[0] = new FluidTank(16_000); //Input 1
 		this.tanks[1] = new FluidTank(16_000); //Input 2
 		this.tanks[2] = new FluidTank(24_000); //Output
+
+		this.fluids = new Fluid[3];
+		this.fluids[0] = ModForgeFluids.none;
+		this.fluids[1] = ModForgeFluids.none;
+		this.fluids[2] = ModForgeFluids.none;
 	}
 
 	@Override

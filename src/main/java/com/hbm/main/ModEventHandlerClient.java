@@ -471,8 +471,13 @@ public class ModEventHandlerClient {
             registerBlockModel(block, 0);
         }
 
-        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels();
-        ((ItemVOTVdrive) ModItems.full_drive).registerModels();
+
+        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
+        ((ItemBreedingRod) ModItems.rod).registerModels(event);
+        ((ItemBreedingRod) ModItems.rod_dual).registerModels(event);
+        ((ItemBreedingRod) ModItems.rod_quad).registerModels(event);
+        ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
+
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();

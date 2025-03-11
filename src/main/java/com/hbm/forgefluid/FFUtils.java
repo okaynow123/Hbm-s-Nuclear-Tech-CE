@@ -594,11 +594,6 @@ public class FFUtils {
 				tank.drain(1000, true);
 
 				in.shrink(1);
-				if(out.isEmpty()) {
-					slots.setStackInSlot(slot2, new ItemStack(ModItems.rod_tritium));
-				} else {
-					slots.setStackInSlot(slot1, new ItemStack(ModItems.rod_tritium));
-				}
 				return true;
 			}
 			if(tank.getFluid() != null && tank.getFluid().getFluid() == FluidRegistry.WATER && tank.getFluid().amount >= 1000 && out.isEmpty()) {
@@ -629,11 +624,6 @@ public class FFUtils {
 				tank.drain(2000, true);
 
 				in.shrink(1);
-				if(out.isEmpty()) {
-					slots.setStackInSlot(slot2, new ItemStack(ModItems.rod_dual_tritium));
-				} else {
-					slots.setStackInSlot(slot1, new ItemStack(ModItems.rod_dual_tritium));
-				}
 				return true;
 			}
 			if(tank.getFluid() != null && tank.getFluid().getFluid() == FluidRegistry.WATER && tank.getFluid().amount >= 2000 && out.isEmpty()) {
@@ -664,11 +654,6 @@ public class FFUtils {
 				tank.drain(4000, true);
 
 				in.shrink(1);
-				if(out.isEmpty()) {
-					slots.setStackInSlot(slot2, new ItemStack(ModItems.rod_quad_tritium));
-				} else {
-					slots.setStackInSlot(slot1, new ItemStack(ModItems.rod_quad_tritium));
-				}
 				return true;
 			}
 			if(tank.getFluid() != null && tank.getFluid().getFluid() == FluidRegistry.WATER && tank.getFluid().amount >= 4000 && out.isEmpty()) {

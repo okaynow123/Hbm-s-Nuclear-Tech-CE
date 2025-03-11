@@ -259,18 +259,6 @@ public class ItemCustomLore extends Item {
 			else
 				list.add("RTG fuel pellet for infinite energy! (almost)");
 		}
-
-		if(this == ModItems.rod_lithium) {
-			list.add("Turns into Tritium Rod");
-		}
-
-		if(this == ModItems.rod_dual_lithium) {
-			list.add("Turns into Dual Tritium Rod");
-		}
-
-		if(this == ModItems.rod_quad_lithium) {
-			list.add("Turns into Quad Tritium Rod");
-		}
 		if(this == ModItems.ingot_combine_steel) {
 			/*list.add("\"I mean, it's a verb for crying out loud.");
 			list.add("The aliens aren't verbs. They're nouns!\"");
@@ -490,12 +478,7 @@ public class ItemCustomLore extends Item {
     		this == ModItems.crystal_schraranium ||
     		this == ModItems.crystal_trixite ||
     		ItemCell.hasFluid(stack, ModForgeFluids.sas3) || 
-    		this == ModItems.rod_unobtainium || 
-    		this == ModItems.rod_schrabidium || 
-			this == ModItems.rod_dual_schrabidium || 
-			this == ModItems.rod_quad_schrabidium ||
-			this == ModItems.rod_dual_solinium || 
-			this == ModItems.rod_quad_solinium) {
+    		this == ModItems.rod_unobtainium) {
 			return EnumRarity.RARE;
 		}
 
