@@ -43,7 +43,10 @@ public class BlockEnums {
 	public static enum OreType {
 		EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
 		DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
-		RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x));
+		RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x)),
+		URANIUM_SCORCEHD ("uranium_scorched", null, null),
+		URANIUM ("uranium", null, null),
+		SCHRABIDIUM ("schrabidium", null, null);
 
 		public final String overlayTexture;
 		public final ItemStack drop;
@@ -56,6 +59,8 @@ public class BlockEnums {
 			return drop;
 		}
 		public int getDropCount(int rand){
+			if(fortuneFunction == null)
+				return 1;
 			return fortuneFunction.apply(rand);
 		}
 
