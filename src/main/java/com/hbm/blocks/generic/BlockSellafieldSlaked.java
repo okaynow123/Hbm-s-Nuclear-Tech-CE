@@ -42,14 +42,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hbm.blocks.generic.BlockSellafield.*;
-
 
 /**
  * This is a 1:1 Sellafield block ported from 1.7.10, but also allows for retrieval of any variant of the block in game, as it's not based on renderer
  * Only limitation is that I was not able to cram all the meta blocks into single block due to 4 bit restriction (it would have been 5 bits to do so),
  * hence a compromise of splitting all of them between different blocks, but allowing each block to have states with textures independent off of the
- * coordinates. I guess you could make a custom model loader or mapper  IMPORTANT: setBlock or any other method that doesn't use placed method needs variant retrieval with getVariantForPos
+ * coordinates.
  * @author MrNorwood
  */
 public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
@@ -90,6 +88,14 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         INSTANCES.forEach(blockSellafieldSlaked -> blockSellafieldSlaked.bakeModel(event));
     }
 
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos){
+        if (!state.getValue(NATURAL))  return state;
+        int variant = getVariantForPos(pos);
+        return state.withProperty(NATURAL, true).withProperty(VARIANT, variant);
+    }
+
+
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
         try {
@@ -121,6 +127,11 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     }
 
     public static int getVariantForPos(BlockPos pos){
+        /*
+            For any autist exploiter: YES, this is deterministic, YES you can theoretically derive coordinates from
+            a patch of those, assuming people use meta 0 blocks. Now go stroke your ego elsewhere on something
+            more productive
+         */
         long l = (pos.getX() * 3129871L) ^ (long) pos.getY() * 116129781L ^ (long) pos.getZ();
         l = l * l * 42317861L + l * 11L;
         int i = (int) (l >> 16 & 3L);
@@ -130,19 +141,10 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack
             stack) {
-        /*
-            For any autist exploiter: YES, this is deterministic, YES you can theoretically derive coordinates from
-            a patch of those, assuming people use meta 0 blocks. Now go stroke your ego elsewhere on something
-            more productive
-         */
-        long l = (pos.getX() * 3129871L) ^ (long) pos.getY() * 116129781L ^ (long) pos.getZ();
-        l = l * l * 42317861L + l * 11L;
-        int i = (int) (l >> 16 & 3L);
-
         int meta = stack.getMetadata();
         IBlockState newState;
         if (meta == 0) {
-            newState = this.getStateFromMeta(meta).withProperty(VARIANT, Math.abs(i) % TEXTURE_VARIANTS);
+            newState = this.getStateFromMeta(meta).withProperty(VARIANT, getVariantForPos(pos));
             this.isNatural = true;
         } else {
             newState = this.getStateFromMeta(meta).withProperty(VARIANT, (meta - 1));
