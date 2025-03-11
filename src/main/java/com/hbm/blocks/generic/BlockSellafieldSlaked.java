@@ -7,6 +7,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IDynamicSprites;
 import com.hbm.items.IModelRegister;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -27,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -238,7 +240,19 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
 
         @Override
         public String getTranslationKey(ItemStack stack) {
-            return super.getTranslationKey() + "_" + stack.getItemDamage();
+            return super.getTranslationKey() + "_name";
+
+        }
+
+        public String getItemStackDisplayName(ItemStack stack)
+        {
+            int meta = stack.getMetadata();
+            String name = I18nUtil.resolveKey( this.getTranslationKey() + ".name");
+            String neutralizedKey = I18nUtil.resolveKey("adjective.neutralized");
+            if(meta == 0)
+                return name;
+            else
+                return neutralizedKey + " " + name;
         }
 
 
