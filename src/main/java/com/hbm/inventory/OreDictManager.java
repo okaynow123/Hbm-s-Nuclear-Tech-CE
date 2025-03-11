@@ -420,8 +420,8 @@ public class OreDictManager {
         LAPIS.dust(powder_lapis);
         NETHERQUARTZ.gem(Items.QUARTZ).dust(powder_quartz).ore(Blocks.QUARTZ_ORE);
         QUARTZ.dust(powder_quartz);
-        DIAMOND.dust(powder_diamond).ore(gravel_diamond/*, ore_sellafield_diamond*/);
-        EMERALD.dust(powder_emerald)/*.ore(ore_sellafield_emerald)*/;
+        DIAMOND.dust(powder_diamond).ore(gravel_diamond, ore_sellafield_diamond);
+        EMERALD.dust(powder_emerald).ore(ore_sellafield_emerald);
 
         /*
          * RADIOACTIVE

@@ -51,7 +51,6 @@ import java.util.Random;
 public class BlockSellafield extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
 
     public static final int LEVELS = 7;
-    public static final String basePath = "blocks/";
     public static final float rad = 0.5f;
     public final int level;
     public static final int[][] colors = new int[][]{
@@ -94,6 +93,8 @@ public class BlockSellafield extends BlockSellafieldSlaked implements ICustomBlo
 
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+        if(!isNatural)
+            return;
         int level = this.level;
 
         if(entityIn instanceof EntityLivingBase)

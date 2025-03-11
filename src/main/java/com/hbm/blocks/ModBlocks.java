@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hbm.blocks.BlockEnums.*;
 import static com.hbm.blocks.generic.BlockOreMetaInverted.*;
 
 public class ModBlocks {
@@ -207,8 +208,11 @@ public class ModBlocks {
 	public static final Block ore_uranium_scorched = new BlockOutgas(true, 15, true, "ore_uranium_scorched").addRadiation(0.5F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
-	public static final Block ore_sellafield =  new BlockOreMetaInverted(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
-	
+	//public static final Block ore_sellafield =  new BlockOreMetaInverted(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
+	public static final Block ore_sellafield_emerald = new BlockSellafieldOre("ore_sellafield_emerald", OreType.EMERALD);
+	public static final Block ore_sellafield_diamond = new BlockSellafieldOre("ore_sellafield_diamond", OreType.DIAMOND);
+	public static final Block ore_sellafield_radgem = new BlockSellafieldOre("ore_sellafield_radgem", OreType.RADGEM);
+
 
 	public static final Block ore_thorium = new BlockNTMOre("ore_thorium", 2).addRadiation(ItemHazard.ore * ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_titanium = new BlockNTMOre("ore_titanium", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);

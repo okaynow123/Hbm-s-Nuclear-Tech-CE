@@ -47,19 +47,21 @@ import static com.hbm.blocks.generic.BlockSellafield.*;
 
 /**
  * This is a 1:1 Sellafield block ported from 1.7.10, but also allows for retrieval of any variant of the block in game, as it's not based on renderer
- * Only limitation is that I was not able to cram all the metablocks into single block due to 4 bit restriction (it would have been 5 bits to do so),
+ * Only limitation is that I was not able to cram all the meta blocks into single block due to 4 bit restriction (it would have been 5 bits to do so),
  * hence a compromise of splitting all of them between different blocks, but allowing each block to have states with textures independent off of the
- * coordinates.
+ * coordinates. I guess you could make a custom model loader or mapper  IMPORTANT: setBlock or any other method that doesn't use placed method needs variant retrieval with getVariantForPos
  * @author MrNorwood
  */
 public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
     public static final String[] sellafieldTextures = new String[]{"sellafield_slaked", "sellafield_slaked_1", "sellafield_slaked_2", "sellafield_slaked_3"};
     public static final int TEXTURE_VARIANTS = sellafieldTextures.length;
     public static final int META_COUNT = TEXTURE_VARIANTS;
+    public static final String basePath = "blocks/";
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, sellafieldTextures.length - 1);
     public static final PropertyBool NATURAL = PropertyBool.create("natural");
     public static List<BlockSellafieldSlaked> INSTANCES = new ArrayList<>();
     public static final boolean showMetaInCreative = true;
+    protected boolean isNatural = true;
 
     public BlockSellafieldSlaked(Material mat, SoundType type, String s) {
         super(mat, type, s);
@@ -118,6 +120,13 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         }
     }
 
+    public static int getVariantForPos(BlockPos pos){
+        long l = (pos.getX() * 3129871L) ^ (long) pos.getY() * 116129781L ^ (long) pos.getZ();
+        l = l * l * 42317861L + l * 11L;
+        int i = (int) (l >> 16 & 3L);
+        return Math.abs(i) % TEXTURE_VARIANTS;
+    }
+
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack
             stack) {
@@ -134,8 +143,10 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         IBlockState newState;
         if (meta == 0) {
             newState = this.getStateFromMeta(meta).withProperty(VARIANT, Math.abs(i) % TEXTURE_VARIANTS);
+            this.isNatural = true;
         } else {
             newState = this.getStateFromMeta(meta).withProperty(VARIANT, (meta - 1));
+            this.isNatural = false;
         }
         world.setBlockState(pos, newState, 3);
     }

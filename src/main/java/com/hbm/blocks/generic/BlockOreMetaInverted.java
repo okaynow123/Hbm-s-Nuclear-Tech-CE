@@ -2,6 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.BlockBase;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
@@ -42,6 +43,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
+import static com.hbm.blocks.BlockEnums.*;
+
 //MrNorwood: Welp, and I made it backwards. No biggie, this is still incredibly useful
 //Overengieered it award
 public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, ICustomBlockItem  {
@@ -52,32 +55,6 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
     public static final List<BlockOreMetaInverted> INSTANCES = new ArrayList<>();
     public final String baseTextureName;
     public final OreType[] overlays;
-
-    public static enum OreType {
-        EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
-        DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
-        RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x));
-
-        public final String overlayTexture;
-        public final ItemStack drop;
-        private final Function<Integer, Integer> fortuneFunction;
-
-        public String getName(){
-           return overlayTexture;
-        }
-        public ItemStack getDrop(){
-            return drop;
-        }
-        public int getDropCount(int rand){
-            return fortuneFunction.apply(rand);
-        }
-
-        OreType(String overlayTexture, @Nullable ItemStack drop, Function<Integer, Integer> fortuneFunction) {
-            this.overlayTexture = overlayTexture;
-            this.drop = drop;
-            this.fortuneFunction = fortuneFunction;
-        }
-    }
 
 
     public BlockOreMetaInverted(Material material, String name, String baseTexture, OreType... overlays) {
