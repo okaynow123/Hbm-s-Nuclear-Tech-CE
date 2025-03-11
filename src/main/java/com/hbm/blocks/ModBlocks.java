@@ -209,7 +209,7 @@ public class ModBlocks {
 	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
 	public static final Block ore_sellafield_emerald = new BlockSellafieldOre("ore_sellafield_emerald", OreType.EMERALD);
-	public static final Block ore_sellafield_uranium_scorched = new BlockSellafieldOre("ore_sellafield_uranium_scorched", OreType.URANIUM_SCORCEHD); //FIXME: this texture requires transparency on multipass
+	public static final Block ore_sellafield_uranium_scorched = new BlockSellafieldOre("ore_sellafield_uranium_scorched", OreType.URANIUM);
 	public static final Block ore_sellafield_schrabidium = new BlockSellafieldOre("ore_sellafield_schrabidium", OreType.SCHRABIDIUM);
 	public static final Block ore_sellafield_diamond = new BlockSellafieldOre("ore_sellafield_diamond", OreType.DIAMOND);
 	public static final Block ore_sellafield_radgem = new BlockSellafieldOre("ore_sellafield_radgem", OreType.RADGEM);
