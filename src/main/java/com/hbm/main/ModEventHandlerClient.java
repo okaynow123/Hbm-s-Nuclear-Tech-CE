@@ -4,6 +4,10 @@ import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.blocks.generic.BlockOreMetaInverted;
+import com.hbm.blocks.generic.BlockSellafield;
+import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
@@ -467,15 +471,20 @@ public class ModEventHandlerClient {
             registerBlockModel(block, 0);
         }
 
+
         ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels(event);
         ((ItemBreedingRod) ModItems.rod).registerModels(event);
         ((ItemBreedingRod) ModItems.rod_dual).registerModels(event);
         ((ItemBreedingRod) ModItems.rod_quad).registerModels(event);
         ((ItemVOTVdrive) ModItems.full_drive).registerModels(event);
+
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
+        BlockOreMetaInverted.registerModels();
+        BlockSellafieldSlaked.registerModels();
+        BlockMeta.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
@@ -569,10 +578,12 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void modelBaking(ModelBakeEvent evt) {
-        ItemWatzPellet.bakeModels(evt, false);
-        ItemWatzPellet.bakeModels(evt, true);
+        ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
-        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.bakeModels(evt); }
+        ItemAutogen.bakeModels(evt);
+        BlockOreMetaInverted.bakeModels(evt);
+        BlockMeta.bakeModels(evt);
+        BlockSellafieldSlaked.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -795,11 +806,13 @@ public class ModEventHandlerClient {
     @SubscribeEvent
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
+        ItemBedrockOreNew.registerSprites(map);
+        ItemWatzPellet.registerSprites(map);
+        ItemAutogen.registerSprites(map);
+        BlockOreMetaInverted.registerSprites(map);
+        BlockMeta.registerSprites(map);
+        BlockSellafieldSlaked.registerSprites(map);
 
-        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerSprites(map);
-        ((ItemWatzPellet) ModItems.watz_pellet).registerTextures(map, false);
-        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerTextures(map, true);
-        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerSprites(map); }
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
         DSmokeRenderer.sprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke3"));

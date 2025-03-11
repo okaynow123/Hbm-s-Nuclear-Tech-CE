@@ -1,5 +1,12 @@
 package com.hbm.blocks;
 
+import com.hbm.items.ModItems;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nullable;
+import java.util.function.Function;
+
 public class BlockEnums {
 
 	public static enum EnumStoneType {
@@ -7,7 +14,8 @@ public class BlockEnums {
 		ASBESTOS,
 		HEMATITE,
 		MALACHITE,
-		LIMESTONE
+		LIMESTONE,
+		BAUXITE
 	}
 
 	public static enum EnumStalagmiteType {
@@ -31,4 +39,31 @@ public class BlockEnums {
 		GREEN,
 		STEEL
 	}
+
+	public static enum OreType {
+		EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
+		DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
+		RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x));
+
+		public final String overlayTexture;
+		public final ItemStack drop;
+		private final Function<Integer, Integer> fortuneFunction;
+
+		public String getName(){
+			return overlayTexture;
+		}
+		public ItemStack getDrop(){
+			return drop;
+		}
+		public int getDropCount(int rand){
+			return fortuneFunction.apply(rand);
+		}
+
+		OreType(String overlayTexture, @Nullable ItemStack drop, Function<Integer, Integer> fortuneFunction) {
+			this.overlayTexture = overlayTexture;
+			this.drop = drop;
+			this.fortuneFunction = fortuneFunction;
+		}
+	}
+
 }

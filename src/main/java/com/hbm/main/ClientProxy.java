@@ -32,6 +32,8 @@ import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIDMulti;
+import com.hbm.items.special.ItemBedrockOreNew;
+import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -134,6 +136,7 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -185,7 +188,13 @@ public class ClientProxy extends ServerProxy {
 	public File getDataDir() {
 		return Minecraft.getMinecraft().gameDir;
 	}
-	
+
+	@Override
+	public void init(FMLInitializationEvent evt) {
+		ItemDepletedFuel.registerColorHandlers();
+		ItemBedrockOreNew.registerColorHandlers();
+	}
+
 	@Override
 	public void registerRenderInfo()
 	{

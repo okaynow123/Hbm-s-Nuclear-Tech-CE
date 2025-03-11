@@ -16,6 +16,7 @@ import java.util.PriorityQueue;
 // We should forgo any of this stuff. Base minecraft uses VBO with its vertex buffers nowdays, and uses renderlists when VBOs are disabled.
 // And no, you can't just copy-paste stuff either as it breaks. If you struggle I propose a wrapper to make our time easier.
 // Please take your time to port stuff properly and address issues using minecraft renderer, not this frankestein  abomination
+//On top of that I have depricated 90% of stuff that uses it.
 @Deprecated()
 public class Tessellator
 {

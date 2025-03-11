@@ -56,6 +56,8 @@ dependencies {
 
     implementation rfg.deobf('curse.maven:had-enough-items-557549:5471944')
 
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:5640857")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:spark-361579:3542217")

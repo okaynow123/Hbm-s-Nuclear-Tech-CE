@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
+import com.hbm.items.IDynamicModels;
+import com.hbm.items.IDynamicSprites;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
@@ -41,9 +43,8 @@ import java.util.*;
 import static com.hbm.inventory.material.Mats.*;
 import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
-public class ItemBedrockOreNew extends Item {
+public class ItemBedrockOreNew extends Item implements IDynamicModels, IDynamicSprites {
 
-    @SideOnly(Side.CLIENT)
     private static final List<ItemBedrockOreNew> INSTANCES = new ArrayList<>();
 
     public ItemBedrockOreNew(String s) {
@@ -73,6 +74,7 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public void registerModels() {
         for(int i = 0; i < BedrockOreGrade.values().length; i++) {
             BedrockOreGrade grade = BedrockOreGrade.values()[i];
@@ -84,6 +86,7 @@ public class ItemBedrockOreNew extends Item {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static void bakeModels(ModelBakeEvent event){
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft",  "item/generated"));
@@ -122,7 +125,7 @@ public class ItemBedrockOreNew extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerSprites(TextureMap map) {
+    public static void registerSprites(TextureMap map) {
         for(int i = 0; i < BedrockOreGrade.values().length; i++) {
             BedrockOreGrade grade = BedrockOreGrade.values()[i];
             for (int j = 0; j < BedrockOreType.values().length; j++) {

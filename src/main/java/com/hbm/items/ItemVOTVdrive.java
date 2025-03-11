@@ -71,7 +71,7 @@ public class ItemVOTVdrive extends ItemEnumMulti {
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerModels(ModelRegistryEvent event) {
+    public void registerModels() {
         for (int i = 0; i < 4; i++) {
             ModelLoader.setCustomModelResourceLocation(
                     this,

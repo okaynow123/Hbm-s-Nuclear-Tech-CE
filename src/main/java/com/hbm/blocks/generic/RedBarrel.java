@@ -19,12 +19,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class RedBarrel extends Block {
 
     public static final AxisAlignedBB BARREL_BB = new AxisAlignedBB(2 * 0.0625F, 0.0F, 2 * 0.0625F, 14 * 0.0625F, 1.0F, 14 * 0.0625F);
+
+    //MrNorwood: This is pretty much required to prevent infinite recursion issues
+    //TODO: WHY THE FUCK BARRELS DONT HAVE AN ABSTRACT CLASS BELOW IT?
+    //FIXME: This kind of breaks large consecutive explosions, I dont want to deal with it atm
+    private int explosionCount = 0;
+    private static final int MAX_EXPLOSION_DEPTH = 100; // Limit to 100 explosions
 
     public RedBarrel(Material materialIn, String s) {
         super(materialIn);
@@ -42,11 +50,19 @@ public class RedBarrel extends Block {
     @Override
     public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
         if (!worldIn.isRemote && worldIn instanceof WorldServer) {
+            if (explosionCount >= MAX_EXPLOSION_DEPTH) {
+                return;
+            }
+
+            explosionCount++;
+
             ((WorldServer) worldIn).addScheduledTask(() -> {
                 explode(worldIn, pos.getX(), pos.getY(), pos.getZ());
+                explosionCount--;
             });
         }
     }
+
 
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {

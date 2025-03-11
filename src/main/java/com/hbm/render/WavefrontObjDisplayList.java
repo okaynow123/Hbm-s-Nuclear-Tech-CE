@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated //We should use VAOs for this, not displaylists
 public class WavefrontObjDisplayList implements IModelCustom {
 
 	public List<Pair<String, Integer>> nameToCallList = new ArrayList<>();
