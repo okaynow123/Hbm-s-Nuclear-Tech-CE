@@ -50,6 +50,7 @@ import java.util.Objects;
  * Only limitation is that I was not able to cram all the meta blocks into single block due to 4 bit restriction (it would have been 5 bits to do so),
  * hence a compromise of splitting all of them between different blocks, but allowing each block to have states with textures independent off of the
  * coordinates.
+ *
  * @author MrNorwood
  */
 public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
@@ -166,23 +167,29 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         boolean natural = state.getValue(NATURAL); // Get the natural property (boolean)
         int variant = state.getValue(VARIANT); // Get the variant property (int)
 
-        // - 1 bit for NATURAL (true = 0, false = 1)
-        // - 4 bits for VARIANT (variant 3 and 4 will be technically item ID 5 and 7, dont get spooked by that)
+        // 1 bit for NATURAL (true = 0, false = 1)
+        // 1 bit for padding
+        // 2 bits for variant
 
-        if (natural) {
-            return variant; // For natural == true, only store the variant as meta
-        } else {
-            return (1 << 0) | (variant << 1); // For natural == false, use 1 + shifted variant (1 bit for natural)
-        }
+        // 7 variants possible atm, can be 8 if player obtainable gem  block was meta 16 or higher
+
+        return (variant & 0b111) | ((natural ? 0 : 1) << 3);
+
     }
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        // Extract the NATURAL value (if meta is 0, it's natural, else it's not)
-        boolean natural = meta == 0;  // When meta is 0, natural is true, otherwise false
-        // Extract the VARIANT value (shift right and mask to get the lower 4 bits)
-        int variant = natural ? meta : (meta >> 1) & 0x0F; // When natural is true, use meta directly, otherwise shift
-
-
+        boolean natural;
+        int variant =  (meta & 0b111);
+        //0 is reserved for natural block accessable from ingame
+        //Anything >= 8 is not neutralized as blockItems only go up to 4 meta
+        if(meta == 0 || meta >= 8) {
+            natural = true;
+        }
+        else {
+            //Enforce staggered ID
+            variant--;
+            natural = ((meta >> 3) & 1) == 1;
+        }
         return this.getDefaultState()
                 .withProperty(NATURAL, natural)
                 .withProperty(VARIANT, variant);
