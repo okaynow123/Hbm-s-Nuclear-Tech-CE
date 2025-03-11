@@ -20,6 +20,18 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Allows for layered block sprites with support for overlay transparency. Much more performant than using tesselator
+ * or adding quads with baked models. It iterates over every singe pixel within the overlay, checks whenever it is
+ * transparent and applies the data on top of the same pixel coordinate of the base texture. Currently limited to full
+ * opacity pixels, as it replaces pixel data, doesn't take account alpha into consideration.
+ * //TODO: make it apply semitransparent layers with no data loss
+ *
+ * @parm spriteName path for the generated texture
+ * @parm baseTexurePath Full resource path to the base texture, it will make up background of the sprite
+ * @parm overlayPath Full resource path to the overlay texture, it will be applied on top of base texture
+ * @author MrNorwood
+ */
 public class TextureAtlasSpriteMultipass  extends TextureAtlasSprite {
 
     private String overlayPath;
