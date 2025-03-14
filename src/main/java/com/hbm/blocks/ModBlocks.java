@@ -208,8 +208,9 @@ public class ModBlocks {
 	public static final Block ore_uranium_scorched = new BlockOutgas(true, 15, true, "ore_uranium_scorched").addRadiation(0.5F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
-	//public static final Block ore_sellafield =  new BlockOreMetaInverted(Material.ROCK, "ore_sellafield", "sellafield_slaked", OreType.DIAMOND, OreType.EMERALD, OreType.RADGEM  );
 	public static final Block ore_sellafield_emerald = new BlockSellafieldOre("ore_sellafield_emerald", OreType.EMERALD);
+	public static final Block ore_sellafield_uranium_scorched = new BlockSellafieldOre("ore_sellafield_uranium_scorched", OreType.URANIUM);
+	public static final Block ore_sellafield_schrabidium = new BlockSellafieldOre("ore_sellafield_schrabidium", OreType.SCHRABIDIUM);
 	public static final Block ore_sellafield_diamond = new BlockSellafieldOre("ore_sellafield_diamond", OreType.DIAMOND);
 	public static final Block ore_sellafield_radgem = new BlockSellafieldOre("ore_sellafield_radgem", OreType.RADGEM);
 
@@ -530,12 +531,11 @@ public class ModBlocks {
 	public static final Block block_smore = new BlockBase(Material.ROCK, "block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);
 	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag",  "block_slag", "block_slag_broken" ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
-	//public static final Block sellafield = new BlockSellafieldBad(Material.ROCK, SoundType.STONE, "sellafield").setCreativeTab(MainRegistry.blockTab);
 
-	//public static final Block sellafield_slaked = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "sellafield_slaked", (short) 3).addRadiation(2.5F).toBlock().setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 
 	//TODO: We need some kind of crafting recepie for purifying the higher meta blocks if we want them for building
 	public static final Block sellafield_slaked = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield_bedrock = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_bedrock").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_0 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_0", 0).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_1 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_1", 1).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_2 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_2", 2).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
@@ -1323,7 +1323,10 @@ public class ModBlocks {
 	public static final Block vent_pink_cloud = new BlockVent(Material.IRON, "vent_pink_cloud").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block vent_chlorine_seal = new BlockClorineSeal(Material.IRON, "vent_chlorine_seal").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block chlorine_gas = new BlockClorine(Material.CLOTH, "chlorine_gas").setHardness(0.0F).setResistance(0.0F).setCreativeTab(MainRegistry.machineTab);
-	
+
+	public static final Block stone_resource = new BlockResourceStone().setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+
+
 	public static final Block gas_radon = new BlockGasRadon("gas_radon").setCreativeTab(MainRegistry.resourceTab);
 	public static final Block gas_radon_dense = new BlockGasRadonDense("gas_radon_dense").setCreativeTab(MainRegistry.resourceTab);
 	public static final Block gas_radon_tomb = new BlockGasRadonTomb("gas_radon_tomb").setCreativeTab(MainRegistry.resourceTab);

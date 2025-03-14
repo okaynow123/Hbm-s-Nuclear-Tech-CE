@@ -51,7 +51,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     public final short META_COUNT;
     private boolean showMetaInCreative = true;
     public static List<BlockMeta> INSTANCES = new ArrayList<>();
-    private String[] textures;
+    protected String[] textures;
 
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
         super(mat, type, s);
@@ -78,6 +78,12 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
     }
 
+    public BlockMeta(Material mat, SoundType type, String s, int metaCount) {
+        super(mat, type, s);
+        META_COUNT = (short) metaCount;
+        INSTANCES.add(this);
+    }
+
     public BlockMeta(Material m, String s, short metaCount, boolean showMetaInCreative) {
         super(m, s);
         META_COUNT = metaCount;
@@ -85,7 +91,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
     }
 
-    public static void registerSprites(TextureMap map){for(BlockMeta item : INSTANCES) item.registerSprite(map);}
+    public static void registerSprites(TextureMap map){INSTANCES.forEach(item -> item.registerSprite(map));}
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
@@ -167,7 +173,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{this.META});
+        return new BlockStateContainer(this, META);
     }
 
     @Override

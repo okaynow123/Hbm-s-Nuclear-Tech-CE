@@ -97,9 +97,12 @@ public class BlockSellafield extends BlockSellafieldSlaked implements ICustomBlo
             return;
         int level = this.level;
 
-        if(entityIn instanceof EntityLivingBase)
+        if(entityIn instanceof EntityLivingBase) {
             ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(HbmPotion.radiation, 30 * 20, level < 5 ? level : level * 2));
+            if (level >= 3)
+                entityIn.setFire(level);
 
+        }
     }
 
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {

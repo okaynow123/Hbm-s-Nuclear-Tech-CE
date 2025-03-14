@@ -1,0 +1,67 @@
+package com.hbm.blocks;
+
+import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.util.EnumUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Locale;
+
+
+//DUDE a third implementation of fucking metablocks?? Yea no, we're extending BlockMeta
+public abstract class BlockEnumMeta extends BlockMeta {
+
+
+    final public boolean multiName;
+    final private boolean multiTexture;
+    public Class<? extends Enum> blockEnum;
+
+    public BlockEnumMeta(Material mat, SoundType type, String registryName, Class<? extends Enum> blockEnum, boolean multiName, boolean multiTexture) {
+        super(mat, type, registryName, blockEnum.getEnumConstants().length );
+        this.blockEnum = blockEnum;
+        this.multiName = multiName;
+        this.multiTexture = multiTexture;
+        this.textures = Arrays.stream(blockEnum.getEnumConstants())
+                .sorted(Comparator.comparing(Enum::ordinal))
+                .map(Enum::name)
+                .map(name -> registryName + "." + name.toLowerCase(Locale.US))
+                .toArray(String[]::new);
+
+    }
+
+
+    @Override
+    public void registerItem() {
+        ItemBlock itemBlock = new EnumMetaBlockItem(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        itemBlock.setCreativeTab(this.getCreativeTab());
+        ForgeRegistries.ITEMS.register(itemBlock);
+    }
+
+    public String enumToTranslationKey(Enum value) {
+        return this.getTranslationKey() + "." +  value.name().toLowerCase(Locale.US);
+    }
+
+    public class EnumMetaBlockItem extends MetaBlockItem {
+
+        public EnumMetaBlockItem(Block block) {
+            super(block);
+        }
+
+        public String getTranslationKey(ItemStack stack) {
+            if (multiName) {
+                Enum num = EnumUtil.grabEnumSafely(blockEnum, stack.getMetadata());
+                return enumToTranslationKey(num);
+            } else
+                return this.block.getTranslationKey();
+        }
+    }
+
+
+}

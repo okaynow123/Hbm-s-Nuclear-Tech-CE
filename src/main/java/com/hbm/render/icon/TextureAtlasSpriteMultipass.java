@@ -20,6 +20,18 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Allows for layered block sprites with support for overlay transparency. Much more performant than using tesselator
+ * or adding quads with baked models. It iterates over every singe pixel within the overlay, checks whenever it is
+ * transparent and applies the data on top of the same pixel coordinate of the base texture. Now with alpha blending
+ * too!
+ * //
+ *
+ * @parm spriteName path for the generated texture
+ * @parm baseTexurePath Full resource path to the base texture, it will make up background of the sprite
+ * @parm overlayPath Full resource path to the overlay texture, it will be applied on top of base texture
+ * @author MrNorwood
+ */
 public class TextureAtlasSpriteMultipass  extends TextureAtlasSprite {
 
     private String overlayPath;
@@ -97,11 +109,25 @@ public class TextureAtlasSpriteMultipass  extends TextureAtlasSprite {
 
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
                 for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                    int basePixel = bufferedImage.getRGB(x, y);
                     int overlayPixel = overlayImage.getRGB(x, y);
-                    int alpha = (overlayPixel >> 24) & 0xFF; // Extract alpha channel
 
-                    if (alpha > 0) { // Only copy non-transparent pixels
-                        baseFrameData[0][y * bufferedImage.getWidth() + x] = overlayPixel;
+                    int overlayAlpha = (overlayPixel >> 24) & 0xFF; // Extract alpha channel of overlay
+                    if (overlayAlpha > 0) { // If the overlay pixel is not fully transparent
+                        int baseRed = (basePixel >> 16) & 0xFF;
+                        int baseGreen = (basePixel >> 8) & 0xFF;
+                        int baseBlue = basePixel & 0xFF;
+
+                        int overlayRed = (overlayPixel >> 16) & 0xFF;
+                        int overlayGreen = (overlayPixel >> 8) & 0xFF;
+                        int overlayBlue = overlayPixel & 0xFF;
+
+                        // Perform alpha blending
+                        int red = (int) ((overlayAlpha / 255.0) * overlayRed + ((255 - overlayAlpha) / 255.0) * baseRed);
+                        int green = (int) ((overlayAlpha / 255.0) * overlayGreen + ((255 - overlayAlpha) / 255.0) * baseGreen);
+                        int blue = (int) ((overlayAlpha / 255.0) * overlayBlue + ((255 - overlayAlpha) / 255.0) * baseBlue);
+
+                        baseFrameData[0][y * bufferedImage.getWidth() + x] = (basePixel & 0xFF000000) | (red << 16) | (green << 8) | blue;
                     }
                 }
             }
