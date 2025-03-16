@@ -28,14 +28,18 @@ public abstract class BlockEnumMeta extends BlockMeta {
         this.blockEnum = blockEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
-        this.blockFrames = Arrays.stream(blockEnum.getEnumConstants())
+        this.blockFrames = assignBlockFrames(registryName);
+    }
+
+    protected BlockBakeFrame[] assignBlockFrames(String registryName){
+        return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
                 .map(name -> registryName + "." + name.toLowerCase(Locale.US))
                 .map(texture -> new BlockBakeFrame(texture))
                 .toArray(BlockBakeFrame[]::new);
-
     }
+
 
 
     @Override

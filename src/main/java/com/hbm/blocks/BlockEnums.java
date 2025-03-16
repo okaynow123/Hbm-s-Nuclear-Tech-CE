@@ -71,4 +71,27 @@ public class BlockEnums {
 		}
 	}
 
+
+	public static enum EnumBasaltOreType {
+		SULFUR (new ItemStack(ModItems.sulfur)),
+		FLUORITE(new ItemStack(ModItems.fluorite)),
+		ASBESTOS(new ItemStack(ModItems.ingot_asbestos)),
+		GEM(new ItemStack(ModItems.gem_volcanic)),
+		MOLYSITE(new ItemStack(ModItems.powder_molysite));
+
+		public final ItemStack drop;
+
+		public ItemStack getDrop(){
+			return drop;
+		}
+		public int getDropCount(int rand){
+			return rand + 1;
+		}
+
+        EnumBasaltOreType(ItemStack drop) {
+            this.drop = drop;
+        }
+    }
+
+
 }
