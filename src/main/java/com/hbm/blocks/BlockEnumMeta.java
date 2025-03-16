@@ -1,6 +1,7 @@
 package com.hbm.blocks;
 
 import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.util.EnumUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -27,11 +28,12 @@ public abstract class BlockEnumMeta extends BlockMeta {
         this.blockEnum = blockEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
-        this.textures = Arrays.stream(blockEnum.getEnumConstants())
+        this.blockFrames = Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
                 .map(name -> registryName + "." + name.toLowerCase(Locale.US))
-                .toArray(String[]::new);
+                .map(texture -> new BlockBakeFrame(texture))
+                .toArray(BlockBakeFrame[]::new);
 
     }
 

@@ -19,6 +19,7 @@ import com.hbm.blocks.turret.*;
 import com.hbm.items.special.ItemHazard;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.machine.*;
 import net.minecraft.block.Block;
@@ -529,7 +530,7 @@ public class ModBlocks {
 	public static final Block block_actinium = new BlockBeaconable(Material.IRON, "block_actinium").setSoundType(SoundType.METAL).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block block_tritium = new BlockRotatablePillarHazard(Material.GLASS, SoundType.GLASS, "block_tritium").addRadiation(4.5F).toBlock().setCreativeTab(MainRegistry.blockTab).setHardness(3.0F).setResistance(2.0F);
 	public static final Block block_smore = new BlockBase(Material.ROCK, "block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);
-	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag",  "block_slag", "block_slag_broken" ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag", BlockBakeFrame.simpleModelArray("block_slag", "block_slag_broken") ).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
 
 
