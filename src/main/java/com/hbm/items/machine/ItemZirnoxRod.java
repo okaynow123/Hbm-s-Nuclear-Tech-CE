@@ -6,23 +6,26 @@ import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class ItemZirnoxRod extends ItemEnumMulti {
 
-    public ItemZirnoxRod() {
-        super(EnumZirnoxType.class, true, true);
+    public ItemZirnoxRod(String registryName) {
+        super(registryName, EnumZirnoxType.class, true, true);
         this.setMaxStackSize(1);
         this.canRepair = false;
     }
@@ -76,21 +79,28 @@ public class ItemZirnoxRod extends ItemEnumMulti {
         else
             loc = I18nUtil.resolveKeyArray("desc.item.zirnoxRod", num.heat, BobMathUtil.getShortNumber(num.maxLife));
 
-        for (String s : loc) {
-            list.add(s);
-        }
+        Collections.addAll(list, loc);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        Enum[] enums = theEnum.getEnumConstants();
+    //TODO: Make this more inline with new ItemEnum standards
+//    @SideOnly(Side.CLIENT)
+//    public void registerModel() {
+//        Enum[] enums = theEnum.getEnumConstants();
+//
+//        for (Enum num : enums) {
+//            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(
+//                    new ResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US)), "inventory");
+//            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(), modelResourceLocation);
+//        }
+//    }
 
-        for (Enum num : enums) {
-            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(
-                    new ResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US)), "inventory");
-            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(), modelResourceLocation);
-        }
-    }
+//    @SideOnly(Side.CLIENT)
+//    @Override
+//    public void bakeModel(ModelBakeEvent event){}
+//
+//    @SideOnly(Side.CLIENT)
+//    @Override
+//    public void registerSprite(TextureMap map){}
 
     @Override
     public String getTranslationKey(ItemStack stack) {
@@ -98,7 +108,7 @@ public class ItemZirnoxRod extends ItemEnumMulti {
         return super.getTranslationKey() + "_" + num.name().toLowerCase(Locale.US);
     }
 
-    public static enum EnumZirnoxType {
+    public enum EnumZirnoxType {
         NATURAL_URANIUM_FUEL(250_000, 30),
         URANIUM_FUEL(200_000, 50),
         TH232(20_000, 0, true),
@@ -115,16 +125,28 @@ public class ItemZirnoxRod extends ItemEnumMulti {
         public final int heat;
         public final boolean breeding;
 
-        private EnumZirnoxType(int life, int heat, boolean breeding) {
+        EnumZirnoxType(int life, int heat, boolean breeding) {
             this.maxLife = life;
             this.heat = heat;
             this.breeding = breeding;
         }
 
-        private EnumZirnoxType(int life, int heat) {
+        EnumZirnoxType(int life, int heat) {
             this.maxLife = life;
             this.heat = heat;
             this.breeding = false;
         }
+    }
+
+    public enum EnumZirnoxTypeDepleted {
+        NATURAL_URANIUM_FUEL,
+        URANIUM_FUEL,
+        THORIUM_FUEL,
+        MOX_FUEL,
+        PLUTONIUM_FUEL,
+        U233_FUEL,
+        U235_FUEL,
+        LES_FUEL,
+        ZFB_MOX,
     }
 }

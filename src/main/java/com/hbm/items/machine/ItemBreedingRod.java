@@ -12,8 +12,8 @@ import java.util.Locale;
 
 public class ItemBreedingRod extends ItemEnumMulti {
 
-    public ItemBreedingRod() {
-        super(BreedingRodType.class, true, true);
+    public ItemBreedingRod(String registryName) {
+        super( registryName, BreedingRodType.class, true, true);
     }
 
     public enum BreedingRodType {
@@ -40,7 +40,7 @@ public class ItemBreedingRod extends ItemEnumMulti {
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerModels(ModelRegistryEvent event) {
+    public void registerModel(ModelRegistryEvent event) {
         Enum[] enums = theEnum.getEnumConstants();
 
         for (Enum num : enums) {

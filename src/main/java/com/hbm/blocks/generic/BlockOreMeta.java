@@ -1,11 +1,8 @@
 package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
-import com.hbm.blocks.BlockBase;
-import com.hbm.blocks.BlockEnums;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
-import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.TextureAtlasSpriteMultipass;
@@ -21,7 +18,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -39,25 +35,23 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Function;
 
 import static com.hbm.blocks.BlockEnums.*;
 
 //MrNorwood: Welp, and I made it backwards. No biggie, this is still incredibly useful
 //Overengieered it award
-public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, ICustomBlockItem  {
+public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBlockItem  {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
     public final short META_COUNT;
     public final  boolean showMetaInCreative;
-    public static final List<BlockOreMetaInverted> INSTANCES = new ArrayList<>();
+    public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
     public final String baseTextureName;
     public final OreType[] overlays;
 
 
-    public BlockOreMetaInverted(Material material, String name, String baseTexture, OreType... overlays) {
+    public BlockOreMeta(Material material, String name, String baseTexture, OreType... overlays) {
         super(material, name);
         this.baseTextureName = baseTexture;
         this.overlays = overlays;
@@ -67,7 +61,7 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
     }
 
     public static void bakeModels(ModelBakeEvent event) {
-        for (BlockOreMetaInverted block : INSTANCES) {
+        for (BlockOreMeta block : INSTANCES) {
             block.bakeModel(event);
         }
     }
@@ -78,7 +72,7 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
     }
 
 
-    public static void registerSprites(TextureMap map){for(BlockOreMetaInverted item : INSTANCES) item.registerSprite(map);}
+    public static void registerSprites(TextureMap map){for(BlockOreMeta item : INSTANCES) item.registerSprite(map);}
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
                 for(OreType overlay : this.overlays) {
@@ -100,7 +94,7 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
 
     @SideOnly(Side.CLIENT)
     public static void registerModels() {
-        for (BlockOreMetaInverted block : INSTANCES) {
+        for (BlockOreMeta block : INSTANCES) {
             for (int meta = 0; meta <= block.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
                         Item.getItemFromBlock(block),
@@ -123,7 +117,7 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
 
 
     public void registerItem() {
-        ItemBlock itemBlock = new BlockOreMetaInverted.MetaBlockOreItem(this);
+        ItemBlock itemBlock = new BlockOreMeta.MetaBlockOreItem(this);
         itemBlock.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
         if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
@@ -163,7 +157,7 @@ public class BlockOreMetaInverted extends BlockMeta implements IDynamicModels, I
     }
 
     public class MetaBlockOreItem extends ItemBlock implements IModelRegister {
-        BlockOreMetaInverted metaBlock = (BlockOreMetaInverted) this.block;
+        BlockOreMeta metaBlock = (BlockOreMeta) this.block;
 
         public MetaBlockOreItem(Block block) {
             super(block);

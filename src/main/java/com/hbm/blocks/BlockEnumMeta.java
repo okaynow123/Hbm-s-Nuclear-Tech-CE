@@ -24,7 +24,7 @@ public abstract class BlockEnumMeta extends BlockMeta {
     public Class<? extends Enum> blockEnum;
 
     public BlockEnumMeta(Material mat, SoundType type, String registryName, Class<? extends Enum> blockEnum, boolean multiName, boolean multiTexture) {
-        super(mat, type, registryName, blockEnum.getEnumConstants().length );
+        super(mat, type, registryName, blockEnum.getEnumConstants().length);
         this.blockEnum = blockEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
@@ -47,7 +47,7 @@ public abstract class BlockEnumMeta extends BlockMeta {
     }
 
     public String enumToTranslationKey(Enum value) {
-        return this.getTranslationKey() + "." +  value.name().toLowerCase(Locale.US);
+        return this.getTranslationKey() + "." + value.name().toLowerCase(Locale.US);
     }
 
     public class EnumMetaBlockItem extends MetaBlockItem {

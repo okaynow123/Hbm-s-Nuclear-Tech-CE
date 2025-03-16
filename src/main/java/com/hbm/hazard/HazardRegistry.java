@@ -284,13 +284,6 @@ public class HazardRegistry {
 		HazardSystem.register(block_schrabidium_cluster, makeData(RADIATION, 70F));
 		HazardSystem.register(block_euphemium_cluster, makeData(RADIATION, 50F));
 
-		//Ill keep this annotation for reference later ig
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 0), makeData(RADIATION, 0.5F));
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 1), makeData(RADIATION, 1F));
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 2), makeData(RADIATION, 2.5F));
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 3), makeData(RADIATION, 4F));
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 4), makeData(RADIATION, 5F));
-//		HazardSystem.register(ItemStackUtil.itemStackFrom(ModBlocks.sellafield, 1, 5), makeData(RADIATION, 10F));
 
 		//Amazing naming scheme (fucking why)
 		HazardSystem.register(ItemStackUtil.itemStackFrom(sellafield_0), makeData(RADIATION, 5.0F));
@@ -332,6 +325,7 @@ public class HazardRegistry {
 		HazardSystem.register(rod_zirnox_les_fuel_depleted, makeData().addEntry(RADIATION, wst * rod_dual * 15F).addEntry(BLINDING, 20F));
 		HazardSystem.register(rod_zirnox_tritium, makeData(RADIATION, 0.001F * rod_dual));
 		HazardSystem.register(rod_zirnox_zfb_mox_depleted, makeData(RADIATION, wst * rod_dual * 5F));
+
 
 		//TODO: add Oredict to Waste
 		HazardSystem.register(waste_uranium_legacy, makeData().addEntry( RADIATION, wst * billet * 10F));

@@ -12,36 +12,30 @@ import static com.hbm.render.block.BlockBakeFrame.BlockForm.*;
 
 
 /**
- * Flexible system for baking Block models, supporting all possible configurations
+ * Flexible system for baking Block models, supporting all possible configurations (that matter)
+ * All you need to do is provide its form (consult the enum on the bottom of the class), and string names of textures
+ * from there it will be handled for you.
  *
  * @author MrNorwood
  */
 public class BlockBakeFrame {
 
 
-    public static BlockBakeFrame[] simpleModelArray(String... texture) {
-        BlockBakeFrame[] frames = new BlockBakeFrame[texture.length];
-        for(int i = 0;   i < texture.length; i++){
-           frames[i] = new BlockBakeFrame(texture[i]);
-        }
-        return frames;
-    }
-
-
     public static final String ROOT_PATH = "blocks/";
     public final String[] textureArray;
     public final BlockForm blockForm;
 
+    //Quick method for making an array of single texture ALL form blocks
     public BlockBakeFrame(String texture) {
         this.textureArray = new String[]{texture};
         this.blockForm = ALL;
     }
 
-
     public BlockBakeFrame(String topTexture, String sideTexture) {
         this.textureArray = new String[]{topTexture, sideTexture};
         this.blockForm = PILLAR;
     }
+
 
     public BlockBakeFrame(String topTexture, String sideTexture, String bottomTexture) {
         this.textureArray = new String[]{topTexture, sideTexture, bottomTexture};
@@ -66,6 +60,14 @@ public class BlockBakeFrame {
         this.blockForm = form;
     }
 
+    public static BlockBakeFrame[] simpleModelArray(String... texture) {
+        BlockBakeFrame[] frames = new BlockBakeFrame[texture.length];
+        for (int i = 0; i < texture.length; i++) {
+            frames[i] = new BlockBakeFrame(texture[i]);
+        }
+        return frames;
+    }
+
     public void registerBlockTextures(TextureMap map) {
         for (String texture : this.textureArray) {
             ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture);
@@ -77,9 +79,10 @@ public class BlockBakeFrame {
         return new
                 ResourceLocation(RefStrings.MODID, ROOT_PATH + textureArray[index]);
     }
-     public String getBaseModel(){
+
+    public String getBaseModel() {
         return this.blockForm.baseBakedModel;
-     }
+    }
 
     public void putTextures(ImmutableMap.Builder<String, String> textureMap) {
         String[] wraps = this.blockForm.textureWrap;
@@ -95,12 +98,12 @@ public class BlockBakeFrame {
         PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
         FULL_CUSTOM("minecraft:block/cube_all", 6, new String[]{
-                "top",     // Top face
-                "bottom",  // Bottom face
-                "north",   // North face
-                "south",   // South face
-                "west",    // West face
-                "east"     // East face
+                "top",
+                "bottom",
+                "north",
+                "south",
+                "west",
+                "east"
         });
 
         public final String baseBakedModel;

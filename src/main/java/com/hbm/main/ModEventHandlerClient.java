@@ -5,8 +5,7 @@ import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.generic.BlockOreMetaInverted;
-import com.hbm.blocks.generic.BlockSellafield;
+import com.hbm.blocks.generic.BlockOreMeta;
 import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
@@ -29,6 +28,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIArmorTable;
 import com.hbm.items.IModelRegister;
+import com.hbm.items.ItemEnumMulti;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.ItemArmorMod;
@@ -472,17 +472,18 @@ public class ModEventHandlerClient {
         }
 
 
-        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels();
-        ((ItemBreedingRod) ModItems.rod).registerModels(event);
-        ((ItemBreedingRod) ModItems.rod_dual).registerModels(event);
-        ((ItemBreedingRod) ModItems.rod_quad).registerModels(event);
-        ((ItemVOTVdrive) ModItems.full_drive).registerModels();
+        ItemEnumMulti.registerModels();
+//        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels();
+//        ((ItemBreedingRod) ModItems.rod).registerModels();
+//        ((ItemBreedingRod) ModItems.rod_dual).registerModels();
+//        ((ItemBreedingRod) ModItems.rod_quad).registerModels();
+//        ((ItemVOTVdrive) ModItems.full_drive).registerModels();
 
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
-        BlockOreMetaInverted.registerModels();
+        BlockOreMeta.registerModels();
         BlockSellafieldSlaked.registerModels();
         BlockMeta.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
@@ -581,7 +582,7 @@ public class ModEventHandlerClient {
         ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
-        BlockOreMetaInverted.bakeModels(evt);
+        BlockOreMeta.bakeModels(evt);
         BlockMeta.bakeModels(evt);
         BlockSellafieldSlaked.bakeModels(evt);
 
@@ -808,9 +809,9 @@ public class ModEventHandlerClient {
         TextureMap map = evt.getMap();
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
-        ItemAutogen.registerSprites(map);
-        BlockOreMetaInverted.registerSprites(map);
+        BlockOreMeta.registerSprites(map);
         BlockMeta.registerSprites(map);
+        ItemAutogen.registerSprites(map);
         BlockSellafieldSlaked.registerSprites(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));

@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.hbm.items.ItemEnums.*;
+
 public class ModItems {
 	
 	public static final List<Item> ALL_ITEMS = new ArrayList<Item>();
@@ -1302,8 +1304,9 @@ public class ModItems {
 
 	public static final Item rod_zirnox_empty = new ItemBase("rod_zirnox_empty").setMaxStackSize(64).setCreativeTab(MainRegistry.controlTab);
 	public static final Item rod_zirnox_tritium = new ItemBase("rod_zirnox_tritium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
-	public static final ItemEnumMulti rod_zirnox = (ItemEnumMulti) new ItemZirnoxRod().setTranslationKey("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
-	public static final ItemEnumMulti full_drive = (ItemEnumMulti) new ItemVOTVdrive().setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item rod_zirnox =  new ItemZirnoxRod("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
+	public static final Item full_drive =  new ItemVOTVdrive("hard_drive_full").setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
 
 	//TODO: Make this metaitems
 	// for now, let's just make it work before making it metaitems..
@@ -1347,9 +1350,9 @@ public class ModItems {
 	// because they all fucking need to be change in all recipes. Without the "_new" the game WILL crash because of the same registry names.
 	// TODO: Norwood, if you're reading this, remind me to clean this shithole below
 
-	public static final Item rod = new ItemBreedingRod().setTranslationKey("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_dual = new ItemBreedingRod().setTranslationKey("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_quad = new ItemBreedingRod().setTranslationKey("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod = new ItemBreedingRod("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_dual = new ItemBreedingRod("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_quad = new ItemBreedingRod("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
 
 	public static final Item rod_u233 = new ItemBase( "rod_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_u233 = new ItemBase( "rod_dual_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
@@ -1540,6 +1543,7 @@ public class ModItems {
 	public static final Item bedrock_ore = new ItemBedrockOreNew("bedrock_ore_new").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bedrock_ore_base = new ItemBedrockOreBase("bedrock_ore_base").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bedrock_ore_fragment = new ItemAutogen(MaterialShapes.FRAGMENT, "bedrock_ore_fragment").aot(Mats.MAT_BISMUTH, "bedrock_ore_fragment_bismuth").setCreativeTab(MainRegistry.partsTab);
+	public static final Item chunk_ore = new ItemEnumMulti("chunk_ore", EnumChunkType.class, true, true ).setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item neutron_reflector = new ItemBase("neutron_reflector").setCreativeTab(MainRegistry.partsTab);
 	public static final Item rtg_unit = new ItemBase("rtg_unit").setCreativeTab(MainRegistry.partsTab);
@@ -1609,7 +1613,10 @@ public class ModItems {
 	public static final Item solid_fuel_presto = new ItemFuel("solid_fuel_presto", 6400).setCreativeTab(MainRegistry.partsTab);
 	public static final Item solid_fuel_presto_triplet = new ItemFuel("solid_fuel_presto_triplet", 19200).setCreativeTab(MainRegistry.partsTab);
 	public static final Item rocket_fuel = new ItemFuel("rocket_fuel", 6400).setCreativeTab(MainRegistry.partsTab);
+	@Deprecated
 	public static final Item briquette_lignite = new ItemFuelHazard("briquette_lignite", 1600, false).addCoal(3).toItem().setCreativeTab(MainRegistry.partsTab);
+	public static final Item briquette = new ItemEnumMulti("briquette", EnumBriquetteType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+
 	public static final Item coke = new ItemFuelHazard("coke", 3200, false).addCoal(4).toItem().setCreativeTab(MainRegistry.partsTab);
 	public static final Item lignite = new ItemFuelHazard("lignite", 1200, false).addCoal(1).toItem().setCreativeTab(MainRegistry.partsTab);
 	
