@@ -63,6 +63,12 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
     }
 
+    public BlockMeta(Material mat, SoundType type, String s, String... simpleModelTextures) {
+        super(mat, type, s);
+        this.blockFrames = BlockBakeFrame.simpleModelArray(simpleModelTextures);
+        META_COUNT = (short) blockFrames.length;
+        INSTANCES.add(this);
+    }
 
     public BlockMeta(Material m, String s) {
         super(m, s);
