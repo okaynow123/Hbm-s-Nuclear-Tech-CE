@@ -68,8 +68,8 @@ public class BlockCluster extends BlockOre implements IDrillInteraction {
 			return ModItems.crystal_aluminium;
 		if(this == ModBlocks.cluster_copper)
 			return ModItems.crystal_copper;
-		if(this == ModBlocks.basalt_gem)
-			return ModItems.gem_volcanic;
+//		if(this == ModBlocks.basalt_gem)
+//			return ModItems.gem_volcanic;
 
 		return null;
 	}

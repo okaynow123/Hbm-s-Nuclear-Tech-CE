@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
+//TODO: BANISH THIS DOGSHIT
 public class BlockNTMOre extends BlockOre implements IItemHazard {
 
     ItemHazardModule module;
@@ -62,13 +63,13 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        if (this == ModBlocks.ore_asbestos || this == ModBlocks.ore_gneiss_asbestos || this == ModBlocks.basalt_asbestos) {
+        if (this == ModBlocks.ore_asbestos || this == ModBlocks.ore_gneiss_asbestos) {
             return ModItems.ingot_asbestos;
         }
         if (this == ModBlocks.ore_nether_fire) {
             return rand.nextInt(10) == 0 ? ModItems.ingot_phosphorus : ModItems.powder_fire;
         }
-        if (this == ModBlocks.ore_sulfur || this == ModBlocks.ore_nether_sulfur || this == ModBlocks.ore_meteor_sulfur || this == ModBlocks.basalt_sulfur) {
+        if (this == ModBlocks.ore_sulfur || this == ModBlocks.ore_nether_sulfur || this == ModBlocks.ore_meteor_sulfur) {
             return ModItems.sulfur;
         }
         if (this == ModBlocks.ore_niter) {
@@ -204,7 +205,7 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
 
     @Override
     public int quantityDropped(IBlockState state, int fortune, Random rand) {
-        if (this == ModBlocks.ore_sulfur || this == ModBlocks.ore_nether_sulfur || this == ModBlocks.ore_meteor_sulfur || this == ModBlocks.basalt_sulfur) {
+        if (this == ModBlocks.ore_sulfur || this == ModBlocks.ore_nether_sulfur || this == ModBlocks.ore_meteor_sulfur) {
             return 2 + rand.nextInt(3) * fortune;
         }
         if (this == ModBlocks.ore_niter) {

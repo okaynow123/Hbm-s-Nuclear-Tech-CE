@@ -73,8 +73,8 @@ public class BlockOutgas extends BlockNTMOre implements IItemHazard {
             if (this == ModBlocks.ore_asbestos || this == ModBlocks.ore_gneiss_asbestos ||
                     this == ModBlocks.block_asbestos || this == ModBlocks.deco_asbestos ||
                     this == ModBlocks.brick_asbestos || this == ModBlocks.tile_lab ||
-                    this == ModBlocks.tile_lab_cracked || this == ModBlocks.tile_lab_broken ||
-                    this == ModBlocks.basalt_asbestos) {
+                    this == ModBlocks.tile_lab_cracked || this == ModBlocks.tile_lab_broken
+                    ) {
                 return ModBlocks.gas_asbestos;
             }
         }
