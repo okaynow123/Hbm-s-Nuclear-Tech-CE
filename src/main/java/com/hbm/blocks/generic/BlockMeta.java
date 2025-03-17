@@ -51,6 +51,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
 
+
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
         super(mat, type, s);
         META_COUNT = metaCount;

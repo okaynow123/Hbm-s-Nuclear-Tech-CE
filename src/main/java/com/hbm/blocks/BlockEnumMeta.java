@@ -6,6 +6,7 @@ import com.hbm.util.EnumUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -23,6 +24,10 @@ public abstract class BlockEnumMeta extends BlockMeta {
     final private boolean multiTexture;
     public Class<? extends Enum> blockEnum;
 
+    public static final <E extends Enum<E>> IBlockState stateFromEnum(Block block, E anEnum) {
+        return block.getDefaultState().withProperty(META, anEnum.ordinal());
+    }
+
     public BlockEnumMeta(Material mat, SoundType type, String registryName, Class<? extends Enum> blockEnum, boolean multiName, boolean multiTexture) {
         super(mat, type, registryName, blockEnum.getEnumConstants().length);
         this.blockEnum = blockEnum;
@@ -31,7 +36,7 @@ public abstract class BlockEnumMeta extends BlockMeta {
         this.blockFrames = assignBlockFrames(registryName);
     }
 
-    protected BlockBakeFrame[] assignBlockFrames(String registryName){
+    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
@@ -39,7 +44,6 @@ public abstract class BlockEnumMeta extends BlockMeta {
                 .map(texture -> new BlockBakeFrame(texture))
                 .toArray(BlockBakeFrame[]::new);
     }
-
 
 
     @Override

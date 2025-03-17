@@ -1,5 +1,7 @@
 package com.hbm.blocks.fluid;
 
+import com.hbm.blocks.BlockEnumMeta;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
@@ -28,6 +30,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
+
+import static com.hbm.blocks.BlockEnumMeta.*;
+import static com.hbm.blocks.BlockEnums.*;
+import static com.hbm.blocks.BlockEnums.EnumBasaltOreType.*;
+import static com.hbm.blocks.ModBlocks.basalt_ore;
 
 public class VolcanicBlock extends BlockFluidClassic {
 
@@ -106,13 +113,14 @@ public class VolcanicBlock extends BlockFluidClassic {
 			boolean canMakeGem = lavaCount + basaltCount == 6 && lavaCount < 3 && (above == ModBlocks.basalt || above == ModBlocks.volcanic_lava_block);
 			
 			if(r < 2)
-				world.setBlockState(pos, ModBlocks.basalt_sulfur.getDefaultState());
+				world.setBlockState(pos, stateFromEnum(basalt_ore, SULFUR));
+
 			else if(r == 2)
-				world.setBlockState(pos, ModBlocks.basalt_asbestos.getDefaultState());
+				world.setBlockState(pos, stateFromEnum(basalt_ore, ASBESTOS));
 			else if(r == 3)
-				world.setBlockState(pos, ModBlocks.basalt_fluorite.getDefaultState());
+				world.setBlockState(pos, stateFromEnum(basalt_ore, FLUORITE));
 			else if(r < 14 && canMakeGem)
-				world.setBlockState(pos, ModBlocks.basalt_gem.getDefaultState());
+				world.setBlockState(pos, stateFromEnum(basalt_ore, GEM));
 			else
 				world.setBlockState(pos, ModBlocks.basalt.getDefaultState());
 		}
