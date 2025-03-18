@@ -67,7 +67,8 @@ public class OreEnumUtil {
         METEORITE_TREASURE(METEOR_TREASURE, BASE1_RAND_3),
         COBALT(new ItemStack(ModItems.fragment_cobalt), (fortune, rand) -> 4 + rand.nextInt(6)),
         COBALT_NETHER(new ItemStack(ModItems.fragment_cobalt), (fortune, rand) -> 5 + rand.nextInt(8)),
-        PHOSPHORUS_NETHER((rand) -> (rand.nextInt(10) == 0 ? new ItemStack(ModItems.ingot_phosphorus) : new ItemStack(ModItems.powder_fire)), VANILLA_FORTUNE )
+        PHOSPHORUS_NETHER((rand) -> (rand.nextInt(10) == 0 ? new ItemStack(ModItems.ingot_phosphorus) : new ItemStack(ModItems.powder_fire)), VANILLA_FORTUNE ),
+        LIGNITE(new ItemStack(ModItems.lignite), VANILLA_FORTUNE)
         ;
 
 
