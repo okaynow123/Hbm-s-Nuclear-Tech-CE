@@ -116,5 +116,6 @@ public class MachineAssembler extends BlockDummyable {
 		this.makeExtra(world, x - rot.offsetX * 1,					y,	z - rot.offsetZ * 1);
 		this.makeExtra(world, x + rot.offsetX * 2 - dir.offsetX,	y,	z + rot.offsetZ * 2 - dir.offsetZ);
 		this.makeExtra(world, x - rot.offsetX * 1 - dir.offsetX,	y,	z - rot.offsetZ * 1 - dir.offsetZ);
+
 	}
 }
