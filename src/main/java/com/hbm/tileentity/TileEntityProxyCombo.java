@@ -22,6 +22,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	boolean inventory;
 	boolean power;
 	boolean fluid;
+	public boolean moltenMetal;
 
 	boolean heat;
 
@@ -41,6 +42,31 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		this.fluid = fluid;
 		this.heat = heat;
 	}
+
+
+	public TileEntityProxyCombo inventory() {
+		this.inventory = true;
+		return this;
+	}
+
+	public TileEntityProxyCombo power() {
+		this.power = true;
+		return this;
+	}
+	public TileEntityProxyCombo moltenMetal() {
+		this.moltenMetal = true;
+		return this;
+	}
+	public TileEntityProxyCombo fluid() {
+		this.fluid = true;
+		return this;
+	}
+
+	public TileEntityProxyCombo heatSource() {
+		this.heat = true;
+		return this;
+	}
+
 
 	// fewer messy recursive operations
 	public TileEntity getTile() {
