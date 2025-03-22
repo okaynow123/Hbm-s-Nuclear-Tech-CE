@@ -11,6 +11,12 @@ import java.util.function.BiFunction;
 
 import static com.hbm.items.ModItems.*;
 
+
+/**
+ * Simple function driven enum that allows for easy and flexible ore block drops.
+ * Simply pass Enum to your class and use both quantity and drop function to retrieve relevant data
+ * @author MrNorwood
+ */
 public class OreEnumUtil {
 
     public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) * fortune;
