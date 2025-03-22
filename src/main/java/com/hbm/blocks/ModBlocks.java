@@ -608,14 +608,7 @@ public class ModBlocks {
 	public static final Block basalt_polished = new BlockBase(Material.ROCK, "basalt_polished").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block basalt_tiles = new BlockBase(Material.ROCK, "basalt_tiles").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 
-	public static final Block block_cap_nuka = new BlockCap(Material.IRON, "block_cap_nuka").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_quantum = new BlockCap(Material.IRON, "block_cap_quantum").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_rad = new BlockCap(Material.IRON, "block_cap_rad").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_sparkle = new BlockCap(Material.IRON, "block_cap_sparkle").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_korl = new BlockCap(Material.IRON, "block_cap_korl").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_fritz = new BlockCap(Material.IRON, "block_cap_fritz").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_sunset = new BlockCap(Material.IRON, "block_cap_sunset").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
-	public static final Block block_cap_star = new BlockCap(Material.IRON, "block_cap_star").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
+	public static final Block block_cap = new BlockCap("block_cap").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
 
 	//Bombs
 	public static final Block nuke_gadget = new NukeGadget(Material.IRON, "nuke_gadget").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);
