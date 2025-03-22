@@ -14,9 +14,9 @@ import static com.hbm.items.ModItems.*;
 
 public class OreEnumUtil {
 
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) * fortune;
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND2_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(2) * fortune;
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND2_FORTUNE = (state,fortune, rand) -> 1 + rand.nextInt(2) * fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) +    rand.nextInt(fortune);
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND2_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(2) +    rand.nextInt(fortune);
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND2_FORTUNE = (state,fortune, rand) -> 1 + rand.nextInt(2) +     rand.nextInt(fortune);
     public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND_3 = (state,fortune, rand) -> 1 + rand.nextInt(3);
     public static final TriFunction<IBlockState, Integer, Random, Integer> CONST1 = (state, fortune, rand) -> 1;
     public static final TriFunction<IBlockState, Integer, Random, Integer> VANILLA_FORTUNE = (state, fortune, rand) -> 1 + rand.nextInt(fortune + 1);
@@ -67,7 +67,7 @@ public class OreEnumUtil {
         DIAMOND(new ItemStack(Items.DIAMOND), VANILLA_FORTUNE),
         EMERALD(new ItemStack(Items.EMERALD), VANILLA_FORTUNE),
 
-        ASBESTOS(new ItemStack(ingot_asbestos), CONST1),
+        ASBESTOS(new ItemStack(ingot_asbestos), VANILLA_FORTUNE),
         SULFUR(new ItemStack(sulfur), BASE2_RAND3_FORTUNE),
         NITER(new ItemStack(niter), BASE1_RAND2_FORTUNE),
         FLUORITE(new ItemStack(fluorite), BASE2_RAND3_FORTUNE),
@@ -85,7 +85,7 @@ public class OreEnumUtil {
         WASTE_TRINITE(new ItemStack(trinitite), VANILLA_FORTUNE),
         ZIRCON(new ItemStack(nugget_zirconium), BASE2_RAND2_FORTUNE),
         NEODYMIUM(new ItemStack(fragment_neodymium), BASE2_RAND2_FORTUNE),
-        NITAN(new ItemStack(powder_nitan_mix), (state, fortune, rand) -> 1),
+        NITAN(new ItemStack(powder_nitan_mix), CONST1,
 
 
 
