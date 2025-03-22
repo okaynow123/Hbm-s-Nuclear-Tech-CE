@@ -85,7 +85,7 @@ public class OreEnumUtil {
         WASTE_TRINITE(new ItemStack(trinitite), VANILLA_FORTUNE),
         ZIRCON(new ItemStack(nugget_zirconium), BASE2_RAND2_FORTUNE),
         NEODYMIUM(new ItemStack(fragment_neodymium), BASE2_RAND2_FORTUNE),
-        NITAN(new ItemStack(powder_nitan_mix), CONST1,
+        NITAN(new ItemStack(powder_nitan_mix), CONST1),
 
 
 
