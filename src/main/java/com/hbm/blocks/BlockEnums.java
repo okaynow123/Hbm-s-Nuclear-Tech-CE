@@ -86,5 +86,30 @@ public class BlockEnums {
         }
     }
 
+	public static enum EnumBlockCapType {
+		NUKA (new ItemStack(ModItems.cap_nuka)),
+		QUANTUM (new ItemStack(ModItems.cap_quantum)),
+		RAD (new ItemStack(ModItems.cap_rad)),
+		SPARKLE (new ItemStack(ModItems.cap_sparkle)),
+		KORL (new ItemStack(ModItems.cap_korl)),
+		FRITZ (new ItemStack(ModItems.cap_fritz)),
+		SUNSET (new ItemStack(ModItems.cap_sunset)),
+		STAR (new ItemStack(ModItems.cap_star));
+
+		public final ItemStack drop;
+
+		public ItemStack getDrop() {
+			return drop;
+		}
+
+		public int getDropCount(int rand){
+			return 128;
+		}
+
+		EnumBlockCapType(ItemStack drop) {
+			this.drop = drop;
+		}
+	}
+
 
 }
