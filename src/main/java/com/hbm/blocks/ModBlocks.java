@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hbm.blocks.BlockEnums.OreType;
+import static com.hbm.blocks.OreEnumUtil.*;
 
 public class ModBlocks {
 
@@ -205,7 +206,7 @@ public class ModBlocks {
 	//Ores
 	public static final Block ore_uranium = new BlockOutgas(true, 20, true, "ore_uranium").addRadiation(ItemHazard.ore * ItemHazard.u).toBlock().setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block ore_uranium_scorched = new BlockOutgas(true, 15, true, "ore_uranium_scorched").addRadiation(0.5F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_schrabidium = new BlockNTMOre("ore_schrabidium", null, 3, 300).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 
 	public static final Block ore_sellafield_emerald = new BlockSellafieldOre("ore_sellafield_emerald", OreType.EMERALD);
 	public static final Block ore_sellafield_uranium_scorched = new BlockSellafieldOre("ore_sellafield_uranium_scorched", OreType.URANIUM);
@@ -216,42 +217,42 @@ public class ModBlocks {
 
 	public static final Block ore_thorium = new BlockNTMOre("ore_thorium", 2).addRadiation(ItemHazard.ore * ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_titanium = new BlockNTMOre("ore_titanium", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_sulfur = new BlockNTMOre("ore_sulfur", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_niter = new BlockNTMOre("ore_niter", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_sulfur = new BlockNTMOre("ore_sulfur", OreEnum.SULFUR, 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_niter = new BlockNTMOre("ore_niter", OreEnum.NITER, 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_copper = new BlockNTMOre("ore_copper", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_tungsten = new BlockNTMOre("ore_tungsten", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_aluminium = new BlockNTMOre("ore_aluminium", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_fluorite = new BlockNTMOre("ore_fluorite", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_fluorite = new BlockNTMOre("ore_fluorite", OreEnum.FLUORITE,  1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_lead = new BlockNTMOre("ore_lead", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_beryllium = new BlockNTMOre("ore_beryllium", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block ore_lignite = new BlockNTMOre("ore_lignite", 0).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block ore_asbestos = new BlockNTMOre("ore_asbestos", 1, 6).addAsbestos(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block ore_rare = new BlockNTMOre("ore_rare", 2, 12).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_lignite = new BlockNTMOre("ore_lignite", OreEnum.LIGNITE, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
+	public static final Block ore_asbestos = new BlockNTMOre("ore_asbestos", OreEnum.ASBESTOS, 1, 6).addAsbestos(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
+	public static final Block ore_rare = new BlockNTMOre("ore_rare", OreEnum.RARE_EARTHS, 2, 12).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block ore_coal_oil = new BlockCoalOil("ore_coal_oil").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
 	public static final Block ore_coal_oil_burning = new BlockCoalBurning("ore_coal_oil_burning").setCreativeTab(MainRegistry.resourceTab).setLightLevel(10F/15F).setHardness(5.0F).setResistance(15.0F);
 
-	public static final Block cluster_iron = new BlockCluster("cluster_iron").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
-	public static final Block cluster_titanium = new BlockCluster("cluster_titanium").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
-	public static final Block cluster_aluminium = new BlockCluster("cluster_aluminium").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
-	public static final Block cluster_copper = new BlockCluster("cluster_copper").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
+	public static final Block cluster_iron = new BlockCluster("cluster_iron", OreEnum.CLUSTER_IRON).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
+	public static final Block cluster_titanium = new BlockCluster("cluster_titanium", OreEnum.CLUSTER_TITANIUM).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
+	public static final Block cluster_aluminium = new BlockCluster("cluster_aluminium", OreEnum.CLUSTER_ALUMINIUM).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
+	public static final Block cluster_copper = new BlockCluster("cluster_copper", OreEnum.CLUSTER_COPPER).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(35.0F);
 
-	public static final Block ore_cobalt = new BlockNTMOre("ore_cobalt", 3, 15).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_cinnebar = new BlockNTMOre("ore_cinnebar", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_coltan = new BlockNTMOre("ore_coltan", 3, 20).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(10.0F);
+	public static final Block ore_cobalt = new BlockNTMOre("ore_cobalt", OreEnum.COBALT, 3, 15).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_cinnebar = new BlockNTMOre("ore_cinnabar", OreEnum.CINNEBAR, 1).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_coltan = new BlockNTMOre("ore_coltan", OreEnum.COLTAN, 3, 20).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(10.0F);
 
-	public static final Block ore_reiium = new BlockNTMOre("ore_reiium", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_weidanium = new BlockNTMOre("ore_weidanium", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_australium = new BlockNTMOre("ore_australium", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_verticium = new BlockNTMOre("ore_verticium", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_unobtainium = new BlockNTMOre("ore_unobtainium", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_daffergon = new BlockNTMOre("ore_daffergon", 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_reiium = new BlockNTMOre("ore_reiium", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_weidanium = new BlockNTMOre("ore_weidanium", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_australium = new BlockNTMOre("ore_australium", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_verticium = new BlockNTMOre("ore_verticium", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_unobtainium = new BlockNTMOre("ore_unobtainium", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_daffergon = new BlockNTMOre("ore_daffergon", null, 4, 100).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block stone_depth = new BlockDepth("stone_depth").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block ore_depth_cinnebar = new BlockDepthOre("ore_depth_cinnebar").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block ore_depth_zirconium = new BlockDepthOre("ore_depth_zirconium").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block ore_depth_borax = new BlockDepthOre("ore_depth_borax").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block cluster_depth_iron = new BlockDepthOre("cluster_depth_iron").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block cluster_depth_titanium = new BlockDepthOre("cluster_depth_titanium").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block cluster_depth_tungsten = new BlockDepthOre("cluster_depth_tungsten").setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_depth_cinnebar = new BlockDepthOre("ore_depth_cinnebar", OreEnum.CINNEBAR).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_depth_zirconium = new BlockDepthOre("ore_depth_zirconium", OreEnum.ZIRCON).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_depth_borax = new BlockDepthOre("ore_depth_borax", null).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block cluster_depth_iron = new BlockDepthOre("cluster_depth_iron", OreEnum.CLUSTER_IRON).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block cluster_depth_titanium = new BlockDepthOre("cluster_depth_titanium", OreEnum.CLUSTER_TITANIUM).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block cluster_depth_tungsten = new BlockDepthOre("cluster_depth_tungsten", OreEnum.CLUSTER_TUNGSTEN).setCreativeTab(MainRegistry.resourceTab);
 
 	public static final Block ore_bedrock_coltan = new BlockBedrockOre("ore_bedrock_coltan").setCreativeTab(MainRegistry.resourceTab).setBlockUnbreakable().setResistance(3_600_000);
 	public static final Block ore_bedrock_oil = new BlockBase(Material.ROCK, "ore_bedrock_oil").setCreativeTab(MainRegistry.resourceTab).setBlockUnbreakable().setResistance(3_600_000);
@@ -267,7 +268,7 @@ public class ModBlocks {
 	public static final Block ore_gneiss_uranium = new BlockOutgas(true, 20, true, "ore_gneiss_uranium").addRadiation(ItemHazard.ore * ItemHazard.u).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_uranium_scorched = new BlockOutgas(true, 20, true, "ore_gneiss_uranium_scorched").addRadiation(1.0F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_copper = new BlockNTMOre("ore_gneiss_copper", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block ore_gneiss_asbestos = new BlockNTMOre("ore_gneiss_asbestos", 2).addAsbestos(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block ore_gneiss_asbestos = new BlockNTMOre("ore_gneiss_asbestos", OreEnum.ASBESTOS, 2).addAsbestos(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_lithium = new BlockNTMOre("ore_gneiss_lithium", 0).addHydroReactivity().toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_schrabidium = new BlockNTMOre("ore_gneiss_schrabidium", 3).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_rare = new BlockNTMOre("ore_gneiss_rare", 3).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
@@ -279,31 +280,31 @@ public class ModBlocks {
 	public static final Block ore_nether_smoldering = new BlockSmolder(Material.ROCK, "ore_nether_smoldering").setCreativeTab(MainRegistry.resourceTab).setLightLevel(1F).setHardness(0.4F).setResistance(10.0F);
 	public static final Block ore_nether_cobalt = new BlockNTMOre("ore_nether_cobalt", 3).setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
 	public static final Block ore_nether_tungsten = new BlockNTMOre("ore_nether_tungsten", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
-	public static final Block ore_nether_sulfur = new BlockNTMOre("ore_nether_sulfur", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
-	public static final Block ore_nether_fire = new BlockNTMOre("ore_nether_fire", 1).addFire(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
+	public static final Block ore_nether_sulfur = new BlockNTMOre("ore_nether_sulfur", OreEnum.SULFUR, 1).setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
+	public static final Block ore_nether_fire = new BlockNTMOre("ore_nether_fire", OreEnum.PHOSPHORUS_NETHER, 1).addFire(5).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
 	public static final Block ore_nether_uranium = new BlockOutgas(true, 20, true, "ore_nether_uranium").addRadiation(ItemHazard.ore * ItemHazard.u).toBlock().setHardness(0.4F).setResistance(10.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block ore_nether_uranium_scorched = new BlockOutgas(true, 20, true, "ore_nether_uranium_scorched").addRadiation(2.0F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
 	public static final Block ore_nether_plutonium = new BlockNTMOre("ore_nether_plutonium", 3).addRadiation(ItemHazard.pu).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(0.4F).setResistance(10.0F);
 	public static final Block ore_nether_schrabidium = new BlockNTMOre("ore_nether_schrabidium", 3).addRadiation(ItemHazard.ore * ItemHazard.sa326).addBlinding().toBlock().setHardness(15.0F).setResistance(600.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block stone_depth_nether = new BlockDepth("stone_depth_nether").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block ore_depth_nether_neodymium = new BlockDepthOre("ore_depth_nether_neodymium").setCreativeTab(MainRegistry.resourceTab);
-	public static final Block ore_depth_nether_nitan = new BlockDepthOre("ore_depth_nether_nitan").setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_depth_nether_neodymium = new BlockDepthOre("ore_depth_nether_neodymium", OreEnum.NEODYMIUM).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_depth_nether_nitan = new BlockDepthOre("ore_depth_nether_nitan", OreEnum.NITAN).setCreativeTab(MainRegistry.resourceTab);
 
-	public static final Block block_meteor = new BlockNTMOre("block_meteor", 3).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
-	public static final Block block_meteor_cobble = new BlockNTMOre("block_meteor_cobble", 2, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
-	public static final Block block_meteor_broken = new BlockNTMOre("block_meteor_broken", 1, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
+	public static final Block block_meteor = new BlockNTMOre("block_meteor", OreEnum.BLOCK_METEOR, 3).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
+	public static final Block block_meteor_cobble = new BlockNTMOre("block_meteor_cobble", OreEnum.METEORITE_FRAG, 2, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
+	public static final Block block_meteor_broken = new BlockNTMOre("block_meteor_broken", OreEnum.METEORITE_FRAG, 1, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
 	public static final Block block_meteor_molten = new BlockHazard(Material.ROCK, "block_meteor_molten").addFire(3).toBlock().setTickRandomly(true).setLightLevel(0.75F).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
-	public static final Block block_meteor_treasure = new BlockNTMOre("block_meteor_treasure", 3).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
-	public static final Block ore_meteor_uranium = new BlockNTMOre("ore_meteor_uranium", 2, 30).addRadiation(0.25F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_thorium = new BlockNTMOre("ore_meteor_thorium", 2, 30).addRadiation(ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_titanium = new BlockNTMOre("ore_meteor_titanium", 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_sulfur = new BlockNTMOre("ore_meteor_sulfur", 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_copper = new BlockNTMOre("ore_meteor_copper", 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_tungsten = new BlockNTMOre("ore_meteor_tungsten", 2, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_aluminium = new BlockNTMOre("ore_meteor_aluminium", 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_lead = new BlockNTMOre("ore_meteor_lead", 2, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_lithium = new BlockNTMOre("ore_meteor_lithium", 0, 30).addHydroReactivity().toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_meteor_starmetal = new BlockNTMOre("ore_meteor_starmetal", 3, 60).setCreativeTab(MainRegistry.resourceTab).setHardness(10.0F).setResistance(100.0F);
+	public static final Block block_meteor_treasure = new BlockNTMOre("block_meteor_treasure", OreEnum.METEORITE_TREASURE, 3).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(900.0F);
+	public static final Block ore_meteor_uranium = new BlockNTMOre("ore_meteor_uranium", null, 2, 30).addRadiation(0.25F).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_thorium = new BlockNTMOre("ore_meteor_thorium",  null, 2, 30).addRadiation(ItemHazard.th232).toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_titanium = new BlockNTMOre("ore_meteor_titanium", null, 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_sulfur = new BlockNTMOre("ore_meteor_sulfur", null, 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_copper = new BlockNTMOre("ore_meteor_copper", null, 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_tungsten = new BlockNTMOre("ore_meteor_tungsten", null, 2, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_aluminium = new BlockNTMOre("ore_meteor_aluminium", null, 1, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_lead = new BlockNTMOre("ore_meteor_lead", null, 2, 30).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_lithium = new BlockNTMOre("ore_meteor_lithium", null, 0, 30).addHydroReactivity().toBlock().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_meteor_starmetal = new BlockNTMOre("ore_meteor_starmetal", null, 3, 60).setCreativeTab(MainRegistry.resourceTab).setHardness(10.0F).setResistance(100.0F);
 
 	public static final Block meteor_polished = new BlockBase(Material.ROCK, "meteor_polished").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);
 	public static final Block meteor_brick = new BlockBase(Material.ROCK, "meteor_brick").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(900.0F);

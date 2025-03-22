@@ -1,24 +1,36 @@
 package com.hbm.blocks;
 
+import com.hbm.lib.TriFunction;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static com.hbm.items.ModItems.*;
 
+
+/**
+ * Simple function driven enum that allows for easy and flexible ore block drops.
+ * Simply pass Enum to your class and use both quantity and drop function to retrieve relevant data
+ * @author MrNorwood
+ */
 public class OreEnumUtil {
 
-    public static final BiFunction<Integer, Random, Integer> BASE2_RAND3_FORTUNE = (fortune, rand) -> 2 + rand.nextInt(3) * fortune;
-    public static final BiFunction<Integer, Random, Integer> BASE1_RAND2_FORTUNE = (fortune, rand) -> 1 + rand.nextInt(2) * fortune;
-    public static final BiFunction<Integer, Random, Integer> BASE1_RAND_3 = (fortune, rand) -> 1 + rand.nextInt(3);
-    public static final BiFunction<Integer, Random, Integer> CONST1 = (fortune, rand) -> 1;
-    public static final BiFunction<Integer, Random, Integer> VANILLA_FORTUNE = (fortune, rand) -> 1 + rand.nextInt(fortune + 1);
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) * fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND2_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(2) * fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND2_FORTUNE = (state, fortune, rand) -> 1 + rand.nextInt(2) * fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND_3 = (state, fortune, rand) -> 1 + rand.nextInt(3);
+    public static final TriFunction<IBlockState, Integer, Random, Integer> CONST1 = (state, fortune, rand) -> 1;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> VANILLA_FORTUNE = (state, fortune, rand) -> 1 + applyFortune(rand, fortune);
 
-    public static final Function<Random, ItemStack> METEOR_TREASURE = rand -> switch (rand.nextInt(35)) {
+    public static int applyFortune(Random rand, int fortune){
+        return fortune <= 0 ? 0 : rand.nextInt(fortune);
+    }
+
+    public static final BiFunction<IBlockState, Random, ItemStack> METEOR_TREASURE = (state, rand) -> switch (rand.nextInt(35)) {
         case 0 -> new ItemStack(coil_advanced_alloy);
         case 1 -> new ItemStack(plate_advanced_alloy);
         case 2 -> new ItemStack(powder_desh_mix);
@@ -64,41 +76,48 @@ public class OreEnumUtil {
         DIAMOND(new ItemStack(Items.DIAMOND), VANILLA_FORTUNE),
         EMERALD(new ItemStack(Items.EMERALD), VANILLA_FORTUNE),
 
-        ASBESTOS(new ItemStack(ingot_asbestos), CONST1),
+        ASBESTOS(new ItemStack(ingot_asbestos), VANILLA_FORTUNE),
         SULFUR(new ItemStack(sulfur), BASE2_RAND3_FORTUNE),
         NITER(new ItemStack(niter), BASE1_RAND2_FORTUNE),
         FLUORITE(new ItemStack(fluorite), BASE2_RAND3_FORTUNE),
         METEORITE_FRAG(new ItemStack(fragment_meteorite), BASE1_RAND_3),
         METEORITE_TREASURE(METEOR_TREASURE, BASE1_RAND_3),
-        COBALT(new ItemStack(fragment_cobalt), (fortune, rand) -> 4 + rand.nextInt(6)),
-        COBALT_NETHER(new ItemStack(fragment_cobalt), (fortune, rand) -> 5 + rand.nextInt(8)),
-        PHOSPHORUS_NETHER((rand) -> (rand.nextInt(10) == 0 ? new ItemStack(ingot_phosphorus) : new ItemStack(powder_fire)), VANILLA_FORTUNE),
+        COBALT(new ItemStack(fragment_cobalt), (state, fortune, rand) -> 4 + rand.nextInt(6)),
+        COBALT_NETHER(new ItemStack(fragment_cobalt), (state, fortune, rand) -> 5 + rand.nextInt(8)),
+        PHOSPHORUS_NETHER((state, rand) -> (rand.nextInt(10) == 0 ? new ItemStack(ingot_phosphorus) : new ItemStack(powder_fire)), VANILLA_FORTUNE),
         LIGNITE(new ItemStack(lignite), VANILLA_FORTUNE),
         RARE_EARTHS(new ItemStack(rare_earth_chunk), VANILLA_FORTUNE),
-        BLOCK_METEOR((rand) -> (rand.nextInt(10) == 0 ? new ItemStack(plate_dalekanium) : new ItemStack(Item.getItemFromBlock(ModBlocks.block_meteor))), VANILLA_FORTUNE),
-        CINNEBAR(new ItemStack(cinnebar), VANILLA_FORTUNE),
+        BLOCK_METEOR((state, rand) -> (rand.nextInt(10) == 0 ? new ItemStack(plate_dalekanium) : new ItemStack(Item.getItemFromBlock(ModBlocks.block_meteor))), VANILLA_FORTUNE),
+        CINNEBAR(new ItemStack(cinnebar), BASE1_RAND2_FORTUNE),
         COLTAN(new ItemStack(fragment_coltan), VANILLA_FORTUNE),
+        RAD_GEM(new ItemStack(gem_rad), VANILLA_FORTUNE),
+        WASTE_TRINITE(new ItemStack(trinitite), VANILLA_FORTUNE),
+        ZIRCON(new ItemStack(nugget_zirconium), BASE2_RAND2_FORTUNE),
+        NEODYMIUM(new ItemStack(fragment_neodymium), BASE2_RAND2_FORTUNE),
+        NITAN(new ItemStack(powder_nitan_mix), CONST1),
+
 
         CLUSTER_IRON(new ItemStack(crystal_iron), VANILLA_FORTUNE),
         CLUSTER_TITANIUM(new ItemStack(crystal_titanium), VANILLA_FORTUNE),
         CLUSTER_ALUMINIUM(new ItemStack(crystal_aluminium), VANILLA_FORTUNE),
         CLUSTER_COPPER(new ItemStack(crystal_copper), VANILLA_FORTUNE),
+        CLUSTER_TUNGSTEN(new ItemStack(crystal_tungsten), VANILLA_FORTUNE),
 
         ;
 
 
-        public final Function<Random, ItemStack> dropFunction;
-        private final BiFunction<Integer, Random, Integer> quantity;
+        public final BiFunction<IBlockState, Random, ItemStack> dropFunction;
+        public final TriFunction<IBlockState, Integer, Random, Integer> quantityFunction;
 
-        OreEnum(Function<Random, ItemStack> dropFunction, BiFunction<Integer, Random, Integer> quantityFunction) {
+        OreEnum(BiFunction<IBlockState, Random, ItemStack> dropFunction, TriFunction<IBlockState, Integer, Random, Integer> quantityFunction) {
             this.dropFunction = dropFunction;
-            this.quantity = quantityFunction;
+            this.quantityFunction = quantityFunction;
         }
 
-
-        OreEnum(ItemStack drop,  BiFunction<Integer, Random, Integer> quantity) {
-            this((rand) -> drop, quantity);
+        OreEnum(ItemStack drop, TriFunction<IBlockState, Integer, Random, Integer> quantity) {
+            this((state, rand) ->  new ItemStack(drop.getItem(), 1, drop.getMetadata()), quantity);
         }
+
     }
 
 
