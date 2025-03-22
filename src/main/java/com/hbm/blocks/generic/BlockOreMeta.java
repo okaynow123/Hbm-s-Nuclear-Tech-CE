@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.lib.RefStrings;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -30,23 +32,26 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import com.hbm.blocks.ICustomBlockItem;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
-import static com.hbm.blocks.BlockEnums.*;
+import static com.hbm.blocks.BlockEnums.OreType;
+import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
 //MrNorwood: Welp, and I made it backwards. No biggie, this is still incredibly useful
 //Overengieered it award
-public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBlockItem  {
+public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBlockItem {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    public final short META_COUNT;
-    public final  boolean showMetaInCreative;
     public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
+    public final short META_COUNT;
+    public final boolean showMetaInCreative;
     public final String baseTextureName;
     public final OreType[] overlays;
 
@@ -55,7 +60,7 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
         super(material, name);
         this.baseTextureName = baseTexture;
         this.overlays = overlays;
-        META_COUNT = (short)overlays.length;
+        META_COUNT = (short) overlays.length;
         INSTANCES.add(this);
         showMetaInCreative = true;
     }
@@ -66,30 +71,8 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
         }
     }
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, META);
-    }
-
-
-    public static void registerSprites(TextureMap map){for(BlockOreMeta item : INSTANCES) item.registerSprite(map);}
-    @SideOnly(Side.CLIENT)
-    public void registerSprite(TextureMap map) {
-                for(OreType overlay : this.overlays) {
-                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" + overlay.getName());
-                    TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+baseTextureName, "blocks/" + "ore_overlay_" + overlay);
-                    map.setTextureEntry(layeredSprite);
-                }
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(META);
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(META, meta);
+    public static void registerSprites(TextureMap map) {
+        for (BlockOreMeta item : INSTANCES) item.registerSprite(map);
     }
 
     @SideOnly(Side.CLIENT)
@@ -105,21 +88,67 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
         }
     }
 
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        Random rand = ((World) world).rand;
-        int meta = state.getValue(META);
-        OreType typeEnum = this.overlays[meta];
-        if(typeEnum.getDrop() == null)
-            return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
-
-        return Collections.singletonList(new ItemStack(typeEnum.getDrop().getItem(), typeEnum.getDropCount(rand.nextInt(fortune+1)), typeEnum.drop.getMetadata()));
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, META);
     }
 
+    @SideOnly(Side.CLIENT)
+    public void registerSprite(TextureMap map) {
+        for (OreType overlay : this.overlays) {
+            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" + overlay.getName());
+            TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/" + baseTextureName, "blocks/" + "ore_overlay_" + overlay);
+            map.setTextureEntry(layeredSprite);
+        }
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(META);
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(META, meta);
+    }
+
+//    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+//        Random rand = ((World) world).rand;
+//        int meta = state.getValue(META);
+//        OreType typeEnum = this.overlays[meta];
+//        if(typeEnum.getDrop() == null)
+//            return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
+//
+//        return Collections.singletonList(new ItemStack(typeEnum.getDrop().getItem(), typeEnum.getDropCount(rand.nextInt(fortune+1)), typeEnum.drop.getMetadata()));
+//    }
+
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+
+        OreEnum oreEnum = overlays[state.getValue(META)].oreEnum;
+        Random rand = world instanceof World ? ((World) world).rand : RANDOM;
+
+
+        int count = (oreEnum == null) ? quantityDropped(state, fortune, rand) : oreEnum.quantityFunction.apply(state, fortune, rand);
+
+        for (int i = 0; i < count; i++) {
+            ItemStack droppedItem;
+
+            if (oreEnum == null) {
+                droppedItem = new ItemStack(this.getItemDropped(state, rand, fortune), 1, this.damageDropped(state));
+            } else {
+                droppedItem = oreEnum.dropFunction.apply(state, rand);
+            }
+
+            if (droppedItem.getItem() != Items.AIR) {
+                drops.add(droppedItem);
+            }
+        }
+    }
 
     public void registerItem() {
         ItemBlock itemBlock = new BlockOreMeta.MetaBlockOreItem(this);
         itemBlock.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
-        if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
+        if (showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
     }
 
@@ -137,7 +166,7 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
             for (int meta = 0; meta <= META_COUNT - 1; meta++) {
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
                 String overlay = overlays[meta % overlays.length].getName();
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" +overlay);
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + this.getRegistryName().getPath() + "-" + "ore_overlay_" + overlay);
 
                 // Base texture
                 textureMap.put("all", spriteLoc.toString());
@@ -167,9 +196,9 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
 
         @Override
         @SideOnly(Side.CLIENT)
-        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
             if (this.isInCreativeTab(tab)) {
-                for (int i = 0; i <= metaBlock.META_COUNT-1; i++) {
+                for (int i = 0; i <= metaBlock.META_COUNT - 1; i++) {
                     list.add(new ItemStack(this, 1, i));
                 }
             }
@@ -183,14 +212,13 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
 
         @Override
         public void registerModels() {
-            for (int meta = 0; meta <= metaBlock.META_COUNT-1; meta++) {
+            for (int meta = 0; meta <= metaBlock.META_COUNT - 1; meta++) {
                 MainRegistry.logger.info("Registering model for " + this.block.getRegistryName() + " meta=" + meta);
                 ModelLoader.setCustomModelResourceLocation(this, meta,
                         new ModelResourceLocation(this.getRegistryName(), "meta=" + meta));
             }
         }
     }
-
 
 
 }

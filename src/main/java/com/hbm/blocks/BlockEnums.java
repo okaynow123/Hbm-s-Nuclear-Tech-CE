@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
+import static com.hbm.blocks.OreEnumUtil.*;
+
 public class BlockEnums {
 
 	public static enum EnumStoneType {
@@ -41,33 +43,24 @@ public class BlockEnums {
 	}
 
 	public static enum OreType {
-		EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
-		DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
-		RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x)),
-		URANIUM_SCORCEHD ("uranium_scorched", null, null),
-		URANIUM ("uranium", null, null),
-		SCHRABIDIUM ("schrabidium", null, null);
+		EMERALD ("emerald",OreEnum.EMERALD),
+		DIAMOND ("diamond", OreEnum.DIAMOND),
+		RADGEM ("radgem",OreEnum.RAD_GEM),
+		//URANIUM_SCORCEHD ("uranium_scorched", null),
+		URANIUM ("uranium", null),
+		SCHRABIDIUM ("schrabidium", null);
 
 		public final String overlayTexture;
-		public final ItemStack drop;
-		private final Function<Integer, Integer> fortuneFunction;
+		public final OreEnum oreEnum;
 
 		public String getName(){
 			return overlayTexture;
 		}
-		public ItemStack getDrop(){
-			return drop;
-		}
-		public int getDropCount(int rand){
-			if(fortuneFunction == null)
-				return 1;
-			return fortuneFunction.apply(rand);
-		}
 
-		OreType(String overlayTexture, @Nullable ItemStack drop, Function<Integer, Integer> fortuneFunction) {
+		OreType(String overlayTexture, @Nullable OreEnum oreEnum) {
 			this.overlayTexture = overlayTexture;
-			this.drop = drop;
-			this.fortuneFunction = fortuneFunction;
+			this.oreEnum = oreEnum;
+
 		}
 	}
 

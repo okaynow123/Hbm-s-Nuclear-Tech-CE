@@ -149,32 +149,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         }
     }
 
-//    @SideOnly(Side.CLIENT)
-//    private void bakeModelOld(ModelBakeEvent event) {
-//        try {
-//            IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft:block/cube_all"));
-//
-//            for (int meta = 0; meta <= META_COUNT - 1; meta++) {
-//                ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
-//                String texture = textures[meta % textures.length];
-//                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + texture);
-//
-//                // Base texture
-//                textureMap.put("all", spriteLoc.toString());
-//
-//
-//                IModel retexturedModel = baseModel.retexture(textureMap.build());
-//                IBakedModel bakedModel = retexturedModel.bake(
-//                        ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
-//                );
-//
-//                ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
-//                event.getModelRegistry().putObject(modelLocation, bakedModel);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
