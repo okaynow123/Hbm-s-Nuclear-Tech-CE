@@ -184,11 +184,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerMachineShredder(player.inventory, (TileEntityMachineShredder) entity);
 			}
 			return null;
-		case ModBlocks.guiID_machine_fluidtank:
-			if(entity instanceof TileEntityMachineFluidTank) {
-				return new ContainerMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) entity);
-			}
-			return null;
 		case ModBlocks.guiID_machine_cyclotron:
 			if(entity instanceof TileEntityMachineCyclotron) {
 				return new ContainerMachineCyclotron(player.inventory, (TileEntityMachineCyclotron) entity);
@@ -706,11 +701,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_machine_shredder:
 			if(entity instanceof TileEntityMachineShredder) {
 				return new GUIMachineShredder(player.inventory, (TileEntityMachineShredder) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_fluidtank:
-			if(entity instanceof TileEntityMachineFluidTank) {
-				return new GUIMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) entity);
 			}
 			return null;
 		case ModBlocks.guiID_machine_cyclotron:

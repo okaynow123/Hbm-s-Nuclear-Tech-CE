@@ -89,6 +89,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		};
 		tankNew = new FluidTankNTM(Fluids.OIL, 64000, 0);
 		tank = new FluidTank(64000);
+
+		converted = true;
 	}
 
 	@Override

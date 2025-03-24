@@ -87,6 +87,8 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 		tanksOld[2] = new FluidTank(24000);
 		tanksOld[3] = new FluidTank(24000);
 		tanksOld[4] = new FluidTank(24000);
+
+		converted = true;
 	}
 
 	public String getName() {

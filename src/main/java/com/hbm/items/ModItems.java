@@ -936,7 +936,7 @@ public class ModItems {
 	public static final Item ingot_schrabidate = new ItemBase( "ingot_schrabidate").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_solinium = new ItemBase( "ingot_solinium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_mud = new ItemBase("ingot_mud").setCreativeTab(MainRegistry.partsTab);
-	
+
 	public static final Item ingot_thorium_fuel = new ItemBase( "ingot_thorium_fuel").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_uranium_fuel = new ItemBase( "ingot_uranium_fuel").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_mox_fuel = new ItemBase( "ingot_mox_fuel").setCreativeTab(MainRegistry.partsTab);
@@ -1343,13 +1343,9 @@ public class ModItems {
 	public static final Item plate_fuel_ra226be = new ItemPlateFuel(1300000, "plate_fuel_ra226be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 30).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item plate_fuel_pu238be = new ItemPlateFuel(1000000, "plate_fuel_pu238be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 
-	// Th3_Sl1ze: this is the temporary variant, I'm sincerely too tired and unwilling to do anything at 3 am to clean up the old rods
-	// because they all fucking need to be change in all recipes. Without the "_new" the game WILL crash because of the same registry names.
-	// TODO: Norwood, if you're reading this, remind me to clean this shithole below
-
-	public static final Item rod = new ItemBreedingRod().setTranslationKey("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_dual = new ItemBreedingRod().setTranslationKey("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_quad = new ItemBreedingRod().setTranslationKey("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_dual = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_quad = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
 
 	public static final Item rod_u233 = new ItemBase( "rod_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_u233 = new ItemBase( "rod_dual_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);

@@ -102,6 +102,8 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		this.fluidType = null;
 		this.tank = new FluidTank(16_000);
 		this.tankNew = new FluidTankNTM(Fluids.SULFURIC_ACID, 16_000);
+
+		converted = true;
 	}
 
 	@Override

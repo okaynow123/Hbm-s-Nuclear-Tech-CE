@@ -59,6 +59,8 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
         smoke = new FluidTankNTM(Fluids.SMOKE, buffer);
         smoke_leaded = new FluidTankNTM(Fluids.SMOKE_LEADED, buffer);
         smoke_poison = new FluidTankNTM(Fluids.SMOKE_POISON, buffer);
+
+        converted = true;
     }
 
     public DirPos[] getConPos() {

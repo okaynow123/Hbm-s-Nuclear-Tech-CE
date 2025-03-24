@@ -65,6 +65,8 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
         tanks[1] = new FluidTankNTM(Fluids.GAS, 64_000);
 
         upgradeManager = new UpgradeManager();
+
+        converted = true;
     }
 
     private String customName;

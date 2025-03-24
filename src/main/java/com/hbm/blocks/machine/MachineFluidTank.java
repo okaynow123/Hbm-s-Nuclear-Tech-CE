@@ -44,6 +44,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,8 +53,6 @@ import java.util.List;
 import java.util.Random;
 
 public class MachineFluidTank extends BlockDummyable implements IPersistentInfoProvider, IToolable, ILookOverlay {
-
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	
 	public MachineFluidTank(Material materialIn, String s) {
 		super(materialIn, s);
@@ -80,74 +79,27 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Item.getItemFromBlock(ModBlocks.machine_fluidtank);
 	}
-	
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	
-	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return false;
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		return false;
-	}
-	
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
-	}
-	
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return ((EnumFacing) state.getValue(FACING)).getIndex();
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.byIndex(meta);
-
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
-			enumfacing = EnumFacing.NORTH;
-		}
-
-		return this.getDefaultState().withProperty(FACING, enumfacing);
-	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if(world.isRemote)
 		{
 			return true;
-		} else if(!player.isSneaking()) {
+		}
+
+		int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+		if(posC == null)
+			return false;
+
+		if(!player.isSneaking()) {
 			TileEntityMachineFluidTank entity = (TileEntityMachineFluidTank) world.getTileEntity(pos);
-			if (entity != null) {
-				player.openGui(MainRegistry.instance, ModBlocks.guiID_machine_fluidtank, world, pos.getX(), pos.getY(), pos.getZ());
+
+			if(entity != null) {
+				if(entity.hasExploded) return false;
+				FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, posC[0], posC[1], posC[2]);
 			}
 			return true;
 		} else if(player.isSneaking()){
-			int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
-
-			if(posC == null)
-				return false;
 
 			TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
 

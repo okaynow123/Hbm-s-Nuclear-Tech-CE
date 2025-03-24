@@ -25,12 +25,14 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
     @Override
 	public void render(TileEntityMachineAssembler assembler, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
-    	Vec3d start = new Vec3d(assembler.getPos().getX()+0.05, assembler.getPos().getY()+1.5, assembler.getPos().getZ()+3.1);
     	//RenderHelper.renderFlashLight(start, start.add(-20, 0, 0), 20, 1, ResourceManager.fl_cookie, partialTicks);
     	//FlashlightRenderer.addFlashlight(start, start.add(-20, 0, 0), 20, 20, ResourceManager.fl_cookie, true, true);
     	//LightRenderer.addPointLight(start, new Vec3d(1, 0.4, 0.1), 10);
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glRotatef(180, 0F, 1F, 0F);
        // GL11.glPushMatrix();
        // GL11.glTranslated(0, 5, 0);
         //GlStateManager.bindTexture(RenderHelper.deferredNormalTex);
@@ -38,18 +40,18 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
         //GL11.glPopMatrix();
 		switch(assembler.getBlockMetadata())
 		{
-		case 2:
-			GL11.glRotatef(180, 0F, 1F, 0F);
-	        GL11.glTranslated(-0.5D, 0.0D, 0.5D); break;
-		case 4:
-			GL11.glRotatef(270, 0F, 1F, 0F);
-	        GL11.glTranslated(-0.5D, 0.0D, 0.5D); break;
-		case 3:
-			GL11.glRotatef(0, 0F, 1F, 0F);
-	        GL11.glTranslated(-0.5D, 0.0D, 0.5D); break;
-		case 5:
-			GL11.glRotatef(90, 0F, 1F, 0F);
-	        GL11.glTranslated(-0.5D, 0.0D, 0.5D); break;
+			case 14:
+				GL11.glRotatef(180, 0F, 1F, 0F);
+				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
+			case 13:
+				GL11.glRotatef(270, 0F, 1F, 0F);
+				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
+			case 15:
+				GL11.glRotatef(0, 0F, 1F, 0F);
+				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
+			case 12:
+				GL11.glRotatef(90, 0F, 1F, 0F);
+				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
 		}
 
 		bindTexture(ResourceManager.assembler_body_tex);
@@ -102,17 +104,17 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 		GL11.glRotatef(180, 0F, 1F, 0F);
 		switch(tileEntity.getBlockMetadata())
 		{
-		case 2:
-			GL11.glTranslated(-1, 0, 0);
-			GL11.glRotatef(180, 0F, 1F, 0F); break;
-		case 4:
-			GL11.glRotatef(270, 0F, 1F, 0F); break;
-		case 3:
-			GL11.glTranslated(0, 0, -1);
-			GL11.glRotatef(0, 0F, 1F, 0F); break;
-		case 5:
-			GL11.glTranslated(-1, 0, -1);
-			GL11.glRotatef(90, 0F, 1F, 0F); break;
+			case 14:
+				GL11.glTranslated(-1, 0, 0);
+				GL11.glRotatef(180, 0F, 1F, 0F); break;
+			case 13:
+				GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 15:
+				GL11.glTranslated(0, 0, -1);
+				GL11.glRotatef(0, 0F, 1F, 0F); break;
+			case 12:
+				GL11.glTranslated(-1, 0, -1);
+				GL11.glRotatef(90, 0F, 1F, 0F); break;
 		}
 		
 
@@ -153,17 +155,17 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 		GL11.glRotatef(180, 0F, 1F, 0F);
 		switch(tileEntity.getBlockMetadata())
 		{
-		case 2:
-			GL11.glTranslated(-1, 0, 0);
-			GL11.glRotatef(180, 0F, 1F, 0F); break;
-		case 4:
-			GL11.glRotatef(270, 0F, 1F, 0F); break;
-		case 3:
-			GL11.glTranslated(0, 0, -1);
-			GL11.glRotatef(0, 0F, 1F, 0F); break;
-		case 5:
-			GL11.glTranslated(-1, 0, -1);
-			GL11.glRotatef(90, 0F, 1F, 0F); break;
+			case 14:
+				GL11.glTranslated(-1, 0, 0);
+				GL11.glRotatef(180, 0F, 1F, 0F); break;
+			case 13:
+				GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 15:
+				GL11.glTranslated(0, 0, -1);
+				GL11.glRotatef(0, 0F, 1F, 0F); break;
+			case 12:
+				GL11.glTranslated(-1, 0, -1);
+				GL11.glRotatef(90, 0F, 1F, 0F); break;
 		}
 		
 

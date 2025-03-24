@@ -52,6 +52,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 		//acid
 		tank = new FluidTank(16000);
 		tankNew = new FluidTankNTM(Fluids.PEROXIDE, 16000);
+		converted = true;
 	}
 
 	public Fluid getTankType(){

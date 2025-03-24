@@ -97,6 +97,8 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 		tanks[2] = new FluidTank(24000);
 		tanks[3] = new FluidTank(24000);
 		tankTypes = new Fluid[]{null, null, null, null};
+
+		converted = true;
 	}
 
 	// last successful load

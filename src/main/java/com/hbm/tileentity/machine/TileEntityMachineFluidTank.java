@@ -10,11 +10,13 @@ import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.container.ContainerMachineFluidTank;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.*;
+import com.hbm.inventory.gui.GUIMachineFluidTank;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -24,8 +26,10 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.*;
 import com.hbm.util.ParticleUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IPersistentNBT, IControllable, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
 
 	public FluidTankNTM tankNew;
 	public FluidTank tank;
@@ -65,6 +69,8 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		super(6);
 		tank = new FluidTank(256000);
 		tankNew = new FluidTankNTM(Fluids.NONE, 256000);
+
+		converted = true;
 	}
 	
 	public String getName() {
@@ -457,6 +463,17 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 		repair.add(new RecipesCommon.OreDictStack(OreDictManager.STEEL.plate(), 6));
 		return repair;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
 	}
 
 	@Override

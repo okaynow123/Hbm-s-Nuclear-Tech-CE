@@ -51,6 +51,8 @@ public class TileEntityMachineBoilerRTG extends TileEntityMachineBase implements
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(16000);
 		tanks[1] = new FluidTank(16000);
+
+		converted = true;
 	}
 	
 	@Override

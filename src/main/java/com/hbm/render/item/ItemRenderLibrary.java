@@ -455,11 +455,14 @@ public class ItemRenderLibrary {
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_well), new ItemRenderBase() {
 			public void renderInventory() {
 				GL11.glTranslated(0, -4, 0);
-				GL11.glScaled(4, 4, 4);
+				GL11.glScaled(3, 3, 3);
 			}
 			public void renderCommon() {
+				GL11.glRotatef(90, 0F, 1F, 0F);
 				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glShadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.derrick_tex); ResourceManager.derrick.renderAll();
+				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
 
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_pumpjack), new ItemRenderBase() {
