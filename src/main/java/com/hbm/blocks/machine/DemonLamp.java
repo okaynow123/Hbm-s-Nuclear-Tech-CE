@@ -1,8 +1,6 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.tileentity.machine.TileEntityDemonLamp;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -16,16 +14,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class DemonLamp extends BlockContainer implements IItemHazard {
-
-	ItemHazardModule module;
+public class DemonLamp extends BlockContainer {
 
 	public DemonLamp(SoundType st, String s) {
 		super(Material.IRON);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		super.setSoundType(st);
-		this.module = new ItemHazardModule();
 		
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
@@ -38,11 +33,6 @@ public class DemonLamp extends BlockContainer implements IItemHazard {
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityDemonLamp();
-	}
-
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
 	}
 	
 	@Override
