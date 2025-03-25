@@ -92,7 +92,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 			return false;
 
 		if(!player.isSneaking()) {
-			TileEntityMachineFluidTank entity = (TileEntityMachineFluidTank) world.getTileEntity(pos);
+			TileEntityMachineFluidTank entity = (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
 
 			if(entity != null) {
 				if(entity.hasExploded) return false;

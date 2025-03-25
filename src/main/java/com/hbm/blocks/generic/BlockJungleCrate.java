@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -31,7 +32,7 @@ public class BlockJungleCrate extends Block {
 		drops.add(new ItemStack(Items.GOLD_INGOT, 4 + rand.nextInt(4)));
 		drops.add(new ItemStack(Items.GOLD_NUGGET, 8 + rand.nextInt(10)));
 		drops.add(new ItemStack(ModItems.powder_gold, 2 + rand.nextInt(3)));
-		drops.add(new ItemStack(ModItems.wire_gold, 2 + rand.nextInt(2)));
+		drops.add(new ItemStack(ModItems.wire_fine, 2 + rand.nextInt(2), Mats.MAT_GOLD.id));
 
         if(rand.nextInt(2) == 0)
         	drops.add(new ItemStack(ModItems.plate_gold, 1 + rand.nextInt(2)));

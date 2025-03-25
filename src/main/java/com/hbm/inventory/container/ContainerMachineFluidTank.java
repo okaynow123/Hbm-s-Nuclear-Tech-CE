@@ -16,9 +16,9 @@ public class ContainerMachineFluidTank extends Container {
 	public ContainerMachineFluidTank(InventoryPlayer invPlayer, TileEntityMachineFluidTank tedf) {
 		//What the heck is a diFurnace
 		diFurnace = tedf;
-		
-		//this.addSlotToContainer(new Slot(tedf, 0, 8, 17));
-		//this.addSlotToContainer(new Slot(tedf, 1, 8, 53));
+
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 17));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 8, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 53 - 18, 17));
 		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 3, 53 - 18, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 125, 17));

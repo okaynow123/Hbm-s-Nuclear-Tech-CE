@@ -28,6 +28,8 @@ import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIArmorTable;
+import com.hbm.inventory.material.Mats;
+import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ModItems;
@@ -482,6 +484,7 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
+        ((ItemMold) ModItems.mold).registerModels();
         BlockOreMetaInverted.registerModels();
         BlockSellafieldSlaked.registerModels();
         BlockMeta.registerModels();
@@ -584,6 +587,7 @@ public class ModEventHandlerClient {
         BlockOreMetaInverted.bakeModels(evt);
         BlockMeta.bakeModels(evt);
         BlockSellafieldSlaked.bakeModels(evt);
+        ItemMold.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -635,6 +639,12 @@ public class ModEventHandlerClient {
             IBakedModel model = (IBakedModel) object7;
             ChemTemplateRender.INSTANCE.itemModel = model;
             evt.getModelRegistry().putObject(ItemChemistryTemplate.chemModel, new ChemTemplateBakedModel());
+        }
+        Object object8 = evt.getModelRegistry().getObject(ItemCrucibleTemplate.location);
+        if (object8 instanceof IBakedModel) {
+            IBakedModel model = (IBakedModel) object8;
+            CrucibleTemplateRender.INSTANCE.itemModel = model;
+            evt.getModelRegistry().putObject(ItemCrucibleTemplate.location, new CrucibleTemplateBakedModel());
         }
 
         IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();
@@ -808,6 +818,7 @@ public class ModEventHandlerClient {
         TextureMap map = evt.getMap();
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
+        ItemMold.registerSprites(map);
         ItemAutogen.registerSprites(map);
         BlockOreMetaInverted.registerSprites(map);
         BlockMeta.registerSprites(map);

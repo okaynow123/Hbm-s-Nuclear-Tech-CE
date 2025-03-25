@@ -1509,6 +1509,9 @@ public class ModItems {
 	public static final Item ore_bedrock_enriched = new ItemBedrockOre("ore_bedrock_enriched").setCreativeTab(MainRegistry.partsTab); //Final Product
 
 	//Autogen
+	public static final Item mold_base = new ItemBase("mold_base").setCreativeTab(MainRegistry.controlTab);
+	public static final Item mold = new ItemMold("mold");
+	public static final Item scraps = new ItemScraps("scraps").aot(Mats.MAT_BISMUTH, "scraps_bismuth").setCreativeTab(MainRegistry.partsTab);
 	public static final Item shell = new ItemAutogen(MaterialShapes.SHELL, "shell").setCreativeTab(MainRegistry.partsTab);
 	public static final Item pipe = new ItemAutogen(MaterialShapes.PIPE, "pipe").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_raw = new ItemAutogen(MaterialShapes.INGOT, "ingot_raw").setCreativeTab(MainRegistry.partsTab);
@@ -1531,6 +1534,7 @@ public class ModItems {
 	public static final Item part_mechanism = new ItemAutogen(MaterialShapes.MECHANISM, "part_mechanism").setCreativeTab(MainRegistry.partsTab);
 	public static final Item part_stock = new ItemAutogen(MaterialShapes.STOCK, "part_stock").setCreativeTab(MainRegistry.partsTab);
 	public static final Item part_grip = new ItemAutogen(MaterialShapes.GRIP, "part_grip").setCreativeTab(MainRegistry.partsTab);
+	public static final Item casing = new ItemEnumMulti(ItemEnums.EnumCasingType.class, true, true).setTranslationKey("casing").setCreativeTab(MainRegistry.partsTab);
 
 	//Bedrock Ores (new, gottverdammt)
 	public static final Item bedrock_ore = new ItemBedrockOreNew("bedrock_ore_new").setCreativeTab(MainRegistry.partsTab);
@@ -2064,6 +2068,7 @@ public class ModItems {
 	public static final Item assembly_template = new ItemAssemblyTemplate("assembly_template").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item chemistry_template = new ItemChemistryTemplate("chemistry_template").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item chemistry_icon = new ItemChemistryIcon("chemistry_icon").setMaxStackSize(1).setCreativeTab(null);
+	public static final Item crucible_template = new ItemCrucibleTemplate("crucible_template").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item forge_fluid_identifier = new ItemForgeFluidIdentifier("forge_fluid_identifier").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item fluid_identifier_multi = new ItemFluidIDMulti("fluid_identifier_multi").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item ff_fluid_duct = new ItemFFFluidDuct("ff_fluid_duct").setCreativeTab(MainRegistry.templateTab);
@@ -2175,7 +2180,9 @@ public class ModItems {
 	public static final Item casing_50 = new ItemBase("casing_50").setCreativeTab(MainRegistry.partsTab);
 	public static final Item casing_buckshot = new ItemBase("casing_buckshot").setCreativeTab(MainRegistry.partsTab);
 	
-	//Wires and things
+	// Wires and things
+	// Th3_Sl1ze: the only reason why I'm even keeping old wires, plates and etc - I want to convert them to the new meta ones
+	// because why the fuck people should lose half of their resources?
 	public static final Item wire_advanced_alloy = new ItemBase("wire_advanced_alloy").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_advanced_alloy = new ItemBase("coil_advanced_alloy").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_advanced_torus = new ItemBase("coil_advanced_torus").setCreativeTab(MainRegistry.partsTab);

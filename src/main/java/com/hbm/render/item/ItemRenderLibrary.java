@@ -715,6 +715,15 @@ public class ItemRenderLibrary {
 				bindTexture(ResourceManager.sawmill_tex);
 				RenderSawmill.renderCommon(cog ? System.currentTimeMillis() % 3600 * 0.1F : 0, cog);
 			}});
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_crucible), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -1.5, 0);
+				GL11.glScaled(3.25, 3.25, 3.25);
+			}
+			public void renderCommon() {
+				bindTexture(ResourceManager.crucible_tex);
+				ResourceManager.crucible_heat.renderAll();
+			}});
 		renderers.put(Item.getItemFromBlock(ModBlocks.heater_electric), new ItemRenderBase() {
 			public void renderInventory() {
 				GL11.glTranslated(0, -1, 0);

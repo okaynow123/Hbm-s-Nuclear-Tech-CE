@@ -370,6 +370,7 @@ public class ResourceManager {
 	public static final IModelCustom heater_heatex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/heatex.obj")).asVBO();
 	public static final IModelCustom furnace_iron = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/furnace_iron.obj")).asVBO();
 	public static final IModelCustom furnace_steel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/furnace_steel.obj")).asVBO();
+	public static final IModelCustom crucible_heat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/crucible.obj")).asVBO();
 	public static final IModelCustom heat_boiler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/boiler.obj")).asVBO();
 	//Heat-Based Machines
 	
@@ -757,6 +758,7 @@ public class ResourceManager {
     
     //Firebox and the lot
 	public static final ResourceLocation sawmill_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/sawmill.png");
+	public static final ResourceLocation crucible_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/crucible_heat.png");
 	public static final ResourceLocation heater_firebox_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/firebox.png");
 	public static final ResourceLocation heater_oven_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/heating_oven.png");
 	public static final ResourceLocation heater_oilburner_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/oilburner.png");

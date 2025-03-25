@@ -574,6 +574,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityMachineSatDock.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_sat_dock"));
 		GameRegistry.registerTileEntity(TileEntityMachineDiesel.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_diesel"));
 		GameRegistry.registerTileEntity(TileEntitySawmill.class, new ResourceLocation(RefStrings.MODID, "tileentity_sawmill"));
+		GameRegistry.registerTileEntity(TileEntityCrucible.class, new ResourceLocation(RefStrings.MODID, "tileentity_crucible"));
 		GameRegistry.registerTileEntity(TileEntityForceField.class, new ResourceLocation(RefStrings.MODID, "tileentity_force_field"));
 		GameRegistry.registerTileEntity(TileEntityMachineRadarNT.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_radar"));
 		GameRegistry.registerTileEntity(TileEntityMachineRadarLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_radar_large"));

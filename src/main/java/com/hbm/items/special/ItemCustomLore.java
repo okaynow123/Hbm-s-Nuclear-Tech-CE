@@ -3,6 +3,7 @@ package com.hbm.items.special;
 import com.hbm.config.GeneralConfig;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
@@ -457,7 +458,7 @@ public class ItemCustomLore extends Item {
 			this == ModItems.powder_schrabidate || 
 			this == ModItems.powder_schrabidium || 
 
-			this == ModItems.wire_schrabidium || 
+			this == new ItemStack(ModItems.wire_fine, 1, Mats.MAT_SCHRABIDIUM.id).getItem() ||
 
 			this == ModItems.plate_schrabidium || 
 			this == ModItems.plate_saturnite || 

@@ -450,6 +450,17 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	}
 
 	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
+	}
+
+	@Override
 	public boolean isDamaged() {
 		return this.hasExploded;
 	}
@@ -463,17 +474,6 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 		repair.add(new RecipesCommon.OreDictStack(OreDictManager.STEEL.plate(), 6));
 		return repair;
-	}
-
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMachineFluidTank(player.inventory, (TileEntityMachineFluidTank) world.getTileEntity(new BlockPos(x, y, z)));
 	}
 
 	@Override
