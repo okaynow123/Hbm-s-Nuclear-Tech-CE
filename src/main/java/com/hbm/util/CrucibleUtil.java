@@ -91,8 +91,8 @@ public class CrucibleUtil {
             return null;
         }
 
-        if(acc.canAcceptPartialPour(world, mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ(), hit.x, hit.y, hit.z, ForgeDirection.getOrientation(mop.sideHit.getIndex()), stack)) {
-            Mats.MaterialStack left = acc.pour(world, mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ(), hit.x, hit.y, hit.z, ForgeDirection.getOrientation(mop.sideHit.getIndex()), stack);
+        if(acc.canAcceptPartialPour(world, mop.getBlockPos(), hit.x, hit.y, hit.z, ForgeDirection.getOrientation(mop.sideHit.getIndex()), stack)) {
+            Mats.MaterialStack left = acc.pour(world, mop.getBlockPos(), hit.x, hit.y, hit.z, ForgeDirection.getOrientation(mop.sideHit.getIndex()), stack);
             if(left == null) {
                 left = new Mats.MaterialStack(stack.material, 0);
             }

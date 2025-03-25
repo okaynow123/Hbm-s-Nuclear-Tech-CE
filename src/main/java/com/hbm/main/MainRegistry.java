@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockCrate;
-import com.hbm.blocks.generic.EntityGrenadeTau;
+import com.hbm.entity.grenade.EntityGrenadeTau;
 import com.hbm.blocks.network.energy.CableDiode.TileEntityDiode;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
@@ -982,7 +982,8 @@ public class MainRegistry {
 		//Drillgon200: expand the max entity radius for the hunter chopper
 		if(World.MAX_ENTITY_RADIUS < 5)
 			World.MAX_ENTITY_RADIUS = 5;
-		MinecraftForge.EVENT_BUS.register(new SchistStratum()); //DecorateBiomeEvent.Pre
+		MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_gneiss, 0.01D, 5, 8, 30)); //DecorateBiomeEvent.Pre
+		//MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.ore_hematite, 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
 		
 		NTMCraftTweaker.applyPostInitActions();
 		AssemblerRecipes.generateList();

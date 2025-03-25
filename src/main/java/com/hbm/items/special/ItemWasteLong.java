@@ -1,5 +1,6 @@
 package com.hbm.items.special;
 
+import com.hbm.items.ItemBase;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,10 +13,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemWasteLong extends ItemContaminating {
+public class ItemWasteLong extends ItemBase {
 
-	public ItemWasteLong(float radiation, String s) {
-		super(radiation, s);
+	public ItemWasteLong(String s) {
+		super(s);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setCreativeTab(MainRegistry.controlTab);
@@ -33,7 +34,6 @@ public class ItemWasteLong extends ItemContaminating {
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
 		list.add(TextFormatting.ITALIC + WasteClass.values()[rectify(stack.getItemDamage())].name);
-		super.addInformation(stack, world, list, flagIn);
 	}
 	
 	public static int rectify(int meta) {

@@ -7,7 +7,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.DigammaMatter;
 import com.hbm.blocks.generic.BMPowerBox;
 import com.hbm.blocks.generic.BlockModDoor;
-import com.hbm.blocks.generic.EntityGrenadeTau;
 import com.hbm.blocks.generic.TrappedBrick;
 import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.WatzPump;

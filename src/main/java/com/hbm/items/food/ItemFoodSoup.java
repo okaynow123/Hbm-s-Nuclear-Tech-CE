@@ -3,53 +3,26 @@ package com.hbm.items.food;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.items.ModItems;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemSoup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemHazardSoup extends ItemSoup implements IItemHazard {
+public class ItemFoodSoup extends ItemSoup {
 
-	ItemHazardModule module;
-
-	public ItemHazardSoup(int i, String s) {
+	public ItemFoodSoup(int i, String s) {
 		super(i);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
-		this.module = new ItemHazardModule();
 		
 		ModItems.ALL_ITEMS.add(this);
-	}
-	
-
-	@Override
-	public ItemHazardModule getModule() {
-		return this.module;
-	}
-	
-	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entity, int itemSlot, boolean isSelected){
-		if(entity instanceof EntityLivingBase)
-			this.module.applyEffects((EntityLivingBase) entity, stack.getCount(), itemSlot, isSelected, ((EntityLivingBase)entity).getHeldItem(EnumHand.MAIN_HAND) == stack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
-	}
-	
-	@Override
-	public boolean onEntityItemUpdate(EntityItem item){
-		super.onEntityItemUpdate(item);
-		return super.onEntityItemUpdate(item);
 	}
 
 	@Override
@@ -57,7 +30,6 @@ public class ItemHazardSoup extends ItemSoup implements IItemHazard {
 		if(this == ModItems.glowing_stew) {
             list.add("Removes 80 RAD");
     	}
-    	this.module.addInformation(stack, list, flagIn);
 		super.addInformation(stack, world, list, flagIn);
 	}
 

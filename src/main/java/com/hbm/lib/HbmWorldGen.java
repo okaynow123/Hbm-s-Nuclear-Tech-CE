@@ -162,7 +162,7 @@ public class HbmWorldGen implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.copperClusterSpawn.get(dimID)), 6, 15, 20, ModBlocks.cluster_copper);
 		
 		//Stone ores
-		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.malachiteSpawn.get(dimID)), 16, 6, 40, ModBlocks.ore_malachite);
+		//DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.malachiteSpawn.get(dimID)), 16, 6, 40, ModBlocks.ore_malachite);
 		
 		//Special ores
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.reiiumSpawn.get(dimID)), 3, 14, 18, ModBlocks.ore_reiium);

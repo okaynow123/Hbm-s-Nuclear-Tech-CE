@@ -1,6 +1,5 @@
 package com.hbm.items.weapon;
 
-import com.hbm.blocks.generic.EntityGrenadeTau;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.grenade.*;
 import com.hbm.items.ModItems;

@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
-import com.hbm.interfaces.IItemHazard;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.StorageDrumRecipes;
 import com.hbm.packet.FluidTankPacket;
@@ -10,7 +10,6 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.ContaminationUtil;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -59,11 +58,11 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 			for(int i = 0; i < 24; i++) {
 				
 				if(!inventory.getStackInSlot(i).isEmpty()) {
-					
-					Item item = inventory.getStackInSlot(i).getItem();
-					
-					if(item instanceof IItemHazard && world.getTotalWorldTime() % 20 == 0) {
-						rad += ((IItemHazard)item).getModule().radiation;
+
+					ItemStack itemStack = inventory.getStackInSlot(i);
+
+					if(world.getTotalWorldTime() % 20 == 0) {
+						rad += HazardSystem.getRawRadsFromStack(itemStack);
 					}
 
 					int[] wasteData = StorageDrumRecipes.getWaste(inventory.getStackInSlot(i));

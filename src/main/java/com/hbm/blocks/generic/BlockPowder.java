@@ -1,9 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.items.ModItems;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.Block;
@@ -25,11 +23,9 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockPowder extends Block implements IItemHazard {
+public class BlockPowder extends Block {
 
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 6);
-
-	ItemHazardModule module;
 
 	public BlockPowder(Material mat, SoundType soundType, String s) {
 		super(mat);
@@ -37,7 +33,6 @@ public class BlockPowder extends Block implements IItemHazard {
 		this.setRegistryName(s);
 		this.setSoundType(soundType);
 		this.setHarvestLevel("shovel", 0);
-		this.module = new ItemHazardModule();
 
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
@@ -99,11 +94,6 @@ public class BlockPowder extends Block implements IItemHazard {
 	@Override
 	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos){
 		return true;
-	}
-
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
 	}
 
 	@Override

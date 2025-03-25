@@ -5,6 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
+import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import crafttweaker.CraftTweakerAPI;
@@ -105,8 +106,8 @@ public class AnvilRecipes {
 				new ItemStack(ModItems.stamp_schrabidium_flat),
 				new ItemStack(ModItems.stamp_desh_flat)
 				}));
-		smithingRecipes.add(new AnvilSmithingMold(10, new OreDictStack(STEEL.shell()), new OreDictStack(OreNames.SHELL)));
-		smithingRecipes.add(new AnvilSmithingMold(11, new OreDictStack(STEEL.pipe()), new OreDictStack(OreNames.PIPE)));
+		smithingRecipes.add(new AnvilSmithingMold(10, new OreDictStack(STEEL.shell()), new OreDictStack(MaterialShapes.SHELL.name())));
+		smithingRecipes.add(new AnvilSmithingMold(11, new OreDictStack(STEEL.pipe()), new OreDictStack(MaterialShapes.PIPE.name())));
 		smithingRecipes.add(new AnvilSmithingMold(12, new OreDictStack(IRON.ingot(), 9), new OreDictStack("ingot", 9)));
 		smithingRecipes.add(new AnvilSmithingMold(13, new OreDictStack(IRON.plate(), 9), new OreDictStack("plate", 9)));
 		smithingRecipes.add(new AnvilSmithingMold(14, new OreDictStack(ALLOY.wireDense(), 9),  new OreDictStack("wireDense", 9)));

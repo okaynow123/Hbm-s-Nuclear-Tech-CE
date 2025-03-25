@@ -56,7 +56,7 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 
 	public FoundryOutlet(String s) {
 		super(Material.ROCK);
-		this.setUnlocalizedName(s);
+		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setSoundType(SoundType.METAL);
 
@@ -85,7 +85,7 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {
@@ -221,6 +221,6 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 			text.add("§2" + I18nUtil.resolveKey("foundry.inverted"));
 		}
 		
-		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(this.getUnlocalizedName() + ".name"), 0xFF4000, 0x401000, text);
+		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(this.getTranslationKey() + ".name"), 0xFF4000, 0x401000, text);
 	}
 }

@@ -1,7 +1,7 @@
 package com.hbm.items.bomb;
 
+import com.hbm.items.ItemBase;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemHazard;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -10,10 +10,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemManMike extends ItemHazard {
+public class ItemManMike extends ItemBase {
 
-	public ItemManMike(float radiation, String s) {
-		super(radiation, s);
+	public ItemManMike(String s) {
+		super(s);
 		this.setCreativeTab(MainRegistry.nukeTab);
 	}
 

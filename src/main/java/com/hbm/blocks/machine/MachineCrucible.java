@@ -162,29 +162,29 @@ public class MachineCrucible extends BlockDummyable implements ICrucibleAcceptor
     }
 
     @Override
-    public boolean canAcceptPartialPour(World world, int x, int y, int z, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+    public boolean canAcceptPartialPour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
-        int[] pos = this.findCore(world, x, y, z);
-        if(pos == null) return false;
-        TileEntity tile = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+        int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+        if(posC == null) return false;
+        TileEntity tile = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
         if(!(tile instanceof TileEntityCrucible)) return false;
         TileEntityCrucible crucible = (TileEntityCrucible) tile;
 
-        return crucible.canAcceptPartialPour(world, x, y, z, dX, dY, dZ, side, stack);
+        return crucible.canAcceptPartialPour(world, pos, dX, dY, dZ, side, stack);
     }
 
     @Override
-    public Mats.MaterialStack pour(World world, int x, int y, int z, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+    public Mats.MaterialStack pour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
-        int[] pos = this.findCore(world, x, y, z);
-        if(pos == null) return stack;
-        TileEntity tile = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+        int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+        if(posC == null) return stack;
+        TileEntity tile = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
         if(!(tile instanceof TileEntityCrucible)) return stack;
         TileEntityCrucible crucible = (TileEntityCrucible) tile;
 
-        return crucible.pour(world, x, y, z, dX, dY, dZ, side, stack);
+        return crucible.pour(world, pos, dX, dY, dZ, side, stack);
     }
 
-    @Override public boolean canAcceptPartialFlow(World world, int x, int y, int z, ForgeDirection side, Mats.MaterialStack stack) { return false; }
-    @Override public Mats.MaterialStack flow(World world, int x, int y, int z, ForgeDirection side, Mats.MaterialStack stack) { return null; }
+    @Override public boolean canAcceptPartialFlow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) { return false; }
+    @Override public Mats.MaterialStack flow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) { return null; }
 }

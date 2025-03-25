@@ -36,6 +36,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -560,7 +561,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
     }
 
     @Override
-    public boolean canAcceptPartialPour(World world, int x, int y, int z, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+    public boolean canAcceptPartialPour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
         CrucibleRecipes.CrucibleRecipe recipe = getLoadedRecipe();
 
@@ -577,7 +578,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
     }
 
     @Override
-    public Mats.MaterialStack pour(World world, int x, int y, int z, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+    public Mats.MaterialStack pour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
         CrucibleRecipes.CrucibleRecipe recipe = getLoadedRecipe();
 
@@ -610,8 +611,8 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
         return new Mats.MaterialStack(stack.material, stack.amount - toAdd);
     }
 
-    @Override public boolean canAcceptPartialFlow(World world, int x, int y, int z, ForgeDirection side, Mats.MaterialStack stack) { return false; }
-    @Override public Mats.MaterialStack flow(World world, int x, int y, int z, ForgeDirection side, Mats.MaterialStack stack) { return null; }
+    @Override public boolean canAcceptPartialFlow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) { return false; }
+    @Override public Mats.MaterialStack flow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) { return null; }
 
     @Override
     public int[] getMatsToCopy() {

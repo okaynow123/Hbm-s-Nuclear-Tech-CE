@@ -41,8 +41,10 @@ public class ItemCrucibleTemplate extends Item implements IHasCustomModel {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
-        for(int i = 0; i < CrucibleRecipes.recipes.size(); i++) {
-            list.add(new ItemStack(this, 1, CrucibleRecipes.recipes.get(i).getId()));
+        if(tab == this.getCreativeTab() || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < CrucibleRecipes.recipes.size(); i++) {
+                list.add(new ItemStack(this, 1, CrucibleRecipes.recipes.get(i).getId()));
+            }
         }
     }
 

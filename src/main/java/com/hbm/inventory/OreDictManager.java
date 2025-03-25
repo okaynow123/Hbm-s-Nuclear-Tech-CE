@@ -545,7 +545,8 @@ public class OreDictManager {
          * RARE METALS
          */
         AUSTRALIUM.nugget(nugget_australium).billet(billet_australium).ingot(ingot_australium).dust(powder_australium).block(block_australium).ore(ore_australium);
-        RADSPICE.rad(HazardRegistry.radspice).hot(15).blinding(50F).hydro(10).toxic(2).nugget(nugget_radspice).dustSmall(powder_radspice_tiny).ingot(ingot_radspice).dust(powder_radspice).block(block_radspice);
+        // Th3_Sl1ze: remind me to delete radspice..
+        //RADSPICE.rad(HazardRegistry.radspice).hot(15).blinding(50F).hydro(10).toxic(2).nugget(nugget_radspice).dustSmall(powder_radspice_tiny).ingot(ingot_radspice).dust(powder_radspice).block(block_radspice);
         REIIUM.nugget(nugget_reiium).ingot(ingot_reiium).dust(powder_reiium).block(block_reiium).ore(ore_reiium);
         WEIDANIUM.nugget(nugget_weidanium).ingot(ingot_weidanium).dust(powder_weidanium).block(block_weidanium).ore(ore_weidanium);
         UNOBTAINIUM.nugget(nugget_unobtainium).billet(billet_unobtainium).ingot(ingot_unobtainium).dust(powder_unobtainium).block(block_unobtainium).ore(ore_unobtainium);
@@ -581,9 +582,9 @@ public class OreDictManager {
         AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209);
 
         /*
-         * Fuels
+         * Fuels - they should be deleted too..
          */
-        U_FUEL.rad(HazardRegistry.u_fuel).nugget(nugget_uranium_fuel).billet(billet_uranium_fuel).ingot(ingot_uranium_fuel).block(block_uranium_fuel);
+        /*U_FUEL.rad(HazardRegistry.u_fuel).nugget(nugget_uranium_fuel).billet(billet_uranium_fuel).ingot(ingot_uranium_fuel).block(block_uranium_fuel);
         TH_FUEL.rad(HazardRegistry.th_fuel).nugget(nugget_thorium_fuel).billet(billet_thorium_fuel).ingot(ingot_thorium_fuel).block(block_thorium_fuel);
         PU_FUEL.rad(HazardRegistry.pu_fuel).nugget(nugget_plutonium_fuel).billet(billet_plutonium_fuel).ingot(ingot_plutonium_fuel).block(block_plutonium_fuel);
         NP_FUEL.rad(HazardRegistry.np_fuel).nugget(nugget_neptunium_fuel).billet(billet_neptunium_fuel).ingot(ingot_neptunium_fuel);
@@ -591,7 +592,7 @@ public class OreDictManager {
         AM_FUEL.rad(HazardRegistry.am_fuel).nugget(nugget_americium_fuel).ingot(ingot_americium_fuel).billet(billet_americium_fuel);
         SCH_FUEL.rad(HazardRegistry.sch_fuel).blinding(50F).nugget(nugget_schrabidium_fuel).billet(billet_schrabidium_fuel).ingot(ingot_schrabidium_fuel).block(block_schrabidium_fuel);
         LES_FUEL.rad(HazardRegistry.les_fuel).blinding(50F).nugget(nugget_les).billet(billet_les).ingot(ingot_les);
-        HES_FUEL.rad(HazardRegistry.hes_fuel).blinding(50F).nugget(nugget_hes).billet(billet_hes).ingot(ingot_hes);
+        HES_FUEL.rad(HazardRegistry.hes_fuel).blinding(50F).nugget(nugget_hes).billet(billet_hes).ingot(ingot_hes);*/
 
         /*
          * COLLECTIONS
@@ -1056,14 +1057,6 @@ public class OreDictManager {
             return this.haz(new HazardEntry(HazardRegistry.COAL, h));
         }
 
-        public DictFrame cryo(float h) {
-            return this.haz(new HazardEntry(HazardRegistry.COLD, h));
-        }
-
-        public DictFrame toxic(float h) {
-            return this.haz(new HazardEntry(HazardRegistry.TOXIC, h));
-        }
-
         public DictFrame exposive(float h) {
             return this.haz(new HazardEntry(HazardRegistry.EXPLOSIVE, h));
         }
@@ -1129,23 +1122,6 @@ public class OreDictManager {
         public DictFrame block(Object... block) {
             hazMult = HazardRegistry.block;
             return makeObject(BLOCK, block);
-        }
-
-        public DictFrame part(Object... part) {
-            hazMult = HazardRegistry.part;
-            return makeObject(PART, part);
-        }
-
-        @Deprecated
-        public DictFrame wire(Object... wire) {
-            hazMult = HazardRegistry.part;
-            return makeObject(WIRE, wire);
-        }
-
-        @Deprecated
-        public DictFrame bolt(Object... bolt) {
-            hazMult = HazardRegistry.part;
-            return makeObject(BOLT, bolt);
         }
 
         public DictFrame ore(Object... ore) {

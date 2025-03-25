@@ -1,8 +1,6 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
-import com.hbm.modules.ItemHazardModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,24 +15,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
-public class BlockLithium extends Block implements IItemHazard {
+public class BlockHydroreactive extends Block {
 
-	ItemHazardModule module;
-
-	public BlockLithium(Material materialIn, String s) {
+	public BlockHydroreactive(Material materialIn, String s) {
 		super(materialIn);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
-		this.module = new ItemHazardModule();
-		this.addHydroReactivity();
 
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
 
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
-	}
 
 	private boolean touchesWater(World world, int x, int y, int z) {
 
@@ -67,7 +57,6 @@ public class BlockLithium extends Block implements IItemHazard {
 
 	@Override
 	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add("It's not my fault you didn't pay");
 		tooltip.add("attention in chemistry class.");
 	}

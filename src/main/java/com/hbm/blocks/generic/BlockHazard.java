@@ -1,10 +1,10 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ContaminationUtil;
@@ -31,9 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockHazard extends Block implements IItemHazard {
-
-    ItemHazardModule module;
+public class BlockHazard extends BlockBase {
 
     private float radIn = 0.0F;
     private float radMax = 0.0F;
@@ -44,12 +42,7 @@ public class BlockHazard extends Block implements IItemHazard {
 
 
     public BlockHazard(Material mat, String s) {
-        super(mat);
-        this.setTranslationKey(s);
-        this.setRegistryName(s);
-        this.module = new ItemHazardModule();
-
-        ModBlocks.ALL_BLOCKS.add(this);
+        super(mat, s);
     }
 
     public BlockHazard(String s) {
@@ -69,11 +62,6 @@ public class BlockHazard extends Block implements IItemHazard {
     public BlockHazard setDisplayEffect(ExtDisplayEffect extEffect) {
         this.extEffect = extEffect;
         return this;
-    }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override
@@ -143,14 +131,8 @@ public class BlockHazard extends Block implements IItemHazard {
         }
     }
 
-    @Override
-    public ItemHazardModule getModule() {
-        return module;
-    }
 
-    @Override
-    public IItemHazard addRadiation(float radiation) {
-        this.getModule().addRadiation(radiation);
+    public BlockHazard addRadiation(float radiation) {
         this.radIn = radiation * 0.1F;
         this.radMax = radiation;
         return this;
@@ -175,7 +157,7 @@ public class BlockHazard extends Block implements IItemHazard {
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 
         if (this.rad3d > 0) {
-            ContaminationUtil.radiate(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, this.rad3d, 0, this.module.fire * 5000, 0, 0);
+            ContaminationUtil.radiate(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, this.rad3d, 0, 0, 0, 0);
             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
         }
         if (this == ModBlocks.block_meteor_molten) {
@@ -227,7 +209,7 @@ public class BlockHazard extends Block implements IItemHazard {
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
         if (entity instanceof EntityLivingBase)
-            this.module.applyEffects((EntityLivingBase) entity, 0.5F, 0, false, EnumHand.MAIN_HAND);
+            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
 
 
         if (entity instanceof EntityLivingBase && this == ModBlocks.brick_jungle_mystic) {
@@ -239,7 +221,7 @@ public class BlockHazard extends Block implements IItemHazard {
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
         if (entity instanceof EntityLivingBase)
-            this.module.applyEffects((EntityLivingBase) entity, 0.5F, 0, false, EnumHand.MAIN_HAND);
+            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
 
 
         if (entity instanceof EntityLivingBase && this == ModBlocks.brick_jungle_mystic) {
