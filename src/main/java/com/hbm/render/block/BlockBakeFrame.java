@@ -46,7 +46,7 @@ public class BlockBakeFrame {
         this.textureArray = textures;
         switch (textures.length) {
             case 1:
-                if (form == ALL) break;
+                if (form == ALL || form == CROSS) break;
             case 2:
                 if (form == PILLAR) break;
             case 3:
@@ -95,6 +95,7 @@ public class BlockBakeFrame {
 
     public enum BlockForm {
         ALL("minecraft:block/cube_all", 1, new String[]{"all"}),
+        CROSS("minecraft:block/cross", 1, new String[]{"cross"}),
         PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
         FULL_CUSTOM("minecraft:block/cube_all", 6, new String[]{

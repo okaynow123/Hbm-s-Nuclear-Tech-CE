@@ -5,7 +5,6 @@ import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
@@ -128,7 +127,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     private void bakeModel(ModelBakeEvent event) {
         for (int meta = 0; meta <= META_COUNT - 1; meta++) {
             BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
-            try{
+            try {
                 IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
 
@@ -148,7 +147,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         }
     }
-
 
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
