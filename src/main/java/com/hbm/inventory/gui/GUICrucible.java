@@ -91,8 +91,8 @@ public class GUICrucible extends GuiInfoContainer {
         int lastQuant = 0;
 
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
-        for(Mats.MaterialStack sta : stack) {
+        List<Mats.MaterialStack> copy = new ArrayList<>(stack);
+        for(Mats.MaterialStack sta : copy) {
 
             int targetHeight = (lastQuant + sta.amount) * 79 / capacity;
 

@@ -116,29 +116,29 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 		return new TileEntityFoundryOutlet();
 	}
 	
-	// @Override
-	// public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-	// 	if(world.isRemote) {
-	// 		return true;
-	// 	}
-		
-	// 	if(!player.isSneaking()) {
-	// 		TileEntityFoundryOutlet tile = (TileEntityFoundryOutlet) world.getTileEntity(x, y, z);
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if(world.isRemote) {
+	 		return true;
+	 	}
+
+	 	if(!player.isSneaking()) {
+	 		TileEntityFoundryOutlet tile = (TileEntityFoundryOutlet) world.getTileEntity(pos);
 			
-	// 		if(player.getHeldItem() != null && player.getHeldItem().getItem() == ModItems.scraps) {
-	// 			MaterialStack mat = ItemScraps.getMats(player.getHeldItem());
-	// 			if(mat != null) {
-	// 				tile.filter = mat.material;
-	// 			}
-	// 		} else {
-	// 			tile.invertRedstone = !tile.invertRedstone;
-	// 		}
-	// 		tile.markDirty();
-	// 		world.markBlockForUpdate(x, y, z);
-	// 	}
+	 		if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() == ModItems.scraps) {
+	 			MaterialStack mat = ItemScraps.getMats(player.getHeldItem(hand));
+	 			if(mat != null) {
+	 				tile.filter = mat.material;
+	 			}
+	 		} else {
+	 			tile.invertRedstone = !tile.invertRedstone;
+	 		}
+	 		tile.markDirty();
+	 		world.markAndNotifyBlock(pos, world.getChunk(pos), state, state, 2);
+	 	}
 		
-	// 	return true;
-	// }
+	 	return true;
+	}
 
 	@Override
     public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool) {

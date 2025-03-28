@@ -1,0 +1,10 @@
+# Made in Blockbench 4.12.3
+newmtl m_07aec63c-a829-e7cc-1363-dc31f5ed2bbb
+map_Kd foundry_channel_side.png
+newmtl m_40125d25-df76-3368-a296-57acf5dd5b37
+map_Kd foundry_channel_bottom.png
+newmtl m_ca741696-7c19-5a14-4763-640dc56f47b5
+map_Kd foundry_channel_inner.png
+newmtl m_487cefdc-51d5-6071-2fc6-11f5a977b5ec
+map_Kd foundry_channel_top.png
+newmtl none

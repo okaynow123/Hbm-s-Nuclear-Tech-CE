@@ -339,7 +339,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 
 	private ForgeDirection getRotationFromState(IBlockState state) {
-		int meta = state.getValue(META); // Используем PropertyInteger META
+		int meta = state.getValue(META);
 		return ForgeDirection.getOrientation(meta - offset).getRotation(ForgeDirection.UP);
 	}
 

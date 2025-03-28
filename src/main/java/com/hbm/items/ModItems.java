@@ -1621,6 +1621,7 @@ public class ModItems {
 	public static final Item fragment_meteorite = new ItemBase("fragment_meteorite").setCreativeTab(MainRegistry.partsTab);
 	public static final Item fragment_boron = new ItemBase("fragment_boron").setCreativeTab(MainRegistry.partsTab);
 	public static final Item fragment_coltan = new ItemBase("fragment_coltan").setCreativeTab(MainRegistry.partsTab);
+	public static final Item chunk_ore = new ItemEnumMulti(ItemEnums.EnumChunkType.class, true, true).setTranslationKey("chunk_ore").setCreativeTab(MainRegistry.partsTab);
 	
 	
 	public static final Item demon_core_open = new ItemDemonCore("demon_core_open").setCreativeTab(MainRegistry.nukeTab);

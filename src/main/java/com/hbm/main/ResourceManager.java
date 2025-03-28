@@ -230,6 +230,9 @@ public class ResourceManager {
 	//Magnusson Device
 	public static final IModelCustom microwave = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/microwave.obj")).asVBO();
 
+	//Foundry
+	public static final IModelCustom foundry_channel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/foundry_channel.obj"));
+
 	//Cables
 	public static final IModelCustom cable_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/cable_neo.obj")).asVBO();
 

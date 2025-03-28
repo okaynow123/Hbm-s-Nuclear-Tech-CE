@@ -9,6 +9,7 @@ import com.hbm.blocks.generic.BlockOreMetaInverted;
 import com.hbm.blocks.generic.BlockSellafield;
 import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
+import com.hbm.blocks.machine.FoundryChannel;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;

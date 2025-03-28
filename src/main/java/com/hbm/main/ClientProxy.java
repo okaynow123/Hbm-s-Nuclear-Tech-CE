@@ -297,6 +297,9 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new RenderSawmill());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrucible.class, new RenderCrucible());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReactorResearch.class, new RenderSmallReactor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFoundryMold.class, new RenderFoundry());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFoundryBasin.class, new RenderFoundry());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFoundryChannel.class, new RenderFoundryChannel());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReactorZirnox.class, new RenderZirnox());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityZirnoxDestroyed.class, new RenderZirnoxDestroyed());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceField.class, new RenderMachineForceField());
@@ -1094,6 +1097,17 @@ public class ClientProxy extends ServerProxy {
                 ejector.spawnCasing(Minecraft.getMinecraft().renderEngine, casingConfig, world, x, y, z, data.getFloat("pitch"), data.getFloat("yaw"), data.getBoolean("crouched"));
             }
         }
+
+		if("foundry".equals(type)) {
+			int color = data.getInteger("color");
+			byte dir = data.getByte("dir");
+			float length = data.getFloat("len");
+			float base = data.getFloat("base");
+			float offset = data.getFloat("off");
+
+			ParticleFoundry sploosh = new ParticleFoundry(world, x, y, z, color, dir, length, base, offset);
+			Minecraft.getMinecraft().effectRenderer.addEffect(sploosh);
+		}
 		
 		if("fireworks".equals(type)) {
 			int color = data.getInteger("color");

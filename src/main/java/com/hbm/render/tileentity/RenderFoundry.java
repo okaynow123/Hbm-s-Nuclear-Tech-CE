@@ -1,7 +1,14 @@
 package com.hbm.render.tileentity;
 
 import java.awt.Color;
+import java.util.Objects;
 
+import com.hbm.main.MainRegistry;
+import com.hbm.wiaj.WorldInAJar;
+import com.hbm.wiaj.actors.ITileActorRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.lib.RefStrings;
@@ -17,12 +24,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class RenderFoundryLib {
+public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCastingBase> implements ITileActorRenderer {
 	
 	public static final ResourceLocation lava = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
 
@@ -49,8 +55,8 @@ public class RenderFoundryLib {
 
 		GL11.glPopMatrix();
 	}
-
-	public static void renderFoundry(TileEntity te, double x, double y, double z, float interp) {
+	@Override
+	public void render(TileEntityFoundryCastingBase te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		IRenderFoundry foundry = (IRenderFoundry) te;
 		
 		GL11.glPushMatrix();
@@ -71,15 +77,15 @@ public class RenderFoundryLib {
 		}
 
 		if(foundry.shouldRender()) {
-			
+
 			int hex = foundry.getMat().moltenColor;
 			Color color = new Color(hex);
-	
+
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(lava);
-			
+			ITileActorRenderer.bindTexture(lava);
+
 			Tessellator tess = new Tessellator();
         	tess.setNormal(0F, 1F, 0F);
         	tess.setBrightness(240);
@@ -94,7 +100,18 @@ public class RenderFoundryLib {
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			GL11.glPopMatrix();
 		}
-		
+
 		GL11.glPopMatrix();
 	}
+
+	@Override
+	public void renderActor(WorldInAJar world, int ticks, float interp, NBTTagCompound data) {
+		int x = data.getInteger("x");
+		int y = data.getInteger("y");
+		int z = data.getInteger("z");
+		render((TileEntityFoundryCastingBase) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))), x, y, z, interp, 0, 0);
+	}
+
+	@Override
+	public void updateActor(int ticks, NBTTagCompound data) { }
 }
