@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Used in items that require model baking;
+ * Will automatically bake once correct methods are supplied
  */
 public interface IDynamicModels {
     public static List<IDynamicModels> INSTANCES = new ArrayList<>();
