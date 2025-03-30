@@ -48,7 +48,7 @@ import java.util.Random;
  * what 1.7 can get away with.
   * @author MrNorwood
  */
-public class BlockSellafield extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
+public class BlockSellafield extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicModels {
 
     public static final int LEVELS = 7;
     public static final float rad = 0.5f;

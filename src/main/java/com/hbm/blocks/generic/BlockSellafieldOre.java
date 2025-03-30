@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicModels, IDynamicSprites {
+public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicModels {
 
     public BlockEnums.OreType oreType;
 

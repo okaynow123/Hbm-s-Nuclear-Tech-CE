@@ -45,7 +45,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    public static List<BlockMeta> INSTANCES = new ArrayList<>();
+    //public static List<BlockMeta> INSTANCES = new ArrayList<>();
     public final short META_COUNT;
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
@@ -100,16 +100,14 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModels() {
-        for (BlockMeta block : INSTANCES) {
-            for (int meta = 0; meta <= block.META_COUNT; meta++) {
+    public void registerModel() {
+            for (int meta = 0; meta <= this.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
-                        Item.getItemFromBlock(block),
+                        Item.getItemFromBlock(this),
                         meta,
-                        new ModelResourceLocation(block.getRegistryName(), "meta=" + meta)
+                        new ModelResourceLocation(this.getRegistryName(), "meta=" + meta)
                 );
             }
-        }
     }
 
     public static void bakeModels(ModelBakeEvent event) {
@@ -124,7 +122,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     }
 
     @SideOnly(Side.CLIENT)
-    private void bakeModel(ModelBakeEvent event) {
+    public void bakeModel(ModelBakeEvent event) {
         for (int meta = 0; meta <= META_COUNT - 1; meta++) {
             BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
             try {

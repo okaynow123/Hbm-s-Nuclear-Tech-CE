@@ -43,7 +43,8 @@ import java.util.*;
 import static com.hbm.inventory.material.Mats.*;
 import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
-public class ItemBedrockOreNew extends Item implements IDynamicModels, IDynamicSprites {
+//TODO: fix IDynamicModels
+public class ItemBedrockOreNew extends Item {
 
     private static final List<ItemBedrockOreNew> INSTANCES = new ArrayList<>();
 

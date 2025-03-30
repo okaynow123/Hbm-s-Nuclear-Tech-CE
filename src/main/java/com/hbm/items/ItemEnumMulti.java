@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class ItemEnumMulti extends ItemBase implements IDynamicSprites, IDynamicModels {
+public class ItemEnumMulti extends ItemBase implements  IDynamicModels {
 
     public static final String ROOT_PATH = "items/";
     public static List<ItemEnumMulti> INSTANCES = new ArrayList<>();

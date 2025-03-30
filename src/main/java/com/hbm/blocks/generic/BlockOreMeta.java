@@ -49,7 +49,7 @@ import static com.hbm.blocks.OreEnumUtil.OreEnum;
 public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBlockItem {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
+    //public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
     public final short META_COUNT;
     public final boolean showMetaInCreative;
     public final String baseTextureName;
@@ -65,26 +65,24 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
         showMetaInCreative = true;
     }
 
-    public static void bakeModels(ModelBakeEvent event) {
-        for (BlockOreMeta block : INSTANCES) {
-            block.bakeModel(event);
-        }
-    }
-
-    public static void registerSprites(TextureMap map) {
-        for (BlockOreMeta item : INSTANCES) item.registerSprite(map);
-    }
+//    public static void bakeModels(ModelBakeEvent event) {
+//        for (BlockOreMeta block : INSTANCES) {
+//            block.bakeModel(event);
+//        }
+//    }
+//
+//    public static void registerSprites(TextureMap map) {
+//        for (BlockOreMeta item : INSTANCES) item.registerSprite(map);
+//    }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModels() {
-        for (BlockOreMeta block : INSTANCES) {
-            for (int meta = 0; meta <= block.META_COUNT; meta++) {
+    public void registerModel() {
+            for (int meta = 0; meta <= this.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
-                        Item.getItemFromBlock(block),
+                        Item.getItemFromBlock(this),
                         meta,
-                        new ModelResourceLocation(block.getRegistryName(), "meta=" + meta)
+                        new ModelResourceLocation(this.getRegistryName(), "meta=" + meta)
                 );
-            }
         }
     }
 
@@ -159,7 +157,7 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
     }
 
     @SideOnly(Side.CLIENT)
-    private void bakeModel(ModelBakeEvent event) {
+    public void bakeModel(ModelBakeEvent event) {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft:block/cube_all"));
 

@@ -27,10 +27,7 @@ import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIArmorTable;
-import com.hbm.items.IModelRegister;
-import com.hbm.items.ItemEnumMulti;
-import com.hbm.items.ItemVOTVdrive;
-import com.hbm.items.ModItems;
+import com.hbm.items.*;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.gear.ArmorFSB;
@@ -483,9 +480,7 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
-        BlockOreMeta.registerModels();
-        BlockSellafieldSlaked.registerModels();
-        BlockMeta.registerModels();
+        IDynamicModels.registerModels();
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
@@ -809,10 +804,9 @@ public class ModEventHandlerClient {
         TextureMap map = evt.getMap();
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
-        BlockOreMeta.registerSprites(map);
-        BlockMeta.registerSprites(map);
         ItemAutogen.registerSprites(map);
-        BlockSellafieldSlaked.registerSprites(map);
+
+        IDynamicModels.registerSprites(map);
 
         DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
         DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
