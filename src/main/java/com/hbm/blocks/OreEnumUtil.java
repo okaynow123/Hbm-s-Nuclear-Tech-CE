@@ -19,9 +19,9 @@ import static com.hbm.items.ModItems.*;
  */
 public class OreEnumUtil {
 
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) * fortune;
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND2_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(2) * fortune;
-    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND2_FORTUNE = (state, fortune, rand) -> 1 + rand.nextInt(2) * fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND3_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(3) + fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE2_RAND2_FORTUNE = (state, fortune, rand) -> 2 + rand.nextInt(2) + fortune;
+    public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND2_FORTUNE = (state, fortune, rand) -> 1 + rand.nextInt(2) + fortune;
     public static final TriFunction<IBlockState, Integer, Random, Integer> BASE1_RAND_3 = (state, fortune, rand) -> 1 + rand.nextInt(3);
     public static final TriFunction<IBlockState, Integer, Random, Integer> CONST1 = (state, fortune, rand) -> 1;
     public static final TriFunction<IBlockState, Integer, Random, Integer> VANILLA_FORTUNE = (state, fortune, rand) -> 1 + applyFortune(rand, fortune);

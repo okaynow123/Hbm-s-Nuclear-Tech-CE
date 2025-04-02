@@ -19,7 +19,6 @@ import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.machine.*;
@@ -231,8 +230,8 @@ public class ModBlocks {
 	public static final Block ore_beryllium = new BlockNTMOre("ore_beryllium", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
 
 	public static final Block ore_lignite = new BlockNTMOre("ore_lignite", 0).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block ore_asbestos = new BlockNTMOre("ore_asbestos", 1, 6).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block ore_rare = new BlockNTMOre("ore_rare", 2, 12).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_asbestos = new BlockNTMOre("ore_asbestos", OreEnum.ASBESTOS, 1, 6).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
+	public static final Block ore_rare = new BlockNTMOre("ore_rare", OreEnum.RARE_EARTHS, 2, 12).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 
 	public static final Block ore_coal_oil = new BlockCoalOil("ore_coal_oil").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(15.0F);
 	public static final Block ore_coal_oil_burning = new BlockCoalBurning("ore_coal_oil_burning").setCreativeTab(MainRegistry.resourceTab).setLightLevel(10F/15F).setHardness(5.0F).setResistance(15.0F);
@@ -554,15 +553,6 @@ public class ModBlocks {
 	public static final Block sellafield_4 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_4", 4).setHardness(5.0F).setResistance(8F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_core = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_core", 5).setHardness(10.0F).setResistance(10F).setCreativeTab(MainRegistry.resourceTab);
 
-@Depricated() //This is just sellafield under different name
-	public static final Block baleonitite_slaked = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_0 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_0").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_1 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_1").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_2 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_2").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_3 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_3").setHardness(5.0F).setResistance(7F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_4 = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_4").setHardness(5.0F).setResistance(8F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block baleonitite_core = new BlockHazard(Material.ROCK, SoundType.STONE, "baleonitite_core").setHardness(10.0F).setResistance(9F).setCreativeTab(MainRegistry.resourceTab);
-	
 
 	public static final Block geysir_water = new BlockGeysir(Material.ROCK, "geysir_water").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block geysir_chlorine = new BlockGeysir(Material.ROCK, "geysir_chlorine").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
