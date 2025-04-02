@@ -101,6 +101,13 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     		world.setBlockToAir(pos);
     	}
 	}
+
+	public BlockPos findCore(IBlockAccess world, BlockPos pos) {
+    	positions.clear();
+    	int[] p = findCoreRec(world, pos.getX(), pos.getY(), pos.getZ());
+    	if(p == null) return null;
+    	return new BlockPos(p[0], p[1], p[2]);
+    }
 	
 	public int[] findCore(IBlockAccess world, int x, int y, int z) {
     	positions.clear();
@@ -229,7 +236,6 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 	
 	protected void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
-
 		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, getDimensions(), this, dir);
 	}
 	
@@ -279,13 +285,13 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			//ForgeDirection d = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) - offset);
 			//MultiblockHandler.emptySpace(world, x, y, z, getDimensions(), this, d);
 		} else if(!safeRem) {
-			
-	    	if(i >= extra)
-	    		i -= extra;
 
-	    	ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
+			if(i >= extra)
+				i -= extra;
+
+			ForgeDirection dir = ForgeDirection.getOrientation(i).getOpposite();
 			int[] pos1 = findCore(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
-			
+
 			if(pos1 != null) {
 
 				//ForgeDirection d = ForgeDirection.getOrientation(world.getBlockMetadata(pos[0], pos[1], pos[2]) - offset);
@@ -300,29 +306,61 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		return !bounding.isEmpty();
 	}
 
-	public List<AxisAlignedBB> bounding = new ArrayList();
+	public List<AxisAlignedBB> bounding = new ArrayList<>();
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> list, @Nullable Entity entityIn, boolean isActualState) {
-
-		if(!this.useDetailedHitbox()) {
-			super.addCollisionBoxToList(state, world, pos, entityBox, list, entityIn, isActualState);
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
+		if (!this.useDetailedHitbox()) {
+			super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, isActualState);
 			return;
 		}
 
-		int[] corePos = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+		int[] corePos = this.findCore(worldIn, pos.getX(), pos.getY(), pos.getZ());
 
-		if(corePos == null)
+		if (corePos == null) {
 			return;
-		IBlockState coreState = world.getBlockState(new BlockPos(corePos[0], corePos[1], corePos[2]));
+		}
 
-		for(AxisAlignedBB aabb :this.bounding) {
-			AxisAlignedBB boxlet = getAABBRotationOffset(aabb, corePos[0] + 0.5, corePos[1], corePos[2] + 0.5, ForgeDirection.getOrientation(coreState.getBlock().getMetaFromState(state) - this.offset).getRotation(ForgeDirection.UP));
+		BlockPos coreBlockPos = new BlockPos(corePos[0], corePos[1], corePos[2]);
 
-			if(entityBox.intersects(boxlet)) {
-				list.add(boxlet);
+		for (AxisAlignedBB aabb : this.bounding) {
+			AxisAlignedBB rotatedBox = getAABBRotationOffset(
+					aabb,
+					coreBlockPos.getX() + 0.5,
+					coreBlockPos.getY(),
+					coreBlockPos.getZ() + 0.5,
+					getRotationFromState(worldIn.getBlockState(coreBlockPos))
+			);
+
+			if (entityBox.intersects(rotatedBox)) {
+				collidingBoxes.add(rotatedBox);
 			}
 		}
+	}
+
+	private ForgeDirection getRotationFromState(IBlockState state) {
+		int meta = state.getValue(META);
+		return ForgeDirection.getOrientation(meta - offset).getRotation(ForgeDirection.UP);
+	}
+
+	public static AxisAlignedBB getAABBRotationOffset(AxisAlignedBB aabb, double x, double y, double z, ForgeDirection dir) {
+		AxisAlignedBB newBox = null;
+
+		if (dir == ForgeDirection.NORTH) {
+			newBox = new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+		} else if (dir == ForgeDirection.EAST) {
+			newBox = new AxisAlignedBB(-aabb.maxZ, aabb.minY, aabb.minX, -aabb.minZ, aabb.maxY, aabb.maxX);
+		} else if (dir == ForgeDirection.SOUTH) {
+			newBox = new AxisAlignedBB(-aabb.maxX, aabb.minY, -aabb.maxZ, -aabb.minX, aabb.maxY, -aabb.minZ);
+		} else if (dir == ForgeDirection.WEST) {
+			newBox = new AxisAlignedBB(aabb.minZ, aabb.minY, -aabb.maxX, aabb.maxZ, aabb.maxY, -aabb.minX);
+		}
+
+		if (newBox != null) {
+			return newBox.offset(x, y, z);
+		}
+
+		return new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ).offset(x + 0.5, y + 0.5, z + 0.5);
 	}
 	
 	@Override
@@ -400,11 +438,20 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		double dZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double)interp;
 		float exp = 0.002F;
 
-		int meta = world.getBlockState(new BlockPos(coreX, coreY, coreZ)).getBlock().getMetaFromState(world.getBlockState(new BlockPos(coreX, coreY, coreZ)));
+		int meta = world.getBlockState(new BlockPos(coreX, coreY, coreZ)).getValue(META);
 
 		ICustomBlockHighlight.setup();
 		for(AxisAlignedBB aabb : this.bounding) RenderGlobal.drawSelectionBoundingBox(getAABBRotationOffset(aabb.expand(exp, exp, exp), 0, 0, 0, ForgeDirection.getOrientation(meta - offset).getRotation(ForgeDirection.UP)).offset(coreX - dX + 0.5, coreY - dY, coreZ - dZ + 0.5), 0,0,0,1.0F);
 		ICustomBlockHighlight.cleanup();
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		if (!this.useDetailedHitbox()) {
+			return FULL_BLOCK_AABB;
+		} else {
+			return new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.999F, 1.0F);
+		}
 	}
 
 	@Override
@@ -432,23 +479,6 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		if (tile instanceof ICopiable)
 			return ((ICopiable) tile).infoForDisplay(world, x, y, z);
 		return null;
-	}
-
-	public static AxisAlignedBB getAABBRotationOffset(AxisAlignedBB aabb, double x, double y, double z, ForgeDirection dir) {
-
-		AxisAlignedBB newBox = null;
-
-		if(dir == ForgeDirection.NORTH) newBox = new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-		if(dir == ForgeDirection.EAST) newBox = new AxisAlignedBB(-aabb.maxZ, aabb.minY, aabb.minX, -aabb.minZ, aabb.maxY, aabb.maxX);
-		if(dir == ForgeDirection.SOUTH) newBox = new AxisAlignedBB(-aabb.maxX, aabb.minY, -aabb.maxZ, -aabb.minX, aabb.maxY, -aabb.minZ);
-		if(dir == ForgeDirection.WEST) newBox = new AxisAlignedBB(aabb.minZ, aabb.minY, -aabb.maxX, aabb.maxZ, aabb.maxY, -aabb.minX);
-
-		if(newBox != null) {
-			newBox.offset(x, y, z);
-			return newBox;
-		}
-
-		return new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ).offset(x + 0.5, y + 0.5, z + 0.5);
 	}
 
 }

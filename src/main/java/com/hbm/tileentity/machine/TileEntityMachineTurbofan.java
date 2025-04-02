@@ -78,6 +78,8 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		tank = new FluidTankNTM(Fluids.KEROSENE, 24000);
 		blood = new FluidTankNTM(Fluids.BLOOD, 24000);
 		upgradeManager = new UpgradeManager();
+
+		converted = true;
 	}
 	@Override
 	public String getName() {

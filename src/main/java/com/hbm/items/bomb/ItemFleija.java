@@ -1,7 +1,7 @@
 package com.hbm.items.bomb;
 
+import com.hbm.items.ItemBase;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemHazard;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemFleija extends ItemHazard {
+public class ItemFleija extends ItemBase {
 
-	public ItemFleija(float radiation, boolean blinding, String s) {
-		super(radiation, false, blinding, s);
+	public ItemFleija(String s) {
+		super(s);
 		this.setCreativeTab(MainRegistry.nukeTab);
 	}
 	

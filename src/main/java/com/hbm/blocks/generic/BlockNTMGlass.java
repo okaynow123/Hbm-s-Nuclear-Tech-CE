@@ -2,9 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.RadiationSystemNT;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.interfaces.IRadResistantBlock;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.SoundType;
@@ -19,10 +17,9 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock, IItemHazard {
+public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock {
 
 	BlockRenderLayer layer;
-	ItemHazardModule module;
 	boolean doesDrop = false;
 	boolean isRadResistant = false;
 
@@ -41,15 +38,10 @@ public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock,
 		this.layer = layer;
 		this.doesDrop = doesDrop;
 		this.isRadResistant = isRadResistant;
-		this.module = new ItemHazardModule();
 
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
 
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
-	}
 
 	@Override
 	public BlockNTMGlass setSoundType(SoundType sound) {

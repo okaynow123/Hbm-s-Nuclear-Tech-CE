@@ -71,6 +71,8 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
 
 		Random rand = new Random();
 		audioDesync = rand.nextFloat() * 0.05F;
+
+		converted = true;
 	}
 
 	@Untested

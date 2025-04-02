@@ -1,9 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.main.MainRegistry;
-import com.hbm.modules.ItemHazardModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -17,9 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockMushHuge extends Block implements IItemHazard {
-
-	ItemHazardModule module;
+public class BlockMushHuge extends Block {
 
 	public BlockMushHuge(Material mat, String s) {
 		super(mat);
@@ -27,13 +23,7 @@ public class BlockMushHuge extends Block implements IItemHazard {
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setSoundType(SoundType.PLANT);
-		this.module = new ItemHazardModule();
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
 	}
 
 	@Override

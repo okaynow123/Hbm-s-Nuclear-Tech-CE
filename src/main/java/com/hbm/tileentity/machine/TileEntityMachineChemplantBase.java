@@ -113,6 +113,8 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		for(int idx = 0; idx < tanks.length; ++idx) {
 			tanks[idx] = new TypedFluidTank(null, new FluidTank(this.getTankCapacity()));
 		}
+
+		converted = true;
 	}
 
 	//Norwood: Why the fuck was the fluid array downsized by one? that causes out of bounds you know?

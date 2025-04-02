@@ -53,6 +53,8 @@ public class TileEntityMachineBoilerElectric extends TileEntityMachineBase imple
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(16000);
 		tanks[1] = new FluidTank(16000);
+
+		converted = true;
 	}
 	
 	@Override

@@ -15,17 +15,17 @@ import java.util.List;
 
 public class BlockRotatablePillar extends BlockRotatedPillar {
 
+	public BlockRotatablePillar(Material materialIn, String s, SoundType sound) {
+		this(materialIn, s);
+		this.setSoundType(sound);
+	}
+
 	public BlockRotatablePillar(Material materialIn, String s) {
 		super(materialIn);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

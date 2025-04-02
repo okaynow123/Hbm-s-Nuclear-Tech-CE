@@ -3,6 +3,7 @@ package com.hbm.hazard.type;
 import com.hbm.config.GeneralConfig;
 import com.hbm.hazard.helper.HazardHelper;
 import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.lib.Library;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
@@ -47,18 +48,36 @@ public class HazardTypeRadiation extends HazardTypeBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addHazardInformation(final EntityPlayer player, final List list, float level, final ItemStack stack, final List<HazardModifier> modifiers) {
-		
+
 		level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
-		
-		if(level < 1e-5)
-			return;
-		
-		list.add(TextFormatting.GREEN + "[" + I18nUtil.resolveKey("trait.radioactive") + "]");
-		final String rad = "" + (Math.floor(level* 1000) / 1000);
-		list.add(TextFormatting.YELLOW + (rad + "RAD/s"));
-		
+		if(level == 0) return;
+		list.add("§a[" + I18nUtil.resolveKey("trait.radioactive") + "]");
+		list.add(" §e" + (Library.roundFloat(getNewValue(level), 3)+ getSuffix(level) + " " + I18nUtil.resolveKey("desc.rads")));
+
 		if(stack.getCount() > 1) {
-			list.add(TextFormatting.YELLOW + "Stack: " + ((Math.floor(level * 1000 * stack.getCount()) / 1000) + "RAD/s"));
+			float stackRad = level * stack.getCount();
+			list.add(" §e" + I18nUtil.resolveKey("desc.stack")+" " + Library.roundFloat(getNewValue(stackRad), 3) + getSuffix(stackRad) + " " + I18nUtil.resolveKey("desc.rads"));
+		}
+	}
+
+
+	public static float getNewValue(float radiation){
+		if(radiation < 1000000){
+			return radiation;
+		} else if(radiation < 1000000000){
+			return radiation * 0.000001F;
+		} else{
+			return radiation * 0.000000001F;
+		}
+	}
+
+	public static String getSuffix(float radiation){
+		if(radiation < 1000000){
+			return "";
+		} else if(radiation < 1000000000){
+			return I18nUtil.resolveKey("desc.mil");
+		} else{
+			return I18nUtil.resolveKey("desc.bil");
 		}
 	}
 

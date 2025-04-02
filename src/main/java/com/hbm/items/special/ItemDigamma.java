@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.config.WeaponConfig;
 import com.hbm.entity.effect.EntityQuasar;
+import com.hbm.items.ItemBase;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -14,12 +15,12 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemDigamma extends ItemHazard {
+public class ItemDigamma extends ItemBase {
 
 	int digamma;
 	
-	public ItemDigamma(float radiation, int diagamma, String s) {
-		super(radiation, s);
+	public ItemDigamma(int diagamma, String s) {
+		super(s);
 		//obacht! the particle's digamma value is "ticks until half life" while the superclass' interpretation is "simply add flat value"
 		this.digamma = diagamma;
 	}
@@ -37,15 +38,7 @@ public class ItemDigamma extends ItemHazard {
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
 		list.add(TextFormatting.GOLD + I18nUtil.resolveKey("trait.hlParticle", "1.67*10³⁴ a"));
 		list.add(TextFormatting.RED + I18nUtil.resolveKey("trait.hlPlayer", (digamma / 20F) + "s"));
-
 		list.add("");
-		super.addInformation(stack, world, list, flagIn);
-
-		float d = ((int) ((1000F / digamma) * 200F)) / 10F;
-
-		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.digamma") + "]");
-		list.add(TextFormatting.DARK_RED + "" + d + "mDRX/s");
-
 		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
 	}
 	

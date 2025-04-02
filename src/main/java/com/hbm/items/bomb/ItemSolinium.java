@@ -1,6 +1,6 @@
 package com.hbm.items.bomb;
 
-import com.hbm.items.special.ItemHazard;
+import com.hbm.items.ItemBase;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -9,10 +9,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemSolinium extends ItemHazard {
+public class ItemSolinium extends ItemBase {
 
-	public ItemSolinium(float radiation, boolean blinding, String s) {
-		super(radiation, false, blinding, s);
+	public ItemSolinium(String s) {
+		super(s);
 		this.setCreativeTab(MainRegistry.nukeTab);
 	}
 

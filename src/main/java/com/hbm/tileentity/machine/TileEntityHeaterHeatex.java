@@ -60,6 +60,8 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
         this.tankTypes[0] = ModForgeFluids.coolant_hot;
         this.tanks[1] = new FluidTank(ModForgeFluids.coolant, 0, 24_000);
         this.tankTypes[1] = ModForgeFluids.coolant;
+
+        converted = true;
     }
 
     @Override

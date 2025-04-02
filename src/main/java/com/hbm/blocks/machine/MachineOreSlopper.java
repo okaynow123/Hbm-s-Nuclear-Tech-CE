@@ -22,30 +22,19 @@ import java.util.List;
 
 public class MachineOreSlopper extends BlockDummyable {
 
-    protected static final List<AxisAlignedBB> BOUNDING_BOXES = ImmutableList.of(
-            //Base
-            new AxisAlignedBB(-3.5, 0, -1.5, 3.5, 1, 1.5),
-            //Slop bucket
-            new AxisAlignedBB(0.5, 1, -1.5, 3.5, 3.25, 1.5),
-            //Shredder
-            new AxisAlignedBB(-2.25, 1, -1.5, 0.25, 3.25, -0.75),
-            new AxisAlignedBB(-2.25, 1, 0.75, 0.25, 3.25, 1.5),
-            new AxisAlignedBB(-2.25, 1, -1.5, -2, 3.25, 1.5),
-            new AxisAlignedBB(0, 1, -1.5, 0.25, 3.25, 1.5),
-            new AxisAlignedBB(-2, 1, -0.75, 0, 2, 0.75),
-            //Outlet
-            new AxisAlignedBB(-3.25, 1, -1, -2.25, 3, 1)
-    );
-
     public MachineOreSlopper(String s) {
-        super(Material.IRON, s);
-    }
-
-    @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
-        for (AxisAlignedBB box : BOUNDING_BOXES) {
-            addCollisionBoxToList(pos, entityBox, collidingBoxes, box);
-        }
+        super(Material.IRON, s);		//Base
+        this.bounding.add(new AxisAlignedBB(-3.5, 0, -1.5, 3.5, 1, 1.5));
+        //Slop bucket
+        this.bounding.add(new AxisAlignedBB(0.5, 1, -1.5, 3.5, 3.25, 1.5));
+        //Shredder
+        this.bounding.add(new AxisAlignedBB(-2.25, 1, -1.5, 0.25, 3.25, -0.75));
+        this.bounding.add(new AxisAlignedBB(-2.25, 1, 0.75, 0.25, 3.25, 1.5));
+        this.bounding.add(new AxisAlignedBB(-2.25, 1, -1.5, -2, 3.25, 1.5));
+        this.bounding.add(new AxisAlignedBB(0, 1, -1.5, 0.25, 3.25, 1.5));
+        this.bounding.add(new AxisAlignedBB(-2, 1, -0.75, 0, 2, 0.75));
+        //Outlet
+        this.bounding.add(new AxisAlignedBB(-3.25, 1, -1, -2.25, 3, 1));
     }
 
     @Override

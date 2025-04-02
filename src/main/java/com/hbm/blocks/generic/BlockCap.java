@@ -4,7 +4,9 @@ import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
+
 import com.hbm.render.block.BlockBakeFrame;
+
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +23,7 @@ public class BlockCap extends BlockEnumMeta {
 
     public BlockCap(String registryName) {
         super(Material.IRON, SoundType.METAL, registryName, BlockEnums.EnumBlockCapType.class, true, true);
+
     }
 
     @Override

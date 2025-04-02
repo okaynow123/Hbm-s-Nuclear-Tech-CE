@@ -74,6 +74,8 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		};
 		tankNew = new FluidTankNTM(Fluids.PEROXIDE, 8000);
 		tank = new FluidTank(16000);
+
+		converted = true;
 	}
 
 	@Override

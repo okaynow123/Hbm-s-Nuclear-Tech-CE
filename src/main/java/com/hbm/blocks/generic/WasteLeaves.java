@@ -1,8 +1,6 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
-import com.hbm.modules.ItemHazardModule;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.BlockStateContainer;
@@ -23,16 +21,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class WasteLeaves extends BlockOldLeaf implements IItemHazard {
-
-	ItemHazardModule module;
+public class WasteLeaves extends BlockOldLeaf {
 
 	public WasteLeaves(String s) {
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK).withProperty(CHECK_DECAY, Boolean.valueOf(false)).withProperty(DECAYABLE, Boolean.valueOf(false)));
 		this.setTickRandomly(false);
-		this.module = new ItemHazardModule();
 		ModBlocks.ALL_BLOCKS.add(this);
 	}
 
@@ -70,11 +65,6 @@ public class WasteLeaves extends BlockOldLeaf implements IItemHazard {
     public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random){
     	return;
     }
-
-	@Override
-	public ItemHazardModule getModule() {
-		return module;
-	}
 
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune){

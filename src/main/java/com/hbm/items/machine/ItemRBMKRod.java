@@ -1,26 +1,20 @@
 package com.hbm.items.machine;
 
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.tileentity.machine.rbmk.IRBMKFluxReceiver.NType;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemRBMKRod extends Item implements IItemHazard {
+public class ItemRBMKRod extends Item {
 
 	public static final double xe135HalflifeMulPerTick = 0.9999241662036941; // 0.5^(1/9140) for a 9.14h halflife
 	
@@ -77,7 +71,6 @@ public class ItemRBMKRod extends Item implements IItemHazard {
 	public ItemRBMKRod(String fullName, String s) {
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
-		this.module = new ItemHazardModule();
 		
 		this.fullName = fullName;
 		
@@ -451,38 +444,6 @@ public class ItemRBMKRod extends Item implements IItemHazard {
 		}
 
 		super.addInformation(stack, worldIn, list, flag);
-		updateModule(stack);
-		this.module.addInformation(stack, list, flag);
-	}
-	
-	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean b) {
-		
-		if(entity instanceof EntityLivingBase) {
-			updateModule(stack);
-			this.module.applyEffects((EntityLivingBase) entity, stack.getCount(), i, b, ((EntityLivingBase)entity).getHeldItemMainhand() == stack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
-		}
-	}
-	
-	@Override
-	public boolean onEntityItemUpdate(EntityItem item) {
-		
-		super.onEntityItemUpdate(item);
-		updateModule(item.getItem());
-		return this.module.onEntityItemUpdate(item);
-	}
-	
-	ItemHazardModule module;
-
-	@Override
-	public ItemHazardModule getModule() {
-		return this.module;
-	}
-	
-	private void updateModule(ItemStack stack) {
-		
-		float mod = (float)(1 + (1 - getEnrichment(stack)) * 24 + getPoisonLevel(stack) * 100);
-		this.module.setMod(mod);
 	}
 	
 	/*  __    __   ____     ________

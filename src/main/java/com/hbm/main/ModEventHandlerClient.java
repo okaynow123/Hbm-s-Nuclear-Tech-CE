@@ -8,6 +8,7 @@ import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.blocks.generic.BlockOreMeta;
 import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
+import com.hbm.blocks.machine.FoundryChannel;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
@@ -43,7 +44,6 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.packet.AuxButtonPacket;
 import com.hbm.packet.GunButtonPacket;
 import com.hbm.packet.MeathookJumpPacket;
@@ -78,11 +78,8 @@ import com.hbm.tileentity.bomb.TileEntityNukeCustom;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom.CustomNukeEntry;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom.EnumEntryType;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
-import com.hbm.util.ArmorRegistry;
+import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
-import com.hbm.util.BobMathUtil;
-import com.hbm.util.ContaminationUtil;
-import com.hbm.util.I18nUtil;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
@@ -480,7 +477,10 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
+
         IDynamicModels.registerModels();
+        ((ItemMold) ModItems.mold).registerModels();
+  
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
@@ -580,6 +580,7 @@ public class ModEventHandlerClient {
         BlockOreMeta.bakeModels(evt);
         BlockMeta.bakeModels(evt);
         BlockSellafieldSlaked.bakeModels(evt);
+        ItemMold.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -631,6 +632,12 @@ public class ModEventHandlerClient {
             IBakedModel model = (IBakedModel) object7;
             ChemTemplateRender.INSTANCE.itemModel = model;
             evt.getModelRegistry().putObject(ItemChemistryTemplate.chemModel, new ChemTemplateBakedModel());
+        }
+        Object object8 = evt.getModelRegistry().getObject(ItemCrucibleTemplate.location);
+        if (object8 instanceof IBakedModel) {
+            IBakedModel model = (IBakedModel) object8;
+            CrucibleTemplateRender.INSTANCE.itemModel = model;
+            evt.getModelRegistry().putObject(ItemCrucibleTemplate.location, new CrucibleTemplateBakedModel());
         }
 
         IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();
@@ -804,6 +811,7 @@ public class ModEventHandlerClient {
         TextureMap map = evt.getMap();
         ItemBedrockOreNew.registerSprites(map);
         ItemWatzPellet.registerSprites(map);
+        ItemMold.registerSprites(map);
         ItemAutogen.registerSprites(map);
 
         IDynamicModels.registerSprites(map);
@@ -2115,6 +2123,12 @@ public class ModEventHandlerClient {
             }
         }
 
+        /// NEUTRON RADS ///
+        ContaminationUtil.addNeutronRadInfo(stack, event.getEntityPlayer(), list, event.getFlags());
+
+        /// HAZARDS ///
+        HazardSystem.addHazardInfo(stack, event.getEntityPlayer(), list, event.getFlags());
+
         /// CUSTOM NUKE ///
         ComparableStack comp = new NbtComparableStack(stack).makeSingular();
         CustomNukeEntry entry = TileEntityNukeCustom.entries.get(comp);
@@ -2143,14 +2157,13 @@ public class ModEventHandlerClient {
             list.add(TextFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
         }
         /// NEUTRON RADS ///
-        float activationRads = ContaminationUtil.getNeutronRads(stack);
-        if (activationRads > 0) {
-            list.add(TextFormatting.GREEN + "[" + I18nUtil.resolveKey("trait.radioactive") + "]");
-            float stackRad = activationRads / stack.getCount();
-            list.add(TextFormatting.YELLOW + (Library.roundFloat(ItemHazardModule.getNewValue(stackRad), 3) + ItemHazardModule.getSuffix(stackRad) + " " + I18nUtil.resolveKey("desc.rads")));
-
-            if (stack.getCount() > 1) {
-                list.add(TextFormatting.YELLOW + (I18nUtil.resolveKey("desc.stack") + " " + Library.roundFloat(ItemHazardModule.getNewValue(activationRads), 3) + ItemHazardModule.getSuffix(activationRads) + " " + I18nUtil.resolveKey("desc.rads")));
+        if(event.getFlags().isAdvanced()) {
+            List<String> names = ItemStackUtil.getOreDictNames(stack);
+            if(names.size() > 0) {
+                list.add("§bOre Dict:");
+                for(String s : names) {
+                    list.add("§3 - " + s);
+                }
             }
         }
 
@@ -2159,9 +2172,6 @@ public class ModEventHandlerClient {
             if (stack.getTagCompound().getBoolean("ntmContagion"))
                 list.add("§4§l[" + I18nUtil.resolveKey("trait.mkuinfected") + "§4§l]");
         }
-
-        //HAZARD
-        HazardSystem.addFullTooltip(stack, event.getEntityPlayer(), list);
     }
 
     @SubscribeEvent

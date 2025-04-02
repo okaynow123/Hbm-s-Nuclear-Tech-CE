@@ -2,6 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.MachineConfig;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemLock;
 import com.hbm.lib.InventoryHelper;
@@ -98,6 +99,7 @@ public class BlockStorageCrate extends BlockContainer {
 
 			NBTTagCompound nbt = new NBTTagCompound();
 
+			float rads = 0;
 			if(te != null) {
 				IItemHandler inventory;
 				if(te instanceof TileEntitySafe){
@@ -114,10 +116,15 @@ public class BlockStorageCrate extends BlockContainer {
 					if(stack.isEmpty())
 						continue;
 
+					rads += HazardSystem.getTotalRadsFromStack(stack) * stack.getCount();
 					NBTTagCompound slot = new NBTTagCompound();
 					stack.writeToNBT(slot);
 					nbt.setTag("slot" + i, slot);
 				}
+			}
+
+			if(rads > 0){
+				nbt.setFloat("cRads", rads);
 			}
 
 			if(te instanceof TileEntityLockableBase) {

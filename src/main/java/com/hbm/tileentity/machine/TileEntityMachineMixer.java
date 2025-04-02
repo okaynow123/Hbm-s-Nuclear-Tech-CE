@@ -72,6 +72,8 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 		this.fluids[0] = ModForgeFluids.none;
 		this.fluids[1] = ModForgeFluids.none;
 		this.fluids[2] = ModForgeFluids.none;
+
+		converted = true;
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.container.ContainerMachineAssembler;
+import com.hbm.inventory.gui.GUIMachineAssembler;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.lib.ForgeDirection;
@@ -14,8 +16,12 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +30,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TileEntityMachineAssembler extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityMachineAssembler extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
     public static final long maxPower = 2000000;
     public long power;
@@ -701,16 +708,27 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
         return 65536.0D;
     }
 
-    @Override
-    public int countMufflers() {
+	@Override
+	public int countMufflers() {
 
-        int count = 0;
+		int count = 0;
 
-        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++)
-            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++)
-                if (world.getBlockState(new BlockPos(x, pos.getY() - 1, z)).getBlock() == ModBlocks.muffler)
-                    count++;
+		for(int x = pos.getX() - 1; x <= pos.getX() + 1; x++)
+			for(int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++)
+				if(world.getBlockState(new BlockPos(x, pos.getY() - 1, z)).getBlock() == ModBlocks.muffler)
+					count++;
 
-        return count;
-    }
+		return count;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineAssembler(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineAssembler(player.inventory, this);
+	}
 }

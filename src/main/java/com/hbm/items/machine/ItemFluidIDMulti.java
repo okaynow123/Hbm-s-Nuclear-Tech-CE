@@ -110,13 +110,11 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
-    // Этот метод вызывается при инициализации клиентской части мода
     @SideOnly(Side.CLIENT)
     public static void registerItemColors() {
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemFluidIdentifierColor(), ModItems.fluid_identifier_multi);
     }
 
-    // Внутренний класс для обработки цвета
     @SideOnly(Side.CLIENT)
     public static class ItemFluidIdentifierColor implements IItemColor {
         @Override
