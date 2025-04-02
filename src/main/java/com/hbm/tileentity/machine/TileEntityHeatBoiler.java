@@ -50,6 +50,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements INBTPa
 
         tanks[1] = new FluidTank(ModForgeFluids.steam, 0, 64000000);
         types[1] = ModForgeFluids.steam;
+        converted = true;
 
     }
     @Override

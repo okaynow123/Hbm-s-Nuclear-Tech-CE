@@ -2,9 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.main.MainRegistry;
-import com.hbm.modules.ItemHazardModule;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.Block;
@@ -30,10 +28,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class WasteEarth extends Block implements IItemHazard {
+public class WasteEarth extends Block {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    ItemHazardModule module;
 
     public WasteEarth(Material materialIn, boolean tick, String s) {
         super(materialIn);
@@ -42,7 +39,6 @@ public class WasteEarth extends Block implements IItemHazard {
         this.setCreativeTab(MainRegistry.controlTab);
         this.setTickRandomly(tick);
         this.setHarvestLevel("shovel", 0);
-        this.module = new ItemHazardModule();
 
         ModBlocks.ALL_BLOCKS.add(this);
     }
@@ -65,11 +61,6 @@ public class WasteEarth extends Block implements IItemHazard {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(META, meta);
-    }
-
-    @Override
-    public ItemHazardModule getModule() {
-        return module;
     }
 
     @Override

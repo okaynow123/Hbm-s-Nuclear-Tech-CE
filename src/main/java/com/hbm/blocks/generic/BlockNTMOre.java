@@ -1,10 +1,9 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IItemHazard;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.modules.ItemHazardModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.SoundType;
@@ -25,11 +24,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
+
 import static com.hbm.blocks.OreEnumUtil.*;
 
-public class BlockNTMOre extends BlockOre implements IItemHazard {
+public class BlockNTMOre extends BlockOre {
 
-    ItemHazardModule module;
+
     public static int xp;
     protected final OreEnum oreEnum;
 
@@ -42,7 +42,6 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
         this.setCreativeTab(MainRegistry.controlTab);
         this.setTickRandomly(false);
         this.setHarvestLevel("pickaxe", harvestLvl);
-        this.module = new ItemHazardModule();
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
@@ -60,10 +59,6 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
         super.setSoundType(sound);
     }
 
-    @Override
-    public ItemHazardModule getModule() {
-        return module;
-    }
 
     @Override
     public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
@@ -130,13 +125,13 @@ public class BlockNTMOre extends BlockOre implements IItemHazard {
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
         if (entity instanceof EntityLivingBase)
-            this.module.applyEffects((EntityLivingBase) entity, 0.5F, 0, false, EnumHand.MAIN_HAND);
+            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
     }
 
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
         if (entity instanceof EntityLivingBase)
-            this.module.applyEffects((EntityLivingBase) entity, 0.5F, 0, false, EnumHand.MAIN_HAND);
+            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
     }
 
     @Override

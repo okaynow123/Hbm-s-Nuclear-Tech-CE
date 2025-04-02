@@ -58,6 +58,8 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 		tanks = new FluidTank[2];
 		tanks[0] = new FluidTank(8000);
 		tanks[1] = new FluidTank(8000);
+
+		converted = true;
 	}
 
 	@Override

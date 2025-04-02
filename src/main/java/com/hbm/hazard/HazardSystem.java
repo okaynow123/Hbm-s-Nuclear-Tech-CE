@@ -1,4 +1,5 @@
 package com.hbm.hazard;
+import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ItemStackUtil;
 
 import java.util.*;
@@ -10,6 +11,7 @@ import com.hbm.interfaces.Untested;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -168,11 +170,11 @@ public class HazardSystem {
 		return entries;
 	}
 
-	public static float getHazardLevelFromStack(final ItemStack stack, final HazardTypeBase hazard) {
-		final List<HazardEntry> entries = getHazardsFromStack(stack);
+	public static float getHazardLevelFromStack(ItemStack stack, HazardTypeBase hazard) {
+		List<HazardEntry> entries = getHazardsFromStack(stack);
 
-		for (final HazardEntry entry : entries) {
-			if (entry.type == hazard) {
+		for(HazardEntry entry : entries) {
+			if(entry.type == hazard) {
 				return HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods);
 			}
 		}
@@ -180,15 +182,31 @@ public class HazardSystem {
 		return 0F;
 	}
 
+	public static float getRawRadsFromBlock(Block b) {
+		return getHazardLevelFromStack(new ItemStack(Item.getItemFromBlock(b)), HazardRegistry.RADIATION);
+	}
+
+	public static float getRawRadsFromStack(ItemStack stack) {
+		return getHazardLevelFromStack(stack, HazardRegistry.RADIATION);
+	}
+
+	public static float getTotalRadsFromStack(ItemStack stack) {
+		return getHazardLevelFromStack(stack, HazardRegistry.RADIATION) + ContaminationUtil.getNeutronRads(stack);
+	}
+
+	public static void applyHazards(Block b, EntityLivingBase entity) {
+		applyHazards(new ItemStack(Item.getItemFromBlock(b)), entity);
+	}
+
 	/**
 	 * Will grab and iterate through all assigned hazards of the given stack and apply their effects to the holder.
 	 * @param stack
 	 * @param entity
 	 */
-	public static void applyHazards(final ItemStack stack, final EntityLivingBase entity) {
-		final List<HazardEntry> hazards = getHazardsFromStack(stack);
-		
-		for(final HazardEntry hazard : hazards) {
+	public static void applyHazards(ItemStack stack, EntityLivingBase entity) {
+		List<HazardEntry> hazards = getHazardsFromStack(stack);
+
+		for(HazardEntry hazard : hazards) {
 			hazard.applyHazard(stack, entity);
 		}
 	}
@@ -197,62 +215,50 @@ public class HazardSystem {
 	 * Will apply the effects of all carried items, including the armor inventory.
 	 * @param player
 	 */
-	public static void updatePlayerInventory(final EntityPlayer player) {
-		final NonNullList<ItemStack> mainInventory = player.inventory.mainInventory;
-		final NonNullList<ItemStack> armorInventory = player.inventory.armorInventory;
+	public static void updatePlayerInventory(EntityPlayer player) {
+		int inventorySize = player.inventory.getSizeInventory();
+		for(int i = 0; i < inventorySize; i++) {
 
-		// Iterate over main inventory
-		for (int i = 0; i < mainInventory.size(); i++) {
-			final ItemStack stack = mainInventory.get(i);
-
-			// Check if stack is not empty
-			if (!stack.isEmpty()) {
+			ItemStack stack = player.inventory.getStackInSlot(i);
+			if(stack != null && !stack.isEmpty()) {
 				applyHazards(stack, player);
 
-				// Check if stack is now empty after applying hazards
-				if (stack.getCount() == 0) {
-					mainInventory.set(i, ItemStack.EMPTY);
+				if(stack.getCount() == 0) {
+					player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 				}
 			}
 		}
-
-		// Iterate over armor inventory
-		for (final ItemStack stack : armorInventory) {
-			if (!stack.isEmpty()) {
-				applyHazards(stack, player);
-			}
-		}
+		player.inventoryContainer.detectAndSendChanges();
 	}
 
-	public static void updateLivingInventory(final EntityLivingBase entity) {
-		
-		for(int i = 0; i < 5; i++) {
-			final ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.values()[i]);
+	public static void updateLivingInventory(EntityLivingBase entity) {
 
-			if(stack != ItemStack.EMPTY) {
+		for(EntityEquipmentSlot i : EntityEquipmentSlot.values()) {
+			ItemStack stack = entity.getItemStackFromSlot(i);
+
+			if(stack != null && !stack.isEmpty()) {
 				applyHazards(stack, entity);
 			}
 		}
 	}
 
-	public static void updateDroppedItem(final EntityItem entity) {
-		
-		final ItemStack stack = entity.getItem();
-		
-		if(entity.isDead || stack == ItemStack.EMPTY || stack.getCount() <= 0) return;
-		
-		final List<HazardEntry> hazards = getHazardsFromStack(stack);
-		for(final HazardEntry entry : hazards) {
+	public static void updateDroppedItem(EntityItem entity) {
+		if(entity.isDead) return;
+		ItemStack stack = entity.getItem();
+
+		if(stack == null || stack.isEmpty() || stack.getCount() <= 0) return;
+
+		List<HazardEntry> hazards = getHazardsFromStack(stack);
+		for(HazardEntry entry : hazards) {
 			entry.type.updateEntity(entity, HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods));
 		}
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public static void addFullTooltip(final ItemStack stack, final EntityPlayer player, final List list) {
-		
-		final List<HazardEntry> hazards = getHazardsFromStack(stack);
-		
-		for(final HazardEntry hazard : hazards) {
+
+	public static void addHazardInfo(ItemStack stack, EntityPlayer player, List<String> list, ITooltipFlag flagIn) {
+
+		List<HazardEntry> hazards = getHazardsFromStack(stack);
+
+		for(HazardEntry hazard : hazards) {
 			hazard.type.addHazardInformation(player, list, hazard.baseLevel, stack, hazard.mods);
 		}
 	}

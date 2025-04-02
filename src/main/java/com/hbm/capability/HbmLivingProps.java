@@ -4,18 +4,14 @@ import java.util.List;
 import java.util.UUID;
 
 import com.hbm.config.RadiationConfig;
-import com.hbm.interfaces.IItemHazard;
 import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
-import com.hbm.main.MainRegistry;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
 
-import com.hbm.packet.PlayerInformPacket;
 import com.hbm.packet.PlayerInformPacketLegacy;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

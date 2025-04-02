@@ -61,6 +61,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 		super(6);
 		tank = new FluidTank(-1);
 		tankNew = new FluidTankNTM(Fluids.NONE, 0, 0);
+		converted = true;
 	}
 	
 	public TileEntityBarrel(int cap) {

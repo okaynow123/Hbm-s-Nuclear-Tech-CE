@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBattery;
 import com.hbm.items.machine.ItemBreedingRod;
@@ -59,7 +60,7 @@ public class HbmChestContents {
 			new WeightedRandomChestContentFrom1710(ModItems.ingot_steel, 0, 1, 2, 7),
 			new WeightedRandomChestContentFrom1710(ModItems.ingot_red_copper, 0, 1, 1, 4),
 			new WeightedRandomChestContentFrom1710(ModItems.ingot_titanium, 0, 1, 3, 5),
-			new WeightedRandomChestContentFrom1710(ModItems.wire_red_copper, 0, 2, 3, 7),
+			new WeightedRandomChestContentFrom1710(ModItems.wire_fine, Mats.MAT_MINGRADE.id, 2, 3, 7),
 			new WeightedRandomChestContentFrom1710(ModItems.circuit_targeting_tier1, 0, 1, 1, 4),
 			new WeightedRandomChestContentFrom1710(ModItems.circuit_copper, 0, 1, 1, 4),
 			new WeightedRandomChestContentFrom1710(ModItems.battery_generic, 0, 1, 1, 4),
@@ -224,7 +225,7 @@ public class HbmChestContents {
 	private static WeightedRandomChestContentFrom1710[] spaceship = new WeightedRandomChestContentFrom1710[] {
 			new WeightedRandomChestContentFrom1710(ModItems.battery_advanced, 0, 1, 1, 5),
 			new WeightedRandomChestContentFrom1710(ModItems.ingot_advanced_alloy, 0, 2, 16, 5),
-			new WeightedRandomChestContentFrom1710(ModItems.wire_advanced_alloy, 0, 8, 32, 5),
+			new WeightedRandomChestContentFrom1710(ModItems.wire_fine, Mats.MAT_ALLOY.id, 8, 32, 5),
 			new WeightedRandomChestContentFrom1710(ModItems.coil_advanced_alloy, 0, 2, 16, 5),
 			new WeightedRandomChestContentFrom1710(ItemCell.getFullCell(Fluids.DEUTERIUM), 1, 8, 5),
 			new WeightedRandomChestContentFrom1710(ItemCell.getFullCell(Fluids.TRITIUM), 1, 8, 5),

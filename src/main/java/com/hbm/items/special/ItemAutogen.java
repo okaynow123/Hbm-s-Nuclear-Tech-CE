@@ -8,6 +8,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IDynamicSprites;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -36,7 +37,7 @@ public class ItemAutogen extends Item {
 
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
-    private HashMap<NTMMaterial, String> textureOverrides = new HashMap();
+    private HashMap<NTMMaterial, String> textureOverrides = new HashMap<>();
     private String overrideUnlocalizedName = null;
 
     public ItemAutogen(MaterialShapes shape, String s) {
@@ -110,7 +111,7 @@ public class ItemAutogen extends Item {
     public void registerSprite(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
             if(!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || mat.autogen.contains(shape))) {
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/"+ this.getRegistryName().getPath() + "-" + mat.names[0]);
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/"+ Objects.requireNonNull(this.getRegistryName()).getPath() + "-" + mat.names[0]);
                 TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
                 map.setTextureEntry(sprite);
             }
@@ -121,11 +122,11 @@ public class ItemAutogen extends Item {
         }
     }
 
-    private String getTexturePath(NTMMaterial mat) {
+    protected String getTexturePath(NTMMaterial mat) {
         if (textureOverrides.containsKey(mat)) {
             return "items/" + textureOverrides.get(mat);
         } else {
-            return "items/" + this.getRegistryName().getPath() + "-" + mat.names[0];
+            return "items/" + Objects.requireNonNull(this.getRegistryName()).getPath() + "-" + mat.names[0];
         }
     }
 

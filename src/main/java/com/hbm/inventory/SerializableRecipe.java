@@ -33,6 +33,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new CrackRecipes());
         recipeHandlers.add(new CokerRecipes());
         recipeHandlers.add(new ChemplantRecipes());
+        recipeHandlers.add(new CrucibleRecipes());
         recipeHandlers.add(new CrystallizerRecipes());
         recipeHandlers.add(new FractionRecipes());
         recipeHandlers.add(new HydrotreatingRecipes());

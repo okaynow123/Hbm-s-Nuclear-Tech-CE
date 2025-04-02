@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-
+//TODO: REWORK
 public class TileEntityMachineRadGen extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2 {
 
 	public ItemStackHandler inventory;
@@ -99,7 +99,7 @@ public class TileEntityMachineRadGen extends TileEntityLoadedBase implements ITi
 	}
 
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		return i == 0 && ContaminationUtil.getStackRads(stack) > 0;
+		return i == 0 && ContaminationUtil.getNeutronRads(stack) > 0;
 	}
 	
 	@Override
@@ -108,7 +108,7 @@ public class TileEntityMachineRadGen extends TileEntityLoadedBase implements ITi
 			power = Library.chargeItemsFromTE(inventory, 2, power, maxPower);
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 			this.tryProvide(world, this.pos.getX() - dir.offsetX * 4, this.pos.getY(), this.pos.getZ() - dir.offsetZ * 4, dir.getOpposite());
-			int r = (int)Math.sqrt(ContaminationUtil.getStackRads(inventory.getStackInSlot(0)));
+			int r = (int)Math.sqrt(ContaminationUtil.getNeutronRads(inventory.getStackInSlot(0)));
 			if(r > 0) {
 				if(inventory.getStackInSlot(0).getItem().hasContainerItem(inventory.getStackInSlot(0))) {
 					if(inventory.getStackInSlot(1).isEmpty()) {

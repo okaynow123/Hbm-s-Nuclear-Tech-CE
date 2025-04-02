@@ -160,30 +160,31 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
 
-        registry.addRecipeClickArea(GUIMachineAssembler.class, 45, 83, 82, 30, ASSEMBLY);
-        registry.addRecipeClickArea(GUIMachineChemplant.class, 45, 90, 85, 15, CHEMPLANT);
-        registry.addRecipeClickArea(GUIMixer.class, 62, 36, 52, 44, MIXER);
-        registry.addRecipeClickArea(GUIMachineCyclotron.class, 50, 24, 40, 40, CYCLOTRON);
-        registry.addRecipeClickArea(GUIMachinePress.class, 80, 35, 15, 15, PRESS);
-        registry.addRecipeClickArea(GUIMachineEPress.class, 80, 35, 15, 15, PRESS);
-        registry.addRecipeClickArea(GUITestDiFurnace.class, 102, 36, 21, 14, ALLOY);
-        registry.addRecipeClickArea(GUIDiFurnaceRTG.class, 102, 36, 21, 14, ALLOY);
-        registry.addRecipeClickArea(GUIMachineBoiler.class, 61, 34, 17, 35, BOILER);
-        registry.addRecipeClickArea(GUIMachineBoilerElectric.class, 61, 34, 17, 35, BOILER);
-        registry.addRecipeClickArea(GUIMachineBoilerRTG.class, 61, 34, 17, 17, BOILER);
-        registry.addRecipeClickArea(GUIMachineCentrifuge.class, 35, 9, 106, 40, CENTRIFUGE);
-        registry.addRecipeClickArea(GUIMachineCMBFactory.class, 111, 35, 21, 14, CMB);
-        registry.addRecipeClickArea(GUIMachineGasCent.class, 118, 36, 51, 13, GAS_CENT);
-        registry.addRecipeClickArea(GUIMachineRefinery.class, 79, 71, 71, 17, REFINERY);
-        registry.addRecipeClickArea(GUIMachineShredder.class, 43, 89, 53, 17, SHREDDER);
-        registry.addRecipeClickArea(GUICrystallizer.class, 79, 40, 29, 26, CRYSTALLIZER);
-        registry.addRecipeClickArea(GUIBook.class, 89, 34, 23, 16, BOOK);
-        registry.addRecipeClickArea(GUIHadron.class, 71, 28, 32, 32, HADRON);
-        registry.addRecipeClickArea(GUISILEX.class, 45, 82, 113 - 45, 125 - 82, SILEX);
-        registry.addRecipeClickArea(GUIAnvil.class, 34, 26, 52 - 34, 44 - 26, SMITHING);
-        registry.addRecipeClickArea(GUIAnvil.class, 12, 50, 48 - 12, 66 - 50, ANVIL);
-        registry.addRecipeClickArea(GUIRBMKOutgasser.class, 64, 53, 48, 16, RBMKOUTGASSER);
-        registry.addRecipeClickArea(GUIMachineSchrabidiumTransmutator.class, 64, 56, 66, 31, TRANSMUTATION);
+
+		registry.addRecipeClickArea(GUIMachineAssembler.class, 45, 83, 82, 30, ASSEMBLY);
+		registry.addRecipeClickArea(GUIMachineChemplant.class, 45, 90, 85, 15, CHEMPLANT);
+		registry.addRecipeClickArea(GUIMixer.class, 62, 36, 52, 44, MIXER);
+		registry.addRecipeClickArea(GUIMachineCyclotron.class, 50, 24, 40, 40, CYCLOTRON);
+		registry.addRecipeClickArea(GUIMachinePress.class, 80, 35, 15, 15, PRESS);
+		registry.addRecipeClickArea(GUIMachineEPress.class, 80, 35, 15, 15, PRESS);
+		registry.addRecipeClickArea(GUITestDiFurnace.class, 102, 36, 21, 14, ALLOY);
+		registry.addRecipeClickArea(GUIDiFurnaceRTG.class, 102, 36, 21, 14, ALLOY);
+		registry.addRecipeClickArea(GUIMachineBoiler.class, 61, 34, 17, 35, BOILER);
+		registry.addRecipeClickArea(GUIMachineBoilerElectric.class, 61, 34, 17, 35, BOILER);
+		registry.addRecipeClickArea(GUIMachineBoilerRTG.class, 61, 34, 17, 17, BOILER);
+		registry.addRecipeClickArea(GUIMachineCentrifuge.class, 35, 9, 106, 40, CENTRIFUGE);
+		registry.addRecipeClickArea(GUIMachineCMBFactory.class, 111, 35, 21, 14, CMB);
+		registry.addRecipeClickArea(GUIMachineGasCent.class, 118, 36, 51, 13, GAS_CENT);
+		registry.addRecipeClickArea(GUIMachineRefinery.class, 53, 30, 56, 85, REFINERY);
+		registry.addRecipeClickArea(GUIMachineShredder.class, 43, 89, 53, 17, SHREDDER);
+		registry.addRecipeClickArea(GUICrystallizer.class, 79, 40, 29, 26, CRYSTALLIZER);
+		registry.addRecipeClickArea(GUIBook.class, 89, 34, 23, 16, BOOK);
+		registry.addRecipeClickArea(GUIHadron.class, 71, 28, 32, 32, HADRON);
+		registry.addRecipeClickArea(GUISILEX.class, 45, 82, 113-45, 125-82, SILEX);
+		registry.addRecipeClickArea(GUIAnvil.class, 34, 26, 52-34, 44-26, SMITHING);
+		registry.addRecipeClickArea(GUIAnvil.class, 12, 50, 48-12, 66-50, ANVIL);
+		registry.addRecipeClickArea(GUIRBMKOutgasser.class, 64, 53, 48, 16, RBMKOUTGASSER);
+		registry.addRecipeClickArea(GUIMachineSchrabidiumTransmutator.class, 64, 56, 66, 31, TRANSMUTATION);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
@@ -275,39 +276,48 @@ public class JEIConfig implements IModPlugin {
                 new BookRecipeHandler(help));
     }
 
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
-        if (!GeneralConfig.jei)
-            return;
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.cell, (ItemStack stack) -> {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            return ModItems.cell.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
-        });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_barrel_full, (ItemStack stack) -> {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            return ModItems.fluid_barrel_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
-        });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_full, (ItemStack stack) -> {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            return ModItems.fluid_tank_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
-        });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_generic, (ItemStack stack) -> {
-            FluidStack fluid = FluidUtil.getFluidContained(stack);
-            return ModItems.canister_generic.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
-        });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> {
-            return ModItems.missile_custom.getTranslationKey() + "w" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "warhead")) + "f" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "fuselage")) + "s" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "stability")) + "t" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "thruster"));
-        });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, (ItemStack stack) -> {
-            if (stack.hasTagCompound()) {
-                String s = "";
-                if (stack.getTagCompound().hasKey("type"))
-                    s = s + stack.getTagCompound().getString("type");
-                return s;
-            }
-            return "";
-        });
-    }
+
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
+		if(!GeneralConfig.jei)
+			return;
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.cell, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.cell.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_barrel_full, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.fluid_barrel_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_lead_full, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.fluid_tank_lead_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_lead_full, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.fluid_tank_lead_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_full, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.fluid_tank_full.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_generic, (ItemStack stack) -> {
+			FluidStack fluid = FluidUtil.getFluidContained(stack);
+			return ModItems.canister_generic.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> {
+			return ModItems.missile_custom.getTranslationKey() + "w" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "warhead")) + "f" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "fuselage")) + "s" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "stability")) + "t" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "thruster"));
+		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, (ItemStack stack) -> {
+			if(stack.hasTagCompound()) {
+				String s = "";
+				if(stack.getTagCompound().hasKey("type"))
+					s = s + stack.getTagCompound().getString("type");
+				return s;
+			}
+			return "";
+		});
+	}
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {

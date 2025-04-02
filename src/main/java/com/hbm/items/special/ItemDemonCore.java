@@ -1,5 +1,6 @@
 package com.hbm.items.special;
 
+import com.hbm.items.ItemBase;
 import com.hbm.items.ModItems;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -10,7 +11,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemDemonCore extends ItemHazard {
+public class ItemDemonCore extends ItemBase {
 
 	public ItemDemonCore(String s){
 		super(s);
@@ -28,7 +29,6 @@ public class ItemDemonCore extends ItemHazard {
 	
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
-		super.addInformation(stack, world, list, flagIn);
 		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
 	}
 

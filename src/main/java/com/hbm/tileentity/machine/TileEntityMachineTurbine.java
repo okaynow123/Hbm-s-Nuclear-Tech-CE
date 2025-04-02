@@ -91,6 +91,8 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 		tankTypes[0] = ModForgeFluids.steam;
 		tanks[1] = new FluidTank(128000);
 		tankTypes[1] = ModForgeFluids.spentsteam;
+
+		converted = true;
 	}
 
 	@Override

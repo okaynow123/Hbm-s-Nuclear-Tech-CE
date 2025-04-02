@@ -47,6 +47,7 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.SPENTSTEAM, 100);
 		tanks[1] = new FluidTankNTM(Fluids.WATER, 100);
+		converted = true;
 	}
 
 	@Override

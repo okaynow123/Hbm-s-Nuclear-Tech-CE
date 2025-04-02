@@ -53,6 +53,8 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 		tanks[0] = new FluidTank(16000);
 		tanks[1] = new FluidTank(16000);
 		plasma = new FluidTank(64000);
+
+		converted = true;
 	}
 
 	@Override

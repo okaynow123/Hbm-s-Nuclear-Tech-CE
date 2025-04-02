@@ -54,6 +54,8 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
 		feed = new FluidTankNTM(Fluids.WATER, 10000);
 		steam = new FluidTankNTM(Fluids.STEAM, 1000000);
+
+		converted = true;
 	}
 
 	public void getDiagData(NBTTagCompound nbt) {

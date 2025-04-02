@@ -101,7 +101,7 @@ public class ContainerSILEX extends Container {
 					if (!this.mergeItemStack(var5, 1, 2, false)) {
 						return ItemStack.EMPTY ;
 					}
-				} else if (FluidContainerRegistry.getFluidContent(var3, silex.tank.getTankType()) > 0) {
+				} else if (FluidContainerRegistry.getFluidContent(var3, silex.tankNew.getTankType()) > 0) {
 					if (!this.mergeItemStack(var5, 2, 3, false)) {
 						return ItemStack.EMPTY;
 					}

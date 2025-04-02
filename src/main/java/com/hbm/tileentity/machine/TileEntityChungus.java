@@ -83,6 +83,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 
 		Random rand = new Random();
 		audioDesync = rand.nextFloat() * 0.05F;
+		converted = true;
 	}
 
 	@Override
