@@ -1,3 +1,4 @@
+
 package com.hbm.entity.missile;
 
 import api.hbm.entity.IRadarDetectableNT;
@@ -119,66 +120,66 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	
 	@Override
 	public void onUpdate() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		super.onUpdate();
-		
-		if(velocity < 4) velocity += MathHelper.clamp(this.ticksExisted / 60D * 0.05D, 0, 0.05);
-		
-		if(!world.isRemote) {
-
-			if(hasPropulsion()) {
-				this.motionY -= decelY * velocity;
-	
-				Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
-				vector = vector.normalize();
-				vector.xCoord *= accelXZ;
-				vector.zCoord *= accelXZ;
-	
-				if(motionY > 0) {
-					motionX += vector.xCoord * velocity;
-					motionZ += vector.zCoord * velocity;
-				}
-	
-				if(motionY < 0) {
-					motionX -= vector.xCoord * velocity;
-					motionZ -= vector.zCoord * velocity;
-				}
-			} else {
-				motionX *= 0.99;
-				motionZ *= 0.99;
-
-				if(motionY > -1.5)
-					motionY -= 0.05;
-			}
-	
-			if(motionY < -velocity && this.isCluster) {
-				cluster();
-				this.setDead();
-				return;
-			}
-			
-			this.rotationYaw = (float) (Math.atan2(targetX - posX, targetZ - posZ) * 180.0D / Math.PI);
-			float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-			for(this.rotationPitch = (float) (Math.atan2(this.motionY, f2) * 180.0D / Math.PI) - 90; this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F);
-			EntityTrackerEntry tracker = TrackerUtil.getTrackerEntry((WorldServer) world, this.getEntityId());
-			if(tracker != null){
-				// fuck you, mojang
-				int lastYaw = ObfuscationReflectionHelper.getPrivateValue(EntityTrackerEntry.class, tracker, "field_73127_g");
-				lastYaw += 100;
-				ObfuscationReflectionHelper.setPrivateValue(EntityTrackerEntry.class, tracker, lastYaw, "field_73127_g");
-			}
-			
-			loadNeighboringChunks((int) Math.floor(posX / 16), (int) Math.floor(posZ / 16));
-		} else {
-			this.spawnContrail();
-		}
-		
-		while(this.rotationPitch - this.prevRotationPitch >= 180.0F) this.prevRotationPitch += 360.0F;
-		while(this.rotationYaw - this.prevRotationYaw < -180.0F) this.prevRotationYaw -= 360.0F;
-		while(this.rotationYaw - this.prevRotationYaw >= 180.0F) this.prevRotationYaw += 360.0F;
+	    this.prevPosX = this.posX;
+	    this.prevPosY = this.posY;
+	    this.prevPosZ = this.posZ;
+	    super.onUpdate();
+	    
+	    if (velocity < 4) {
+	        velocity += 0.02; // Smooth velocity increase
+	    }
+	    
+	    if (!world.isRemote) {
+	        double startY = world.getHeight(startX, startZ);
+	        double targetY = world.getHeight(targetX, targetZ);// Ensure missile reaches a higher cruise altitude
+	        
+	        double distanceToTarget = Math.sqrt((targetX - posX) * (targetX - posX) + (targetZ - posZ) * (targetZ - posZ));//Euclidean distance
+	        
+	        
+	        double cruiseAltitude = Math.max(startY, targetY) + distanceToTarget * Math.PI; 
+	        /**
+	         * @author Bailie Byrne
+	         * @discord bailieb123
+	         * Cruise altitude is annoying but works
+	         * Currently usiong the abs distance multiplied by Pi to give hte max Y coord the missile flies at
+	         * Obviously for really short distances 1 block the missile bareley gets off the ground
+	         * If any errors occur setting this to be like 150 or 200 (+startY to be safe) should work
+	         */
+	        
+	        /**
+	         * Split the missile into three phases of the parabolic arc
+	         */
+	        
+	        if (posY < cruiseAltitude && distanceToTarget > 0) {
+	            // Initial Ascent Phase: Missile ascends first
+	            motionX *= 0.98;
+	            motionY = Math.max(motionY + 0.1, 1.0); // Stronger initial ascent
+	            motionZ *= 0.98;
+	        } else if (distanceToTarget > 30) {
+	            // Cruise Phase: Maintain level flight
+	            Vec3 vector = Vec3.createVectorHelper(targetX - posX, 0, targetZ - posZ).normalize();
+	            motionX = vector.xCoord * velocity;
+	            motionY *= 0.95; // Slight damping to prevent floating issues
+	            motionZ = vector.zCoord * velocity;
+	        } else {
+	            // Descent Phase: Smoothly approach target
+	            Vec3 vector = Vec3.createVectorHelper(targetX - posX, Math.max(targetY - posY, -10), targetZ - posZ).normalize();
+	            motionX = vector.xCoord * velocity;
+	            motionY = vector.yCoord * velocity * 0.85; // More gradual descent
+	            motionZ = vector.zCoord * velocity;
+	        }
+	        
+	        this.rotationYaw = (float) (Math.atan2(targetX - posX, targetZ - posZ) * 180.0D / Math.PI);
+	        float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+	        this.rotationPitch = (float) (Math.atan2(this.motionY, f2) * 180.0D / Math.PI) - 90;
+	        
+	        loadNeighboringChunks((int) Math.floor(posX / 16), (int) Math.floor(posZ / 16));
+	    } else {
+	        this.spawnContrail();
+	    }
 	}
+
+
 	
 	public boolean hasPropulsion() {
 		return true;
