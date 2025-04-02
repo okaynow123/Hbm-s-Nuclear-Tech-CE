@@ -5,7 +5,11 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -16,6 +20,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItemMeteorRemote extends Item {
 
@@ -26,6 +31,22 @@ public class ItemMeteorRemote extends Item {
 		this.setMaxDamage(2);
 		
 		ModItems.ALL_ITEMS.add(this);
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return enchantment != Enchantments.UNBREAKING && enchantment != Enchantments.MENDING && super.canApplyAtEnchantingTable(stack, enchantment);
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		if (book.getItem() == Items.ENCHANTED_BOOK) {
+			Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(book);
+			if (enchantments.containsKey(Enchantments.MENDING) || enchantments.containsKey(Enchantments.UNBREAKING)) {
+				return false;
+			}
+		}
+		return super.isBookEnchantable(stack, book);
 	}
 	
 	@Override
