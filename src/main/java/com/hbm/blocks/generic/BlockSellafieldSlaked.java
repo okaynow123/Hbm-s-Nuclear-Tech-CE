@@ -35,6 +35,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,14 +54,14 @@ import java.util.Objects;
  *
  * @author MrNorwood
  */
-public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem, IDynamicSprites, IDynamicModels {
+public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem,  IDynamicModels {
     public static final String[] sellafieldTextures = new String[]{"sellafield_slaked", "sellafield_slaked_1", "sellafield_slaked_2", "sellafield_slaked_3"};
     public static final int TEXTURE_VARIANTS = sellafieldTextures.length;
     public static final int META_COUNT = TEXTURE_VARIANTS;
     public static final String basePath = "blocks/";
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, sellafieldTextures.length - 1);
     public static final PropertyBool NATURAL = PropertyBool.create("natural");
-    public static List<BlockSellafieldSlaked> INSTANCES = new ArrayList<>();
+    //public static List<BlockSellafieldSlaked> INSTANCES = new ArrayList<>();
     public static final boolean showMetaInCreative = true;
     protected boolean isNatural = true;
 
@@ -70,9 +71,9 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     }
 
 
-    public static void registerModels(){
-        INSTANCES.forEach(BlockSellafieldSlaked::registerModel);
-    }
+//    public static void registerModels(){
+//        INSTANCES.forEach(BlockSellafieldSlaked::registerModel);
+//    }
 
     @SideOnly(Side.CLIENT)
     public void registerModel() {
@@ -208,9 +209,9 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
     }
 
-    public static void registerSprites(TextureMap map){
-        INSTANCES.forEach(blockSellafield -> blockSellafield.registerSprite(map));
-    }
+//    public static void registerSprites(TextureMap map){
+//        INSTANCES.forEach(blockSellafield -> blockSellafield.registerSprite(map));
+//    }
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {

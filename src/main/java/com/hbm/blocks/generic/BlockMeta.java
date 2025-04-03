@@ -3,16 +3,13 @@ package com.hbm.blocks.generic;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ICustomBlockItem;
-import com.hbm.interfaces.Untested;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.icon.TextureAtlasSpriteMultipass;
+import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -48,23 +45,30 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
+    //public static List<BlockMeta> INSTANCES = new ArrayList<>();
     public final short META_COUNT;
+    protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
-    public static List<BlockMeta> INSTANCES = new ArrayList<>();
-    protected String[] textures;
+
 
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
         super(mat, type, s);
         META_COUNT = metaCount;
     }
 
-    public BlockMeta(Material mat, SoundType type, String s, String... textures ) {
+    public BlockMeta(Material mat, SoundType type, String s, BlockBakeFrame... blockFrames) {
         super(mat, type, s);
-        this.textures = textures;
-        META_COUNT = (short) textures.length;
+        this.blockFrames = blockFrames;
+        META_COUNT = (short) blockFrames.length;
         INSTANCES.add(this);
     }
 
+    public BlockMeta(Material mat, SoundType type, String s, String... simpleModelTextures) {
+        super(mat, type, s);
+        this.blockFrames = BlockBakeFrame.simpleModelArray(simpleModelTextures);
+        META_COUNT = (short) blockFrames.length;
+        INSTANCES.add(this);
+    }
 
     public BlockMeta(Material m, String s) {
         super(m, s);
@@ -91,49 +95,41 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
     }
 
-    public static void registerSprites(TextureMap map){INSTANCES.forEach(item -> item.registerSprite(map));}
-
-    @SideOnly(Side.CLIENT)
-    public void registerSprite(TextureMap map) {
-        for(String texture : this.textures) {
-            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/" + texture);
-            map.registerSprite(spriteLoc);
-        }
+    public static void registerSprites(TextureMap map) {
+        INSTANCES.forEach(item -> item.registerSprite(map));
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModels() {
-        for (BlockMeta block : INSTANCES) {
-            for (int meta = 0; meta <= block.META_COUNT; meta++) {
+    public void registerModel() {
+            for (int meta = 0; meta <= this.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
-                        Item.getItemFromBlock(block),
+                        Item.getItemFromBlock(this),
                         meta,
-                        new ModelResourceLocation(block.getRegistryName(), "meta=" + meta)
+                        new ModelResourceLocation(this.getRegistryName(), "meta=" + meta)
                 );
             }
-        }
     }
 
     public static void bakeModels(ModelBakeEvent event) {
-        for (BlockMeta block : INSTANCES) {
-            block.bakeModel(event);
+        INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerSprite(TextureMap map) {
+        for (BlockBakeFrame frame : blockFrames) {
+            frame.registerBlockTextures(map);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private void bakeModel(ModelBakeEvent event) {
-        try {
-            IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft:block/cube_all"));
-
-            for (int meta = 0; meta <= META_COUNT - 1; meta++) {
+    public void bakeModel(ModelBakeEvent event) {
+        for (int meta = 0; meta <= META_COUNT - 1; meta++) {
+            BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
+            try {
+                IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
-                String texture = textures[meta % textures.length];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "blocks/"+ texture);
 
-                // Base texture
-                textureMap.put("all", spriteLoc.toString());
-
-
+                blockFrame.putTextures(textureMap);
                 IModel retexturedModel = baseModel.retexture(textureMap.build());
                 IBakedModel bakedModel = retexturedModel.bake(
                         ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
@@ -141,12 +137,14 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
                 ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
                 event.getModelRegistry().putObject(modelLocation, bakedModel);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
         }
     }
-
 
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
@@ -158,7 +156,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     public void registerItem() {
         ItemBlock itemBlock = new MetaBlockItem(this);
         itemBlock.setRegistryName(this.getRegistryName());
-        if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
+        if (showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
     }
 
@@ -167,8 +165,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         int meta = stack.getMetadata();
         world.setBlockState(pos, this.getStateFromMeta(meta), 3);
     }
-
-
 
 
     @Override
@@ -189,6 +185,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     public class MetaBlockItem extends ItemBlock implements IModelRegister {
         BlockMeta metaBlock = (BlockMeta) this.block;
+
         public MetaBlockItem(Block block) {
             super(block);
             this.hasSubtypes = true;
@@ -197,7 +194,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         @Override
         @SideOnly(Side.CLIENT)
-        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
             if (this.isInCreativeTab(tab)) {
                 for (int i = 0; i <= metaBlock.META_COUNT - 1; i++) {
                     list.add(new ItemStack(this, 1, i));
@@ -213,7 +210,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         @Override
         public void registerModels() {
-            for (int meta = 0; meta <= metaBlock.META_COUNT-1; meta++) {
+            for (int meta = 0; meta <= metaBlock.META_COUNT - 1; meta++) {
                 MainRegistry.logger.info("Registering model for " + this.block.getRegistryName() + " meta=" + meta);
                 ModelLoader.setCustomModelResourceLocation(this, meta,
                         new ModelResourceLocation(this.getRegistryName(), "meta=" + meta));

@@ -5,6 +5,7 @@ import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.entity.missile.EntityRideableRocket;
+import com.hbm.interfaces.Untested;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -26,10 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+@Untested
+//@Slize What the fuck is this shit?
 public class ItemVOTVdrive extends ItemEnumMulti {
 
-    public ItemVOTVdrive() {
-        super(SolarSystem.Body.class, false, true);
+    public ItemVOTVdrive(String registryName) {
+        super(registryName, SolarSystem.Body.class, false, true);
         this.setMaxStackSize(1);
         this.canRepair = false;
     }
@@ -70,16 +73,6 @@ public class ItemVOTVdrive extends ItemEnumMulti {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-        for (int i = 0; i < 4; i++) {
-            ModelLoader.setCustomModelResourceLocation(
-                    this,
-                    i,
-                    new ModelResourceLocation(RefStrings.MODID + ":votv_f" + i, "inventory")
-            );
-        }
-    }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override

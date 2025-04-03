@@ -231,6 +231,7 @@ public class HazardRegistry {
 		HazardSystem.register(new ItemStack(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
 		HazardSystem.register(new ItemStack(ModItems.gem_rad), makeData(RADIATION, 25F));
 
+
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal(), u * rod_dual, wst * rod_dual * 11.5F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.URANIUM_FUEL.ordinal(), uf * rod_dual, wst * rod_dual * 10F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.TH232.ordinal(), th232 * rod_dual, thf * rod_dual, false);

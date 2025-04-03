@@ -28,10 +28,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.hbm.blocks.BlockEnums.*;
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.DictFrame.fromAll;
 import static com.hbm.inventory.OreDictManager.DictFrame.fromOne;
 import static com.hbm.inventory.material.MaterialShapes.*;
+import static com.hbm.items.ItemEnums.*;
 import static com.hbm.items.ItemEnums.EnumAshType;
 import static com.hbm.items.ModItems.*;
 
@@ -505,15 +507,15 @@ public class OreDictManager {
         EUPH.nugget(nugget_euphemium).ingot(ingot_euphemium).dust(powder_euphemium).block(block_euphemium);
         DNT.nugget(nugget_dineutronium).ingot(ingot_dineutronium).dust(powder_dineutronium).block(block_dineutronium);
         FIBER.ingot(ingot_fiberglass).block(block_fiberglass);
-        ASBESTOS.asbestos(1F).ingot(ingot_asbestos).dust(powder_asbestos).block(block_asbestos).ore(ore_asbestos, ore_gneiss_asbestos/*, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS)*/);
+        ASBESTOS.asbestos(1F).ingot(ingot_asbestos).dust(powder_asbestos).block(block_asbestos).ore(ore_asbestos, ore_gneiss_asbestos, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS));
         OSMIRIDIUM.nugget(nugget_osmiridium).ingot(ingot_osmiridium);
 
         /*
          * DUST AND GEM ORES
          */
-        S.dust(sulfur).block(block_sulfur).ore(ore_sulfur, ore_nether_sulfur /*,DictFrame.fromOne(ore_basalt, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR)).oreNether(ore_nether_sulfur*/);
+        S.dust(sulfur).block(block_sulfur).ore(ore_sulfur, ore_nether_sulfur ,DictFrame.fromOne(basalt_ore, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR)).oreNether(ore_nether_sulfur);
         KNO.dust(niter).block(block_niter).ore(ore_niter);
-        F.dust(fluorite).block(block_fluorite).ore(ore_fluorite/*, DictFrame.fromOne(ore_basalt, EnumBasaltOreType.FLUORITE)*/);
+        F.dust(fluorite).block(block_fluorite).ore(ore_fluorite, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.FLUORITE));
         LIGNITE.gem(lignite).dust(powder_lignite).ore(ore_lignite);
         COALCOKE.gem(fromOne(coke, EnumCokeType.COAL)).block(fromOne(block_coke, EnumCokeType.COAL));
         PETCOKE.gem(fromOne(coke, EnumCokeType.PETROLEUM)).block(fromOne(block_coke, EnumCokeType.PETROLEUM));
@@ -521,14 +523,15 @@ public class OreDictManager {
         CINNABAR.crystal(cinnebar).gem(cinnebar).ore(ore_cinnebar, ore_depth_cinnebar);
         BORAX.dust(powder_borax).ore(ore_depth_borax);
         CHLOROCALCITE.dust(powder_chlorocalcite);
-        MOLYSITE.dust(powder_molysite)/*.ore(DictFrame.fromOne(ore_basalt, EnumBasaltOreType.MOLYSITE))*/;
+        MOLYSITE.dust(powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
         SODALITE.gem(gem_sodalite);
-        VOLCANIC.gem(gem_volcanic).ore(/*DictFrame.fromOne(ore_basalt, EnumBasaltOreType.GEM)*/);
-        HEMATITE.ore(fromOne(stone_resource, BlockEnums.EnumStoneType.HEMATITE));
-        MALACHITE.ingot(DictFrame.fromOne(chunk_ore, ItemEnums.EnumChunkType.MALACHITE)).ore(fromOne(stone_resource, BlockEnums.EnumStoneType.MALACHITE));
-        LIMESTONE.dust(powder_limestone).ore(fromOne(stone_resource, BlockEnums.EnumStoneType.LIMESTONE));
-        BAUXITE.gem(fromOne(stone_resource, BlockEnums.EnumStoneType.BAUXITE));
-        CRYOLITE.crystal(fromOne(chunk_ore, ItemEnums.EnumChunkType.CRYOLITE));
+
+        VOLCANIC.gem(gem_volcanic).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.GEM));
+        HEMATITE.ore(fromOne(stone_resource, EnumStoneType.HEMATITE));
+        MALACHITE.ingot(DictFrame.fromOne(chunk_ore, EnumChunkType.MALACHITE)).ore(fromOne(stone_resource, EnumStoneType.MALACHITE));
+        LIMESTONE.dust(powder_limestone).ore(fromOne(stone_resource, EnumStoneType.LIMESTONE));
+        BAUXITE.gem(fromOne(stone_resource, EnumStoneType.BAUXITE));
+        CRYOLITE.crystal(fromOne(chunk_ore, EnumChunkType.CRYOLITE));
         SLAG.block(block_slag);
 
         /*
@@ -558,7 +561,9 @@ public class OreDictManager {
         /*
          * RARE EARTHS
          */
-        RAREEARTH.ingot(DictFrame.fromOne(ModItems.chunk_ore, ItemEnums.EnumChunkType.RARE)).ore(ore_rare, ore_gneiss_rare);
+
+        RAREEARTH.ingot(DictFrame.fromOne(ModItems.chunk_ore, EnumChunkType.RARE)).ore(ore_rare, ore_gneiss_rare);
+
         LA.nugget(fragment_lanthanium).ingot(ingot_lanthanium).dustSmall(powder_lanthanium_tiny).dust(powder_lanthanium).block(block_lanthanium);
         ZR.nugget(nugget_zirconium).ingot(ingot_zirconium).billet(billet_zirconium).dust(powder_zirconium).block(block_zirconium).ore(ore_depth_zirconium);
         ND.nugget(fragment_neodymium).dustSmall(powder_neodymium_tiny).dust(powder_neodymium).ore(ore_depth_nether_neodymium).oreNether(ore_depth_nether_neodymium);
@@ -697,9 +702,9 @@ public class OreDictManager {
         }
 
         //TODO
-//		OreDictionary.registerOre("briquetteCoal", fromOne(briquette, EnumBriquetteType.COAL));
-//		OreDictionary.registerOre("briquetteLignite", fromOne(briquette, EnumBriquetteType.LIGNITE));
-//		OreDictionary.registerOre("briquetteWood", fromOne(briquette, EnumBriquetteType.WOOD));
+		OreDictionary.registerOre("briquetteCoal", fromOne(briquette, EnumBriquetteType.COAL));
+		OreDictionary.registerOre("briquetteLignite", fromOne(briquette, EnumBriquetteType.LIGNITE));
+		OreDictionary.registerOre("briquetteWood", fromOne(briquette, EnumBriquetteType.WOOD));
 
         OreDictionary.registerOre(getReflector(), neutron_reflector);
 

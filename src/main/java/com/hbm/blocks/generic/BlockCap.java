@@ -1,49 +1,47 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.blocks.BlockEnumMeta;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
+
+import com.hbm.render.block.BlockBakeFrame;
+
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
-import java.util.Random;
+import java.util.*;
 
-public class BlockCap extends BlockRotatablePillar {
+public class BlockCap extends BlockEnumMeta {
 
-    public BlockCap(Material materialIn, String s, SoundType sound) {
-        super(materialIn, s, sound);
-    }
+    public BlockCap(String registryName) {
+        super(Material.IRON, SoundType.METAL, registryName, BlockEnums.EnumBlockCapType.class, true, true);
 
-    public BlockCap(Material materialIn, String s) {
-        super(materialIn, s);
-    }
-
-    @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        if (this == ModBlocks.block_cap_nuka)
-            return ModItems.cap_nuka;
-        if (this == ModBlocks.block_cap_quantum)
-            return ModItems.cap_quantum;
-        if (this == ModBlocks.block_cap_sparkle)
-            return ModItems.cap_sparkle;
-        if (this == ModBlocks.block_cap_rad)
-            return ModItems.cap_rad;
-        if (this == ModBlocks.block_cap_korl)
-            return ModItems.cap_korl;
-        if (this == ModBlocks.block_cap_fritz)
-            return ModItems.cap_fritz;
-        if (this == ModBlocks.block_cap_sunset)
-            return ModItems.cap_sunset;
-        if (this == ModBlocks.block_cap_star)
-            return ModItems.cap_star;
-        return Items.AIR;
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
-        return 128;
+    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
+
+        return Arrays.stream(blockEnum.getEnumConstants())
+                .sorted(Comparator.comparing(Enum::ordinal))
+                .map(Enum::name)
+                .map(name -> registryName + "_" + name.toLowerCase(Locale.US))
+                .map(texture -> new BlockBakeFrame(texture + "_top", texture))
+                .toArray(BlockBakeFrame[]::new);
     }
 
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        int meta = state.getValue(META);
+        BlockEnums.EnumBlockCapType oreType = (BlockEnums.EnumBlockCapType) this.blockEnum.getEnumConstants()[meta];
+
+        return Collections.singletonList(new ItemStack(oreType.getDrop().getItem(), oreType.getDropCount(0), oreType.drop.getMetadata()));
+    }
 }

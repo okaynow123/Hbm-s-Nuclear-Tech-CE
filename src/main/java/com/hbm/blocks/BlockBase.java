@@ -14,49 +14,49 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class BlockBase extends Block {
-	
-	public BlockBase(Material m, String s){
-		super(m);
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
-		this.setHarvestLevel("pickaxe", 0);
-		this.setCreativeTab(MainRegistry.controlTab);
-		ModBlocks.ALL_BLOCKS.add(this);
-	}
 
-	public BlockBase(Material material) {
-		super(material);
-		ModBlocks.ALL_BLOCKS.add(this);
-	}
+    public BlockBase(Material m, String s) {
+        super(m);
+        this.setTranslationKey(s);
+        this.setRegistryName(s);
+        this.setHarvestLevel("pickaxe", 0);
+        this.setCreativeTab(MainRegistry.controlTab);
+        ModBlocks.ALL_BLOCKS.add(this);
+    }
 
-	public BlockBase() {
+    public BlockBase(Material material) {
+        super(material);
+        ModBlocks.ALL_BLOCKS.add(this);
+    }
+
+    public BlockBase() {
         super(Material.ROCK);
         ModBlocks.ALL_BLOCKS.add(this);
-	}
+    }
 
-	public BlockBase(Material m, SoundType sound, String s){
-		super(m);
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
-		this.setSoundType(sound);
-		this.setHarvestLevel("pickaxe", 0);
-		this.setCreativeTab(MainRegistry.controlTab);
-		ModBlocks.ALL_BLOCKS.add(this);
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World player, List<String> list, ITooltipFlag advanced) {
-		if(stack.getItem() == Item.getItemFromBlock(ModBlocks.meteor_battery)){
-			list.add(I18nUtil.resolveKey("desc.teslacoils"));
-		}
-		
-		float hardness = this.getExplosionResistance(null);
-		if(hardness > 50){
-			list.add(TextFormatting.GOLD + I18nUtil.resolveKey("trait.blastres", hardness));
-		}
-	}
+    public BlockBase(Material m, SoundType sound, String s) {
+        super(m);
+        this.setTranslationKey(s);
+        this.setRegistryName(s);
+        this.setSoundType(sound);
+        this.setHarvestLevel("pickaxe", 0);
+        this.setCreativeTab(MainRegistry.controlTab);
+        ModBlocks.ALL_BLOCKS.add(this);
+    }
 
-	public Block setSoundType(SoundType sound){
-		return super.setSoundType(sound);
-	}
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> list, ITooltipFlag advanced) {
+        if (stack.getItem() == Item.getItemFromBlock(ModBlocks.meteor_battery)) {
+            list.add(I18nUtil.resolveKey("desc.teslacoils"));
+        }
+
+        float hardness = this.getExplosionResistance(null);
+        if (hardness > 50) {
+            list.add(TextFormatting.GOLD + I18nUtil.resolveKey("trait.blastres", hardness));
+        }
+    }
+
+    public Block setSoundType(SoundType sound) {
+        return super.setSoundType(sound);
+    }
 }

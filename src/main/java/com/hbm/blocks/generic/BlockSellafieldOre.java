@@ -33,11 +33,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicModels, IDynamicSprites {
+public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustomBlockItem, IDynamicModels {
 
     public BlockEnums.OreType oreType;
 
-    public BlockSellafieldOre( String s, BlockEnums.OreType oreType) {
+    public BlockSellafieldOre(String s, BlockEnums.OreType oreType) {
         super(Material.ROCK, SoundType.STONE, s);
         this.oreType = oreType;
     }
@@ -45,9 +45,9 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        for(int i =  0;  i < sellafieldTextures.length; i++) {
-            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + i );
-            TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/"+sellafieldTextures[i], "blocks/" + "ore_overlay_" + oreType.getName());
+        for (int i = 0; i < sellafieldTextures.length; i++) {
+            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + i);
+            TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/" + sellafieldTextures[i], "blocks/" + "ore_overlay_" + oreType.getName());
             map.setTextureEntry(layeredSprite);
         }
     }
@@ -59,9 +59,15 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
         int meta = variant + 1;
         if (natural)
             meta = 0;
-        if(oreType.getDrop() == null)
+        if (oreType.oreEnum == null)
             return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
-        return Collections.singletonList(new ItemStack(oreType.getDrop().getItem(), oreType.getDropCount(rand.nextInt(fortune+1)), oreType.drop.getMetadata()));
+        else {
+            int count = oreType.oreEnum.quantityFunction.apply(state, fortune, rand);
+            List<ItemStack> drop = new ArrayList<>(count);
+            for (int i = 0; i < count; i++)
+                drop.add(oreType.oreEnum.dropFunction.apply(state, rand));
+            return drop;
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -72,7 +78,7 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
             for (int textureIndex = 0; textureIndex <= sellafieldTextures.length - 1; textureIndex++) {
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
 
-                ResourceLocation spriteLoc =  new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + textureIndex );
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + textureIndex);
 
                 // Base texture
                 textureMap.put("all", spriteLoc.toString());

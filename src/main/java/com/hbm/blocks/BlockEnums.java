@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
+import static com.hbm.blocks.OreEnumUtil.*;
+
 public class BlockEnums {
 
 	public static enum EnumStoneType {
@@ -41,34 +43,73 @@ public class BlockEnums {
 	}
 
 	public static enum OreType {
-		EMERALD ("emerald", new ItemStack(Items.EMERALD), (x -> 1 + x )),
-		DIAMOND ("diamond", new ItemStack(Items.DIAMOND), (x -> 1 + x)),
-		RADGEM ("radgem", new ItemStack(ModItems.gem_rad), (x -> 1 + x)),
-		URANIUM_SCORCEHD ("uranium_scorched", null, null),
-		URANIUM ("uranium", null, null),
-		SCHRABIDIUM ("schrabidium", null, null);
+		EMERALD ("emerald",OreEnum.EMERALD),
+		DIAMOND ("diamond", OreEnum.DIAMOND),
+		RADGEM ("radgem",OreEnum.RAD_GEM),
+		//URANIUM_SCORCEHD ("uranium_scorched", null),
+		URANIUM ("uranium", null),
+		SCHRABIDIUM ("schrabidium", null);
 
 		public final String overlayTexture;
-		public final ItemStack drop;
-		private final Function<Integer, Integer> fortuneFunction;
+		public final OreEnum oreEnum;
 
 		public String getName(){
 			return overlayTexture;
 		}
+
+		OreType(String overlayTexture, @Nullable OreEnum oreEnum) {
+			this.overlayTexture = overlayTexture;
+			this.oreEnum = oreEnum;
+
+		}
+	}
+
+
+	public static enum EnumBasaltOreType {
+		SULFUR (new ItemStack(ModItems.sulfur)),
+		FLUORITE(new ItemStack(ModItems.fluorite)),
+		ASBESTOS(new ItemStack(ModItems.ingot_asbestos)),
+		GEM(new ItemStack(ModItems.gem_volcanic)),
+		MOLYSITE(new ItemStack(ModItems.powder_molysite));
+
+		public final ItemStack drop;
+
 		public ItemStack getDrop(){
 			return drop;
 		}
 		public int getDropCount(int rand){
-			if(fortuneFunction == null)
-				return 1;
-			return fortuneFunction.apply(rand);
+			return rand + 1;
 		}
 
-		OreType(String overlayTexture, @Nullable ItemStack drop, Function<Integer, Integer> fortuneFunction) {
-			this.overlayTexture = overlayTexture;
+        EnumBasaltOreType(ItemStack drop) {
+            this.drop = drop;
+        }
+    }
+
+	public static enum EnumBlockCapType {
+		NUKA (new ItemStack(ModItems.cap_nuka)),
+		QUANTUM (new ItemStack(ModItems.cap_quantum)),
+		RAD (new ItemStack(ModItems.cap_rad)),
+		SPARKLE (new ItemStack(ModItems.cap_sparkle)),
+		KORL (new ItemStack(ModItems.cap_korl)),
+		FRITZ (new ItemStack(ModItems.cap_fritz)),
+		SUNSET (new ItemStack(ModItems.cap_sunset)),
+		STAR (new ItemStack(ModItems.cap_star));
+
+		public final ItemStack drop;
+
+		public ItemStack getDrop() {
+			return drop;
+		}
+
+		public int getDropCount(int rand){
+			return 128;
+		}
+
+		EnumBlockCapType(ItemStack drop) {
 			this.drop = drop;
-			this.fortuneFunction = fortuneFunction;
 		}
 	}
+
 
 }

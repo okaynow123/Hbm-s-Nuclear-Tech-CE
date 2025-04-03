@@ -32,7 +32,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class ItemAutogen extends Item implements IDynamicModels, IDynamicSprites {
+//TODO: fix IDynamicModels
+public class ItemAutogen extends Item {
 
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;

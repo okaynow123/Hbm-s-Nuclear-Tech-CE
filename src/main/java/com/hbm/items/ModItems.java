@@ -64,6 +64,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.hbm.items.ItemEnums.*;
+
 public class ModItems {
 	
 	public static final List<Item> ALL_ITEMS = new ArrayList<Item>();
@@ -1299,8 +1301,9 @@ public class ModItems {
 
 	public static final Item rod_zirnox_empty = new ItemBase("rod_zirnox_empty").setMaxStackSize(64).setCreativeTab(MainRegistry.controlTab);
 	public static final Item rod_zirnox_tritium = new ItemBase("rod_zirnox_tritium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
-	public static final ItemEnumMulti rod_zirnox = (ItemEnumMulti) new ItemZirnoxRod().setTranslationKey("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
-	public static final ItemEnumMulti full_drive = (ItemEnumMulti) new ItemVOTVdrive().setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item rod_zirnox =  new ItemZirnoxRod("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
+	public static final Item full_drive =  new ItemVOTVdrive("hard_drive_full").setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
 
 	//TODO: Make this metaitems
 	// for now, let's just make it work before making it metaitems..
@@ -1340,9 +1343,11 @@ public class ModItems {
 	public static final Item plate_fuel_ra226be = new ItemPlateFuel(1300000, "plate_fuel_ra226be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 30).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item plate_fuel_pu238be = new ItemPlateFuel(1000000, "plate_fuel_pu238be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 
-	public static final Item rod = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_dual = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
-	public static final Item rod_quad = (ItemEnumMulti) new ItemBreedingRod().setTranslationKey("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+
+	public static final Item rod = new ItemBreedingRod("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_dual = new ItemBreedingRod("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
+	public static final Item rod_quad = new ItemBreedingRod("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
+
 
 	public static final Item rod_u233 = new ItemBase( "rod_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_empty);
 	public static final Item rod_dual_u233 = new ItemBase( "rod_dual_u233").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_dual_empty);
@@ -1531,12 +1536,13 @@ public class ModItems {
 	public static final Item part_mechanism = new ItemAutogen(MaterialShapes.MECHANISM, "part_mechanism").setCreativeTab(MainRegistry.partsTab);
 	public static final Item part_stock = new ItemAutogen(MaterialShapes.STOCK, "part_stock").setCreativeTab(MainRegistry.partsTab);
 	public static final Item part_grip = new ItemAutogen(MaterialShapes.GRIP, "part_grip").setCreativeTab(MainRegistry.partsTab);
-	public static final Item casing = new ItemEnumMulti(ItemEnums.EnumCasingType.class, true, true).setTranslationKey("casing").setCreativeTab(MainRegistry.partsTab);
+	public static final Item casing = new ItemEnumMulti("casing", ItemEnums.EnumCasingType.class, true, true).setCreativeTab(MainRegistry.partsTab);
 
 	//Bedrock Ores (new, gottverdammt)
 	public static final Item bedrock_ore = new ItemBedrockOreNew("bedrock_ore_new").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bedrock_ore_base = new ItemBedrockOreBase("bedrock_ore_base").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bedrock_ore_fragment = new ItemAutogen(MaterialShapes.FRAGMENT, "bedrock_ore_fragment").aot(Mats.MAT_BISMUTH, "bedrock_ore_fragment_bismuth").setCreativeTab(MainRegistry.partsTab);
+	public static final Item chunk_ore = new ItemEnumMulti("chunk_ore", EnumChunkType.class, true, true ).setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item neutron_reflector = new ItemBase("neutron_reflector").setCreativeTab(MainRegistry.partsTab);
 	public static final Item rtg_unit = new ItemBase("rtg_unit").setCreativeTab(MainRegistry.partsTab);
@@ -1606,9 +1612,15 @@ public class ModItems {
 	public static final Item solid_fuel_presto = new ItemFuel("solid_fuel_presto", 6400).setCreativeTab(MainRegistry.partsTab);
 	public static final Item solid_fuel_presto_triplet = new ItemFuel("solid_fuel_presto_triplet", 19200).setCreativeTab(MainRegistry.partsTab);
 	public static final Item rocket_fuel = new ItemFuel("rocket_fuel", 6400).setCreativeTab(MainRegistry.partsTab);
+
+
+	
+	public static final Item briquette = new ItemEnumMulti("briquette", EnumBriquetteType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+	@Deprecated
 	public static final Item briquette_lignite = new ItemFuel("briquette_lignite", 1600).setCreativeTab(MainRegistry.partsTab);
 	public static final Item coke = new ItemFuel("coke", 3200).setCreativeTab(MainRegistry.partsTab);
 	public static final Item lignite = new ItemFuel("lignite", 1200).setCreativeTab(MainRegistry.partsTab);
+
 	
 	//Fragments
 	public static final Item rare_earth_chunk = new ItemBase("rare_earth_chunk").setCreativeTab(MainRegistry.partsTab);
@@ -1621,8 +1633,7 @@ public class ModItems {
 	public static final Item fragment_meteorite = new ItemBase("fragment_meteorite").setCreativeTab(MainRegistry.partsTab);
 	public static final Item fragment_boron = new ItemBase("fragment_boron").setCreativeTab(MainRegistry.partsTab);
 	public static final Item fragment_coltan = new ItemBase("fragment_coltan").setCreativeTab(MainRegistry.partsTab);
-	public static final Item chunk_ore = new ItemEnumMulti(ItemEnums.EnumChunkType.class, true, true).setTranslationKey("chunk_ore").setCreativeTab(MainRegistry.partsTab);
-	
+
 	
 	public static final Item demon_core_open = new ItemDemonCore("demon_core_open").setCreativeTab(MainRegistry.nukeTab);
 	public static final Item demon_core_closed = new ItemCustomLore("demon_core_closed").setCreativeTab(MainRegistry.nukeTab);
@@ -2534,43 +2545,43 @@ public class ModItems {
 	public static final Item debris_element = new ItemBase("debris_element").setCreativeTab(MainRegistry.controlTab);
 
 	
-	public static final ItemRBMKPellet rbmk_pellet_zfb_bismuth = (ItemRBMKPellet) new ItemRBMKPellet("Zirconium Fast Breeder - LEU/HEP-241 -> Bi", "rbmk_pellet_zfb_bismuth");
-	public static final ItemRBMKPellet rbmk_pellet_zfb_pu241 = (ItemRBMKPellet) new ItemRBMKPellet("Zirconium Fast Breeder - HEU-235/HEP-240 -> Pu241", "rbmk_pellet_zfb_pu241");
-	public static final ItemRBMKPellet rbmk_pellet_zfb_am_mix = (ItemRBMKPellet) new ItemRBMKPellet("Zirconium Fast Breeder - HEP-241 -> HEA", "rbmk_pellet_zfb_am_mix");
+	public static final ItemRBMKPellet rbmk_pellet_zfb_bismuth = new ItemRBMKPellet("Zirconium Fast Breeder - LEU/HEP-241 -> Bi", "rbmk_pellet_zfb_bismuth");
+	public static final ItemRBMKPellet rbmk_pellet_zfb_pu241 = new ItemRBMKPellet("Zirconium Fast Breeder - HEU-235/HEP-240 -> Pu241", "rbmk_pellet_zfb_pu241");
+	public static final ItemRBMKPellet rbmk_pellet_zfb_am_mix = new ItemRBMKPellet("Zirconium Fast Breeder - HEP-241 -> HEA", "rbmk_pellet_zfb_am_mix");
 
-	public static final ItemRBMKPellet rbmk_pellet_ueu = (ItemRBMKPellet) new ItemRBMKPellet("Unenriched Uranium", "rbmk_pellet_ueu");
-	public static final ItemRBMKPellet rbmk_pellet_meu = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Uranium-235", "rbmk_pellet_meu");
-	public static final ItemRBMKPellet rbmk_pellet_heu233 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Uranium-233", "rbmk_pellet_heu233");
-	public static final ItemRBMKPellet rbmk_pellet_heu235 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Uranium-235", "rbmk_pellet_heu235");
-	public static final ItemRBMKPellet rbmk_pellet_thmeu = (ItemRBMKPellet) new ItemRBMKPellet("Thorium with MEU Driver Fuel", "rbmk_pellet_thmeu");
-	public static final ItemRBMKPellet rbmk_pellet_lep = (ItemRBMKPellet) new ItemRBMKPellet("Low Enriched Plutonium-239", "rbmk_pellet_lep");
-	public static final ItemRBMKPellet rbmk_pellet_mep = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Plutonium-239", "rbmk_pellet_mep");
-	public static final ItemRBMKPellet rbmk_pellet_hep239 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Plutonium-239", "rbmk_pellet_hep239");
-	public static final ItemRBMKPellet rbmk_pellet_hep241 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Plutonium-241", "rbmk_pellet_hep241");
-	public static final ItemRBMKPellet rbmk_pellet_lea = (ItemRBMKPellet) new ItemRBMKPellet("Low Enriched Americium-242", "rbmk_pellet_lea");
-	public static final ItemRBMKPellet rbmk_pellet_mea = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Americium-242", "rbmk_pellet_mea");
-	public static final ItemRBMKPellet rbmk_pellet_hea241 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Americium-241", "rbmk_pellet_hea241");
-	public static final ItemRBMKPellet rbmk_pellet_hea242 = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Americium-242", "rbmk_pellet_hea242");
-	public static final ItemRBMKPellet rbmk_pellet_men = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Neptunium-237", "rbmk_pellet_men");
-	public static final ItemRBMKPellet rbmk_pellet_hen = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Neptunium-237", "rbmk_pellet_hen");
-	public static final ItemRBMKPellet rbmk_pellet_mox = (ItemRBMKPellet) new ItemRBMKPellet("Mixed LEU & LEP Oxide", "rbmk_pellet_mox");
-	public static final ItemRBMKPellet rbmk_pellet_les = (ItemRBMKPellet) new ItemRBMKPellet("Low Enriched Schrabidium-326", "rbmk_pellet_les");
-	public static final ItemRBMKPellet rbmk_pellet_mes = (ItemRBMKPellet) new ItemRBMKPellet("Medium Enriched Schrabidium-326", "rbmk_pellet_mes");
-	public static final ItemRBMKPellet rbmk_pellet_hes = (ItemRBMKPellet) new ItemRBMKPellet("Highly Enriched Schrabidium-326", "rbmk_pellet_hes");
+	public static final ItemRBMKPellet rbmk_pellet_ueu = new ItemRBMKPellet("Unenriched Uranium", "rbmk_pellet_ueu");
+	public static final ItemRBMKPellet rbmk_pellet_meu = new ItemRBMKPellet("Medium Enriched Uranium-235", "rbmk_pellet_meu");
+	public static final ItemRBMKPellet rbmk_pellet_heu233 = new ItemRBMKPellet("Highly Enriched Uranium-233", "rbmk_pellet_heu233");
+	public static final ItemRBMKPellet rbmk_pellet_heu235 = new ItemRBMKPellet("Highly Enriched Uranium-235", "rbmk_pellet_heu235");
+	public static final ItemRBMKPellet rbmk_pellet_thmeu = new ItemRBMKPellet("Thorium with MEU Driver Fuel", "rbmk_pellet_thmeu");
+	public static final ItemRBMKPellet rbmk_pellet_lep = new ItemRBMKPellet("Low Enriched Plutonium-239", "rbmk_pellet_lep");
+	public static final ItemRBMKPellet rbmk_pellet_mep = new ItemRBMKPellet("Medium Enriched Plutonium-239", "rbmk_pellet_mep");
+	public static final ItemRBMKPellet rbmk_pellet_hep239 = new ItemRBMKPellet("Highly Enriched Plutonium-239", "rbmk_pellet_hep239");
+	public static final ItemRBMKPellet rbmk_pellet_hep241 = new ItemRBMKPellet("Highly Enriched Plutonium-241", "rbmk_pellet_hep241");
+	public static final ItemRBMKPellet rbmk_pellet_lea = new ItemRBMKPellet("Low Enriched Americium-242", "rbmk_pellet_lea");
+	public static final ItemRBMKPellet rbmk_pellet_mea = new ItemRBMKPellet("Medium Enriched Americium-242", "rbmk_pellet_mea");
+	public static final ItemRBMKPellet rbmk_pellet_hea241 = new ItemRBMKPellet("Highly Enriched Americium-241", "rbmk_pellet_hea241");
+	public static final ItemRBMKPellet rbmk_pellet_hea242 = new ItemRBMKPellet("Highly Enriched Americium-242", "rbmk_pellet_hea242");
+	public static final ItemRBMKPellet rbmk_pellet_men = new ItemRBMKPellet("Medium Enriched Neptunium-237", "rbmk_pellet_men");
+	public static final ItemRBMKPellet rbmk_pellet_hen = new ItemRBMKPellet("Highly Enriched Neptunium-237", "rbmk_pellet_hen");
+	public static final ItemRBMKPellet rbmk_pellet_mox = new ItemRBMKPellet("Mixed LEU & LEP Oxide", "rbmk_pellet_mox");
+	public static final ItemRBMKPellet rbmk_pellet_les = new ItemRBMKPellet("Low Enriched Schrabidium-326", "rbmk_pellet_les");
+	public static final ItemRBMKPellet rbmk_pellet_mes = new ItemRBMKPellet("Medium Enriched Schrabidium-326", "rbmk_pellet_mes");
+	public static final ItemRBMKPellet rbmk_pellet_hes = new ItemRBMKPellet("Highly Enriched Schrabidium-326", "rbmk_pellet_hes");
 	public static final ItemRBMKPellet rbmk_pellet_leaus = new ItemRBMKPellet("Low Enriched Australium (Tasmanite)", "rbmk_pellet_leaus");
 	public static final ItemRBMKPellet rbmk_pellet_heaus = new ItemRBMKPellet("Highly Enriched Australium (Ayerite)", "rbmk_pellet_heaus");
 	public static final ItemRBMKPellet rbmk_pellet_unobtainium = new ItemRBMKPellet("The Strongest Manmade Neutron Emitter", "rbmk_pellet_unobtainium");
-	public static final ItemRBMKPellet rbmk_pellet_po210be = (ItemRBMKPellet) new ItemRBMKPellet("Polonium-210 & Beryllium Neutron Source", "rbmk_pellet_po210be");
-	public static final ItemRBMKPellet rbmk_pellet_ra226be = (ItemRBMKPellet) new ItemRBMKPellet("Radium-226 & Beryllium Neutron Source", "rbmk_pellet_ra226be");
-	public static final ItemRBMKPellet rbmk_pellet_pu238be = (ItemRBMKPellet) new ItemRBMKPellet("Plutonium-238 & Beryllium Neutron Source", "rbmk_pellet_pu238be");
-	public static final ItemRBMKPellet rbmk_pellet_balefire_gold = (ItemRBMKPellet) new ItemRBMKPellet("Antihydrogen in a Magnetized Gold-198 Lattice", "rbmk_pellet_balefire_gold");
-	public static final ItemRBMKPellet rbmk_pellet_flashlead = (ItemRBMKPellet) new ItemRBMKPellet("Antihydrogen confined by a Magnetized Gold-198 & Lead-209 Lattice", "rbmk_pellet_flashlead");
-	public static final ItemRBMKPellet rbmk_pellet_balefire = (ItemRBMKPellet) new ItemRBMKPellet("Draconic Flames", "rbmk_pellet_balefire");
-	public static final ItemRBMKPellet rbmk_pellet_drx = (ItemRBMKPellet) new ItemRBMKPellet(TextFormatting.OBFUSCATED + "can't you hear, can't you hear the thunder?", "rbmk_pellet_drx");
+	public static final ItemRBMKPellet rbmk_pellet_po210be = new ItemRBMKPellet("Polonium-210 & Beryllium Neutron Source", "rbmk_pellet_po210be");
+	public static final ItemRBMKPellet rbmk_pellet_ra226be = new ItemRBMKPellet("Radium-226 & Beryllium Neutron Source", "rbmk_pellet_ra226be");
+	public static final ItemRBMKPellet rbmk_pellet_pu238be = new ItemRBMKPellet("Plutonium-238 & Beryllium Neutron Source", "rbmk_pellet_pu238be");
+	public static final ItemRBMKPellet rbmk_pellet_balefire_gold = new ItemRBMKPellet("Antihydrogen in a Magnetized Gold-198 Lattice", "rbmk_pellet_balefire_gold");
+	public static final ItemRBMKPellet rbmk_pellet_flashlead = new ItemRBMKPellet("Antihydrogen confined by a Magnetized Gold-198 & Lead-209 Lattice", "rbmk_pellet_flashlead");
+	public static final ItemRBMKPellet rbmk_pellet_balefire = new ItemRBMKPellet("Draconic Flames", "rbmk_pellet_balefire");
+	public static final ItemRBMKPellet rbmk_pellet_drx = new ItemRBMKPellet(TextFormatting.OBFUSCATED + "can't you hear, can't you hear the thunder?", "rbmk_pellet_drx");
 
 	
 	public static final Item rbmk_fuel_empty = new ItemBase("rbmk_fuel_empty").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-	public static final ItemRBMKRod rbmk_fuel_ueu = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_ueu, "rbmk_fuel_ueu")
+	public static final ItemRBMKRod rbmk_fuel_ueu = new ItemRBMKRod(rbmk_pellet_ueu, "rbmk_fuel_ueu")
 			.setYield(100000000D)
 			.setStats(7.5)
 			.setFunction(EnumBurnFunc.LOG_TEN)
@@ -2579,7 +2590,7 @@ public class ModItems {
 			.setMeltingPoint(2865)
 			.setFuelColor(0.513F, 0.541F, 0.498F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_meu = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_meu, "rbmk_fuel_meu")
+	public static final ItemRBMKRod rbmk_fuel_meu = new ItemRBMKRod(rbmk_pellet_meu, "rbmk_fuel_meu")
 			.setYield(100000000D)
 			.setStats(10)
 			.setFunction(EnumBurnFunc.LOG_TEN)
@@ -2588,7 +2599,7 @@ public class ModItems {
 			.setMeltingPoint(2865)
 			.setFuelColor(0.513F, 0.541F, 0.498F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_heu233 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_heu233, "rbmk_fuel_heu233")
+	public static final ItemRBMKRod rbmk_fuel_heu233 = new ItemRBMKRod(rbmk_pellet_heu233, "rbmk_fuel_heu233")
 			.setYield(100000000D)
 			.setStats(0.275D)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2596,14 +2607,14 @@ public class ModItems {
 			.setMeltingPoint(2865)
 			.setFuelColor(0.513F, 0.541F, 0.498F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_heu235 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_heu235, "rbmk_fuel_heu235")
+	public static final ItemRBMKRod rbmk_fuel_heu235 = new ItemRBMKRod(rbmk_pellet_heu235, "rbmk_fuel_heu235")
 			.setYield(100000000D)
 			.setStats(5) //Consistency with HEN; its critical mass is too high to justify a linear function
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
 			.setMeltingPoint(2865)
 			.setFuelColor(0.513F, 0.541F, 0.498F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_thmeu = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_thmeu, "rbmk_fuel_thmeu")
+	public static final ItemRBMKRod rbmk_fuel_thmeu = new ItemRBMKRod(rbmk_pellet_thmeu, "rbmk_fuel_thmeu")
 			.setYield(100000000D)
 			.setStats(20)
 			.setFunction(EnumBurnFunc.PLATEU)
@@ -2612,7 +2623,7 @@ public class ModItems {
 			.setMeltingPoint(3350)
 			.setFuelColor(0.360F, 0.259F, 0.212F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_lep = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_lep, "rbmk_fuel_lep")
+	public static final ItemRBMKRod rbmk_fuel_lep = new ItemRBMKRod(rbmk_pellet_lep, "rbmk_fuel_lep")
 			.setYield(100000000D)
 			.setStats(17.5)
 			.setFunction(EnumBurnFunc.LOG_TEN)
@@ -2621,14 +2632,14 @@ public class ModItems {
 			.setMeltingPoint(2744)
 			.setFuelColor(0.314F, 0.349F, 0.337F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_mep = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_mep, "rbmk_fuel_mep")
+	public static final ItemRBMKRod rbmk_fuel_mep = new ItemRBMKRod(rbmk_pellet_mep, "rbmk_fuel_mep")
 			.setYield(100000000D)
 			.setStats(3.5, 20)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
 			.setMeltingPoint(2744)
 			.setFuelColor(0.314F, 0.349F, 0.337F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hep239 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hep239, "rbmk_fuel_hep")
+	public static final ItemRBMKRod rbmk_fuel_hep239 = new ItemRBMKRod(rbmk_pellet_hep239, "rbmk_fuel_hep")
 			.setYield(100000000D)
 			.setStats(0.3)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2636,7 +2647,7 @@ public class ModItems {
 			.setMeltingPoint(2744)
 			.setFuelColor(0.314F, 0.349F, 0.337F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hep241 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hep241, "rbmk_fuel_hep241")
+	public static final ItemRBMKRod rbmk_fuel_hep241 = new ItemRBMKRod(rbmk_pellet_hep241, "rbmk_fuel_hep241")
 			.setYield(100000000D)
 			.setStats(0.4)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2644,7 +2655,7 @@ public class ModItems {
 			.setMeltingPoint(2744)
 			.setFuelColor(0.314F, 0.349F, 0.337F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_lea = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_lea, "rbmk_fuel_lea")
+	public static final ItemRBMKRod rbmk_fuel_lea = new ItemRBMKRod(rbmk_pellet_lea, "rbmk_fuel_lea")
 			.setYield(100000000D)
 			.setStats(6, 10)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2653,7 +2664,7 @@ public class ModItems {
 			.setMeltingPoint(3986)
 			.setFuelColor(0.514F, 0.467F, 0.455F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_mea = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_mea, "rbmk_fuel_mea")
+	public static final ItemRBMKRod rbmk_fuel_mea = new ItemRBMKRod(rbmk_pellet_mea, "rbmk_fuel_mea")
 			.setYield(100000000D)
 			.setStats(0.9, 20, 600)
 			.setFunction(EnumBurnFunc.ARCH)
@@ -2662,7 +2673,7 @@ public class ModItems {
 			.setMeltingPoint(3986)
 			.setFuelColor(0.545F, 0.424F, 0.443F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hea241 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hea241, "rbmk_fuel_hea241")
+	public static final ItemRBMKRod rbmk_fuel_hea241 = new ItemRBMKRod(rbmk_pellet_hea241, "rbmk_fuel_hea241")
 			.setYield(100000000D)
 			.setStats(6.5, 15)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2671,7 +2682,7 @@ public class ModItems {
 			.setNeutronTypes(NType.FAST, NType.FAST)
 			.setFuelColor(0.545F, 0.424F, 0.443F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hea242 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hea242, "rbmk_fuel_hea242")
+	public static final ItemRBMKRod rbmk_fuel_hea242 = new ItemRBMKRod(rbmk_pellet_hea242, "rbmk_fuel_hea242")
 			.setYield(100000000D)
 			.setStats(0.45)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2679,7 +2690,7 @@ public class ModItems {
 			.setMeltingPoint(3386)
 			.setFuelColor(0.545F, 0.424F, 0.443F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_men = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_men, "rbmk_fuel_men")
+	public static final ItemRBMKRod rbmk_fuel_men = new ItemRBMKRod(rbmk_pellet_men, "rbmk_fuel_men")
 			.setYield(100000000D)
 			.setStats(3)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2689,7 +2700,7 @@ public class ModItems {
 			.setNeutronTypes(NType.ANY, NType.FAST)
 			.setFuelColor(0.447F, 0.482F, 0.439F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hen = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hen, "rbmk_fuel_hen")
+	public static final ItemRBMKRod rbmk_fuel_hen = new ItemRBMKRod(rbmk_pellet_hen, "rbmk_fuel_hen")
 			.setYield(100000000D)
 			.setStats(4)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2697,7 +2708,7 @@ public class ModItems {
 			.setNeutronTypes(NType.FAST, NType.FAST)
 			.setFuelColor(0.376F, 0.423F, 0.376F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_mox = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_mox, "rbmk_fuel_mox")
+	public static final ItemRBMKRod rbmk_fuel_mox = new ItemRBMKRod(rbmk_pellet_mox, "rbmk_fuel_mox")
 			.setYield(100000000D)
 			.setStats(10)
 			.setFunction(EnumBurnFunc.LOG_TEN)
@@ -2705,7 +2716,7 @@ public class ModItems {
 			.setMeltingPoint(2815)
 			.setFuelColor(0.423F, 0.455F, 0.427F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_les = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_les, "rbmk_fuel_les")
+	public static final ItemRBMKRod rbmk_fuel_les = new ItemRBMKRod(rbmk_pellet_les, "rbmk_fuel_les")
 			.setYield(100000000D)
 			.setStats(5)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2714,7 +2725,7 @@ public class ModItems {
 			.setNeutronTypes(NType.SLOW, NType.SLOW) //Beryllium Moderation
 			.setFuelColor(0.498F, 0.596F, 0.620F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_mes = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_mes, "rbmk_fuel_mes")
+	public static final ItemRBMKRod rbmk_fuel_mes = new ItemRBMKRod(rbmk_pellet_mes, "rbmk_fuel_mes")
 			.setYield(100000000D)
 			.setStats(0.75D, 0, 750)
 			.setFunction(EnumBurnFunc.ARCH)
@@ -2722,7 +2733,7 @@ public class ModItems {
 			.setMeltingPoint(2750)
 			.setFuelColor(0.408F, 0.651F, 0.710F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_hes = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_hes, "rbmk_fuel_hes")
+	public static final ItemRBMKRod rbmk_fuel_hes = new ItemRBMKRod(rbmk_pellet_hes, "rbmk_fuel_hes")
 			.setYield(100000000D)
 			.setStats(0.9)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2752,7 +2763,7 @@ public class ModItems {
 			.setFuelColor(0.929F, 0.812F, 0F)
 			.setCherenkovColor(1F, 0.9F, 0F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_unobtainium = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_unobtainium, "rbmk_fuel_unobtainium")
+	public static final ItemRBMKRod rbmk_fuel_unobtainium = new ItemRBMKRod(rbmk_pellet_unobtainium, "rbmk_fuel_unobtainium")
 			.setYield(250000000D)
 			.setStats(40, 1)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2762,7 +2773,7 @@ public class ModItems {
 			.setMeltingPoint(6000)
 			.setFuelColor(0F, 0.373F, 0.565F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_ra226be = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_ra226be, "rbmk_fuel_ra226be")
+	public static final ItemRBMKRod rbmk_fuel_ra226be = new ItemRBMKRod(rbmk_pellet_ra226be, "rbmk_fuel_ra226be")
 			.setYield(100000000D)
 			.setStats(0D, 20)
 			.setFunction(EnumBurnFunc.PASSIVE)
@@ -2774,7 +2785,7 @@ public class ModItems {
 			.setNeutronTypes(NType.SLOW, NType.SLOW) //Beryllium Moderation
 			.setFuelColor(0.710F, 0.722F, 0.686F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_po210be = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_po210be, "rbmk_fuel_po210be")
+	public static final ItemRBMKRod rbmk_fuel_po210be = new ItemRBMKRod(rbmk_pellet_po210be, "rbmk_fuel_po210be")
 			.setYield(25000000D)
 			.setStats(0D, 50)
 			.setFunction(EnumBurnFunc.PASSIVE)
@@ -2786,7 +2797,7 @@ public class ModItems {
 			.setNeutronTypes(NType.SLOW, NType.SLOW) //Beryllium Moderation
 			.setFuelColor(0.463F, 0.392F, 0.318F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_pu238be = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_pu238be, "rbmk_fuel_pu238be")
+	public static final ItemRBMKRod rbmk_fuel_pu238be = new ItemRBMKRod(rbmk_pellet_pu238be, "rbmk_fuel_pu238be")
 			.setYield(50000000D)
 			.setStats(4, 40)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2796,7 +2807,7 @@ public class ModItems {
 			.setNeutronTypes(NType.SLOW, NType.SLOW) //Beryllium Moderation
 			.setFuelColor(0.459F, 0.475F, 0.443F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_balefire_gold = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_balefire_gold, "rbmk_fuel_balefire_gold")
+	public static final ItemRBMKRod rbmk_fuel_balefire_gold = new ItemRBMKRod(rbmk_pellet_balefire_gold, "rbmk_fuel_balefire_gold")
 			.setYield(100000000D)
 			.setStats(0.8, 10)
 			.setFunction(EnumBurnFunc.ARCH)
@@ -2806,7 +2817,7 @@ public class ModItems {
 			.setFuelColor(0.902F, 0.714F, 0.227F)
 			.setCherenkovColor(0.6F, 0F, 1F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_flashlead = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_flashlead, "rbmk_fuel_flashlead")
+	public static final ItemRBMKRod rbmk_fuel_flashlead = new ItemRBMKRod(rbmk_pellet_flashlead, "rbmk_fuel_flashlead")
 			.setYield(250000000D)
 			.setStats(1, 50, 1500)
 			.setFunction(EnumBurnFunc.ARCH)
@@ -2816,7 +2827,7 @@ public class ModItems {
 			.setFuelColor(0.682F, 0.521F, 0.125F)
 			.setCherenkovColor(0.6F, 0F, 1F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_zfb_bismuth = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_zfb_bismuth, "rbmk_fuel_zfb_bismuth")
+	public static final ItemRBMKRod rbmk_fuel_zfb_bismuth = new ItemRBMKRod(rbmk_pellet_zfb_bismuth, "rbmk_fuel_zfb_bismuth")
 			.setYield(50000000D)
 			.setStats(2)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
@@ -2824,14 +2835,14 @@ public class ModItems {
 			.setMeltingPoint(2744)
 			.setFuelColor(0.643F, 0.620F, 0.643F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_zfb_pu241 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_zfb_pu241, "rbmk_fuel_zfb_pu241")
+	public static final ItemRBMKRod rbmk_fuel_zfb_pu241 = new ItemRBMKRod(rbmk_pellet_zfb_pu241, "rbmk_fuel_zfb_pu241")
 			.setYield(50000000D)
 			.setStats(2)
 			.setFunction(EnumBurnFunc.SQUARE_ROOT)
 			.setMeltingPoint(2865)
 			.setFuelColor(0.462F, 0.459F, 0.384F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_zfb_am_mix = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_zfb_am_mix, "rbmk_fuel_zfb_am_mix")
+	public static final ItemRBMKRod rbmk_fuel_zfb_am_mix = new ItemRBMKRod(rbmk_pellet_zfb_am_mix, "rbmk_fuel_zfb_am_mix")
 			.setYield(50000000D)
 			.setStats(0.2)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2839,7 +2850,7 @@ public class ModItems {
 			.setMeltingPoint(3744)
 			.setFuelColor(0.600F, 0.565F, 0.525F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_balefire = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_balefire, "rbmk_fuel_balefire")
+	public static final ItemRBMKRod rbmk_fuel_balefire = new ItemRBMKRod(rbmk_pellet_balefire, "rbmk_fuel_balefire")
 			.setYield(100000000D)
 			.setStats(1, 35)
 			.setFunction(EnumBurnFunc.LINEAR)
@@ -2849,7 +2860,7 @@ public class ModItems {
 			.setFuelColor(0.369F, 0.878F, 0F)
 			.setCherenkovColor(0.25F, 1F, 0F)
 			;
-	public static final ItemRBMKRod rbmk_fuel_drx = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_drx, "rbmk_fuel_drx")
+	public static final ItemRBMKRod rbmk_fuel_drx = new ItemRBMKRod(rbmk_pellet_drx, "rbmk_fuel_drx")
 			.setYield(100000000D)
 			.setStats(0.1, 10)
 			.setFunction(EnumBurnFunc.QUADRATIC)

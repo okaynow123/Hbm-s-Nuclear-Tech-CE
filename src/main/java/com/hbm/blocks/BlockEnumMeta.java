@@ -1,10 +1,12 @@
 package com.hbm.blocks;
 
 import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.util.EnumUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -22,17 +24,25 @@ public abstract class BlockEnumMeta extends BlockMeta {
     final private boolean multiTexture;
     public Class<? extends Enum> blockEnum;
 
+    public static final <E extends Enum<E>> IBlockState stateFromEnum(Block block, E anEnum) {
+        return block.getDefaultState().withProperty(META, anEnum.ordinal());
+    }
+
     public BlockEnumMeta(Material mat, SoundType type, String registryName, Class<? extends Enum> blockEnum, boolean multiName, boolean multiTexture) {
-        super(mat, type, registryName, blockEnum.getEnumConstants().length );
+        super(mat, type, registryName, blockEnum.getEnumConstants().length);
         this.blockEnum = blockEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
-        this.textures = Arrays.stream(blockEnum.getEnumConstants())
+        this.blockFrames = assignBlockFrames(registryName);
+    }
+
+    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
+        return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
                 .map(name -> registryName + "." + name.toLowerCase(Locale.US))
-                .toArray(String[]::new);
-
+                .map(texture -> new BlockBakeFrame(texture))
+                .toArray(BlockBakeFrame[]::new);
     }
 
 
@@ -45,7 +55,7 @@ public abstract class BlockEnumMeta extends BlockMeta {
     }
 
     public String enumToTranslationKey(Enum value) {
-        return this.getTranslationKey() + "." +  value.name().toLowerCase(Locale.US);
+        return this.getTranslationKey() + "." + value.name().toLowerCase(Locale.US);
     }
 
     public class EnumMetaBlockItem extends MetaBlockItem {

@@ -40,6 +40,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
         //GL11.glPopMatrix();
 		switch(assembler.getBlockMetadata())
 		{
+
 			case 14:
 				GL11.glRotatef(180, 0F, 1F, 0F);
 				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
@@ -52,6 +53,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 			case 12:
 				GL11.glRotatef(90, 0F, 1F, 0F);
 				GL11.glTranslated(0.5D, 0.0D, -0.5D); break;
+
 		}
 
 		bindTexture(ResourceManager.assembler_body_tex);
@@ -104,6 +106,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 		GL11.glRotatef(180, 0F, 1F, 0F);
 		switch(tileEntity.getBlockMetadata())
 		{
+
 			case 14:
 				GL11.glTranslated(-1, 0, 0);
 				GL11.glRotatef(180, 0F, 1F, 0F); break;
@@ -115,6 +118,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 			case 12:
 				GL11.glTranslated(-1, 0, -1);
 				GL11.glRotatef(90, 0F, 1F, 0F); break;
+
 		}
 		
 
@@ -155,6 +159,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 		GL11.glRotatef(180, 0F, 1F, 0F);
 		switch(tileEntity.getBlockMetadata())
 		{
+
 			case 14:
 				GL11.glTranslated(-1, 0, 0);
 				GL11.glRotatef(180, 0F, 1F, 0F); break;
@@ -166,6 +171,7 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 			case 12:
 				GL11.glTranslated(-1, 0, -1);
 				GL11.glRotatef(90, 0F, 1F, 0F); break;
+
 		}
 		
 
