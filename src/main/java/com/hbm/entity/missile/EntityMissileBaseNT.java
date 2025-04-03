@@ -181,7 +181,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	            motionX = vector.xCoord * velocity;
 	            motionY = Math.max(vector.yCoord * velocity * 0.85 , -2);
 	            
-	            if (motionY == -2 && distanceToTarget < 10) {
+	            if (motionY == -2 && distanceToTarget < 10 && this.isCluster) {
 	            	cluster();
 	            }
 	            
