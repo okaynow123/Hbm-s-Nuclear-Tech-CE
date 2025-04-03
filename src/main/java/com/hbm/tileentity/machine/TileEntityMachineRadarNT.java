@@ -336,10 +336,11 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 
 		IRadarDetectableNT.RadarScanParams params = new IRadarDetectableNT.RadarScanParams(this.scanMissiles, this.scanShells, this.scanPlayers, this.smartMode);
 		
-		List<Entity> matchingEntities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(
-			    pos.getX() - scan, pos.getY() - radarBuffer, pos.getZ() - scan,
+		this.matchingEntities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(
+			    pos.getX() - scan, pos.getY() , pos.getZ() - scan,
 			    pos.getX() + scan, pos.getY() + scan, pos.getZ() + scan
 			));
+		
 		
 		converters.clear();
 		//prevent memory leak
@@ -366,6 +367,8 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 			}
 		}
 	}
+
+
 
 	public int getRedPower() {
 
