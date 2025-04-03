@@ -114,40 +114,85 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 
     @Override
     public void onUpdate() {
-
-        if(!world.isRemote) {
+        if (!world.isRemote) {            
+            // Calculate direction vector to target
+            double deltaX = this.targetX - this.posX;
+            double deltaY = this.targetY - this.posY;
+            double deltaZ = this.targetZ - this.posZ;
+            
+            // Calculate horizontal distance
+            double horizontalDist = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+            
+            // Calculate time to target based on current horizontal velocity
+            double currentHorizontalSpeed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            if (currentHorizontalSpeed < 0.1) currentHorizontalSpeed = 1.0; // Default if too slow
+            
+            double timeToTarget = horizontalDist / currentHorizontalSpeed;
+            
+            // Calculate required vertical velocity accounting for gravity (corrected formula)
+            // Using physics formula: y = y0 + v0*t + 0.5*a*t^2
+            // Solving for v0: v0 = (y - y0 - 0.5*a*t^2)/t
+            double gravity = getGravityVelocity();
+            double idealY = (deltaY + 0.5 * gravity * timeToTarget * timeToTarget) / timeToTarget;
+            
+            // Apply a small correction to vertical velocity (gentle adjustment)
+            this.motionY += (idealY - this.motionY) * 0.1;
+            
+            if (horizontalDist > 0.5) {
+                // Ideal direction to target
+                double idealX = deltaX / horizontalDist;
+                double idealZ = deltaZ / horizontalDist;
+                
+                // Apply correction to horizontal motion (gentle adjustment)
+                this.motionX += (idealX * currentHorizontalSpeed - this.motionX) * 0.1;
+                this.motionZ += (idealZ * currentHorizontalSpeed - this.motionZ) * 0.1;
+                
+                // Maintain original speed
+                double newSpeedXZ = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+                if (newSpeedXZ > 0.001) {
+                    this.motionX = this.motionX * currentHorizontalSpeed / newSpeedXZ;
+                    this.motionZ = this.motionZ * currentHorizontalSpeed / newSpeedXZ;
+                }
+            }
+            
             super.onUpdate();
 
-            if(!didWhistle && this.shouldWhistle) {
+            // Handle whistling logic
+            if (!didWhistle && this.shouldWhistle) {
                 double speed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-                double deltaX = this.posX - this.targetX;
-                double deltaZ = this.posZ - this.targetZ;
-                double dist = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+                double deltaToTargetX = this.posX - this.targetX;
+                double deltaToTargetZ = this.posZ - this.targetZ;
+                double dist = Math.sqrt(deltaToTargetX * deltaToTargetX + deltaToTargetZ * deltaToTargetZ);
 
-                if(speed * 18 > dist) {
+                if (speed * 18 > dist) {
                     world.playSound(null, this.targetX, this.targetY, this.targetZ, HBMSoundHandler.mortarWhistle, SoundCategory.BLOCKS, 15.0F, 0.9F + rand.nextFloat() * 0.2F);
-                    this.didWhistle = true;
+                    this.didWhistle = true; // Play whistle sound when close to the target
                 }
             }
 
-            loadNeighboringChunks((int)Math.floor(posX / 16D), (int)Math.floor(posZ / 16D));
-            this.getType().onUpdate(this);
+            // Load neighboring chunks
+            loadNeighboringChunks((int) Math.floor(posX / 16), (int) Math.floor(posZ / 16));
+            this.getType().onUpdate(this); // Update shell type behavior
 
         } else {
-            if(this.turnProgress > 0) {
-                double interpX = this.posX + (this.syncPosX - this.posX) / (double) this.turnProgress;
-                double interpY = this.posY + (this.syncPosY - this.posY) / (double) this.turnProgress;
-                double interpZ = this.posZ + (this.syncPosZ - this.posZ) / (double) this.turnProgress;
-                double d = MathHelper.wrapDegrees(this.syncYaw - (double) this.rotationYaw);
-                this.rotationYaw = (float) ((double) this.rotationYaw + d / (double) this.turnProgress);
-                this.rotationPitch = (float)((double)this.rotationPitch + (this.syncPitch - (double)this.rotationPitch) / (double)this.turnProgress);
+            // Handle interpolation for smooth movement
+            if (this.turnProgress > 0) {
+                double interpX = this.posX + (this.syncPosX - this.posX) / this.turnProgress;
+                double interpY = this.posY + (this.syncPosY - this.posY) / this.turnProgress;
+                double interpZ = this.posZ + (this.syncPosZ - this.posZ) / this.turnProgress;
+                double d = MathHelper.wrapDegrees(this.syncYaw - this.rotationYaw);
+
+                this.rotationYaw += d / this.turnProgress;
+                this.rotationPitch += (this.syncPitch - this.rotationPitch) / this.turnProgress;
+
                 --this.turnProgress;
-                this.setPosition(interpX, interpY, interpZ);
+                this.setPosition(interpX, interpY, interpZ); // Interpolate position
             } else {
-                this.setPosition(this.posX, this.posY, this.posZ);
+                this.setPosition(this.posX, this.posY, this.posZ); // Set position directly
             }
 
-            if(new Vec3d(this.syncPosX - this.posX, this.syncPosY - this.posY, this.syncPosZ - this.posZ).length() < 0.2) {
+            // Spawn smoke particles if close to the synchronized position
+            if (new Vec3d(this.syncPosX - this.posX, this.syncPosY - this.posY, this.syncPosZ - this.posZ).length() < 0.2) {
                 world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5, posZ, 0.0, 0.1, 0.0);
             }
         }
@@ -177,7 +222,12 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     protected void onImpact(RayTraceResult mop) {
 
         if(!world.isRemote) {
+        	//If youre gonna debug be more vebose
             MainRegistry.logger.info("########################\n Artillery shell hit at " + posX + ", " + posY + ", " + posZ + "\n########################");
+            MainRegistry.logger.info("########################\n Target was  at " + targetX + ", " + targetY + ", " + targetZ + "\n########################");
+            MainRegistry.logger.info("########################\n Deviation " + Math.sqrt(targetX*targetX - posX*posX) + ", " + Math.sqrt(targetY*targetY-posY*posY) + ", " + Math.sqrt(targetZ*targetZ-posZ*posZ) + "\n########################");
+            MainRegistry.logger.info("########################\n Motion Values On Impact " + this.motionX + ", " + this.motionY + ", " + this.motionZ + "\n########################");
+           
 
             if(mop.typeOfHit == mop.typeOfHit.ENTITY && mop.entityHit instanceof EntityArtilleryShell) return;
             this.getType().onImpact(this, mop);
@@ -205,6 +255,8 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 
             loadedChunks.clear();
             loadedChunks.add(new ChunkPos(newChunkX, newChunkZ));
+                        
+            //ChunkCoordIntPair doesnt exist in 1.12.2
             //loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX + this.motionX) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ) / 16D)));
 
             for(ChunkPos chunk : loadedChunks) {
@@ -264,6 +316,8 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     @Override
     public double getGravityVelocity() {
         return 9.81 * 0.05;
+        //try changing to *0.03 as SuperClass assumes 0.03 for grav velocity,
+        //also grav massivley effects where the shell lands
     }
 
     @Override
