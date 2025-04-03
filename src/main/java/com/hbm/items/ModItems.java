@@ -2050,19 +2050,19 @@ public class ModItems {
 	
 	
 	public static final Item meteorite_sword = new ItemSwordMeteorite(9F, 0, MainRegistry.matMeteorite, "meteorite_sword");
-	public static final Item meteorite_sword_seared = new ItemSwordMeteorite(14F, 0, MainRegistry.matMeteorite, "meteorite_sword_seared");
-	public static final Item meteorite_sword_reforged = new ItemSwordMeteorite(24F, 0, MainRegistry.matMeteorite, "meteorite_sword_reforged");
-	public static final Item meteorite_sword_hardened = new ItemSwordMeteorite(34F, 0, MainRegistry.matMeteorite, "meteorite_sword_hardened");
-	public static final Item meteorite_sword_alloyed = new ItemSwordMeteorite(49F, 0, MainRegistry.matMeteorite, "meteorite_sword_alloyed");
-	public static final Item meteorite_sword_machined = new ItemSwordMeteorite(64F, 0, MainRegistry.matMeteorite, "meteorite_sword_machined");
-	public static final Item meteorite_sword_treated = new ItemSwordMeteorite(79F, 0, MainRegistry.matMeteorite, "meteorite_sword_treated");
-	public static final Item meteorite_sword_etched = new ItemSwordMeteorite(99F, 0, MainRegistry.matMeteorite, "meteorite_sword_etched");
-	public static final Item meteorite_sword_bred = new ItemSwordMeteorite(124F, 0, MainRegistry.matMeteorite, "meteorite_sword_bred");
-	public static final Item meteorite_sword_irradiated = new ItemSwordMeteorite(174F, 0, MainRegistry.matMeteorite, "meteorite_sword_irradiated");
-	public static final Item meteorite_sword_fused = new ItemSwordMeteorite(249F, 0, MainRegistry.matMeteorite, "meteorite_sword_fused");
-	public static final Item meteorite_sword_baleful = new ItemSwordMeteorite(499F, 0, MainRegistry.matMeteorite, "meteorite_sword_baleful");
-	public static final Item meteorite_sword_warped = new ItemSwordMeteorite(2999F, 0, MainRegistry.matMeteorite, "meteorite_sword_warped");
-	public static final Item meteorite_sword_demonic = new ItemSwordMeteorite(13665F, 0, MainRegistry.matMeteorite, "meteorite_sword_demonic");
+	public static final Item meteorite_sword_seared = new ItemSwordMeteorite(10F, 0, MainRegistry.matMeteorite, "meteorite_sword_seared");
+	public static final Item meteorite_sword_reforged = new ItemSwordMeteorite(12.5F, 0, MainRegistry.matMeteorite, "meteorite_sword_reforged");
+	public static final Item meteorite_sword_hardened = new ItemSwordMeteorite(15F, 0, MainRegistry.matMeteorite, "meteorite_sword_hardened");
+	public static final Item meteorite_sword_alloyed = new ItemSwordMeteorite(17.5F, 0, MainRegistry.matMeteorite, "meteorite_sword_alloyed");
+	public static final Item meteorite_sword_machined = new ItemSwordMeteorite(20F, 0, MainRegistry.matMeteorite, "meteorite_sword_machined");
+	public static final Item meteorite_sword_treated = new ItemSwordMeteorite(22.5F, 0, MainRegistry.matMeteorite, "meteorite_sword_treated");
+	public static final Item meteorite_sword_etched = new ItemSwordMeteorite(25F, 0, MainRegistry.matMeteorite, "meteorite_sword_etched");
+	public static final Item meteorite_sword_bred = new ItemSwordMeteorite(30F, 0, MainRegistry.matMeteorite, "meteorite_sword_bred");
+	public static final Item meteorite_sword_irradiated = new ItemSwordMeteorite(35F, 0, MainRegistry.matMeteorite, "meteorite_sword_irradiated");
+	public static final Item meteorite_sword_fused = new ItemSwordMeteorite(50F, 0, MainRegistry.matMeteorite, "meteorite_sword_fused");
+	public static final Item meteorite_sword_baleful = new ItemSwordMeteorite(75F, 0, MainRegistry.matMeteorite, "meteorite_sword_baleful");
+	public static final Item meteorite_sword_warped = new ItemSwordMeteorite(110F, 0, MainRegistry.matMeteorite, "meteorite_sword_warped");
+	public static final Item meteorite_sword_demonic = new ItemSwordMeteorite(400F, 0, MainRegistry.matMeteorite, "meteorite_sword_demonic");
 	
 	//Templates
 	public static final Item template_folder = new ItemTemplateFolder("template_folder").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
