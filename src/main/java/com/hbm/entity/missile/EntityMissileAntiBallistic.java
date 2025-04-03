@@ -37,7 +37,12 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	public double velocity;
 	protected int activationTimer;
 
-	public static double baseSpeed = 1.5D;
+	public static double baseSpeed = 2.5D;
+	
+	private double initialPosX;
+    private double initialPosY;
+    private double initialPosZ;
+    public AxisAlignedBB boundingBox;
 
 	public EntityMissileAntiBallistic(World world) {
 		super(world);
@@ -47,6 +52,19 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	@Override
 	protected void entityInit() {
 		super.entityInit();
+		
+		this.initialPosX = this.posX;
+        this.initialPosY = this.posY;
+        this.initialPosZ = this.posZ;
+        
+        int radarRange = TileEntityMachineRadarNT.radarRange;  // Radar range from the TileEntityMachineRadarNT
+
+        // Create an AxisAlignedBB based on the missile's initial position and radar range
+        this.boundingBox = new AxisAlignedBB(
+        		initialPosX - radarRange, initialPosY , initialPosZ - radarRange,
+        		initialPosX + radarRange, initialPosY + radarRange, + initialPosZ + radarRange 
+			);
+		
 		init(ForgeChunkManager.requestTicket(MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY));
 	}
 
@@ -69,7 +87,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 			if(velocity < 6) velocity += 0.1;
 
-			if(activationTimer < 40) {
+			if(activationTimer < 10) {
 				activationTimer++;
 				motionY = baseSpeed;
 			} else {
@@ -80,7 +98,30 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 				if(prevTracking == null && this.tracking != null) {
 					ExplosionLarge.spawnShock(world, posX, posY, posZ, 24, 3F);
 				}
+				
+				if (this.tracking != null) { // Ensure tracking target exists
+				    double distance = Math.sqrt(
+				        Math.pow(this.tracking.posX - this.posX, 2) +
+				        Math.pow(this.tracking.posY - this.posY, 2) +
+				        Math.pow(this.tracking.posZ - this.posZ, 2)
+				    );
 
+				    if (distance < 15) { // Check if the distance is less than 10
+
+				        List<Entity> explosionRadius = world.getEntitiesWithinAABB(Entity.class, 
+				            new AxisAlignedBB(posX - 15, posY - 15, posZ - 15, posX + 15, posY + 15, posZ + 15));
+
+				        for (Entity entity : explosionRadius) {
+				            if (entity instanceof EntityMissileBaseNT) {
+				                EntityMissileBaseNT target = (EntityMissileBaseNT) entity;
+				                target.health -= 51; //EntityMissileBaseNT has default health of 50 to die
+				            }
+				        }
+
+				        this.setDead(); // Destroy the anti-missile
+				        ExplosionLarge.explode(world, posX, posY, posZ, 20F, true, false, false);
+				    }
+				}
 				if(this.tracking != null) {
 					this.aimAtTarget();
 				} else {
@@ -88,6 +129,8 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 				}
 			}
 
+			
+			
 			loadNeighboringChunks((int) Math.floor(posX / 16), (int) Math.floor(posZ / 16));
 
 			if(this.posY > 2000 && (this.tracking == null || this.tracking.isDead)) this.setDead();
@@ -111,8 +154,11 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 		Entity closest = null;
 		double dist = 1_000;
+		
+		
+		List<Entity> entitiesWithinRange = world.getEntitiesWithinAABB(Entity.class, this.boundingBox);
 
-		for(Entity e : TileEntityMachineRadarNT.matchingEntities) {
+		for(Entity e : entitiesWithinRange) {
 			if(e.dimension != this.dimension) continue;
 			if(!(e instanceof EntityMissileBaseNT)) continue; //can only lock onto missiles
 			if(e instanceof EntityMissileStealth) continue; //cannot lock onto missiles with stealth coating
@@ -123,6 +169,10 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 				closest = e;
 			}
 		}
+		
+		 if(closest != null) {
+		        System.out.println("Found target missile at: " + closest.posX + ", " + closest.posY + ", " + closest.posZ);
+		    }
 
 		this.tracking = closest;
 	}
@@ -136,6 +186,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 		Vec3 motion = Vec3.createVectorHelper(predicted.xCoord - posX, predicted.yCoord - posY, predicted.zCoord - posZ).normalize();
 
 		if(delta.length() < 10 && activationTimer >= 40) {
+			System.out.println("I DIED HERE 1");
 			this.setDead();
 			ExplosionLarge.explode(world, posX, posY, posZ, 15F, true, false, false);
 
@@ -148,7 +199,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 	@Override
 	protected void onImpact(RayTraceResult mop) {
-		if(this.activationTimer >= 40) {
+		if(this.activationTimer >= 10) {
 			this.setDead();
 			ExplosionLarge.explode(world, posX, posY, posZ, 20F, true, false, false);
 		}
