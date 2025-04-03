@@ -29,91 +29,140 @@ import java.util.List;
 
 public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoader, IRadarDetectable {
 
-    private Ticket loaderTicket; // Ticket for chunk loading
+    private Ticket loaderTicket;
 
-    private int turnProgress; // Progress for interpolation of position and rotation
-    private double syncPosX, syncPosY, syncPosZ; // Synchronized position for smooth client-side movement
-    private double syncYaw, syncPitch; // Synchronized rotation for smooth client-side movement
+    private int turnProgress;
+    private double syncPosX;
+    private double syncPosY;
+    private double syncPosZ;
+    private double syncYaw;
+    private double syncPitch;
     @SideOnly(Side.CLIENT)
-    private double velocityX, velocityY, velocityZ; // Client-side velocity for interpolation
+    private double velocityX;
+    @SideOnly(Side.CLIENT)
+    private double velocityY;
+    @SideOnly(Side.CLIENT)
+    private double velocityZ;
 
-    private double targetX, targetY, targetZ; // Target coordinates for the shell
-    private boolean shouldWhistle = false; // Whether the shell should whistle
-    private boolean didWhistle = false; // Whether the shell has already whistled
+    private double targetX;
+    private double targetY;
+    private double targetZ;
+    private boolean shouldWhistle = false;
+    private boolean didWhistle = false;
 
-    private ItemStack cargo = null; // Cargo carried by the shell
+    private ItemStack cargo = null;
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityArtilleryShell.class, DataSerializers.VARINT); // Type of artillery shell
+    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityArtilleryShell.class, DataSerializers.VARINT);
 
     public EntityArtilleryShell(World world) {
         super(world);
-        this.ignoreFrustumCheck = true; // Always render the entity
-        this.setSize(0.5F, 0.5F); // Set entity size
+        this.ignoreFrustumCheck = true;
+        this.setSize(0.5F, 0.5F);
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
-        init(ForgeChunkManager.requestTicket(MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY)); // Initialize chunk loader
-        this.dataManager.register(TYPE, 0); // Register the shell type
+        init(ForgeChunkManager.requestTicket(MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY));
+        this.dataManager.register(TYPE, 0);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public boolean isInRangeToRenderDist(double distance) {
-        return true; // Always render regardless of distance
+        return true;
     }
 
     public EntityArtilleryShell setType(int type) {
-        this.dataManager.set(TYPE, type); // Set the shell type
+        this.dataManager.set(TYPE, type);
         return this;
     }
 
     public ItemAmmoArty.ArtilleryShell getType() {
         try {
-            return ItemAmmoArty.itemTypes[this.dataManager.get(TYPE)]; // Get the shell type
-        } catch (Exception ex) {
-            return ItemAmmoArty.itemTypes[0]; // Default to the first type if an error occurs
+            return ItemAmmoArty.itemTypes[this.dataManager.get(TYPE)];
+        } catch(Exception ex) {
+            return ItemAmmoArty.itemTypes[0];
         }
     }
 
     public double[] getTarget() {
-        return new double[] { this.targetX, this.targetY, this.targetZ }; // Get the target coordinates
+        return new double[] { this.targetX, this.targetY, this.targetZ };
     }
 
     public void setTarget(double x, double y, double z) {
         this.targetX = x;
         this.targetY = y;
-        this.targetZ = z; // Set the target coordinates
+        this.targetZ = z;
     }
 
     public double getTargetHeight() {
-        return this.targetY; // Get the target's Y-coordinate
+        return this.targetY;
     }
 
     public void setWhistle(boolean whistle) {
-        this.shouldWhistle = whistle; // Set whether the shell should whistle
+        this.shouldWhistle = whistle;
     }
 
     public boolean getWhistle() {
-        return this.shouldWhistle; // Get whether the shell should whistle
+        return this.shouldWhistle;
     }
 
     public boolean didWhistle() {
-        return this.didWhistle; // Get whether the shell has already whistled
+        return this.didWhistle;
     }
 
     @Override
     public void onUpdate() {
-        if (!world.isRemote) {
+        if (!world.isRemote) {            
+            // Calculate direction vector to target
+            double deltaX = this.targetX - this.posX;
+            double deltaY = this.targetY - this.posY;
+            double deltaZ = this.targetZ - this.posZ;
+            
+            // Calculate horizontal distance
+            double horizontalDist = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+            
+            // Calculate time to target based on current horizontal velocity
+            double currentHorizontalSpeed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            if (currentHorizontalSpeed < 0.1) currentHorizontalSpeed = 1.0; // Default if too slow
+            
+            double timeToTarget = horizontalDist / currentHorizontalSpeed;
+            
+            // Calculate required vertical velocity accounting for gravity (corrected formula)
+            // Using physics formula: y = y0 + v0*t + 0.5*a*t^2
+            // Solving for v0: v0 = (y - y0 - 0.5*a*t^2)/t
+            double gravity = getGravityVelocity();
+            double idealY = (deltaY + 0.5 * gravity * timeToTarget * timeToTarget) / timeToTarget;
+            
+            // Apply a small correction to vertical velocity (gentle adjustment)
+            this.motionY += (idealY - this.motionY) * 0.1;
+            
+            if (horizontalDist > 0.5) {
+                // Ideal direction to target
+                double idealX = deltaX / horizontalDist;
+                double idealZ = deltaZ / horizontalDist;
+                
+                // Apply correction to horizontal motion (gentle adjustment)
+                this.motionX += (idealX * currentHorizontalSpeed - this.motionX) * 0.1;
+                this.motionZ += (idealZ * currentHorizontalSpeed - this.motionZ) * 0.1;
+                
+                // Maintain original speed
+                double newSpeedXZ = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+                if (newSpeedXZ > 0.001) {
+                    this.motionX = this.motionX * currentHorizontalSpeed / newSpeedXZ;
+                    this.motionZ = this.motionZ * currentHorizontalSpeed / newSpeedXZ;
+                }
+            }
+            
             super.onUpdate();
 
             // Handle whistling logic
             if (!didWhistle && this.shouldWhistle) {
                 double speed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-                double deltaX = this.posX - this.targetX;
-                double deltaZ = this.posZ - this.targetZ;
-                double dist = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+                double deltaToTargetX = this.posX - this.targetX;
+                double deltaToTargetZ = this.posZ - this.targetZ;
+                double dist = Math.sqrt(deltaToTargetX * deltaToTargetX + deltaToTargetZ * deltaToTargetZ);
 
                 if (speed * 18 > dist) {
                     world.playSound(null, this.targetX, this.targetY, this.targetZ, HBMSoundHandler.mortarWhistle, SoundCategory.BLOCKS, 15.0F, 0.9F + rand.nextFloat() * 0.2F);
@@ -122,7 +171,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
             }
 
             // Load neighboring chunks
-            loadNeighboringChunks((int) (posX / 16), (int) (posZ / 16));
+            loadNeighboringChunks((int) Math.floor(posX / 16), (int) Math.floor(posZ / 16));
             this.getType().onUpdate(this); // Update shell type behavior
 
         } else {
@@ -153,7 +202,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_) {
         this.velocityX = this.motionX = p_70016_1_;
         this.velocityY = this.motionY = p_70016_3_;
-        this.velocityZ = this.motionZ = p_70016_5_; // Set velocity for interpolation
+        this.velocityZ = this.motionZ = p_70016_5_;
     }
 
     @SideOnly(Side.CLIENT)
@@ -163,7 +212,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
         this.syncPosZ = z;
         this.syncYaw = yaw;
         this.syncPitch = pitch;
-        this.turnProgress = theNumberThree; // Set synchronized position and rotation
+        this.turnProgress = theNumberThree;
         this.motionX = this.velocityX;
         this.motionY = this.velocityY;
         this.motionZ = this.velocityZ;
@@ -171,55 +220,60 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 
     @Override
     protected void onImpact(RayTraceResult mop) {
-        if (!world.isRemote) {
-            // Log impact details for debugging
+
+        if(!world.isRemote) {
+        	//If youre gonna debug be more vebose
             MainRegistry.logger.info("########################\n Artillery shell hit at " + posX + ", " + posY + ", " + posZ + "\n########################");
             MainRegistry.logger.info("########################\n Target was  at " + targetX + ", " + targetY + ", " + targetZ + "\n########################");
-            MainRegistry.logger.info("########################\n Deviation " + Math.sqrt((targetX - posX) * (targetX - posX)) + ", " + Math.sqrt((targetY - posY) * (targetY - posY)) + ", " + Math.sqrt((targetZ - posZ) * (targetZ - posZ)) + "\n########################");
+            MainRegistry.logger.info("########################\n Deviation " + Math.sqrt(targetX*targetX - posX*posX) + ", " + Math.sqrt(targetY*targetY-posY*posY) + ", " + Math.sqrt(targetZ*targetZ-posZ*posZ) + "\n########################");
             MainRegistry.logger.info("########################\n Motion Values On Impact " + this.motionX + ", " + this.motionY + ", " + this.motionZ + "\n########################");
+           
 
-
-            if (mop.typeOfHit == mop.typeOfHit.ENTITY && mop.entityHit instanceof EntityArtilleryShell) return; // Prevent self-collision
-            this.getType().onImpact(this, mop); // Handle impact behavior based on shell type
+            if(mop.typeOfHit == mop.typeOfHit.ENTITY && mop.entityHit instanceof EntityArtilleryShell) return;
+            this.getType().onImpact(this, mop);
         }
     }
 
     @Override
     public void init(Ticket ticket) {
-        if (!world.isRemote && ticket != null) {
-            if (loaderTicket == null) {
+        if(!world.isRemote && ticket != null) {
+            if(loaderTicket == null) {
                 loaderTicket = ticket;
-                loaderTicket.bindEntity(this); // Bind the ticket to this entity
+                loaderTicket.bindEntity(this);
                 loaderTicket.getModData();
             }
-            ForgeChunkManager.forceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ)); // Force load the chunk
+            ForgeChunkManager.forceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ));
         }
     }
 
-    List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>(); // List of loaded chunks
+    List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>();
 
     public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-        if (!world.isRemote && loaderTicket != null) {
-            clearChunkLoader(); // Clear previously loaded chunks
+        if(!world.isRemote && loaderTicket != null) {
+
+            clearChunkLoader();
 
             loadedChunks.clear();
-            loadedChunks.add(new ChunkPos(newChunkX, newChunkZ)); // Add the current chunk
+            loadedChunks.add(new ChunkPos(newChunkX, newChunkZ));
+                        
+            //ChunkCoordIntPair doesnt exist in 1.12.2
+            //loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX + this.motionX) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ) / 16D)));
 
-            for (ChunkPos chunk : loadedChunks) {
-                ForgeChunkManager.forceChunk(loaderTicket, chunk); // Force load neighboring chunks
+            for(ChunkPos chunk : loadedChunks) {
+                ForgeChunkManager.forceChunk(loaderTicket, chunk);
             }
         }
     }
 
     public void killAndClear() {
-        this.setDead(); // Mark the entity as dead
-        this.clearChunkLoader(); // Clear loaded chunks
+        this.setDead();
+        this.clearChunkLoader();
     }
 
     public void clearChunkLoader() {
-        if (!world.isRemote && loaderTicket != null) {
-            for (ChunkPos chunk : loadedChunks) {
-                ForgeChunkManager.unforceChunk(loaderTicket, chunk); // Unforce loaded chunks
+        if(!world.isRemote && loaderTicket != null) {
+            for(ChunkPos chunk : loadedChunks) {
+                ForgeChunkManager.unforceChunk(loaderTicket, chunk);
             }
         }
     }
@@ -228,64 +282,67 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
 
-        nbt.setInteger("type", this.dataManager.get(TYPE)); // Save shell type
-        nbt.setBoolean("shouldWhistle", this.shouldWhistle); // Save whistle state
-        nbt.setBoolean("didWhistle", this.didWhistle); // Save whistle completion state
-        nbt.setDouble("targetX", this.targetX); // Save target coordinates
+        nbt.setInteger("type", this.dataManager.get(TYPE));
+        nbt.setBoolean("shouldWhistle", this.shouldWhistle);
+        nbt.setBoolean("didWhistle", this.didWhistle);
+        nbt.setDouble("targetX", this.targetX);
         nbt.setDouble("targetY", this.targetY);
         nbt.setDouble("targetZ", this.targetZ);
 
-        if (this.cargo != null)
-            nbt.setTag("cargo", this.cargo.writeToNBT(new NBTTagCompound())); // Save cargo
+        if(this.cargo != null)
+            nbt.setTag("cargo", this.cargo.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
 
-        this.dataManager.set(TYPE, nbt.getInteger("type")); // Load shell type
-        this.shouldWhistle = nbt.getBoolean("shouldWhistle"); // Load whistle state
-        this.didWhistle = nbt.getBoolean("didWhistle"); // Load whistle completion state
-        this.targetX = nbt.getDouble("targetX"); // Load target coordinates
+        this.dataManager.set(TYPE, nbt.getInteger("type"));
+        this.shouldWhistle = nbt.getBoolean("shouldWhistle");
+        this.didWhistle = nbt.getBoolean("didWhistle");
+        this.targetX = nbt.getDouble("targetX");
         this.targetY = nbt.getDouble("targetY");
         this.targetZ = nbt.getDouble("targetZ");
 
         NBTTagCompound compound = nbt.getCompoundTag("cargo");
-        this.setCargo(new ItemStack(compound)); // Load cargo
+        this.setCargo(new ItemStack(compound));
     }
 
     @Override
     protected float getAirDrag() {
-        return 1.0F; // Air drag factor
+        return 1.0F;
     }
 
     @Override
     public double getGravityVelocity() {
-        return 9.81 * 0.05; // Gravity effect on the shell
+        return 9.81 * 0.05;
+        //try changing to *0.03 as SuperClass assumes 0.03 for grav velocity,
+        //also grav massivley effects where the shell lands
     }
 
     @Override
     protected int groundDespawn() {
-        return cargo != null ? 0 : 1200; // Despawn time based on cargo presence
+        return cargo != null ? 0 : 1200;
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return true; // Allow collisions with the shell
+        return true;
     }
 
     public void setCargo(ItemStack stack) {
-        this.cargo = stack; // Set the cargo
+        this.cargo = stack;
     }
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote) {
-            if (this.cargo != null) {
-                player.inventory.addItemStackToInventory(this.cargo.copy()); // Give cargo to the player
+
+        if(!world.isRemote) {
+            if(this.cargo != null) {
+                player.inventory.addItemStackToInventory(this.cargo.copy());
                 player.inventoryContainer.detectAndSendChanges();
             }
-            this.setDead(); // Remove the shell
+            this.setDead();
         }
 
         return false;
@@ -293,6 +350,6 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
 
     @Override
     public RadarTargetType getTargetType() {
-        return RadarTargetType.ARTILLERY; // Radar target type for this entity
+        return RadarTargetType.ARTILLERY;
     }
 }
