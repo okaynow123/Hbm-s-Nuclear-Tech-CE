@@ -179,7 +179,13 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	            // Descent Phase: Smoothly approach target
 	        	Vec3 vector = Vec3.createVectorHelper(targetX - posX, targetY - posY, targetZ - posZ).normalize();
 	            motionX = vector.xCoord * velocity;
-	            motionY = Math.max(vector.yCoord * velocity * 0.85 , -2);// More gradual descent, -2 should be larger
+	            motionY = Math.max(vector.yCoord * velocity * 0.85 , -2);
+	            
+	            if (motionY == -2 && distanceToTarget < 10) {
+	            	cluster();
+	            }
+	            
+	            // More gradual descent, -2 should be larger
 	            //Added a cap to max downwards speed, just keep motionY = vector.yCoord * velocity * 0.85
 	            //This cap is too allow Anti Ballistics to intercept
 	            motionZ = vector.zCoord * velocity;
