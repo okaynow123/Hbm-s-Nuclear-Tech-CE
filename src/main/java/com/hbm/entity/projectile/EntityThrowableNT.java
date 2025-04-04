@@ -130,21 +130,36 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
     @Override
     public void shoot(double motionX, double motionY, double motionZ, float velocity, float inaccuracy) {
         float throwLen = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+        //Euclidean Distance ^^
+        
         motionX /= (double) throwLen;
         motionY /= (double) throwLen;
         motionZ /= (double) throwLen;
-        motionX += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
-        motionY += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
-        motionZ += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+        //Doubles for Coords are gonna cause floating point errors, XYZ should be fine as ints motion is neccessary as a Double
+        
+        
+//        motionX += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+//        motionY += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+//        motionZ += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+//        Fuck the guassian randomising
+        
+        
         motionX *= (double) velocity;
         motionY *= (double) velocity;
         motionZ *= (double) velocity;
+        
+        //Motion should be fine as a double
+        
         this.motionX = motionX;
         this.motionY = motionY;
         this.motionZ = motionZ;
         float hyp = MathHelper.sqrt(motionX * motionX + motionZ * motionZ);
+
+        
+        
         this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
         this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(motionY, (double) hyp) * 180.0D / Math.PI);
+        
         this.ticksInGround = 0;
     }
 
@@ -182,9 +197,11 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
             } else {
 
                 this.inGround = false;
-                this.motionX *= (double) (this.rand.nextFloat() * 0.2F);
-                this.motionY *= (double) (this.rand.nextFloat() * 0.2F);
-                this.motionZ *= (double) (this.rand.nextFloat() * 0.2F);
+//                this.motionX *= (double) (this.rand.nextFloat() * 0.2F);
+//                this.motionY *= (double) (this.rand.nextFloat() * 0.2F);
+//                this.motionZ *= (double) (this.rand.nextFloat() * 0.2F);
+                //Randomizing motion why?? Im assuming for unpredicadbility but no
+                
                 this.ticksInGround = 0;
                 this.ticksInAir = 0;
             }
@@ -198,6 +215,8 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
             if(!this.isSpectral()) mop = this.world.rayTraceBlocks(pos.toVec3d(), nextPos.toVec3d(), false, true, false);
             pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
             nextPos = Vec3.createVectorHelper(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
+            //Looks fine too theres no Float divs, 
+            
 
             if(mop != null) {
                 nextPos = Vec3.createVectorHelper(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
@@ -214,13 +233,16 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                 for(int j = 0; j < list.size(); ++j) {
                     Entity entity = (Entity) list.get(j);
 
+                    //Applies damage to enemies, excluding the thrower (one who shot the projectile)
                     if(entity.canBeCollidedWith() && (entity != thrower || this.ticksInAir >= this.selfDamageDelay())) {
                         double hitbox = 0.3F;
                         AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
+                        
+                        
                         RayTraceResult hitMop = aabb.calculateIntercept(pos.toVec3d(), nextPos.toVec3d());
-
+                        //Non pentrative raytrace result
+                        
                         if(hitMop != null) {
-
                             // if penetration is enabled, run impact for all intersecting entities
                             if(this.doesPenetrate()) {
                                 this.onImpact(new RayTraceResult(entity, hitMop.hitVec));
@@ -252,12 +274,15 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                 }
             }
 
+            //Code for motion and rotation during flight
             if(!this.onGround) {
+            	
                 float hyp = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                 this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
                 for(this.rotationPitch = (float) (Math.atan2(this.motionY, (double) hyp) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F);
 
+                //Normalising rotation im assuming
                 while(this.rotationPitch - this.prevRotationPitch >= 180.0F) this.prevRotationPitch += 360.0F;
                 while(this.rotationYaw - this.prevRotationYaw < -180.0F) this.prevRotationYaw -= 360.0F;
                 while(this.rotationYaw - this.prevRotationYaw >= 180.0F) this.prevRotationYaw += 360.0F;
@@ -268,6 +293,8 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
 
             float drag = this.getAirDrag();
             double gravity = this.getGravityVelocity();
+            //Why are we fetching a const on every frame update??
+            //Is gravity expected to change ?
 
             this.posX += this.motionX * motionMult();
             this.posY += this.motionY * motionMult();
@@ -287,6 +314,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
             this.motionZ *= (double) drag;
             this.motionY -= gravity;
             this.setPosition(this.posX, this.posY, this.posZ);
+            //Seems fine
         }
     }
 
@@ -321,6 +349,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
 
     public double getGravityVelocity() {
         return 0.03D;
+        //Why 0.03? this is overridden in every child class no?
     }
 
     protected abstract void onImpact(RayTraceResult result);
@@ -367,6 +396,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
     }
 
     /* ================================== Additional Getters =====================================*/
+    //Use lombok for love of god
 
     protected float getAirDrag() { return 0.99F; }
 
