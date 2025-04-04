@@ -71,7 +71,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 		this.setLocationAndAngles(x, y, z, 0, 0);
 		startX = (int) x;
 		startZ = (int) z;
-		startY = (int) world.getHeight(startX, startY);
+		startY = (int) world.getHeight(startX, startZ);
 		targetX = a;
 		targetZ = b;
 		targetY = (int) world.getHeight(targetX, targetZ);
@@ -131,6 +131,10 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	    this.prevPosZ = this.posZ;
 	    super.onUpdate();
 	    
+	    if (this.health <= 0) { //check its not been blown up
+	    	this.killMissile();
+	    }
+	    
 	    if (velocity < 4) {
 	        velocity += 0.02; // Smooth velocity increase
 	    }
@@ -142,7 +146,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	        // Calculate cruise altitude but clamp it to a max of 500
 	        double cruiseAltitude = Math.min((Math.max(startY, targetY) + distanceToTarget * Math.PI), 500); // Assert a maximum cruise height
 	        
-	        // Clamp the missile's Y position to be no higher than 500
+	        // Clamp the missile's Y position to be no higher than 1000 to stop crazy heights
 	        if (posY > 500) {
 	            posY = 500;
 	        }
@@ -165,7 +169,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	            motionX *= 0.98;
 	            motionY = Math.max(motionY + 0.1, 0.5); // Stronger initial ascent
 	            motionZ *= 0.98;
-	        } else if (distanceToTarget > 30) {
+	        } else if (distanceToTarget > 100) { //30
 	            // Cruise Phase: Maintain level flight
 	            Vec3 vector = Vec3.createVectorHelper(targetX - posX, targetY - posY, targetZ - posZ).normalize();
 	            motionX = vector.xCoord * velocity;
@@ -175,7 +179,15 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	            // Descent Phase: Smoothly approach target
 	        	Vec3 vector = Vec3.createVectorHelper(targetX - posX, targetY - posY, targetZ - posZ).normalize();
 	            motionX = vector.xCoord * velocity;
-	            motionY = vector.yCoord * velocity * 0.85; // More gradual descent
+	            motionY = Math.max(vector.yCoord * velocity * 0.85 , -2);
+	            
+	            if (motionY == -2 && distanceToTarget < 10 && this.isCluster) {
+	            	cluster();
+	            }
+	            
+	            // More gradual descent, -2 should be larger
+	            //Added a cap to max downwards speed, just keep motionY = vector.yCoord * velocity * 0.85
+	            //This cap is too allow Anti Ballistics to intercept
 	            motionZ = vector.zCoord * velocity;
 	        }
 	        
