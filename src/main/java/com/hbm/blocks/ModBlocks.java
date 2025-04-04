@@ -503,11 +503,7 @@ public class ModBlocks {
 	public static final Block burning_earth = new WasteEarth(Material.GROUND, true, "burning_earth").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F);
 
 	//PollutedBecauseOilThings
-	public static final Block plant_dead_generic = new BlockDeadPlant(Material.PLANTS, "plant_dead_generic").setSoundType(SoundType.PLANT).setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block plant_dead_grass = new BlockDeadPlant(Material.PLANTS, "plant_dead_grass").setSoundType(SoundType.PLANT).setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block plant_dead_flower = new BlockDeadPlant(Material.PLANTS, "plant_dead_flower").setSoundType(SoundType.PLANT).setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block plant_dead_big_flower = new BlockDeadPlant(Material.PLANTS, "plant_dead_big_flower").setSoundType(SoundType.PLANT).setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block plant_dead_fern = new BlockDeadPlant(Material.PLANTS, "plant_dead_fern").setSoundType(SoundType.PLANT).setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block plant_dead = new BlockDeadPlant("plant_dead").setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab).setLightOpacity(0);
 
 	public static final Block dirt_dead = new BlockFallingBase(Material.GROUND, "dirt_dead", SoundType.GROUND).setHardness(0.5F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block dirt_oily = new BlockFallingBase(Material.GROUND, "dirt_oily", SoundType.GROUND).setHardness(0.5F).setCreativeTab(MainRegistry.resourceTab);

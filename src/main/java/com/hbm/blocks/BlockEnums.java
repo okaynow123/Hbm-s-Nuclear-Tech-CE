@@ -5,7 +5,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
 
 import static com.hbm.blocks.OreEnumUtil.*;
 
@@ -111,5 +110,12 @@ public class BlockEnums {
 		}
 	}
 
+	public static enum EnumDeadPlantType {
+		GENERIC,
+		GRASS,
+		FLOWER,
+		BIG_FLOWER,
+		FERN,
+	}
 
 }
