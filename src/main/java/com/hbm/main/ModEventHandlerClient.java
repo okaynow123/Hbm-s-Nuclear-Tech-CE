@@ -466,21 +466,16 @@ public class ModEventHandlerClient {
         }
 
 
-        ItemEnumMulti.registerModels();
-//        ((ItemZirnoxRod) ModItems.rod_zirnox).registerModels();
-//        ((ItemBreedingRod) ModItems.rod).registerModels();
-//        ((ItemBreedingRod) ModItems.rod_dual).registerModels();
-//        ((ItemBreedingRod) ModItems.rod_quad).registerModels();
-//        ((ItemVOTVdrive) ModItems.full_drive).registerModels();
+
 
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
         ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
-
-        IDynamicModels.registerModels();
         ((ItemMold) ModItems.mold).registerModels();
-  
+        ItemEnumMulti.registerModels();
+        IDynamicModels.registerModels();
+
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
     }
@@ -577,10 +572,8 @@ public class ModEventHandlerClient {
         ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
-        BlockOreMeta.bakeModels(evt);
-        BlockMeta.bakeModels(evt);
-        BlockSellafieldSlaked.bakeModels(evt);
         ItemMold.bakeModels(evt);
+        IDynamicModels.bakeModels(evt);
 
         for (EnumCanister e : EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());

@@ -29,6 +29,7 @@ public class BlockBakeBase extends BlockBase implements IDynamicModels {
     Material m, String s, BlockBakeFrame blockFrame) {
         super(m, s);
         this.blockFrame = blockFrame;
+        IDynamicModels.INSTANCES.add(this);
 
     }
 
@@ -36,6 +37,15 @@ public class BlockBakeBase extends BlockBase implements IDynamicModels {
             Material m, String s, String texture) {
         super(m, s);
         this.blockFrame = new BlockBakeFrame(ALL, texture);
+        IDynamicModels.INSTANCES.add(this);
+
+    }
+
+    public BlockBakeBase(
+            Material m, String s) {
+        super(m, s);
+        this.blockFrame = new BlockBakeFrame(ALL, s);
+        IDynamicModels.INSTANCES.add(this);
 
     }
 
@@ -43,6 +53,7 @@ public class BlockBakeBase extends BlockBase implements IDynamicModels {
             Material m, String s, String textureTop, String textureSide) {
         super(m, s);
         this.blockFrame = new BlockBakeFrame(textureTop, textureSide);
+        IDynamicModels.INSTANCES.add(this);
 
     }
 
@@ -61,6 +72,8 @@ public class BlockBakeBase extends BlockBase implements IDynamicModels {
 
                 ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "inventory");
                 event.getModelRegistry().putObject(modelLocation, bakedModel);
+                ModelResourceLocation worldLocation = new ModelResourceLocation(getRegistryName(), "normal");
+                event.getModelRegistry().putObject(worldLocation, bakedModel);
 
             } catch (Exception e) {
                 e.printStackTrace();
