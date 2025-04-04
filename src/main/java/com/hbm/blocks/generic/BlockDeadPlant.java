@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -35,24 +36,14 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
     }
 
     @Override
-    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
-
+    protected BlockBakeFrame[] assignBlockFrames(String registryName)
+    {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
                 .map(name -> registryName + "_" + name.toLowerCase(Locale.US))
-                .map(BlockBakeFrame::new)
+                .map(texture -> new BlockBakeFrame(BlockBakeFrame.BlockForm.CROSS, texture))
                 .toArray(BlockBakeFrame[]::new);
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return this.canBlockStay(world, pos, world.getBlockState(pos));
-    }
-
-    public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
-        Block block = world.getBlockState(pos.down()).getBlock();
-        return block == Blocks.GRASS || block == Blocks.DIRT || block == ModBlocks.waste_earth || block == ModBlocks.waste_dirt || block == ModBlocks.dirt_dead || block == ModBlocks.dirt_oily;
     }
 
     /**
@@ -66,6 +57,16 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
     }
 
     @Override
+    public boolean canPlaceBlockAt(World world, BlockPos pos) {
+        return this.canBlockStay(world, pos, world.getBlockState(pos));
+    }
+
+    public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
+        Block block = world.getBlockState(pos.down()).getBlock();
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == ModBlocks.waste_earth || block == ModBlocks.waste_dirt || block == ModBlocks.dirt_dead || block == ModBlocks.dirt_oily;
+    }
+
+    @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
         return new AxisAlignedBB(0.09999999403953552D, 0.0D, 0.09999999403953552D, 0.8999999761581421D, 0.4000000059604645D, 0.8999999761581421D);
     }
@@ -76,15 +77,11 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
         return NULL_AABB;
     }
 
-//    public boolean isOpaqueCube() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isFullCube(IBlockState state)
-//    {
-//        return false;
-//    }
+    @Override
+    public boolean isFullCube(IBlockState state)
+    {
+        return false;
+    }
 
     @Override
     public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
