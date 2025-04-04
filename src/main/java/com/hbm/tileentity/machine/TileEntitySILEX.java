@@ -24,12 +24,13 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 
-public class TileEntitySILEX extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IFFtoNTMF {
+public class TileEntitySILEX extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IFFtoNTMF{
 
 	public EnumWavelengths mode = EnumWavelengths.NULL;
 	public FluidTank tank;
@@ -139,7 +140,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	}
 	
 	public int getFluidScaled(int i) {
-		return (tank.getFluidAmount() * i) / tank.getCapacity();
+		return (tankNew.getFill() * i) / tankNew.getMaxFill();
 	}
 	
 	public int getFillScaled(int i) {
