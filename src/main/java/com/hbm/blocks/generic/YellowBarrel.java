@@ -19,9 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class YellowBarrel extends Block {
+public class YellowBarrel extends BaseBarrel {
 
-	public static final AxisAlignedBB BARREL_BB = new AxisAlignedBB(2 * 0.0625F, 0.0F, 2 * 0.0625F, 14 * 0.0625F, 1.0F, 14 * 0.0625F);
 	Random rand = new Random();
 
 	public YellowBarrel(Material materialIn, String s) {
@@ -50,31 +49,6 @@ public class YellowBarrel extends Block {
     	ExplosionNukeGeneric.waste(p_149695_1_, x, y, z, 35);
 
         RadiationSavedData.incrementRad(p_149695_1_, new BlockPos(x, y, z), 35, 1500);
-	}
-
-	@Override
-	public boolean canDropFromExplosion(Explosion explosionIn) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return BARREL_BB;
 	}
 
 	@Override

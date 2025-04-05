@@ -1,7 +1,7 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.YellowBarrel;
+import com.hbm.blocks.generic.BaseBarrel;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.InventoryHelper;
@@ -32,6 +32,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+
 
 public class BlockFluidBarrel extends BlockContainer {
 
@@ -169,6 +170,6 @@ public class BlockFluidBarrel extends BlockContainer {
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		return YellowBarrel.BARREL_BB;
+		return BaseBarrel.BARREL_BB;
 	}
 }
