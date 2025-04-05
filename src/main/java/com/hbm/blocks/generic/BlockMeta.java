@@ -39,6 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 
 public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicModels {
@@ -49,6 +50,11 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     public final short META_COUNT;
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
+
+    public IBlockState getRandomState(Random rand){
+        return this.getDefaultState().withProperty(META, rand.nextInt(META_COUNT));
+
+    }
 
 
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {

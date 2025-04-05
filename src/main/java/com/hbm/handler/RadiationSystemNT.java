@@ -49,10 +49,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = RefStrings.MODID)
+//FIXME: this shit causes data corruption waay too often, added some exception handling, but I think this still needs a decent sift
 public class RadiationSystemNT {
 
     /**
@@ -1193,19 +1195,25 @@ public class RadiationSystemNT {
          */
         public void add(World world, BlockPos pos) {
             for (EnumFacing e : EnumFacing.VALUES) {
-                //Tries to load the chunk so it updates right.
+                // Force chunk loading by accessing block state
                 world.getBlockState(pos.offset(e, 16));
                 if (isSubChunkLoaded(world, pos.offset(e, 16))) {
                     SubChunkRadiationStorage sc = getSubChunkStorage(world, pos.offset(e, 16));
-                    //Clear all the neighbor's references to this sub chunk
+                    // Clear all the neighbor's references to this sub-chunk
                     for (RadPocket p : sc.pockets) {
                         p.connectionIndices[e.getOpposite().ordinal()].clear();
                     }
-                    //Sync connections to the neighbor to make it two way
+                    // Sync connections to the neighbor to make it two-way
                     for (RadPocket p : pockets) {
                         List<Integer> indc = p.connectionIndices[e.ordinal()];
                         for (int idx : indc) {
-                            sc.pockets[idx].connectionIndices[e.getOpposite().ordinal()].add(p.index);
+                            // Check that the index is within bounds
+                            if (sc.pockets != null && idx >= 0 && idx < sc.pockets.length) {
+                                sc.pockets[idx].connectionIndices[e.getOpposite().ordinal()].add(p.index);
+                            } else {
+                                // Log a warning or handle the missing connection gracefully
+                                System.out.println("Warning: Invalid connection index " + idx + " for neighbor at " + pos.offset(e, 16));
+                            }
                         }
                     }
                 }
@@ -1351,10 +1359,22 @@ public class RadiationSystemNT {
          * @param p   - the pocket to write data from
          */
         public void writePocket(ByteBuffer buf, RadPocket p) {
-            //Serialize index and radiation
+            if (p == null) {
+                // Write a marker value (-1) to indicate a null pocket.
+                buf.putInt(-1);
+                // Write default radiation (0.0f)
+                buf.putFloat(0.0f);
+                // For each facing, write zero as the count of connection indices.
+                for (EnumFacing e : EnumFacing.VALUES) {
+                    buf.putShort((short) 0);
+                }
+                return;
+            }
+
+            // Serialize index and radiation
             buf.putInt(p.index);
             buf.putFloat(p.radiation);
-            //For each facing, serialize the indices in that direction
+            // For each facing, serialize the indices in that direction
             for (EnumFacing e : EnumFacing.VALUES) {
                 List<Integer> indc = p.connectionIndices[e.ordinal()];
                 buf.putShort((short) indc.size());
@@ -1371,37 +1391,46 @@ public class RadiationSystemNT {
          */
         public void readFromNBT(NBTTagCompound tag) {
             ByteBuffer data = ByteBuffer.wrap(tag.getByteArray("chunkRadData"));
-            //For each chunk, try to deserialize it
+            // For each sub-chunk in the chunk:
             for (int i = 0; i < chunks.length; i++) {
-                boolean subChunkExists = data.get() == 1;
-                if (subChunkExists) {
-                    //Y level could be implicitly defined with i, but this works too
-                    int yLevel = data.getShort();
-                    //Create the new sub chunk, don't pass any data into it because we'll set that manually
-                    SubChunkRadiationStorage st = new SubChunkRadiationStorage(this, yLevel, null, null);
-                    int pocketsLength = data.getShort();
-                    st.pockets = new RadPocket[pocketsLength];
-                    //Deserialize each pocket into the pockets array
-                    for (int j = 0; j < pocketsLength; j++) {
-                        st.pockets[j] = readPocket(data, st);
-                        if (st.pockets[j].radiation > 0) {
-                            //If it has active radiation, add it to the active set to be updated
-                            parent.addActivePocket(st.pockets[j]);
+                try {
+                    boolean subChunkExists = data.get() == 1;
+                    if (subChunkExists) {
+                        int yLevel = data.getShort();
+                        SubChunkRadiationStorage st = new SubChunkRadiationStorage(this, yLevel, null, null);
+                        int pocketsLength = data.getShort();
+                        st.pockets = new RadPocket[pocketsLength];
+                        // Deserialize each pocket into the pockets array
+                        for (int j = 0; j < pocketsLength; j++) {
+                            st.pockets[j] = readPocket(data, st);
+                            if (st.pockets[j].radiation > 0) {
+                                parent.addActivePocket(st.pockets[j]);
+                            }
                         }
-                    }
-                    boolean perBlockDataExists = data.get() == 1;
-                    if (perBlockDataExists) {
-                        //If the per block data exists, read indices sequentially and set each array slot to the rad pocket at that index
-                        st.pocketsByBlock = new RadPocket[16 * 16 * 16];
-                        for (int j = 0; j < 16 * 16 * 16; j++) {
-                            int idx = data.getShort();
-                            if (idx >= 0)
-                                st.pocketsByBlock[j] = st.pockets[idx];
+                        boolean perBlockDataExists = data.get() == 1;
+                        if (perBlockDataExists) {
+                            st.pocketsByBlock = new RadPocket[16 * 16 * 16];
+                            for (int j = 0; j < 16 * 16 * 16; j++) {
+                                int idx = data.getShort();
+                                // Check that the index is within the valid range for st.pockets
+
+                                if (idx >= 0 && idx < st.pockets.length) {
+                                    st.pocketsByBlock[j] = st.pockets[idx];
+                                } else {
+                                    st.pocketsByBlock[j] = null;
+                                    System.out.println("Warning: Invalid pocket index " + idx + " at sub-chunk " + i + ", block " + j);
+                                }
+                            }
                         }
+                        chunks[i] = st;
+                    } else {
+                        chunks[i] = null;
                     }
-                    chunks[i] = st;
-                } else {
-                    chunks[i] = null;
+                } catch (BufferUnderflowException e) {
+                    // Log the underflow issue and create a default sub-chunk filled with "zero" values.
+                    System.out.println("BufferUnderflowException while reading sub-chunk " + i + ". Defaulting to 0s.");
+                    // Here we assume y-level 0, empty pockets, and a per-block array defaulted to null (which you can treat as 0)
+                    chunks[i] = new SubChunkRadiationStorage(this, 0, new RadPocket[0], new RadPocket[16 * 16 * 16]);
                 }
             }
         }

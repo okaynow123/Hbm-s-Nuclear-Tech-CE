@@ -216,7 +216,7 @@ public class EntityFalloutUnderGround extends Entity implements IChunkLoader {
 				return;
 
 			} else if(bblock == Blocks.BEDROCK || bblock == ModBlocks.ore_bedrock_oil || bblock == ModBlocks.ore_bedrock_block){
-				if(world.isAirBlock(pos.up())) world.setBlockState(pos.up(), ModBlocks.toxic_block.getDefaultState());
+				 world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState());
 				return;
 			
 			} else if(bblock instanceof BlockLeaves) {

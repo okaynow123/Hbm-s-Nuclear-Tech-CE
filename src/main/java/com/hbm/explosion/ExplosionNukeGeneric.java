@@ -13,6 +13,7 @@ import java.util.Random;
 import java.lang.NoClassDefFoundError;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Level;
 
 import com.hbm.config.CompatibilityConfig;
@@ -306,9 +307,9 @@ public class ExplosionNukeGeneric {
 				world.setBlockState(pos, ModBlocks.sellafield_slaked.getStateFromMeta(world.rand.nextInt(4)));
 			}
 
-//			else if(b == Blocks.BEDROCK){
-//				world.setBlockState(pos.add(0, 1, 0), ModBlocks.toxic_block.getDefaultState());
-//			}
+			else if(b == Blocks.BEDROCK){
+				world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState());
+			}
 
 			else if (b == Blocks.RED_MUSHROOM_BLOCK) {
 				if (bs.getValue(BlockHugeMushroom.VARIANT) == BlockHugeMushroom.EnumType.STEM) {
@@ -439,11 +440,11 @@ public class ExplosionNukeGeneric {
 			}
 
 			else if(b == Blocks.STONE){
-				world.setBlockState(pos, ModBlocks.sellafield_slaked.getStateFromMeta(world.rand.nextInt(4)));
+				world.setBlockState(pos, ModBlocks.sellafield_slaked.getDefaultState());
 			}
 
 			else if(b == Blocks.BEDROCK){
-				world.setBlockState(pos.add(0, 1, 0), ModBlocks.toxic_block.getDefaultState());
+				world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState());
 			}
 
 			else if (b == Blocks.MOSSY_COBBLESTONE) {
@@ -453,10 +454,10 @@ public class ExplosionNukeGeneric {
 			else if (b == Blocks.COAL_ORE) {
 				rand = random.nextInt(30);
 				if (rand == 1 || rand == 2 || rand == 3) {
-					world.setBlockState(pos, Blocks.DIAMOND_ORE.getDefaultState());
+					world.setBlockState(pos, ModBlocks.ore_sellafield_diamond.getDefaultState(), 3);
 				}
 				if (rand == 29) {
-					world.setBlockState(pos, Blocks.EMERALD_ORE.getDefaultState());
+					world.setBlockState(pos, ModBlocks.ore_sellafield_emerald.getDefaultState(), 3);
 				}
 			}
 

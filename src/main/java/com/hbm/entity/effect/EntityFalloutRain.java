@@ -348,7 +348,7 @@ public class EntityFalloutRain extends Entity implements IConstantRenderer, IChu
 			}
 
 			if(bblock == Blocks.BEDROCK || bblock == ModBlocks.ore_bedrock_oil || bblock == ModBlocks.ore_bedrock_block){
-				if(world.isAirBlock(pos.up())) world.setBlockState(pos.up(), ModBlocks.toxic_block.getDefaultState());
+				 world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState());
 				break;
 			}
 
