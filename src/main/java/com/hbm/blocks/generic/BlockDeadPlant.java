@@ -7,8 +7,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -18,7 +16,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -39,16 +36,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
-{
-    public static final Set<IBlockState> PLANTABLE_BLOCKS = new HashSet<>();
+public class BlockDeadPlant extends BlockEnumMeta implements IPlantable {
+    public static final Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
+
     static {
-        PLANTABLE_BLOCKS.add(ModBlocks.waste_dirt.getDefaultState());
-        PLANTABLE_BLOCKS.add(ModBlocks.waste_earth.getDefaultState());
-        PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead.getDefaultState());
-        PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily.getDefaultState());
-        PLANTABLE_BLOCKS.add(Blocks.GRASS.getDefaultState());
-        PLANTABLE_BLOCKS.add(Blocks.DIRT.getDefaultState());
+        PLANTABLE_BLOCKS.add(ModBlocks.waste_dirt);
+        PLANTABLE_BLOCKS.add(ModBlocks.waste_earth);
+        PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead);
+        PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily);
+        PLANTABLE_BLOCKS.add(Blocks.GRASS);
+        PLANTABLE_BLOCKS.add(Blocks.DIRT);
     }
 
 
@@ -57,8 +54,7 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
     }
 
     @Override
-    protected BlockBakeFrame[] assignBlockFrames(String registryName)
-    {
+    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
@@ -72,13 +68,11 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
      * transparency (glass, reeds), TRANSLUCENT for fully blended transparency (stained glass)
      */
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getRenderLayer()
-    {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
@@ -87,31 +81,42 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
         return this.canBlockStay(world, pos, world.getBlockState(pos));
     }
 
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
+        this.checkAndDropBlock(worldIn, pos, state);
+    }
+
+    protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!this.canBlockStay(worldIn, pos, state)) {
+            this.dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
+    }
+
+
     public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
-        IBlockState block = world.getBlockState(pos.down());
+        Block block = world.getBlockState(pos.down()).getBlock();
         return PLANTABLE_BLOCKS.contains(block);
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return new AxisAlignedBB(0.09999999403953552D, 0.0D, 0.09999999403953552D, 0.8999999761581421D, 0.4000000059604645D, 0.8999999761581421D);
     }
 
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return NULL_AABB;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
@@ -153,7 +158,7 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
                 IBakedModel bakedItemModel = retexturedItemModel.bake(
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter()
                 );
-                ModelResourceLocation  itemModelLocation = new ModelResourceLocation(getRegistryName(), "inventory-" + meta);
+                ModelResourceLocation itemModelLocation = new ModelResourceLocation(getRegistryName(), "inventory-" + meta);
                 event.getModelRegistry().putObject(itemModelLocation, bakedItemModel);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -162,6 +167,7 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
 
         }
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModel() {
