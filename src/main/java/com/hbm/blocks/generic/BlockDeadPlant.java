@@ -1,43 +1,60 @@
 package com.hbm.blocks.generic;
 
+import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.BlockEnumMeta;
-import com.hbm.blocks.BlockEnums;
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
-public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
-{
+import static com.hbm.blocks.BlockEnums.EnumDeadPlantType;
+
+public class BlockDeadPlant extends BlockEnumMeta implements IPlantable, ICustomBlockItem {
+
+    public static Set<Block> PLANTABLE = new HashSet<>();
+
+    static {
+        PLANTABLE.add(Blocks.GRASS);
+        PLANTABLE.add(Blocks.DIRT);
+        PLANTABLE.add(Blocks.FARMLAND);
+        PLANTABLE.add(ModBlocks.waste_earth);
+        PLANTABLE.add(ModBlocks.dirt_dead);
+        PLANTABLE.add(ModBlocks.waste_dirt);
+    }
+
     public BlockDeadPlant(String registryName) {
-        super(Material.PLANTS, SoundType.PLANT, registryName, BlockEnums.EnumDeadPlantType.class, true, true);
+        super(Material.PLANTS, SoundType.PLANT, registryName, EnumDeadPlantType.class, true, true);
     }
 
     @Override
-    protected BlockBakeFrame[] assignBlockFrames(String registryName)
-    {
+    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
@@ -51,9 +68,73 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
      * transparency (glass, reeds), TRANSLUCENT for fully blended transparency (stained glass)
      */
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getRenderLayer()
-    {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        this.checkAndDropBlock(worldIn, pos, state);
+    }
+
+    protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!this.canBlockStay(worldIn, pos, state)) {
+            this.dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
+    }
+
+    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state) {
+        if (state.getBlock() == this) {
+            IBlockState soil = worldIn.getBlockState(pos.down());
+            return soil.getBlock().canSustainPlant(soil, worldIn, pos.down(), net.minecraft.util.EnumFacing.UP, this);
+        }
+        return this.canSustainBush(worldIn.getBlockState(pos.down()));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void bakeModel(ModelBakeEvent event) {
+        for (int meta = 0; meta <= META_COUNT - 1; meta++) {
+            BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
+            try {
+                IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
+                ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
+
+                blockFrame.putTextures(textureMap);
+                IModel retexturedModel = baseModel.retexture(textureMap.build());
+                IBakedModel bakedModel = retexturedModel.bake(
+                        ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
+                );
+
+                ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
+                event.getModelRegistry().putObject(modelLocation, bakedModel);
+
+                IModel itemModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
+
+                ResourceLocation texture = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + blockFrame.textureArray[0]);
+                IModel retexturedItemModel = itemModel.retexture(
+                        ImmutableMap.of(
+                                "layer0",   texture.toString()
+                        )
+                );
+                IBakedModel itemBakedModel = retexturedItemModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                ModelResourceLocation itemModelLocation = new ModelResourceLocation(getRegistryName(), "inventory-" + meta);
+                event.getModelRegistry().putObject(itemModelLocation, itemBakedModel);
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+
+    protected boolean canSustainBush(IBlockState state) {
+        return PLANTABLE.contains(state.getBlock());
     }
 
     @Override
@@ -61,26 +142,36 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
         return this.canBlockStay(world, pos, world.getBlockState(pos));
     }
 
-    public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
-        Block block = world.getBlockState(pos.down()).getBlock();
-        return block == Blocks.GRASS || block == Blocks.DIRT || block == ModBlocks.waste_earth || block == ModBlocks.waste_dirt || block == ModBlocks.dirt_dead || block == ModBlocks.dirt_oily;
-    }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return new AxisAlignedBB(0.09999999403953552D, 0.0D, 0.09999999403953552D, 0.8999999761581421D, 0.4000000059604645D, 0.8999999761581421D);
     }
 
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return NULL_AABB;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        for (int meta = 0; meta <= this.META_COUNT; meta++) {
+            ModelLoader.setCustomModelResourceLocation(
+                    Item.getItemFromBlock(this),
+                    meta,
+                    new ModelResourceLocation(this.getRegistryName(), "inventory-" + meta)
+            );
+        }
     }
 
     @Override
@@ -94,4 +185,6 @@ public class BlockDeadPlant extends BlockEnumMeta implements IPlantable
         if (state.getBlock() != this) return getDefaultState();
         return state;
     }
+
+
 }
