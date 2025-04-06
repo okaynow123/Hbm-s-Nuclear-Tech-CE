@@ -101,6 +101,7 @@ public class ParticleCoolingTower extends Particle {
 		tes.draw();
 
 		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 	}
 

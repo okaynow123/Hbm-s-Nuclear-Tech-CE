@@ -17,7 +17,7 @@ import java.util.Map;
 //Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
 //https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
 public class ViewModelPositonDebugger {
-    static boolean debug = false;
+    static boolean debug = true;
     static boolean blockInput = false;
     public Map<TransformType, offset> offsetMap;
     protected int debugIndex = 0;
@@ -71,9 +71,10 @@ public class ViewModelPositonDebugger {
     public void applyCustomOffset(offset offset) {
         GlStateManager.scale(offset.scale,offset.scale,offset.scale);
         GlStateManager.translate(-offset.position.x,offset.position.y,offset.position.z);
-        GL11.glRotated(-offset.rotation.y,0,1,0);
-        GL11.glRotated(offset.rotation.x,1,0,0);
-        GL11.glRotated(-offset.rotation.z,0,0,1);
+        GlStateManager.rotate((float) -offset.rotation.y, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate((float) offset.rotation.x, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate((float) -offset.rotation.z, 0.0F, 0.0F, 1.0F);
+
     }
     protected void render(TransformType type) {
         offset offset = this.offsetMap.get(type);
