@@ -109,13 +109,4 @@ public class BlockEnums {
 			this.drop = drop;
 		}
 	}
-
-	public static enum EnumDeadPlantType {
-		GENERIC,
-		GRASS,
-		FLOWER,
-		BIG_FLOWER,
-		FERN,
-	}
-
 }
