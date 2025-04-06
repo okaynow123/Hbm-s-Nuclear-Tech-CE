@@ -14,15 +14,17 @@ public class ItemGear extends ItemBase {
 //Norwood: this entire class for single item? what a shame
     public ItemGear(String s) {
         super(s);
-        this.setHasSubtypes(true);
         this.setMaxDamage(0);
+        this.setHasSubtypes(true);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        for (int i = 0; i < 2; i++) {
-            items.add(new ItemStack(this, 1, i));
+        if (this.isInCreativeTab(tab)) {
+            for (int i = 0; i < 2; i++) {
+                items.add(new ItemStack(this, 1, i));
+            }
         }
     }
 

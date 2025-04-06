@@ -1,11 +1,12 @@
 package com.hbm.tileentity.machine;
 
-import java.io.IOException;
-
+import api.hbm.energymk2.IEnergyProviderMK2;
+import api.hbm.tile.IHeatSource;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.entity.projectile.EntityCog;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -13,34 +14,19 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
-
-import api.hbm.energymk2.IEnergyProviderMK2;
-import api.hbm.tile.IHeatSource;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 
 public class TileEntityStirling extends TileEntityLoadedBase implements INBTPacketReceiver, IEnergyProviderMK2, IConfigurableMachine, ITickable {
-
-    public long powerBuffer;
-    public int heat;
-    private int warnCooldown = 0;
-    private int overspeed = 0;
-    public boolean hasCog = true;
-
-
-    public float spin;
-    public float lastSpin;
-    private float xCoord = this.pos.getX();
-    private float yCoord = this.pos.getY();
-    private float zCoord = this.pos.getZ();
 
     /* CONFIGURABLE CONSTANTS */
     public static double diffusion = 0.1D;
@@ -48,44 +34,54 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
     public static int maxHeatNormal = 300;
     public static int maxHeatSteel = 1500;
     public static int overspeedLimit = 300;
+    private final float xCoord = this.pos.getX();
+    private final float yCoord = this.pos.getY();
+    private final float zCoord = this.pos.getZ();
+    public long powerBuffer;
+    public int heat;
+    public boolean hasCog = true;
+    public float spin;
+    public float lastSpin;
+    AxisAlignedBB bb = null;
+    private int warnCooldown = 0;
+    private int overspeed = 0;
 
     @Override
     public void update() {
 
-        if(!world.isRemote) {
+        if (!world.isRemote) {
 
-            if(hasCog) {
+            if (hasCog) {
                 this.powerBuffer = 0;
                 tryPullHeat();
 
-                this.powerBuffer = (long) (this.heat * (this.isCreative() ? 1 : this.efficiency));
+                this.powerBuffer = (long) (this.heat * (this.isCreative() ? 1 : efficiency));
 
-                if(warnCooldown > 0)
+                if (warnCooldown > 0)
                     warnCooldown--;
 
-                if(heat > maxHeat() && !isCreative()) {
+                if (heat > maxHeat() && !isCreative()) {
 
                     this.overspeed++;
 
-                    if(overspeed > 60 && warnCooldown == 0) {
+                    if (overspeed > 60 && warnCooldown == 0) {
                         warnCooldown = 100;
                         world.playSound(null, this.pos, HBMSoundHandler.warnOverspeed, SoundCategory.BLOCKS, 2F, 1F);
                     }
 
-                    if(overspeed > overspeedLimit) {
+                    if (overspeed > overspeedLimit) {
                         this.hasCog = false;
-                        this.world.newExplosion(null, xCoord + 0.5, yCoord + 1, zCoord + 0.5, 5F, false, false);
+                        this.world.newExplosion(null, pos.getX() + 0.5F, pos.getY() + 1f, pos.getZ() + 0.5f, 5F, false, false);
 
                         int orientation = this.getBlockMetadata() - BlockDummyable.offset;
                         ForgeDirection dir = ForgeDirection.getOrientation(orientation);
-                        //EntityCog cog = new EntityCog(world, xCoord + 0.5 + dir.offsetX, yCoord + 1, zCoord + 0.5 + dir.offsetZ).setOrientation(orientation).setMeta(this.getGeatMeta());
+                        EntityCog cog = new EntityCog(world, pos.getX() + 0.5 + dir.offsetX, pos.getY() + 1, pos.getZ() + 0.5 + dir.offsetZ).setOrientation(orientation).setMeta(this.getGeatMeta());
                         ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 
-                        //TODO:COG
-//                        cog.motionX = rot.offsetX;
-//                        cog.motionY = 1 + (heat - maxHeat()) * 0.0001D;
-//                        cog.motionZ = rot.offsetZ;
-//                        world.spawnEntity(cog);
+                        cog.motionX = rot.offsetX;
+                        cog.motionY = 1 + (heat - maxHeat()) * 0.0001D;
+                        cog.motionZ = rot.offsetZ;
+                        world.spawnEntity(cog);
 
                         this.markDirty();
                     }
@@ -104,13 +100,13 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
             data.setBoolean("hasCog", hasCog);
             INBTPacketReceiver.networkPack(this, data, 150);
 
-            if(hasCog) {
-                for(DirPos pos : getConPos()) {
+            if (hasCog) {
+                for (DirPos pos : getConPos()) {
                     this.tryProvide(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
                 }
             } else {
 
-                if(this.powerBuffer > 0)
+                if (this.powerBuffer > 0)
                     this.powerBuffer--;
             }
 
@@ -119,12 +115,12 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
 
             float momentum = powerBuffer * 50F / ((float) maxHeat());
 
-            if(this.isCreative()) momentum = Math.min(momentum, 45F);
+            if (this.isCreative()) momentum = Math.min(momentum, 45F);
 
             this.lastSpin = this.spin;
             this.spin += momentum;
 
-            if(this.spin >= 360F) {
+            if (this.spin >= 360F) {
                 this.spin -= 360F;
                 this.lastSpin -= 360F;
             }
@@ -144,11 +140,11 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
     }
 
     protected DirPos[] getConPos() {
-        return new DirPos[] {
-                new DirPos(xCoord + 2, yCoord, zCoord, Library.POS_X),
-                new DirPos(xCoord - 2, yCoord, zCoord, Library.NEG_X),
-                new DirPos(xCoord, yCoord, zCoord + 2, Library.POS_Z),
-                new DirPos(xCoord, yCoord, zCoord - 2, Library.NEG_Z)
+        return new DirPos[]{
+                new DirPos(this.pos.east(2), Library.POS_X),
+                new DirPos(this.pos.west(2), Library.NEG_X),
+                new DirPos(this.pos.south(2), Library.POS_Z),
+                new DirPos(this.pos.north(2), Library.NEG_Z)
         };
     }
 
@@ -160,13 +156,12 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
     }
 
     protected void tryPullHeat() {
-        TileEntity con = world.getTileEntity(new BlockPos(xCoord, yCoord - 1, zCoord));
+        TileEntity con = world.getTileEntity(this.getPos().down());
 
-        if(con instanceof IHeatSource) {
-            IHeatSource source = (IHeatSource) con;
+        if (con instanceof IHeatSource source) {
             int heatSrc = (int) (source.getHeatStored() * diffusion);
 
-            if(heatSrc > 0) {
+            if (heatSrc > 0) {
                 source.useUpHeat(heatSrc);
                 this.heat += heatSrc;
                 return;
@@ -186,7 +181,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
         nbt.setLong("powerBuffer", powerBuffer);
@@ -196,13 +191,13 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
     }
 
     @Override
-    public void setPower(long power) {
-        this.powerBuffer = power;
+    public long getPower() {
+        return powerBuffer;
     }
 
     @Override
-    public long getPower() {
-        return powerBuffer;
+    public void setPower(long power) {
+        this.powerBuffer = power;
     }
 
     @Override
@@ -210,10 +205,8 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
         return powerBuffer;
     }
 
-    AxisAlignedBB bb = null;
-
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
+    public @NotNull AxisAlignedBB getRenderBoundingBox() {
         if (bb == null) {
             bb = new AxisAlignedBB(
                     pos.add(-1, 0, -1),
