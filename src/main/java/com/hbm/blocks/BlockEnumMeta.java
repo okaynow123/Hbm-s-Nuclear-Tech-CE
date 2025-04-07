@@ -58,6 +58,11 @@ public abstract class BlockEnumMeta extends BlockMeta {
         return this.getTranslationKey() + "." + value.name().toLowerCase(Locale.US);
     }
 
+    public Enum getEnumFromState(IBlockState state)
+    {
+        return this.blockEnum.getEnumConstants()[getMetaFromState(state)];
+    }
+
     public class EnumMetaBlockItem extends MetaBlockItem {
 
         public EnumMetaBlockItem(Block block) {
@@ -72,6 +77,4 @@ public abstract class BlockEnumMeta extends BlockMeta {
                 return this.block.getTranslationKey();
         }
     }
-
-
 }
