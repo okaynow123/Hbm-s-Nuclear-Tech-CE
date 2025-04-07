@@ -20,10 +20,14 @@ public class PlantEnums {
     }
 
     public static enum EnumTallPlantType {
-        HEMP,
-        MUSTARD_WILLOW_2,
-        MUSTARD_WILLOW_3,
-        MUSTARD_WILLOW_4,
+        HEMP_LOWER,
+        HEMP_UPPER,
+        MUSTARD_WILLOW_2_LOWER,
+        MUSTARD_WILLOW_2_UPPER,
+        MUSTARD_WILLOW_3_LOWER,
+        MUSTARD_WILLOW_3_UPPER,
+        MUSTARD_WILLOW_4_LOWER,
+        MUSTARD_WILLOW_4_UPPER,
     }
 
 }
