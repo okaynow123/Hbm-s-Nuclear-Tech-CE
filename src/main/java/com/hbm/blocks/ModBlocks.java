@@ -49,14 +49,6 @@ public class ModBlocks {
 
 	public static Material materialGas = new MaterialGas();
 
-	public static SoundType soundTypeGrate = new ModSoundType(HBMSoundHandler.metalBlock, 0.5F, 1.0F) {
-		@Override
-		public SoundEvent getBreakSound() {
-			return SoundEvents.BLOCK_STONE_BREAK;
-		}
-
-	};
-
 	public static final Block test_render = new TestRender(Material.ROCK, "test_render").setCreativeTab(null);
 	public static final Block obj_tester = new TestObjTester(Material.IRON, "obj_tester").setCreativeTab(null).setHardness(2.5F).setResistance(10.0F);
 
@@ -445,32 +437,32 @@ public class ModBlocks {
 	public static final Block steel_roof = new DecoBlock(Material.IRON, "steel_roof").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(15.0F);
 	public static final Block steel_beam = new DecoBlock(Material.IRON, "steel_beam").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(15.0F);
 	public static final Block steel_scaffold = new DecoBlock(Material.IRON, "steel_scaffold").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(15.0F);
-	public static final Block steel_grate = new BlockGrate(Material.IRON, "steel_grate").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block steel_grate = new BlockGrate(Material.IRON, "steel_grate").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
 
-	public static final Block deco_pipe = new BlockPipe(Material.IRON, "deco_pipe").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rusted = new BlockPipe(Material.IRON, "deco_pipe_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_green = new BlockPipe(Material.IRON, "deco_pipe_green").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_green_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_red = new BlockPipe(Material.IRON, "deco_pipe_red").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_marked = new BlockPipe(Material.IRON, "deco_pipe_marked").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim = new BlockPipe(Material.IRON, "deco_pipe_rim").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim_rusted = new BlockPipe(Material.IRON, "deco_pipe_rim_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim_green = new BlockPipe(Material.IRON, "deco_pipe_rim_green").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_rim_green_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim_red = new BlockPipe(Material.IRON, "deco_pipe_rim_red").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_rim_marked = new BlockPipe(Material.IRON, "deco_pipe_rim_marked").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed = new BlockPipe(Material.IRON, "deco_pipe_framed").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed_rusted = new BlockPipe(Material.IRON, "deco_pipe_framed_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed_green = new BlockPipe(Material.IRON, "deco_pipe_framed_green").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_framed_green_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed_red = new BlockPipe(Material.IRON, "deco_pipe_framed_red").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_framed_marked = new BlockPipe(Material.IRON, "deco_pipe_framed_marked").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad = new BlockPipe(Material.IRON, "deco_pipe_quad").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad_rusted = new BlockPipe(Material.IRON, "deco_pipe_quad_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad_green = new BlockPipe(Material.IRON, "deco_pipe_quad_green").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_quad_green_rusted").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad_red = new BlockPipe(Material.IRON, "deco_pipe_quad_red").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
-	public static final Block deco_pipe_quad_marked = new BlockPipe(Material.IRON, "deco_pipe_quad_marked").setSoundType(soundTypeGrate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe = new BlockPipe(Material.IRON, "deco_pipe").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rusted = new BlockPipe(Material.IRON, "deco_pipe_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_green = new BlockPipe(Material.IRON, "deco_pipe_green").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_green_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_red = new BlockPipe(Material.IRON, "deco_pipe_red").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_marked = new BlockPipe(Material.IRON, "deco_pipe_marked").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim = new BlockPipe(Material.IRON, "deco_pipe_rim").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim_rusted = new BlockPipe(Material.IRON, "deco_pipe_rim_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim_green = new BlockPipe(Material.IRON, "deco_pipe_rim_green").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_rim_green_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim_red = new BlockPipe(Material.IRON, "deco_pipe_rim_red").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_rim_marked = new BlockPipe(Material.IRON, "deco_pipe_rim_marked").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed = new BlockPipe(Material.IRON, "deco_pipe_framed").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed_rusted = new BlockPipe(Material.IRON, "deco_pipe_framed_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed_green = new BlockPipe(Material.IRON, "deco_pipe_framed_green").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_framed_green_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed_red = new BlockPipe(Material.IRON, "deco_pipe_framed_red").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_framed_marked = new BlockPipe(Material.IRON, "deco_pipe_framed_marked").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad = new BlockPipe(Material.IRON, "deco_pipe_quad").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad_rusted = new BlockPipe(Material.IRON, "deco_pipe_quad_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad_green = new BlockPipe(Material.IRON, "deco_pipe_quad_green").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad_green_rusted = new BlockPipe(Material.IRON, "deco_pipe_quad_green_rusted").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad_red = new BlockPipe(Material.IRON, "deco_pipe_quad_red").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
+	public static final Block deco_pipe_quad_marked = new BlockPipe(Material.IRON, "deco_pipe_quad_marked").setSoundType(ModSoundTypes.grate).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(5.0F);
 
 	//Radiation blocks
 

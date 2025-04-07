@@ -146,9 +146,8 @@ public class SpecialContainerFillLists {
 			return f;
 		}
 	}
-	
+
 	public enum EnumGasCanister {
-		EMPTY(null, new ModelResourceLocation(RefStrings.MODID + ":gas_empty", "inventory")),
 		NATURAL(Fluids.GAS, new ModelResourceLocation(RefStrings.MODID + ":gas_full", "inventory")),
 		PETROLEUM(Fluids.PETROLEUM, new ModelResourceLocation(RefStrings.MODID + ":gas_petroleum", "inventory")),
 		BIOGAS(Fluids.BIOGAS, new ModelResourceLocation(RefStrings.MODID + ":gas_biogas", "inventory")),
@@ -189,16 +188,6 @@ public class SpecialContainerFillLists {
 					return true;
 			}
 			return false;
-		}
-		public static EnumGasCanister getEnumFromFluid(FluidType f){
-			if(f == null)
-				return EnumGasCanister.EMPTY;
-			for(EnumGasCanister e : EnumGasCanister.values()){
-				if(e.getFluid() == f){
-					return e;
-				}
-			}
-			return null;
 		}
 		public static FluidType[] getFluids() {
 			FluidType[] f = new FluidType[EnumGasCanister.values().length];

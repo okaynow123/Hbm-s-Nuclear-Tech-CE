@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCell;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCanister;
-import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
 import com.hbm.inventory.*;
 import com.hbm.inventory.AnvilRecipes.AnvilConstructionRecipe;
 import com.hbm.inventory.AnvilRecipes.AnvilOutput;

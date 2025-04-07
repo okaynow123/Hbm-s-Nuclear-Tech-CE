@@ -53,7 +53,7 @@ public class MapGenTiltedSpires extends MapGenBase {
 		}
 
 		BlockFalling.fallInstantly = true;
-		super.generate(world, chunkX, chunkZ, primer);
+		super.generate(worldObj, chunkX, chunkZ, primer);
 		BlockFalling.fallInstantly = false;
 	}
 

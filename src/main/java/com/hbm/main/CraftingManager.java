@@ -12,6 +12,7 @@ import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
@@ -1709,16 +1710,17 @@ public class CraftingManager {
 
 		addShapelessAuto(new ItemStack(Items.PAPER, 1), new Object[] { new ItemStack(ModItems.assembly_template, 1, OreDictionary.WILDCARD_VALUE) });
 		addShapelessAuto(new ItemStack(Items.PAPER, 1), new Object[] { new ItemStack(ModItems.chemistry_template, 1, OreDictionary.WILDCARD_VALUE) });
-
-		for(Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
-			Fluid fluid = entry.getValue();
-			addShapelessAuto(ItemFFFluidDuct.getStackFromFluid(fluid), new Object[] { new ItemStack(ModBlocks.fluid_duct_mk2, 1), new IngredientContainsTag(ItemForgeFluidIdentifier.getStackFromFluid(entry.getValue())) });
-
-			addShapelessAuto(ItemFFFluidDuct.getStackFromFluid(fluid, 8), new Object[] { new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new ItemStack(ModBlocks.fluid_duct_mk2, 8), new IngredientContainsTag(ItemForgeFluidIdentifier.getStackFromFluid(entry.getValue())) });
+		FluidType[] order = Fluids.getInNiceOrder();
+		// honestly, that doesn't even make sense, you can rightclick with fluid identifier and it'd be pretty much faster?..
+		for (int i = 1; i < order.length; ++i) {
+			if (!order[i].hasNoID()) {
+				addShapelessAuto(new ItemStack(ModItems.ff_fluid_duct, 1, order[i].getID()), new Object[] { new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModItems.forge_fluid_identifier, 1, order[i].getID())});
+				addShapelessAuto(new ItemStack(ModItems.ff_fluid_duct, 8, order[i].getID()), new Object[] { new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModBlocks.fluid_duct_mk2, 1), new ItemStack(ModItems.forge_fluid_identifier, 1, order[i].getID()) });
+			}
+		}
 		// No more old pipe crafting
 		// 	addShapelessAuto(ItemFFFluidDuct.getStackFromFluid(fluid), new Object[] { new ItemStack(ModItems.ff_fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new IngredientContainsTag(ItemForgeFluidIdentifier.getStackFromFluid(entry.getValue())) });
 		// 	addShapelessAuto(ItemFFFluidDuct.getStackFromFluid(fluid, 8), new Object[] { new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.ff_fluid_duct, 8, OreDictionary.WILDCARD_VALUE), new IngredientContainsTag(ItemForgeFluidIdentifier.getStackFromFluid(entry.getValue())) });
-		}
 
 		addShapelessAuto(new ItemStack(ModBlocks.fluid_duct_mk2, 1), new Object[] { new ItemStack(ModItems.ff_fluid_duct, 1, OreDictionary.WILDCARD_VALUE) });
 

@@ -38,6 +38,7 @@ import com.hbm.items.machine.ItemCassette.TrackType;
 import com.hbm.items.special.*;
 import com.hbm.items.special.weapon.GunB92;
 import com.hbm.items.tool.ItemFluidCanister;
+import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.*;
 import com.hbm.lib.HBMSoundHandler;
@@ -418,14 +419,6 @@ public class ModEventHandlerClient {
         }
         ModelLoader.registerItemVariants(ModItems.cell, list);
 
-        i = 0;
-        list = new ResourceLocation[EnumGasCanister.values().length];
-        for (EnumGasCanister e : EnumGasCanister.values()) {
-            list[i] = e.getResourceLocation();
-            i++;
-        }
-        ModelLoader.registerItemVariants(ModItems.cell, list);
-
         ModelResourceLocation[] locations = new ModelResourceLocation[ItemAmmoArty.itemTypes.length];
         for (i = 0; i < ItemAmmoArty.itemTypes.length; i++) {
             locations[i] = new ModelResourceLocation(ModItems.ammo_arty.getRegistryName() + "_" + i, "inventory");
@@ -440,6 +433,11 @@ public class ModEventHandlerClient {
                 if (order[i].getContainer(Fluids.CD_Canister.class) != null) {
                     ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
                             FluidCanisterRender.INSTANCE.setModelLocation(ItemFluidCanister.getStackFromFluid(order[i])));
+                }
+
+                ModelLoader.setCustomModelResourceLocation(ModItems.ff_fluid_duct, order[i].getID(), ItemFFFluidDuct.ductLoc);
+                if (order[i].getContainer(Fluids.CD_Gastank.class) != null) {
+                    ModelLoader.setCustomModelResourceLocation(ModItems.gas_full, order[i].getID(), ItemGasCanister.gasCansiterFullModel);
                 }
                 ModelLoader.setCustomModelResourceLocation(ModItems.fluid_tank_lead_full, order[i].getID(),
                         ItemFluidTank.fluidTankLeadFullModel);

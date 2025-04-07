@@ -2,6 +2,7 @@ package com.hbm.blocks.network;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.ModSoundTypes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -32,6 +33,7 @@ public class BlockFluidPipeMk2 extends BlockContainer implements ILookOverlay {
 		super(materialIn);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
+		this.setSoundType(ModSoundTypes.pipe);
 		this.useNeighborBrightness = true;
 		
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -40,8 +42,7 @@ public class BlockFluidPipeMk2 extends BlockContainer implements ILookOverlay {
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		TileEntity te = source.getTileEntity(pos);
-		if (te instanceof TileEntityPipeBaseNT) {
-			TileEntityPipeBaseNT pipe = (TileEntityPipeBaseNT) te;
+		if (te instanceof TileEntityPipeBaseNT pipe) {
 			FluidType type = pipe.getType();
 
 			boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_X, type);
@@ -50,7 +51,7 @@ public class BlockFluidPipeMk2 extends BlockContainer implements ILookOverlay {
 			boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Y, type);
 			boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_Z, type);
 			boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Z, type);
-			int mask = 0 + (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
+			int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
 
 			if (mask == 0) {
 				return new AxisAlignedBB(0F, 0F, 0F, 1F, 1F, 1F);
@@ -137,10 +138,8 @@ public class BlockFluidPipeMk2 extends BlockContainer implements ILookOverlay {
 
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(!(te instanceof TileEntityPipeBaseNT))
+		if(!(te instanceof TileEntityPipeBaseNT duct))
 			return;
-
-		TileEntityPipeBaseNT duct = (TileEntityPipeBaseNT) te;
 
 		List<String> text = new ArrayList();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
