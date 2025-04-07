@@ -852,6 +852,55 @@ public class ItemRenderLibrary {
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
         });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(-1, -1, 0);
+                GL11.glScaled(3, 3, 3);
+            }
+
+            public void renderCommon() {
+                GL11.glRotated(-180, 0, 1, 0);
+                GL11.glScaled(1, 1, 1);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.stirling_tex);
+                ResourceManager.stirling.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling_steel), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(0, -1, 0);
+                GL11.glScaled(1.9, 1.9, 1.9);
+            }
+
+            public void renderCommon() {
+                GL11.glRotated(180, 0, 1, 0);
+                GL11.glScaled(1, 1, 1);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.stirling_tex);
+                ResourceManager.stirling.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling_creative), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(0, -1, 0);
+                GL11.glScaled(1.9, 1.9, 1.9);
+            }
+
+            public void renderCommon() {
+                GL11.glRotated(180, 0, 1, 0);
+                GL11.glScaled(1, 1, 1);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.stirling_creative_tex);
+                ResourceManager.stirling.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
+
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_sawmill), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -1.5, 0);
@@ -2349,6 +2398,8 @@ public class ItemRenderLibrary {
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
         });
+
+
         renderers.put(Item.getItemFromBlock(ModBlocks.reactor_research), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -4, 0);

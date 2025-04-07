@@ -17,5 +17,7 @@ public class Jars {
 		canneries.put(new ComparableStack(ModBlocks.machine_silex), new CannerySILEX());
 		canneries.put(new ComparableStack(ModBlocks.hadron_core), new CanneryHadron());
 		canneries.put(new ComparableStack(ModBlocks.hadron_diode), new CannerySchottky());
+		canneries.put(new ComparableStack(ModBlocks.machine_stirling), new CanneryStirling());
+		canneries.put(new ComparableStack(ModBlocks.machine_stirling_steel), new CanneryStirling());
 	}
 }
