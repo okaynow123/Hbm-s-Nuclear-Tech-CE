@@ -41,7 +41,7 @@ import java.util.*;
 
 public class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
 
-    public static final Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
+    public final Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
 
     public BlockPlantEnumMeta(String registryName, Class<? extends Enum> blockEnum) {
         super(Material.PLANTS, SoundType.PLANT, registryName, blockEnum, true, true);
@@ -86,9 +86,6 @@ public class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
         return true;
     }
 
-    @Override
-    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) { }
-
     protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!this.canBlockStay(worldIn, pos, state)) {
             this.dropBlockAsItem(worldIn, pos, state, 0);
@@ -99,7 +96,7 @@ public class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
 
     public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
         Block block = world.getBlockState(pos.down()).getBlock();
-        return PLANTABLE_BLOCKS.contains(block);
+        return this.PLANTABLE_BLOCKS.contains(block);
     }
 
     @Override

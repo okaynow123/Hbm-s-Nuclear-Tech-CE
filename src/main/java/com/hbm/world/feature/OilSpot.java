@@ -3,6 +3,7 @@ package com.hbm.world.feature;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 
+import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockDeadPlant;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -34,21 +35,21 @@ public class OilSpot {
                         if(world.rand.nextInt(10) == 0) {
                             Block block = world.getBlockState(new BlockPos(rX, rY + 1, rZ)).getBlock();
                             if (block.getMetaFromState(block.getBlockState().getBaseState()) == 2) {
-                                world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.FERN.ordinal()));
+                                world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.FERN.ordinal()));
                             } else {
-                                world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.GRASS.ordinal()));
+                                world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.GRASS.ordinal()));
                             }
                         } else {
                             world.setBlockState(plantPos, Blocks.AIR.getDefaultState());
                         }
                     } else if(ground instanceof BlockFlower) {
-                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.FLOWER.ordinal()));
+                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.FLOWER.ordinal()));
                     } else if(ground instanceof BlockDoublePlant) {
-                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.BIG_FLOWER.ordinal()));
+                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.BIG_FLOWER.ordinal()));
                     } else if(ground instanceof BlockBush) {
-                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.GENERIC.ordinal()));
+                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.GENERIC.ordinal()));
                     } else if(ground instanceof IPlantable) {
-                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(BlockEnums.EnumDeadPlantType.GENERIC.ordinal()));
+                        world.setBlockState(plantPos, ModBlocks.plant_dead.getStateFromMeta(PlantEnums.EnumDeadPlantType.GENERIC.ordinal()));
                     }
                 }
 
