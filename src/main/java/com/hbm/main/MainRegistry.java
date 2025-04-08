@@ -524,6 +524,7 @@ public class MainRegistry {
 		GameRegistry.registerTileEntity(TileEntityRadSensor.class, new ResourceLocation(RefStrings.MODID, "tileentity_radsensor"));
 		GameRegistry.registerTileEntity(TileEntityMachineAmgen.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_amgen"));
 		GameRegistry.registerTileEntity(TileEntityMachineSPP.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_spp"));
+		GameRegistry.registerTileEntity(TileEntityStirling.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_stirling"));
 		GameRegistry.registerTileEntity(TileEntityMachineArcFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_arc_furnace"));
 		GameRegistry.registerTileEntity(TileEntityMachineElectricFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_electric_furnace"));
 		GameRegistry.registerTileEntity(TileEntityWasteDrum.class, new ResourceLocation(RefStrings.MODID, "tileentity_waste_drum"));
@@ -882,6 +883,7 @@ public class MainRegistry {
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_ntm_ufo"), EntityUFO.class, "entity_ntm_ufo", i++, MainRegistry.instance, 1000, 1, true, 0x00FFFF, 0x606060);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_digamma_quasar"), EntityQuasar.class, "entity_digamma_quasar", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_mist"), EntityMist.class, "entity_mist", i++, MainRegistry.instance, 1000, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_cog"), EntityCog.class, "entity_cog", i++, MainRegistry.instance, 1000, 1, true);
 		EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_zirnox_debris"), EntityZirnoxDebris.class, "entity_zirnox_debris", i++, MainRegistry.instance, 1000, 1, true);
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback() {
