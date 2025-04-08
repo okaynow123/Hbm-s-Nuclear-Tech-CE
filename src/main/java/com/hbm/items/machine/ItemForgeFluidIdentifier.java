@@ -76,14 +76,6 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 	public FluidType getType(World world, int x, int y, int z, ItemStack stack) {
 		return Fluids.fromID(stack.getItemDamage());
 	}
-	
-	public static ItemStack getStackFromFluid(Fluid f){
-		ItemStack stack = new ItemStack(ModItems.forge_fluid_identifier, 1, 0);
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("fluidtype", f.getName());
-		stack.setTagCompound(tag);
-		return stack;
-	}
 
 	public static void spreadType(World worldIn, BlockPos pos, FluidType hand, FluidType pipe, int x){
 		if(x > 0){

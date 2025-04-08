@@ -13,10 +13,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -249,10 +246,12 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                 }
             }
 
-            if (mop != null) {
-                if (mop.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(mop.getBlockPos()) == Blocks.PORTAL) {
+
+            if(mop != null) {
+                if(mop.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(mop.getBlockPos()).getBlock() == Blocks.PORTAL) {
+
                     this.setPortal(mop.getBlockPos());
-                } else {
+                } else if (!net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, mop)){
                     this.onImpact(mop);
                 }
             }

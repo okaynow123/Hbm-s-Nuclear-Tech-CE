@@ -38,15 +38,4 @@ public class ItemBreedingRod extends ItemEnumMulti {
         RA226,
         AC227
     }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModel(ModelRegistryEvent event) {
-        Enum[] enums = theEnum.getEnumConstants();
-
-        for (Enum num : enums) {
-            ModelResourceLocation modelResourceLocation = new ModelResourceLocation(
-                    new ResourceLocation(this.getRegistryName() + "_" + num.name().toLowerCase(Locale.US)), "inventory");
-            ModelLoader.setCustomModelResourceLocation(this, num.ordinal(), modelResourceLocation);
-        }
-    }
 }

@@ -4,9 +4,13 @@ import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,9 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemGasCanister extends Item implements IHasCustomModel {
+public class ItemGasCanister extends Item {
 
-	public static final ModelResourceLocation fluidCanisterModel = new ModelResourceLocation(RefStrings.MODID + ":gas_empty", "inventory");
+	public static final ModelResourceLocation gasCansiterFullModel = new ModelResourceLocation(
+			RefStrings.MODID + ":gas_full", "inventory");
 	
 	
 	public ItemGasCanister(String s){
@@ -44,16 +49,35 @@ public class ItemGasCanister extends Item implements IHasCustomModel {
 		String s1 = ("" + I18n.format(Fluids.fromID(stack.getItemDamage()).getConditionalName())).trim();
 
 		if(s1 != null) {
-			s = s + " " + s1;
+			s = s + ": " + s1;
 		}
 
 		return s;
 	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerColorHandler() {
+		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+		IItemColor handler = new ItemGasCanister.GasCanisterColorHandler();
+		itemColors.registerItemColorHandler(handler, ModItems.gas_full);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static class GasCanisterColorHandler implements IItemColor {
+		@Override
+		public int colorMultiplier(ItemStack stack, int tintIndex) {
+			if(tintIndex != 0){
+				Fluids.CD_Gastank tank = Fluids.fromID(stack.getItemDamage()).getContainer(Fluids.CD_Gastank.class);
+				if(tank == null) return 0xffffff;
+				return tintIndex == 1 ? tank.bottleColor : tank.labelColor;
+			}
+			return 0xFFFFFF;
+		}
+	}
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		FluidStack f = FluidUtil.getFluidContained(stack);
-		tooltip.add((f == null ? "0" : f.amount) + "/" + 4000 + " mb");
+		tooltip.add(4000 + "/" + 4000 + " mb");
 	}
 	
 	@Override
@@ -68,10 +92,5 @@ public class ItemGasCanister extends Item implements IHasCustomModel {
 				}
 			}
 		}
-	}
-
-	@Override
-	public ModelResourceLocation getResourceLocation() {
-		return fluidCanisterModel;
 	}
 }

@@ -10,6 +10,7 @@ import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionNukeGeneric;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import net.minecraft.item.ItemStack;
@@ -27,10 +28,9 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
 	@Override
 	public List<ItemStack> getDebris() {
 		List<ItemStack> list = new ArrayList<ItemStack>();
-		// gottverdammt Alcater, where are you when we need you..
-		//list.add(new ItemStack(ModItems.wire_fine, 4, Mats.MAT_ALUMINIUM.id));
+		list.add(new ItemStack(ModItems.wire_fine, 4, Mats.MAT_ALUMINIUM.id));
 		list.add(new ItemStack(ModItems.plate_titanium, 4));
-		//list.add(new ItemStack(ModItems.shell, 2, Mats.MAT_ALUMINIUM.id));
+		list.add(new ItemStack(ModItems.shell, 2, Mats.MAT_ALUMINIUM.id));
 		list.add(new ItemStack(ModItems.ducttape, 1));
 		return list;
 	}

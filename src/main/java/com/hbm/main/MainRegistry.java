@@ -21,6 +21,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.tileentity.bomb.*;
@@ -930,12 +931,7 @@ public class MainRegistry {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		ModItems.init();
-		//FIXME: This is a massive hack and I dont know how to resolve it atm
-		//Putting it in ClientProxy seems to not work for some reason
-		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-			ItemDepletedFuel.registerColorHandlers();
-			ItemBedrockOreNew.registerColorHandlers();
-		}
+		proxy.init(event);
 		ModBlocks.init();
 		HazmatRegistry.registerHazmats();
 		registerReactorFuels();

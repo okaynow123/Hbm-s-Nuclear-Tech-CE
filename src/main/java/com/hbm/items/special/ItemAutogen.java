@@ -1,19 +1,22 @@
 package com.hbm.items.special;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
-import com.hbm.items.IDynamicModels;
-import com.hbm.items.IDynamicSprites;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.lib.RefStrings;
-import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -38,6 +41,7 @@ public class ItemAutogen extends Item {
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
     private HashMap<NTMMaterial, String> textureOverrides = new HashMap<>();
+    private static HashMap<NTMMaterial, TextureAtlasSprite> iconMap = new HashMap<>();
     private String overrideUnlocalizedName = null;
 
     public ItemAutogen(MaterialShapes shape, String s) {
@@ -110,14 +114,18 @@ public class ItemAutogen extends Item {
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         for (NTMMaterial mat : Mats.orderedList) {
-            if(!textureOverrides.containsKey(mat) && mat.solidColorLight != mat.solidColorDark && (shape == null || mat.autogen.contains(shape))) {
+            if(!textureOverrides.containsKey(mat) && (shape == null || mat.autogen.contains(shape))) {
                 ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/"+ Objects.requireNonNull(this.getRegistryName()).getPath() + "-" + mat.names[0]);
-                TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
+                TextureAtlasSprite sprite;
+                if(mat.solidColorLight != mat.solidColorDark) {
+                    sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, mat.solidColorLight, mat.solidColorDark));
+                    iconMap.put(mat, sprite);
+                } else sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, 0xFFFFFF, 0x505050));
                 map.setTextureEntry(sprite);
             }
             if(textureOverrides.containsKey(mat) && (shape == null || mat.autogen.contains(shape))) {
                 ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/" + textureOverrides.get(mat));
-                map.registerSprite(spriteLoc);
+                iconMap.put(mat, map.registerSprite(spriteLoc));
             }
         }
     }
@@ -127,6 +135,30 @@ public class ItemAutogen extends Item {
             return "items/" + textureOverrides.get(mat);
         } else {
             return "items/" + Objects.requireNonNull(this.getRegistryName()).getPath() + "-" + mat.names[0];
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void registerColorHandlers() {
+        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+        IItemColor handler = new ItemAutogen.AutogenColorHandler();
+        for (ItemAutogen item : INSTANCES) {
+            itemColors.registerItemColorHandler(handler, item);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static class AutogenColorHandler implements IItemColor {
+        @Override
+        public int colorMultiplier(ItemStack stack, int tintIndex) {
+            NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+            if(mat != null) {
+                if(iconMap.containsKey(mat)) {
+                    return 0xffffff; //custom textures don't need tints
+                } else return mat.moltenColor;
+            }
+
+            return 0xffffff;
         }
     }
 

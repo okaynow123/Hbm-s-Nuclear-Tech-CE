@@ -30,10 +30,13 @@ import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.machine.ItemScraps;
+import com.hbm.items.special.ItemAutogen;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
+import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -193,6 +196,9 @@ public class ClientProxy extends ServerProxy {
 	public void init(FMLInitializationEvent evt) {
 		ItemDepletedFuel.registerColorHandlers();
 		ItemBedrockOreNew.registerColorHandlers();
+		ItemFFFluidDuct.registerColorHandlers();
+		ItemGasCanister.registerColorHandler();
+		ItemAutogen.registerColorHandlers();
 	}
 
 	@Override
@@ -1943,7 +1949,6 @@ public class ClientProxy extends ServerProxy {
 		ModItems.gun_uzi_saturnite_silencer.setTileEntityItemStackRenderer(new ItemRenderUzi());
 		ModItems.gun_mp40.setTileEntityItemStackRenderer(new ItemRenderMP40());
 		ModItems.cell.setTileEntityItemStackRenderer(new ItemRenderCell());
-		ModItems.gas_empty.setTileEntityItemStackRenderer(new ItemRenderGasCanister());
 		ModItems.multitool_dig.setTileEntityItemStackRenderer(new ItemRenderMultitool());
 		ModItems.multitool_silk.setTileEntityItemStackRenderer(new ItemRenderMultitool());
 		ModItems.multitool_ext.setTileEntityItemStackRenderer(new ItemRenderMultitool());
@@ -1957,7 +1962,6 @@ public class ClientProxy extends ServerProxy {
 		ModItems.big_sword.setTileEntityItemStackRenderer(new ItemRenderBigSword());
 		ModItems.shimmer_sledge.setTileEntityItemStackRenderer(new ItemRenderShim());
 		ModItems.shimmer_axe.setTileEntityItemStackRenderer(new ItemRenderShim());
-		ModItems.ff_fluid_duct.setTileEntityItemStackRenderer(new ItemRenderFFFluidDuct());
 		ModItems.fluid_icon.setTileEntityItemStackRenderer(new ItemRenderFluidIcon());
 		ModItems.gun_brimstone.setTileEntityItemStackRenderer(new ItemRenderObj());
 		ModItems.stopsign.setTileEntityItemStackRenderer(new ItemRenderShim());

@@ -27,6 +27,7 @@ public class BiomeGenIke extends BiomeGenBaseCelestial {
 
 		this.topBlock = ModBlocks.ike_regolith.getDefaultState();
 		this.fillerBlock = ModBlocks.ike_regolith.getDefaultState(); // thiccer regolith due to uhhhhhh...................
+		this.creatures.clear();
 	}
 
 	@Override
