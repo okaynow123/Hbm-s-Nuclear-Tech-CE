@@ -75,10 +75,6 @@ public class EntityCog extends EntityThrowableInterp {
         return true;
     }
 
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
 
     @Override
     protected void onImpact(RayTraceResult result) {
@@ -123,6 +119,7 @@ public class EntityCog extends EntityThrowableInterp {
                 this.motionY = 0;
                 this.motionZ = 0;
                 this.onGround = true;
+                this.setCollisionDisabled(true); //Makes you not push it into the ground
             }
         }
     }
@@ -153,7 +150,20 @@ public class EntityCog extends EntityThrowableInterp {
     protected int groundDespawn() {
         return 0;
     }
+    @Override
+    public boolean canBePushed() {
+        return !collisionDisabled;
+    }
 
+    @Override
+    public boolean canBeCollidedWith() {
+        return !collisionDisabled;
+    }
+    private boolean collisionDisabled = false;
+
+    public void setCollisionDisabled(boolean disabled) {
+        this.collisionDisabled = disabled;
+    }
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
