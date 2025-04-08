@@ -122,7 +122,7 @@ public class EntityCog extends EntityThrowableInterp {
                 this.motionX = 0;
                 this.motionY = 0;
                 this.motionZ = 0;
-                this.inGround = true;
+                this.onGround = true;
             }
         }
     }
@@ -131,7 +131,7 @@ public class EntityCog extends EntityThrowableInterp {
     public void onUpdate() {
         if (!world.isRemote) {
             int orientation = this.getOrientation();
-            if (orientation >= 6 && !this.inGround) {
+            if (orientation >= 6 && !this.onGround) {
                 this.setOrientation(orientation - 6);
             }
         }

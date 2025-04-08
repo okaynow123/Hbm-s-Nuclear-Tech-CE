@@ -182,11 +182,11 @@ public class TileEntityStirling extends TileEntityLoadedBase implements INBTPack
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
 
         nbt.setLong("powerBuffer", powerBuffer);
         nbt.setBoolean("hasCog", hasCog);
         nbt.setInteger("overspeed", overspeed);
+        super.writeToNBT(nbt);
         return nbt;
     }
 
