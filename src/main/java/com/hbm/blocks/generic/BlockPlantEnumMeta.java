@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
+public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
 
     public final Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
 
