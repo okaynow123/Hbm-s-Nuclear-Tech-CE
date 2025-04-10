@@ -13,10 +13,15 @@ public class PlantEnums {
     public static enum EnumFlowerPlantType {
         FOXGLOVE,
         HEMP,
-        MUSTARD_WILLOW_0,
-        MUSTARD_WILLOW_1,
+        MUSTARD_WILLOW_0(true),
+        MUSTARD_WILLOW_1(true),
         NIGHTSHADE,
         TOBACCO,
+        ;
+
+        public final boolean needsOil;
+        EnumFlowerPlantType(boolean needsOil){ this.needsOil = needsOil;}
+        EnumFlowerPlantType(){ this.needsOil = false;}
     }
 
     public static enum EnumTallPlantType {

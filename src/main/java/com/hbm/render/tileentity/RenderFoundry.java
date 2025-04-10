@@ -6,7 +6,10 @@ import java.util.Objects;
 import com.hbm.main.MainRegistry;
 import com.hbm.wiaj.WorldInAJar;
 import com.hbm.wiaj.actors.ITileActorRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
@@ -14,7 +17,6 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.IRenderFoundry;
 import com.hbm.tileentity.machine.TileEntityFoundryCastingBase;
-import com.hbm.render.amlfrom1710.Tessellator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -58,26 +60,23 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 	@Override
 	public void render(TileEntityFoundryCastingBase te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		IRenderFoundry foundry = (IRenderFoundry) te;
-		
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		
-		if(te instanceof TileEntityFoundryCastingBase) {
-			ItemStackHandler inv = ((TileEntityFoundryCastingBase) te).inventory;
-			
-			ItemStack mold = inv.getStackInSlot(0);
-			if(mold != null && !mold.isEmpty()) {
-				drawItem(mold, foundry.moldHeight(), te.getWorld());
-			}
-			
-			ItemStack out = inv.getStackInSlot(1);
-			if(out != null && !out.isEmpty()) {
-				drawItem(out, foundry.outHeight(), te.getWorld());
-			}
-		}
 
-		if(foundry.shouldRender()) {
+        ItemStackHandler inv = te.inventory;
 
+        ItemStack mold = inv.getStackInSlot(0);
+        if (!mold.isEmpty()) {
+            drawItem(mold, foundry.moldHeight(), te.getWorld());
+        }
+
+        ItemStack out = inv.getStackInSlot(1);
+        if (!out.isEmpty()) {
+            drawItem(out, foundry.outHeight(), te.getWorld());
+        }
+
+        if (foundry.shouldRender()) {
 			int hex = foundry.getMat().moltenColor;
 			Color color = new Color(hex);
 
@@ -86,16 +85,32 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 			ITileActorRenderer.bindTexture(lava);
 
-			Tessellator tess = new Tessellator();
-        	tess.setNormal(0F, 1F, 0F);
-        	tess.setBrightness(240);
-			tess.startDrawingQuadsColor();
-			tess.setColorRGBA_F(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
-			tess.addVertexWithUV(foundry.minX(), foundry.getLevel(), foundry.minZ(), foundry.minZ(), foundry.maxX());
-			tess.addVertexWithUV(foundry.minX(), foundry.getLevel(), foundry.maxZ(), foundry.maxZ(), foundry.maxX());
-			tess.addVertexWithUV(foundry.maxX(), foundry.getLevel(), foundry.maxZ(), foundry.maxZ(), foundry.minX());
-			tess.addVertexWithUV(foundry.maxX(), foundry.getLevel(), foundry.minZ(), foundry.minZ(), foundry.minX());
-			tess.draw();
+			Tessellator tessellator = Tessellator.getInstance();
+			BufferBuilder buffer = tessellator.getBuffer();
+
+			float r = color.getRed() / 255.0F;
+			float g = color.getGreen() / 255.0F;
+			float b = color.getBlue() / 255.0F;
+			float a = 1.0F;
+
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+			float yLevel = (float) foundry.getLevel();
+			float minX = (float) foundry.minX();
+			float maxX = (float) foundry.maxX();
+			float minZ = (float) foundry.minZ();
+			float maxZ = (float) foundry.maxZ();
+
+			// Bottom left
+			buffer.pos(minX, yLevel, minZ).tex(minZ, maxX).color(r, g, b, a).endVertex();
+			// Top left
+			buffer.pos(minX, yLevel, maxZ).tex(maxZ, maxX).color(r, g, b, a).endVertex();
+			// Top right
+			buffer.pos(maxX, yLevel, maxZ).tex(maxZ, minX).color(r, g, b, a).endVertex();
+			// Bottom right
+			buffer.pos(maxX, yLevel, minZ).tex(minZ, minX).color(r, g, b, a).endVertex();
+
+			tessellator.draw();
 
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			GL11.glPopMatrix();

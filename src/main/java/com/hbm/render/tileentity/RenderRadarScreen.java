@@ -4,9 +4,12 @@ import api.hbm.entity.RadarEntry;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.inventory.gui.GUIMachineRadarNT;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.tileentity.machine.TileEntityMachineRadarScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 public class RenderRadarScreen extends TileEntitySpecialRenderer<TileEntityMachineRadarScreen> {
@@ -16,77 +19,85 @@ public class RenderRadarScreen extends TileEntitySpecialRenderer<TileEntityMachi
     }
     @Override
     public void render(TileEntityMachineRadarScreen screen, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+        GlStateManager.enableLighting();
+        GlStateManager.disableCull();
 
         switch(screen.getBlockMetadata() - BlockDummyable.offset) {
-            case 2: GL11.glRotatef(90, 0F, 1F, 0F); break;
-            case 4: GL11.glRotatef(180, 0F, 1F, 0F); break;
-            case 3: GL11.glRotatef(270, 0F, 1F, 0F); break;
-            case 5: GL11.glRotatef(0, 0F, 1F, 0F); break;
+            case 2: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+            case 4: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+            case 3: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+            case 5: GlStateManager.rotate(0, 0F, 1F, 0F); break;
         }
 
-        bindTexture(ResourceManager.radar_screen_tex);
+        this.bindTexture(ResourceManager.radar_screen_tex);
         ResourceManager.radar_screen.renderAll();
 
-        bindTexture(GUIMachineRadarNT.texture);
-        Tessellator tess = Tessellator.instance;
+        this.bindTexture(GUIMachineRadarNT.texture);
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buffer = tess.getBuffer();
 
-        if(screen.linked) {
-            GL11.glDepthMask(false);
-            tess.startDrawingQuads();
+        if (screen.linked) {
+            GlStateManager.depthMask(false);
 
             double offset = ((screen.getWorld().getTotalWorldTime() % 56) + partialTicks) / 30D;
-            tess.setColorRGBA_I(0x00ff00, 0);
-            tess.addVertex(0.38, 2 - offset, 1.375);
-            tess.addVertex(0.38, 2 - offset, -0.375);
-            tess.setColorRGBA_I(0x00ff00, 50);
-            tess.addVertex(0.38, 2 - offset - 0.125, -0.375);
-            tess.addVertex(0.38, 2 - offset - 0.125, 1.375);
 
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glDisable(GL11.GL_ALPHA_TEST);
-            GL11.glShadeModel(GL11.GL_SMOOTH);
+            GlStateManager.disableTexture2D();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.disableAlpha();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+            buffer.pos(0.38, 2 - offset, 1.375).color(0, 255, 0, 0).endVertex();
+            buffer.pos(0.38, 2 - offset, -0.375).color(0, 255, 0, 0).endVertex();
+            buffer.pos(0.38, 2 - offset - 0.125, -0.375).color(0, 255, 0, 50).endVertex();
+            buffer.pos(0.38, 2 - offset - 0.125, 1.375).color(0, 255, 0, 50).endVertex();
             tess.draw();
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-            GL11.glShadeModel(GL11.GL_FLAT);
 
-            if(!screen.entries.isEmpty()) {
-                tess.startDrawingQuads();
-                tess.setNormal(0F, 1F, 0F);
+            GlStateManager.enableTexture2D();
+            GlStateManager.disableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.shadeModel(GL11.GL_FLAT);
 
-                for(RadarEntry entry : screen.entries) {
-
-                    double sX = (entry.posX - screen.refX) / ((double) screen.range + 1) * (0.875D);
-                    double sZ = (entry.posZ - screen.refZ) / ((double) screen.range + 1) * (0.875D);
+            if (!screen.entries.isEmpty()) {
+                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                for (RadarEntry entry : screen.entries) {
+                    double sX = (entry.posX - screen.refX) / ((double) screen.range + 1) * 0.875D;
+                    double sZ = (entry.posZ - screen.refZ) / ((double) screen.range + 1) * 0.875D;
                     double size = 0.0625D;
-                    tess.addVertexWithUV(0.38, 1 - sZ + size, 0.5 - sX + size, 216D / 256D, (entry.blipLevel * 8F + 8F) / 256F);
-                    tess.addVertexWithUV(0.38, 1 - sZ + size, 0.5 - sX - size, 224D / 256D, (entry.blipLevel * 8F + 8F) / 256F);
-                    tess.addVertexWithUV(0.38, 1 - sZ - size, 0.5 - sX - size, 224D / 256D, entry.blipLevel * 8F / 256F);
-                    tess.addVertexWithUV(0.38, 1 - sZ - size, 0.5 - sX + size, 216D / 256D, entry.blipLevel * 8F / 256F);
+
+                    float u1 = 216F / 256F;
+                    float u2 = 224F / 256F;
+                    float v1 = (entry.blipLevel * 8F + 8F) / 256F;
+                    float v2 = (entry.blipLevel * 8F) / 256F;
+
+                    buffer.pos(0.38, 1 - sZ + size, 0.5 - sX + size).tex(u1, v1).normal(0F, 1F, 0F).endVertex();
+                    buffer.pos(0.38, 1 - sZ + size, 0.5 - sX - size).tex(u2, v1).normal(0F, 1F, 0F).endVertex();
+                    buffer.pos(0.38, 1 - sZ - size, 0.5 - sX - size).tex(u2, v2).normal(0F, 1F, 0F).endVertex();
+                    buffer.pos(0.38, 1 - sZ - size, 0.5 - sX + size).tex(u1, v2).normal(0F, 1F, 0F).endVertex();
                 }
                 tess.draw();
             }
-            GL11.glDepthMask(true);
+
+            GlStateManager.depthMask(true);
         } else {
             int offset = 118 + screen.getWorld().rand.nextInt(81);
-            tess.startDrawingQuads();
-            tess.setColorOpaque_I(0xffffff);
-            tess.setNormal(0F, 1F, 0F);
-            tess.addVertexWithUV(0.38, 1.875, 1.375, 216D / 256D, (offset + 40F) / 256F);
-            tess.addVertexWithUV(0.38, 1.875, -0.375, 256D / 256D, (offset + 40F) / 256F);
-            tess.addVertexWithUV(0.38, 0.125, -0.375, 256D / 256D, offset / 256F);
-            tess.addVertexWithUV(0.38, 0.125, 1.375, 216D / 256D, offset / 256F);
+            float u1 = 216F / 256F;
+            float u2 = 256F / 256F;
+            float v1 = (offset + 40F) / 256F;
+            float v2 = offset / 256F;
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+            buffer.pos(0.38, 1.875, 1.375).tex(u1, v1).normal(0F, 1F, 0F).endVertex();
+            buffer.pos(0.38, 1.875, -0.375).tex(u2, v1).normal(0F, 1F, 0F).endVertex();
+            buffer.pos(0.38, 0.125, -0.375).tex(u2, v2).normal(0F, 1F, 0F).endVertex();
+            buffer.pos(0.38, 0.125, 1.375).tex(u1, v2).normal(0F, 1F, 0F).endVertex();
             tess.draw();
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
 }

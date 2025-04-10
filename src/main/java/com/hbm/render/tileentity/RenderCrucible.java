@@ -4,12 +4,14 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.inventory.material.Mats;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.tileentity.machine.TileEntityCrucible;
 import com.hbm.wiaj.WorldInAJar;
 import com.hbm.wiaj.actors.ITileActorRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -34,15 +36,18 @@ public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible
             case 2 -> GL11.glRotatef(90, 0F, 1F, 0F);
             case 4 -> GL11.glRotatef(180, 0F, 1F, 0F);
         }
+
         ITileActorRenderer.bindTexture(ResourceManager.crucible_tex);
         ResourceManager.crucible_heat.renderAll();
 
-        if(!crucible.recipeStack.isEmpty() || !crucible.wasteStack.isEmpty()) {
+        if (!crucible.recipeStack.isEmpty() || !crucible.wasteStack.isEmpty()) {
             int totalCap = crucible.recipeZCapacity + crucible.wasteZCapacity;
             int totalMass = 0;
 
-            for(Mats.MaterialStack stack : crucible.recipeStack) totalMass += stack.amount;
-            for(Mats.MaterialStack stack : crucible.wasteStack) totalMass += stack.amount;
+            for (Mats.MaterialStack stack : crucible.recipeStack)
+                totalMass += stack.amount;
+            for (Mats.MaterialStack stack : crucible.wasteStack)
+                totalMass += stack.amount;
 
             double level = ((double) totalMass / (double) totalCap) * 0.875D;
 
@@ -53,14 +58,19 @@ public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
             ITileActorRenderer.bindTexture(lava);
-            Tessellator tess = Tessellator.instance;
-            tess.setNormal(0F, 1F, 0F);
-            tess.startDrawingQuads();
-            tess.addVertexWithUV(-1, 0.5 + level, -1, 0, 0);
-            tess.addVertexWithUV(-1, 0.5 + level, 1, 0, 1);
-            tess.addVertexWithUV(1, 0.5 + level, 1, 1, 1);
-            tess.addVertexWithUV(1, 0.5 + level, -1, 1, 0);
-            tess.draw();
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+            float yLevel = (float) (0.5 + level);
+
+            buffer.pos(-1, yLevel, -1).tex(0, 0).endVertex();
+            buffer.pos(-1, yLevel,  1).tex(0, 1).endVertex();
+            buffer.pos( 1, yLevel,  1).tex(1, 1).endVertex();
+            buffer.pos( 1, yLevel, -1).tex(1, 0).endVertex();
+
+            tessellator.draw();
 
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glPopAttrib();
@@ -68,6 +78,7 @@ public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible
         }
 
         GL11.glPopMatrix();
+
     }
 
     @Override

@@ -2,12 +2,16 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
+import com.hbm.inventory.OreDictManager;
+import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -17,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.HEMP;
@@ -87,7 +93,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                     !aboveState.getValue(META).equals(valueOf(type.name().replace("_LOWER", "_UPPER")).ordinal())) {
                 world.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, type == HEMP_LOWER ? HEMP.ordinal() : MUSTARD_WILLOW_0.ordinal())); // Break orphaned lower half
             }
-                checkAndDropBlock(world, pos, state);
+            checkAndDropBlock(world, pos, state);
 
 
         }
@@ -100,10 +106,8 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
         }
     }
 
-    protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (!this.canBlockStay(worldIn, pos, state))
-        {
+    protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!this.canBlockStay(worldIn, pos, state)) {
             this.dropBlockAsItem(worldIn, pos, state, 0);
             worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
         }
@@ -128,6 +132,12 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
     }
 
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        NonNullList<ItemStack> ret = NonNullList.create();
+        getDrops(ret, world, pos, state, fortune);
+        return ret;
+    }
+
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
         return true;
@@ -147,7 +157,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                         .withProperty(META, HEMP_UPPER.ordinal()), 2);
                 break;
             case MUSTARD_WILLOW_2_LOWER:
-                if(isWatered(worldIn, pos)) {
+                if (isWatered(worldIn, pos)) {
                     worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
                             .withProperty(META, MUSTARD_WILLOW_3_LOWER.ordinal()), 2);
 
@@ -156,7 +166,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                 }
                 break;
             case MUSTARD_WILLOW_3_LOWER:
-                if(isWatered(worldIn, pos)) {
+                if (isWatered(worldIn, pos)) {
                     worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
                             .withProperty(META, MUSTARD_WILLOW_4_LOWER.ordinal()), 2);
 
@@ -165,6 +175,16 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                 }
                 break;
         }
+    }
+
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
+        ArrayList<ItemStack> ret = (ArrayList<ItemStack>) super.getDrops(blockAccess, pos, state, fortune );
+        World world = (World) blockAccess;
+
+        if(getEnumFromState(state) == MUSTARD_WILLOW_4_UPPER) {
+            ret.add(OreDictManager.DictFrame.fromOne(ModItems.plant_item, com.hbm.items.ItemEnums.EnumPlantType.MUSTARDWILLOW, 3 + world.rand.nextInt(4)));
+        }
+
     }
 
 

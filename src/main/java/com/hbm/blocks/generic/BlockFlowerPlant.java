@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.PlantEnums;
+import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -13,10 +13,15 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+import static com.hbm.blocks.ModBlocks.*;
+import static com.hbm.blocks.PlantEnums.*;
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
+import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
+
 public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
 
     public BlockFlowerPlant(String registryName) {
-        super(registryName, PlantEnums.EnumFlowerPlantType.class);
+        super(registryName, EnumFlowerPlantType.class);
 
         this.PLANTABLE_BLOCKS.add(Blocks.GRASS);
         this.PLANTABLE_BLOCKS.add(Blocks.DIRT);
@@ -24,6 +29,14 @@ public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
 
     @Override
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
+        EnumFlowerPlantType type = EnumFlowerPlantType.values()[state.getValue(META)];
+        if (type == MUSTARD_WILLOW_0 || type == MUSTARD_WILLOW_1) {
+            if (!isWatered(worldIn, pos))
+                return false;
+        }
+        if (type == HEMP || type == MUSTARD_WILLOW_1)
+            return worldIn.isAirBlock(pos.up());
+
         return true;
     }
 
@@ -34,30 +47,32 @@ public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
 
     @Override
     public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-        var type = (PlantEnums.EnumFlowerPlantType) this.getEnumFromState(state);
-        switch (type)
-        {
+        var type = (EnumFlowerPlantType) this.getEnumFromState(state);
+        switch (type) {
             case HEMP:
-                worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, PlantEnums.EnumTallPlantType.HEMP_LOWER.ordinal()), 2);
+                Block ground = worldIn.getBlockState(pos.down()).getBlock();
+                if (ground == dirt_dead || ground == dirt_oily) {
+                    worldIn.setBlockState(pos, plant_dead.getDefaultState().withProperty(META, EnumDeadPlantType.GENERIC.ordinal()), 3);
+                    break;
+                }
+                worldIn.setBlockState(pos, plant_tall.getDefaultState()
+                        .withProperty(META, HEMP_LOWER.ordinal()), 2);
 
-                worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, PlantEnums.EnumTallPlantType.HEMP_UPPER.ordinal()), 2);
-                break;
-            case TOBACCO:
-            case NIGHTSHADE:
-            case FOXGLOVE:
-                worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Item.getItemFromBlock(this), 1, type.ordinal())));
+                worldIn.setBlockState(pos.up(), plant_tall.getDefaultState()
+                        .withProperty(META, HEMP_UPPER.ordinal()), 2);
                 break;
             case MUSTARD_WILLOW_0:
-                if(isWatered(worldIn, pos))
-                    worldIn.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_1.ordinal()), 3);
+                if (isWatered(worldIn, pos))
+                    worldIn.setBlockState(pos, plant_flower.getDefaultState().withProperty(META, MUSTARD_WILLOW_1.ordinal()), 3);
                 break;
             case MUSTARD_WILLOW_1:
-                if(isWatered(worldIn, pos)) {
-                    worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_LOWER.ordinal()), 3);
-                    worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_UPPER.ordinal()), 3);
+                if (isWatered(worldIn, pos)) {
+                    worldIn.setBlockState(pos, plant_tall.getDefaultState().withProperty(META, MUSTARD_WILLOW_2_LOWER.ordinal()), 3);
+                    worldIn.setBlockState(pos.up(), plant_tall.getDefaultState().withProperty(META, MUSTARD_WILLOW_2_UPPER.ordinal()), 3);
                 }
+                break;
+            default:
+                worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Item.getItemFromBlock(this), 1, type.ordinal())));
                 break;
         }
     }

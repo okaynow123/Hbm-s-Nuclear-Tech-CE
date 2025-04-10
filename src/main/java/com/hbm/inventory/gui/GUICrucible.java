@@ -71,11 +71,13 @@ public class GUICrucible extends GuiInfoContainer {
 
     protected void drawStackInfo(List<Mats.MaterialStack> stack, int mouseX, int mouseY, int x, int y) {
         List<String> tempList = new ArrayList<>();
+        List<Mats.MaterialStack> stackCopy = new ArrayList<>(stack); //I had some concurrent modification crashes
+
 
         if (stack.isEmpty())
             tempList.add(ChatFormatting.RED + "Empty");
 
-        for (Mats.MaterialStack sta : stack) {
+        for (Mats.MaterialStack sta : stackCopy) {
             tempList.add(ChatFormatting.YELLOW + I18nUtil.resolveKey(sta.material.getTranslationKey()) + ": " + Mats.formatAmount(sta.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
         }
 

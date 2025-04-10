@@ -1495,6 +1495,7 @@ public class ModItems {
 	public static final Item piston_pneumatic = new ItemBase("piston_pneumatic").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_hydraulic = new ItemBase("piston_hydraulic").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_electro = new ItemBase("piston_electro").setCreativeTab(MainRegistry.partsTab);
+	public static final Item plant_item = new ItemEnumMulti("plant_item", EnumPlantType.class, true, true).setCreativeTab(MainRegistry.partsTab);
 	
 	//BedrockOres
 	public static final Item ore_bedrock = new ItemBedrockOre("ore_bedrock").setCreativeTab(MainRegistry.partsTab);
