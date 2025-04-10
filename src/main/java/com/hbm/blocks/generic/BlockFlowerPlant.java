@@ -25,19 +25,10 @@ public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
     @Override
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
         return true;
-//        var type = this.getEnumFromState(state);
-//        return type == PlantEnums.EnumFlowerPlantType.HEMP ||
-////                worldIn.getBlockState(pos.down()).getBlock() == ModBlocks.dirt_oily &&
-//                (
-//                type == PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_0 ||
-//                type == PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_1
-//                );
     }
 
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-//        var type = this.getEnumFromState(state);
-//        return type == PlantEnums.EnumFlowerPlantType.HEMP || true; // TODO: Remove the "|| true"
         return true;
     }
 
@@ -59,11 +50,14 @@ public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
                 worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Item.getItemFromBlock(this), 1, type.ordinal())));
                 break;
             case MUSTARD_WILLOW_0:
-                worldIn.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_1.ordinal()), 3);
+                if(isWatered(worldIn, pos))
+                    worldIn.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_1.ordinal()), 3);
                 break;
             case MUSTARD_WILLOW_1:
-                worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_LOWER.ordinal()), 3);
-                worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_UPPER.ordinal()), 3);
+                if(isWatered(worldIn, pos)) {
+                    worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_LOWER.ordinal()), 3);
+                    worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState().withProperty(META, PlantEnums.EnumTallPlantType.MUSTARD_WILLOW_2_UPPER.ordinal()), 3);
+                }
                 break;
         }
     }

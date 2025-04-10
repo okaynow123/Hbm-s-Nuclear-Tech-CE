@@ -81,7 +81,19 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlant
         return true;
     }
 
-
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+    {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
+        this.checkAndDropBlock(worldIn, pos, state);
+    }
+    protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (!this.canBlockStay(worldIn, pos, state))
+        {
+            this.dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
+    }
 
     public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
         Block block = world.getBlockState(pos.down()).getBlock();
@@ -120,6 +132,25 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlant
         IBlockState state = world.getBlockState(pos);
         if (state.getBlock() != this) return getDefaultState();
         return state;
+    }
+
+    protected boolean isWatered(World world, BlockPos pos){
+
+        Block[] directions = {
+                world.getBlockState(pos.north().down()).getBlock(), // North
+                world.getBlockState(pos.south().down()).getBlock(), // South
+                world.getBlockState(pos.east().down()).getBlock(),  // East
+                world.getBlockState(pos.west().down()).getBlock()   // West
+        };
+
+        for (Block block : directions) {
+            if (block == Blocks.WATER) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     @SideOnly(Side.CLIENT)

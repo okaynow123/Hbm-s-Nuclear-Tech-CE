@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.HEMP;
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_0;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 
@@ -83,7 +85,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
             if (aboveState.getBlock() != this ||
                     !aboveState.getValue(META).equals(valueOf(type.name().replace("_LOWER", "_UPPER")).ordinal())) {
-                world.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, 1)); // Break orphaned lower half
+                world.setBlockState(pos, ModBlocks.plant_flower.getDefaultState().withProperty(META, type == HEMP_LOWER ? HEMP.ordinal() : MUSTARD_WILLOW_0.ordinal())); // Break orphaned lower half
             }
                 checkAndDropBlock(world, pos, state);
 
@@ -119,7 +121,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
     @Override
     public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
         EnumTallPlantType type = EnumTallPlantType.values()[state.getValue(META)];
-        if (worldIn.isAirBlock(pos.up())) {
+        if (worldIn.isAirBlock(pos.up()) || worldIn.getBlockState(pos.up()).getBlock() instanceof BlockPlantEnumMeta) {
             return type == MUSTARD_WILLOW_2_LOWER || type == MUSTARD_WILLOW_3_LOWER;
         }
         return false;
@@ -145,18 +147,22 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                         .withProperty(META, HEMP_UPPER.ordinal()), 2);
                 break;
             case MUSTARD_WILLOW_2_LOWER:
-                worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, MUSTARD_WILLOW_2_LOWER.ordinal()), 2);
+                if(isWatered(worldIn, pos)) {
+                    worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
+                            .withProperty(META, MUSTARD_WILLOW_3_LOWER.ordinal()), 2);
 
-                worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, MUSTARD_WILLOW_2_UPPER.ordinal()), 2);
+                    worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState()
+                            .withProperty(META, MUSTARD_WILLOW_3_UPPER.ordinal()), 2);
+                }
                 break;
-            case MUSTARD_WILLOW_3_UPPER:
-                worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, MUSTARD_WILLOW_3_LOWER.ordinal()), 2);
+            case MUSTARD_WILLOW_3_LOWER:
+                if(isWatered(worldIn, pos)) {
+                    worldIn.setBlockState(pos, ModBlocks.plant_tall.getDefaultState()
+                            .withProperty(META, MUSTARD_WILLOW_4_LOWER.ordinal()), 2);
 
-                worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState()
-                        .withProperty(META, MUSTARD_WILLOW_3_UPPER.ordinal()), 2);
+                    worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState()
+                            .withProperty(META, MUSTARD_WILLOW_4_UPPER.ordinal()), 2);
+                }
                 break;
         }
     }
