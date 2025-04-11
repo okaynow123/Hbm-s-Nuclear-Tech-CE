@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.items.IDynamicModels;
-import com.hbm.items.IDynamicSprites;
 import com.hbm.items.IModelRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
@@ -22,20 +21,20 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,7 +53,7 @@ import java.util.Objects;
  *
  * @author MrNorwood
  */
-public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem,  IDynamicModels {
+public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem, IDynamicModels {
     public static final String[] sellafieldTextures = new String[]{"sellafield_slaked", "sellafield_slaked_1", "sellafield_slaked_2", "sellafield_slaked_3"};
     public static final int TEXTURE_VARIANTS = sellafieldTextures.length;
     public static final int META_COUNT = TEXTURE_VARIANTS;
@@ -75,6 +74,22 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
 //        INSTANCES.forEach(BlockSellafieldSlaked::registerModel);
 //    }
 
+    public static void bakeModels(ModelBakeEvent event) {
+        INSTANCES.forEach(blockSellafieldSlaked -> blockSellafieldSlaked.bakeModel(event));
+    }
+
+    public static int getVariantForPos(BlockPos pos) {
+        /*
+            For any autist exploiter: YES, this is deterministic, YES you can theoretically derive coordinates from
+            a patch of those, assuming people use meta 0 blocks. Now go stroke your ego elsewhere on something
+            more productive
+         */
+        long l = (pos.getX() * 3129871L) ^ (long) pos.getY() * 116129781L ^ (long) pos.getZ();
+        l = l * l * 42317861L + l * 11L;
+        int i = (int) (l >> 16 & 3L);
+        return Math.abs(i) % TEXTURE_VARIANTS;
+    }
+
     @SideOnly(Side.CLIENT)
     public void registerModel() {
         // Register the model for natural
@@ -88,17 +103,17 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         }
     }
 
-    public static void bakeModels(ModelBakeEvent event){
-        INSTANCES.forEach(blockSellafieldSlaked -> blockSellafieldSlaked.bakeModel(event));
-    }
-
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos){
-        if (!state.getValue(NATURAL))  return state;
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (!state.getValue(NATURAL)) return state;
         int variant = getVariantForPos(pos);
         return state.withProperty(NATURAL, true).withProperty(VARIANT, variant);
     }
 
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return new ItemStack(Item.getItemFromBlock(this), 1, getMetaFromState(state));
+    }
 
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
@@ -128,18 +143,6 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static int getVariantForPos(BlockPos pos){
-        /*
-            For any autist exploiter: YES, this is deterministic, YES you can theoretically derive coordinates from
-            a patch of those, assuming people use meta 0 blocks. Now go stroke your ego elsewhere on something
-            more productive
-         */
-        long l = (pos.getX() * 3129871L) ^ (long) pos.getY() * 116129781L ^ (long) pos.getZ();
-        l = l * l * 42317861L + l * 11L;
-        int i = (int) (l >> 16 & 3L);
-        return Math.abs(i) % TEXTURE_VARIANTS;
     }
 
     @Override
@@ -177,16 +180,16 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         return (variant & 0b111) | ((natural ? 0 : 1) << 3);
 
     }
+
     @Override
     public IBlockState getStateFromMeta(int meta) {
         boolean natural;
-        int variant =  (meta & 0b111);
+        int variant = (meta & 0b111);
         //0 is reserved for natural block accessable from ingame
         //Anything >= 8 is not neutralized as blockItems only go up to 4 meta
-        if(meta == 0 || meta >= 8) {
+        if (meta == 0 || meta >= 8) {
             natural = true;
-        }
-        else {
+        } else {
             //Enforce staggered ID
             variant--;
             natural = ((meta >> 3) & 1) == 1;
@@ -195,7 +198,6 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
                 .withProperty(NATURAL, natural)
                 .withProperty(VARIANT, variant);
     }
-
 
 
     @Override
@@ -224,7 +226,7 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     public void registerItem() {
         ItemBlock itemBlock = new SellafieldSlackedItemBlock(this);
         itemBlock.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
-        if(showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
+        if (showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
     }
 
@@ -252,12 +254,11 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
 
         }
 
-        public String getItemStackDisplayName(ItemStack stack)
-        {
+        public String getItemStackDisplayName(ItemStack stack) {
             int meta = stack.getMetadata();
-            String name = I18nUtil.resolveKey( this.getTranslationKey() + ".name");
+            String name = I18nUtil.resolveKey(this.getTranslationKey() + ".name");
             String neutralizedKey = I18nUtil.resolveKey("adjective.neutralized");
-            if(meta == 0)
+            if (meta == 0)
                 return name;
             else
                 return neutralizedKey + " " + name;
