@@ -79,12 +79,7 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlant
     }
 
 
-    @Override
-    protected boolean canSilkHarvest() {
-        return true;
-    }
-
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
+     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
         this.checkAndDropBlock(worldIn, pos, state);

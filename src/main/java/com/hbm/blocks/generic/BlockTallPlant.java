@@ -18,8 +18,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.HEMP;
@@ -30,16 +31,16 @@ import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
 
-    public static void initPlacables(){
+    public BlockTallPlant(String registryName) {
+        super(registryName, EnumTallPlantType.class);
+
+    }
+
+    public static void initPlacables() {
         PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead);
         PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily);
         PLANTABLE_BLOCKS.add(Blocks.GRASS);
         PLANTABLE_BLOCKS.add(Blocks.DIRT);
-    }
-
-    public BlockTallPlant(String registryName) {
-        super(registryName, EnumTallPlantType.class);
-
     }
 
     @Override
@@ -59,7 +60,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public @NotNull IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         EnumTallPlantType type = values()[meta];
         if (!type.name().endsWith("_LOWER")) {
             type = valueOf(type.name().replace("_UPPER", "_LOWER"));
@@ -71,11 +72,25 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
         return 1;
     }
 
+    public String enumToTranslationKey(Enum value) {
+        return this.getTranslationKey() + "." + value.name().toLowerCase(Locale.US).substring(0, value.name().length() - 6);
+    }
+
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
         if (worldIn.isRemote) return;
         EnumTallPlantType type = EnumTallPlantType.values()[state.getValue(META)];
+        if (type.name().endsWith("_UPPER"))
+            return;
+        Block onTop = worldIn.getBlockState(pos.down()).getBlock();
 
+       if(!type.needsOil){
+           if(onTop == ModBlocks.dirt_dead || onTop == ModBlocks.dirt_oily) {
+               worldIn.setBlockState(pos, stateFromEnum(ModBlocks.plant_dead, PlantEnums.EnumDeadPlantType.BIG_FLOWER), 3);
+               return;
+           }
+       }
+       //TODO: Some obfuscated crap to decipher
     }
 
     @Override
@@ -106,12 +121,6 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
         }
     }
 
-    public void growToTallPlant(World world, BlockPos pos, EnumTallPlantType lower, EnumTallPlantType upper) {
-        if (world.isAirBlock(pos.up())) {
-            world.setBlockState(pos, this.getDefaultState().withProperty(META, lower.ordinal()), 2);
-            world.setBlockState(pos.up(), this.getDefaultState().withProperty(META, upper.ordinal()), 2);
-        }
-    }
 
     protected void checkAndDropBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!this.canBlockStay(worldIn, pos, state)) {
@@ -153,11 +162,6 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
     }
 
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        NonNullList<ItemStack> ret = NonNullList.create();
-        getDrops(ret, world, pos, state, fortune);
-        return ret;
-    }
 
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
@@ -180,20 +184,27 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
                 worldIn.setBlockState(pos.up(), ModBlocks.plant_tall.getDefaultState().withProperty(META, MUSTARD_WILLOW_4_UPPER.ordinal()), 2);
 
-                worldIn.setBlockState(pos.down(2), Blocks.DIRT.getDefaultState(), 3);
+                worldIn.setBlockState(pos.down(), Blocks.DIRT.getDefaultState(), 3);
                 break;
         }
     }
 
+    @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> ret = super.getDrops(blockAccess, pos, state, fortune);
         World world = (World) blockAccess;
-
-        if (getEnumFromState(state) == MUSTARD_WILLOW_4_UPPER) {
-            ret.add(OreDictManager.DictFrame.fromOne(ModItems.plant_item, com.hbm.items.ItemEnums.EnumPlantType.MUSTARDWILLOW, 3 + world.rand.nextInt(4)));
+        EnumTallPlantType type = (EnumTallPlantType) getEnumFromState(state);
+        switch (type) {
+            case HEMP_LOWER:
+            case HEMP_UPPER:
+                drops.add(new ItemStack(EnumMetaBlockItem.getItemFromBlock(ModBlocks.plant_flower), 1, HEMP.ordinal()));
+                break;
+            case MUSTARD_WILLOW_4_UPPER:
+                drops.add(OreDictManager.DictFrame.fromOne(ModItems.plant_item, com.hbm.items.ItemEnums.EnumPlantType.MUSTARDWILLOW, 3 + world.rand.nextInt(4)));
+                break;
+            default:
+                drops.add(new ItemStack(EnumMetaBlockItem.getItemFromBlock(ModBlocks.plant_flower), 1, MUSTARD_WILLOW_0.ordinal()));
+                break;
         }
-
     }
-
 
 }
