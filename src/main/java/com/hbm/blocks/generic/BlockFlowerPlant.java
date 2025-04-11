@@ -20,11 +20,15 @@ import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 
 public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
 
+    public static void initPlacables(){
+        PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead);
+        PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily);
+        PLANTABLE_BLOCKS.add(Blocks.GRASS);
+        PLANTABLE_BLOCKS.add(Blocks.DIRT);
+    }
     public BlockFlowerPlant(String registryName) {
         super(registryName, EnumFlowerPlantType.class);
 
-        this.PLANTABLE_BLOCKS.add(Blocks.GRASS);
-        this.PLANTABLE_BLOCKS.add(Blocks.DIRT);
     }
 
     @Override

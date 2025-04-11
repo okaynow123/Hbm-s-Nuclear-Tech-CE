@@ -1470,6 +1470,10 @@ public class ModBlocks {
 			}
 		}
 		BlockSellafield.registerSellafieldLevels();
+		BlockTallPlant.initPlacables();
+		BlockDeadPlant.initPlacables();
+		BlockFlowerPlant.initPlacables();
+
 
 	}
 }

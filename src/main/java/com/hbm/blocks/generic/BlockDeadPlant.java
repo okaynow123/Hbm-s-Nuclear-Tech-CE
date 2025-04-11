@@ -12,12 +12,11 @@ public class BlockDeadPlant extends BlockPlantEnumMeta {
     public BlockDeadPlant(String registryName) {
         super(registryName, PlantEnums.EnumDeadPlantType.class);
 
-        this.PLANTABLE_BLOCKS.add(ModBlocks.waste_dirt);
-        this.PLANTABLE_BLOCKS.add(ModBlocks.waste_earth);
-        this.PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead);
-        this.PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily);
-        this.PLANTABLE_BLOCKS.add(Blocks.GRASS);
-        this.PLANTABLE_BLOCKS.add(Blocks.DIRT);
+    }
+
+    public static void initPlacables(){
+        PLANTABLE_BLOCKS.add(ModBlocks.waste_dirt);
+        PLANTABLE_BLOCKS.add(ModBlocks.waste_earth);
     }
 
     @Override

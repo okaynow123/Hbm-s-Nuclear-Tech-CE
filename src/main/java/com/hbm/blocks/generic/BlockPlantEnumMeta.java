@@ -41,10 +41,13 @@ import java.util.*;
 
 public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlantable {
 
-    public final Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
+    public static Set<Block> PLANTABLE_BLOCKS = new HashSet<>();
 
     public BlockPlantEnumMeta(String registryName, Class<? extends Enum> blockEnum) {
         super(Material.PLANTS, SoundType.PLANT, registryName, blockEnum, true, true);
+    }
+
+    public static void initPlacables(){
     }
 
     @Override
@@ -97,7 +100,7 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlant
 
     public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
         Block block = world.getBlockState(pos.down()).getBlock();
-        return this.PLANTABLE_BLOCKS.contains(block);
+        return PLANTABLE_BLOCKS.contains(block);
     }
 
     @Override
@@ -132,6 +135,11 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta implements IPlant
         IBlockState state = world.getBlockState(pos);
         if (state.getBlock() != this) return getDefaultState();
         return state;
+    }
+
+    protected boolean isOiled(World world, BlockPos pos){
+        return world.getBlockState(pos.down()).getBlock() == ModBlocks.dirt_oily;
+
     }
 
     protected boolean isWatered(World world, BlockPos pos){

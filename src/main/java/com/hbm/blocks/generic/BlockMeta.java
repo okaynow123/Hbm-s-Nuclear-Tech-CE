@@ -20,12 +20,14 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -153,6 +155,8 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     }
 
 
+
+
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int meta = state.getValue(META);
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
@@ -170,6 +174,12 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         int meta = stack.getMetadata();
         world.setBlockState(pos, this.getStateFromMeta(meta), 3);
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    {
+        return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META));
     }
 
 
