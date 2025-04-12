@@ -18,13 +18,12 @@ import net.minecraft.item.ItemStack;
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 
-//TODO: Replace lignite and make plantitem
 public class CanneryWillow extends CanneryBase {
 
 
     @Override
     public ItemStack getIcon() {
-        return OreDictManager.DictFrame.fromOne(ModItems.lignite, ItemEnums.EnumPlantType.MUSTARDWILLOW);//FIXME
+        return OreDictManager.DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.MUSTARDWILLOW);
     }
 
     @Override
@@ -125,7 +124,7 @@ public class CanneryWillow extends CanneryBase {
         scene1.add(new ActionRemoveActor(0));
 
         scene1.add(new ActionWait(20));
-        scene1.add(new ActionCreateActor(0, new ActorFancyPanel(Minecraft.getMinecraft().fontRenderer, 10, -25, new Object[][] {{"=", OreDictManager.DictFrame.fromOne(ModBlocks.plant_flower, MUSTARD_WILLOW_1), "x1 + ", OreDictManager.DictFrame.fromOne(ModItems.lignite, ItemEnums.EnumPlantType.MUSTARDWILLOW), "x3-6"}}, 0)
+        scene1.add(new ActionCreateActor(0, new ActorFancyPanel(Minecraft.getMinecraft().fontRenderer, 10, -25, new Object[][] {{"=", OreDictManager.DictFrame.fromOne(ModBlocks.plant_flower, MUSTARD_WILLOW_1), "x1 + ", OreDictManager.DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.MUSTARDWILLOW), "x3-6"}}, 0)
                 .setColors(colorCopper).setOrientation(ActorFancyPanel.Orientation.LEFT)));
         scene1.add(new ActionSetBlock(2, 3, 2, Blocks.AIR));
         scene1.add(new ActionSetBlock(2, 2, 2, ModBlocks.plant_flower, MUSTARD_WILLOW_1.ordinal()));

@@ -54,12 +54,11 @@ public class WorldInAJar implements IBlockAccess {
 		return this.blocks[pos.getX()][pos.getY()][pos.getZ()] != null ? this.blocks[pos.getX()][pos.getY()][pos.getZ()] : Blocks.AIR.getBlockState().getBaseState();
 	}
 	
-	public void setBlock(int x, int y, int z, IBlockState b, int meta) {
+	public void setBlock(int x, int y, int z, IBlockState b) {
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
 			return;
 
 		this.blocks[x][y][z] = b;
-		this.meta[x][y][z] = (short)meta;
 	}
 
 	//shaky, we may kick tile entities entirely and rely on outside-the-world tile actors for rendering

@@ -31,7 +31,7 @@ public class ActionSetBlock implements IJarAction {
 
 	@Override
 	public void act(WorldInAJar world, JarScene scene) {
-		world.setBlock(x, y, z, b.getDefaultState(), meta);
+		world.setBlock(x, y, z, b.getStateFromMeta(meta));
 	}
 
 	@Override
