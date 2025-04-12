@@ -24,7 +24,7 @@ public class Jars {
 		canneries.put(new ComparableStack(ModBlocks.machine_stirling), new CanneryStirling());
 		canneries.put(new ComparableStack(ModBlocks.machine_stirling_steel), new CanneryStirling());
 
-		//canneries.put(new ComparableStack(OreDictManager.DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.MUSTARDWILLOW)), new CanneryWillow());
+		canneries.put(new ComparableStack(OreDictManager.DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.MUSTARDWILLOW)), new CanneryWillow());
 		canneries.put(new ComparableStack(OreDictManager.DictFrame.fromOne(ModBlocks.plant_flower, PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_0)), new CanneryWillow());
 
 	}

@@ -9,6 +9,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -18,8 +19,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -28,11 +31,12 @@ import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_0;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 
-public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
+public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable, IPlantable {
 
 
     public BlockTallPlant(String registryName) {
         super(registryName, EnumTallPlantType.class);
+        this.setTickRandomly(true);
 
     }
 
@@ -60,7 +64,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
     }
 
     @Override
-    public @NotNull IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public @NotNull IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase placer, EnumHand hand) {
         EnumTallPlantType type = values()[meta];
         if (!type.name().endsWith("_LOWER")) {
             type = valueOf(type.name().replace("_UPPER", "_LOWER"));
@@ -68,9 +72,9 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
         return this.getDefaultState().withProperty(META, type.ordinal());
     }
 
-    public int quantityDropped(int meta, int fortune, Random random) {
-        return 1;
-    }
+//    public int quantityDropped(int meta, int fortune, Random random) {
+//        return 1;
+//    }
 
     public String enumToTranslationKey(Enum value) {
         return this.getTranslationKey() + "." + value.name().toLowerCase(Locale.US).substring(0, value.name().length() - 6);
@@ -84,13 +88,15 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
             return;
         Block onTop = worldIn.getBlockState(pos.down()).getBlock();
 
-       if(!type.needsOil){
-           if(onTop == ModBlocks.dirt_dead || onTop == ModBlocks.dirt_oily) {
-               worldIn.setBlockState(pos, stateFromEnum(ModBlocks.plant_dead, PlantEnums.EnumDeadPlantType.BIG_FLOWER), 3);
-               return;
-           }
-       }
-       //TODO: Some obfuscated crap to decipher
+        if (!type.needsOil) {
+            if (onTop == ModBlocks.dirt_dead || onTop == ModBlocks.dirt_oily) {
+                worldIn.setBlockState(pos, stateFromEnum(ModBlocks.plant_dead, PlantEnums.EnumDeadPlantType.BIG_FLOWER), 3);
+                return;
+            }
+        }
+        if (canGrow(worldIn, pos, state, false) && canUseBonemeal(worldIn, rand, pos, state) && rand.nextInt(3) == 0)
+            grow(worldIn, rand, pos, state);
+
     }
 
     @Override
@@ -165,7 +171,11 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
 
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-        return true;
+        EnumTallPlantType type = EnumTallPlantType.values()[state.getValue(META)];
+        if (type == MUSTARD_WILLOW_3_LOWER)
+            return true;
+
+        return rand.nextFloat() < 0.33F;
     }
 
     @Override
@@ -189,9 +199,11 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
         }
     }
 
+
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
+        public List<ItemStack> getDrops(IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
         World world = (World) blockAccess;
+        List<ItemStack> drops = NonNullList.create();
         EnumTallPlantType type = (EnumTallPlantType) getEnumFromState(state);
         switch (type) {
             case HEMP_LOWER:
@@ -205,6 +217,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable {
                 drops.add(new ItemStack(EnumMetaBlockItem.getItemFromBlock(ModBlocks.plant_flower), 1, MUSTARD_WILLOW_0.ordinal()));
                 break;
         }
+        return drops;
     }
 
 }

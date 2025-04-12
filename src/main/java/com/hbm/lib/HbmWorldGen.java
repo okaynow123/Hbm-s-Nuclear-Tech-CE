@@ -3,6 +3,7 @@ package com.hbm.lib;
 import java.util.Random;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
@@ -14,6 +15,7 @@ import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
 import com.hbm.world.Antenna;
@@ -61,8 +63,13 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraft.world.gen.feature.WorldGenerator;
+
+import static com.hbm.blocks.PlantEnums.*;
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
+import static com.hbm.blocks.generic.BlockMeta.META;
 
 public class HbmWorldGen implements IWorldGenerator {
 
@@ -74,15 +81,52 @@ public class HbmWorldGen implements IWorldGenerator {
 
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+		//TODO: Report this from 1.7, this is a mess
 		try{
 			generateOres(world, rand, chunkX * 16, chunkZ * 16);
 			if(world.getWorldInfo().isMapFeaturesEnabled())
 				generateStructures(world, rand, chunkX * 16, chunkZ * 16);
+
+			generatePlants(world, rand, chunkX * 16, chunkZ * 16);
 		} catch(final Throwable t){
 			System.out.println("NTM Worldgen Error "+t);
 			t.printStackTrace();
 		}
 	}
+
+	//TEMPORARY
+	public void generatePlants(World world, Random rand, int i, int j){
+		Biome biome = world.getBiome(new BlockPos(i, 0, j));
+
+		if(!TomSaveData.forWorld(world).impact) {
+			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST) && rand.nextInt(16) == 0) {
+				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, FOXGLOVE.ordinal()));
+			}
+
+			if (biome == Biomes.ROOFED_FOREST && rand.nextInt(8) == 0) {
+				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, NIGHTSHADE.ordinal()));
+			}
+
+			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) && rand.nextInt(8) == 0) {
+				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, TOBACCO.ordinal()));
+			}
+
+			if (rand.nextInt(64) == 0) {
+				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, HEMP.ordinal()));
+			}
+//			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER) && rand.nextInt(4) == 0) {
+//				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.reeds, 0);
+//			}
+//
+//			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH) && rand.nextInt(8) == 0) {
+//				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.reeds, 0);
+//			}
+
+		}
+
+
+	}
+
 
 	public void generateOres(World world, Random rand, int i, int j){
 		int dimID = world.provider.getDimension();
@@ -297,7 +341,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			}
 
 			DungeonToolbox.generateOre(world, rand, i, j, 16, 8, 10, 50, ModBlocks.stone_porous);
-			OilSpot.generateOilSpot(world, randPosX, randPosZ, 5, 50);
+			OilSpot.generateOilSpot(world, randPosX, randPosZ, 5, 50, true);
 		}
 	}
 

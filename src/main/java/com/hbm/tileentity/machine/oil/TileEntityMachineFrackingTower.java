@@ -172,7 +172,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 
         this.tanks[2].setFill(tanks[2].getFill() - solutionRequired);
 
-        OilSpot.generateOilSpot(world, this.pos.getX(), this.pos.getZ(), destructionRange, 10);
+        OilSpot.generateOilSpot(world, this.pos.getX(), this.pos.getZ(), destructionRange, 10, false);
     }
 
     @Override

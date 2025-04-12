@@ -10,25 +10,40 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 
 import java.util.Random;
 
 import static com.hbm.blocks.ModBlocks.*;
-import static com.hbm.blocks.PlantEnums.*;
+import static com.hbm.blocks.PlantEnums.EnumDeadPlantType;
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType;
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
 import static com.hbm.blocks.PlantEnums.EnumTallPlantType.*;
 
-public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
+public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable, IPlantable {
 
-    public static void initPlacables(){
+    public BlockFlowerPlant(String registryName) {
+        super(registryName, EnumFlowerPlantType.class);
+        this.setTickRandomly(true);
+    }
+
+
+    public static void initPlacables() {
         PLANTABLE_BLOCKS.add(ModBlocks.dirt_dead);
         PLANTABLE_BLOCKS.add(ModBlocks.dirt_oily);
         PLANTABLE_BLOCKS.add(Blocks.GRASS);
         PLANTABLE_BLOCKS.add(Blocks.DIRT);
     }
-    public BlockFlowerPlant(String registryName) {
-        super(registryName, EnumFlowerPlantType.class);
 
+    @Override
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (worldIn.isRemote) return;
+        EnumFlowerPlantType type = EnumFlowerPlantType.values()[state.getValue(META)];
+
+        if (!(type == HEMP || type == MUSTARD_WILLOW_0 || type == MUSTARD_WILLOW_1)) return;
+
+        if (canGrow(worldIn, pos, state, false) && canUseBonemeal(worldIn, rand, pos, state) && rand.nextInt(3) == 0)
+            grow(worldIn, rand, pos, state);
     }
 
     @Override
@@ -46,7 +61,11 @@ public class BlockFlowerPlant extends BlockPlantEnumMeta implements IGrowable {
 
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-        return true;
+        var type = (EnumFlowerPlantType) this.getEnumFromState(state);
+        return switch (type) {
+            case HEMP, MUSTARD_WILLOW_0, MUSTARD_WILLOW_1 -> rand.nextFloat() < 0.33F;
+            default -> true;
+        };
     }
 
     @Override
