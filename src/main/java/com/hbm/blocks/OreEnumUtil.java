@@ -88,7 +88,7 @@ public class OreEnumUtil {
         LIGNITE(new ItemStack(lignite), VANILLA_FORTUNE),
         RARE_EARTHS(new ItemStack(rare_earth_chunk), VANILLA_FORTUNE),
         BLOCK_METEOR((state, rand) -> (rand.nextInt(10) == 0 ? new ItemStack(plate_dalekanium) : new ItemStack(Item.getItemFromBlock(ModBlocks.block_meteor))), VANILLA_FORTUNE),
-        CINNEBAR(new ItemStack(cinnebar), BASE1_RAND2_FORTUNE),
+        CINNABAR(new ItemStack(cinnabar), BASE1_RAND2_FORTUNE),
         COLTAN(new ItemStack(fragment_coltan), VANILLA_FORTUNE),
         RAD_GEM(new ItemStack(gem_rad), VANILLA_FORTUNE),
         WASTE_TRINITE(new ItemStack(trinitite), VANILLA_FORTUNE),

@@ -209,8 +209,8 @@ public class CentrifugeRecipes {
 				new ItemStack(Blocks.GRAVEL, 1) });
 
 		recipes.put(CINNABAR.ore(), new ItemStack[] {
-				new ItemStack(ModItems.cinnebar, 2),
-				new ItemStack(ModItems.cinnebar, 2),
+				new ItemStack(ModItems.cinnabar, 2),
+				new ItemStack(ModItems.cinnabar, 2),
 				new ItemStack(Items.REDSTONE, 1),
 				new ItemStack(Blocks.GRAVEL, 1) });
 		
@@ -305,7 +305,7 @@ public class CentrifugeRecipes {
 		recipes.put(SRN.crystal(), new ItemStack[] { new ItemStack(ModItems.nugget_schrabidium, 2), new ItemStack(ModItems.nugget_schrabidium, 2), new ItemStack(ModItems.nugget_uranium, 2), new ItemStack(ModItems.nugget_plutonium, 2) });
 		recipes.put(SA326.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_schrabidium, 2), new ItemStack(ModItems.powder_schrabidium, 2), new ItemStack(ModItems.powder_plutonium, 1), new ItemStack(ModItems.powder_lithium_tiny, 1) });
 		recipes.put(RAREEARTH.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_desh_mix, 1), new ItemStack(ModItems.powder_desh_mix, 1), new ItemStack(ModItems.nugget_zirconium, 2), new ItemStack(ModItems.nugget_zirconium, 2) });
-		recipes.put(CINNABAR.crystal(), new ItemStack[] { new ItemStack(ModItems.cinnebar, 3), new ItemStack(ModItems.cinnebar, 3), new ItemStack(Items.REDSTONE, 2), new ItemStack(ModItems.powder_lithium_tiny, 1) });
+		recipes.put(CINNABAR.crystal(), new ItemStack[] { new ItemStack(ModItems.cinnabar, 3), new ItemStack(ModItems.cinnabar, 3), new ItemStack(Items.REDSTONE, 2), new ItemStack(ModItems.powder_lithium_tiny, 1) });
 		recipes.put(P_RED.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_fire, 3), new ItemStack(ModItems.powder_fire, 3), new ItemStack(ModItems.ingot_phosphorus, 2), new ItemStack(Items.BLAZE_POWDER, 2) });
 		recipes.put(new ComparableStack(ModItems.crystal_trixite), new ItemStack[] { new ItemStack(ModItems.powder_plutonium, 3), new ItemStack(ModItems.powder_cobalt, 3), new ItemStack(ModItems.powder_spark_mix, 1), new ItemStack(ModItems.powder_nitan_mix, 2) });
 		recipes.put(LI.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_lithium, 2), new ItemStack(ModItems.powder_lithium, 2), new ItemStack(ModItems.powder_quartz, 1), new ItemStack(ModItems.fluorite, 1) });

@@ -80,7 +80,7 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
         DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.6D, ModBlocks.cluster_depth_iron, rand, 24, planetStone, ModBlocks.stone_depth);
         DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.6D, ModBlocks.cluster_depth_titanium, rand, 32, planetStone, ModBlocks.stone_depth);
         DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.6D, ModBlocks.cluster_depth_tungsten, rand, 32, planetStone, ModBlocks.stone_depth);
-        DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.8D, ModBlocks.ore_depth_cinnebar, rand, 16, planetStone, ModBlocks.stone_depth);
+        DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.8D, ModBlocks.ore_depth_cinnabar, rand, 16, planetStone, ModBlocks.stone_depth);
         DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.8D, ModBlocks.ore_depth_zirconium, rand, 16, planetStone, ModBlocks.stone_depth);
         DepthDeposit.generateCondition(world, x, 0, 3, z, 5, 0.8D, ModBlocks.ore_depth_borax, rand, 16, planetStone, ModBlocks.stone_depth);
 
@@ -98,7 +98,7 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
         DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.berylliumSpawn, 4, 5, 30, ModBlocks.ore_beryllium, planetStone);
         DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.rareSpawn, 5, 5, 20, ModBlocks.ore_rare, planetStone);
         // DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.asbestosSpawn, 4, 16, 16, ModBlocks.ore_asbestos, meta, planetStone);
-        DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.cinnebarSpawn, 4, 8, 16, ModBlocks.ore_cinnebar, planetStone);
+        DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.cinnabarSpawn, 4, 8, 16, ModBlocks.ore_cinnabar, planetStone);
         DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.cobaltSpawn, 4, 4, 8, ModBlocks.ore_cobalt, planetStone);
 
         DungeonToolbox.generateOre(world, rand, x, z, WorldConfig.ironClusterSpawn, 6, 15, 45, ModBlocks.cluster_iron, planetStone);

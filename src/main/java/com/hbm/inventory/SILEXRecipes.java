@@ -954,7 +954,7 @@ public class SILEXRecipes {
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_phosphorus), 7))
 				);
 		recipes.put(CINNABAR.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.VISIBLE)
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.cinnebar), 64))
+				.addOut(new WeightedRandomObject(new ItemStack(ModItems.cinnabar), 64))
 				.addOut(new WeightedRandomObject(new ItemStack(Blocks.GRAVEL), 24))
 				.addOut(new WeightedRandomObject(new ItemStack(Items.REDSTONE), 12))
 				);

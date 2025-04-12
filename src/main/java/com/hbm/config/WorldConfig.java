@@ -19,7 +19,7 @@ public class WorldConfig {
 	public static int asbestosSpawn = 4;
 	public static int rareSpawn = 6;
 	public static int lithiumSpawn = 6;
-	public static int cinnebarSpawn = 1;
+	public static int cinnabarSpawn = 1;
 	public static int oilcoalSpawn = 128;
 	public static int gassshaleSpawn = 5;
 	public static int gasbubbleSpawn = 4;
@@ -100,7 +100,7 @@ public class WorldConfig {
 		gassshaleSpawn = convertToInt(CompatibilityConfig.gassshaleSpawn.get(0));
 		explosivebubbleSpawn = convertToInt(CompatibilityConfig.explosivebubbleSpawn.get(0));
 		gasbubbleSpawn = convertToInt(CompatibilityConfig.gasbubbleSpawn.get(0));
-		cinnebarSpawn = convertToInt(CompatibilityConfig.cinnebarSpawn.get(0));
+		cinnabarSpawn = convertToInt(CompatibilityConfig.cinnabarSpawn.get(0));
 		cobaltSpawn = convertToInt(CompatibilityConfig.cobaltSpawn.get(0));
 		
 		ironClusterSpawn = convertToInt(CompatibilityConfig.ironClusterSpawn.get(0));

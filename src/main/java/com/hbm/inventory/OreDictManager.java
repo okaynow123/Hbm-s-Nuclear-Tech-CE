@@ -520,7 +520,7 @@ public class OreDictManager {
         COALCOKE.gem(fromOne(coke, EnumCokeType.COAL)).block(fromOne(block_coke, EnumCokeType.COAL));
         PETCOKE.gem(fromOne(coke, EnumCokeType.PETROLEUM)).block(fromOne(block_coke, EnumCokeType.PETROLEUM));
         LIGCOKE.gem(fromOne(coke, EnumCokeType.LIGNITE)).block(fromOne(block_coke, EnumCokeType.LIGNITE));
-        CINNABAR.crystal(cinnebar).gem(cinnebar).ore(ore_cinnebar, ore_depth_cinnebar);
+        CINNABAR.crystal(cinnabar).gem(cinnabar).ore(ore_cinnabar, ore_depth_cinnabar);
         BORAX.dust(powder_borax).ore(ore_depth_borax);
         CHLOROCALCITE.dust(powder_chlorocalcite);
         MOLYSITE.dust(powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
@@ -728,8 +728,8 @@ public class OreDictManager {
 //		OreDictionary.registerOre("dye", new ItemStack(chemical_dye, 1, OreDictionary.WILDCARD_VALUE));
 //		OreDictionary.registerOre("dye", new ItemStack(crayon, 1, OreDictionary.WILDCARD_VALUE));
 
-        OreDictionary.registerOre("dyeRed", cinnebar);
-        OreDictionary.registerOre("dye", cinnebar);
+        OreDictionary.registerOre("dyeRed", cinnabar);
+        OreDictionary.registerOre("dye", cinnabar);
         OreDictionary.registerOre("dyeYellow", sulfur);
         OreDictionary.registerOre("dye", sulfur);
         OreDictionary.registerOre("dyeBlack", powder_coal);

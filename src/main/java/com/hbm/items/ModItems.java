@@ -1566,7 +1566,7 @@ public class ModItems {
 	public static final Item pellet_gas = new ItemCustomLore("pellet_gas").setCreativeTab(MainRegistry.partsTab);
 	
 	public static final Item coal_infernal = new ItemFuel("coal_infernal", 4800).setCreativeTab(MainRegistry.partsTab);
-	public static final Item cinnebar = new ItemBase("cinnebar").setCreativeTab(MainRegistry.partsTab);
+	public static final Item cinnabar = new ItemBase("cinnabar").setCreativeTab(MainRegistry.partsTab);
 	public static final Item powder_ash = new ItemBase("powder_ash").setCreativeTab(MainRegistry.partsTab);
 	public static final Item powder_cement = new ItemLemon(2, 0.5F, false, "powder_cement").setCreativeTab(MainRegistry.partsTab);
 	
@@ -2139,7 +2139,7 @@ public class ModItems {
 	public static final Item crystal_rare = new ItemBase("crystal_rare").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_phosphorus = new ItemCustomLore("crystal_phosphorus").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_lithium = new ItemCustomLore("crystal_lithium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item crystal_cinnebar = new ItemBase("crystal_cinnebar").setCreativeTab(MainRegistry.partsTab);
+	public static final Item crystal_cinnabar = new ItemBase("crystal_cinnabar").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_cobalt = new ItemBase("crystal_cobalt").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_starmetal = new ItemBase("crystal_starmetal").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_trixite = new ItemCustomLore("crystal_trixite").setCreativeTab(MainRegistry.partsTab);
