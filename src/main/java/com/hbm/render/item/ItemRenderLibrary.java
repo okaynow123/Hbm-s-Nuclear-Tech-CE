@@ -7,15 +7,12 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.render.tileentity.RenderDemonLamp;
 import com.hbm.render.tileentity.RenderSawmill;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -2097,7 +2094,7 @@ public class ItemRenderLibrary {
 
 
                 GlStateManager.pushMatrix();
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     ResourceManager.rbmk_element.renderPart("Column");
                     GlStateManager.translate(0, 1, 0);
                 }
@@ -2130,7 +2127,7 @@ public class ItemRenderLibrary {
 
                 // Rende column base
                 GlStateManager.pushMatrix();
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     ResourceManager.rbmk_rods.renderPart("Column");
                     GlStateManager.translate(0, 1, 0);
                 }
@@ -2158,21 +2155,21 @@ public class ItemRenderLibrary {
 
             public void renderCommon(ItemStack stack) {
                 Block block = Block.getBlockFromItem(stack.getItem());
-                if(!(block instanceof RBMKBase)) return;
+                if (!(block instanceof RBMKBase)) return;
 
                 // Bind texture properly
                 Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) block).columnTexture);
 
 
                 GlStateManager.pushMatrix();
-                for(int i = 0; i < 4; i++) {
+                for (int i = 0; i < 4; i++) {
                     ResourceManager.rbmk_reflector.renderPart("Column");
                     GlStateManager.translate(0, 1, 0);
                 }
                 GlStateManager.popMatrix();
 
 
-                if(block != ModBlocks.rbmk_boiler) {
+                if (block != ModBlocks.rbmk_boiler) {
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(0, 3F, 0);
                     ResourceManager.rbmk_reflector.renderPart("Lid");

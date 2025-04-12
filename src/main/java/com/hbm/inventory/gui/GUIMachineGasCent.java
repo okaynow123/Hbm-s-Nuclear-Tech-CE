@@ -115,4 +115,5 @@ public class GUIMachineGasCent extends GuiInfoContainer {
 
 		GL11.glDisable(GL11.GL_BLEND);
 	}
+
 }
