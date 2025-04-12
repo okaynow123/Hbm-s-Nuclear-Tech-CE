@@ -13,6 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemStackUtil {
@@ -173,10 +174,14 @@ public class ItemStackUtil {
 	 * @return
 	 */
 	public static List<String> getOreDictNames(final ItemStack stack) {
-		final List<String> list = new ArrayList();
+		if (stack == null || stack.isEmpty() || stack.getItem() == null) {
+			return Collections.emptyList();
+		}
 
+		final List<String> list = new ArrayList<>();
 		final int[] ids = OreDictionary.getOreIDs(stack);
-		for(final int i : ids) {
+
+		for (final int i : ids) {
 			list.add(OreDictionary.getOreName(i));
 		}
 
