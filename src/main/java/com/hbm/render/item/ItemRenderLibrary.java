@@ -12,8 +12,10 @@ import com.hbm.render.tileentity.RenderDemonLamp;
 import com.hbm.render.tileentity.RenderSawmill;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -2089,11 +2091,26 @@ public class ItemRenderLibrary {
             }
 
             public void renderCommon(ItemStack stack) {
-                bindTexture(((RBMKBase) Block.getBlockFromItem(stack.getItem())).columnTexture);
-                Tessellator tes = Tessellator.instance;
-                tes.startDrawing(GL11.GL_TRIANGLES);
-                ResourceManager.rbmk_element.tessellatePartSplit(tes, "Column", 0.5F, 3);
-                tes.draw();
+                Block block = Block.getBlockFromItem(stack.getItem());
+                if (!(block instanceof RBMKBase)) return;
+                Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) block).columnTexture);
+
+
+                GlStateManager.pushMatrix();
+                for(int i = 0; i < 4; i++) {
+                    ResourceManager.rbmk_element.renderPart("Column");
+                    GlStateManager.translate(0, 1, 0);
+                }
+                GlStateManager.popMatrix();
+
+
+                // Render lid if needed
+                if (block != ModBlocks.rbmk_boiler && block != ModBlocks.rbmk_heater) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0, 3, 0);
+                    ResourceManager.rbmk_element.renderPart("Lid");
+                    GlStateManager.popMatrix();
+                }
             }
 
             public boolean doNullTransform() {
@@ -2107,14 +2124,26 @@ public class ItemRenderLibrary {
             }
 
             public void renderCommon(ItemStack stack) {
-                bindTexture(((RBMKBase) Block.getBlockFromItem(stack.getItem())).columnTexture);
-                Tessellator tes = Tessellator.instance;
-                tes.startDrawing(GL11.GL_TRIANGLES);
-                ResourceManager.rbmk_rods.tessellatePartSplit(tes, "Column", 0.5F, 3);
-                tes.addTranslation(0, 3, 0);
-                if (Block.getBlockFromItem(stack.getItem()) != ModBlocks.rbmk_boiler && Block.getBlockFromItem(stack.getItem()) != ModBlocks.rbmk_heater)
-                    ResourceManager.rbmk_rods.tessellatePart(tes, "Lid");
-                tes.draw();
+                Block block = Block.getBlockFromItem(stack.getItem());
+                if (!(block instanceof RBMKBase)) return;
+                Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) block).columnTexture);
+
+                // Rende column base
+                GlStateManager.pushMatrix();
+                for(int i = 0; i < 4; i++) {
+                    ResourceManager.rbmk_rods.renderPart("Column");
+                    GlStateManager.translate(0, 1, 0);
+                }
+                GlStateManager.popMatrix();
+
+
+                // Render lid if needed
+                if (block != ModBlocks.rbmk_boiler && block != ModBlocks.rbmk_heater) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0, 3, 0);
+                    ResourceManager.rbmk_rods.renderPart("Lid");
+                    GlStateManager.popMatrix();
+                }
             }
 
             public boolean doNullTransform() {
@@ -2123,16 +2152,32 @@ public class ItemRenderLibrary {
         };
         ItemRenderBase rbmkPassive = new ItemRenderBase() {
             public void renderInventory(ItemStack stack) {
-                GL11.glTranslated(0, -5.5, 0);
-                GL11.glScaled(3.65, 3.65, 3.65);
+                GlStateManager.translate(0, -5.5, 0);
+                GlStateManager.scale(3.65, 3.65, 3.65);
             }
 
             public void renderCommon(ItemStack stack) {
-                bindTexture(((RBMKBase) Block.getBlockFromItem(stack.getItem())).columnTexture);
-                Tessellator tes = Tessellator.instance;
-                tes.startDrawing(GL11.GL_TRIANGLES);
-                ResourceManager.rbmk_reflector.tessellatePartSplit(tes, "Column", 0.5F, 3);
-                tes.draw();
+                Block block = Block.getBlockFromItem(stack.getItem());
+                if(!(block instanceof RBMKBase)) return;
+
+                // Bind texture properly
+                Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) block).columnTexture);
+
+
+                GlStateManager.pushMatrix();
+                for(int i = 0; i < 4; i++) {
+                    ResourceManager.rbmk_reflector.renderPart("Column");
+                    GlStateManager.translate(0, 1, 0);
+                }
+                GlStateManager.popMatrix();
+
+
+                if(block != ModBlocks.rbmk_boiler) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0, 3F, 0);
+                    ResourceManager.rbmk_reflector.renderPart("Lid");
+                    GlStateManager.popMatrix();
+                }
             }
 
             public boolean doNullTransform() {

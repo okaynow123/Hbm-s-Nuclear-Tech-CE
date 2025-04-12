@@ -487,9 +487,9 @@ public class ResourceManager {
 	public static final ResourceLocation mini_nuke_tex = new ResourceLocation(RefStrings.MODID, "textures/models/projectiles/mini_nuke.png");
 
 	//TODO: Move this off of old Tess
-	public static final WavefrontObject rbmk_element = new WavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_element.obj"));
-	public static final WavefrontObject rbmk_reflector = new WavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_reflector.obj"));
-	public static final WavefrontObject rbmk_rods = new WavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_rods.obj"));
+	public static final IModelCustom rbmk_element = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_element.obj")).asVBO();
+	public static final IModelCustom rbmk_reflector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_reflector.obj")).asVBO();
+	public static final IModelCustom rbmk_rods = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_rods.obj")).asVBO();
 
 	public static final IModelCustom rbmk_console = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_console.obj")).asVBO();
 	public static final IModelCustom rbmk_debris = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/debris.obj")).asVBO();
