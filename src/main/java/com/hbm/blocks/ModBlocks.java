@@ -492,7 +492,7 @@ public class ModBlocks {
 
 	public static final Block waste_grass_tall = new WasteGrassTall(Material.PLANTS, "waste_grass_tall").setCreativeTab(MainRegistry.resourceTab);
 
-	public static final Block burning_earth = new WasteEarth(Material.GROUND, true, "burning_earth").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.blockTab).setHardness(0.6F);
+	public static final Block burning_earth = new WasteEarth(Material.GROUND, SoundType.PLANT, true, "burning_earth").setCreativeTab(MainRegistry.blockTab).setHardness(0.6F);
 
 	//PollutedBecauseOilThings
 	public static final Block plant_dead = new BlockDeadPlant("plant_dead").setHardness(0).setResistance(0).setCreativeTab(MainRegistry.resourceTab).setLightOpacity(0);

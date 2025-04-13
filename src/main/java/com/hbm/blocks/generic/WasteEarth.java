@@ -72,11 +72,6 @@ public class WasteEarth extends Block {
     }
 
     @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
-    }
-
-    @Override
     public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 1;
     }
