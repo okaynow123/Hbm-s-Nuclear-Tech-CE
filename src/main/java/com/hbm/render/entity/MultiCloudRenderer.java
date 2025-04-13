@@ -70,7 +70,7 @@ public class MultiCloudRenderer extends Render<EntityModFX> {
 
 				GL11.glPushMatrix();
 				Tessellator tessellator = Tessellator.getInstance();
-				this.func_77026_a(tessellator, tex);
+				this.render(tessellator, tex);
 				GL11.glPopMatrix();
 
 				GL11.glScaled(1/size, 1/size, 1/size);
@@ -123,7 +123,7 @@ public class MultiCloudRenderer extends Render<EntityModFX> {
 		return TextureMap.LOCATION_BLOCKS_TEXTURE;
 	}
 
-	private void func_77026_a(Tessellator tes, TextureAtlasSprite tas) {
+	private void render(Tessellator tes, TextureAtlasSprite tas) {
 		BufferBuilder buf = tes.getBuffer();
 		float f = tas.getMinU();
 		float f1 = tas.getMaxU();

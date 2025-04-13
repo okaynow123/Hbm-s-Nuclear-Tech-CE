@@ -26,7 +26,8 @@ public class EntityProcessorCross implements IEntityProcessor {
 	protected double nodeDist = 2D;
 	protected IEntityRangeMutator range;
 	protected ICustomDamageHandler damage;
-	
+	protected boolean allowSelfDamage = false;
+
 	public EntityProcessorCross(double nodeDist) {
 		this.nodeDist = nodeDist;
 	}
@@ -113,7 +114,12 @@ public class EntityProcessorCross implements IEntityProcessor {
 		
 		return affectedPlayers;
 	}
-	
+	public EntityProcessorCross setAllowSelfDamage() {
+		this.allowSelfDamage = true;
+		return this;
+	}
+
+
 	public EntityProcessorCross withRangeMod(float mod) {
 		range = new IEntityRangeMutator() {
 			@Override

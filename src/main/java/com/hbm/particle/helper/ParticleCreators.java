@@ -8,5 +8,6 @@ public class ParticleCreators {
 
     static {
         particleCreators.put("casingNT", new CasingCreator());
+        particleCreators.put("explosionSmall", new ExplosionSmallCreator());
     }
 }

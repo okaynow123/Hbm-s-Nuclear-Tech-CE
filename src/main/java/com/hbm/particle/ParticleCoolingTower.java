@@ -26,7 +26,7 @@ public class ParticleCoolingTower extends Particle {
 
 	public ParticleCoolingTower( World world, double x, double y, double z) {
 		super(world, x, y, z);
-		this.particleAlpha = 0.20F; //Norwood: best solution to make the particle transparent with current minecraft version
+		this.particleAlpha = 0.30F; //Norwood: best solution to make the particle transparent with current minecraft version
 		this.particleRed = this.particleGreen = this.particleBlue = 0.9F + world.rand.nextFloat() * 0.05F;
 		this.canCollide = false;
 	}
