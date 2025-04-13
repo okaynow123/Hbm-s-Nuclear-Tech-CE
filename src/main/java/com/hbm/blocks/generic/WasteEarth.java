@@ -83,6 +83,10 @@ public class WasteEarth extends Block {
 
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
+        if (entity instanceof EntityLivingBase && this == ModBlocks.burning_earth) {
+
+            entity.setFire(3);
+        }
         if (entity instanceof EntityLivingBase && this == ModBlocks.waste_earth) {
 
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation, 15 * 20, 4));
@@ -91,7 +95,6 @@ public class WasteEarth extends Block {
 
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation, 20 * 20, 9));
         }
-
         if (entity instanceof EntityLivingBase && this == ModBlocks.frozen_grass) {
 
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 2 * 60 * 20, 2));
