@@ -4529,6 +4529,7 @@ tile.brick_obsidian.name=Obsidian Bricks
 tile.brick_obsidian_slab.name=Obsidian Brick Slab
 tile.brick_obsidian_stairs.name=Obsidian Brick Stairs
 tile.broadcaster_pc.name=Corrupted Broadcaster
+tile.burning_earth.name=Burning Grass
 tile.cable_detector.name=Redstone Power Switch
 tile.cable_diode.desc=§6Limits throughput and restricts flow direction$§eUse screwdriver to increase throughput$§eUse hand drill to decrease throughput$§eUse defuser to change network priority
 tile.cable_diode.name=Power Diode
