@@ -68,7 +68,7 @@ public class WasteEarth extends Block {
         if (this == ModBlocks.frozen_grass) {
             return Items.SNOWBALL;
         }
-        return Item.getItemFromBlock(this);
+        return super.getItemDropped(state, rand, fortune);
     }
 
     @Override
@@ -78,26 +78,21 @@ public class WasteEarth extends Block {
 
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
-        if (entity instanceof EntityLivingBase && this == ModBlocks.burning_earth) {
+        if (entity instanceof EntityLivingBase) {
+            EntityLivingBase castedEntity = ((EntityLivingBase) entity);
 
-            entity.setFire(3);
-        }
-        if (entity instanceof EntityLivingBase && this == ModBlocks.waste_earth) {
-
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation, 15 * 20, 4));
-        }
-        if (entity instanceof EntityLivingBase && this == ModBlocks.waste_dirt) {
-
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation, 20 * 20, 9));
-        }
-        if (entity instanceof EntityLivingBase && this == ModBlocks.frozen_grass) {
-
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 2 * 60 * 20, 2));
-        }
-        if (entity instanceof EntityLivingBase && this == ModBlocks.waste_mycelium) {
-
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.radiation, 30 * 20, 29));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
+            if (this == ModBlocks.waste_earth) {
+                castedEntity.addPotionEffect(new PotionEffect(HbmPotion.radiation, 15 * 20, 4));
+            } else if (this == ModBlocks.waste_dirt) {
+                castedEntity.addPotionEffect(new PotionEffect(HbmPotion.radiation, 20 * 20, 9));
+            } else if (this == ModBlocks.waste_mycelium) {
+                castedEntity.addPotionEffect(new PotionEffect(HbmPotion.radiation, 30 * 20, 29));
+                castedEntity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
+            } else if (this == ModBlocks.frozen_grass) {
+                castedEntity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 2 * 60 * 20, 2));
+            } else if (this == ModBlocks.burning_earth) {
+                entity.setFire(3);
+            }
         }
     }
 
