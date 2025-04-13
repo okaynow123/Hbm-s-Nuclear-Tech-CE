@@ -27,10 +27,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class WasteEarth extends Block {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
+    public static final Set<Block> RenewableBlocks = new HashSet<>(Arrays.asList(
+            ModBlocks.waste_earth,
+            ModBlocks.waste_dirt,
+            ModBlocks.waste_mycelium
+    ));
 
     public WasteEarth(Material materialIn, boolean tick, String s) {
         super(materialIn);
@@ -50,7 +58,7 @@ public class WasteEarth extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{META});
+        return new BlockStateContainer(this, META);
     }
 
     @Override
@@ -113,31 +121,14 @@ public class WasteEarth extends Block {
 
     @Override
     public void updateTick(World world, BlockPos pos1, IBlockState state, Random rand) {
-        int x = pos1.getX();
-        int y = pos1.getY();
-        int z = pos1.getZ();
-        if (this == ModBlocks.waste_mycelium && GeneralConfig.enableMycelium) {
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    for (int k = -1; k < 2; k++) {
-                        Block b0 = world.getBlockState(new BlockPos(x + i, y + j, z + k)).getBlock();
-                        IBlockState b1 = world.getBlockState(new BlockPos(x + i, y + j + 1, z + k));
-                        if (!b1.isOpaqueCube() && (b0 == Blocks.DIRT || b0 == Blocks.GRASS || b0 == Blocks.MYCELIUM || b0 == ModBlocks.waste_earth)) {
-                            world.setBlockState(new BlockPos(x + i, y + j, z + k), ModBlocks.waste_mycelium.getDefaultState());
-                        }
-                    }
-                }
-            }
-        }
-
-        if (this == ModBlocks.waste_earth || this == ModBlocks.waste_dirt || this == ModBlocks.waste_mycelium) {
+        if (RenewableBlocks.contains(this)) {
 
             if (GeneralConfig.enableAutoCleanup) {
-                world.setBlockState(new BlockPos(x, y, z), Blocks.DIRT.getDefaultState());
+                world.setBlockState(pos1, Blocks.DIRT.getDefaultState());
             }
 
-            if (world.getBlockState(new BlockPos(x, y + 1, z)).getBlock() instanceof BlockMushroom) {
-                world.setBlockState(new BlockPos(x, y + 1, z), ModBlocks.mush.getDefaultState());
+            if (world.getBlockState(pos1.up()).getBlock() instanceof BlockMushroom) {
+                world.setBlockState(pos1.up(), ModBlocks.mush.getDefaultState());
             }
         }
     }
