@@ -2,15 +2,14 @@ package com.hbm.particle;
 
 import com.hbm.entity.particle.ParticleFXRotating;
 import com.hbm.main.ModEventHandlerClient;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
@@ -37,6 +36,11 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
     }
 
     @Override
+    public int getBrightnessForRender(float partialTick) {
+        return 0xF000F0;
+    }
+
+    @Override
     public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
@@ -44,7 +48,7 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
 
         this.particleAge++;
 
-        if(this.particleAge >= this.particleMaxAge) {
+        if (this.particleAge >= this.particleMaxAge) {
             this.setExpired();
         }
 
@@ -57,9 +61,10 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
         this.motionX *= 0.65D;
         this.motionZ *= 0.65D;
 
-        this.move(this.motionX, this.motionY, this.motionZ);    }
+        this.move(this.motionX, this.motionY, this.motionZ);
+    }
 
-  @Override
+    @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         double ageScaled = (double) (this.particleAge + partialTicks) / (double) this.particleMaxAge;
 
@@ -70,16 +75,18 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
         );
 
         this.setRBGColorF(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-        this.particleAlpha = (float) Math.pow(1 - Math.min(ageScaled, 1), 0.25);
+        this.particleAlpha = (float) Math.pow(1 - Math.min(ageScaled, 1), 0.25) * 0.7F; //alpha correction as 1.7 particles are less opaque
 
-        this.particleScale = (float) ((0.25 + 1 - Math.pow(1 - ageScaled, 4) + (this.particleAge + partialTicks) * 0.02) * this.particleScale);
 
         GlStateManager.color(particleRed, particleGreen, particleBlue, particleAlpha * 0.5F);
         GlStateManager.depthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableAlpha();
+        GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569F);
 
-        //Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        newScale = (0.25 + 1 - Math.pow(1 - ageScaled, 4) + (this.particleAge + partialTicks) * 0.02) * this.particleScale;
+        newScale = (float) (0.25 + 1 - Math.pow(1 - ageScaled, 4) + (this.particleAge + partialTicks) * 0.02) * this.particleScale;
         super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 
