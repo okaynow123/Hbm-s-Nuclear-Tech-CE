@@ -39,8 +39,7 @@ public class ParticleFXRotating extends Particle {
         int lightMapK = brightness & 65535;
         Vec3d[] avec3d = new Vec3d[]{new Vec3d((double) (-rotationX * scale - rotationXY * scale), (double) (-rotationZ * scale), (double) (-rotationYZ * scale - rotationXZ * scale)), new Vec3d((double) (-rotationX * scale + rotationXY * scale), (double) (rotationZ * scale), (double) (-rotationYZ * scale + rotationXZ * scale)), new Vec3d((double) (rotationX * scale + rotationXY * scale), (double) (rotationZ * scale), (double) (rotationYZ * scale + rotationXZ * scale)), new Vec3d((double) (rotationX * scale - rotationXY * scale), (double) (-rotationZ * scale), (double) (rotationYZ * scale - rotationXZ * scale))};
 
-        float rotation = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
-        //float rotation = this.prevParticleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
+        float rotation = this.prevParticleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
         float f9 = MathHelper.cos(rotation * 0.5F);
         float f10 = MathHelper.sin(rotation * 0.5F) * (float) cameraViewDir.x;
         float f11 = MathHelper.sin(rotation * 0.5F) * (float) cameraViewDir.y;
