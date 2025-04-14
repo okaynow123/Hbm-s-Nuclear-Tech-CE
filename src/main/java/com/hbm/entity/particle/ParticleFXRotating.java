@@ -44,7 +44,7 @@ public class ParticleFXRotating extends Particle {
         float f10 = MathHelper.sin(rotation * 0.5F) * (float) cameraViewDir.x;
         float f11 = MathHelper.sin(rotation * 0.5F) * (float) cameraViewDir.y;
         float f12 = MathHelper.sin(rotation * 0.5F) * (float) cameraViewDir.z;
-        Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12);
+        Vec3d vec3d = new Vec3d((double) f10, (double) f11, (double) f12); //FIXME: doesnt spin, jitters around
 
         for (int l = 0; l < 4; ++l) {
             Vec3d v = avec3d[l];

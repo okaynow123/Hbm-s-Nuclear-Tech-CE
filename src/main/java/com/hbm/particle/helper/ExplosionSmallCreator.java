@@ -49,7 +49,7 @@ public class ExplosionSmallCreator implements IParticleCreator {
         if (dist < 200) {
             SoundEvent sound = dist < 80 ? HBMSoundHandler.explosionSmallNear : HBMSoundHandler.explosionSmallFar;
             Minecraft.getMinecraft().getSoundHandler().playDelayedSound(
-                    new PositionedSoundRecord(sound, SoundCategory.BLOCKS, 100F, 1.0F, (float) x, (float) y, (float) z),
+                    new PositionedSoundRecord(sound, SoundCategory.PLAYERS, 100F, 1.0F, (float) x, (float) y, (float) z),
                     (int) (dist / speedOfSound)
             );
         }
