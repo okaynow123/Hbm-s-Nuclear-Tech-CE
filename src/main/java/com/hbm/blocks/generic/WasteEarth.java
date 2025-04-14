@@ -6,10 +6,8 @@ import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockMushroom;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,18 +25,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
-import java.util.Set;
-import java.util.Arrays;
-import java.util.HashSet;
 
 public class WasteEarth extends Block {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    public static final Set<Block> RenewableBlocks = new HashSet<>(Arrays.asList(
-            ModBlocks.waste_earth,
-            ModBlocks.waste_dirt,
-            ModBlocks.waste_mycelium
-    ));
 
     public WasteEarth(Material materialIn, boolean tick, String s) {
         super(materialIn);
@@ -120,15 +110,10 @@ public class WasteEarth extends Block {
     }
 
     @Override
-    public void updateTick(World world, BlockPos pos1, IBlockState state, Random rand) {
-        if (RenewableBlocks.contains(this)) {
-
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+        if (this == ModBlocks.waste_earth || this == ModBlocks.waste_dirt || this == ModBlocks.waste_mycelium) {
             if (GeneralConfig.enableAutoCleanup) {
-                world.setBlockState(pos1, Blocks.DIRT.getDefaultState());
-            }
-
-            if (world.getBlockState(pos1.up()).getBlock() instanceof BlockMushroom) {
-                world.setBlockState(pos1.up(), ModBlocks.mush.getDefaultState());
+                world.setBlockState(pos, Blocks.DIRT.getDefaultState());
             }
         }
     }

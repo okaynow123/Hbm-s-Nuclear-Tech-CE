@@ -11,21 +11,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-
+// foont: todo:  should be modified when plantableOn is implemented
 public class WasteMycelium extends WasteEarth {
-
-    private static final List<Block> spreadsToBlocks = Arrays.asList(
-            Blocks.DIRT,
-            Blocks.GRASS,
-            Blocks.MYCELIUM,
-            ModBlocks.waste_earth,
-            ModBlocks.waste_dirt
-    );
-
 
     public WasteMycelium(Material materialIn, SoundType type, boolean tick, String s) {
         super(materialIn, type, tick, s);
@@ -45,9 +35,10 @@ public class WasteMycelium extends WasteEarth {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
                     BlockPos adjacentBlockPos = new BlockPos(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
-                    Block adjacentBlock = world.getBlockState(adjacentBlockPos).getBlock();
+                    Block adjB = world.getBlockState(adjacentBlockPos).getBlock();
                     IBlockState aboveAdjacentBlockState = world.getBlockState(adjacentBlockPos.up());
-                    if (!aboveAdjacentBlockState.isOpaqueCube() && spreadsToBlocks.contains(adjacentBlock)) {
+                    if (!aboveAdjacentBlockState.isOpaqueCube() &&
+                            (adjB == Blocks.DIRT || adjB == Blocks.GRASS || adjB == Blocks.MYCELIUM || adjB == ModBlocks.waste_earth || adjB == ModBlocks.waste_dirt)) {
                         validPositions.add(adjacentBlockPos);
                     }
                 }
