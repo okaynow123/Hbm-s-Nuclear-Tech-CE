@@ -56,8 +56,7 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
         this.prevParticleAngle = this.particleAngle;
 
         float ageScaled = (float) this.particleAge / (float) this.particleMaxAge;
-        this.particleAngle += (1 - ageScaled) * 5 * ((rand.nextInt(100) % 2) - 0.5);
-
+        this.particleAngle += (float) ((1 - ageScaled) * 5 * ((this.hashCode() % 2) - 0.5));
         this.motionX *= 0.65D;
         this.motionZ *= 0.65D;
 
