@@ -391,7 +391,7 @@ public class ResourceManager {
 	public static final IModelCustom dud = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bombs/BalefireCrashed.obj")).asVBO();
 
 	//Landmines
-	public static final IModelCustom mine_ap = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mine_ap.obj")).asVBO();
+	public static final IModelCustom mine_ap = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bombs/ap_mine.obj")).asVBO();
 	public static final IModelCustom mine_he = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mine_he.obj")).asVBO();
 	public static final IModelCustom mine_marelet = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bombs/marelet.obj")).asVBO();
 	public static final IModelCustom mine_fat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mine_fat.obj")).asVBO();
@@ -684,7 +684,12 @@ public class ResourceManager {
 	public static final ResourceLocation brandon_explosive = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/brandon_drum.png");
 	
 	//Landmines
-	public static final ResourceLocation mine_ap_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_ap.png");
+
+	public static final ResourceLocation mine_ap_grass_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_ap_grass.png");
+	public static final ResourceLocation mine_ap_desert_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_ap_desert.png");
+	public static final ResourceLocation mine_ap_snow_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_ap_snow.png");
+	public static final ResourceLocation mine_ap_stone_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_ap_stone.png");
+
 	public static final ResourceLocation mine_marelet_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_marelet.png");
 	public static final ResourceLocation mine_shrap_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_shrap.png");
 	public static final ResourceLocation mine_fat_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_fat.png");

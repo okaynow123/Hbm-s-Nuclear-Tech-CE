@@ -1271,15 +1271,17 @@ public class ItemRenderLibrary {
 
         renderers.put(Item.getItemFromBlock(ModBlocks.mine_ap), new ItemRenderBase() {
             public void renderInventory() {
-                GL11.glScaled(8, 8, 8);
+                GL11.glScaled(8,8,8);
             }
 
             public void renderCommon() {
-                GL11.glScaled(6, 6, 6);
+                GL11.glScaled(1.25, 1.25, 1.25);
                 GL11.glRotatef(22.5F, 0F, 1F, 0F);
                 GlStateManager.disableCull();
-                bindTexture(ResourceManager.mine_ap_tex);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.mine_ap_grass_tex);
                 ResourceManager.mine_ap.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
                 GlStateManager.enableCull();
             }
         });

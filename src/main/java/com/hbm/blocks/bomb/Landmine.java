@@ -36,19 +36,23 @@ import java.util.Random;
 
 public class Landmine extends BlockContainer implements IBomb {
 
+
+    public double range;
+    public double height;
     public static final float f = 0.0625F;
-    public static final AxisAlignedBB AP_BOX = new AxisAlignedBB(6 * f, 0.0F, 6 * f, 10 * f, 2 * f, 10 * f);
+    public static final AxisAlignedBB AP_BOX = new AxisAlignedBB(5 * f, 0.0F, 5 * f, 11 * f, 1 * f, 11 * f);
     public static final AxisAlignedBB HE_BOX = new AxisAlignedBB(4 * f, 0.0F, 4 * f, 12 * f, 2 * f, 12 * f);
-    public static final AxisAlignedBB SHRAP_BOX = new AxisAlignedBB(4 * f, 0.0F, 4 * f, 12 * f, 2 * f, 12 * f);
+    public static final AxisAlignedBB SHRAP_BOX = new AxisAlignedBB(5 * f, 0.0F, 5 * f, 11 * f, 1 * f, 11 * f);
     public static final AxisAlignedBB FAT_BOX = new AxisAlignedBB(5 * f, 0.0F, 4 * f, 11 * f, 6 * f, 12 * f);
     public static boolean safeMode = false;
     private static Random rand = new Random();
 
-    public Landmine(Material materialIn, String s) {
+    public Landmine(Material materialIn, String s, double range, double height) {
         super(materialIn);
         this.setTranslationKey(s);
         this.setRegistryName(s);
-
+        this.range = range;
+        this.height = height;
         ModBlocks.ALL_BLOCKS.add(this);
     }
 

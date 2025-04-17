@@ -45,9 +45,11 @@ public class ExplosionKnockbackPacket implements IMessage {
         public IMessage onMessage(ExplosionKnockbackPacket m, MessageContext ctx) {
 
             EntityPlayer thePlayer = Minecraft.getMinecraft().player;
-            thePlayer.motionX += m.motionX;
-            thePlayer.motionY += m.motionY;
-            thePlayer.motionZ += m.motionZ;
+            if(thePlayer != null) {
+                thePlayer.motionX += m.motionX;
+                thePlayer.motionY += m.motionY;
+                thePlayer.motionZ += m.motionZ;
+            }
 
             return null;
         }

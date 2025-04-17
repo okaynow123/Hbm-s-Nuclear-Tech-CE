@@ -645,10 +645,10 @@ public class ModBlocks {
 	public static final Block crashed_balefire = new BlockCrashedBomb(Material.IRON, "crashed_bomb").setCreativeTab(MainRegistry.nukeTab).setBlockUnbreakable().setResistance(100.0F);
 	public static final Block fireworks = new BlockFireworks(Material.IRON, "fireworks").setCreativeTab(MainRegistry.nukeTab).setResistance(5.0F);
 
-	public static final Block mine_ap = new Landmine(Material.IRON, "mine_ap").setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
-	public static final Block mine_he = new Landmine(Material.IRON, "mine_he").setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
-	public static final Block mine_shrap = new Landmine(Material.IRON, "mine_shrap").setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
-	public static final Block mine_fat = new Landmine(Material.IRON, "mine_fat").setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
+	public static final Block mine_ap = new Landmine(Material.IRON, "mine_ap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
+	public static final Block mine_he = new Landmine(Material.IRON, "mine_he", 2D, 5D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
+	public static final Block mine_shrap = new Landmine(Material.IRON, "mine_shrap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
+	public static final Block mine_fat = new Landmine(Material.IRON, "mine_fat", 2.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 
 	public static final Block flame_war = new BombFlameWar(Material.IRON, "flame_war").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);
 	public static final Block float_bomb = new BombFloat(Material.IRON, "float_bomb").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);
