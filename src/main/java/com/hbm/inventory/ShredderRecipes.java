@@ -278,18 +278,6 @@ public class ShredderRecipes {
 		ShredderRecipes.setRecipe(ModItems.ingot_polymer, new ItemStack(ModItems.powder_polymer, 1));
 		ShredderRecipes.setRecipe(ModItems.ingot_bakelite, new ItemStack(ModItems.powder_bakelite, 1));
 
-		ShredderRecipes.setRecipe(ModBlocks.turret_light, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModBlocks.turret_heavy, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModBlocks.turret_flamer, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModBlocks.turret_rocket, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModBlocks.turret_cwis, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModBlocks.turret_tau, new ItemStack(ModItems.powder_steel, 16));
-		ShredderRecipes.setRecipe(ModItems.turret_light_ammo, new ItemStack(Items.GUNPOWDER, 4));
-		ShredderRecipes.setRecipe(ModItems.turret_heavy_ammo, new ItemStack(Items.GUNPOWDER, 4));
-		ShredderRecipes.setRecipe(ModItems.turret_flamer_ammo, new ItemStack(Items.GUNPOWDER, 4));
-		ShredderRecipes.setRecipe(ModItems.turret_rocket_ammo, new ItemStack(Items.GUNPOWDER, 4));
-		ShredderRecipes.setRecipe(ModItems.turret_cwis_ammo, new ItemStack(Items.GUNPOWDER, 4));
-		ShredderRecipes.setRecipe(ModItems.turret_tau_ammo, new ItemStack(ModItems.powder_uranium, 4));
 		ShredderRecipes.setRecipe(ModBlocks.ore_nether_coal, new ItemStack(ModItems.coal_infernal, 2));
 		ShredderRecipes.setRecipe(ModBlocks.ore_cinnabar, new ItemStack(ModItems.cinnabar, 2));
 		

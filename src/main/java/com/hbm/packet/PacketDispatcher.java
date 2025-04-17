@@ -45,10 +45,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(AuxButtonPacket.Handler.class, AuxButtonPacket.class, i++, Side.SERVER);
 		//Fluid pipe type update for rendering
 		wrapper.registerMessage(TEFluidTypePacketTest.Handler.class, TEFluidTypePacketTest.class, i++, Side.CLIENT);
-		//Turret basic packet for making the client has the right ammo amounts
-		wrapper.registerMessage(TETurretPacket.Handler.class, TETurretPacket.class, i++, Side.CLIENT);
-		//CIWS has a really long range, so stuff might not even exist on client, so rotation needs to be sent
-		wrapper.registerMessage(TETurretCIWSPacket.Handler.class, TETurretCIWSPacket.class, i++, Side.CLIENT);
 		//Packet for updating the bomber flying sound, I think
 		wrapper.registerMessage(LoopedEntitySoundPacket.Handler.class, LoopedEntitySoundPacket.class, i++, Side.CLIENT);
 		//Missile type for render sync with client
