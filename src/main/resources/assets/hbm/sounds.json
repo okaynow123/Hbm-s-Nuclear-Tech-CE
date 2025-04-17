@@ -175,8 +175,22 @@
     "weapon.hit_metal": {"category": "player", "sounds": ["hbm:weapon/hit_metal0", "hbm:weapon/hit_metal1"]},
     "weapon.hit_flesh": {"category": "player", "sounds": ["hbm:weapon/hit_flesh0", "hbm:weapon/hit_flesh1", "hbm:weapon/hit_flesh2", "hbm:weapon/hit_flesh3"]},
     "weapon.nuclearExplosion": {"category": "player", "sounds": [{"name": "hbm:weapon/nuclear_explosion", "stream": true}]},
-    "weapon.explosionSmallNear": {"category": "player", "sounds": ["hbm:weapon/explosionSmallNear1", "hbm:weapon/explosionSmallNear2", "hbm:weapon/explosionSmallNear3"]},
-    "weapon.explosionSmallFar": {"category": "player", "sounds": ["hbm:weapon/explosionSmallFar1", "hbm:weapon/explosionSmallFar2"]},
+    "weapon.explosion_small_near": {
+      "category": "player",
+      "sounds": [
+        "hbm:weapon/explosion_small_near1",
+        "hbm:weapon/explosion_small_near2",
+        "hbm:weapon/explosion_small_near3"
+      ]
+    },
+    "weapon.explosion_small_far": {
+      "category": "player",
+      "sounds": [
+        "hbm:weapon/explosion_small_far1",
+        "hbm:weapon/explosion_small_far2"
+      ]
+    },
+
 
 
 

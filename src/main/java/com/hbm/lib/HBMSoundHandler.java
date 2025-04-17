@@ -300,8 +300,8 @@ public final class HBMSoundHandler {
 
     public static void init() {
 
-        explosionSmallNear = register("weapon.explosionSmallNear");
-        explosionSmallFar = register("weapon.explosionSmallFar");
+        explosionSmallNear = register("weapon.explosion_small_near");
+        explosionSmallFar  = register("weapon.explosion_small_far");
         assemblerOperate = register("block.assembleroperate");
         fel = register("block.fel");
         pressOperate = register("block.pressoperate");
