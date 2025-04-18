@@ -8,7 +8,6 @@ import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ContaminationUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +19,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -208,25 +206,21 @@ public class BlockHazard extends BlockBase {
 
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
-        if (entity instanceof EntityLivingBase)
-            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
+        if (!(entity instanceof EntityLivingBase)) return;
 
-
-        if (entity instanceof EntityLivingBase && this == ModBlocks.brick_jungle_mystic) {
+        HazardSystem.applyHazards(this, (EntityLivingBase)entity);
+        if (this == ModBlocks.brick_jungle_mystic) {
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.taint, 15 * 20, 2));
-            return;
         }
     }
 
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
-        if (entity instanceof EntityLivingBase)
-            HazardSystem.applyHazards(this, (EntityLivingBase)entity);
+        if (!(entity instanceof EntityLivingBase)) return;
 
-
-        if (entity instanceof EntityLivingBase && this == ModBlocks.brick_jungle_mystic) {
+        HazardSystem.applyHazards(this, (EntityLivingBase) entity);
+        if (this == ModBlocks.brick_jungle_mystic) {
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(HbmPotion.taint, 15 * 20, 2));
-            return;
         }
     }
 
