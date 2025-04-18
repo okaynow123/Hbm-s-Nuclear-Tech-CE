@@ -13,11 +13,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -57,6 +59,12 @@ public class BlockHazardMeta extends BlockHazard implements ICustomBlockItem {
 		return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
 	}
 
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		return new ItemStack(this, 1, this.getMetaFromState(state));
+	}
+
+	@Override
 	public void registerItem() {
 		ItemBlock itemBlock = new MetaBlockItem(this);
 		itemBlock.setRegistryName(this.getRegistryName());
@@ -69,7 +77,6 @@ public class BlockHazardMeta extends BlockHazard implements ICustomBlockItem {
 		int meta = stack.getMetadata();
 		world.setBlockState(pos, this.getStateFromMeta(meta), 3);
 	}
-
 
 
 	@Override
