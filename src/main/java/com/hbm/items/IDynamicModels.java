@@ -1,8 +1,6 @@
 package com.hbm.items;
 
-import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

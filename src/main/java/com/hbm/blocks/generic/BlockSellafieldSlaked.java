@@ -6,6 +6,7 @@ import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -44,7 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * This is a 1:1 Sellafield block ported from 1.7.10, but also allows for retrieval of any variant of the block in game, as it's not based on renderer
  * Only limitation is that I was not able to cram all the meta blocks into single block due to 4 bit restriction (it would have been 5 bits to do so),
@@ -58,24 +58,16 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     public static final int TEXTURE_VARIANTS = sellafieldTextures.length;
     public static final int META_COUNT = TEXTURE_VARIANTS;
     public static final String basePath = "blocks/";
+
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, sellafieldTextures.length - 1);
     public static final PropertyBool NATURAL = PropertyBool.create("natural");
-    //public static List<BlockSellafieldSlaked> INSTANCES = new ArrayList<>();
+
     public static final boolean showMetaInCreative = true;
     protected boolean isNatural = true;
 
     public BlockSellafieldSlaked(Material mat, SoundType type, String s) {
         super(mat, type, s);
         INSTANCES.add(this);
-    }
-
-
-//    public static void registerModels(){
-//        INSTANCES.forEach(BlockSellafieldSlaked::registerModel);
-//    }
-
-    public static void bakeModels(ModelBakeEvent event) {
-        INSTANCES.forEach(blockSellafieldSlaked -> blockSellafieldSlaked.bakeModel(event));
     }
 
     public static int getVariantForPos(BlockPos pos) {
@@ -201,7 +193,6 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
 
 
     @Override
-
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         boolean natural = state.getValue(NATURAL);
         int variant = state.getValue(VARIANT);
@@ -210,10 +201,6 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
             meta = 0;
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
     }
-
-//    public static void registerSprites(TextureMap map){
-//        INSTANCES.forEach(blockSellafield -> blockSellafield.registerSprite(map));
-//    }
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
@@ -251,7 +238,6 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         @Override
         public String getTranslationKey(ItemStack stack) {
             return super.getTranslationKey() + "_name";
-
         }
 
         public String getItemStackDisplayName(ItemStack stack) {
