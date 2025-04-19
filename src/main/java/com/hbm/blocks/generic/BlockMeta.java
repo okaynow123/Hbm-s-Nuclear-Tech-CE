@@ -43,11 +43,12 @@ import java.util.List;
 import java.util.Random;
 
 
-public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicModels {
+public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicModels, IMetaBlock {
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
     public final short META_COUNT;
+
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
 
@@ -56,41 +57,16 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     }
 
-    public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
-        super(mat, type, s);
-        META_COUNT = metaCount;
-    }
-
-    public BlockMeta(Material mat, SoundType type, String s, BlockBakeFrame... blockFrames) {
-        super(mat, type, s);
-        this.blockFrames = blockFrames;
-        META_COUNT = (short) blockFrames.length;
-        INSTANCES.add(this);
-    }
-
-    public BlockMeta(Material mat, SoundType type, String s, String... simpleModelTextures) {
-        super(mat, type, s);
-        this.blockFrames = BlockBakeFrame.simpleModelArray(simpleModelTextures);
-        META_COUNT = (short) blockFrames.length;
-        INSTANCES.add(this);
-    }
-
     public BlockMeta(Material m, String s) {
         super(m, s);
-        META_COUNT = 15;
         INSTANCES.add(this);
+        META_COUNT = 15;
     }
 
-    public BlockMeta(Material mat, SoundType type, String s) {
+    public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
         super(mat, type, s);
-        META_COUNT = 15;
         INSTANCES.add(this);
-    }
-
-    public BlockMeta(Material mat, SoundType type, String s, int metaCount) {
-        super(mat, type, s);
-        META_COUNT = (short) metaCount;
-        INSTANCES.add(this);
+        META_COUNT = metaCount;
     }
 
     public BlockMeta(Material m, String s, short metaCount, boolean showMetaInCreative) {
@@ -98,6 +74,16 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         META_COUNT = metaCount;
         this.showMetaInCreative = showMetaInCreative;
         INSTANCES.add(this);
+    }
+
+    public BlockMeta(Material mat, SoundType type, String s, BlockBakeFrame... blockFrames) {
+        this(mat, type, s, (short) blockFrames.length);
+        this.blockFrames = blockFrames;
+    }
+
+    public BlockMeta(Material mat, SoundType type, String s, String... simpleModelTextures) {
+        this(mat, type, s, (short) simpleModelTextures.length);
+        this.blockFrames = BlockBakeFrame.simpleModelArray(simpleModelTextures);
     }
 
     @SideOnly(Side.CLIENT)
@@ -111,12 +97,13 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
             }
     }
 
-    public static void bakeModels(ModelBakeEvent event) {
-        INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
-    }
-
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
+        if (blockFrames == null || blockFrames.length == 0) {
+            MainRegistry.logger.error("No block frames defined for " + getRegistryName());
+            throw new RuntimeException("No block frames defined for " + getRegistryName());
+        }
+
         for (BlockBakeFrame frame : blockFrames) {
             frame.registerBlockTextures(map);
         }
@@ -142,8 +129,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 
@@ -168,11 +153,9 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META));
     }
-
 
     @Override
     protected BlockStateContainer createBlockState() {
