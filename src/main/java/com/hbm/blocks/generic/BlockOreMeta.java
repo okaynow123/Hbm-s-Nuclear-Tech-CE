@@ -49,7 +49,6 @@ import static com.hbm.blocks.OreEnumUtil.OreEnum;
 public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBlockItem {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    //public static final List<BlockOreMeta> INSTANCES = new ArrayList<>();
     public final short META_COUNT;
     public final boolean showMetaInCreative;
     public final String baseTextureName;
@@ -64,16 +63,6 @@ public class BlockOreMeta extends BlockMeta implements IDynamicModels, ICustomBl
         INSTANCES.add(this);
         showMetaInCreative = true;
     }
-
-//    public static void bakeModels(ModelBakeEvent event) {
-//        for (BlockOreMeta block : INSTANCES) {
-//            block.bakeModel(event);
-//        }
-//    }
-//
-//    public static void registerSprites(TextureMap map) {
-//        for (BlockOreMeta item : INSTANCES) item.registerSprite(map);
-//    }
 
     @SideOnly(Side.CLIENT)
     public void registerModel() {
