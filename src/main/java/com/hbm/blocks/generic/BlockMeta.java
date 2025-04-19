@@ -38,7 +38,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -48,7 +47,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    //public static List<BlockMeta> INSTANCES = new ArrayList<>();
     public final short META_COUNT;
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
@@ -57,7 +55,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         return this.getDefaultState().withProperty(META, rand.nextInt(META_COUNT));
 
     }
-
 
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
         super(mat, type, s);
@@ -103,13 +100,9 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
     }
 
-    public static void registerSprites(TextureMap map) {
-        INSTANCES.forEach(item -> item.registerSprite(map));
-    }
-
     @SideOnly(Side.CLIENT)
     public void registerModel() {
-            for (int meta = 0; meta <= this.META_COUNT; meta++) {
+            for (int meta = 0; meta < this.META_COUNT; meta++) {
                 ModelLoader.setCustomModelResourceLocation(
                         Item.getItemFromBlock(this),
                         meta,
@@ -131,7 +124,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        for (int meta = 0; meta <= META_COUNT - 1; meta++) {
+        for (int meta = 0; meta < META_COUNT; meta++) {
             BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
             try {
                 IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
@@ -153,8 +146,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         }
     }
-
-
 
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
@@ -212,7 +203,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         @SideOnly(Side.CLIENT)
         public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
             if (this.isInCreativeTab(tab)) {
-                for (int i = 0; i <= metaBlock.META_COUNT - 1; i++) {
+                for (int i = 0; i < metaBlock.META_COUNT; i++) {
                     list.add(new ItemStack(this, 1, i));
                 }
             }
@@ -226,7 +217,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         @Override
         public void registerModels() {
-            for (int meta = 0; meta <= metaBlock.META_COUNT - 1; meta++) {
+            for (int meta = 0; meta < metaBlock.META_COUNT; meta++) {
                 MainRegistry.logger.info("Registering model for " + this.block.getRegistryName() + " meta=" + meta);
                 ModelLoader.setCustomModelResourceLocation(this, meta,
                         new ModelResourceLocation(this.getRegistryName(), "meta=" + meta));

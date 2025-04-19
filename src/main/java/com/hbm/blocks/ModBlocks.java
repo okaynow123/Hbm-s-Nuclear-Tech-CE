@@ -475,13 +475,13 @@ public class ModBlocks {
 	public static final Block waste_earth = new WasteEarth(Material.GRASS, SoundType.GROUND, true, "waste_earth").setHardness(0.5F).setResistance(1.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_dirt = new WasteEarth(Material.GROUND, SoundType.GROUND, true, "waste_dirt").setHardness(0.5F).setResistance(1.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_gravel = new WasteSand(Material.GROUND, SoundType.GROUND, "waste_gravel").setHardness(0.5F).setResistance(1.0F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block waste_sandstone = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_sandstone", (short) 6).setCreativeTab(MainRegistry.resourceTab).setHardness(3.0F).setResistance(6.0F);
+	public static final Block waste_sandstone = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_sandstone", (short) 7).setCreativeTab(MainRegistry.resourceTab).setHardness(3.0F).setResistance(6.0F);
 	public static final Block waste_sand = new WasteSand(Material.SAND, SoundType.SAND, "waste_sand").setHardness(0.5F).setResistance(1.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_trinitite = new WasteSand(Material.SAND, SoundType.SAND, "waste_trinitite").setHardness(0.5F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block waste_sandstone_red = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_sandstone_red", (short) 6).setCreativeTab(MainRegistry.resourceTab).setHardness(3.0F).setResistance(6.0F);
+	public static final Block waste_sandstone_red = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_sandstone_red", (short) 7).setCreativeTab(MainRegistry.resourceTab).setHardness(3.0F).setResistance(6.0F);
 	public static final Block waste_sand_red = new WasteSand(Material.SAND, SoundType.SAND, "waste_sand_red").setHardness(0.5F).setResistance(1.0F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_trinitite_red = new WasteSand(Material.SAND, SoundType.SAND, "waste_trinitite_red").setHardness(0.5F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block waste_terracotta = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_terracotta", (short) 6).setCreativeTab(MainRegistry.resourceTab).setHardness(4.0F).setResistance(8.0F);
+	public static final Block waste_terracotta = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_terracotta", (short) 7).setCreativeTab(MainRegistry.resourceTab).setHardness(4.0F).setResistance(8.0F);
 
 	public static final Block waste_log = new WasteLog(Material.WOOD, SoundType.WOOD, "waste_log").setHardness(5.0F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_planks = new BlockFuel(Material.WOOD, "waste_planks", 5, 5, 1600).setHardness(0.5F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
