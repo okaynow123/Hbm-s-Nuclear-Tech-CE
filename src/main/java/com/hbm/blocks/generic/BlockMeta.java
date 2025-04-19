@@ -190,7 +190,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     }
 
 
-    public class MetaBlockItem extends ItemBlock implements IModelRegister {
+    public static class MetaBlockItem extends ItemBlock implements IModelRegister {
         BlockMeta metaBlock = (BlockMeta) this.block;
 
         public MetaBlockItem(Block block) {

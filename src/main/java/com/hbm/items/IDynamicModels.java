@@ -13,6 +13,8 @@ import java.util.List;
  * Will automatically bake once correct methods are supplied
  */
 public interface IDynamicModels {
+
+    /** Should be populated by implementors in constructors. */
     List<IDynamicModels> INSTANCES = new ArrayList<>();
 
     @SideOnly(Side.CLIENT)
