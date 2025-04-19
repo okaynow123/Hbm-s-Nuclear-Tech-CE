@@ -19,7 +19,7 @@ public interface IDynamicModels {
 
     @SideOnly(Side.CLIENT)
     static void bakeModels(ModelBakeEvent event) {
-            INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
+        INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
     }
 
     void bakeModel(ModelBakeEvent event);

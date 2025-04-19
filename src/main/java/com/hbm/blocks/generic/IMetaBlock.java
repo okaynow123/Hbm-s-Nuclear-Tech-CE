@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Property;
 
 import java.util.List;
 
@@ -17,17 +18,6 @@ import java.util.List;
  * This interface defines methods that HAS TO be implemented by blocks that use metadata.
  */
 public interface IMetaBlock {
-    /**
-     * Gets the PropertyInteger used for metadata.
-     * @return The PropertyInteger used for metadata.
-     */
-    PropertyInteger getMetaProperty();
-
-    /**
-     * Gets the maximum metadata value.
-     * @return The maximum metadata value.
-     */
-    short getMetaCount();
 
     /**
      * Gets the metadata value from the block state.

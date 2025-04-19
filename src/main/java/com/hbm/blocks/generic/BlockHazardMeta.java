@@ -17,21 +17,38 @@ import java.util.stream.IntStream;
  */
 public class BlockHazardMeta extends BlockMeta {
 
-    public BlockHazardMeta(Material mat, SoundType type, String registryName, short metaCount) {
+
+    public BlockHazardMeta(Material mat, SoundType type, String registryName, String locPrefix, BlockBakeFrame.BlockForm bForm, short metaCount) {
         super(mat, type, registryName, metaCount);
         if (metaCount < 0 || metaCount > 15) {
             throw new IllegalArgumentException(String.format("metaCount must be between 0 and 15 (inclusive), in %s", registryName));
         }
-        this.blockFrames = assignBlockFrames(registryName);
+        this.blockFrames = generateBlockFrames(registryName, locPrefix, bForm);
     }
 
-    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
+    protected BlockBakeFrame[] generateBlockFrames(String registryName, String locPrefix, BlockBakeFrame.BlockForm blockForm) {
+        String locTemplate = locPrefix + registryName + "%s%d";
         return IntStream.range(0, META_COUNT)
                 .mapToObj(id -> {
-                    String topTexture = registryName + "_top_" + id;
-                    String bottomTexture = registryName + "_bottom_" + id;
-                    String sideTexture = registryName + "_normal_" + id;
-                    return new BlockBakeFrame(topTexture, bottomTexture, sideTexture);
+                    switch (blockForm) {
+                        case ALL -> {
+                            return new BlockBakeFrame(String.format(locTemplate, "_", id));
+                        }
+                        case PILLAR_BOTTOM -> {
+                            return new BlockBakeFrame(
+                                    String.format(locTemplate, "_top_", id),
+                                    String.format(locTemplate, "_side_", id),
+                                    String.format(locTemplate, "_bottom_", id)
+                            );
+                        }
+                        case PILLAR -> {
+                            return new BlockBakeFrame(
+                                    String.format(locTemplate, "_top_", id),
+                                    String.format(locTemplate, "_side_", id)
+                            );
+                        }
+                        default -> throw new IllegalStateException("Unexpected value: " + blockForm);
+                    }
                 })
                 .toArray(BlockBakeFrame[]::new);
     }
