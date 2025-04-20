@@ -4,7 +4,6 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
-import com.hbm.util.Compat;
 
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.*;
@@ -253,7 +252,7 @@ public class HazardRegistry {
 		HazardSystem.register(rod_zirnox_u235_fuel_depleted, makeData(RADIATION, wst * rod_dual * 11F));
 		HazardSystem.register(rod_zirnox_les_fuel_depleted, makeData().addEntry(RADIATION, wst * rod_dual * 15F).addEntry(BLINDING, 20F));
 		HazardSystem.register(rod_zirnox_tritium, makeData(RADIATION, 0.001F * rod_dual));
-		HazardSystem.register(rod_zirnox_zfb_mox_depleted, makeData(RADIATION, wst * rod_dual * 5F));
+		HazardSystem.register(rod_zirnox_zfb_mox_fuel_depleted, makeData(RADIATION, wst * rod_dual * 5F));
 
 		registerOtherWaste(waste_natural_uranium, wst * billet * 11.5F);
 		registerOtherWaste(waste_uranium, wst * billet * 10F);

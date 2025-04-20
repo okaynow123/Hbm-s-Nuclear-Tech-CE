@@ -81,7 +81,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.U235_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_u235_fuel_depleted));
         fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LES_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_les_fuel_depleted));
         fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LITHIUM.ordinal()), new ItemStack(ModItems.rod_zirnox_tritium));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.ZFB_MOX.ordinal()), new ItemStack(ModItems.rod_zirnox_zfb_mox_depleted));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.ZFB_MOX.ordinal()), new ItemStack(ModItems.rod_zirnox_zfb_mox_fuel_depleted));
     }
 
     public TileEntityReactorZirnox() {
