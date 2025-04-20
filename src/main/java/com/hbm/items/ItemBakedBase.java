@@ -21,13 +21,13 @@ public class ItemBakedBase extends ItemBase implements IDynamicModels {
     public ItemBakedBase(String s, String texturePath) {
         super(s);
         this.texturePath = texturePath;
-        IDynamicModels.INSTANCES.add(this);
+        INSTANCES.add(this);
     }
 
     public ItemBakedBase(String s) {
         super(s);
         this.texturePath = s;
-        IDynamicModels.INSTANCES.add(this);
+        INSTANCES.add(this);
     }
 
     @Override

@@ -22,10 +22,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
-public class ItemEnumMulti extends ItemBase implements  IDynamicModels {
+public class ItemEnumMulti extends ItemBase implements IDynamicModels {
 
     public static final String ROOT_PATH = "items/";
-    public static List<ItemEnumMulti> INSTANCES = new ArrayList<>();
     protected final String[] textures;
     //hell yes, now we're thinking with enums!
     protected Class<? extends Enum> theEnum;
@@ -46,21 +45,6 @@ public class ItemEnumMulti extends ItemBase implements  IDynamicModels {
                 .toArray(String[]::new);
     }
 
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModels() {
-        INSTANCES.forEach(ItemEnumMulti::registerModel);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerSprites(TextureMap map) {
-        INSTANCES.forEach(item -> item.registerSprite(map));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void bakeModels(ModelBakeEvent event) {
-        INSTANCES.forEach(item -> item.bakeModel(event));
-    }
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
@@ -86,12 +70,6 @@ public class ItemEnumMulti extends ItemBase implements  IDynamicModels {
         }
     }
 
-
-    @Override
-    public Item setTranslationKey(String unlocalizedName) {
-        super.setTranslationKey(unlocalizedName);
-        return this;
-    }
 
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
@@ -137,6 +115,12 @@ public class ItemEnumMulti extends ItemBase implements  IDynamicModels {
 
     public Class<? extends Enum> getTheEnum() {
         return theEnum;
+    }
+
+    @Override
+    public Item setTranslationKey(String unlocalizedName) {
+        super.setTranslationKey(unlocalizedName);
+        return this;
     }
 
     @Override
