@@ -18,6 +18,7 @@ import com.hbm.inventory.gui.GUIReactorZirnox;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemZirnoxRod;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
+import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -71,17 +72,17 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
     public static final HashMap<RecipesCommon.ComparableStack, ItemStack> fuelMap = new HashMap<RecipesCommon.ComparableStack, ItemStack>();
 
     static {
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_natural_uranium_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.URANIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_uranium_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.TH232.ordinal()), new ItemStack(ModItems.rod_zirnox, 1, EnumZirnoxType.THORIUM_FUEL.ordinal()));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.THORIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_thorium_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.MOX_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_mox_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.PLUTONIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_plutonium_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.U233_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_u233_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.U235_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_u235_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LES_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_les_fuel_depleted));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LITHIUM.ordinal()), new ItemStack(ModItems.rod_zirnox_tritium));
-        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.ZFB_MOX.ordinal()), new ItemStack(ModItems.rod_zirnox_zfb_mox_fuel_depleted));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.NATURAL_URANIUM_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.URANIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.TH232_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox, 1, EnumZirnoxType.THORIUM_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.THORIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.THORIUM_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.MOX_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.MOX_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.PLUTONIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.PLUTONIUM_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.U233_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U233_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.U235_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U235_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LES_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.LES_FUEL.ordinal()));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.LITHIUM_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_tritium));
+        fuelMap.put(new RecipesCommon.ComparableStack(ModItems.rod_zirnox, 1, EnumZirnoxType.ZFB_MOX_FUEL.ordinal()), new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.ZFB_MOX_FUEL.ordinal()));
     }
 
     public TileEntityReactorZirnox() {
@@ -324,17 +325,18 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
     // itemstack in slots[id] has to contain ItemZirnoxRod
     private void decay(int id) {
         int decay = getNeighbourCount(id);
-        final EnumZirnoxType num = EnumUtil.grabEnumSafely(EnumZirnoxType.class, inventory.getStackInSlot(id).getItemDamage());
+        ItemStack zirnoxRodItemStack = inventory.getStackInSlot(id);
+        final EnumZirnoxType num = EnumUtil.grabEnumSafely(EnumZirnoxType.class, zirnoxRodItemStack.getItemDamage());
 
         if (!num.breeding)
             decay++;
 
         for (int i = 0; i < decay; i++) {
             this.heat += num.heat;
-            ItemZirnoxRod.incrementLifeTime(inventory.getStackInSlot(id));
+            ItemZirnoxRod.incrementLifeTime(zirnoxRodItemStack);
 
-            if (ItemZirnoxRod.getLifeTime(inventory.getStackInSlot(id)) > num.maxLife) {
-                inventory.setStackInSlot(id, fuelMap.get(new RecipesCommon.ComparableStack(inventory.getStackInSlot(id))).copy());
+            if (ItemZirnoxRod.getLifeTime(zirnoxRodItemStack) > num.maxLife) {
+                inventory.setStackInSlot(id, fuelMap.get(new RecipesCommon.ComparableStack(zirnoxRodItemStack)).copy());
                 break;
             }
         }

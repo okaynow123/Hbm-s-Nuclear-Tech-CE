@@ -564,7 +564,6 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void modelBaking(ModelBakeEvent evt) {
-//        ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
         ItemMold.bakeModels(evt);

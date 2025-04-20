@@ -5,22 +5,13 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class ItemZirnoxRod extends ItemEnumMulti {
 
@@ -32,7 +23,7 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
     public static void incrementLifeTime(ItemStack stack) {
 
-        if(!stack.hasTagCompound())
+        if (!stack.hasTagCompound())
             stack.setTagCompound(new NBTTagCompound());
 
         int time = stack.getTagCompound().getInteger("life");
@@ -42,7 +33,7 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
     public static void setLifeTime(ItemStack stack, int time) {
 
-        if(!stack.hasTagCompound())
+        if (!stack.hasTagCompound())
             stack.setTagCompound(new NBTTagCompound());
 
         stack.getTagCompound().setInteger("life", time);
@@ -50,7 +41,7 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 
     public static int getLifeTime(ItemStack stack) {
 
-        if(!stack.hasTagCompound()) {
+        if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
             return 0;
         }
@@ -58,10 +49,12 @@ public class ItemZirnoxRod extends ItemEnumMulti {
         return stack.getTagCompound().getInteger("life");
     }
 
+    @Override
     public boolean showDurabilityBar(ItemStack stack) {
         return getDurabilityForDisplay(stack) > 0D;
     }
 
+    @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         EnumZirnoxType num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
         return (double) getLifeTime(stack) / (double) num.maxLife;
@@ -102,24 +95,19 @@ public class ItemZirnoxRod extends ItemEnumMulti {
 //    @Override
 //    public void registerSprite(TextureMap map){}
 
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        Enum num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
-        return super.getTranslationKey() + "_" + num.name().toLowerCase(Locale.US);
-    }
 
     public enum EnumZirnoxType {
         NATURAL_URANIUM_FUEL(250_000, 30),
         URANIUM_FUEL(200_000, 50),
-        TH232(20_000, 0, true),
+        TH232_FUEL(20_000, 0, true),
         THORIUM_FUEL(200_000, 40),
         MOX_FUEL(165_000, 75),
         PLUTONIUM_FUEL(175_000, 65),
         U233_FUEL(150_000, 100),
         U235_FUEL(165_000, 85),
         LES_FUEL(150_000, 150),
-        LITHIUM(20_000, 0, true),
-        ZFB_MOX(50_000, 35);
+        LITHIUM_FUEL(20_000, 0, true),
+        ZFB_MOX_FUEL(50_000, 35);
 
         public final int maxLife;
         public final int heat;
@@ -136,17 +124,5 @@ public class ItemZirnoxRod extends ItemEnumMulti {
             this.heat = heat;
             this.breeding = false;
         }
-    }
-
-    public enum EnumZirnoxTypeDepleted {
-        NATURAL_URANIUM_FUEL,
-        URANIUM_FUEL,
-        THORIUM_FUEL,
-        MOX_FUEL,
-        PLUTONIUM_FUEL,
-        U233_FUEL,
-        U235_FUEL,
-        LES_FUEL,
-        ZFB_MOX,
     }
 }

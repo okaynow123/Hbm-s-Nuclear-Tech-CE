@@ -24,6 +24,7 @@ import com.hbm.items.ModItems;
 //import com.hbm.items.machine.BreedingRodType;
 //import com.hbm.items.machine.EnumWatzType;
 
+import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -233,26 +234,27 @@ public class HazardRegistry {
 
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal(), u * rod_dual, wst * rod_dual * 11.5F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.URANIUM_FUEL.ordinal(), uf * rod_dual, wst * rod_dual * 10F, false);
-		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.TH232.ordinal(), th232 * rod_dual, thf * rod_dual, false);
+		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.TH232_FUEL.ordinal(), th232 * rod_dual, thf * rod_dual, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.THORIUM_FUEL.ordinal(), thf * rod_dual, wst * rod_dual * 7.5F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.MOX_FUEL.ordinal(), mox * rod_dual, wst * rod_dual * 10F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.PLUTONIUM_FUEL.ordinal(), puf * rod_dual, wst * rod_dual * 12.5F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.U233_FUEL.ordinal(), u233 * rod_dual, wst * rod_dual * 10F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.U235_FUEL.ordinal(), u235 * rod_dual, wst * rod_dual * 11F, false);
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.LES_FUEL.ordinal(), saf * rod_dual, wst * rod_dual * 15F, false);
-		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.LITHIUM.ordinal(), 0, 0.001F * rod_dual, false);
-		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.ZFB_MOX.ordinal(), mox * rod_dual, wst * rod_dual * 5F, false);
+		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.LITHIUM_FUEL.ordinal(), 0, 0.001F * rod_dual, false);
+		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.ZFB_MOX_FUEL.ordinal(), mox * rod_dual, wst * rod_dual * 5F, false);
 
-		HazardSystem.register(rod_zirnox_natural_uranium_fuel_depleted, makeData(RADIATION, wst * rod_dual * 11.5F));
-		HazardSystem.register(rod_zirnox_uranium_fuel_depleted, makeData(RADIATION, wst * rod_dual * 10F));
-		HazardSystem.register(rod_zirnox_thorium_fuel_depleted, makeData(RADIATION, wst * rod_dual * 7.5F));
-		HazardSystem.register(rod_zirnox_mox_fuel_depleted, makeData(RADIATION, wst * rod_dual * 10F));
-		HazardSystem.register(rod_zirnox_plutonium_fuel_depleted, makeData(RADIATION, wst * rod_dual * 12.5F));
-		HazardSystem.register(rod_zirnox_u233_fuel_depleted, makeData(RADIATION, wst * rod_dual * 10F));
-		HazardSystem.register(rod_zirnox_u235_fuel_depleted, makeData(RADIATION, wst * rod_dual * 11F));
-		HazardSystem.register(rod_zirnox_les_fuel_depleted, makeData().addEntry(RADIATION, wst * rod_dual * 15F).addEntry(BLINDING, 20F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.NATURAL_URANIUM_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 11.5F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 10F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.THORIUM_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 7.5F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.MOX_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 10F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.PLUTONIUM_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 12.5F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U233_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 10F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U235_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 11F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.LES_FUEL.ordinal()), makeData().addEntry(RADIATION, wst * rod_dual * 15F).addEntry(BLINDING, 20F));
+		HazardSystem.register(new ItemStack(rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.ZFB_MOX_FUEL.ordinal()), makeData(RADIATION, wst * rod_dual * 5F));
+
 		HazardSystem.register(rod_zirnox_tritium, makeData(RADIATION, 0.001F * rod_dual));
-		HazardSystem.register(rod_zirnox_zfb_mox_fuel_depleted, makeData(RADIATION, wst * rod_dual * 5F));
 
 		registerOtherWaste(waste_natural_uranium, wst * billet * 11.5F);
 		registerOtherWaste(waste_uranium, wst * billet * 10F);
