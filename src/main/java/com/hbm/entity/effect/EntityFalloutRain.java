@@ -464,7 +464,7 @@ public class EntityFalloutRain extends Entity implements IConstantRenderer, IChu
 				placeBlockFromDist(dist, ModBlocks.waste_sandstone, pos);
 				continue;
 			} else if(bblock == Blocks.RED_SANDSTONE) {
-				placeBlockFromDist(dist, ModBlocks.waste_sandstone_red, pos);
+				placeBlockFromDist(dist, ModBlocks.waste_red_sandstone, pos);
 				continue;
 			} else if(bblock == Blocks.HARDENED_CLAY || bblock == Blocks.STAINED_HARDENED_CLAY) {
 				placeBlockFromDist(dist, ModBlocks.waste_terracotta, pos);

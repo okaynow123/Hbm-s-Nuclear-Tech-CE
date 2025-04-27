@@ -13,7 +13,6 @@ import java.util.Random;
 import java.lang.NoClassDefFoundError;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Level;
 
 import com.hbm.config.CompatibilityConfig;
@@ -647,7 +646,7 @@ public class ExplosionNukeGeneric {
 				return;
 			}
 
-			if(b.getBlock() == ModBlocks.waste_sandstone_red) {
+			if(b.getBlock() == ModBlocks.waste_red_sandstone) {
 				world.setBlockState(pos, Blocks.RED_SANDSTONE.getDefaultState());
 				return;
 			}

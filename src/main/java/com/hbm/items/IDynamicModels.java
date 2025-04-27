@@ -1,8 +1,6 @@
 package com.hbm.items;
 
-import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,29 +13,32 @@ import java.util.List;
  * Will automatically bake once correct methods are supplied
  */
 public interface IDynamicModels {
-    public static List<IDynamicModels> INSTANCES = new ArrayList<>();
+
+    /** Should be populated by implementors in constructors. */
+    List<IDynamicModels> INSTANCES = new ArrayList<>();
 
     @SideOnly(Side.CLIENT)
-    public static void bakeModels(ModelBakeEvent event) {
-            INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
+    static void bakeModels(ModelBakeEvent event) {
+        INSTANCES.forEach(blockMeta -> blockMeta.bakeModel(event));
     }
 
-
-    public void bakeModel(ModelBakeEvent event);
+    void bakeModel(ModelBakeEvent event);
 
 
     @SideOnly(Side.CLIENT)
-    public static void registerModels(){
+    static void registerModels(){
         INSTANCES.forEach(IDynamicModels::registerModel);
     }
 
-    public void registerModel();
+    void registerModel();
+
 
     @SideOnly(Side.CLIENT)
     static void registerSprites(TextureMap map){
-        INSTANCES.forEach(dynamicSpirte -> dynamicSpirte.registerSprite(map));
+        INSTANCES.forEach(dynamicSprite -> dynamicSprite.registerSprite(map));
     }
+
     @SideOnly(Side.CLIENT)
-    public void registerSprite(TextureMap map);
+    void registerSprite(TextureMap map);
 
 }

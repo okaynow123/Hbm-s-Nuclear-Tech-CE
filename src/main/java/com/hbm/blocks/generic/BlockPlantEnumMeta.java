@@ -52,7 +52,7 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta {
     }
 
     @Override
-    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
+    protected BlockBakeFrame[] generateBlockFrames(String registryName) {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)

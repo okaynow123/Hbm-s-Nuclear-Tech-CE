@@ -29,19 +29,19 @@ public abstract class BlockEnumMeta extends BlockMeta {
     }
 
     public BlockEnumMeta(Material mat, SoundType type, String registryName, Class<? extends Enum> blockEnum, boolean multiName, boolean multiTexture) {
-        super(mat, type, registryName, blockEnum.getEnumConstants().length);
+        super(mat, type, registryName, (short) blockEnum.getEnumConstants().length);
         this.blockEnum = blockEnum;
         this.multiName = multiName;
         this.multiTexture = multiTexture;
-        this.blockFrames = assignBlockFrames(registryName);
+        this.blockFrames = generateBlockFrames(registryName);
     }
 
-    protected BlockBakeFrame[] assignBlockFrames(String registryName) {
+    protected BlockBakeFrame[] generateBlockFrames(String registryName) {
         return Arrays.stream(blockEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
                 .map(name -> registryName + "." + name.toLowerCase(Locale.US))
-                .map(texture -> new BlockBakeFrame(texture))
+                .map(BlockBakeFrame::new)
                 .toArray(BlockBakeFrame[]::new);
     }
 

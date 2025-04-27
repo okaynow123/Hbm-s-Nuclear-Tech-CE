@@ -279,7 +279,7 @@ public class EntityFalloutUnderGround extends Entity implements IChunkLoader {
 				placeBlockFromDist(l, ModBlocks.waste_sandstone, pos);
 				return;
 			} else if(bblock == Blocks.RED_SANDSTONE) {
-				placeBlockFromDist(l, ModBlocks.waste_sandstone_red, pos);
+				placeBlockFromDist(l, ModBlocks.waste_red_sandstone, pos);
 				return;
 			} else if(bblock == Blocks.HARDENED_CLAY || bblock == Blocks.STAINED_HARDENED_CLAY) {
 				placeBlockFromDist(l, ModBlocks.waste_terracotta, pos);
