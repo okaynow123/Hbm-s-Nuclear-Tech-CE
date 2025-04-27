@@ -36,7 +36,7 @@ public class WavefrontObjVBO implements IModelCustom {
             data.name = g.name;
 
             FloatBuffer vertexData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * VERTEX_SIZE);
-            FloatBuffer uvData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * UV_SIZE);
+            FloatBuffer uvData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * UV_SIZE); //TODO: I think we can save some memory here
             FloatBuffer normalData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * VERTEX_SIZE);
 
             for(S_Face face : g.faces) {

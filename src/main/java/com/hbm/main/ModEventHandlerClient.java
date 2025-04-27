@@ -499,7 +499,7 @@ public class ModEventHandlerClient {
                         new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
             }
         }
-        if (item instanceof IModelRegister)
+        if (item instanceof IModelRegister && !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer())
             ((IModelRegister) item).registerModels();
 
         if (item == ModItems.chemistry_icon) {

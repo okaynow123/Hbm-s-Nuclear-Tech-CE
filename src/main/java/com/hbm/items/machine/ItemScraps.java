@@ -101,6 +101,7 @@ public class ItemScraps extends ItemAutogen {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
 
         if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {

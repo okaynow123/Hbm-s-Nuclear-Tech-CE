@@ -48,6 +48,7 @@ public class ItemCrucibleTemplate extends Item implements IHasCustomModel {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
 
         CrucibleRecipes.CrucibleRecipe recipe = CrucibleRecipes.indexMapping.get(stack.getItemDamage());

@@ -240,6 +240,7 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
             return super.getTranslationKey() + "_name";
         }
 
+        @SideOnly(Side.CLIENT)
         public String getItemStackDisplayName(ItemStack stack) {
             int meta = stack.getMetadata();
             String name = I18nUtil.resolveKey(this.getTranslationKey() + ".name");
@@ -252,6 +253,7 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
 
 
         @Override
+        @SideOnly(Side.CLIENT)
         public void registerModels() {
             ModelLoader.setCustomModelResourceLocation(this, 0,
                     new ModelResourceLocation(this.getRegistryName(), "variant=1"));
