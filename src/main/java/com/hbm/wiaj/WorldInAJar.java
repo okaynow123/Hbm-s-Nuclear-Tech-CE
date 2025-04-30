@@ -1,5 +1,6 @@
 package com.hbm.wiaj;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
@@ -53,7 +54,19 @@ public class WorldInAJar implements IBlockAccess {
 		
 		return this.blocks[pos.getX()][pos.getY()][pos.getZ()] != null ? this.blocks[pos.getX()][pos.getY()][pos.getZ()] : Blocks.AIR.getBlockState().getBaseState();
 	}
-	
+
+	public IBlockState getBlockState(int x, int y, int z) {
+		return getBlockState(new BlockPos(x,y,z));
+	}
+
+
+	public Block getBlock(int x, int y, int z) {
+		return getBlockState(new BlockPos(x,y,z)).getBlock();
+	}
+	public Block getBlock(BlockPos pos) {
+		return getBlockState(pos).getBlock();
+	}
+
 	public void setBlock(int x, int y, int z, IBlockState b) {
 		if(x < 0 || x >= sizeX || y < 0 || y >= sizeY || z < 0 || z >= sizeZ)
 			return;

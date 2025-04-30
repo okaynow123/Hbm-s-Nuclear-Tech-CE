@@ -18,7 +18,15 @@ public class ParticleRocketFlame extends Particle {
 	private int age;
 	private int maxAge;
 	private int randSeed;
-	
+	public double prevPosX;
+	public double prevPosY;
+	public double prevPosZ;
+	public double posX;
+	public double posY;
+	public double posZ;
+
+
+
 	public ParticleRocketFlame(World worldIn, double posXIn, double posYIn, double posZIn) {
 		super(worldIn, posXIn, posYIn, posZIn);
 		maxAge = 300 + rand.nextInt(50);
@@ -40,7 +48,11 @@ public class ParticleRocketFlame extends Particle {
 		this.particleScale = scale;
 		return this;
 	}
-	
+
+	public void setCollision(boolean bool){
+		this.canCollide = bool;
+	}
+
 	@Override
 	public void onUpdate() {
 		this.prevPosX = this.posX;
