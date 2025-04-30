@@ -1772,6 +1772,26 @@ public class ItemRenderLibrary {
             }
         });
 
+        renderers.put(Item.getItemFromBlock(ModBlocks.turret_himars), new ItemRenderBase( ) {
+            public void renderInventory() {
+                GL11.glTranslatef(0F, -2F, 0F);
+                GL11.glScaled(3.5, 3.5, 3.5);
+            }
+            public void renderCommon() {
+                GL11.glRotatef(-45F, 0F, 0F, 0F);
+                GL11.glScaled(0.5, 0.5, 0.5);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.turret_himars_tex);
+                ResourceManager.turret_himars.renderPart("Base");
+                bindTexture(ResourceManager.turret_himars_tex);
+                ResourceManager.turret_himars.renderPart("Carriage");
+                ResourceManager.turret_himars.renderPart("Launcher");
+                ResourceManager.turret_himars.renderPart("Crane");
+                bindTexture(ResourceManager.turret_himars_tex);
+                ResourceManager.turret_himars.renderPart("TubeStandard");
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }});
+
         renderers.put(Item.getItemFromBlock(ModBlocks.turret_chekhov), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -3, 0);

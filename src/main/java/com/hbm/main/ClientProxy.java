@@ -350,6 +350,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityControlPanel.class, new RenderControlPanel());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDemonLamp.class, new RenderDemonLamp());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurretArty.class, new RenderTurretArty());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurretHIMARS.class, new RenderTurretHIMARS());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurretChekhov.class, new RenderTurretChekhov());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurretFriendly.class, new RenderTurretFriendly());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTurretJeremy.class, new RenderTurretJeremy());
@@ -1992,6 +1993,8 @@ public class ClientProxy extends ServerProxy {
         ModItems.gun_egon.setTileEntityItemStackRenderer(new ItemRenderGunEgon());
         ModItems.jshotgun.setTileEntityItemStackRenderer(new ItemRenderJShotgun());
         ModItems.gun_ar15.setTileEntityItemStackRenderer(new ItemRenderWeaponAR15());
+
+        ModItems.ammo_himars.setTileEntityItemStackRenderer(new ItemRenderTurretHIMARSAmmo());
 
         ModItems.meteorite_sword_seared.setTileEntityItemStackRenderer(new ItemRendererMeteorSword(1.0F, 0.5F, 0.0F));
         ModItems.meteorite_sword_reforged.setTileEntityItemStackRenderer(new ItemRendererMeteorSword(0.5F, 1.0F, 1.0F));

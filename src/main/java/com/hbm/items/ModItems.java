@@ -2398,6 +2398,7 @@ public class ModItems {
 	public static final Item ammo_50ae_star = new ItemAmmo("ammo_50ae_star").setCreativeTab(MainRegistry.weaponTab);
 
 	public static final Item ammo_arty = new ItemAmmoArty("ammo_arty");
+	public static final Item ammo_himars = new ItemAmmoHIMARS("ammo_himars");
 	
 	public static final Item gun_b92_ammo = new GunB92Cell("gun_b92_ammo").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
 	public static final Item gun_bf_ammo = new ItemBase("gun_bf_ammo").setCreativeTab(MainRegistry.weaponTab);
