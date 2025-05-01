@@ -215,7 +215,7 @@ public abstract class WeaponAbility {
 
 					for(int i = 0; i < count; i++) {
 
-						living.dropItem(((WeightedRandomObject)WeightedRandom.getRandomItem(living.getRNG(), Arrays.asList(ammo))).asItem(), 1);
+						living.dropItem(WeightedRandom.getRandomItem(living.getRNG(), Arrays.asList(ammo)).asItem(), 1);
 						world.spawnEntity(new EntityXPOrb(world, living.posX, living.posY, living.posZ, 1));
 					}
 

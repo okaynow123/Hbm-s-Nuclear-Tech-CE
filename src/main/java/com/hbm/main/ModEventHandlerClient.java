@@ -468,10 +468,7 @@ public class ModEventHandlerClient {
 
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
-        ((ItemWatzPellet) ModItems.watz_pellet).registerModels();
-        ((ItemWatzPellet) ModItems.watz_pellet_depleted).registerModels();
         ((ItemMold) ModItems.mold).registerModels();
-        ItemEnumMulti.registerModels();
         IDynamicModels.registerModels();
 
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
@@ -567,7 +564,6 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void modelBaking(ModelBakeEvent evt) {
-        ItemWatzPellet.bakeModels(evt);
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
         ItemMold.bakeModels(evt);
@@ -801,7 +797,6 @@ public class ModEventHandlerClient {
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
         ItemBedrockOreNew.registerSprites(map);
-        ItemWatzPellet.registerSprites(map);
         ItemMold.registerSprites(map);
         ItemAutogen.registerSprites(map);
 
