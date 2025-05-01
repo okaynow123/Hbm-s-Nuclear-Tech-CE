@@ -36,6 +36,7 @@ import com.hbm.items.special.ItemAutogen;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.items.tool.ItemGasCanister;
+import com.hbm.items.weapon.IMetaItemTesr;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -2027,6 +2028,7 @@ public class ClientProxy extends ServerProxy {
         ModItems.forge_fluid_identifier.setTileEntityItemStackRenderer(new FFIdentifierRender());
 
         for (Entry<Item, ItemRenderBase> entry : ItemRenderLibrary.renderers.entrySet()) {
+
             entry.getKey().setTileEntityItemStackRenderer(entry.getValue());
         }
     }

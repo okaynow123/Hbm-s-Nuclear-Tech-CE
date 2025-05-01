@@ -104,6 +104,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.entity.Render;
@@ -163,6 +164,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
 import java.util.Map.Entry;
+
+import static com.hbm.items.ModItems.ammo_himars;
 
 
 public class ModEventHandlerClient {
@@ -411,6 +414,8 @@ public class ModEventHandlerClient {
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
 
+
+
         int i = 0;
         ResourceLocation[] list = new ResourceLocation[EnumCell.values().length];
         for (EnumCell e : EnumCell.values()) {
@@ -470,6 +475,10 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemMold) ModItems.mold).registerModels();
         IDynamicModels.registerModels();
+        //FIXME: this is a dogshit solution
+        for(i = 1; i < ItemAmmoHIMARS.itemTypes.length; i++){
+            ModelLoader.setCustomModelResourceLocation(ammo_himars, i, new ModelResourceLocation(ammo_himars.getRegistryName(), "inventory"));
+        }
 
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();

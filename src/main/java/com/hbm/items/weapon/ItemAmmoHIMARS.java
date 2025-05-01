@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ItemAmmoHIMARS extends Item {
+public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     public static HIMARSRocket[] itemTypes = new HIMARSRocket[8];
 
     public static final int SMALL = 0;
@@ -70,6 +70,8 @@ public class ItemAmmoHIMARS extends Item {
             }
         }
     }
+
+
 
     @Override
     public void addInformation(
@@ -125,6 +127,11 @@ public class ItemAmmoHIMARS extends Item {
         return "item." + itemTypes[Math.abs(stack.getItemDamage()) % itemTypes.length].ammo_name;
     }
 
+    @Override
+    public int getSubitemCount() {
+        return itemTypes.length;
+    }
+
     public abstract static class HIMARSRocket {
         public enum Type {
             Standard,
@@ -135,7 +142,7 @@ public class ItemAmmoHIMARS extends Item {
         public final String name;
         public final ResourceLocation texture;
         public final int amount;
-        public final Type type;
+        public final Type modelType;
 
         public HIMARSRocket(String name, Type type) {
             this.ammo_name = "ammo_himars_" + name;
@@ -144,7 +151,7 @@ public class ItemAmmoHIMARS extends Item {
                     new ResourceLocation(
                             RefStrings.MODID, "textures/models/projectiles/himars_" + name + ".png");
             this.amount = type == Type.Standard ? 6 : 1;
-            this.type = type;
+            this.modelType = type;
         }
 
         public abstract void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop);

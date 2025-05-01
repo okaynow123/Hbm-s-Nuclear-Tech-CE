@@ -6,6 +6,7 @@ import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.tileentity.RenderDemonLamp;
 import com.hbm.render.tileentity.RenderSawmill;
@@ -2623,6 +2624,38 @@ public class ItemRenderLibrary {
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
         });
+
+        renderers.put(ModItems.ammo_himars, new ItemRenderBase( ) {
+            public void renderInventory() {
+                GL11.glTranslated(0, -2, 0);
+                double scale = 2.75D;
+                GL11.glScaled(scale, scale, scale);
+                GL11.glRotated(System.currentTimeMillis() % 3600 / 10D, 0, 1, 0);
+            }
+            public void renderCommon(ItemStack item) {
+                GL11.glTranslated(0, 1.5, 0);
+                GL11.glRotated(-45, 0, 1, 0);
+                GL11.glRotated(90, 1, 0, 0);
+                ItemAmmoHIMARS.HIMARSRocket type = ItemAmmoHIMARS.itemTypes[item.getItemDamage()];
+                GL11.glShadeModel(GL11.GL_SMOOTH);
+                bindTexture(type.texture);
+                if(type.modelType == ItemAmmoHIMARS.HIMARSRocket.Type.Single) {
+                    GL11.glTranslated(0.75, 0, 0);
+                    ResourceManager.turret_himars.renderPart("RocketStandard");
+                    GL11.glTranslated(-1.5, 0, 0);
+                    GL11.glTranslated(0, -3.375D, 0);
+                    ResourceManager.turret_himars.renderPart("TubeStandard");
+                } else {
+                    GL11.glTranslated(0.75, 0, 0);
+                    ResourceManager.turret_himars.renderPart("RocketSingle");
+                    GL11.glTranslated(-1.5, 0, 0);
+                    GL11.glTranslated(0, -3.375D, 0);
+                    ResourceManager.turret_himars.renderPart("TubeSingle");
+                }
+                GL11.glShadeModel(GL11.GL_FLAT);
+            }});
+
+
     }
 
     private static void bindTexture(ResourceLocation res) {

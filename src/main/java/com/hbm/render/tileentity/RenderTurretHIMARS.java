@@ -54,13 +54,13 @@ public class RenderTurretHIMARS extends TileEntitySpecialRenderer<TileEntityTurr
       ItemAmmoHIMARS.HIMARSRocket rocket = ItemAmmoHIMARS.itemTypes[turret.typeLoaded];
       bindTexture(rocket.texture);
 
-      if (rocket.type == ItemAmmoHIMARS.HIMARSRocket.Type.Standard) {
+      if (rocket.modelType == ItemAmmoHIMARS.HIMARSRocket.Type.Standard) {
         ResourceManager.turret_himars.renderPart("TubeStandard");
 
         for (int i = 0; i < turret.ammo; i++) {
           ResourceManager.turret_himars.renderPart("CapStandard" + (5 - i + 1));
         }
-      } else if (rocket.type == ItemAmmoHIMARS.HIMARSRocket.Type.Single) {
+      } else if (rocket.modelType == ItemAmmoHIMARS.HIMARSRocket.Type.Single) {
         ResourceManager.turret_himars.renderPart("TubeSingle");
 
         if (turret.hasAmmo()) {
