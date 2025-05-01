@@ -15,6 +15,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -31,12 +32,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static com.hbm.items.ModItems.ammo_himars;
 
 public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     public static HIMARSRocket[] itemTypes = new HIMARSRocket[8];
@@ -59,6 +63,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
 
         init();
         ModItems.ALL_ITEMS.add(this);
+        IMetaItemTesr.INSTANCES.add(this);
     }
 
     @Override
@@ -70,7 +75,9 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
             }
         }
     }
-
+    public String getName(){
+        return getRegistryName().toString();
+    }
 
 
     @Override
@@ -131,6 +138,12 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     public int getSubitemCount() {
         return itemTypes.length;
     }
+
+    @Override
+    public void redirectModel() {
+        IMetaItemTesr.super.redirectModel();
+    }
+
 
     public abstract static class HIMARSRocket {
         public enum Type {

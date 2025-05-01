@@ -475,10 +475,9 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemMold) ModItems.mold).registerModels();
         IDynamicModels.registerModels();
+        IMetaItemTesr.redirectModels();
         //FIXME: this is a dogshit solution
-        for(i = 1; i < ItemAmmoHIMARS.itemTypes.length; i++){
-            ModelLoader.setCustomModelResourceLocation(ammo_himars, i, new ModelResourceLocation(ammo_himars.getRegistryName(), "inventory"));
-        }
+
 
         for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
         registerBedrockOreModels();
