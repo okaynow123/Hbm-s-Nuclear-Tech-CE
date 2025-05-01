@@ -40,16 +40,16 @@ import java.util.Locale;
 /*
  * Watz Isotropic Fuel, Oxidized
  */
-public class ItemWatzPellet extends ItemEnumMulti implements IDynamicSprites, IDynamicModels {
+public class ItemWatzPellet extends ItemEnumMulti implements IDynamicModels {
 
-    final boolean isDesaturated;
+    final boolean isDepleted;
 
-    public ItemWatzPellet(String s, boolean isDesaturated) {
+    public ItemWatzPellet(String s, boolean isDepleted) {
         super(s, EnumWatzType.class, true, true);
         this.setMaxStackSize(16);
         this.setTranslationKey(s);
         this.setCreativeTab(MainRegistry.controlTab);
-        this.isDesaturated = isDesaturated;
+        this.isDepleted = isDepleted;
     }
 
     public static int desaturate(int color) {
@@ -105,7 +105,7 @@ public class ItemWatzPellet extends ItemEnumMulti implements IDynamicSprites, ID
     @Override
     public void registerModel() {
         for (int i = 0; i < EnumWatzType.values().length; i++) {
-            if (this.isDesaturated) {
+            if (this.isDepleted) {
                 ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(RefStrings.MODID + ":items/watz_pellet_depleted-" + i, "inventory"));
             } else {
                 ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(RefStrings.MODID + ":items/watz_pellet-" + i, "inventory"));
@@ -119,9 +119,9 @@ public class ItemWatzPellet extends ItemEnumMulti implements IDynamicSprites, ID
         for (int j = 0; j <= 1; j++) {
             for (int i = 0; i < EnumWatzType.values().length; i++) {
                 EnumWatzType type = EnumWatzType.values()[i];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i));
-                int light = isDesaturated ? desaturate(type.colorLight) : type.colorLight;
-                int dark = isDesaturated ? desaturate(type.colorDark) : type.colorDark;
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDepleted ? "_depleted-" + i : "-" + i));
+                int light = isDepleted ? desaturate(type.colorLight) : type.colorLight;
+                int dark = isDepleted ? desaturate(type.colorDark) : type.colorDark;
                 TextureAtlasSpriteMutatable mutableIcon = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xD2D2D2, 0x333333, light, dark));
                 map.setTextureEntry(mutableIcon);
             }
@@ -135,7 +135,7 @@ public class ItemWatzPellet extends ItemEnumMulti implements IDynamicSprites, ID
             try {
                 IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
                 for (int i = 0; i < EnumWatzType.values().length; i++) {
-                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i));
+                    ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDepleted ? "_depleted-" + i : "-" + i));
                     IModel retexturedModel = baseModel.retexture(
                             ImmutableMap.of(
                                     "layer0", spriteLoc.toString()
@@ -143,7 +143,7 @@ public class ItemWatzPellet extends ItemEnumMulti implements IDynamicSprites, ID
 
                     );
                     IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDesaturated ? "_depleted-" + i : "-" + i)), "inventory");
+                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/watz_pellet" + (isDepleted ? "_depleted-" + i : "-" + i)), "inventory");
                     event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
 
                 }
