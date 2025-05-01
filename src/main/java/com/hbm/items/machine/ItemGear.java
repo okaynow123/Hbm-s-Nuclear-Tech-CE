@@ -1,21 +1,20 @@
 package com.hbm.items.machine;
 
-import java.util.List;
-
 import com.hbm.items.ItemBase;
+import com.hbm.items.weapon.IMetaItemTesr;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.util.NonNullList;
 
-public class ItemGear extends ItemBase {
-//Norwood: this entire class for single item? what a shame
+public class ItemGear extends ItemBase implements IMetaItemTesr {
+    //Norwood: this entire class for single item? what a shame
     public ItemGear(String s) {
         super(s);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
+        IMetaItemTesr.INSTANCES.add(this);
     }
 
     @Override
@@ -33,4 +32,13 @@ public class ItemGear extends ItemBase {
         return super.getTranslationKey() + (stack.getMetadata() == 1 ? "_steel" : "");
     }
 
+    @Override
+    public int getSubitemCount() {
+        return 2;
+    }
+
+    @Override
+    public String getName() {
+        return getRegistryName().toString();
+    }
 }
