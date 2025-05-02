@@ -200,6 +200,29 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
   }
 
   @Override
+  public void writeEntityToNBT(NBTTagCompound nbt) {
+    super.writeEntityToNBT(nbt);
+
+    if(this.lastTargetPos == null) {
+      this.lastTargetPos = Vec3.createVectorHelper(posX, posY, posZ);
+    }
+
+    nbt.setDouble("targetX", this.lastTargetPos.xCoord);
+    nbt.setDouble("targetY", this.lastTargetPos.yCoord);
+    nbt.setDouble("targetZ", this.lastTargetPos.zCoord);
+
+    nbt.setInteger("type", this.dataManager.get(TYPE));
+  }
+
+  @Override
+  public void readEntityFromNBT(NBTTagCompound nbt) {
+    super.readEntityFromNBT(nbt);
+
+    this.lastTargetPos = Vec3.createVectorHelper(nbt.getDouble("targetX"), nbt.getDouble("targetY"), nbt.getDouble("targetZ"));
+    this.setType(nbt.getInteger("type"));
+  }
+
+  @Override
   protected float getAirDrag() {
     return 1.0F;
   }
