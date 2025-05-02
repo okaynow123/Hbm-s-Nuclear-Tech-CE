@@ -84,7 +84,7 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT {
 
 			if(conf != null) {
 				this.spawnBullet(conf);
-				this.conusmeAmmo(conf.ammo);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_fire, SoundCategory.BLOCKS, 4.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());

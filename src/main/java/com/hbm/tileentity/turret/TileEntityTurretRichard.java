@@ -115,7 +115,7 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 			
 			if(conf != null) {
 				this.spawnBullet(conf);
-				this.conusmeAmmo(conf.ammo);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.richard_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 				this.loaded--;
 				

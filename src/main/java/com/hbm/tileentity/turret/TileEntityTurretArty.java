@@ -177,7 +177,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         return null;
     }
 
-    public void conusmeAmmo(Item ammo) {
+    public void consumeAmmo(Item ammo) {
 
         for(int i = 1; i < 10; i++) {
             ItemStack stack = this.inventory.getStackInSlot(i);
@@ -362,7 +362,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
             if(conf != null) {
                 cachedCasingConfig = ItemAmmoArty.itemTypes[conf.getItemDamage()].casing;
                 this.spawnShell(conf);
-                this.conusmeAmmo(ModItems.ammo_arty);
+                this.consumeAmmo(ModItems.ammo_arty);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_fire, SoundCategory.BLOCKS, 25.0F, 1.0F);
                 Vec3 pos = new Vec3(this.getTurretPos());
                 Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);

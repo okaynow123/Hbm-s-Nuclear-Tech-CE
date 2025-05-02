@@ -9,6 +9,7 @@ import com.hbm.entity.projectile.rocketbehavior.RocketTargetingPredictive;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -25,134 +26,191 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityArtilleryRocket extends EntityThrowableInterp
-        implements IChunkLoader, IRadarDetectable {
+    implements IChunkLoader, IRadarDetectable {
 
-    private Ticket loaderTicket;
+  private Ticket loaderTicket;
 
-    public Entity targetEntity = null;
-    public Vec3 lastTargetPos;
+  public Entity targetEntity = null;
+  public Vec3 lastTargetPos;
 
-    public IRocketTargetingBehavior targeting;
-    public IRocketSteeringBehavior steering;
+  public IRocketTargetingBehavior targeting;
+  public IRocketSteeringBehavior steering;
 
-    private static final DataParameter<Integer> TYPE =
-            EntityDataManager.createKey(EntityArtilleryRocket.class, DataSerializers.VARINT);
+  private static final DataParameter<Integer> TYPE =
+      EntityDataManager.createKey(EntityArtilleryRocket.class, DataSerializers.VARINT);
 
-    public EntityArtilleryRocket(World world) {
-        super(world);
-        this.ignoreFrustumCheck = true;
+  public EntityArtilleryRocket(World world) {
+    super(world);
+    this.ignoreFrustumCheck = true;
 
-        this.targeting = new RocketTargetingPredictive();
-        this.steering = new RocketSteeringBallisticArc();
+    this.targeting = new RocketTargetingPredictive();
+    this.steering = new RocketSteeringBallisticArc();
+  }
+
+  @Override
+  protected void entityInit() {
+    super.entityInit();
+    init(
+        ForgeChunkManager.requestTicket(
+            MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY));
+    this.dataManager.register(TYPE, 10);
+  }
+
+  public ItemAmmoHIMARS.HIMARSRocket getRocket() {
+    try {
+      return ItemAmmoHIMARS.itemTypes[this.dataManager.get(TYPE)];
+    } catch (Exception ex) {
+      return ItemAmmoHIMARS.itemTypes[0];
+    }
+  }
+
+  public EntityArtilleryRocket setTarget(Entity target) {
+    this.targetEntity = target;
+    setTarget(target.posX, target.posY - target.getYOffset() + target.height / 2D, target.posZ);
+    return this;
+  }
+
+  public EntityArtilleryRocket setTarget(double x, double y, double z) {
+    this.lastTargetPos = Vec3.createVectorHelper(x, y, z);
+    return this;
+  }
+
+  public Vec3 getLastTarget() {
+    return this.lastTargetPos;
+  }
+
+  @Override
+  @SideOnly(Side.CLIENT)
+  public boolean isInRangeToRenderDist(double distance) {
+    return true;
+  }
+
+  public EntityArtilleryRocket setType(int type) {
+    this.dataManager.set(TYPE, type);
+    return this;
+  }
+
+  @Override
+  public void onUpdate() {
+
+    if (world.isRemote) {
+      this.lastTickPosX = this.posX;
+      this.lastTickPosY = this.posY;
+      this.lastTickPosZ = this.posZ;
     }
 
-    @Override
-    protected void entityInit() {
-        super.entityInit();
-        init(
-                ForgeChunkManager.requestTicket(
-                        MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY));
-        this.dataManager.register(TYPE, 10);
-    }
+    super.onUpdate();
 
-    public ItemAmmoHIMARS.HIMARSRocket getRocket() {
-        try {
-            return ItemAmmoHIMARS.itemTypes[this.dataManager.get(TYPE)];
-        } catch (Exception ex) {
-            return ItemAmmoHIMARS.itemTypes[0];
+    if (!world.isRemote) {
+
+      // TODO: Refactor this
+      // shitty hack, figure out what's happening here
+      if (this.targeting == null) this.targeting = new RocketTargetingPredictive();
+      if (this.steering == null) this.steering = new RocketSteeringBallisticArc();
+
+      if (this.targetEntity == null) {
+        Vec3 delta =
+            Vec3.createVectorHelper(
+                this.lastTargetPos.xCoord - this.posX,
+                this.lastTargetPos.yCoord - this.posY,
+                this.lastTargetPos.zCoord - this.posZ);
+        if (delta.length() <= 15D) {
+          this.targeting = null;
+          this.steering = null;
         }
-    }
+      }
 
-    public EntityArtilleryRocket setTarget(Entity target) {
-        this.targetEntity = target;
-        setTarget(target.posX, target.posY - target.getYOffset() + target.height / 2D, target.posZ);
-        return this;
-    }
+      if (this.targeting != null && this.targetEntity != null)
+        this.targeting.recalculateTargetPosition(this, this.targetEntity);
+      if (this.steering != null) this.steering.adjustCourse(this, 25D, 15D);
 
-    public EntityArtilleryRocket setTarget(double x, double y, double z) {
-        this.lastTargetPos = Vec3.createVectorHelper(x, y, z);
-        return this;
-    }
+      loadNeighboringChunks((int) Math.floor(posX / 16D), (int) Math.floor(posZ / 16D));
+      this.getRocket().onUpdate(this);
+    } else {
 
-    public Vec3 getLastTarget() {
-        return this.lastTargetPos;
-    }
+      Vec3 v =
+          Vec3.createVectorHelper(lastTickPosX - posX, lastTickPosY - posY, lastTickPosZ - posZ);
+      double velocity = v.length();
+      v = v.normalize();
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isInRangeToRenderDist(double distance) {
-        return true;
-    }
-
-    public EntityArtilleryRocket setType(int type) {
-        this.dataManager.set(TYPE, type);
-        return this;
-    }
-
-    @Override
-    protected void onImpact(RayTraceResult mop) {
-        if (!world.isRemote) {
-            this.getRocket().onImpact(this, mop);
+      int offset = 6;
+      if (velocity > 1) {
+        for (int i = offset; i < velocity + offset; i++) {
+          NBTTagCompound data = new NBTTagCompound();
+          data.setDouble("posX", posX + v.xCoord * i);
+          data.setDouble("posY", posY + v.yCoord * i);
+          data.setDouble("posZ", posZ + v.zCoord * i);
+          data.setString("type", "exKerosene");
+          MainRegistry.proxy.effectNT(data);
         }
+      }
     }
+  }
 
-    @Override
-    public void init(ForgeChunkManager.Ticket ticket) {
-        if (!world.isRemote && ticket != null) {
-            if (loaderTicket == null) {
-                loaderTicket = ticket;
-                loaderTicket.bindEntity(this);
-                loaderTicket.getModData();
-            }
-            ForgeChunkManager.forceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ));
-        }
+  @Override
+  protected void onImpact(RayTraceResult mop) {
+    if (!world.isRemote) {
+      this.getRocket().onImpact(this, mop);
     }
+  }
 
-    List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>();
-
-    public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
-        if (!world.isRemote && loaderTicket != null) {
-
-            clearChunkLoader();
-
-            loadedChunks.clear();
-            loadedChunks.add(new ChunkPos(newChunkX, newChunkZ));
-
-            // ChunkCoordIntPair doesnt exist in 1.12.2
-            // loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX +
-            // this.motionX) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ) / 16D)));
-
-            for (ChunkPos chunk : loadedChunks) {
-                ForgeChunkManager.forceChunk(loaderTicket, chunk);
-            }
-        }
+  @Override
+  public void init(ForgeChunkManager.Ticket ticket) {
+    if (!world.isRemote && ticket != null) {
+      if (loaderTicket == null) {
+        loaderTicket = ticket;
+        loaderTicket.bindEntity(this);
+        loaderTicket.getModData();
+      }
+      ForgeChunkManager.forceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ));
     }
+  }
 
-    public void killAndClear() {
-        this.setDead();
-        this.clearChunkLoader();
-    }
+  List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>();
 
-    public void clearChunkLoader() {
-        if (!world.isRemote && loaderTicket != null) {
-            for (ChunkPos chunk : loadedChunks) {
-                ForgeChunkManager.unforceChunk(loaderTicket, chunk);
-            }
-        }
-    }
+  public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
+    if (!world.isRemote && loaderTicket != null) {
 
-    @Override
-    protected float getAirDrag() {
-        return 1.0F;
-    }
+      clearChunkLoader();
 
-    @Override
-    public double getGravityVelocity() {
-        return this.steering != null ? 0D : 0.01D;
-    }
+      loadedChunks.clear();
+      loadedChunks.add(new ChunkPos(newChunkX, newChunkZ));
 
-    @Override
-    public RadarTargetType getTargetType() {
-        return RadarTargetType.ARTILLERY;
+      // ChunkCoordIntPair doesnt exist in 1.12.2
+      // loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX +
+      // this.motionX) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ) / 16D)));
+
+      for (ChunkPos chunk : loadedChunks) {
+        ForgeChunkManager.forceChunk(loaderTicket, chunk);
+      }
     }
+  }
+
+  public void killAndClear() {
+    this.setDead();
+    this.clearChunkLoader();
+  }
+
+  public void clearChunkLoader() {
+    if (!world.isRemote && loaderTicket != null) {
+      for (ChunkPos chunk : loadedChunks) {
+        ForgeChunkManager.unforceChunk(loaderTicket, chunk);
+      }
+    }
+  }
+
+  @Override
+  protected float getAirDrag() {
+    return 1.0F;
+  }
+
+  @Override
+  public double getGravityVelocity() {
+    return this.steering != null ? 0D : 0.01D;
+  }
+
+  @Override
+  public RadarTargetType getTargetType() {
+    return RadarTargetType.ARTILLERY;
+  }
 }

@@ -381,7 +381,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		}
 	}
 	
-	public void conusmeAmmo(Item ammo) {
+	public void consumeAmmo(Item ammo) {
 		
 		for(int i = 1; i < 10; i++) {
 			

@@ -121,7 +121,7 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT {
 			
 			if(conf != null && this.target != null) {
 				this.target.attackEntityFrom(ModDamageSource.electricity, 30F + world.rand.nextInt(11));
-				this.conusmeAmmo(conf.ammo);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.tauShoot, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 				
 				NBTTagCompound data = new NBTTagCompound();

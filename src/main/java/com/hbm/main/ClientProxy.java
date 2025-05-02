@@ -581,6 +581,7 @@ public class ClientProxy extends ServerProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityRBMKDebris.class, RenderRBMKDebris.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityZirnoxDebris.class, RenderZirnoxDebris.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityArtilleryShell.class, RenderArtilleryShell.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(EntityArtilleryRocket.class, RenderArtilleryRocket.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntitySawblade.class, RenderSawblade.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntitySpear.class, RenderSpear.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityMissileTier4.EntityMissileVolcano.class, RenderMissileNuclear.FACTORY);
