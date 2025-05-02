@@ -2633,26 +2633,26 @@ public class ItemRenderLibrary {
                 GL11.glRotated(System.currentTimeMillis() % 3600 / 10D, 0, 1, 0);
             }
             public void renderCommon(ItemStack item) {
-                GL11.glTranslated(0, 1.5, 0);
-                GL11.glRotated(-45, 0, 1, 0);
-                GL11.glRotated(90, 1, 0, 0);
+                GlStateManager.translate(0, 1.5, 0);
+                GlStateManager.rotate(-45, 0, 1, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 ItemAmmoHIMARS.HIMARSRocket type = ItemAmmoHIMARS.itemTypes[item.getItemDamage()];
-                GL11.glShadeModel(GL11.GL_SMOOTH);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
                 bindTexture(type.texture);
-                if(type.modelType == ItemAmmoHIMARS.HIMARSRocket.Type.Single) {
-                    GL11.glTranslated(0.75, 0, 0);
+                if(type.modelType == ItemAmmoHIMARS.HIMARSRocket.Type.Standard) {
+                    GlStateManager.translate(0.75, 0, 0);
                     ResourceManager.turret_himars.renderPart("RocketStandard");
-                    GL11.glTranslated(-1.5, 0, 0);
-                    GL11.glTranslated(0, -3.375D, 0);
+                    GlStateManager.translate(-1.5, 0, 0);
+                    GlStateManager.translate(0, -3.375D, 0);
                     ResourceManager.turret_himars.renderPart("TubeStandard");
                 } else {
-                    GL11.glTranslated(0.75, 0, 0);
+                    GlStateManager.translate(0.75, 0, 0);
                     ResourceManager.turret_himars.renderPart("RocketSingle");
-                    GL11.glTranslated(-1.5, 0, 0);
-                    GL11.glTranslated(0, -3.375D, 0);
+                    GlStateManager.translate(-1.5, 0, 0);
+                    GlStateManager.translate(0, -3.375D, 0);
                     ResourceManager.turret_himars.renderPart("TubeSingle");
                 }
-                GL11.glShadeModel(GL11.GL_FLAT);
+                GlStateManager.shadeModel(GL11.GL_FLAT);
             }});
 
 

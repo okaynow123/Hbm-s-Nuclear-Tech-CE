@@ -15,11 +15,15 @@ public class ItemRenderBase extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
+			GL11.glRotated(-90, 0, 1, 0);
+			GL11.glScaled(0.4, 0.4, 0.4);
+			break;
 		case HEAD:
 		case FIXED:
 		case GROUND:
 			GL11.glScaled(0.4, 0.4, 0.4);
 			GL11.glRotated(-90, 0, 1, 0);
+			GlStateManager.translate(2.5, 0, 0);
 			renderNonInv(itemStackIn);
 			break;
 		case GUI:
