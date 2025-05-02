@@ -16,6 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -128,42 +129,44 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 
 	protected void mouseClicked(int x, int y, int i) throws IOException {
 		super.mouseClicked(x, y, i);
-		
+
+		final BlockPos turretPos = turret.getPos();
+
 		boolean flag = x >= this.field.x && x < this.field.x + this.field.width && y >= this.field.y && y < this.field.y + this.field.height;
 		this.field.setFocused(flag);
 
 		if(guiLeft + 115 <= x && guiLeft + 115 + 18 > x && guiTop + 25 < y && guiTop + 25 + 18 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ(), 0, 0));
+			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turretPos, 0, 0));
 			return;
 		}
 
 		if(guiLeft + 8 <= x && guiLeft + 8 + 10 > x && guiTop + 29 < y && guiTop + 29 + 10 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ(), 0, 1));
+			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turretPos, 0, 1));
 			return;
 		}
 
 		if(guiLeft + 22 <= x && guiLeft + 22 + 10 > x && guiTop + 29 < y && guiTop + 29 + 10 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ(), 0, 2));
+			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turretPos, 0, 2));
 			return;
 		}
 
 		if(guiLeft + 36 <= x && guiLeft + 36 + 10 > x && guiTop + 29 < y && guiTop + 29 + 10 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ(), 0, 3));
+			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turretPos, 0, 3));
 			return;
 		}
 
 		if(guiLeft + 50 <= x && guiLeft + 50 + 10 > x && guiTop + 29 < y && guiTop + 29 + 10 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ(), 0, 4));
+			PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(turretPos, 0, 4));
 			return;
 		}
 		
@@ -198,7 +201,7 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("name", this.field.getText());
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ()));
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turretPos));
 			
 			this.field.setText("");
 			return;
@@ -210,7 +213,7 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setInteger("del", this.index);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turret.getPos().getX(), turret.getPos().getY(), turret.getPos().getZ()));
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turretPos));
 		}
 	}
 

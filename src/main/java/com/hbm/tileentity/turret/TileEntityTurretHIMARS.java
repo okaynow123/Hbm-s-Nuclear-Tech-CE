@@ -41,7 +41,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
     ammoStacks = new ArrayList<>();
 
     NonNullList<ItemStack> list = NonNullList.create();
-    // ModItems.ammo_himars.getSubItems(MainRegistry.weaponTab, list);
+    ModItems.ammo_himars.getSubItems(MainRegistry.weaponTab, list);
     this.ammoStacks.addAll(list);
 
     return ammoStacks;
