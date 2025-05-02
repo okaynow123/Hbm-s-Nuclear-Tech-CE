@@ -35,7 +35,7 @@ public class ParticleMukeWave extends Particle {
         this.particleMaxAge = maxAge;
     }
 
-    public void renderParticle(BufferBuilder _buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
+    public void renderParticle(BufferBuilder buf, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -72,11 +72,16 @@ public class ParticleMukeWave extends Particle {
 
 // Restore GL state
         GlStateManager.enableCull();
+        GlStateManager.disableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableLighting();
         if (fog) GL11.glEnable(GL11.GL_FOG);
         GlStateManager.depthMask(true);
 
+    }
+
+    public int getFXLayer(){
+        return 3;
     }
 
 }

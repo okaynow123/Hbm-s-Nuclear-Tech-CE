@@ -216,7 +216,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     itemTypes[RocketType.STANDARD.ordinal()] =
         new HIMARSRocket("standard", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
-            final BlockPos blockPos = mop.getBlockPos();
+            final BlockPos blockPos = new BlockPos(mop.hitVec);
 
             standardExplosion(rocket, mop, 20F, 3F, false, ModBlocks.block_slag, 1);
             ExplosionCreator.composeEffect(
@@ -243,7 +243,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     itemTypes[RocketType.STANDARD_HE.ordinal()] =
         new HIMARSRocket("standard_he", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
-            final BlockPos blockPos = mop.getBlockPos();
+            final BlockPos blockPos = new BlockPos(mop.hitVec);
 
             standardExplosion(rocket, mop, 20F, 3F, true, ModBlocks.block_slag, 1);
             ExplosionCreator.composeEffect(
