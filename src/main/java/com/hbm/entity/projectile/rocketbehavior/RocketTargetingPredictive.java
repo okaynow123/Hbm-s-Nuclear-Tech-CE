@@ -19,7 +19,7 @@ public class RocketTargetingPredictive implements IRocketTargetingBehavior {
    * a single second of prediction is good enough at long distances where there's
    * still room for error, like player vehicles or ICBMs.
    */
-  private double[][] targetMotion = new double[20][3];
+  private final double[][] targetMotion = new double[20][3];
 
   @Override
   public void recalculateTargetPosition(EntityArtilleryRocket rocket, Entity target) {

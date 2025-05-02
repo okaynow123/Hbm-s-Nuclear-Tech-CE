@@ -46,7 +46,7 @@ public class RenderArtilleryRocket extends Render<EntityArtilleryRocket> {
 
     if (fog) GlStateManager.disableFog();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
-    HIMARSRocket rocket = entity.getRocket();
+    HIMARSRocket rocket = entity.getType();
     if (rocket.modelType == HIMARSRocket.Type.Standard)
       ResourceManager.turret_himars.renderPart("RocketStandard");
     if (rocket.modelType == HIMARSRocket.Type.Single)
@@ -59,6 +59,6 @@ public class RenderArtilleryRocket extends Render<EntityArtilleryRocket> {
 
   @Override
   protected ResourceLocation getEntityTexture(EntityArtilleryRocket entity) {
-    return entity.getRocket().texture;
+    return entity.getType().texture;
   }
 }

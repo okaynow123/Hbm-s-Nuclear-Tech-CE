@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityArtilleryRocket extends EntityThrowableInterp
+public class EntityArtilleryRocket extends EntityThrowableNT
     implements IChunkLoader, IRadarDetectable {
 
   private Ticket loaderTicket;
@@ -53,10 +53,21 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
     init(
         ForgeChunkManager.requestTicket(
             MainRegistry.instance, world, ForgeChunkManager.Type.ENTITY));
-    this.dataManager.register(TYPE, 10);
+    this.dataManager.register(TYPE, 0);
   }
 
-  public ItemAmmoHIMARS.HIMARSRocket getRocket() {
+  @Override
+  @SideOnly(Side.CLIENT)
+  public boolean isInRangeToRenderDist(double distance) {
+    return true;
+  }
+
+  public EntityArtilleryRocket setType(int type) {
+    this.dataManager.set(TYPE, type);
+    return this;
+  }
+
+  public ItemAmmoHIMARS.HIMARSRocket getType() {
     try {
       return ItemAmmoHIMARS.itemTypes[this.dataManager.get(TYPE)];
     } catch (Exception ex) {
@@ -80,17 +91,6 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
   }
 
   @Override
-  @SideOnly(Side.CLIENT)
-  public boolean isInRangeToRenderDist(double distance) {
-    return true;
-  }
-
-  public EntityArtilleryRocket setType(int type) {
-    this.dataManager.set(TYPE, type);
-    return this;
-  }
-
-  @Override
   public void onUpdate() {
 
     if (world.isRemote) {
@@ -103,10 +103,12 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
 
     if (!world.isRemote) {
 
-      // TODO: Refactor this
-      // shitty hack, figure out what's happening here
-      if (this.targeting == null) this.targeting = new RocketTargetingPredictive();
-      if (this.steering == null) this.steering = new RocketSteeringBallisticArc();
+      if (this.targeting == null) {
+        this.targeting = new RocketTargetingPredictive();
+      }
+      if (this.steering == null) {
+        this.steering = new RocketSteeringBallisticArc();
+      }
 
       if (this.targetEntity == null) {
         Vec3 delta =
@@ -125,7 +127,7 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
       if (this.steering != null) this.steering.adjustCourse(this, 25D, 15D);
 
       loadNeighboringChunks((int) Math.floor(posX / 16D), (int) Math.floor(posZ / 16D));
-      this.getRocket().onUpdate(this);
+      this.getType().onUpdate(this);
     } else {
 
       Vec3 v =
@@ -150,7 +152,7 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
   @Override
   protected void onImpact(RayTraceResult mop) {
     if (!world.isRemote) {
-      this.getRocket().onImpact(this, mop);
+      this.getType().onImpact(this, mop);
     }
   }
 

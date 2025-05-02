@@ -1,6 +1,8 @@
 package com.hbm.items.weapon;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.entity.effect.EntityNukeTorex;
+import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityArtilleryRocket;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
@@ -298,22 +300,11 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
         new HIMARSRocket("standard_mini_nuke", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
             rocket.killAndClear();
-            //            Vec3 vec =
-            //                Vec3.createVectorHelper(rocket.motionX, rocket.motionY,
-            // rocket.motionZ).normalize();
-            //                        ExplosionNukeGeneric.explode(
-            //                            rocket.world,
-            //                            mop.hitVec.x - vec.xCoord,
-            //                            mop.hitVec.y - vec.yCoord,
-            //                            mop.hitVec.z - vec.zCoord,
-            //                            ExplosionNukeSmall.PARAMS_MEDIUM);
-            //
-            // rocket.world.spawnEntity(EntityNukeExplosionMK5.statFac(rocket.world, 100,
-            //             mop.hitVec.x, mop.hitVec.y, mop.hitVec.z));
-            //                        EntityNukeTorex.statFac(rocket.world, mop.hitVec.x,
-            // mop.hitVec.y,
-            //             mop.hitVec.z, 100);
-            //                        rocket.setDead();
+            // I think radius of the explosion is too high!
+            rocket.world.spawnEntity(
+                EntityNukeExplosionMK5.statFac(
+                    rocket.world, 100, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z));
+            EntityNukeTorex.statFac(rocket.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 100);
           }
         };
 
