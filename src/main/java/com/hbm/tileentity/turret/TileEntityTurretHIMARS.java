@@ -354,7 +354,6 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
     this.mode = FiringMode.values()[nbt.getShort("mode")];
     this.typeLoaded = nbt.getShort("type");
     this.ammo = nbt.getInteger("ammo");
-    this.crane = nbt.getFloat("crane");
   }
 
   @Override
@@ -363,7 +362,6 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
     nbt.setShort("mode", (short) this.mode.ordinal());
     nbt.setInteger("type", this.typeLoaded);
     nbt.setInteger("ammo", this.ammo);
-    nbt.setFloat("crane", this.crane);
     return nbt;
   }
 
