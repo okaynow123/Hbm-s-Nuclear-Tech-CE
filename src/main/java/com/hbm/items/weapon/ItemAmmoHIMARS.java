@@ -30,6 +30,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -169,7 +170,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
 
     public abstract void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop);
 
-    public abstract void onUpdate(EntityArtilleryRocket rocket);
+    public void onUpdate(EntityArtilleryRocket rocket) {}
   }
 
   private static void standardExplosion(
@@ -183,7 +184,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     Vec3 vec = Vec3.createVectorHelper(entity.motionX, entity.motionY, entity.motionZ).normalize();
     ExplosionVNT explosionVnt =
         new ExplosionVNT(
-                entity.world,
+            entity.world,
             mop.hitVec.x - vec.xCoord,
             mop.hitVec.y - vec.yCoord,
             mop.hitVec.z - vec.zCoord,
@@ -209,21 +210,21 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     PacketDispatcher.wrapper.sendToAllAround(
         new AuxParticlePacketNT(data, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z),
         new NetworkRegistry.TargetPoint(
-                entity.dimension, entity.posX, entity.posY, entity.posZ, 250));
+            entity.dimension, entity.posX, entity.posY, entity.posZ, 250));
   }
 
   private void init() {
     itemTypes[RocketType.STANDARD.ordinal()] =
         new HIMARSRocket("standard", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
-            final BlockPos blockPos = new BlockPos(mop.hitVec);
+            final Vec3d hitPos = mop.hitVec;
 
             standardExplosion(rocket, mop, 20F, 3F, false, ModBlocks.block_slag, 1);
             ExplosionCreator.composeEffect(
                 rocket.world,
-                blockPos.getX() + 0.5,
-                blockPos.getY() + 0.5,
-                blockPos.getZ() + 0.5,
+                hitPos.x + 0.5,
+                hitPos.y + 0.5,
+                hitPos.z + 0.5,
                 15,
                 5F,
                 1F,
@@ -236,21 +237,19 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 -2F,
                 200);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
 
     itemTypes[RocketType.STANDARD_HE.ordinal()] =
         new HIMARSRocket("standard_he", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
-            final BlockPos blockPos = new BlockPos(mop.hitVec);
+            final Vec3d hitPos = mop.hitVec;
 
             standardExplosion(rocket, mop, 20F, 3F, true, ModBlocks.block_slag, 1);
             ExplosionCreator.composeEffect(
                 rocket.world,
-                blockPos.getX() + 0.5,
-                blockPos.getY() + 0.5,
-                blockPos.getZ() + 0.5,
+                hitPos.x + 0.5,
+                hitPos.y + 0.5,
+                hitPos.z + 0.5,
                 15,
                 5F,
                 1F,
@@ -263,28 +262,24 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 -2F,
                 200);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
     itemTypes[RocketType.STANDARD_LAVA.ordinal()] =
         new HIMARSRocket("standard_lava", HIMARSRocket.Type.Standard) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
             standardExplosion(rocket, mop, 20F, 3F, true, ModBlocks.volcanic_lava_block, 0);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
     itemTypes[RocketType.SINGLE.ordinal()] =
         new HIMARSRocket("single", HIMARSRocket.Type.Single) {
           public void onImpact(EntityArtilleryRocket rocket, RayTraceResult mop) {
-            final BlockPos blockPos = new BlockPos(mop.hitVec);
+            final Vec3d hitPos = mop.hitVec;
 
             standardExplosion(rocket, mop, 50F, 5F, true, ModBlocks.block_slag, 1);
             ExplosionCreator.composeEffect(
                 rocket.world,
-                blockPos.getX() + 0.5,
-                blockPos.getY() + 0.5,
-                blockPos.getZ() + 0.5,
+                hitPos.x + 0.5,
+                hitPos.y + 0.5,
+                hitPos.z + 0.5,
                 30,
                 6.5F,
                 2F,
@@ -297,8 +292,6 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 -2F,
                 350);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
 
     itemTypes[RocketType.STANDARD_MINI_NUKE.ordinal()] =
@@ -322,8 +315,6 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
             //             mop.hitVec.z, 100);
             //                        rocket.setDead();
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
 
     itemTypes[RocketType.STANDARD_WP.ordinal()] =
@@ -379,8 +370,6 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
             }
             standardMush(rocket, mop, 15);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
 
     itemTypes[RocketType.STANDARD_TB.ordinal()] =
@@ -400,8 +389,6 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.world, (int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z, 30);
             standardMush(rocket, mop, 20);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
 
     itemTypes[RocketType.SINGLE_TB.ordinal()] =
@@ -421,8 +408,6 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.world, (int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z, 30);
             standardMush(rocket, mop, 35);
           }
-
-          public void onUpdate(EntityArtilleryRocket rocket) {}
         };
   }
 }

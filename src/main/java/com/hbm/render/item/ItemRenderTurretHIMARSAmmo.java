@@ -1,6 +1,5 @@
 package com.hbm.render.item;
 
-import com.hbm.main.MainRegistry;
 import net.minecraft.item.ItemStack;
 
 public class ItemRenderTurretHIMARSAmmo extends TEISRBase {

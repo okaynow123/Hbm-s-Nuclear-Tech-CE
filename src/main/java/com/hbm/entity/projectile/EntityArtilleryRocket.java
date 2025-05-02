@@ -203,7 +203,7 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
   public void writeEntityToNBT(NBTTagCompound nbt) {
     super.writeEntityToNBT(nbt);
 
-    if(this.lastTargetPos == null) {
+    if (this.lastTargetPos == null) {
       this.lastTargetPos = Vec3.createVectorHelper(posX, posY, posZ);
     }
 
@@ -218,7 +218,9 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
   public void readEntityFromNBT(NBTTagCompound nbt) {
     super.readEntityFromNBT(nbt);
 
-    this.lastTargetPos = Vec3.createVectorHelper(nbt.getDouble("targetX"), nbt.getDouble("targetY"), nbt.getDouble("targetZ"));
+    this.lastTargetPos =
+        Vec3.createVectorHelper(
+            nbt.getDouble("targetX"), nbt.getDouble("targetY"), nbt.getDouble("targetZ"));
     this.setType(nbt.getInteger("type"));
   }
 
