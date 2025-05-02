@@ -166,7 +166,7 @@ public class EntityArtilleryRocket extends EntityThrowableInterp
     }
   }
 
-  List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>();
+  List<ChunkPos> loadedChunks = new ArrayList<>();
 
   public void loadNeighboringChunks(int newChunkX, int newChunkZ) {
     if (!world.isRemote && loaderTicket != null) {

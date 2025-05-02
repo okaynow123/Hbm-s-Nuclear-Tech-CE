@@ -173,17 +173,17 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
   }
 
   private static void standardExplosion(
-      EntityArtilleryRocket rocket,
+      EntityArtilleryRocket entity,
       RayTraceResult mop,
       float size,
       float rangeMod,
       boolean breaksBlocks,
       Block slag,
       int slagMeta) {
-    Vec3 vec = Vec3.createVectorHelper(rocket.motionX, rocket.motionY, rocket.motionZ).normalize();
+    Vec3 vec = Vec3.createVectorHelper(entity.motionX, entity.motionY, entity.motionZ).normalize();
     ExplosionVNT explosionVnt =
         new ExplosionVNT(
-            rocket.world,
+                entity.world,
             mop.hitVec.x - vec.xCoord,
             mop.hitVec.y - vec.yCoord,
             mop.hitVec.z - vec.zCoord,
@@ -199,17 +199,17 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
     explosionVnt.setPlayerProcessor(new PlayerProcessorStandard());
     explosionVnt.setSFX(new ExplosionEffectStandard());
     explosionVnt.explode();
-    rocket.killAndClear();
+    entity.killAndClear();
   }
 
-  private static void standardMush(EntityArtilleryRocket rocket, RayTraceResult mop, float size) {
+  private static void standardMush(EntityArtilleryRocket entity, RayTraceResult mop, float size) {
     NBTTagCompound data = new NBTTagCompound();
     data.setString("type", "rbmkmush");
     data.setFloat("scale", size);
     PacketDispatcher.wrapper.sendToAllAround(
         new AuxParticlePacketNT(data, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z),
         new NetworkRegistry.TargetPoint(
-            rocket.dimension, rocket.posX, rocket.posY, rocket.posZ, 250));
+                entity.dimension, entity.posX, entity.posY, entity.posZ, 250));
   }
 
   private void init() {
