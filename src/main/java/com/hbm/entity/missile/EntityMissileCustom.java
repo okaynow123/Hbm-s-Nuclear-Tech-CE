@@ -173,7 +173,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 			case KEROSENE: smoke = "exKerosene"; break;
 			case SOLID: smoke = "exSolid"; break;
 			case XENON: break;
-			case HYDRAZINE: smoke = "exKerosene"; break;
+			case HYDRAZINE:
 			case METHALOX: smoke = "exKerosene"; break;
 		}
 

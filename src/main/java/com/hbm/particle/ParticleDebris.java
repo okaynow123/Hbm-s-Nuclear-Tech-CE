@@ -64,9 +64,7 @@ public class ParticleDebris extends Particle {
 
         if (this.hashCode() % 3 == 0) {
             ParticleRocketFlame fx = new ParticleRocketFlame(world, posX, posY, posZ).setScale(1F * Math.max(worldInAJar.sizeY, 6) / 16F);
-            fx.prevPosX = fx.posX;
-            fx.prevPosY = fx.posY;
-            fx.prevPosZ = fx.posZ;
+            fx.updateInterpPos();
             fx.setMaxAge(50);
             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
         }

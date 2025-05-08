@@ -90,9 +90,7 @@ public class ExplosionCreator implements IParticleCreator {
         // SMOKE PLUME
         for(int i = 0; i < cloudCount; i++) {
             ParticleRocketFlame fx = new ParticleRocketFlame(world, x, y, z).setScale(cloudScale);
-            fx.prevPosX = fx.posX;
-            fx.prevPosY = fx.posY;
-            fx.prevPosZ = fx.posZ;
+            fx.updateInterpPos();
             fx.motionX = rand.nextGaussian() * 0.5 * cloudSpeedMult;
             fx.motionY = rand.nextDouble() * 3 * cloudSpeedMult;
             fx.motionZ = rand.nextGaussian() * 0.5 * cloudSpeedMult;

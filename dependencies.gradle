@@ -60,7 +60,7 @@ dependencies {
 
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:6344449")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:spark-361579:3542217")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6344429")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")

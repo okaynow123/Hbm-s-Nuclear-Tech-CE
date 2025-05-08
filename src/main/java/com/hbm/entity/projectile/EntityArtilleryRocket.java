@@ -137,12 +137,13 @@ public class EntityArtilleryRocket extends EntityThrowableNT
       int offset = 6;
       if (velocity > 1) {
         for (int i = offset; i < velocity + offset; i++) {
-          NBTTagCompound data = new NBTTagCompound();
-          data.setDouble("posX", posX + v.x * i);
-          data.setDouble("posY", posY + v.y * i);
-          data.setDouble("posZ", posZ + v.z * i);
-          data.setString("type", "exKerosene");
-          MainRegistry.proxy.effectNT(data);
+//          NBTTagCompound data = new NBTTagCompound();
+//          data.setDouble("posX", posX + v.x * i);
+//          data.setDouble("posY", posY + v.y * i);
+//          data.setDouble("posZ", posZ + v.z * i);
+//          data.setString("type", "exKerosene");
+//          MainRegistry.proxy.effectNT(data);
+           MainRegistry.proxy.spawnParticle(posX + v.x * i, posY + v.y * i, posZ + v.z * i, "exKerosene", null);
         }
       }
     }
