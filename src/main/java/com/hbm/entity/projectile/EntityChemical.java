@@ -10,7 +10,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.*;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.IRepairable.EnumExtinguishType;
 import com.hbm.util.CompatExternal;
@@ -33,6 +32,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.awt.*;
@@ -131,7 +131,7 @@ public class EntityChemical extends EntityThrowableNT{
 
             if(style == ChemicalStyle.BURNING) {
 
-                double motion = Math.min(Vec3.createVectorHelper(motionX, motionY, motionZ).length(), 0.1);
+                double motion = Math.min(new Vec3d(motionX, motionY, motionZ).length(), 0.1);
 
                 for(double d = 0; d < motion; d += 0.0625) {
                     NBTTagCompound nbt = new NBTTagCompound();

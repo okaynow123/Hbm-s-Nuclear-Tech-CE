@@ -1,7 +1,7 @@
 package api.hbm.item;
 
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public interface IDesignatorItem {
@@ -26,5 +26,5 @@ public interface IDesignatorItem {
      * @param z
      * @return the target
      */
-    public Vec3 getCoords(World world, ItemStack stack, int x, int y, int z);
+    public Vec3d getCoords(World world, ItemStack stack, int x, int y, int z);
 }

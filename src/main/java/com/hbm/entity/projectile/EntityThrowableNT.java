@@ -1,6 +1,5 @@
 package com.hbm.entity.projectile;
 
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.TrackerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -13,10 +12,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -191,18 +187,18 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
         } else {
             ++this.ticksInAir;
 
-            Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            Vec3 nextPos = Vec3.createVectorHelper(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
+            Vec3d pos = new Vec3d(this.posX, this.posY, this.posZ);
+            Vec3d nextPos = new Vec3d(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
             RayTraceResult mop = null;
             if (!this.isSpectral())
-                mop = this.world.rayTraceBlocks(pos.toVec3d(), nextPos.toVec3d(), false, true, false);
-            pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
-            nextPos = Vec3.createVectorHelper(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
+                mop = this.world.rayTraceBlocks(pos, nextPos, false, true, false);
+            pos = new Vec3d(this.posX, this.posY, this.posZ);
+            nextPos = new Vec3d(this.posX + this.motionX * motionMult(), this.posY + this.motionY * motionMult(), this.posZ + this.motionZ * motionMult());
             //Looks fine too theres no Float divs, 
 
 
             if (mop != null) {
-                nextPos = Vec3.createVectorHelper(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
+                nextPos = new Vec3d(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
             }
 
             if (!this.world.isRemote && this.doesImpactEntities()) {
@@ -222,7 +218,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                         AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
 
 
-                        RayTraceResult hitMop = aabb.calculateIntercept(pos.toVec3d(), nextPos.toVec3d());
+                        RayTraceResult hitMop = aabb.calculateIntercept(pos, nextPos);
                         //Non pentrative raytrace result
 
                         if (hitMop != null) {
@@ -230,7 +226,7 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
                             if (this.doesPenetrate()) {
                                 this.onImpact(new RayTraceResult(entity, hitMop.hitVec));
                             } else {
-                                Vec3 hitVec = Vec3.createVectorHelper(hitMop.hitVec.x, hitMop.hitVec.y, hitMop.hitVec.z);
+                                Vec3d hitVec = new Vec3d(hitMop.hitVec.x, hitMop.hitVec.y, hitMop.hitVec.z);
                                 double dist = pos.distanceTo(hitVec);
 
                                 if (dist < nearest || nearest == 0.0D) {
