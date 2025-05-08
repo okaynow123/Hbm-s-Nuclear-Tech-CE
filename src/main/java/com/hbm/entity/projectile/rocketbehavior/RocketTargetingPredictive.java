@@ -1,8 +1,8 @@
 package com.hbm.entity.projectile.rocketbehavior;
 
 import com.hbm.entity.projectile.EntityArtilleryRocket;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Basic implementation of predictive targeting. My current best guess for "smart" targeting Keeps a
@@ -24,9 +24,9 @@ public class RocketTargetingPredictive implements IRocketTargetingBehavior {
   @Override
   public void recalculateTargetPosition(EntityArtilleryRocket rocket, Entity target) {
 
-    Vec3 speed = Vec3.createVectorHelper(rocket.motionX, rocket.motionY, rocket.motionZ);
-    Vec3 delta =
-        Vec3.createVectorHelper(
+    Vec3d speed = new Vec3d(rocket.motionX, rocket.motionY, rocket.motionZ);
+    Vec3d delta =
+        new Vec3d(
             target.posX - rocket.posX, target.posY - rocket.posY, target.posZ - rocket.posZ);
     double eta = delta.length() - speed.length();
 

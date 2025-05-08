@@ -5,7 +5,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -95,7 +95,7 @@ public class EntitySawblade extends EntityThrowableInterp {
 
             if(orientation < 6) {
 
-                if(Vec3.createVectorHelper(motionX, motionY, motionZ).length() < 0.75) {
+                if(new Vec3d(motionX, motionY, motionZ).length() < 0.75) {
                     this.dataManager.set(ORIENTATION, orientation + 6);
                     orientation += 6;
                 } else {

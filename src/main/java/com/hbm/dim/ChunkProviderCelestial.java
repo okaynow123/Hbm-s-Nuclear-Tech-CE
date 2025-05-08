@@ -15,6 +15,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
@@ -42,10 +43,10 @@ public abstract class ChunkProviderCelestial implements IChunkGenerator {
 	protected int seaLevel;
 
 	// Noise frequency
-	protected Vec3 firstOrderFreq = Vec3.createVectorHelper(684.412D, 684.412D, 684.412D);
-	protected Vec3 secondOrderFreq = Vec3.createVectorHelper(684.412D, 684.412D, 684.412D);
-	protected Vec3 thirdOrderFreq = Vec3.createVectorHelper(8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
-	protected Vec3 heightOrderFreq = Vec3.createVectorHelper(200.0D, 200.0D, 0.5D);
+	protected Vec3d firstOrderFreq = new Vec3d(684.412D, 684.412D, 684.412D);
+	protected Vec3d secondOrderFreq = new Vec3d(684.412D, 684.412D, 684.412D);
+	protected Vec3d thirdOrderFreq = new Vec3d(8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
+	protected Vec3d heightOrderFreq = new Vec3d(200.0D, 200.0D, 0.5D);
 
 	// Embiggenify
 	protected boolean amplified = false;
@@ -191,10 +192,10 @@ public abstract class ChunkProviderCelestial implements IChunkGenerator {
 
 	// Fills up a buffer with "chances for this block to be stone" using 3D noise and biome specific information
 	protected void generateNoiseField(int x, int y, int z) {
-		firstOrderBuffer = firstOrder.generateNoiseOctaves(firstOrderBuffer, x, y, z, 5, 33, 5, firstOrderFreq.xCoord, firstOrderFreq.yCoord, firstOrderFreq.zCoord);
-		secondOrderBuffer = secondOrder.generateNoiseOctaves(secondOrderBuffer, x, y, z, 5, 33, 5, secondOrderFreq.xCoord, secondOrderFreq.yCoord, secondOrderFreq.zCoord);
-		thirdOrderBuffer = thirdOrder.generateNoiseOctaves(thirdOrderBuffer, x, y, z, 5, 33, 5, thirdOrderFreq.xCoord, thirdOrderFreq.yCoord, thirdOrderFreq.zCoord);
-		heightOrderBuffer = heightOrder.generateNoiseOctaves(heightOrderBuffer, x, z, 5, 5, heightOrderFreq.xCoord, heightOrderFreq.yCoord, heightOrderFreq.zCoord);
+		firstOrderBuffer = firstOrder.generateNoiseOctaves(firstOrderBuffer, x, y, z, 5, 33, 5, firstOrderFreq.x, firstOrderFreq.y, firstOrderFreq.z);
+		secondOrderBuffer = secondOrder.generateNoiseOctaves(secondOrderBuffer, x, y, z, 5, 33, 5, secondOrderFreq.x, secondOrderFreq.y, secondOrderFreq.z);
+		thirdOrderBuffer = thirdOrder.generateNoiseOctaves(thirdOrderBuffer, x, y, z, 5, 33, 5, thirdOrderFreq.x, thirdOrderFreq.y, thirdOrderFreq.z);
+		heightOrderBuffer = heightOrder.generateNoiseOctaves(heightOrderBuffer, x, z, 5, 5, heightOrderFreq.x, heightOrderFreq.y, heightOrderFreq.z);
 
 		int l = 0;
 		int i1 = 0;
