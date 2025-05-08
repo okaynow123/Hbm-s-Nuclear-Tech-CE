@@ -37,6 +37,7 @@ public abstract class EntityThrowableInterp extends EntityThrowableNT {
             this.lastTickPosX = this.posX;
             this.lastTickPosY = this.posY;
             this.lastTickPosZ = this.posZ;
+
             if(this.turnProgress > 0) {
                 double interpX = this.posX + (this.syncPosX - this.posX) / (double) this.turnProgress;
                 double interpY = this.posY + (this.syncPosY - this.posY) / (double) this.turnProgress;
@@ -60,7 +61,7 @@ public abstract class EntityThrowableInterp extends EntityThrowableNT {
     }
 
     @SideOnly(Side.CLIENT)
-    public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int theNumberThree) {
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int theNumberThree, boolean teleport) {
         this.syncPosX = x;
         this.syncPosY = y;
         this.syncPosZ = z;

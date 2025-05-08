@@ -16,6 +16,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -31,7 +32,7 @@ public class EntityArtilleryRocket extends EntityThrowableNT
   private Ticket loaderTicket;
 
   public Entity targetEntity = null;
-  public Vec3 lastTargetPos;
+  public Vec3d lastTargetPos;
 
   public IRocketTargetingBehavior targeting;
   public IRocketSteeringBehavior steering;
@@ -82,11 +83,11 @@ public class EntityArtilleryRocket extends EntityThrowableNT
   }
 
   public EntityArtilleryRocket setTarget(double x, double y, double z) {
-    this.lastTargetPos = Vec3.createVectorHelper(x, y, z);
+    this.lastTargetPos =  new Vec3d(x, y, z);
     return this;
   }
 
-  public Vec3 getLastTarget() {
+  public Vec3d getLastTarget() {
     return this.lastTargetPos;
   }
 
@@ -111,11 +112,10 @@ public class EntityArtilleryRocket extends EntityThrowableNT
       }
 
       if (this.targetEntity == null) {
-        Vec3 delta =
-            Vec3.createVectorHelper(
-                this.lastTargetPos.xCoord - this.posX,
-                this.lastTargetPos.yCoord - this.posY,
-                this.lastTargetPos.zCoord - this.posZ);
+        Vec3d delta = new Vec3d(
+                this.lastTargetPos.x - this.posX,
+                this.lastTargetPos.y - this.posY,
+                this.lastTargetPos.z - this.posZ);
         if (delta.length() <= 15D) {
           this.targeting = null;
           this.steering = null;
@@ -130,8 +130,7 @@ public class EntityArtilleryRocket extends EntityThrowableNT
       this.getType().onUpdate(this);
     } else {
 
-      Vec3 v =
-          Vec3.createVectorHelper(lastTickPosX - posX, lastTickPosY - posY, lastTickPosZ - posZ);
+      Vec3d v = new Vec3d(lastTickPosX - posX, lastTickPosY - posY, lastTickPosZ - posZ);
       double velocity = v.length();
       v = v.normalize();
 
@@ -139,9 +138,9 @@ public class EntityArtilleryRocket extends EntityThrowableNT
       if (velocity > 1) {
         for (int i = offset; i < velocity + offset; i++) {
           NBTTagCompound data = new NBTTagCompound();
-          data.setDouble("posX", posX + v.xCoord * i);
-          data.setDouble("posY", posY + v.yCoord * i);
-          data.setDouble("posZ", posZ + v.zCoord * i);
+          data.setDouble("posX", posX + v.x * i);
+          data.setDouble("posY", posY + v.y * i);
+          data.setDouble("posZ", posZ + v.z * i);
           data.setString("type", "exKerosene");
           MainRegistry.proxy.effectNT(data);
         }
@@ -205,13 +204,13 @@ public class EntityArtilleryRocket extends EntityThrowableNT
   public void writeEntityToNBT(NBTTagCompound nbt) {
     super.writeEntityToNBT(nbt);
 
-    if (this.lastTargetPos == null) {
-      this.lastTargetPos = Vec3.createVectorHelper(posX, posY, posZ);
+    if(this.lastTargetPos == null) {
+      this.lastTargetPos = new Vec3d(posX, posY, posZ);
     }
 
-    nbt.setDouble("targetX", this.lastTargetPos.xCoord);
-    nbt.setDouble("targetY", this.lastTargetPos.yCoord);
-    nbt.setDouble("targetZ", this.lastTargetPos.zCoord);
+    nbt.setDouble("targetX", this.lastTargetPos.x);
+    nbt.setDouble("targetY", this.lastTargetPos.y);
+    nbt.setDouble("targetZ", this.lastTargetPos.z);
 
     nbt.setInteger("type", this.dataManager.get(TYPE));
   }
@@ -220,9 +219,7 @@ public class EntityArtilleryRocket extends EntityThrowableNT
   public void readEntityFromNBT(NBTTagCompound nbt) {
     super.readEntityFromNBT(nbt);
 
-    this.lastTargetPos =
-        Vec3.createVectorHelper(
-            nbt.getDouble("targetX"), nbt.getDouble("targetY"), nbt.getDouble("targetZ"));
+    this.lastTargetPos = new Vec3d(nbt.getDouble("targetX"), nbt.getDouble("targetY"), nbt.getDouble("targetZ"));
     this.setType(nbt.getInteger("type"));
   }
 

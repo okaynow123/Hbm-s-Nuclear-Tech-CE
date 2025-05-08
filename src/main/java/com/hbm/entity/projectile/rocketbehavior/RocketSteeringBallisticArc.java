@@ -2,6 +2,7 @@ package com.hbm.entity.projectile.rocketbehavior;
 
 import com.hbm.entity.projectile.EntityArtilleryRocket;
 import com.hbm.render.amlfrom1710.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class RocketSteeringBallisticArc implements IRocketSteeringBehavior {
 
@@ -10,20 +11,20 @@ public class RocketSteeringBallisticArc implements IRocketSteeringBehavior {
 
     double turnSpeed = 45;
 
-    Vec3 direction =
-        Vec3.createVectorHelper(rocket.motionX, rocket.motionY, rocket.motionZ).normalize();
+    Vec3d direction =
+        new Vec3d(rocket.motionX, rocket.motionY, rocket.motionZ).normalize();
     double horizontalMomentum =
         Math.sqrt(rocket.motionX * rocket.motionX + rocket.motionZ * rocket.motionZ);
-    Vec3 targetPos = rocket.getLastTarget();
-    double deltaX = targetPos.xCoord - rocket.posX;
-    double deltaZ = targetPos.zCoord - rocket.posZ;
+    Vec3d targetPos = rocket.getLastTarget();
+    double deltaX = targetPos.x - rocket.posX;
+    double deltaZ = targetPos.z - rocket.posZ;
     double horizontalDelta = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
     double stepsRequired = horizontalDelta / horizontalMomentum;
-    Vec3 target =
-        Vec3.createVectorHelper(
-                targetPos.xCoord - rocket.posX,
-                targetPos.yCoord - rocket.posY,
-                targetPos.zCoord - rocket.posZ)
+    Vec3d target =
+        new Vec3d (
+                targetPos.x - rocket.posX,
+                targetPos.y - rocket.posY,
+                targetPos.z - rocket.posZ)
             .normalize();
 
     /* the entity's angles lack precision and i lack the nerve to figure out how they're oriented */
@@ -82,13 +83,13 @@ public class RocketSteeringBallisticArc implements IRocketSteeringBehavior {
     rocket.motionZ = velocity.zCoord;
   }
 
-  private static double yaw(Vec3 vec) {
-    boolean pos = vec.zCoord >= 0;
-    return Math.toDegrees(Math.atan(vec.xCoord / vec.zCoord)) + (pos ? 180 : 0);
+  private static double yaw(Vec3d vec) {
+    boolean pos = vec.z >= 0;
+    return Math.toDegrees(Math.atan(vec.x / vec.z)) + (pos ? 180 : 0);
   }
 
-  private static double pitch(Vec3 vec) {
+  private static double pitch(Vec3d vec) {
     return Math.toDegrees(
-        Math.atan(vec.yCoord / Math.sqrt(vec.xCoord * vec.xCoord + vec.zCoord * vec.zCoord)));
+        Math.atan(vec.y / Math.sqrt(vec.x * vec.x + vec.z * vec.z)));
   }
 }

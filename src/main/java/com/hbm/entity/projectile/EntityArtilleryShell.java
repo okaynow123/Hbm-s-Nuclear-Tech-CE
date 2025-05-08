@@ -206,7 +206,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
     }
 
     @SideOnly(Side.CLIENT)
-    public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int theNumberThree) {
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int theNumberThree) {
         this.syncPosX = x;
         this.syncPosY = y;
         this.syncPosZ = z;
