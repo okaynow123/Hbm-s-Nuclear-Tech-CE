@@ -25,7 +25,6 @@ import com.hbm.items.weapon.ItemMissile.WarheadType;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.LoopedEntitySoundPacket;
-import com.hbm.render.amlfrom1710.Vec3;
 
 import api.hbm.entity.IRadarDetectable;
 import net.minecraft.entity.Entity;
@@ -74,7 +73,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 		targetZ = b;
 		this.motionY = 2;
 
-		Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
+		Vec3d vector = new Vec3d(targetX - startX, 0, targetZ - startZ);
 		accelXZ = decelY = 1 / vector.length();
 		decelY *= 2;
 		velocity = 0;
@@ -130,11 +129,11 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		this.dataManager.register(HEALTH, Integer.valueOf(this.health));
-		this.dataManager.register(WARHEAD, Integer.valueOf(0));
-		this.dataManager.register(FUSELAGE, Integer.valueOf(0));
-		this.dataManager.register(FINS, Integer.valueOf(0));
-		this.dataManager.register(THRUSTER, Integer.valueOf(0));
+		this.dataManager.register(HEALTH, this.health);
+		this.dataManager.register(WARHEAD, 0);
+		this.dataManager.register(FUSELAGE, 0);
+		this.dataManager.register(FINS, 0);
+		this.dataManager.register(THRUSTER, 0);
 	}
 
 	@Override
@@ -162,7 +161,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 	@Override
 	protected void spawnContrail() {
 
-		Vec3 v = Vec3.createVectorHelper(motionX, motionY, motionZ).normalize();
+		Vec3d v = new Vec3d(motionX, motionY, motionZ).normalize();
 		String smoke = "";
 		ItemMissile part = (ItemMissile) Item.getItemById(this.dataManager.get(FUSELAGE));
 		FuelType type = (FuelType) part.attributes[0];
@@ -177,7 +176,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 			case METHALOX: smoke = "exKerosene"; break;
 		}
 
-		if(!smoke.isEmpty()) for(int i = 0; i < velocity; i++) MainRegistry.proxy.spawnParticle(posX - v.xCoord * i, posY - v.yCoord * i, posZ - v.zCoord * i, smoke, null);
+		if(!smoke.isEmpty()) for(int i = 0; i < velocity; i++) MainRegistry.proxy.spawnParticle(posX - v.x * i, posY - v.y * i, posZ - v.z * i, smoke, null);
 	}
 
 	@Override
@@ -205,7 +204,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 			case CLUSTER:
 				break;
 			case BUSTER:
-				ExplosionLarge.buster(world, posX, posY, posZ, Vec3.createVectorHelper(motionX, motionY, motionZ), strength, strength * 4);
+				ExplosionLarge.buster(world, posX, posY, posZ, new Vec3d(motionX, motionY, motionZ), strength, strength * 4);
 				break;
 			case NUCLEAR:
 			case TX:
@@ -294,7 +293,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 		return IRadarDetectableNT.TIER1;
 	}
 
-	@Override public List<ItemStack> getDebris() { return new ArrayList(); }
+	@Override public List<ItemStack> getDebris() { return new ArrayList<>(); }
 	@Override public ItemStack getDebrisRareDrop() { return null; }
 
 	@Override

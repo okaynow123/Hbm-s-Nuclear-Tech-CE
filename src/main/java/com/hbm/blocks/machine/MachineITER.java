@@ -4,7 +4,6 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityITER;
 import com.hbm.tileentity.machine.TileEntityITERStruct;
@@ -21,6 +20,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
@@ -238,12 +238,12 @@ public class MachineITER extends BlockDummyable {
 		this.makeExtra(world, x, y, z);
 		this.makeExtra(world, x, y + 4, z);
 
-		Vec3 vec = Vec3.createVectorHelper(5.75, 0, 0);
+		Vec3d vec = new Vec3d(5.75, 0, 0);
 
 		for(int i = 0; i < 16; i++) {
-			vec.rotateAroundY((float) (Math.PI / 8));
-			this.makeExtra(world, x + (int)vec.xCoord, y, z + (int)vec.zCoord);
-			this.makeExtra(world, x + (int)vec.xCoord, y + 4, z + (int)vec.zCoord);
+			vec = vec.rotateYaw((float) (Math.PI / 8));
+			this.makeExtra(world, x + (int)vec.x, y, z + (int)vec.z);
+			this.makeExtra(world, x + (int)vec.x, y + 4, z + (int)vec.z);
 		}
 	}
 	

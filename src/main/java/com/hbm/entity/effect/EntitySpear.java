@@ -5,7 +5,6 @@ import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -60,7 +60,7 @@ public class EntitySpear extends Entity {
 				double iz = posZ + rand.nextGaussian() * 25;
 				double iy = world.getHeight((int)Math.floor(ix), (int)Math.floor(iz)) + 2;
 				
-				ExAttrib at = Vec3.createVectorHelper(ix - posX, 0, iz - posZ).length() < 20 ? ExAttrib.DIGAMMA_CIRCUIT : ExAttrib.DIGAMMA;
+				ExAttrib at = new Vec3d(ix - posX, 0, iz - posZ).length() < 20 ? ExAttrib.DIGAMMA_CIRCUIT : ExAttrib.DIGAMMA;
 				
 				new ExplosionNT(world, this, ix, iy, iz, 7.5F)
 				.addAttrib(ExAttrib.NOHURT)

@@ -9,7 +9,6 @@ import com.hbm.config.VersatileConfig;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.saveddata.AuxSavedData;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -25,6 +24,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -161,14 +161,14 @@ public class EntityFalloutRain extends Entity implements IConstantRenderer, IChu
 		// So yea, I mathematically worked out that 20 is a good value for this, with the minimum possible being 18 in order to reach all chunks
 		int adjustedMaxAngle = 20 * outerRange / 32; // step size = 20 * chunks / 2
 		for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
-			Vec3 vector = Vec3.createVectorHelper(outerRange, 0, 0);
-			vector.rotateAroundY((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0))); // Ugh, mutable data classes (also, ugh, radians; it uses degrees in 1.18; took me two hours to debug)
-			outerChunks.add(ChunkPos.asLong((int) (posX + vector.xCoord) >> 4, (int) (posZ + vector.zCoord) >> 4));
+			Vec3d vector = new Vec3d(outerRange, 0, 0);
+			vector = vector.rotateYaw((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0))); // Ugh, mutable data classes (also, ugh, radians; it uses degrees in 1.18; took me two hours to debug)
+			outerChunks.add(ChunkPos.asLong((int) (posX + vector.x) >> 4, (int) (posZ + vector.z) >> 4));
 		}
 		for (int distance = 0; distance <= outerRange; distance += 8) for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
-			Vec3 vector = Vec3.createVectorHelper(distance, 0, 0);
-			vector.rotateAroundY((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0)));
-			long chunkCoord = ChunkPos.asLong((int) (posX + vector.xCoord) >> 4, (int) (posZ + vector.zCoord) >> 4);
+			Vec3d vector = new Vec3d(distance, 0, 0);
+			vector = vector.rotateYaw((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0)));
+			long chunkCoord = ChunkPos.asLong((int) (posX + vector.x) >> 4, (int) (posZ + vector.z) >> 4);
 			if (!outerChunks.contains(chunkCoord)) chunks.add(chunkCoord);
 		}
 

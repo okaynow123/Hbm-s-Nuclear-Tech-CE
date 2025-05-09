@@ -4,25 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.hbm.entity.IRadarDetectableNT;
-import com.hbm.config.WeaponConfig;
 import com.hbm.entity.logic.IChunkLoader;
-import com.hbm.entity.particle.EntitySmokeFX;
 import com.hbm.entity.projectile.EntityThrowableInterp;
-import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.explosion.ExplosionLarge;
-import com.hbm.lib.ModDamageSource;
-import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.LoopedEntitySoundPacket;
-import com.hbm.render.amlfrom1710.Vec3;
 
 import api.hbm.entity.IRadarDetectable;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -137,8 +126,8 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 		} else {
 
-			Vec3 vec = Vec3.createVectorHelper(motionX, motionY, motionZ).normalize();
-			MainRegistry.proxy.particleControl(posX - vec.xCoord, posY - vec.yCoord, posZ - vec.zCoord, 2);
+			Vec3d vec = new Vec3d(motionX, motionY, motionZ).normalize();
+			MainRegistry.proxy.particleControl(posX - vec.x, posY - vec.y, posZ - vec.z, 2);
 		}
 
 		float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -163,7 +152,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 			if(!(e instanceof EntityMissileBaseNT)) continue; //can only lock onto missiles
 			if(e instanceof EntityMissileStealth) continue; //cannot lock onto missiles with stealth coating
 
-			Vec3 vec = Vec3.createVectorHelper(e.posX - posX, e.posY - posY, e.posZ - posZ);
+			Vec3d vec = new Vec3d(e.posX - posX, e.posY - posY, e.posZ - posZ);
 
 			if(vec.length() < dist) {
 				closest = e;
@@ -180,10 +169,10 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	/** Predictive targeting system */
 	protected void aimAtTarget() {
 
-		Vec3 delta = Vec3.createVectorHelper(tracking.posX - posX, tracking.posY - posY, tracking.posZ - posZ);
-		double intercept = delta.length() / (this.baseSpeed * this.velocity);
-		Vec3 predicted = Vec3.createVectorHelper(tracking.posX + (tracking.posX - tracking.lastTickPosX) * intercept, tracking.posY + (tracking.posY - tracking.lastTickPosY) * intercept, tracking.posZ + (tracking.posZ - tracking.lastTickPosZ) * intercept);
-		Vec3 motion = Vec3.createVectorHelper(predicted.xCoord - posX, predicted.yCoord - posY, predicted.zCoord - posZ).normalize();
+		Vec3d delta = new Vec3d(tracking.posX - posX, tracking.posY - posY, tracking.posZ - posZ);
+		double intercept = delta.length() / (baseSpeed * this.velocity);
+		Vec3d predicted = new Vec3d(tracking.posX + (tracking.posX - tracking.lastTickPosX) * intercept, tracking.posY + (tracking.posY - tracking.lastTickPosY) * intercept, tracking.posZ + (tracking.posZ - tracking.lastTickPosZ) * intercept);
+		Vec3d motion = new Vec3d(predicted.x - posX, predicted.y - posY, predicted.z - posZ).normalize();
 
 		if(delta.length() < 10 && activationTimer >= 40) {
 			System.out.println("I DIED HERE 1");
@@ -192,9 +181,9 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 		}
 
-		this.motionX = motion.xCoord * baseSpeed;
-		this.motionY = motion.yCoord * baseSpeed;
-		this.motionZ = motion.zCoord * baseSpeed;
+		this.motionX = motion.x * baseSpeed;
+		this.motionY = motion.y * baseSpeed;
+		this.motionZ = motion.z * baseSpeed;
 	}
 
 	@Override

@@ -7,9 +7,9 @@ import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.items.ModItems;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -45,19 +45,19 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		
 		byte rot = this.dataManager.get(this.pr3);
 		
-		Vec3 thrust = Vec3.createVectorHelper(0, 0, 1);
+		Vec3d thrust = new Vec3d(0, 0, 1);
 		switch(rot) {
-		case 2: thrust.rotateAroundY((float) -Math.PI / 2F); break;
-		case 4: thrust.rotateAroundY((float) -Math.PI); break;
-		case 3: thrust.rotateAroundY((float) -Math.PI / 2F * 3F);  break;
+		case 2: thrust = thrust.rotateYaw((float) -Math.PI / 2F); break;
+		case 4: thrust = thrust.rotateYaw((float) -Math.PI); break;
+		case 3: thrust = thrust.rotateYaw((float) -Math.PI / 2F * 3F);  break;
 		}
-		thrust.rotateAroundY((this.rotationYaw + 90) * (float) Math.PI / 180F);
-		thrust.rotateAroundX(this.rotationPitch * (float) Math.PI / 180F);
-		thrust.rotateAroundY(-(this.rotationYaw + 90) * (float) Math.PI / 180F);
+		thrust = thrust.rotateYaw((this.rotationYaw + 90) * (float) Math.PI / 180F);
+		thrust = thrust.rotatePitch(this.rotationPitch * (float) Math.PI / 180F);
+		thrust = thrust.rotateYaw(-(this.rotationYaw + 90) * (float) Math.PI / 180F);
 
-		this.spawnContraolWithOffset(thrust.xCoord, thrust.yCoord, thrust.zCoord);
-		this.spawnContraolWithOffset(0, 0, 0);
-		this.spawnContraolWithOffset(-thrust.xCoord, -thrust.zCoord, -thrust.zCoord);
+		this.spawnControlWithOffset(thrust.x, thrust.y, thrust.z);
+		this.spawnControlWithOffset(0, 0, 0);
+		this.spawnControlWithOffset(-thrust.x, -thrust.z, -thrust.z);
 	}
 	
 	public static class EntityMissileNuclear extends EntityMissileTier4 {

@@ -8,6 +8,7 @@ import com.hbm.items.ModItems;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		public EntityMissileBusterStrong(World world) { super(world); }
 		public EntityMissileBusterStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionLarge.buster(world, this.posX, this.posY, this.posZ, Vec3.createVectorHelper(motionX, motionY, motionZ), 25, 20);
+			ExplosionLarge.buster(world, this.posX, this.posY, this.posZ, new Vec3d(motionX, motionY, motionZ), 25, 20);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_buster_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_buster_strong); }

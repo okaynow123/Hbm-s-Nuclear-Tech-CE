@@ -1,14 +1,9 @@
 package com.hbm.entity.missile;
 
 import api.hbm.entity.IRadarDetectableNT;
-import api.hbm.entity.RadarEntry;
 import com.hbm.entity.logic.IChunkLoader;
-import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityThrowableInterp;
 import com.hbm.explosion.ExplosionLarge;
-import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.explosion.vanillant.standard.*;
-import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -19,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -33,7 +27,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,10 +208,10 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 	}
 	
 	protected void spawnContrail() {
-		this.spawnContraolWithOffset(0, 0, 0);
+		this.spawnControlWithOffset(0, 0, 0);
 	}
 	
-	protected void spawnContraolWithOffset(double offsetX, double offsetY, double offsetZ) {
+	protected void spawnControlWithOffset(double offsetX, double offsetY, double offsetZ) {
 		Vec3 vec = Vec3.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY, this.lastTickPosZ - this.posZ);
 		double len = vec.length();
 		vec = vec.normalize();

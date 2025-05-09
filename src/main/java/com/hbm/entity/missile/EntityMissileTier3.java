@@ -7,9 +7,9 @@ import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.explosion.ExplosionThermo;
 import com.hbm.items.ModItems;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -45,15 +45,15 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 	@Override
 	protected void spawnContrail() {
 		
-		Vec3 thrust = Vec3.createVectorHelper(0, 0, 0.5);
-		thrust.rotateAroundY((this.rotationYaw + 90) * (float) Math.PI / 180F);
-		thrust.rotateAroundX(this.rotationPitch * (float) Math.PI / 180F);
-		thrust.rotateAroundY(-(this.rotationYaw + 90) * (float) Math.PI / 180F);
+		Vec3d thrust = new Vec3d(0, 0, 0.5);
+		thrust.rotateYaw((this.rotationYaw + 90) * (float) Math.PI / 180F);
+		thrust.rotatePitch(this.rotationPitch * (float) Math.PI / 180F);
+		thrust.rotateYaw(-(this.rotationYaw + 90) * (float) Math.PI / 180F);
 
-		this.spawnContraolWithOffset(thrust.xCoord, thrust.yCoord, thrust.zCoord);
-		this.spawnContraolWithOffset(-thrust.zCoord, thrust.yCoord, thrust.xCoord);
-		this.spawnContraolWithOffset(-thrust.xCoord, -thrust.zCoord, -thrust.zCoord);
-		this.spawnContraolWithOffset(thrust.zCoord, -thrust.zCoord, -thrust.xCoord);
+		this.spawnControlWithOffset(thrust.x, thrust.y, thrust.z);
+		this.spawnControlWithOffset(-thrust.z, thrust.y, thrust.x);
+		this.spawnControlWithOffset(-thrust.x, -thrust.z, -thrust.z);
+		this.spawnControlWithOffset(thrust.z, -thrust.z, -thrust.x);
 	}
 	
 	public static class EntityMissileBurst extends EntityMissileTier3 {
