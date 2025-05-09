@@ -27,7 +27,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IRadarCommandReceiver;
@@ -50,6 +49,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -393,9 +393,9 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 			
 			if(!designator.isReady(world, inventory.getStackInSlot(1), pos.getX(), pos.getY(), pos.getZ()) && needsDesignator) return BombReturnCode.ERROR_MISSING_COMPONENT;
 			
-			Vec3 coords = designator.getCoords(world, inventory.getStackInSlot(1), pos.getX(), pos.getY(), pos.getZ());
-			targetX = (int) Math.floor(coords.toBlockPos().getX());
-			targetZ = (int) Math.floor(coords.toBlockPos().getZ());
+			Vec3d coords = designator.getCoords(world, inventory.getStackInSlot(1), pos.getX(), pos.getY(), pos.getZ());
+			targetX = (int) Math.floor(coords.x);
+			targetZ = (int) Math.floor(coords.z);
 			
 		} else {
 			if(needsDesignator) return BombReturnCode.ERROR_MISSING_COMPONENT;

@@ -19,6 +19,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -91,7 +92,7 @@ public class ItemDesignatorRange extends Item implements IDesignatorItem {
 	}
 
 	@Override
-	public Vec3 getCoords(World world, ItemStack stack, int x, int y, int z) {
-		return Vec3.createVectorHelper(stack.getTagCompound().getInteger("xCoord"), 0, stack.getTagCompound().getInteger("zCoord"));
+	public Vec3d getCoords(World world, ItemStack stack, int x, int y, int z) {
+		return new Vec3d(stack.getTagCompound().getInteger("xCoord"), 0, stack.getTagCompound().getInteger("zCoord"));
 	}
 }
