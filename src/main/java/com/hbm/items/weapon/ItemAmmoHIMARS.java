@@ -247,22 +247,8 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
             final Vec3d hitPos = mop.hitVec;
 
             standardExplosion(rocket, mop, 20F, 3F, true, ModBlocks.block_slag, 1);
-            ExplosionCreator.composeEffect(
-                rocket.world,
-                hitPos.x + 0.5,
-                hitPos.y + 0.5,
-                hitPos.z + 0.5,
-                15,
-                5F,
-                1F,
-                45F,
-                10,
-                16,
-                50,
-                1F,
-                3F,
-                -2F,
-                200);
+            ExplosionCreator.composeEffectStandard(
+                rocket.world, hitPos.x + 0.5, hitPos.y + 0.5, hitPos.z + 0.5);
           }
         };
     itemTypes[RocketType.STANDARD_LAVA.ordinal()] =
@@ -277,22 +263,8 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
             final Vec3d hitPos = mop.hitVec;
 
             standardExplosion(rocket, mop, 50F, 5F, true, ModBlocks.block_slag, 1);
-            ExplosionCreator.composeEffect(
-                rocket.world,
-                hitPos.x + 0.5,
-                hitPos.y + 0.5,
-                hitPos.z + 0.5,
-                30,
-                6.5F,
-                2F,
-                65F,
-                25,
-                16,
-                50,
-                1.25F,
-                3F,
-                -2F,
-                350);
+            ExplosionCreator.composeEffectLarge(
+                rocket.world, hitPos.x + 0.5, hitPos.y + 0.5, hitPos.z + 0.5);
           }
         };
 
