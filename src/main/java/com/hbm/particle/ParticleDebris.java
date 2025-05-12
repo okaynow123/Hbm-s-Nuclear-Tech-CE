@@ -96,7 +96,11 @@ public class ParticleDebris extends Particle {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
+        worldInAJar.lightlevel = world.getCombinedLight(new BlockPos((int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ)), 0);
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableBlend();
         GlStateManager.pushMatrix();
+
         GlStateManager.translate(pX, pY, pZ);
 
         GlStateManager.rotate((float) (prevRotationPitch + (rotationPitch - prevRotationPitch) * partialTicks), 0, 1, 0);
@@ -104,8 +108,9 @@ public class ParticleDebris extends Particle {
 
         GlStateManager.translate(-worldInAJar.sizeX / 2.0, -worldInAJar.sizeY / 2.0, -worldInAJar.sizeZ / 2.0);
 
-        RenderHelper.disableStandardItemLighting();
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
         for (int x = 0; x < worldInAJar.sizeX; x++) {
@@ -115,17 +120,19 @@ public class ParticleDebris extends Particle {
                     IBlockState state = worldInAJar.getBlockState(pos);
 
                     try {
-                        IBakedModel model = renderer.getModelForState(state);
-                        renderer.getBlockModelRenderer().renderModel(
-                                worldInAJar, model, state, pos, buffer, false
+                        renderer.renderBlock(
+                                state, pos, worldInAJar, buffer
                         );
+
                     } catch (Exception ignored) {
+
                     }
                 }
             }
         }
 
         tessellator.draw();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.popMatrix();
     }
 
