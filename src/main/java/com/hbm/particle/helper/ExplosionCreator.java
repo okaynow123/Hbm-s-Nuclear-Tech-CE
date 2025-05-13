@@ -52,10 +52,14 @@ public class ExplosionCreator implements IParticleCreator {
     public static void composeEffectSmall(World world, double x, double y, double z) { composeEffect(world, x, y, z, 10, 2F, 0.5F, 25F, 5, 8, 20, 0.75F, 1F, -2F, 150); }
 
     /** Development version */
-    public static void composeEffectStandard(World world, double x, double y, double z) { composeEffect(world, x, y, z, 15, 5F, 1F, 45F, 10, 16, 50, 1F, 3F, -2F, 200); }
+    public static void composeEffectStandard(World world, double x, double y, double z) {
+        composeEffect(world, x, y, z, 15, 5F, 1F, 45F, 10, 16, 50, 1F, 3F, -2F, 200);
+    }
 
     /** Upscaled version, ATACMS go brrt */
-    public static void composeEffectLarge(World world, double x, double y, double z) { composeEffect(world, x, y, z, 30, 6.5F, 2F, 65F, 25, 16, 50, 1.25F, 3F, -2F, 350); }
+    public static void composeEffectLarge(World world, double x, double y, double z) {
+        composeEffect(world, x, y, z, 30, 6.5F, 2F, 65F, 25, 16, 50, 1.25F, 3F, -2F, 350);
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
