@@ -107,6 +107,8 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 			cast.inventory.setStackInSlot(1, ItemStack.EMPTY);
 			cast.markDirty();
 			world.markBlockRangeForRenderUpdate(pos, pos);
+			world.notifyBlockUpdate(pos, state, state, 3);
+			world.notifyBlockUpdate(pos, state, state, 3);
 			return true;
 		}
 		
@@ -129,6 +131,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 				world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
 				cast.markDirty();
 				world.markBlockRangeForRenderUpdate(pos, pos);
+				world.notifyBlockUpdate(pos, state, state, 3);
 				return true;
 			}
 		}
@@ -145,6 +148,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 				cast.type = null;
 				cast.markDirty();
 				world.markBlockRangeForRenderUpdate(pos, pos);
+				world.notifyBlockUpdate(pos, state, state, 3);
 			}
 			return true;
 		}
