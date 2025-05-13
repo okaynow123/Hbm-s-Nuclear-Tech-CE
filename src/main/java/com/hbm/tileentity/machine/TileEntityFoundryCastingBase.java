@@ -192,4 +192,12 @@ public abstract class TileEntityFoundryCastingBase extends TileEntityFoundryBase
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) || super.hasCapability(capability, facing);
 	}
+
+	@Override
+	public void onLoad() {
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		IBlockState castingBaseState = world.getBlockState(getPos());
+		world.notifyBlockUpdate(getPos(), castingBaseState, castingBaseState, 3);
+		super.onLoad();
+	}
 }

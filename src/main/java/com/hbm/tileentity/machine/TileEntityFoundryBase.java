@@ -7,6 +7,7 @@ import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.material.Mats.MaterialStack;
 
 import api.hbm.block.ICrucibleAcceptor;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ITickable;
@@ -25,7 +26,7 @@ import net.minecraft.world.World;
  * @author hbm
  *
  */
-public abstract class TileEntityFoundryBase extends TileEntity implements ITickable, ICrucibleAcceptor, ICopiable {
+public abstract class TileEntityFoundryBase extends TileEntityLoadedBase implements ITickable, ICrucibleAcceptor, ICopiable {
 	
 	public NTMMaterial type;
 	protected NTMMaterial lastType;

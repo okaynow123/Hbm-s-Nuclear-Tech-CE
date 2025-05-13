@@ -6,9 +6,7 @@ import java.util.Objects;
 import com.hbm.main.MainRegistry;
 import com.hbm.wiaj.WorldInAJar;
 import com.hbm.wiaj.actors.ITileActorRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +18,6 @@ import com.hbm.tileentity.machine.IRenderFoundry;
 import com.hbm.tileentity.machine.TileEntityFoundryCastingBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -36,34 +33,34 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 	public static final ResourceLocation lava = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
 
 	private static void drawItem(ItemStack stack, double height, World world) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.5D, height, 0.5D);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0.5D, height, 0.5D);
 
 		if(!(stack.getItem() instanceof ItemBlock)) {
-			GL11.glRotatef(-180, 0F, 1F, 0F);
-			GL11.glScaled(0.5F, 0.5F, 0.5F);
+			GlStateManager.rotate(-180, 0F, 1F, 0F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 		} else {
-			GL11.glTranslated(0, -0.352, 0);
+			GlStateManager.translate(0, -0.352, 0);
 		}
 		
 		double scale = 24D / 16D;
-		GL11.glScaled(scale, scale, scale);
+	GlStateManager.scale(scale, scale, scale);
 		
-		GL11.glRotated(90, 1, 0, 0);
+		GlStateManager.rotate(90, 1, 0, 0);
 		IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, world, null);
 		model = ForgeHooksClient.handleCameraTransforms(model, TransformType.FIXED, false);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableAlpha();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	@Override
 	public void render(TileEntityFoundryCastingBase te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		IRenderFoundry foundry = (IRenderFoundry) te;
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 
         ItemStackHandler inv = te.inventory;
 
@@ -79,23 +76,26 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 
         if (foundry.shouldRender()) {
 			int hex = foundry.getMat().moltenColor;
-			Color color = new Color(hex);
+			Color color = new Color(hex).brighter();
 
-			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_CULL_FACE);
+			GlStateManager.pushMatrix();
+			GlStateManager.disableCull();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-			RenderHelper.disableStandardItemLighting();
+			GlStateManager.disableLighting();
 			ITileActorRenderer.bindTexture(lava);
 
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 
-			float r = color.getRed() / 255.0F;
-			float g = color.getGreen() / 255.0F;
-			float b = color.getBlue() / 255.0F;
-			float a = 1.0F;
 
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			double brightener = 0.7D;
+			int r = (int) (255D - (255D - color.getRed()) * brightener);
+			int g = (int) (255D - (255D - color.getGreen()) * brightener);
+			int b = (int) (255D - (255D - color.getBlue()) * brightener);
+			float a = 1.0F;
+			color = new Color(r, g, b);
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 			float yLevel = (float) foundry.getLevel();
 			float minX = (float) foundry.minX();
@@ -104,21 +104,22 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 			float maxZ = (float) foundry.maxZ();
 
 			// Bottom left
-			buffer.pos(minX, yLevel, minZ).tex(minZ, maxX).color(r, g, b, a).endVertex();
+			buffer.pos(minX, yLevel, minZ).tex(minZ, maxX).endVertex();
 			// Top left
-			buffer.pos(minX, yLevel, maxZ).tex(maxZ, maxX).color(r, g, b, a).endVertex();
+			buffer.pos(minX, yLevel, maxZ).tex(maxZ, maxX).endVertex();
 			// Top right
-			buffer.pos(maxX, yLevel, maxZ).tex(maxZ, minX).color(r, g, b, a).endVertex();
+			buffer.pos(maxX, yLevel, maxZ).tex(maxZ, minX).endVertex();
 			// Bottom right
-			buffer.pos(maxX, yLevel, minZ).tex(minZ, minX).color(r, g, b, a).endVertex();
+			buffer.pos(maxX, yLevel, minZ).tex(minZ, minX).endVertex();
 
 			tessellator.draw();
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glPopMatrix();
+			GlStateManager.enableCull();
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override
