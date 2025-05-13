@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
@@ -53,7 +54,9 @@ public class ParticleMukeWave extends Particle {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buffer = tess.getBuffer();
 
-        float alpha = 1 - (((float)this.particleAge + partialTicks) / (float)this.particleMaxAge);
+        float ageRatio = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
+        ageRatio = MathHelper.clamp(ageRatio, 0.0F, 1.0F);
+        float alpha = 1.0F - ageRatio;
         float scale = (1 - (float)Math.pow(Math.E, (this.particleAge + partialTicks) * -0.125)) * waveScale;
 
         float pX = (float)(this.prevPosX + (this.posX - this.prevPosX) * partialTicks - interpPosX);
@@ -71,13 +74,11 @@ public class ParticleMukeWave extends Particle {
         tess.draw();
 
 // Restore GL state
+        GlStateManager.doPolygonOffset(0,0);
         GlStateManager.enableCull();
-        GlStateManager.disableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableLighting();
         if (fog) GL11.glEnable(GL11.GL_FOG);
-        GlStateManager.depthMask(true);
-
     }
 
     public int getFXLayer(){

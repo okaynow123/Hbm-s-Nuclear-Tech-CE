@@ -7,6 +7,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.wiaj.WorldInAJar;
 import com.hbm.wiaj.actors.ITileActorRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -83,6 +84,7 @@ public class RenderFoundry extends TileEntitySpecialRenderer<TileEntityFoundryCa
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+			RenderHelper.disableStandardItemLighting();
 			ITileActorRenderer.bindTexture(lava);
 
 			Tessellator tessellator = Tessellator.getInstance();
