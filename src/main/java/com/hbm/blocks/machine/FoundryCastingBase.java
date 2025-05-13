@@ -108,7 +108,6 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 			cast.markDirty();
 			world.markBlockRangeForRenderUpdate(pos, pos);
 			world.notifyBlockUpdate(pos, state, state, 3);
-			world.notifyBlockUpdate(pos, state, state, 3);
 			return true;
 		}
 		
@@ -136,7 +135,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 			}
 		}
 		//shovel scrap
-		if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof ItemTool && ((ItemTool) player.getHeldItem(hand).getItem()).getToolClasses(player.getHeldItem(hand)).contains("shovel")) {
+		if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof ItemTool && player.getHeldItem(hand).getItem().getToolClasses(player.getHeldItem(hand)).contains("shovel")) {
 			if(cast.amount > 0) {
 				ItemStack scrap = ItemScraps.create(new MaterialStack(cast.type, cast.amount));
 				if(!player.inventory.addItemStackToInventory(scrap)) {
@@ -205,7 +204,12 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 		}
 		
 		cast.inventory.setStackInSlot(0, ItemStack.EMPTY);
-		
+		cast.markDirty();
+		world.markBlockRangeForRenderUpdate(cast.getPos(), cast.getPos());
+		IBlockState castingBaseState = world.getBlockState(cast.getPos());
+		world.notifyBlockUpdate(cast.getPos(), castingBaseState, castingBaseState, 3);
+
+		//Fuck you alc
 		return true;
 	}
 

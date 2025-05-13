@@ -162,6 +162,8 @@ public final class HBMSoundHandler {
 
     public static SoundEvent explosionSmallNear;
     public static SoundEvent explosionSmallFar;
+    public static SoundEvent explosionLargeNear;
+    public static SoundEvent explosionLargeFar;
     public static SoundEvent boltgun;
     public static SoundEvent chungusOperate;
     public static SoundEvent bang;
@@ -302,6 +304,8 @@ public final class HBMSoundHandler {
 
         explosionSmallNear = register("weapon.explosion_small_near");
         explosionSmallFar  = register("weapon.explosion_small_far");
+        explosionLargeNear = register("weapon.explosion_large_near");
+        explosionLargeFar  = register("weapon.explosion_large_far");
         assemblerOperate = register("block.assembleroperate");
         fel = register("block.fel");
         pressOperate = register("block.pressoperate");

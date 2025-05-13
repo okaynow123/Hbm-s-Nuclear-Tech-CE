@@ -1,21 +1,21 @@
 package com.hbm.particle.helper;
 
 import com.hbm.interfaces.Untested;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.ParticleDebris;
 import com.hbm.particle.ParticleMukeWave;
 import com.hbm.particle.ParticleRocketFlame;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.wiaj.WorldInAJar;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,15 +48,23 @@ public class ExplosionCreator implements IParticleCreator {
         IParticleCreator.sendPacket(world, x, y, z, Math.max(300, (int) soundRange), data);
     }
 
-    /** Downscaled for small bombs */
-    public static void composeEffectSmall(World world, double x, double y, double z) { composeEffect(world, x, y, z, 10, 2F, 0.5F, 25F, 5, 8, 20, 0.75F, 1F, -2F, 150); }
+    /**
+     * Downscaled for small bombs
+     */
+    public static void composeEffectSmall(World world, double x, double y, double z) {
+        composeEffect(world, x, y, z, 10, 2F, 0.5F, 25F, 5, 8, 20, 0.75F, 1F, -2F, 150);
+    }
 
-    /** Development version */
+    /**
+     * Development version
+     */
     public static void composeEffectStandard(World world, double x, double y, double z) {
         composeEffect(world, x, y, z, 15, 5F, 1F, 45F, 10, 16, 50, 1F, 3F, -2F, 200);
     }
 
-    /** Upscaled version, ATACMS go brrt */
+    /**
+     * Upscaled version, ATACMS go brrt
+     */
     public static void composeEffectLarge(World world, double x, double y, double z) {
         composeEffect(world, x, y, z, 30, 6.5F, 2F, 65F, 25, 16, 50, 1.25F, 3F, -2F, 350);
     }
@@ -79,11 +87,16 @@ public class ExplosionCreator implements IParticleCreator {
 
         float dist = (float) player.getDistance(x, y, z);
 
-        if(dist <= soundRange) {
-//            String sound = dist <= soundRange * 0.4 ? "hbm:weapon.explosionLargeNear" : "hbm:weapon.explosionLargeFar";
-//            PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(sound), 1000F, 0.9F + rand.nextFloat() * 0.2F, (float) x, (float) y, (float) z);
-//            Minecraft.getMinecraft().getSoundHandler().playDelayedSound(positionedsoundrecord, (int) (dist / speedOfSound));
-            //TODO: too lazy for now :)
+        if (dist <= soundRange) {
+            SoundEvent sound = dist <= soundRange * 0.4 ? HBMSoundHandler.explosionLargeNear : HBMSoundHandler.explosionLargeFar;
+
+            PositionedSoundRecord soundEffect = new PositionedSoundRecord(
+                    sound,
+                    SoundCategory.PLAYERS,
+                    1000F, 0.9F + rand.nextFloat() * 0.2F,
+                    (float) x, (float) y, (float) z);
+
+            Minecraft.getMinecraft().getSoundHandler().playDelayedSound(soundEffect, (int) (dist / speedOfSound));
         }
 
         // WAVE
@@ -92,7 +105,7 @@ public class ExplosionCreator implements IParticleCreator {
         Minecraft.getMinecraft().effectRenderer.addEffect(wave);
 
         // SMOKE PLUME
-        for(int i = 0; i < cloudCount; i++) {
+        for (int i = 0; i < cloudCount; i++) {
             ParticleRocketFlame fx = new ParticleRocketFlame(world, x, y, z).setScale(cloudScale);
             fx.updateInterpPos();
             fx.motionX = rand.nextGaussian() * 0.5 * cloudSpeedMult;
@@ -105,7 +118,7 @@ public class ExplosionCreator implements IParticleCreator {
 
         // DEBRIS
 
-        for(int c = 0; c < debrisCount; c++) {
+        for (int c = 0; c < debrisCount; c++) {
 
             double oX = rand.nextGaussian() * debrisHorizontalDeviation;
             double oY = debrisVerticalOffset;
@@ -121,19 +134,21 @@ public class ExplosionCreator implements IParticleCreator {
             WorldInAJar wiaj = new WorldInAJar(debrisSize, debrisSize, debrisSize);
             particle.worldInAJar = wiaj;
 
-            if(debrisSize > 0) {
+            if (debrisSize > 0) {
                 int middle = debrisSize / 2 - 1;
 
-                for(int i = 0; i < 2; i++) for(int j = 0; j < 2; j++) for(int k = 0; k < 2; k++)
-                    wiaj.setBlock(middle + i, middle + j, middle + k, world.getBlockState( new BlockPos(cX + i, cY + j, cZ + k)));
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < 2; j++)
+                        for (int k = 0; k < 2; k++)
+                            wiaj.setBlock(middle + i, middle + j, middle + k, world.getBlockState(new BlockPos(cX + i, cY + j, cZ + k)));
 
-                for(int layer = 2; layer <= (debrisSize / 2); layer++) {
-                    for(int i = 0; i < debrisRetry; i++) {
+                for (int layer = 2; layer <= (debrisSize / 2); layer++) {
+                    for (int i = 0; i < debrisRetry; i++) {
                         int jx = -layer + rand.nextInt(layer * 2 + 1);
                         int jy = -layer + rand.nextInt(layer * 2 + 1);
                         int jz = -layer + rand.nextInt(layer * 2 + 1);
 
-                        if(wiaj.getBlock(middle + jx + 1, middle + jy, middle + jz) != Blocks.AIR || wiaj.getBlock(middle + jx - 1, middle + jy, middle + jz) != Blocks.AIR ||
+                        if (wiaj.getBlock(middle + jx + 1, middle + jy, middle + jz) != Blocks.AIR || wiaj.getBlock(middle + jx - 1, middle + jy, middle + jz) != Blocks.AIR ||
                                 wiaj.getBlock(middle + jx, middle + jy + 1, middle + jz) != Blocks.AIR || wiaj.getBlock(middle + jx, middle + jy - 1, middle + jz) != Blocks.AIR ||
                                 wiaj.getBlock(middle + jx, middle + jy, middle + jz + 1) != Blocks.AIR || wiaj.getBlock(middle + jx, middle + jy, middle + jz - 1) != Blocks.AIR) {
 

@@ -191,6 +191,18 @@
       ]
     },
 
+    "weapon.explosion_large_near": {
+      "category": "player",
+      "sounds": [
+        "hbm:weapon/explosion_large_near"
+      ]
+    },
+    "weapon.explosion_large_far": {
+      "category": "player",
+      "sounds": [
+        "hbm:weapon/explosion_large_far"
+      ]
+    },
 
 
 
