@@ -81,6 +81,8 @@ public class RocketSteeringBallisticArc implements IRocketSteeringBehavior {
     rocket.motionX = velocity.xCoord;
     rocket.motionY = velocity.yCoord;
     rocket.motionZ = velocity.zCoord;
+
+    rocket.rotationPitch += (float) turnPitch;
   }
 
   private static double yaw(Vec3d vec) {
