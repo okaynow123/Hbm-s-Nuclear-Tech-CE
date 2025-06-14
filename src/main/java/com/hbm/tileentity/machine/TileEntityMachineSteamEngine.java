@@ -11,6 +11,8 @@ import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -22,6 +24,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -142,7 +145,16 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
             tanks[1], world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), pos.getDir());
       }
 
-      // networkPackNT(150);
+      NBTTagCompound data = new NBTTagCompound();
+      data.setLong("powerBuffer", powerBuffer);
+      data.setFloat("acceleration", acceleration);
+      tanks[0].writeToNBT(data, "s");
+      tanks[1].writeToNBT(data, "w");
+      PacketDispatcher.wrapper.sendToAllAround(
+          new AuxParticlePacketNT(data, pos.getX(), pos.getY(), pos.getZ()),
+          new NetworkRegistry.TargetPoint(
+              world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
+
     } else {
       this.lastRotor = this.rotor;
 
