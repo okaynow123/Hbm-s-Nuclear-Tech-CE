@@ -39,8 +39,7 @@ public class RenderSteamEngine extends TileEntitySpecialRenderer<TileEntityMachi
         break;
     }
 
-    TileEntityMachineSteamEngine engine = tile;
-    float angle = engine.lastRotor + (engine.rotor - engine.lastRotor) * interp;
+    float angle = tile.lastRotor + (tile.rotor - tile.lastRotor) * interp;
     GL11.glTranslated(2, 0, 0);
     renderCommon(angle);
 

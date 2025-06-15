@@ -11,7 +11,6 @@ import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.BufPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.*;
@@ -133,12 +132,26 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
 
       for (DirPos dirPos : getConPos()) {
         if (this.powerBuffer > 0)
-          this.tryProvide(world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
+          this.tryProvide(
+              world,
+              dirPos.getPos().getX(),
+              dirPos.getPos().getY(),
+              dirPos.getPos().getZ(),
+              dirPos.getDir());
         this.trySubscribe(
             tanks[0].getTankType(),
-            world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
+            world,
+            dirPos.getPos().getX(),
+            dirPos.getPos().getY(),
+            dirPos.getPos().getZ(),
+            dirPos.getDir());
         this.sendFluid(
-            tanks[1], world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
+            tanks[1],
+            world,
+            dirPos.getPos().getX(),
+            dirPos.getPos().getY(),
+            dirPos.getPos().getZ(),
+            dirPos.getDir());
       }
 
       NBTTagCompound data = new NBTTagCompound();
@@ -147,7 +160,10 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
       tanks[0].writeToNBT(data, "s");
       tanks[1].writeToNBT(data, "w");
 
-      PacketDispatcher.wrapper.sendToAllAround(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
+      PacketDispatcher.wrapper.sendToAllAround(
+          new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
+          new NetworkRegistry.TargetPoint(
+              this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
     } else {
       this.lastRotor = this.rotor;
 
