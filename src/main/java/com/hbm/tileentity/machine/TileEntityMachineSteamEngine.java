@@ -12,6 +12,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.BufPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.*;
 import io.netty.buffer.ByteBuf;
@@ -146,6 +147,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
       tanks[0].writeToNBT(data, "s");
       tanks[1].writeToNBT(data, "w");
 
+      PacketDispatcher.wrapper.sendToAllAround(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
     } else {
       this.lastRotor = this.rotor;
 
