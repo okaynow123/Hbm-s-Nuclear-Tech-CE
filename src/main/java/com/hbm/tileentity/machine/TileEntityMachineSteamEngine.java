@@ -13,9 +13,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.tileentity.IConfigurableMachine;
-import com.hbm.tileentity.IFluidCopiable;
-import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.tileentity.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,6 +34,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
         IEnergyProviderMK2,
         IFluidStandardTransceiver,
         IFluidCopiable,
+        IBufPacketReceiver,
         IConfigurableMachine {
   public long powerBuffer;
 
@@ -131,18 +130,14 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
       buf.writeFloat(this.rotor);
       tanks[1].serialize(buf);
 
-      for (DirPos pos : getConPos()) {
+      for (DirPos dirPos : getConPos()) {
         if (this.powerBuffer > 0)
-          this.tryProvide(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), pos.getDir());
+          this.tryProvide(world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
         this.trySubscribe(
             tanks[0].getTankType(),
-            world,
-            this.pos.getX(),
-            this.pos.getY(),
-            this.pos.getZ(),
-            pos.getDir());
+            world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
         this.sendFluid(
-            tanks[1], world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), pos.getDir());
+            tanks[1], world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
       }
 
       NBTTagCompound data = new NBTTagCompound();
@@ -150,10 +145,6 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
       data.setFloat("acceleration", acceleration);
       tanks[0].writeToNBT(data, "s");
       tanks[1].writeToNBT(data, "w");
-      PacketDispatcher.wrapper.sendToAllAround(
-          new AuxParticlePacketNT(data, pos.getX(), pos.getY(), pos.getZ()),
-          new NetworkRegistry.TargetPoint(
-              world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
 
     } else {
       this.lastRotor = this.rotor;
