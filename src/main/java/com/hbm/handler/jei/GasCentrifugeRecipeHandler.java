@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GasCentrifugeRecipeHandler implements IRecipeCategory<GasCentRecipe> {
 
-	public static final ResourceLocation gui_rl = new ResourceLocation(RefStrings.MODID, "textures/gui/centrifuge_gas.png");
+	public static final ResourceLocation gui_rl = new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png");
 	
 	protected final IDrawable background;
 	protected final IDrawableStatic powerStatic;
@@ -28,7 +28,7 @@ public class GasCentrifugeRecipeHandler implements IRecipeCategory<GasCentRecipe
 	
 	public GasCentrifugeRecipeHandler(IGuiHelper help) {
 		background = help.createDrawable(gui_rl, 6, 15, 163, 55);
-		
+
 		powerStatic = help.createDrawable(gui_rl, 176, 0, 16, 34);
 		powerAnimated = help.createAnimatedDrawable(powerStatic, 480, StartDirection.TOP, true);
 		
