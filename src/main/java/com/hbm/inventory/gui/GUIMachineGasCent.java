@@ -2,12 +2,14 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerMachineGasCent;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -160,13 +162,13 @@ public class GUIMachineGasCent extends GuiInfoContainer {
   public void renderTank(int x, int y, double z, int width, int height, int fluid, int maxFluid) {
     GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 
-    GL11.glEnable(GL11.GL_BLEND);
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    GlStateManager.enableBlend();
+    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
     y += height;
     Minecraft.getMinecraft()
-            .getTextureManager()
-            .bindTexture(gasCent.tankNew.getTankType().getTexture());
+        .getTextureManager()
+        .bindTexture(gasCent.tankNew.getTankType().getTexture());
 
     int scaledHeight = (fluid * height) / maxFluid;
     double minX = x;
@@ -178,12 +180,13 @@ public class GUIMachineGasCent extends GuiInfoContainer {
     double minV = 1.0;
     double maxV = 1.0 - scaledHeight / 16.0;
 
-    Tessellator tessellator = Tessellator.instance;
-    tessellator.startDrawingQuads();
-    tessellator.addVertexWithUV(minX, maxY, z, minU, maxV);
-    tessellator.addVertexWithUV(maxX, maxY, z, maxU, maxV);
-    tessellator.addVertexWithUV(maxX, minY, z, maxU, minV);
-    tessellator.addVertexWithUV(minX, minY, z, minU, minV);
+    Tessellator tessellator = Tessellator.getInstance();
+    BufferBuilder buffer = tessellator.getBuffer();
+    buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+    buffer.pos(minX, maxY, z).tex(minU, maxV).endVertex();
+    buffer.pos(maxX, maxY, z).tex(maxU, maxV).endVertex();
+    buffer.pos(maxX, minY, z).tex(maxU, minV).endVertex();
+    buffer.pos(minX, minY, z).tex(minU, minV).endVertex();
     tessellator.draw();
 
     GL11.glPopAttrib();
