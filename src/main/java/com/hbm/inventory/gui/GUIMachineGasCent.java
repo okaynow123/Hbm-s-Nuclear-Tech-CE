@@ -7,6 +7,7 @@ import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -95,7 +96,7 @@ public class GUIMachineGasCent extends GuiInfoContainer {
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     super.drawDefaultBackground();
-    GL11.glColor4f(1F, 1F, 1F, 1F);
+    GlStateManager.color(1F, 1F, 1F, 1F);
     Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
     drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -157,12 +158,15 @@ public class GUIMachineGasCent extends GuiInfoContainer {
   }
 
   public void renderTank(int x, int y, double z, int width, int height, int fluid, int maxFluid) {
+    GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+
     GL11.glEnable(GL11.GL_BLEND);
+    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
     y += height;
     Minecraft.getMinecraft()
-        .getTextureManager()
-        .bindTexture(gasCent.tankNew.getTankType().getTexture());
+            .getTextureManager()
+            .bindTexture(gasCent.tankNew.getTankType().getTexture());
 
     int scaledHeight = (fluid * height) / maxFluid;
     double minX = x;
@@ -182,6 +186,6 @@ public class GUIMachineGasCent extends GuiInfoContainer {
     tessellator.addVertexWithUV(minX, minY, z, minU, minV);
     tessellator.draw();
 
-    GL11.glDisable(GL11.GL_BLEND);
+    GL11.glPopAttrib();
   }
 }
