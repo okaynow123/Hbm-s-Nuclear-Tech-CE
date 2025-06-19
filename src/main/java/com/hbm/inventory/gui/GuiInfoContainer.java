@@ -101,6 +101,7 @@ public abstract class GuiInfoContainer extends GuiContainer {
 		protected void drawStackText(List lines, int x, int y, FontRenderer font, int highLightIndex) {
 		
 		if(!lines.isEmpty()) {
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			RenderHelper.disableStandardItemLighting();
 			GL11.glDisable(GL11.GL_LIGHTING);
