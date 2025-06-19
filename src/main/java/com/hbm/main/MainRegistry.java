@@ -957,6 +957,7 @@ public class MainRegistry {
 		HadronRecipes.register();
 		MagicRecipes.register();
 		SILEXRecipes.register();
+		GasCentrifugeRecipes.register();
 		NTMToolHandler.register();
 		SerializableRecipe.registerAllHandlers();
 		SerializableRecipe.initialize();
