@@ -49,7 +49,7 @@ public class RecipesCommon {
 	
 	public static abstract class AStack implements Comparable<AStack> {
 
-		protected int stacksize;
+		public int stacksize;
 
 		public boolean isApplicable(ItemStack stack) {
 			return isApplicable(new NbtComparableStack(stack));

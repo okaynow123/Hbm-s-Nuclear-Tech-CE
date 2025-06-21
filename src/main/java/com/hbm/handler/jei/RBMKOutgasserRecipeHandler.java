@@ -1,7 +1,7 @@
 package com.hbm.handler.jei;
 
 
-import com.hbm.inventory.RBMKOutgasserRecipes;
+import com.hbm.inventory.recipes.RBMKOutgasserRecipes;
 import com.hbm.lib.RefStrings;
 
 import com.hbm.util.I18nUtil;
