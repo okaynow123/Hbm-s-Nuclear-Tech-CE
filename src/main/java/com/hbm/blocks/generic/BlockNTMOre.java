@@ -87,7 +87,7 @@ public class BlockNTMOre extends BlockOre {
                 droppedItem =  oreEnum.dropFunction.apply(state, rand);
             }
 
-            if (droppedItem.isEmpty())
+            if (!droppedItem.isEmpty())
             {
                 drops.add(droppedItem);
             }
