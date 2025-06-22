@@ -158,9 +158,9 @@ public class MixerRecipes extends SerializableRecipe {
 		writer.endArray();
 	}
 
-	public static HashMap getRecipes() {
+	public static HashMap<Object[], Object> getRecipes() {
 
-		HashMap<Object[], Object> recipes = new HashMap<Object[], Object>();
+		HashMap<Object[], Object> recipes = new HashMap<>();
 
 		for(Map.Entry<FluidType, MixerRecipe[]> entry : MixerRecipes.recipes.entrySet()) {
 
@@ -180,37 +180,6 @@ public class MixerRecipes extends SerializableRecipe {
 		}
 
 		return recipes;
-	}
-
-	public static AStack getInputItem(FluidType outputFluid) {
-		MixerRecipe[] recipes1 = recipes.get(outputFluid);
-		if (recipes1 != null && recipes1.length > 0) {
-			return recipes1[0].solidInput;
-		}
-		return null;
-	}
-
-	public static FluidStack[] getInputFluidStacks(FluidType outputFluid) {
-		MixerRecipe[] recipes1 = recipes.get(outputFluid);
-		if (recipes1 != null && recipes1.length > 0) {
-			List<FluidStack> inputs = new ArrayList<>();
-			if (recipes1[0].input1 != null) {
-				inputs.add(recipes1[0].input1);
-			}
-			if (recipes1[0].input2 != null) {
-				inputs.add(recipes1[0].input2);
-			}
-			return inputs.toArray(new FluidStack[0]);
-		}
-		return new FluidStack[0];
-	}
-
-	public static int getFluidOutputAmount(FluidType outputFluid) {
-		MixerRecipe[] recipes1 = recipes.get(outputFluid);
-		if (recipes1 != null && recipes1.length > 0) {
-			return recipes1[0].output;
-		}
-		return 0;
 	}
 
 	public static class MixerRecipe {

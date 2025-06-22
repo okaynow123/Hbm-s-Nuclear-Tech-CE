@@ -39,6 +39,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new FractionRecipes());
         recipeHandlers.add(new HydrotreatingRecipes());
         recipeHandlers.add(new LiquefactionRecipes());
+        recipeHandlers.add(new MixerRecipes());
         recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new ReformingRecipes());
         recipeHandlers.add(new SolidificationRecipes());

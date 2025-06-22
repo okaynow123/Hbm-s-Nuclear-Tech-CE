@@ -12,21 +12,12 @@ import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.Tuple;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.ingredients.VanillaTypes;
-import mezz.jei.api.recipe.IIngredientType;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,7 +26,6 @@ import static com.hbm.inventory.OreDictManager.*;
 public class RBMKOutgasserRecipes extends SerializableRecipe {
 
 	public static Map<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> recipes = new HashMap();
-	public static List<RBMKOutgasserRecipe> jeiRBMKOutgasserRecipes = null;
 
 	@Override
 	public void registerDefaults() {
@@ -89,9 +79,9 @@ public class RBMKOutgasserRecipes extends SerializableRecipe {
 		return null;
 	}
 
-	public static HashMap getRecipes() {
+	public static HashMap<Object, Object[]> getRecipes() {
 
-		HashMap<Object, Object[]> recipes = new HashMap<Object, Object[]>();
+		HashMap<Object, Object[]> recipes = new HashMap<>();
 
 		for(Entry<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> entry : RBMKOutgasserRecipes.recipes.entrySet()) {
 
@@ -159,58 +149,5 @@ public class RBMKOutgasserRecipes extends SerializableRecipe {
 	@Override
 	public void deleteRecipes() {
 		recipes.clear();
-	}
-
-	public static List<RBMKOutgasserRecipe> getRBMKOutgasserRecipes() {
-		if(jeiRBMKOutgasserRecipes == null){
-			jeiRBMKOutgasserRecipes = new ArrayList<RBMKOutgasserRecipe>();
-			for(Entry<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> e : recipes.entrySet()){
-				jeiRBMKOutgasserRecipes.add(new RBMKOutgasserRecipe(e.getKey(), e.getValue().getKey(), e.getValue().getValue()));
-			}
-		}
-		return jeiRBMKOutgasserRecipes;
-	}
-
-	public static class RBMKOutgasserRecipe implements IRecipeWrapper {
-
-		private final RecipesCommon.AStack input;
-		private final ItemStack output;
-		private final FluidStack fluidOutput;
-
-		public RBMKOutgasserRecipe(RecipesCommon.AStack input, ItemStack output, FluidStack fluidOutput) {
-			this.input = input;
-			this.output = output;
-			this.fluidOutput = fluidOutput;
-		}
-
-		public static final IIngredientType<FluidStack> NTMFLUID = () -> {
-			return FluidStack.class;
-		};
-
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			List<List<ItemStack>> inputs = new ArrayList<>();
-			inputs.add(input.getStackList());
-			ingredients.setInputLists(VanillaTypes.ITEM, inputs);
-
-			if (output != null && !output.isEmpty()) {
-				ingredients.setOutput(VanillaTypes.ITEM, output);
-			}
-
-			if (fluidOutput != null && fluidOutput.fill > 0) {
-				ingredients.setOutput(NTMFLUID, fluidOutput);
-			}
-		}
-
-		@Override
-		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-			FontRenderer fontRenderer = minecraft.fontRenderer;
-
-			if (fluidOutput != null && fluidOutput.fill > 0) {
-				fontRenderer.drawString("Fluid", 21 - 12, 33 - 17, 4210752);
-				fontRenderer.drawString(fluidOutput.fill + " mB", 123 - 12 - fontRenderer.getStringWidth(fluidOutput.fill + " mB"), 34 - 17, 0x46EA00);
-			}
-			GlStateManager.color(1, 1, 1, 1);
-		}
 	}
 }

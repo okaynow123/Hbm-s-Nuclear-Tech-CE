@@ -1,6 +1,5 @@
 package com.hbm.handler.jei;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.jei.JeiRecipes.JeiUniversalRecipe;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.lib.RefStrings;
@@ -27,20 +26,20 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
     protected final String uid;
     protected final List<JeiRecipes.JeiUniversalRecipe> recipes;
 
-    public JEIUniversalHandler(IGuiHelper helper, String uid, String titleKey, ItemStack iconStack, HashMap<Object, Object> recipeMap) {
+    public JEIUniversalHandler(IGuiHelper helper, String uid, String titleKey, ItemStack[] machines, HashMap<Object, Object> recipeMap) {
         this.uid = uid;
-        this.titleKey = titleKey;
+        this.titleKey = titleKey + ".name";
         this.background = helper.createDrawable(GUI_TEXTURE, 5, 11, 166, 65);
         this.recipes = new ArrayList<>();
-        buildRecipes(recipeMap, iconStack);
+        buildRecipes(recipeMap, machines);
     }
 
-    protected void buildRecipes(HashMap<Object, Object> recipeMap, ItemStack machine) {
+    protected void buildRecipes(HashMap<Object, Object> recipeMap, ItemStack[] machines) {
         for (Map.Entry<Object, Object> entry : recipeMap.entrySet()) {
             ItemStack[] inputs = extractInput(entry.getKey());
             ItemStack[] outputs = extractOutput(entry.getValue());
             if (inputs.length > 0 && outputs.length > 0)
-                recipes.add(new JeiUniversalRecipe(inputs, outputs, machine));
+                recipes.add(new JeiUniversalRecipe(inputs, outputs, machines));
         }
     }
 
@@ -131,12 +130,15 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
 
         stacks.set(ingredients);
 
-        if (recipeWrapper.getMachine() != null) {
-            stacks.init(inputList.size() + outputList.size(), false, 75, 31);
-            stacks.set(inputList.size() + outputList.size(), Collections.singletonList(recipeWrapper.getMachine()));
+        if (recipeWrapper.getMachines() != null && recipeWrapper.getMachines().length > 0) {
+            int slotIndex = inputList.size() + outputList.size();
+            int x = 74;
+            int y = 31;
+
+            stacks.init(slotIndex, false, x, y);
+            stacks.set(slotIndex, Arrays.asList(recipeWrapper.getMachines()));
         }
     }
-
     public static int[][] getInputCoords(int count) {
 
         return switch (count) {

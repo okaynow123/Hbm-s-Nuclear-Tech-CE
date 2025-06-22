@@ -13,7 +13,7 @@ import java.util.Map;
 public class CrystallizerRecipeHandler extends JEIUniversalHandler {
 
 	@Override
-	protected void buildRecipes(HashMap<Object, Object> recipeMap, ItemStack machine) {
+	protected void buildRecipes(HashMap<Object, Object> recipeMap, ItemStack[] machines) {
 		for (Map.Entry<Object, Object> entry : recipeMap.entrySet()) {
 			ItemStack[] inputs = extractInput(entry.getKey());
 			if (inputs.length < 2) continue;
@@ -40,7 +40,7 @@ public class CrystallizerRecipeHandler extends JEIUniversalHandler {
 			recipes.add(new JeiRecipes.CrystallizerRecipe(
 					inputs,
 					new ItemStack[]{output},
-					new ItemStack(ModBlocks.machine_crystallizer),
+					machines,
 					productivity
 			));
 		}
@@ -48,7 +48,7 @@ public class CrystallizerRecipeHandler extends JEIUniversalHandler {
 
 
 	public CrystallizerRecipeHandler(IGuiHelper helper) {
-		super(helper, JEIConfig.CRYSTALLIZER, "tile.machine_crystallizer.name", new ItemStack(ModBlocks.machine_crystallizer), CrystallizerRecipes.getRecipes());
+		super(helper, JEIConfig.CRYSTALLIZER, ModBlocks.machine_crystallizer.getTranslationKey(), new ItemStack[]{new ItemStack(ModBlocks.machine_crystallizer)}, CrystallizerRecipes.getRecipes());
 	}
 
 }

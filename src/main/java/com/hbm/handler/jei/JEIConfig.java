@@ -2,9 +2,10 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.inventory.*;
+import com.hbm.inventory.CentrifugeRecipes;
+import com.hbm.inventory.DFCRecipes;
+import com.hbm.inventory.ShredderRecipes;
 import com.hbm.inventory.gui.*;
-import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.inventory.recipes.RBMKOutgasserRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
@@ -20,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import org.jetbrains.annotations.NotNull;
 
 @JEIPlugin
 public class JEIConfig implements IModPlugin {
@@ -45,6 +47,10 @@ public class JEIConfig implements IModPlugin {
     public static final String BOOK = "hbm.book_of";
     public static final String FUSION_BYPRODUCT = "hbm.fusionbyproduct";
     public static final String HADRON = "hbm.hadron";
+    public static final String HYDROTREATING = "hbm.hydrotreating";
+    public static final String LIQUEFACTION = "hbm.liquefaction";
+    public static final String REFORMING = "hbm.reforming";
+    public static final String SOLIDIFICATION = "hbm.solidification";
     public static final String SILEX = "hbm.silex";
     public static final String SILEX_RADIO = "hbm.silexradio";
     public static final String SILEX_MICRO = "hbm.silexmicro";
@@ -65,9 +71,17 @@ public class JEIConfig implements IModPlugin {
     private CokingRecipeHandler cokingHandler;
     private CrackingHandler crackingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
+    private FractioningRecipeHandler fractioningHandler;
+    private BoilerRecipeHandler boilerHandler;
+    private HydrotreatingHandler hydrotreatHandler;
+    private LiquefactionHandler liquefactHandler;
+    private MixerRecipeHandler mixerHandler;
+    private RBMKOutgasserRecipeHandler outgasserHandler;
+    private ReformingHandler reformingHandler;
+    private SolidificationHandler solidificationHandler;
 
     @Override
-    public void register(IModRegistry registry) {
+    public void register(@NotNull IModRegistry registry) {
         if (!GeneralConfig.jei)
             return;
         registry.addRecipeRegistryPlugin(new HbmJeiRegistryPlugin());
@@ -88,7 +102,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_assemfac), ASSEMBLY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemplant), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemfac), CHEMPLANT);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_mixer), MIXER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_cyclotron), CYCLOTRON);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_schrabidium_transmutator), TRANSMUTATION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_press), PRESS);
@@ -110,6 +123,11 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_refinery), REFINERY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_catalytic_cracker), CRACKING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_fraction_tower), FRACTIONING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_hydrotreater), HYDROTREATING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_liquefactor), LIQUEFACTION);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_catalytic_reformer), REFORMING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_solidifier), SOLIDIFICATION);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_mixer), MIXER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_shredder), SHREDDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_fluidtank), FLUIDS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crystallizer), CRYSTALLIZER);
@@ -134,12 +152,11 @@ public class JEIConfig implements IModPlugin {
 
         // registry.addRecipes(ItemAssemblyTemplate.recipes, ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
-        registry.addRecipes(JeiRecipes.getMixerRecipes(), MIXER);
         registry.addRecipes(JeiRecipes.getCyclotronRecipes(), CYCLOTRON);
         registry.addRecipes(JeiRecipes.getTransmutationRecipes(), TRANSMUTATION);
         registry.addRecipes(JeiRecipes.getPressRecipes(), PRESS);
         registry.addRecipes(JeiRecipes.getAlloyRecipes(), ALLOY);
-        registry.addRecipes(JeiRecipes.getBoilerRecipes(), BOILER);
+        registry.addRecipes(boilerHandler.getRecipes(), BOILER);
         registry.addRecipes(CentrifugeRecipes.getCentrifugeRecipes(), CENTRIFUGE);
         registry.addRecipes(JeiRecipes.getCMBRecipes(), CMB);
         registry.addRecipes(JeiRecipes.getGasCentrifugeRecipes(), GAS_CENT);
@@ -147,7 +164,13 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getStorageDrumRecipes(), STORAGEDRUM);
         registry.addRecipes(JeiRecipes.getRefineryRecipe(), REFINERY);
         registry.addRecipes(crackingHandler.getRecipes(), CRACKING);
-        registry.addRecipes(JeiRecipes.getFractioningRecipe(), FRACTIONING);
+        registry.addRecipes(fractioningHandler.getRecipes(), FRACTIONING);
+        registry.addRecipes(hydrotreatHandler.getRecipes(), HYDROTREATING);
+        registry.addRecipes(liquefactHandler.getRecipes(), LIQUEFACTION);
+        registry.addRecipes(mixerHandler.getRecipes(), MIXER);
+        registry.addRecipes(outgasserHandler.getRecipes(), RBMKOUTGASSER);
+        registry.addRecipes(reformingHandler.getRecipes(), REFORMING);
+        registry.addRecipes(solidificationHandler.getRecipes(), SOLIDIFICATION);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
@@ -167,7 +190,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.DRX), SILEX_DIGAMMA);
         registry.addRecipes(JeiRecipes.getSmithingRecipes(), SMITHING);
         registry.addRecipes(JeiRecipes.getAnvilRecipes(), ANVIL);
-        registry.addRecipes(RBMKOutgasserRecipes.getRBMKOutgasserRecipes(), RBMKOUTGASSER);
         registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
 
@@ -247,24 +269,29 @@ public class JEIConfig implements IModPlugin {
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registry) {
+    public void registerCategories(@NotNull IRecipeCategoryRegistration registry) {
         if (!GeneralConfig.jei)
             return;
         IGuiHelper help = registry.getJeiHelpers().getGuiHelper();
         registry.addRecipeCategories(new AnvilRecipeHandler(help),
-                new CokingRecipeHandler(help),
                 new SmithingRecipeHandler(help),
                 new PressRecipeHandler(help),
                 new AlloyFurnaceRecipeHandler(help),
                 new ShredderRecipeHandler(help),
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
-                new MixerRecipeHandler(help),
-                new BoilerRecipeHandler(help),
                 new RefineryRecipeHandler(help),
-                new CrackingHandler(help),
-                new FractioningRecipeHandler(help),
-                new CrystallizerRecipeHandler(help),
+                boilerHandler = new BoilerRecipeHandler(help),
+                cokingHandler = new CokingRecipeHandler(help),
+                crackingHandler = new CrackingHandler(help),
+                crystallizerHandler = new CrystallizerRecipeHandler(help),
+                fractioningHandler = new FractioningRecipeHandler(help),
+                hydrotreatHandler = new HydrotreatingHandler(help),
+                liquefactHandler = new LiquefactionHandler(help),
+                mixerHandler = new MixerRecipeHandler(help),
+                outgasserHandler = new RBMKOutgasserRecipeHandler(help),
+                reformingHandler = new ReformingHandler(help),
+                solidificationHandler = new SolidificationHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
@@ -283,20 +310,16 @@ public class JEIConfig implements IModPlugin {
                 new SILEXXRayRecipeHandler(help),
                 new SILEXGammaRecipeHandler(help),
                 new SILEXDigammaRecipeHandler(help),
-                new RBMKOutgasserRecipeHandler(help),
                 new RBMKFuelRecipeHandler(help),
                 new FusionRecipeHandler(help),
                 new HadronRecipeHandler(help),
                 new DFCRecipeHandler(help),
                 new BookRecipeHandler(help));
-        cokingHandler = new CokingRecipeHandler(help);
-        crackingHandler = new CrackingHandler(help);
-        crystallizerHandler = new CrystallizerRecipeHandler(help);
     }
 
 
 	@Override
-	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
+	public void registerItemSubtypes(@NotNull ISubtypeRegistry subtypeRegistry) {
 		if(!GeneralConfig.jei)
 			return;
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.cell, (ItemStack stack) -> {
@@ -323,9 +346,9 @@ public class JEIConfig implements IModPlugin {
 			FluidStack fluid = FluidUtil.getFluidContained(stack);
 			return ModItems.canister_generic.getTranslationKey() + (fluid == null ? "empty" : fluid.getFluid().getUnlocalizedName() + fluid.amount);
 		});
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> {
-			return ModItems.missile_custom.getTranslationKey() + "w" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "warhead")) + "f" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "fuselage")) + "s" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "stability")) + "t" + Integer.toString(ItemCustomMissile.readFromNBT(stack, "thruster"));
-		});
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> ModItems.missile_custom.getTranslationKey() + "w" +
+                ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
+                ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, (ItemStack stack) -> {
 			if(stack.hasTagCompound()) {
 				String s = "";
@@ -338,6 +361,6 @@ public class JEIConfig implements IModPlugin {
 	}
 
     @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
     }
 }

@@ -48,7 +48,6 @@ import java.util.Map.Entry;
 public class JeiRecipes {
 
 	private static List<ChemRecipe> chemRecipes = null;
-	private static List<MixerRecipe> mixerRecipes = null;
 	private static List<CyclotronRecipe> cyclotronRecipes = null;
 	private static List<PressRecipe> pressRecipes = null;
 	private static List<AlloyFurnaceRecipe> alloyFurnaceRecipes = null;
@@ -59,7 +58,6 @@ public class JeiRecipes {
 	private static List<StorageDrumRecipe> storageDrumRecipes = null;
 	private static List<RBMKFuelRecipe> rbmkFuelRecipes = null;
 	private static List<RefineryRecipe> refineryRecipes = null;
-	private static List<FractioningRecipe> fractioningRecipes = null;
 	private static List<FluidRecipe> fluidEquivalences = null;
 	private static List<BookRecipe> bookRecipes = null;
 	private static List<BreederRecipe> breederRecipes = null;
@@ -99,31 +97,6 @@ public class JeiRecipes {
 			List<List<ItemStack>> in = Library.copyItemStackListList(inputs); // list of inputs and their list of possible items
 			ingredients.setInputLists(VanillaTypes.ITEM, in);
 			ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-		}
-	}
-
-	public static class MixerRecipe implements IRecipeWrapper {
-		
-		private final List<List<ItemStack>> inputs;
-		private final ItemStack output;
-		
-		public MixerRecipe(List<AStack> inputs, ItemStack output) {
-			List<List<ItemStack>> list = new ArrayList<>(inputs.size());
-			for(AStack s : inputs)
-				list.add(s.getStackList());
-			this.inputs = list;
-			this.output = output; 
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			List<List<ItemStack>> in = Library.copyItemStackListList(inputs); // list of inputs and their list of possible items
-			ingredients.setInputLists(VanillaTypes.ITEM, in);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
-		}
-
-		public int getInputSize(){
-			return inputs.size();
 		}
 	}
 	
@@ -343,42 +316,6 @@ public class JeiRecipes {
 		private final List<ItemStack> outputs;
 		
 		public RefineryRecipe(ItemStack input, List<ItemStack> outputs) {
-			this.input = input;
-			this.outputs = outputs; 
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(VanillaTypes.ITEM, input);
-			ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-		}
-		
-	}
-
-	public static class CrackingRecipe implements IRecipeWrapper {
-		
-		private final List<ItemStack> inputs;
-		public final List<ItemStack> outputs;
-		
-		public CrackingRecipe(List<ItemStack> inputs, List<ItemStack> outputs) {
-			this.inputs = inputs;
-			this.outputs = outputs; 
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInputs(VanillaTypes.ITEM, inputs);
-			ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-		}
-		
-	}
-
-	public static class FractioningRecipe implements IRecipeWrapper {
-		
-		private final ItemStack input;
-		private final List<ItemStack> outputs;
-		
-		public FractioningRecipe(ItemStack input, List<ItemStack> outputs) {
 			this.input = input;
 			this.outputs = outputs; 
 		}
@@ -659,12 +596,12 @@ public class JeiRecipes {
 	public static class JeiUniversalRecipe implements IRecipeWrapper {
 		private final ItemStack[] inputs;
 		private final ItemStack[] outputs;
-		private final ItemStack machine;
+		private final ItemStack[] machines;
 
-		public JeiUniversalRecipe(ItemStack[] inputs, ItemStack[] outputs, ItemStack machine) {
+		public JeiUniversalRecipe(ItemStack[] inputs, ItemStack[] outputs, ItemStack[] machine) {
 			this.inputs = Arrays.stream(inputs).map(ItemStack::copy).toArray(ItemStack[]::new);
 			this.outputs = Arrays.stream(outputs).map(ItemStack::copy).toArray(ItemStack[]::new);
-			this.machine = machine.copy();
+			this.machines = Arrays.stream(machine).map(ItemStack::copy).toArray(ItemStack[]::new);
 		}
 
 		@Override
@@ -673,8 +610,8 @@ public class JeiRecipes {
 			ingredients.setOutputs(VanillaTypes.ITEM, Arrays.asList(outputs));
 		}
 
-		public ItemStack getMachine() {
-			return machine;
+		public ItemStack[] getMachines() {
+			return machines;
 		}
 
 		@Override
@@ -700,7 +637,7 @@ public class JeiRecipes {
 	public static class CrystallizerRecipe extends JeiUniversalRecipe {
 		private final int productivity;
 
-		public CrystallizerRecipe(ItemStack[] inputs, ItemStack[] outputs, ItemStack machine, int productivity) {
+		public CrystallizerRecipe(ItemStack[] inputs, ItemStack[] outputs, ItemStack[] machine, int productivity) {
 			super(inputs, outputs, machine);
 			this.productivity = productivity;
 		}
@@ -768,32 +705,6 @@ public class JeiRecipes {
         }
 		
 		return chemRecipes;
-	}
-
-	public static List<MixerRecipe> getMixerRecipes() {
-		if(mixerRecipes != null)
-			return mixerRecipes;
-		mixerRecipes = new ArrayList<MixerRecipe>();
-		
-        for(FluidType f : MixerRecipes.recipes.keySet()){
-
-        	List<AStack> inputs = new ArrayList<AStack>(3);
-
-        	AStack inputItem = MixerRecipes.getInputItem(f);
-        	FluidStack[] inputFluids = MixerRecipes.getInputFluidStacks(f);
-        	if(inputItem != null)
-        		inputs.add(inputItem);
-        	if(inputFluids != null){
-        		if(inputFluids.length >= 1) inputs.add(new NbtComparableStack(ItemFluidIcon.make(inputFluids[0].type, inputFluids[0].fill)));
-        		if(inputFluids.length == 2) inputs.add(new NbtComparableStack(ItemFluidIcon.make(inputFluids[1].type, inputFluids[1].fill)));
-        	}
-
-        	ItemStack output = ItemFluidIcon.make(f, MixerRecipes.getFluidOutputAmount(f));
-        	
-        	mixerRecipes.add(new MixerRecipe(inputs, output));
-        }
-		
-		return mixerRecipes;
 	}
 	
 	public static List<CyclotronRecipe> getCyclotronRecipes() {
@@ -1018,21 +929,6 @@ public class JeiRecipes {
 			);
 		}
 		return refineryRecipes;
-	}
-
-	public static List<FractioningRecipe> getFractioningRecipe() {
-		if(fractioningRecipes != null)
-			return fractioningRecipes;
-		fractioningRecipes = new ArrayList<FractioningRecipe>();
-
-		for(Entry<FluidType, Pair<FluidStack, FluidStack>> recipe : FractionRecipes.fractions.entrySet()) {
-			List<ItemStack> out = new ArrayList<ItemStack>();
-			out.add(ItemFluidIcon.make(recipe.getValue().getKey()));
-			out.add(ItemFluidIcon.make(recipe.getValue().getValue()));
-
-			fractioningRecipes.add(new FractioningRecipe(ItemFluidIcon.make(recipe.getKey(), 100), out));
-		}
-		return fractioningRecipes;
 	}
 	
 	public static List<ItemStack> getBlades() {

@@ -45,7 +45,7 @@ public class FractionRecipes extends SerializableRecipe {
         return fractions.get(oil);
     }
 
-    public static HashMap<Object, Object> getFractionRecipesForNEI() {
+    public static HashMap<Object, Object> getFractionRecipesForJEI() {
 
         HashMap<Object, Object> recipes = new HashMap();
 
