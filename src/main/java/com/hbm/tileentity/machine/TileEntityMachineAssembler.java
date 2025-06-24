@@ -212,40 +212,40 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 
 
             int meta = this.getBlockMetadata();
-            TileEntity teInputContainer = null;
-            TileEntity teOutputContainer = null;
+            TileEntity teContainerIn = null;
+            TileEntity teContainerOut = null;
             boolean canFill;
             if (meta == 14) {
-                teOutputContainer = world.getTileEntity(pos.add(-2, 0, 0));
-                teInputContainer = world.getTileEntity(pos.add(3, 0, -1));
+                teContainerOut = world.getTileEntity(pos.add(-2, 0, 0));
+                teContainerIn = world.getTileEntity(pos.add(3, 0, -1));
             }
             if (meta == 15) {
-                teOutputContainer = world.getTileEntity(pos.add(2, 0, 0));
-                teInputContainer = world.getTileEntity(pos.add(-3, 0, 1));
+                teContainerOut = world.getTileEntity(pos.add(2, 0, 0));
+                teContainerIn = world.getTileEntity(pos.add(-3, 0, 1));
             }
             if (meta == 13) {
-                teOutputContainer = world.getTileEntity(pos.add(0, 0, 2));
-                teInputContainer = world.getTileEntity(pos.add(-1, 0, -3));
+                teContainerOut = world.getTileEntity(pos.add(0, 0, 2));
+                teContainerIn = world.getTileEntity(pos.add(-1, 0, -3));
             }
             if (meta == 12) {
-                teOutputContainer = world.getTileEntity(pos.add(0, 0, -2));
-                teInputContainer = world.getTileEntity(pos.add(1, 0, 3));
+                teContainerOut = world.getTileEntity(pos.add(0, 0, -2));
+                teContainerIn = world.getTileEntity(pos.add(1, 0, 3));
             }
-            canFill = !(teOutputContainer instanceof TileEntityDummyPort);
+            canFill = !(teContainerOut instanceof TileEntityDummyPort);
             if (!isProgressing) {
-                tryExchangeTemplates(teOutputContainer, teInputContainer);
+                tryExchangeTemplates(teContainerOut, teContainerIn);
             }
 
-            if (teOutputContainer != null) {
-                IItemHandler cap = teOutputContainer.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
+            if (teContainerOut != null) {
+                IItemHandler cap = teContainerOut.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
                 if (cap != null) tryFillContainerCap(cap, 5);
             }
 
-            if (teInputContainer != null) {
-                IItemHandler cap = teInputContainer.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
+            if (teContainerIn != null) {
+                IItemHandler cap = teContainerIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, MultiblockHandler.intToEnumFacing(meta).rotateY());
                 if (cap != null) {
                     int[] slots;
-                    if (teInputContainer instanceof TileEntityMachineBase te) {
+                    if (teContainerIn instanceof TileEntityMachineBase te) {
                         slots = te.getAccessibleSlotsFromSide(MultiblockHandler.intToEnumFacing(meta).rotateY());
                         tryFillAssemblerCap(cap, slots, te);
                     } else if (canFill) {
@@ -341,11 +341,11 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
         this.recipe = nbt.getInteger("recipe");
     }
 
-    public void tryExchangeTemplates(TileEntity teIn, TileEntity teOut) {
+    public void tryExchangeTemplates(TileEntity teOut, TileEntity teIn) {
         //validateTe sees if it's a valid inventory tile entity
-        if (isTeInvalid(teIn) || isTeInvalid(teOut)) return;
-        IItemHandlerModifiable iTeIn = (IItemHandlerModifiable) teIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        IItemHandlerModifiable iTeOut = (IItemHandlerModifiable) teOut.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        if (isTeInvalid(teOut) || isTeInvalid(teIn)) return;
+        IItemHandlerModifiable iTeIn = (IItemHandlerModifiable) teOut.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandlerModifiable iTeOut = (IItemHandlerModifiable) teIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         boolean openSlot = false;
         boolean existingTemplate = false;
         boolean filledContainer = false;
