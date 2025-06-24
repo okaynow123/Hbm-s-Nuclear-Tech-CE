@@ -300,25 +300,25 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
     private void updateConnections() {
         int meta = this.getBlockMetadata();
 
-        if (meta == 5) {
+        if (meta == 12) {
             this.trySubscribe(world, pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X);
             this.trySubscribe(world, pos.getX() - 2, pos.getY(), pos.getZ() + 1, Library.NEG_X);
             this.trySubscribe(world, pos.getX() + 3, pos.getY(), pos.getZ(), Library.POS_X);
             this.trySubscribe(world, pos.getX() + 3, pos.getY(), pos.getZ() + 1, Library.POS_X);
 
-        } else if (meta == 3) {
+        } else if (meta == 15) {
             this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ() - 2, Library.NEG_Z);
             this.trySubscribe(world, pos.getX() - 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z);
             this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ() + 3, Library.POS_Z);
             this.trySubscribe(world, pos.getX() - 1, pos.getY(), pos.getZ() + 3, Library.POS_Z);
 
-        } else if (meta == 4) {
+        } else if (meta == 13) {
             this.trySubscribe(world, pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X);
             this.trySubscribe(world, pos.getX() + 2, pos.getY(), pos.getZ() - 1, Library.POS_X);
             this.trySubscribe(world, pos.getX() - 3, pos.getY(), pos.getZ(), Library.NEG_X);
             this.trySubscribe(world, pos.getX() - 3, pos.getY(), pos.getZ() - 1, Library.NEG_X);
 
-        } else if (meta == 2) {
+        } else if (meta == 14) {
             this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ() + 2, Library.POS_Z);
             this.trySubscribe(world, pos.getX() + 1, pos.getY(), pos.getZ() + 2, Library.POS_Z);
             this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ() - 3, Library.NEG_Z);
