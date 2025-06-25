@@ -204,7 +204,7 @@ public class CrystallizerRecipes extends SerializableRecipe {
 
 	public static CrystallizerRecipe getOutput(ItemStack stack, FluidType type) {
 
-		if(stack == null || stack.getItem() == null)
+		if(stack == null || stack.isEmpty())
 			return null;
 
 		ComparableStack comp = new ComparableStack(stack.getItem(), 1, stack.getItemDamage());

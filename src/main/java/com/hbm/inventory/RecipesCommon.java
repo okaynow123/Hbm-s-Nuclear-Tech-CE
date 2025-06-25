@@ -195,8 +195,7 @@ public class RecipesCommon {
 		
 		public String[] getDictKeys() {
 			
-			int[] ids = OreDictionary.getOreIDs(toStack());
-			
+			int[] ids = toStack().isEmpty() ? null : OreDictionary.getOreIDs(toStack());
 			if(ids == null || ids.length == 0)
 				return new String[0];
 			
