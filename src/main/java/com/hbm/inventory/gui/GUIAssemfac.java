@@ -1,7 +1,6 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerAssemfac;
-import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineAssemfac;
 import net.minecraft.client.Minecraft;
@@ -11,15 +10,12 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 public class GUIAssemfac extends GuiInfoContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_assemfac.png");
     private static final ResourceLocation chemfac = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_chemfac.png");
     private final TileEntityMachineAssemfac assemfac;
-
-    public int hoveredUnitIndex = -1; // template index
 
     public GUIAssemfac(InventoryPlayer invPlayer, TileEntityMachineAssemfac tedf) {
         super(new ContainerAssemfac(invPlayer, tedf));
@@ -31,15 +27,6 @@ public class GUIAssemfac extends GuiInfoContainer {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float f) {
-        this.hoveredUnitIndex = -1;
-        Slot slot = this.getSlotUnderMouse();
-        if (slot != null && slot.getHasStack() && slot.getStack().getItem() instanceof ItemAssemblyTemplate) {
-            int inventoryIndex = slot.getSlotIndex();
-            if (inventoryIndex >= 17 && (inventoryIndex - 17) % 14 == 0 && inventoryIndex < assemfac.inventory.getSlots()) {
-                this.hoveredUnitIndex = (inventoryIndex - 17) / 14;
-            }
-        }
-
         super.drawScreen(mouseX, mouseY, f);
         super.renderHoveredToolTip(mouseX, mouseY);
 
