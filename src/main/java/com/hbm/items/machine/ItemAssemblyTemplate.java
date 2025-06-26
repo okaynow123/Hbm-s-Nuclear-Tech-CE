@@ -116,17 +116,18 @@ public class ItemAssemblyTemplate extends Item implements IHasCustomModel {
         Map<ComparableStack, Integer> availableCounts = null;
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GUIMachineAssembler) {
-            IItemHandler assemblerInventory = ((GUIMachineAssembler) screen).getInventory();
+        if (screen instanceof GUIMachineAssembler assemblerGui && assemblerGui.getSlotUnderMouse()!= null) {
+            IItemHandler assemblerInventory = assemblerGui.getInventory();
             if (assemblerInventory != null) {
                 availableCounts = new HashMap<>();
                 for (int slot = 6; slot < 18; slot++) {
                     countItem(availableCounts, assemblerInventory, slot);
                 }
             }
-        } else if (screen instanceof GUIAssemfac assemfacGui) {
-            int unitIndex = assemfacGui.hoveredUnitIndex;
-            if (unitIndex != -1) {
+        } else if (screen instanceof GUIAssemfac assemfacGui && assemfacGui.getSlotUnderMouse() != null) {
+            int inventoryIndex = assemfacGui.getSlotUnderMouse().getSlotIndex();
+            if (inventoryIndex >= 17 && (inventoryIndex - 17) % 14 == 0 && inventoryIndex < assemfacGui.getInventory().getSlots()) {
+                int unitIndex = (inventoryIndex - 17) / 14;
                 IItemHandler assemblerInventory = assemfacGui.getInventory();
                 if (assemblerInventory != null) {
                     availableCounts = new HashMap<>();
@@ -191,8 +192,8 @@ public class ItemAssemblyTemplate extends Item implements IHasCustomModel {
         list.add(" §3" + Math.floor((float) (getProcessTime(stack)) / 20 * 100) / 100 + " " + I18nUtil.resolveKey("info.template_seconds"));
     }
 
-    private void countItem(Map<ComparableStack, Integer> availableCounts, IItemHandler assemblerInventory, int slot) {
-        ItemStack stackInSlot = assemblerInventory.getStackInSlot(slot);
+    public static void countItem(Map<ComparableStack, Integer> availableCounts, IItemHandler inventory, int slot) {
+        ItemStack stackInSlot = inventory.getStackInSlot(slot);
         if (!stackInSlot.isEmpty()) {
             ItemStack keyStack = stackInSlot.copy();
             keyStack.setCount(1);
@@ -202,7 +203,7 @@ public class ItemAssemblyTemplate extends Item implements IHasCustomModel {
     }
 
     @SideOnly(Side.CLIENT)
-    private CheckResult checkAndConsume(AStack ingredient, Map<ComparableStack, Integer> availableCounts) {
+    public static CheckResult checkAndConsume(AStack ingredient, Map<ComparableStack, Integer> availableCounts) {
         int required = ingredient.count();
         int totalAvailable = 0;
         List<ComparableStack> matchingKeys = new ArrayList<>();
@@ -239,6 +240,6 @@ public class ItemAssemblyTemplate extends Item implements IHasCustomModel {
     }
 
     @Desugar
-    private record CheckResult(String color, int available) {
+    public record CheckResult(String color, int available) {
     }
 }
