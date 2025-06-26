@@ -108,6 +108,8 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 				}
 			}
 		}
+		list.add("§6" + I18nUtil.resolveKey("info.templatefolder"));
+		list.add("");
 		try {
 			list.add(ChatFormatting.BOLD + I18nUtil.resolveKey("info.template_out_p"));
 			for(int i = 0; i < 4; i++) {
