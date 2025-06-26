@@ -8,6 +8,7 @@ import com.hbm.items.ModItems;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,6 +148,7 @@ public class FluidContainerRegistry {
         return null;
     }
 
+    @Nullable
     public static ItemStack getEmptyContainer(ItemStack stack) {
         if(stack == null)
             return null;

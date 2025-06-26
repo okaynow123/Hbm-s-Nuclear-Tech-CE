@@ -60,7 +60,7 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 			if(slots.getStackInSlot(out) == ItemStack.EMPTY) {
 				
 				tank.setFill(tank.getFill() + amount);
-				slots.insertItem(out, emptyContainer, false);
+				if(emptyContainer != null) slots.insertItem(out, emptyContainer, false);
 
 				slots.getStackInSlot(in).setCount(slots.getStackInSlot(in).getCount() - 1);
 				if(slots.getStackInSlot(in).getCount() <= 0) {
