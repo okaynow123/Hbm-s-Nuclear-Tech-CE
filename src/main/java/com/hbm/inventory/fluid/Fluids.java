@@ -94,6 +94,7 @@ public class Fluids {
     public static FluidType GASEOUS_PLUTONIUM_BROMIDE;
     public static FluidType GASEOUS_SCHRABIDIUM_BROMIDE;
     public static FluidType GASEOUS_THORIUM_BROMIDE;
+    public static FluidType GASEOUS_HYDROGEN;
     public static FluidType GAS_WATZ;
     public static FluidType LAVA;
     public static FluidType DEUTERIUM;
@@ -500,6 +501,7 @@ public class Fluids {
         GASEOUS_PLUTONIUM_BROMIDE = new FluidType("GASEOUS_PLUTONIUM_BROMIDE", 0x4C4C4C, 0, 0, 0, EnumSymbol.NONE).setTemp(2600).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(2000, 700_000));
         GASEOUS_SCHRABIDIUM_BROMIDE = new FluidType("GASEOUS_SCHRABIDIUM_BROMIDE", 0x006B6B, 0, 0, 0, EnumSymbol.NONE).setTemp(3000).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(3000, 700_000));
         GASEOUS_THORIUM_BROMIDE = new FluidType("GASEOUS_THORIUM_BROMIDE", 0x7A5542, 0, 0, 0, EnumSymbol.NONE).setTemp(2300).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(1300, 700_000));
+        GASEOUS_HYDROGEN = new FluidType("GASEOUS_HYDROGEN", 0x4286f4, 3, 4, 0, EnumSymbol.NONE).addTraits(new FT_Flammable(5_000), new FT_Combustible(FuelGrade.HIGH, 10_000), GASEOUS, new FT_Rocket(380, 700_000));
 
         // ^ ^ ^ ^ ^ ^ ^ ^
         //ADD NEW FLUIDS HERE
@@ -733,6 +735,8 @@ public class Fluids {
 
         metaOrder.add(DUNAAIR);
 
+        metaOrder.add(GASEOUS_HYDROGEN);
+
         //ANY INTERNAL RENAMING MUST BE REFLECTED HERE - DON'T FORGET TO CHANGE: LANG FILES + TYPE'S STRING ID + NAME OF TANK/GUI TEXTURE FILES!
         // V
 
@@ -741,7 +745,7 @@ public class Fluids {
         // LEGACY
         ACID = PEROXIDE;
 
-        for (FluidType custom : customFluids) metaOrder.add(custom);
+        metaOrder.addAll(customFluids);
 
         CHLORINE.addTraits(new FT_Toxin().addEntry(new ToxinDirectDamage(ModDamageSource.cloud, 2F, 20, HazardClass.GAS_CHLORINE, false)));
         PHOSGENE.addTraits(new FT_Toxin().addEntry(new ToxinDirectDamage(ModDamageSource.cloud, 4F, 20, HazardClass.GAS_CHLORINE, false)));
@@ -823,6 +827,7 @@ public class Fluids {
 
         THORIUM_SALT.addTraits(new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(400, 1, THORIUM_SALT_HOT, 1), new FT_PWRModerator(2.5D));
         THORIUM_SALT_HOT.addTraits(new FT_Coolable(THORIUM_SALT_DEPLETED, 1, 1, 400).setEff(CoolingType.HEATEXCHANGER, 1.0D));
+        GASEOUS_HYDROGEN.setFFNameOverride("hydrogen");
 
         if (idMapping.size() != metaOrder.size()) {
             throw new IllegalStateException("A severe error has occoured during NTM's fluid registering process! The MetaOrder and Mappings are inconsistent! Mapping size: " + idMapping.size() + " / MetaOrder size: " + metaOrder.size());
