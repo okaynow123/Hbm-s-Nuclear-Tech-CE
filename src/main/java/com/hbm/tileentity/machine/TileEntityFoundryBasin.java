@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public class TileEntityFoundryBasin extends TileEntityFoundryCastingBase implements IRenderFoundry {
 
 	public TileEntityFoundryBasin() {
-		super(2);
+		super();
 	}
 
 	@Override
