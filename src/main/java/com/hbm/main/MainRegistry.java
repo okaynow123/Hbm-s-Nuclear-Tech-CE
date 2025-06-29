@@ -929,6 +929,7 @@ public class MainRegistry {
 		registerReactorFuels();
 		ControlRegistry.init();
 		OreDictManager.registerOres();
+		Fluids.initForgeFluidCompat();
 	}
 
 	@EventHandler
