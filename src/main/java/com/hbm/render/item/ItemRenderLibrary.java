@@ -2675,6 +2675,17 @@ public class ItemRenderLibrary {
                 }
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }});
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_soldering_station), new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -1, 0);
+                GlStateManager.scale(5, 5, 5);
+            }
+            public void renderCommon() {
+                bindTexture(ResourceManager.soldering_station_tex);
+                ResourceManager.soldering_station.renderAll();
+            }
+        });
     }
 
     private static void bindTexture(ResourceLocation res) {
