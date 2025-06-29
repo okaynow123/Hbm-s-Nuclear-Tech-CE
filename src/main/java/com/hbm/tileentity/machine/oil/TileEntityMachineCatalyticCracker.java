@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine.oil;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.inventory.CrackRecipes;//FIXME
+import com.hbm.inventory.recipes.CrackRecipes;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
