@@ -133,6 +133,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_shredder), SHREDDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_fluidtank), FLUIDS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crystallizer), CRYSTALLIZER);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_soldering_station), SOLDERING_STATION);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
         registry.addRecipeCatalyst(new ItemStack(ModItems.book_of_), BOOK);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.iter), FUSION_BYPRODUCT);
