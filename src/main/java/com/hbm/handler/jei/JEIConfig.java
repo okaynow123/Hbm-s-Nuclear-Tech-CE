@@ -80,6 +80,7 @@ public class JEIConfig implements IModPlugin {
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
     private SolidificationHandler solidificationHandler;
+    private SolderingStationRecipeHandler solderingStationHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -172,6 +173,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(outgasserHandler.getRecipes(), RBMKOUTGASSER);
         registry.addRecipes(reformingHandler.getRecipes(), REFORMING);
         registry.addRecipes(solidificationHandler.getRecipes(), SOLIDIFICATION);
+        registry.addRecipes(solderingStationHandler.getRecipes(), SOLDERING_STATION);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
@@ -294,6 +296,7 @@ public class JEIConfig implements IModPlugin {
                 outgasserHandler = new RBMKOutgasserRecipeHandler(help),
                 reformingHandler = new ReformingHandler(help),
                 solidificationHandler = new SolidificationHandler(help),
+                solderingStationHandler = new SolderingStationRecipeHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),

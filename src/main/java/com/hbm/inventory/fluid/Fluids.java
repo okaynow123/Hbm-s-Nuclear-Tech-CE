@@ -275,6 +275,9 @@ public class Fluids {
     public static FluidType STELLAR_FLUX;
     public static FluidType VITRIOL;
     public static FluidType SLOP;
+    public static FluidType PERFLUOROMETHYL;
+    public static FluidType PERFLUOROMETHYL_COLD;
+    public static FluidType PERFLUOROMETHYL_HOT;
     /* Lagacy names for compatibility purposes */
     @Deprecated
     public static FluidType ACID;    //JAOPCA uses this, apparently
@@ -502,6 +505,9 @@ public class Fluids {
         GASEOUS_SCHRABIDIUM_BROMIDE = new FluidType("GASEOUS_SCHRABIDIUM_BROMIDE", 0x006B6B, 0, 0, 0, EnumSymbol.NONE).setTemp(3000).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(3000, 700_000));
         GASEOUS_THORIUM_BROMIDE = new FluidType("GASEOUS_THORIUM_BROMIDE", 0x7A5542, 0, 0, 0, EnumSymbol.NONE).setTemp(2300).addTraits(GASEOUS, NOCON, NOID, new FT_Rocket(1300, 700_000));
         GASEOUS_HYDROGEN = new FluidType("GASEOUS_HYDROGEN", 0x4286f4, 3, 4, 0, EnumSymbol.NONE).addTraits(new FT_Flammable(5_000), new FT_Combustible(FuelGrade.HIGH, 10_000), GASEOUS, new FT_Rocket(380, 700_000));
+        PERFLUOROMETHYL = new FluidType("PERFLUOROMETHYL",0xBDC8DC, 1, 0, 1, EnumSymbol.NONE).setTemp(15).addTraits(LIQUID);
+        PERFLUOROMETHYL_COLD = new FluidType("PERFLUOROMETHYL_COLD",0x99DADE, 1, 0, 1, EnumSymbol.NONE).setTemp(-150).addTraits(LIQUID);
+        PERFLUOROMETHYL_HOT = new FluidType("PERFLUOROMETHYL_HOT",0xB899DE, 1, 0, 1, EnumSymbol.NONE).setTemp(250).addTraits(LIQUID);
 
         // ^ ^ ^ ^ ^ ^ ^ ^
         //ADD NEW FLUIDS HERE
@@ -531,6 +537,9 @@ public class Fluids {
         metaOrder.add(CARBONDIOXIDE);
         metaOrder.add(COOLANT);
         metaOrder.add(COOLANT_HOT);
+        metaOrder.add(PERFLUOROMETHYL);
+        metaOrder.add(PERFLUOROMETHYL_COLD);
+        metaOrder.add(PERFLUOROMETHYL_HOT);
         metaOrder.add(CRYOGEL);
         metaOrder.add(MUG);
         metaOrder.add(MUG_HOT);
@@ -786,6 +795,10 @@ public class Fluids {
 
         COOLANT.addTraits(new FT_Heatable().setEff(HeatingType.BOILER, 1.0D).setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.0D).setEff(HeatingType.ICF, 1.0D).addStep(300, 1, COOLANT_HOT, 1));
         COOLANT_HOT.addTraits(new FT_Coolable(COOLANT, 1, 1, 300).setEff(CoolingType.HEATEXCHANGER, 1.0D));
+
+        PERFLUOROMETHYL_COLD.addTraits(new FT_Heatable().setEff(HeatingType.PA, 1.0D).addStep(300, 1, PERFLUOROMETHYL, 1));
+        PERFLUOROMETHYL.addTraits(new FT_Heatable().setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.0D).setEff(HeatingType.ICF, 1.0D).addStep(300, 1, PERFLUOROMETHYL_HOT, 1));
+        PERFLUOROMETHYL_HOT.addTraits(new FT_Coolable(PERFLUOROMETHYL, 1, 1, 300).setEff(CoolingType.HEATEXCHANGER, 1.0D));
 
         MUG.addTraits(new FT_Heatable().setEff(HeatingType.HEATEXCHANGER, 1.0D).setEff(HeatingType.PWR, 1.0D).setEff(HeatingType.ICF, 1.25D).addStep(400, 1, MUG_HOT, 1), new FT_PWRModerator(1.15D));
         MUG_HOT.addTraits(new FT_Coolable(MUG, 1, 1, 400).setEff(CoolingType.HEATEXCHANGER, 1.0D));

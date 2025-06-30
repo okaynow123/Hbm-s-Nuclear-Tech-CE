@@ -1,9 +1,11 @@
 package com.hbm.inventory.container;
 
 import api.hbm.energymk2.IBatteryItem;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.SlotMachineOutput;
 import com.hbm.inventory.SlotNonRetarded;
 import com.hbm.inventory.SlotUpgrade;
+import com.hbm.inventory.recipes.SolderingRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -13,6 +15,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerMachineSolderingStation extends Container {
@@ -30,9 +33,9 @@ public class ContainerMachineSolderingStation extends Container {
     // Output
     this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 6, 107, 27));
     // Battery
-    this.addSlotToContainer(new Slot(playerInv, 7, 152, 72));
+    this.addSlotToContainer(new SlotItemHandler(tile.inventory, 7, 152, 72));
     // Fluid ID
-    this.addSlotToContainer(new Slot(playerInv, 8, 17, 63));
+    this.addSlotToContainer(new SlotItemHandler(tile.inventory, 8, 17, 63));
     // Upgrades
     this.addSlotToContainer(new SlotUpgrade(tile.inventory, 9, 89, 63));
     this.addSlotToContainer(new SlotUpgrade(tile.inventory, 10, 107, 63));
@@ -71,15 +74,15 @@ public class ContainerMachineSolderingStation extends Container {
         } else if (rStack.getItem() instanceof ItemMachineUpgrade) {
           if (!this.mergeItemStack(stack, 9, 11, false)) return ItemStack.EMPTY;
         } else {
-          //                    for(RecipesCommon.AStack t : SolderingRecipes.toppings)
-          // if(t.matchesRecipe(stack, false)) if(!this.mergeItemStack(stack, 0, 3, false)) return
-          // null;
-          //                    for(RecipesCommon.AStack t : SolderingRecipes.pcb)
-          // if(t.matchesRecipe(stack, false)) if(!this.mergeItemStack(stack, 3, 5, false)) return
-          // null;
-          //                    for(RecipesCommon.AStack t : SolderingRecipes.solder)
-          // if(t.matchesRecipe(stack, false)) if(!this.mergeItemStack(stack, 5, 6, false)) return
-          // null;
+          for (RecipesCommon.AStack t : SolderingRecipes.toppings)
+            if (t.matchesRecipe(stack, false))
+              if (!this.mergeItemStack(stack, 0, 3, false)) return ItemStack.EMPTY;
+          for (RecipesCommon.AStack t : SolderingRecipes.pcb)
+            if (t.matchesRecipe(stack, false))
+              if (!this.mergeItemStack(stack, 3, 5, false)) return ItemStack.EMPTY;
+          for (RecipesCommon.AStack t : SolderingRecipes.solder)
+            if (t.matchesRecipe(stack, false))
+              if (!this.mergeItemStack(stack, 5, 6, false)) return ItemStack.EMPTY;
           return ItemStack.EMPTY;
         }
       }

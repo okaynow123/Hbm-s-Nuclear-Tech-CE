@@ -4,14 +4,21 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineSolderingStation;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineSolderingStation;
+import com.hbm.inventory.recipes.SolderingRecipes;
+import com.hbm.inventory.recipes.SolderingRecipes.SolderingRecipe;
 import com.hbm.items.machine.ItemMachineUpgrade;
+import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.Library;
+import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
@@ -27,9 +34,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +52,8 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
         IControlReceiver,
         IGUIProvider,
         IUpgradeInfoProvider,
-        IFluidCopiable {
+        IFluidCopiable,
+        ITickable {
   public long power;
   public long maxPower = 2_000;
   public long consumption;
@@ -55,10 +65,32 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
   public FluidTankNTM tank;
   public ItemStack display;
 
-  // public UpgradeManagerNT upgradeManager = new UpgradeManagerNT();
+  public UpgradeManager upgradeManager = new UpgradeManager();
 
   public TileEntityMachineSolderingStation() {
     super(11);
+//    inventory =
+//        new ItemStackHandler(11) {
+//          @Override
+//          public void setStackInSlot(int slot, @NotNull ItemStack stack) {
+//            if (stack != ItemStack.EMPTY
+//                && stack.getItem() instanceof ItemMachineUpgrade
+//                && slot >= 9
+//                && slot <= 10) {
+//              final BlockPos pos = getPos();
+//
+//              world.playSound(
+//                  null,
+//                  pos.getX() + 0.5,
+//                  pos.getY() + 0.5,
+//                  pos.getZ() + 0.5,
+//                  HBMSoundHandler.upgradePlug,
+//                  SoundCategory.BLOCKS,
+//                  1.0F,
+//                  1.0F);
+//            }
+//          }
+//        };
     this.tank = new FluidTankNTM(Fluids.NONE, 8_000);
   }
 
@@ -67,96 +99,197 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
     return "container.machineSolderingStation";
   }
 
-  //  @Override
-  //  public void setInventorySlotContents(int i, @NotNull ItemStack stack) {
-  //    if (stack != ItemStack.EMPTY && stack.getItem() instanceof ItemMachineUpgrade && i >= 9 && i
-  // <= 10) {
-  //      final BlockPos pos = getPos();
-  //
-  //      world.playSound(
-  //          null,
-  //          pos.getX() + 0.5,
-  //          pos.getY() + 0.5,
-  //          pos.getZ() + 0.5,
-  //          HBMSoundHandler.upgradePlug,
-  //          SoundCategory.BLOCKS,
-  //          1.0F,
-  //          1.0F);
-  //    }
-  //  }
+  private SolderingRecipes.SolderingRecipe recipe;
 
-  //  public boolean canProcess(SolderingRecipe recipe) {
-  //
-  //    if(this.power < this.consumption) return false;
-  //
-  //    if(recipe.fluid != null) {
-  //      if(this.tank.getTankType() != recipe.fluid.type) return false;
-  //      if(this.tank.getFill() < recipe.fluid.fill) return false;
-  //    }
-  //
-  //    if(collisionPrevention && recipe.fluid == null && this.tank.getFill() > 0) return false;
-  //
-  //    if(slots[6] != null) {
-  //      if(slots[6].getItem() != recipe.output.getItem()) return false;
-  //      if(slots[6].getItemDamage() != recipe.output.getItemDamage()) return false;
-  //      if(slots[6].stackSize + recipe.output.stackSize > slots[6].getMaxStackSize()) return
-  // false;
-  //    }
-  //
-  //    return true;
-  //  }
-  //
-  //  public void consumeItems(SolderingRecipe recipe) {
-  //
-  //    for(AStack aStack : recipe.toppings) {
-  //      for(int i = 0; i < 3; i++) {
-  //        ItemStack stack = slots[i];
-  //        if(aStack.matchesRecipe(stack, true) && stack.stackSize >= aStack.stacksize) {
-  // this.decrStackSize(i, aStack.stacksize); break; }
-  //      }
-  //    }
-  //
-  //    for(AStack aStack : recipe.pcb) {
-  //      for(int i = 3; i < 5; i++) {
-  //        ItemStack stack = slots[i];
-  //        if(aStack.matchesRecipe(stack, true) && stack.stackSize >= aStack.stacksize) {
-  // this.decrStackSize(i, aStack.stacksize); break; }
-  //      }
-  //    }
-  //
-  //    for(AStack aStack : recipe.solder) {
-  //      for(int i = 5; i < 6; i++) {
-  //        ItemStack stack = slots[i];
-  //        if(aStack.matchesRecipe(stack, true) && stack.stackSize >= aStack.stacksize) {
-  // this.decrStackSize(i, aStack.stacksize); break; }
-  //      }
-  //    }
-  //
-  //    if(recipe.fluid != null) {
-  //      this.tank.setFill(tank.getFill() - recipe.fluid.fill);
-  //    }
-  //  }
-  //
-  //  @Override
-  //  public boolean isItemValidForSlot(int slot, ItemStack stack) {
-  //    if(slot < 3) {
-  //      for(int i = 0; i < 3; i++) if(i != slot && slots[i] != null &&
-  // slots[i].isItemEqual(stack)) return false;
-  //      for(RecipesCommon.AStack t : SolderingRecipes.toppings) if(t.matchesRecipe(stack, true))
-  // return true;
-  //    } else if(slot < 5) {
-  //      for(int i = 3; i < 5; i++) if(i != slot && slots[i] != null &&
-  // slots[i].isItemEqual(stack)) return false;
-  //      for(RecipesCommon.AStack t : SolderingRecipes.pcb) if(t.matchesRecipe(stack, true)) return
-  // true;
-  //    } else if(slot < 6) {
-  //      for(int i = 5; i < 6; i++) if(i != slot && slots[i] != null &&
-  // slots[i].isItemEqual(stack)) return false;
-  //      for(RecipesCommon.AStack t : SolderingRecipes.solder) if(t.matchesRecipe(stack, true))
-  // return true;
-  //    }
-  //    return false;
-  //  }
+  @Override
+  public void update() {
+
+    if (!world.isRemote) {
+
+      this.power = Library.chargeTEFromItems(inventory, 7, this.getPower(), this.getMaxPower());
+      this.tank.setType(8, inventory);
+
+      if (world.getTotalWorldTime() % 20 == 0) {
+        for (DirPos dirPos : getConPos()) {
+          this.trySubscribe(
+              world,
+              dirPos.getPos().getX(),
+              dirPos.getPos().getY(),
+              dirPos.getPos().getZ(),
+              dirPos.getDir());
+          if (tank.getTankType() != Fluids.NONE)
+            this.trySubscribe(
+                tank.getTankType(),
+                world,
+                dirPos.getPos().getX(),
+                dirPos.getPos().getY(),
+                dirPos.getPos().getZ(),
+                dirPos.getDir());
+        }
+      }
+
+      recipe =
+          SolderingRecipes.getRecipe(
+              new ItemStack[] {
+                inventory.getStackInSlot(0),
+                inventory.getStackInSlot(1),
+                inventory.getStackInSlot(2),
+                inventory.getStackInSlot(3),
+                inventory.getStackInSlot(4),
+                inventory.getStackInSlot(5)
+              });
+      long intendedMaxPower;
+
+      upgradeManager.eval(inventory, 9, 10);
+      int redLevel = upgradeManager.getLevel(UpgradeType.SPEED);
+      int blueLevel = upgradeManager.getLevel(UpgradeType.POWER);
+      int blackLevel = upgradeManager.getLevel(UpgradeType.OVERDRIVE);
+
+      if (recipe != null) {
+        this.processTime =
+            recipe.duration - (recipe.duration * redLevel / 6) + (recipe.duration * blueLevel / 3);
+        this.consumption =
+            recipe.consumption
+                + (recipe.consumption * redLevel)
+                - (recipe.consumption * blueLevel / 6);
+        this.consumption *= (long) Math.pow(2, blackLevel);
+        intendedMaxPower = consumption * 20;
+
+        if (canProcess(recipe)) {
+          this.progress += (1 + blackLevel);
+          this.power -= this.consumption;
+
+          if (progress >= processTime) {
+            this.progress = 0;
+            this.consumeItems(recipe);
+
+            if (inventory.getStackInSlot(6).isEmpty()) {
+              inventory.setStackInSlot(6, recipe.output.copy());
+            } else {
+              inventory
+                  .getStackInSlot(6)
+                  .setCount(inventory.getStackInSlot(6).getCount() + recipe.output.getCount());
+            }
+
+            this.markDirty();
+          }
+
+          if (world.getTotalWorldTime() % 20 == 0) {
+            ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+            ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+            BlockPos pos = getPos();
+            NBTTagCompound dPart = new NBTTagCompound();
+            dPart.setString("type", "tau");
+            dPart.setByte("count", (byte) 3);
+            PacketDispatcher.wrapper.sendToAllAround(
+                new AuxParticlePacketNT(
+                    dPart,
+                    pos.getX() + 0.5 - dir.offsetX * 0.5 + rot.offsetX * 0.5,
+                    pos.getY() + 1.125,
+                    pos.getZ() + 0.5 - dir.offsetZ * 0.5 + rot.offsetZ * 0.5),
+                new TargetPoint(
+                    world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+          }
+
+        } else {
+          this.progress = 0;
+        }
+
+      } else {
+        this.progress = 0;
+        this.consumption = 100;
+        intendedMaxPower = 2000;
+      }
+
+      this.maxPower = Math.max(intendedMaxPower, power);
+
+      this.networkPackNT(25);
+    }
+  }
+
+  public boolean canProcess(SolderingRecipe recipe) {
+
+    if (this.power < this.consumption) return false;
+
+    if (recipe.fluid != null) {
+      if (this.tank.getTankType() != recipe.fluid.type) return false;
+      if (this.tank.getFill() < recipe.fluid.fill) return false;
+    }
+
+    if (collisionPrevention && recipe.fluid == null && this.tank.getFill() > 0) return false;
+
+    if (!inventory.getStackInSlot(6).isEmpty()) {
+      if (inventory.getStackInSlot(6).getItem() != recipe.output.getItem()) return false;
+      if (inventory.getStackInSlot(6).getItemDamage() != recipe.output.getItemDamage())
+        return false;
+
+      if (inventory.getStackInSlot(6).getCount() + recipe.output.getCount()
+          > inventory.getStackInSlot(6).getMaxStackSize()) return false;
+    }
+
+    return true;
+  }
+
+  public void consumeItems(SolderingRecipe recipe) {
+
+    for (AStack aStack : recipe.toppings) {
+      for (int i = 0; i < 3; i++) {
+        ItemStack stack = inventory.getStackInSlot(i);
+        if (aStack.matchesRecipe(stack, true) && stack.getCount() >= aStack.stacksize) {
+          inventory.getStackInSlot(i).shrink(aStack.stacksize);
+          break;
+        }
+      }
+    }
+
+    for (AStack aStack : recipe.pcb) {
+      for (int i = 3; i < 5; i++) {
+        ItemStack stack = inventory.getStackInSlot(i);
+        if (aStack.matchesRecipe(stack, true) && stack.getCount() >= aStack.stacksize) {
+          inventory.getStackInSlot(i).shrink(aStack.stacksize);
+          break;
+        }
+      }
+    }
+
+    for (AStack aStack : recipe.solder) {
+      for (int i = 5; i < 6; i++) {
+        ItemStack stack = inventory.getStackInSlot(i);
+        if (aStack.matchesRecipe(stack, true) && stack.getCount() >= aStack.stacksize) {
+          inventory.getStackInSlot(i).shrink(aStack.stacksize);
+          break;
+        }
+      }
+    }
+
+    if (recipe.fluid != null) {
+      this.tank.setFill(tank.getFill() - recipe.fluid.fill);
+    }
+  }
+
+  @Override
+  public boolean isItemValidForSlot(int slot, ItemStack stack) {
+    if (slot < 3) {
+      for (int i = 0; i < 3; i++)
+        if (i != slot
+            && !inventory.getStackInSlot(i).isEmpty()
+            && inventory.getStackInSlot(i).isItemEqual(stack)) return false;
+      for (AStack t : SolderingRecipes.toppings) if (t.matchesRecipe(stack, true)) return true;
+    } else if (slot < 5) {
+      for (int i = 3; i < 5; i++)
+        if (i != slot
+            && !inventory.getStackInSlot(i).isEmpty()
+            && inventory.getStackInSlot(i).isItemEqual(stack)) return false;
+      for (AStack t : SolderingRecipes.pcb) if (t.matchesRecipe(stack, true)) return true;
+    } else if (slot < 6) {
+      for (int i = 5; i < 6; i++)
+        if (i != slot
+            && !inventory.getStackInSlot(i).isEmpty()
+            && inventory.getStackInSlot(i).isItemEqual(stack)) return false;
+      for (AStack t : SolderingRecipes.solder) if (t.matchesRecipe(stack, true)) return true;
+    }
+    return false;
+  }
 
   @Override
   public boolean canExtractItem(int i, ItemStack itemStack, int j) {
@@ -204,11 +337,11 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
     buf.writeInt(this.progress);
     buf.writeInt(this.processTime);
     buf.writeBoolean(this.collisionPrevention);
-    //    buf.writeBoolean(recipe != null);
-    //    if(recipe != null) {
-    //      buf.writeInt(Item.getIdFromItem(recipe.output.getItem()));
-    //      buf.writeInt(recipe.output.getItemDamage());
-    //    }
+    buf.writeBoolean(recipe != null);
+    if (recipe != null) {
+      buf.writeInt(Item.getIdFromItem(recipe.output.getItem()));
+      buf.writeInt(recipe.output.getItemDamage());
+    }
     this.tank.serialize(buf);
   }
 
