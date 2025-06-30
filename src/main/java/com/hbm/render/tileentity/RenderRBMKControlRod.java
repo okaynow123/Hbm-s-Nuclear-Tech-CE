@@ -38,7 +38,7 @@ public class RenderRBMKControlRod extends TileEntitySpecialRenderer<TileEntityRB
 		Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) control.getBlockType()).columnTexture);
 
 		GlStateManager.pushMatrix();
-		for(int i = 0; i < TileEntityRBMKBase.rbmkHeight; i++) {
+		for(int i = 0; i < TileEntityRBMKBase.rbmkHeight + 1; i++) {
 			ResourceManager.rbmk_rods.renderPart("Column");
 			GlStateManager.translate(0, 1, 0);
 		}

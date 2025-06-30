@@ -92,7 +92,7 @@ public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKBase>
 		// Get the correct model from the main render method
 		IModelCustom columnModel = getColumnModelForBlock(control.getBlockType());
 
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < TileEntityRBMKBase.rbmkHeight + 1; i++) {
 			columnModel.renderPart("Column");  // Use the selected model
 			GlStateManager.translate(0, 1, 0);
 		}
@@ -116,7 +116,7 @@ public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKBase>
 			Minecraft.getMinecraft().getTextureManager().bindTexture(texture_rods);
 
 			// Render full segments
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < TileEntityRBMKBase.rbmkHeight + 1; i++) {
 				ResourceManager.rbmk_element.renderPart("Rods");
 				GlStateManager.translate(0, 1, 0);
 			}
