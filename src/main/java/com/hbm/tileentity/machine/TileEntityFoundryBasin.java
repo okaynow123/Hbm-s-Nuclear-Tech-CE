@@ -25,8 +25,8 @@ public class TileEntityFoundryBasin extends TileEntityFoundryCastingBase impleme
 
 	@Override
 	public boolean shouldRender() {
-		MainRegistry.logger.info("Basin type: " + this.type);
-		MainRegistry.logger.info("Basin amount: " + this.amount);
+//		MainRegistry.logger.info("Basin type: " + this.type);
+//		MainRegistry.logger.info("Basin amount: " + this.amount);
 		return this.type != null && this.amount > 0;
 	}
 
