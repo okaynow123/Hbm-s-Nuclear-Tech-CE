@@ -98,7 +98,11 @@ public class GeneralConfig {
 	public static boolean disableHydro = false;
 	public static boolean disableHot = false;
 	public static boolean disableCold = false;
-	
+	public static boolean enablePacketThreading = true;
+	public static int packetThreadingCoreCount = 8;
+	public static int packetThreadingMaxCount = 16;
+	public static boolean packetThreadingErrorBypass = false;
+
 	public static void loadFromConfig(Configuration config){
 		final String CATEGORY_GENERAL = "01_general";
 		enableDebugMode = config.get(CATEGORY_GENERAL, "1.00_enableDebugMode", false).getBoolean(false);

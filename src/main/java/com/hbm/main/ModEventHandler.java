@@ -23,6 +23,7 @@ import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.IBomb;
 import com.hbm.inventory.AssemblerRecipes;
@@ -37,6 +38,7 @@ import com.hbm.items.tool.ItemDigammaDiagnostic;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.lib.*;
 import com.hbm.packet.*;
+import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
@@ -514,26 +516,24 @@ public class ModEventHandler {
     public void worldTick(WorldTickEvent event) {
         if (event.world == null || event.world.isRemote) return;
         List<Object> entityList = new ArrayList<>(event.world.loadedEntityList);
-        if (!MainRegistry.allPipeNetworks.isEmpty() && !event.world.isRemote) {
+        if (!MainRegistry.allPipeNetworks.isEmpty()) {
             Iterator<FFPipeNetwork> itr = MainRegistry.allPipeNetworks.iterator();
             while (itr.hasNext()) {
                 FFPipeNetwork net = itr.next();
                 if (net.getNetworkWorld() != event.world)
                     continue;
-                if (net != null)
-                    net.updateTick();
+                net.updateTick();
                 if (net.getPipes().isEmpty()) {
                     net.destroySoft();
                     itr.remove();
                 }
-
             }
         }
 
-        if (event.world != null && !event.world.isRemote && event.world.getTotalWorldTime() % 100 == 97) {
+        if (event.world.getTotalWorldTime() % 100 == 97) {
             //Drillgon200: Retarded hack because I'm not convinced game rules are client sync'd
             //Yup they are not LMAO
-            PacketDispatcher.wrapper.sendToAll(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
+            PacketThreading.createSendToAllThreadedPacket(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
         }
 
         if (event.phase == Phase.END) {
@@ -560,6 +560,14 @@ public class ModEventHandler {
             if (e instanceof EntityItem) {
                 HazardSystem.updateDroppedItem((EntityItem) e);
             }
+        }
+
+        if(event.phase == Phase.END) {
+            // As ByteBufs are added to the queue in `com.hbm.packet.toclient.PacketThreading`, they are processed by the packet thread.
+            // This waits until the thread is finished, which most of the time will be instantly since it has plenty of time to process in parallel to everything else.
+            PacketThreading.waitUntilThreadFinished();
+
+            NetworkHandler.flush(); // Flush ALL network packets.
         }
     }
 
