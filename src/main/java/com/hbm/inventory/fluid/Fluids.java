@@ -27,6 +27,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.FileReader;
@@ -1209,22 +1211,28 @@ public class Fluids {
                 defaultTexture = new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still");
 
             // Try loading the custom texture
-            IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
-            IResource resource = null;
+            int color;
+            if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+                IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+                IResource resource = null;
 
-            try {
-                resource = resourceManager.getResource(textureStill);
-            } catch (IOException e) {
-                textureStill = defaultTexture;
-                MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Forge Fluid texture found for: " + fluid.getName() + ". Using default tinted");
+                try {
+                    resource = resourceManager.getResource(textureStill);
+                } catch (IOException e) {
+                    textureStill = defaultTexture;
+                    MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Forge Fluid texture found for: " + fluid.getName() + ". Using default tinted");
+                }
+                resource = null;
+                try {
+                    resource = resourceManager.getResource(textureFlowing);
+                } catch (IOException e) {
+                    textureFlowing = defaultTexture;
+                }
+                color = textureStill == defaultTexture ? 0xFFFFFFFF : fluid.getColor();
+            } else
+            {
+                color = fluid.getColor();
             }
-            resource = null;
-            try {
-                resource = resourceManager.getResource(textureFlowing);
-            } catch (IOException e) {
-                textureFlowing = defaultTexture;
-            }
-            int color = textureStill == defaultTexture ? 0xFFFFFFFF : fluid.getColor();
 
             Fluid compatFluid = new ForgeFluidNTM(fluid.getFFName(),
                     textureStill, textureFlowing, color)
