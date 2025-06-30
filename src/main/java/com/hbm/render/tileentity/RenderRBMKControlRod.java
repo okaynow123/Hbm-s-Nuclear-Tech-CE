@@ -3,6 +3,7 @@ package com.hbm.render.tileentity;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
+import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControl;
 import net.minecraft.client.Minecraft;
@@ -37,7 +38,7 @@ public class RenderRBMKControlRod extends TileEntitySpecialRenderer<TileEntityRB
 		Minecraft.getMinecraft().getTextureManager().bindTexture(((RBMKBase) control.getBlockType()).columnTexture);
 
 		GlStateManager.pushMatrix();
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < TileEntityRBMKBase.rbmkHeight; i++) {
 			ResourceManager.rbmk_rods.renderPart("Column");
 			GlStateManager.translate(0, 1, 0);
 		}
