@@ -8,6 +8,7 @@ import java.util.Random;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.generic.BlockResourceStone;
 import com.hbm.blocks.machine.WatzPump;
+import com.hbm.command.CommandPacketInfo;
 import com.hbm.config.*;
 import com.hbm.dim.CommandSpaceTP;
 import com.hbm.dim.SolarSystem;
@@ -16,6 +17,7 @@ import com.hbm.entity.item.EntityMovingPackage;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.*;
 import com.hbm.inventory.fluid.Fluids;
@@ -920,6 +922,7 @@ public class MainRegistry {
 		ControlRegistry.init();
 		OreDictManager.registerOres();
 		Fluids.initForgeFluidCompat();
+		PacketThreading.init();
 	}
 
 	@EventHandler
@@ -989,6 +992,7 @@ public class MainRegistry {
 		evt.registerServerCommand(new CommandRadiation());
 		evt.registerServerCommand(new CommandHbm());
 		evt.registerServerCommand(new CommandSpaceTP());
+		evt.registerServerCommand(new CommandPacketInfo());
 		AdvancementManager.init(evt.getServer());
 		//MUST be initialized AFTER achievements!!
 		BobmazonOfferFactory.reset();

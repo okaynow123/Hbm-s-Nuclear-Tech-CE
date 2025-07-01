@@ -1,8 +1,8 @@
 package com.hbm.packet.threading;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * This is the base class for any packets passing through the PacketThreading system.
@@ -23,7 +23,7 @@ public abstract class ThreadedPacket implements IMessage {
     /**
      * Returns the compiled buffer.
      */
-    public ByteBuf getCompiledBuffer() {
+    public synchronized ByteBuf getCompiledBuffer() {
         if(compiledBuffer == null || compiledBuffer.readableBytes() <= 0 /* No data written */)
             this.compile();
         return compiledBuffer;
