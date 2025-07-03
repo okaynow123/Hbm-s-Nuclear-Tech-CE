@@ -28,21 +28,17 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class JetpackBase extends ItemArmorMod {
+public abstract class JetpackBase extends ItemArmorMod {
 
 	private ModelJetPack model;
-	public Fluid fuel;
-	public int maxFuel;
-	
-	public JetpackBase(ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn, Fluid fuel, int maxFuel, String s) {
-		super(ArmorModHandler.plate_only, false, true, false, false, s);
-		this.fuel = fuel;
-		this.maxFuel = maxFuel;
+
+
+	public JetpackBase(String registryName) {
+		super(ArmorModHandler.plate_only, false, true, false, false, registryName);
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(TextFormatting.LIGHT_PURPLE + I18nUtil.resolveKey(fuel.getUnlocalizedName()) + ": " + getFuel(stack) + "mB / " + this.maxFuel + "mB");
 		tooltip.add("");
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(TextFormatting.GOLD + "Can be worn on its own!");
@@ -55,8 +51,8 @@ public class JetpackBase extends ItemArmorMod {
 		
 		if(jetpack == null)
 			return;
-		
-		list.add(TextFormatting.RED + "  " + stack.getDisplayName() + " (" + I18nUtil.resolveKey(fuel.getUnlocalizedName()) + ": " + getFuel(jetpack) + "mB / " + this.maxFuel + "mB");
+
+		list.add(TextFormatting.RED + "  " + stack.getDisplayName());
 	}
 	
 	@Override

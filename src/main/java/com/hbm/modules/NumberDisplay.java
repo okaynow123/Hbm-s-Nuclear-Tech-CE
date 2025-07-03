@@ -100,7 +100,7 @@ public class NumberDisplay {
     }
 
     /**
-     * Returns a hexadecimal from EnumChatFormatting
+     * Returns a hexadecimal from TextFormatting
      * @param c Color to use
      * @return
      */

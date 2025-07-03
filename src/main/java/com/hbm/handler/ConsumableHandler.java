@@ -3,6 +3,7 @@ package com.hbm.handler;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.weapon.ItemGunBase;
@@ -20,6 +21,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import java.util.HashMap;
@@ -182,7 +184,7 @@ public class ConsumableHandler {
     private static void handleJetpackTank(final Context context) {
         final ItemStack jetpack = context.target.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
         if (jetpack.getItem() instanceof JetpackBase jetItem) {
-            if (jetItem.fuel != ModForgeFluids.kerosene) return;
+            if (jetItem.fuel != Fluids.KEROSENE.getFFName()) return;
 
             final int newFuel = Math.min(JetpackBase.getFuel(jetpack) + 1000, jetItem.maxFuel);
             if (JetpackBase.getFuel(jetpack) != newFuel) {

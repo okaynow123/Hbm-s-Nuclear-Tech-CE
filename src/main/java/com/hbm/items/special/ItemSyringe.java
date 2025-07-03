@@ -5,6 +5,7 @@ import com.hbm.config.VersatileConfig;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackBase;
+import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -232,7 +233,7 @@ public class ItemSyringe extends Item {
         	}
 		}
 		
-		if(this == ModItems.jetpack_tank && player.inventory.armorInventory.get(2) != null && player.inventory.armorInventory.get(2).getItem() instanceof JetpackBase) {
+		if(this == ModItems.jetpack_tank && player.inventory.armorInventory.get(2) != null && player.inventory.armorInventory.get(2).getItem() instanceof JetpackFueledBase) {
 			if (!world.isRemote) {
 				ItemStack jetpack = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 				JetpackBase jetItem = (JetpackBase) jetpack.getItem();
