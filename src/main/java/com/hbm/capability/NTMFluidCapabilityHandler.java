@@ -80,6 +80,7 @@ public class NTMFluidCapabilityHandler {
 
     @Nullable
     public static Fluid getForgeFluid(FluidType hbmType) {
+        // FIXME The MAP could contain incorrect mappings
         return HBM_TO_FORGE_MAP.get(hbmType);
     }
 
