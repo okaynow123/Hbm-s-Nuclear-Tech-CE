@@ -995,6 +995,22 @@ public class ClientProxy extends ServerProxy {
             }
         }
 
+        if("network".equals(type)) {
+            ParticleDebug debug = null;
+            double mX = data.getDouble("mX");
+            double mY = data.getDouble("mY");
+            double mZ = data.getDouble("mZ");
+
+            if("power".equals(data.getString("mode"))) {
+                debug = new ParticleDebug(world,  x, y, z);
+            }
+            if("fluid".equals(data.getString("mode"))) {
+                int color = data.getInteger("color");
+                debug = new ParticleDebug(world, x, y, z, mX, mY, mZ, color);
+            }
+            Minecraft.getMinecraft().effectRenderer.addEffect(debug);
+        }
+
         if ("exhaust".equals(type)) {
 
             String mode = data.getString("mode");

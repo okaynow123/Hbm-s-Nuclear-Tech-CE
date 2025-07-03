@@ -175,6 +175,8 @@ public class ModEventHandlerClient {
     public static TextureAtlasSprite particle_base;
     public static TextureAtlasSprite fog;
     public static TextureAtlasSprite uv_debug;
+    public static TextureAtlasSprite debugPower;
+    public static TextureAtlasSprite debugFluid;
     public static boolean renderingDepthOnly = false;
     private static boolean sentUniforms = false;
     private static long canneryTimestamp;
@@ -967,10 +969,15 @@ public class ModEventHandlerClient {
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_default_still"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still"));
 
+        //Debug stuff
+        debugPower = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/debug_power"));
+        debugFluid = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/debug_fluid"));
+        uv_debug = map.registerSprite(new ResourceLocation(RefStrings.MODID, "misc/uv_debug"));
+
+
         contrail = map.registerSprite(new ResourceLocation(RefStrings.MODID + ":particle/contrail"));
         particle_base = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/particle_base"));
         fog = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/fog"));
-        uv_debug = map.registerSprite(new ResourceLocation(RefStrings.MODID, "misc/uv_debug"));
 
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/ore_bedrock_layer"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_identifier_overlay"));
