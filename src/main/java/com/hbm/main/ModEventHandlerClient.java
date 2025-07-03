@@ -4,11 +4,7 @@ import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.generic.BlockOreMeta;
-import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
-import com.hbm.blocks.machine.FoundryChannel;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
@@ -27,7 +23,6 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUIArmorTable;
 import com.hbm.items.*;
 import com.hbm.items.armor.ItemArmorMod;
@@ -150,7 +145,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -159,7 +153,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.glu.Project;
 
-import java.lang.reflect.Method;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -379,7 +372,7 @@ public class ModEventHandlerClient {
     public static ItemStack getMouseOverStack() {
 
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.currentScreen instanceof GuiContainer) {
+        if (mc.currentScreen instanceof GuiContainer container) {
 
             ScaledResolution scaledresolution = new ScaledResolution(mc);
             int width = scaledresolution.getScaledWidth();
@@ -387,21 +380,9 @@ public class ModEventHandlerClient {
             int mouseX = Mouse.getX() * width / mc.displayWidth;
             int mouseY = height - Mouse.getY() * height / mc.displayHeight - 1;
 
-            GuiContainer container = (GuiContainer) mc.currentScreen;
-
-            for (Object o : container.inventorySlots.inventorySlots) {
-                Slot slot = (Slot) o;
-
-                if (slot.getHasStack()) {
-                    try {
-                        Method isMouseOverSlot = ReflectionHelper.findMethod(GuiContainer.class, "func_146981_a", "isMouseOverSlot", Slot.class, int.class, int.class);
-
-                        if ((boolean) isMouseOverSlot.invoke(container, slot, mouseX, mouseY)) {
-                            return slot.getStack();
-                        }
-
-                    } catch (Exception ex) {
-                    }
+            for (Slot slot : container.inventorySlots.inventorySlots) {
+                if (slot.getHasStack() && container.isMouseOverSlot(slot, mouseX, mouseY)) {
+                    return slot.getStack();
                 }
             }
         }

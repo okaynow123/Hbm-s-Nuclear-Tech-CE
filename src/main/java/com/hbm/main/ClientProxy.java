@@ -36,7 +36,6 @@ import com.hbm.items.special.ItemAutogen;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.items.tool.ItemGasCanister;
-import com.hbm.items.weapon.IMetaItemTesr;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -142,7 +141,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -151,7 +149,6 @@ import paulscode.sound.SoundSystemConfig;
 
 import java.awt.*;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,7 +174,6 @@ public class ClientProxy extends ServerProxy {
     public static KeyBinding craneLoadKey;
     //Drillgon200: This is stupid, but I'm lazy
     public static boolean renderingConstant = false;
-    public static Field partialTicksPaused;
     public static int boxcarCalllist;
     public RenderInfoSystemLegacy theInfoSystem = new RenderInfoSystemLegacy();
     private HashMap<Integer, Long> vanished = new HashMap<>();
@@ -2097,16 +2093,8 @@ public class ClientProxy extends ServerProxy {
     @SuppressWarnings("deprecation")
     @Override
     public float partialTicks() {
-        try {
-            if (partialTicksPaused == null) {
-                partialTicksPaused = ReflectionHelper.findField(Minecraft.class, "renderPartialTicksPaused", "field_193996_ah");
-            }
             boolean paused = Minecraft.getMinecraft().isGamePaused();
-            return paused ? partialTicksPaused.getFloat(Minecraft.getMinecraft()) : Minecraft.getMinecraft().getRenderPartialTicks();
-        } catch (Exception x) {
-            x.printStackTrace();
-        }
-        return Minecraft.getMinecraft().getRenderPartialTicks();
+            return paused ?  Minecraft.getMinecraft().renderPartialTicksPaused : Minecraft.getMinecraft().getRenderPartialTicks();
     }
 
 }
