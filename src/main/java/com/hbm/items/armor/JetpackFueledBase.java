@@ -17,8 +17,8 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
     public FluidType fuel;
     public int maxFuel;
 
-    public JetpackFueledBase(String registryName, FluidType fuel, int maxFuel) {
-        super(registryName);
+    public JetpackFueledBase(FluidType fuel, int maxFuel, String regName) {
+        super(regName);
         this.fuel = fuel;
         this.maxFuel = maxFuel;
     }

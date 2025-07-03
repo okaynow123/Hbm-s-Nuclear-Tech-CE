@@ -18,13 +18,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WingsMurk extends ItemArmor {
+public class WingsMurk extends JetpackBase {
 
-	public WingsMurk(ArmorMaterial material, String s) {
-		super(material, -1, EntityEquipmentSlot.CHEST);
+	public WingsMurk( String s) {
+		super(s);
 		this.setTranslationKey(s);
-		this.setRegistryName(s);
-		
+
 		ModItems.ALL_ITEMS.add(this);
 	}
 

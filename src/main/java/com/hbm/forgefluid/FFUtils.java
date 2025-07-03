@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Predicate;
-import com.hbm.interfaces.IFluidPipe;
 import com.hbm.interfaces.IFluidPipeMk2;
 import com.hbm.interfaces.IFluidVisualConnectable;
 import com.hbm.interfaces.IItemFluidHandler;
 import com.hbm.inventory.EngineRecipes;
-import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackBase;
@@ -54,6 +51,7 @@ import javax.annotation.Nullable;
 //Drillgon200: This is Library.java except for fluids
 //Drillgon200: Let's hope this works without bugs in 1.12.2...
 //Drillgon200: Still mad they removed the fluid container registry.
+@Deprecated
 public class FFUtils {
 
 	// Drillgon200: Wow that took a while to fix. Now the code is ugly and I'll
@@ -427,11 +425,11 @@ public class FFUtils {
 
 		//Mercury override
 		//Oh god, these overrides are getting worse and worse, but it would take a large amount of effort to make the code good
-		if(in.getItem() == ModItems.nugget_mercury && tank.fill(new FluidStack(ModForgeFluids.mercury, 125), false) == 125){
-			tank.fill(new FluidStack(ModForgeFluids.mercury, 125), true);
-			in.shrink(1);
-			return true;
-		}
+//		if(in.getItem() == ModItems.nugget_mercury && tank.fill(new FluidStack(ModForgeFluids.mercury, 125), false) == 125){
+//			tank.fill(new FluidStack(ModForgeFluids.mercury, 125), true);
+//			in.shrink(1);
+//			return true;
+//		}
 
 		//That's it. I'm making a fluid container registry just so I don't have to make this method any worse.
 		if(FluidContainerRegistry.hasFluid(in.getItem())) {
@@ -508,16 +506,16 @@ public class FFUtils {
 			ItemStack mod = ArmorModHandler.pryMod(stack, ArmorModHandler.plate_only);
 			boolean didFill = false;
 			if(!mod.isEmpty()){
-				if(mod.getItem() instanceof JetpackBase && ((JetpackBase)mod.getItem()).fuel == tank.getFluid().getFluid()) {
+				if(mod.getItem() instanceof JetpackFueledBase && ((JetpackBase)mod.getItem()).fuel == tank.getFluid().getFluid()) {
 
-					if(tank.getFluidAmount() > 0 && JetpackBase.getFuel(mod) < ((JetpackBase)mod.getItem()).maxFuel) {
+					if(tank.getFluidAmount() > 0 && JetpackFueledBase.getFuel(mod) < ((JetpackFueledBase)mod.getItem()).maxFuel) {
 						FluidStack st = tank.drain(25, false);
 						int fill = st == null ? 0 : st.amount;
-						fill = Math.min(((JetpackBase)mod.getItem()).maxFuel-JetpackBase.getFuel(mod), fill);
+						fill = Math.min(((JetpackFueledBase)mod.getItem()).maxFuel-JetpackFueledBase.getFuel(mod), fill);
 						if(fill > 0){
-							JetpackBase.setFuel(mod, JetpackBase.getFuel(mod) + fill);
+							JetpackFueledBase.setFuel(mod, JetpackBase.getFuel(mod) + fill);
 							tank.drain(fill, true);
-							if(JetpackBase.getFuel(mod) < ((JetpackBase)mod.getItem()).maxFuel) {
+							if(JetpackFueledBase.getFuel(mod) < ((JetpackBase)mod.getItem()).maxFuel) {
 								didFill = true;
 							}
 							ArmorModHandler.applyMod(stack, mod);
@@ -726,16 +724,6 @@ public class FFUtils {
 		return false;
 	}
 
-	public static FluidTank changeTankSize(FluidTank fluidTank, int i){
-		FluidTank newTank = new FluidTank(i);
-		if(fluidTank.getFluid() == null) {
-			return newTank;
-		} else {
-			newTank.fill(fluidTank.getFluid(), true);
-			return newTank;
-		}
-	}
-
 	public static TextureAtlasSprite getTextureFromFluid(Fluid f){
 		if(f == null) {
 			return null;
@@ -745,22 +733,6 @@ public class FFUtils {
 
 	public static int getColorFromFluid(Fluid f){
 		return Library.getColorFromResourceLocation(new ResourceLocation(f.getStill().getNamespace(), "textures/"+f.getStill().getPath()+".png"));
-	}
-
-	public static void setColorFromFluid(Fluid f){
-		if(f == null)
-			return;
-
-		setRGBAFromHex(f.getColor());
-	}
-
-	public static void setRGBAFromHex(int color){
-		float r = (color >> 16 & 0xFF) / 255F;
-		float g = (color >> 8 & 0xFF) / 255F;
-		float b = (color & 0xFF) / 255F;
-		float a = (color >> 24 & 0xFF) / 255F;
-
-		GlStateManager.color(r, g, b, a);
 	}
 
 	public static void setRGBFromHex(int color){
@@ -806,41 +778,6 @@ public class FFUtils {
 				tanks[b0].readFromNBT(tag);
 			}
 		}
-	}
-
-	public static boolean areTanksEqual(FluidTankNTM tank1, FluidTankNTM tank2){
-		if(tank1 == null && tank2 == null) {
-			return true;
-		}
-		if(tank1 == null ^ tank2 == null) {
-			return false;
-		}
-		if(tank1.getTankType() == Fluids.NONE && tank2.getTankType() == Fluids.NONE) {
-			return true;
-		}
-		if(tank1.getTankType() == Fluids.NONE ^ tank2.getTankType() == Fluids.NONE) {
-			return false;
-		}
-		if(tank1.getFill() == tank2.getFill() && tank1.getTankType() == tank2.getTankType() && tank1.getMaxFill() == tank2.getMaxFill()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static FluidTankNTM copyTank(FluidTankNTM tank){
-		if(tank == null)
-			return null;
-		return new FluidTankNTM(tank.getTankType(), tank.getMaxFill());
-	}
-
-	public static boolean checkFluidConnectables(World world, BlockPos pos, FFPipeNetwork net, @Nullable EnumFacing facing){
-		TileEntity tileentity = world.getTileEntity(pos);
-		if(tileentity != null && tileentity instanceof IFluidPipe && ((IFluidPipe)tileentity).getNetworkTrue() == net)
-			return true;
-		if(tileentity != null && !(tileentity instanceof IFluidPipe) && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
-			return true;
-		}
-		return false;
 	}
 
 	public static boolean checkFluidConnectablesMk2(World world, BlockPos pos, Fluid type, @Nullable EnumFacing facing){
