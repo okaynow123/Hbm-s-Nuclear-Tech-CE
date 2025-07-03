@@ -392,7 +392,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
             return toTransfer;
         } else {
             Fluid currentForgeFluid = getTankTypeFF();
-            if (currentForgeFluid == null || !currentForgeFluid.getName().equals(resource.getFluid().getName())) {
+            if (currentForgeFluid == null || !currentForgeFluid.equals(resource.getFluid())) {
                 return 0;
             }
             int demand = getMaxFill() - getFill();
