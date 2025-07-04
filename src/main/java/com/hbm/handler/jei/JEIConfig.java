@@ -5,11 +5,14 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.CentrifugeRecipes;
 import com.hbm.inventory.DFCRecipes;
 import com.hbm.inventory.ShredderRecipes;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
 import com.hbm.inventory.recipes.RBMKOutgasserRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
+import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.main.MainRegistry;
 import mezz.jei.api.*;
@@ -355,15 +358,13 @@ public class JEIConfig implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> ModItems.missile_custom.getTranslationKey() + "w" +
                 ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
                 ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, (ItemStack stack) -> {
-			if(stack.hasTagCompound()) {
-				String s = "";
-				if(stack.getTagCompound().hasKey("type"))
-					s = s + stack.getTagCompound().getString("type");
-				return s;
-			}
-			return "";
-		});
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, stack -> {
+            FluidType fluidType = ItemFluidIcon.getFluidType(stack);
+            if (fluidType != null) {
+                return fluidType.getTranslationKey();
+            }
+            return "";
+        });
 	}
 
     @Override
