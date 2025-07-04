@@ -127,7 +127,7 @@ public class BlockVolcano extends Block {
 		NBTTagCompound dPart = new NBTTagCompound();
 		dPart.setString("type", "vanillaExt");
 		dPart.setString("mode", "volcano");
-		// PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(dPart, x + 0.5, y + 10, z + 0.5), new TargetPoint(world.provider.getDimension(), x + 0.5, y + 10, z + 0.5, 250));
+		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(dPart, x + 0.5, y + 10, z + 0.5), new TargetPoint(world.provider.getDimension(), x + 0.5, y + 10, z + 0.5, 250));
 	}
 	
 	private void updateVolcano(World world, int x, int y, int z, Random rand, int meta) {
