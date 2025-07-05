@@ -180,9 +180,7 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
             if (inventory.getStackInSlot(6).isEmpty()) {
               inventory.setStackInSlot(6, recipe.output.copy());
             } else {
-              inventory
-                  .getStackInSlot(6)
-                  .setCount(inventory.getStackInSlot(6).getCount() + recipe.output.getCount());
+              inventory.getStackInSlot(6).grow(recipe.output.getCount());
             }
 
             this.markDirty();

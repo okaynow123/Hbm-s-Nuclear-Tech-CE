@@ -183,7 +183,10 @@ public class ModItems {
 	public static final Item gas_mask_filter_radon = new ItemFilter("gas_mask_filter_radon", 32000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item attachment_mask = new ItemModGasmask("attachment_mask").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item attachment_mask_mono = new ItemModGasmask("attachment_mask_mono").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
-	
+	public static final Item cigarette = new ItemCigarette("cigarette").setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item crackpipe = new ItemCigarette("crackpipe").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+
+
 	public static final Item back_tesla = new ItemModTesla("back_tesla").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item pads_rubber = new ItemModPads(0.5F, "pads_rubber").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item pads_slime = new ItemModPads(0.25F, "pads_slime").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
@@ -443,7 +446,7 @@ public class ModItems {
 	public static final Item inf_water_mk2 = new ItemFluidContainerInfinite(Fluids.WATER, 500, "inf_water_mk2").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item inf_water_mk3 = new ItemFluidContainerInfinite(Fluids.WATER, 5000, "inf_water_mk3").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item inf_water_mk4 = new ItemFluidContainerInfinite(Fluids.WATER, 50000, "inf_water_mk4").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-	
+
 	
 	//Activators
 	public static final Item detonator = new ItemDetonator("detonator").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.nukeTab);
@@ -1308,7 +1311,7 @@ public class ModItems {
 
 	//TODO: Make this metaitems
 	// for now, let's just make it work before making it metaitems..
-	public static final Item rod_zirnox_depleted = new ItemZirnoxRodDepleted("rod_zirnox_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);;
+	public static final Item rod_zirnox_depleted = new ItemZirnoxRodDepleted("rod_zirnox_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
 
 	public static final Item waste_natural_uranium = new ItemDepletedFuel("waste_natural_uranium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item waste_uranium = new ItemDepletedFuel("waste_uranium").setCreativeTab(MainRegistry.partsTab);
@@ -1596,7 +1599,7 @@ public class ModItems {
 	public static final Item centrifuge_element = new ItemBase("centrifuge_element").setCreativeTab(MainRegistry.partsTab);
 	public static final Item centrifuge_tower = new ItemBase("centrifuge_tower").setCreativeTab(null);
 	public static final Item reactor_core = new ItemBase("reactor_core").setCreativeTab(MainRegistry.partsTab);
-	
+
 	
 	
 	//Fuels
@@ -1695,6 +1698,7 @@ public class ModItems {
 	public static final Item marshmallow = new ItemLemon(2, 2, false, "marshmallow").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
 	public static final Item cheese = new ItemLemon(5, 0.75F, false, "cheese").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item marshmallow_roasted = new ItemLemon(6, 6, false, "marshmallow_roasted").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
+
 	//Bongespob arcarmoni
 	public static final Item spongebob_macaroni = new ItemLemon(5, 5, false, "spongebob_macaroni").setCreativeTab(MainRegistry.consumableTab);
 	
