@@ -3,7 +3,6 @@ package com.hbm.tileentity.turret;
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;

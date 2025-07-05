@@ -8,7 +8,6 @@ import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.items.ItemFuelBlock;
 import com.hbm.blocks.machine.ItemSelfcharger;
 import com.hbm.config.BombConfig;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.ToolAbility;
 import com.hbm.handler.ToolAbility.LuckAbility;
 import com.hbm.handler.WeaponAbility;

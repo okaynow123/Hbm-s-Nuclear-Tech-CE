@@ -5,7 +5,6 @@ import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.explosion.ExplosionThermo;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineGasFlare;
@@ -60,7 +59,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 
 	public TileEntityMachineGasFlare() {
 		super(6);
-		tankType = ModForgeFluids.gas;
+		tankType = Fluids.GAS.getFF();;
 		tank = new FluidTankNTM(Fluids.GAS, 64000);
 	}
 

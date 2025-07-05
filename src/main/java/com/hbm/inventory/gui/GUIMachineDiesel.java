@@ -1,6 +1,5 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.inventory.container.ContainerMachineDiesel;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineDiesel;

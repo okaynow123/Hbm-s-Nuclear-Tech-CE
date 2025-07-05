@@ -1,14 +1,10 @@
 package com.hbm.world;
 
-import java.util.Random;
-
-import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HbmChestContents;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockStairs;
@@ -24,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+
+import java.util.Random;
 
 public class Spaceship extends WorldGenerator
 {

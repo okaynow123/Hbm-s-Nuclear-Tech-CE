@@ -2,7 +2,9 @@ package com.hbm.items.tool;
 
 import com.hbm.items.ModItems;
 import com.hbm.util.I18nUtil;
-import com.hbm.world.*;
+import com.hbm.world.FactoryAdvanced;
+import com.hbm.world.FactoryTitanium;
+import com.hbm.world.ParticleAccelerator;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

@@ -5,7 +5,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBoiler;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.MachineRecipes;

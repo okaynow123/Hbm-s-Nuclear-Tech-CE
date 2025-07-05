@@ -3,7 +3,6 @@ package com.hbm.tileentity.machine;
 import api.hbm.fluid.*;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.IFluidAcceptor;

@@ -1,7 +1,5 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerCoreReceiver;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;

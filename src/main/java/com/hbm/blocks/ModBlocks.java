@@ -18,7 +18,6 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hbm.blocks.BlockEnums.OreType;
-import static com.hbm.blocks.OreEnumUtil.*;
+import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
 
 public class ModBlocks {

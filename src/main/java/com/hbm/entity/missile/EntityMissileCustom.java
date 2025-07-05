@@ -1,14 +1,8 @@
 package com.hbm.entity.missile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import api.hbm.entity.IRadarDetectableNT;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockTaint;
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
@@ -17,37 +11,23 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.handler.MissileStruct;
 import com.hbm.items.ModItems;
-import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.LoopedEntitySoundPacket;
-
-import api.hbm.entity.IRadarDetectable;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLoader {
 

@@ -1,11 +1,7 @@
 package com.hbm.forgefluid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hbm.interfaces.IFluidPipe;
 import com.hbm.main.MainRegistry;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -17,6 +13,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FFPipeNetwork implements IFluidHandler {
 
@@ -102,7 +101,7 @@ public class FFPipeNetwork implements IFluidHandler {
 	}
 	
 	public void fillFluidInit(){
-		//if(getType() == ModForgeFluids.oil)
+		//if(getType() == Fluids.OIL.getFF();)
 		//	System.out.println(this.fillables.size());
 		//Pretty much the same thing as the transfer fluid in Library.java
 		if(internalNetworkTank.getFluid() == null || internalNetworkTank.getFluidAmount() <= 0)

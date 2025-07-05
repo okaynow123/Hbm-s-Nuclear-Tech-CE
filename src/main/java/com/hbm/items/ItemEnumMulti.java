@@ -20,7 +20,9 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class ItemEnumMulti extends ItemBase implements IDynamicModels {
 

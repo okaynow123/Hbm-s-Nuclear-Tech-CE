@@ -79,7 +79,7 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 		
 		drawTexturedModalRect(guiLeft + 91, guiTop + 65 - j, 190, 24 - j, 4, j);
 		
-		if(boiler.steamType == ModForgeFluids.steam){
+		if(boiler.steamType == Fluids.STEAM.getFF();){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 194, 0, 14, 58);
 		} else if(boiler.steamType == ModForgeFluids.hotsteam){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 208, 0, 14, 58);

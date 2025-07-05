@@ -7,14 +7,13 @@ import api.hbm.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.CentrifugeRecipes;
-import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.inventory.ShredderRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.ForgeDirection;
@@ -106,7 +105,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	public void update() {
 		if(!world.isRemote) {
 			if(!converted){
-				convertAndSetFluid(ModForgeFluids.oil, tank, tankNew);
+				convertAndSetFluid(Fluids.OIL.getFF();, tank, tankNew);
 				converted = true;
 			}
 			this.trySubscribe(world, pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP);

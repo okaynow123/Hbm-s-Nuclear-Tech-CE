@@ -1,25 +1,11 @@
 package com.hbm.handler;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
-
 import com.hbm.animloader.AnimationWrapper;
 import com.hbm.animloader.AnimationWrapper.EndResult;
 import com.hbm.animloader.AnimationWrapper.EndType;
-import com.hbm.forgefluid.FFUtils;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.JetpackGlider;
 import com.hbm.lib.HBMSoundHandler;
@@ -36,7 +22,6 @@ import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.misc.ColorGradient;
 import com.hbm.sound.MovingSoundJetpack;
 import com.hbm.util.BobMathUtil;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -68,6 +53,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector4f;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class JetpackHandler {
 

@@ -28,11 +28,11 @@ public class EngineRecipes {
 		addFuel(ModForgeFluids.biofuel, FuelGrade.HIGH, 400_000);
 		addFuel(ModForgeFluids.nitan, FuelGrade.HIGH, 5_000_000);
 		addFuel(ModForgeFluids.balefire, FuelGrade.HIGH, 2_500_000);
-		addFuel(ModForgeFluids.gasoline, FuelGrade.HIGH, 1_000_000);
+		addFuel(Fluids.GAS.getFF();oline, FuelGrade.HIGH, 1_000_000);
 		addFuel(ModForgeFluids.ethanol, FuelGrade.HIGH, 200_000);
 		addFuel(ModForgeFluids.fishoil, FuelGrade.LOW, 50_000);
 		addFuel(ModForgeFluids.sunfloweroil, FuelGrade.LOW, 80_000);
-		addFuel(ModForgeFluids.gas, FuelGrade.GAS, 100_000);
+		addFuel(Fluids.GAS.getFF();, FuelGrade.GAS, 100_000);
 		addFuel(ModForgeFluids.petroleum, FuelGrade.GAS, 300_000);
 		addFuel(ModForgeFluids.aromatics, FuelGrade.GAS, 150_000);
 		addFuel(ModForgeFluids.unsaturateds, FuelGrade.GAS, 250_000);

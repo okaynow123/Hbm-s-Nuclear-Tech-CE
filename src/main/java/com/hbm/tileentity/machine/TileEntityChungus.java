@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.FluidType;

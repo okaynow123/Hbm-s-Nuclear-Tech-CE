@@ -17,8 +17,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
-import static com.hbm.render.block.BlockBakeFrame.*;
-import static com.hbm.render.block.BlockBakeFrame.BlockForm.*;
+import static com.hbm.render.block.BlockBakeFrame.BlockForm.ALL;
 
 //Simple class for my baking system, automatically bakes block models from BlockBakeFrame
 public class BlockBakeBase extends BlockBase implements IDynamicModels {

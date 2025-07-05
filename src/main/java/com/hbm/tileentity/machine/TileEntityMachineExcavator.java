@@ -9,7 +9,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.BedrockOreRegistry;

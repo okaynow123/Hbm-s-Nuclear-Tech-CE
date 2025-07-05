@@ -1,7 +1,6 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.tileentity.INBTPacketReceiver;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,8 +35,8 @@ public class TileEntitySolarBoiler extends TileEntity implements INBTPacketRecei
         tanks[0] = new FluidTank(FluidRegistry.WATER, 0, 16000);
         types[0] = FluidRegistry.WATER;
 
-        tanks[1] = new FluidTank(ModForgeFluids.steam, 0, 1600000);
-        types[1] = ModForgeFluids.steam;
+        tanks[1] = new FluidTank(Fluids.STEAM.getFF();, 0, 1600000);
+        types[1] = Fluids.STEAM.getFF();;
 
     }
 

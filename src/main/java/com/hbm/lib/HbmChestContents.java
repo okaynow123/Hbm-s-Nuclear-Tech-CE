@@ -1,9 +1,6 @@
 package com.hbm.lib;
 
-import java.util.Random;
-
 import com.hbm.blocks.ModBlocks;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
@@ -13,11 +10,11 @@ import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.special.ItemCell;
 import com.hbm.items.tool.ItemBombCaller;
 import com.hbm.items.tool.ItemBombCaller.EnumCallerType;
-import com.hbm.items.tool.ItemFluidCanister;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.Random;
 
 public class HbmChestContents {
 

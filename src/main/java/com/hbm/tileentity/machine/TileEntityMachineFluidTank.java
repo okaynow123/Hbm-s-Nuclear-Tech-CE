@@ -6,7 +6,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IFFtoNTMF;

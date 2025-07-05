@@ -1,15 +1,13 @@
 package com.hbm.main;
 
-import static com.hbm.inventory.OreDictManager.*;
-
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.crafting.handlers.MKUCraftingHandler;
 import com.hbm.crafting.handlers.RBMKFuelCraftingHandler;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
@@ -17,21 +15,18 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.*;
+import com.hbm.items.machine.ItemBattery;
+import com.hbm.items.machine.ItemBreedingRod;
+import com.hbm.items.machine.ItemFluidTank;
+import com.hbm.items.machine.ItemFuelRod;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
-import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
-import com.hbm.items.special.ItemCell;
-import com.hbm.items.special.ItemHot;
-import com.hbm.items.special.ItemWasteLong;
-import com.hbm.items.special.ItemWasteShort;
-import com.hbm.items.special.ItemBedrockOre;
+import com.hbm.items.special.*;
 import com.hbm.items.tool.ItemBombCaller;
 import com.hbm.items.tool.ItemBombCaller.EnumCallerType;
 import com.hbm.items.weapon.GunB92Cell;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.EnchantmentUtil;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
@@ -54,6 +49,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import static com.hbm.inventory.OreDictManager.*;
+import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
 @Spaghetti("Norwood: This needs to be separated into multiple classes")
 public class CraftingManager {

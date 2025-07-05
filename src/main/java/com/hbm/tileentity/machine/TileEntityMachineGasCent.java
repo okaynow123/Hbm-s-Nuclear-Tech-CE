@@ -4,7 +4,6 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.GasCentrifugeRecipes;
 import com.hbm.inventory.container.ContainerMachineGasCent;
