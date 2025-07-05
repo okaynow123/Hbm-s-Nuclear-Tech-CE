@@ -51,7 +51,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings("unused")
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
@@ -66,6 +65,8 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     public FluidTankNTM[] tanks;
     public PartSize padSize;
     public int clearingTimer = 0;
+    public MissileStruct load;
+    public int height;
 
     public int redstonePower = 0;
     private int prevRedstonePower = 0;
@@ -131,7 +132,10 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
             }
 
             MissileStruct multipart = getStruct(inventory.getStackInSlot(0));
-            PacketDispatcher.wrapper.sendToAllAround(new TEMissileMultipartPacket(pos, Objects.requireNonNullElseGet(multipart, MissileStruct::new)), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
+            if (multipart != null) {
+                PacketDispatcher.wrapper.sendToAllAround(new TEMissileMultipartPacket(pos, multipart), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
+            } else
+                PacketDispatcher.wrapper.sendToAllAround(new TEMissileMultipartPacket(pos, new MissileStruct()), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
 
             networkPackNT(20);
 

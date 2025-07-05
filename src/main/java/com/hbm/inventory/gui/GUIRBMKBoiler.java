@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerRBMKBoiler;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -79,13 +80,13 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 		
 		drawTexturedModalRect(guiLeft + 91, guiTop + 65 - j, 190, 24 - j, 4, j);
 		
-		if(boiler.steamType == Fluids.STEAM.getFF();){
+		if(boiler.steamType == Fluids.STEAM.getFF()){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 194, 0, 14, 58);
-		} else if(boiler.steamType == ModForgeFluids.hotsteam){
+		} else if(boiler.steamType == Fluids.HOTSTEAM.getFF()){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 208, 0, 14, 58);
-		} else if(boiler.steamType == ModForgeFluids.superhotsteam){
+		} else if(boiler.steamType == Fluids.SUPERHOTSTEAM.getFF()){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 222, 0, 14, 58);
-		} else if(boiler.steamType == ModForgeFluids.ultrahotsteam){
+		} else if(boiler.steamType == Fluids.ULTRAHOTSTEAM.getFF()){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 236, 0, 14, 58);
 		}
 	}

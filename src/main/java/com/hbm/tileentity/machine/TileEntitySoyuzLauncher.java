@@ -7,6 +7,7 @@ import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.MissileStruct;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemSoyuz;
 import com.hbm.lib.ForgeDirection;
@@ -156,7 +157,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
 		FluidStack f = FluidUtil.getFluidContained(stack);
 		if(f == null)
 			return false;
-		if((tank == 0 && f.getFluid() == ModForgeFluids.kerosene) || (tank == 1 && f.getFluid() == ModForgeFluids.oxygen))
+		if((tank == 0 && f.getFluid() == Fluids.KEROSENE.getFF()) || (tank == 1 && f.getFluid() == Fluids.OXYGEN.getFF()))
 			return true;
 		return false;
 	}
@@ -374,9 +375,9 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
 	public int fill(FluidStack resource, boolean doFill) {
 		if(resource == null)
 			return 0;
-		if(resource.getFluid() == ModForgeFluids.kerosene)
+		if(resource.getFluid() == Fluids.KEROSENE.getFF())
 			return tanks[0].fill(resource, doFill);
-		if(resource.getFluid() == ModForgeFluids.oxygen)
+		if(resource.getFluid() == Fluids.OXYGEN.getFF())
 			return tanks[1].fill(resource, doFill);
 		return 0;
 	}

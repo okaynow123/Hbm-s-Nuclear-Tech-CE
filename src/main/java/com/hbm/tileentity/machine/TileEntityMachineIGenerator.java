@@ -7,6 +7,7 @@ import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -64,8 +65,8 @@ public class TileEntityMachineIGenerator extends TileEntityMachineBase implement
 		tanks[2] = new FluidTank(4000);
 		tankTypes = new Fluid[3];
 		tankTypes[0] = FluidRegistry.WATER;
-		tankTypes[1] = ModForgeFluids.heatingoil;
-		tankTypes[2] = ModForgeFluids.lubricant;
+		tankTypes[1] = Fluids.HEATINGOIL.getFF();
+		tankTypes[2] = Fluids.LUBRICANT.getFF();
 		
 	}
 
@@ -241,14 +242,14 @@ public class TileEntityMachineIGenerator extends TileEntityMachineBase implement
 	public static final Map<Fluid, Integer> fluidHeat = new HashMap<>();
 	
 	static {
-		fluidHeat.put(ModForgeFluids.smear, 75);
-		fluidHeat.put(ModForgeFluids.heatingoil, 150);
-		fluidHeat.put(ModForgeFluids.diesel, 225);
-		fluidHeat.put(ModForgeFluids.kerosene, 300);
-		fluidHeat.put(ModForgeFluids.reclaimed, 100);
-		fluidHeat.put(ModForgeFluids.petroil, 125);
-		fluidHeat.put(ModForgeFluids.biofuel, 200);
-		fluidHeat.put(ModForgeFluids.nitan, 2500);
+		fluidHeat.put(Fluids.SMEAR.getFF(), 75);
+		fluidHeat.put(Fluids.HEATINGOIL.getFF(), 150);
+		fluidHeat.put(Fluids.DIESEL.getFF(), 225);
+		fluidHeat.put(Fluids.KEROSENE.getFF(), 300);
+		fluidHeat.put(Fluids.RECLAIMED.getFF(), 100);
+		fluidHeat.put(Fluids.PETROIL.getFF(), 125);
+		fluidHeat.put(Fluids.BIOFUEL.getFF(), 200);
+		fluidHeat.put(Fluids.NITAN.getFF(), 2500);
 	}
 	
 	public int getHeatFromFuel(FluidStack fluid) {

@@ -5,6 +5,7 @@ import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.StorageDrumRecipes;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.saveddata.RadiationSavedData;
@@ -90,8 +91,8 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 				}
 			}
 			
-			this.tanks[0].fill(new FluidStack(ModForgeFluids.wastefluid, liquid), true);
-			this.tanks[1].fill(new FluidStack(ModForgeFluids.wastegas, gas), true);
+			this.tanks[0].fill(new FluidStack(Fluids.WASTEFLUID.getFF(), liquid), true);
+			this.tanks[1].fill(new FluidStack(Fluids.WASTEGAS.getFF(), gas), true);
 			
 			age++;
 			

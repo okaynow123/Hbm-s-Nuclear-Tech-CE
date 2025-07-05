@@ -1,6 +1,5 @@
 package com.hbm.inventory.material;
 
-import com.hbm.inventory.OreDictManager.*;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.material.NTMMaterial.SmeltingBehavior;
 import com.hbm.util.I18nUtil;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.inventory.material.MaterialShapes.*;
 
 /* with every new rewrite, optimization and improvement, the code becomes more gregian */

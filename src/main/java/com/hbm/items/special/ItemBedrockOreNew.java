@@ -2,7 +2,6 @@ package com.hbm.items.special;
 
 import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
-import com.hbm.inventory.material.Mats.*;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
@@ -38,6 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
+import static com.hbm.inventory.material.Mats.*;
 import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
 //TODO: fix IDynamicModels

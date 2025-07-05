@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerMachineCyclotron;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -37,8 +38,8 @@ public class GUIMachineCyclotron extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 80, guiTop + 72, 7, 52, cyclotron.power, TileEntityMachineCyclotron.maxPower);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 53, guiTop + 72, 7, 52, cyclotron.coolant, ModForgeFluids.coolant);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 90, 7, 34, cyclotron.amat, ModForgeFluids.amat);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 53, guiTop + 72, 7, 52, cyclotron.coolant, Fluids.COOLANT.getFF());
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 90, 7, 34, cyclotron.amat, Fluids.AMAT.getFF());
 
 		String[] text = I18nUtil.resolveKeyArray("desc.guiacceptupgrades2");
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 21, guiTop + 75, 8, 8, mouseX, mouseY, text);

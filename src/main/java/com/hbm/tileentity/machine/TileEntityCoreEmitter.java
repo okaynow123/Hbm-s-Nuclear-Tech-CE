@@ -4,6 +4,7 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.AuxGaugePacket;
@@ -220,7 +221,7 @@ public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITic
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if(resource != null && resource.getFluid() == ModForgeFluids.cryogel)
+		if(resource != null && resource.getFluid() == Fluids.CRYOGEL.getFF())
 			return tank.fill(resource, doFill);
 		return 0;
 	}

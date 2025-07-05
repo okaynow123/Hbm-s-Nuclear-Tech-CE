@@ -6,6 +6,7 @@ import com.hbm.interfaces.IFluidPipeMk2;
 import com.hbm.interfaces.IFluidVisualConnectable;
 import com.hbm.interfaces.IItemFluidHandler;
 import com.hbm.inventory.EngineRecipes;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackBase;
@@ -489,16 +490,16 @@ public class FFUtils {
 			ItemStack mod = ArmorModHandler.pryMod(stack, ArmorModHandler.plate_only);
 			boolean didFill = false;
 			if(!mod.isEmpty()){
-				if(mod.getItem() instanceof JetpackFueledBase && ((JetpackBase)mod.getItem()).fuel == tank.getFluid().getFluid()) {
+				if(mod.getItem() instanceof JetpackFueledBase fueledJetPack && fueledJetPack.fuel.getFF() == tank.getFluid().getFluid()) {
 
-					if(tank.getFluidAmount() > 0 && JetpackFueledBase.getFuel(mod) < ((JetpackFueledBase)mod.getItem()).maxFuel) {
+					if(tank.getFluidAmount() > 0 && JetpackFueledBase.getFuel(mod) < fueledJetPack.maxFuel) {
 						FluidStack st = tank.drain(25, false);
 						int fill = st == null ? 0 : st.amount;
-						fill = Math.min(((JetpackFueledBase)mod.getItem()).maxFuel-JetpackFueledBase.getFuel(mod), fill);
+						fill = Math.min(fueledJetPack.maxFuel-JetpackFueledBase.getFuel(mod), fill);
 						if(fill > 0){
 							JetpackFueledBase.setFuel(mod, JetpackBase.getFuel(mod) + fill);
 							tank.drain(fill, true);
-							if(JetpackFueledBase.getFuel(mod) < ((JetpackBase)mod.getItem()).maxFuel) {
+							if(JetpackFueledBase.getFuel(mod) < fueledJetPack.maxFuel) {
 								didFill = true;
 							}
 							ArmorModHandler.applyMod(stack, mod);
@@ -561,7 +562,7 @@ public class FFUtils {
 		// Rod override (extra messy because I don't feel like restarting
 		// minecraft to make a helper method)
 		if(in.getItem() == ModItems.rod_empty) {
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.coolant && tank.getFluid().amount >= 1000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.COOLANT.getFF() && tank.getFluid().amount >= 1000 && out.isEmpty()) {
 				tank.drain(1000, true);
 
 				in.shrink(1);
@@ -572,7 +573,7 @@ public class FFUtils {
 				}
 				return true;
 			}
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.tritium && tank.getFluid().amount >= 1000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.TRITIUM.getFF() && tank.getFluid().amount >= 1000 && out.isEmpty()) {
 				tank.drain(1000, true);
 
 				in.shrink(1);
@@ -591,7 +592,7 @@ public class FFUtils {
 			}
 		}
 		if(in.getItem() == ModItems.rod_dual_empty) {
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.coolant && tank.getFluid().amount >= 2000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.COOLANT.getFF() && tank.getFluid().amount >= 2000 && out.isEmpty()) {
 				tank.drain(2000, true);
 
 				in.shrink(1);
@@ -602,7 +603,7 @@ public class FFUtils {
 				}
 				return true;
 			}
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.tritium && tank.getFluid().amount >= 2000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.TRITIUM.getFF() && tank.getFluid().amount >= 2000 && out.isEmpty()) {
 				tank.drain(2000, true);
 
 				in.shrink(1);
@@ -621,7 +622,7 @@ public class FFUtils {
 			}
 		}
 		if(in.getItem() == ModItems.rod_quad_empty) {
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.coolant && tank.getFluid().amount >= 4000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.COOLANT.getFF() && tank.getFluid().amount >= 4000 && out.isEmpty()) {
 				tank.drain(4000, true);
 
 				in.shrink(1);
@@ -632,7 +633,7 @@ public class FFUtils {
 				}
 				return true;
 			}
-			if(tank.getFluid() != null && tank.getFluid().getFluid() == ModForgeFluids.tritium && tank.getFluid().amount >= 4000 && out.isEmpty()) {
+			if(tank.getFluid() != null && tank.getFluid().getFluid() == Fluids.TRITIUM.getFF() && tank.getFluid().amount >= 4000 && out.isEmpty()) {
 				tank.drain(4000, true);
 
 				in.shrink(1);
@@ -651,14 +652,14 @@ public class FFUtils {
 			}
 		}
 
-		if(in.getItem() instanceof JetpackFueledBase && ((JetpackFueledBase)in.getItem()).fuel == tank.getFluid().getFluid()) {
+		if(tank.getFluid() != null && in.getItem() instanceof JetpackFueledBase fueledJetpack && fueledJetpack.fuel.getFF() == tank.getFluid().getFluid()) {
 
-			if(tank.getFluidAmount() > 0 && JetpackFueledBase.getFuel(in) < ((JetpackFueledBase)in.getItem()).maxFuel) {
+			if(tank.getFluidAmount() > 0 && JetpackFueledBase.getFuel(in) < fueledJetpack.maxFuel) {
 				FluidStack st = tank.drain(25, false);
 				int fill = st == null ? 0 : st.amount;
-				JetpackFueledBase.setFuel(in, Math.min(JetpackFueledBase.getFuel(in) + fill, ((JetpackFueledBase)in.getItem()).maxFuel));
+				JetpackFueledBase.setFuel(in, Math.min(JetpackFueledBase.getFuel(in) + fill, fueledJetpack.maxFuel));
 				tank.drain(fill, true);
-				if(JetpackFueledBase.getFuel(in) >= ((JetpackFueledBase)in.getItem()).maxFuel && out.isEmpty()) {
+				if(JetpackFueledBase.getFuel(in) >= fueledJetpack.maxFuel && out.isEmpty()) {
 					slots.setStackInSlot(slot2, in);
 					slots.setStackInSlot(slot1, ItemStack.EMPTY);
 				}
@@ -666,7 +667,7 @@ public class FFUtils {
 			}
 		}
 
-		Item container = FluidContainerRegistry.getFullContainer(in.getItem(), tank.getFluid().getFluid());
+		Item container = tank.getFluid() == null ? null : FluidContainerRegistry.getFullContainer(in.getItem(), tank.getFluid().getFluid());
 		if(container != null && container != Items.AIR) {
 			FluidStack stack = FluidContainerRegistry.getFluidFromItem(container);
 			if(tank.drain(stack, false).amount == stack.amount && (out.isEmpty() || (out.getItem() == container && out.getCount() < out.getMaxStackSize()))) {

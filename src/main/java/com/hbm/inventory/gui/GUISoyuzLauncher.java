@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerSoyuzLauncher;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -35,8 +36,8 @@ public class GUISoyuzLauncher extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 36, 16, 52, launcher.tanks[0], ModForgeFluids.kerosene);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 36, 16, 52, launcher.tanks[1], ModForgeFluids.oxygen);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 36, 16, 52, launcher.tanks[0], Fluids.KEROSENE.getFF());
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 36, 16, 52, launcher.tanks[1], Fluids.OXYGEN.getFF());
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 49, guiTop + 72, 6, 34, launcher.power, TileEntitySoyuzLauncher.maxPower);
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 43, guiTop + 17, 18, 18, mouseX, mouseY, new String[]{"The Soyuz goes here"} );

@@ -53,7 +53,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements INBTPa
         tanks[0] = new FluidTank(FluidRegistry.WATER, 0, 640000);
         types[0] = FluidRegistry.WATER;
 
-        tanks[1] = new FluidTank(Fluids.STEAM.getFF();, 0, 64000000);
+        tanks[1] = new FluidTank(Fluids.STEAM.getFF(), 0, 64000000);
         types[1] = Fluids.STEAM.getFF();;
         converted = true;
 

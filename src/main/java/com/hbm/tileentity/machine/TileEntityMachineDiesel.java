@@ -6,6 +6,7 @@ import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.EngineRecipes;
 import com.hbm.inventory.EngineRecipes.FuelGrade;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.packet.FluidTankPacket;
@@ -106,7 +107,7 @@ public class TileEntityMachineDiesel extends TileEntityMachineBase implements IT
 					needsUpdate = true;
 
 			Fluid type = tank.getFluid() == null ? null : tank.getFluid().getFluid();
-			if(type != null && type == ModForgeFluids.nitan)
+			if(type != null && type == Fluids.NITAN.getFF())
 				powerCap = maxPower * 10;
 			else
 				powerCap = maxPower;

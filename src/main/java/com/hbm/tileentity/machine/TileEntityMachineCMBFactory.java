@@ -5,6 +5,7 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -37,7 +38,7 @@ public class TileEntityMachineCMBFactory extends TileEntityMachineBase implement
 	public static final long maxPower = 100000000;
 	public static final int processSpeed = 200;
 	public FluidTank tank;
-	public Fluid tankType = ModForgeFluids.watz;
+	public Fluid tankType = Fluids.WATZ.getFF();
 	public boolean needsUpdate = false;
 
 	private static final int[] slots_top = new int[] {1, 3};
@@ -73,7 +74,7 @@ public class TileEntityMachineCMBFactory extends TileEntityMachineBase implement
 			if (itemStack.getItem() instanceof IBatteryItem && ((IBatteryItem)itemStack.getItem()).getCharge(itemStack) == 0)
 				return true;
 		if(i == 2)
-			if(FFUtils.containsFluid(itemStack, ModForgeFluids.watz))
+			if(FFUtils.containsFluid(itemStack, Fluids.WATZ.getFF()))
 				return true;
 		return false;
 	}
@@ -91,7 +92,7 @@ public class TileEntityMachineCMBFactory extends TileEntityMachineBase implement
 				return true;
 			break;
 		case 2:
-			if(FFUtils.containsFluid(stack, ModForgeFluids.watz))
+			if(FFUtils.containsFluid(stack, Fluids.WATZ.getFF()))
 				return true;
 			break;
 		case 3:
@@ -236,7 +237,7 @@ public class TileEntityMachineCMBFactory extends TileEntityMachineBase implement
 	private boolean isValidFluid(FluidStack stack) {
 		if(stack == null)
 			return false;
-		return stack.getFluid() == ModForgeFluids.watz;
+		return stack.getFluid() == Fluids.WATZ.getFF();
 	}
 	
 	@Override

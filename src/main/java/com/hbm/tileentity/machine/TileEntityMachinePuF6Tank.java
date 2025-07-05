@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.packet.FluidTankPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +44,7 @@ public class TileEntityMachinePuF6Tank extends TileEntity implements ITickable, 
 			}
 		};
 		tank = new FluidTank(64000);
-		tankType = ModForgeFluids.puf6;
+		tankType = Fluids.PUF6.getFF();
 	}
 	
 	public String getInventoryName() {
@@ -70,7 +71,7 @@ public class TileEntityMachinePuF6Tank extends TileEntity implements ITickable, 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		tank.readFromNBT(compound);
-		tankType = ModForgeFluids.puf6;
+		tankType = Fluids.PUF6.getFF();
 		if(compound.hasKey("inventory"))
 			inventory.deserializeNBT(compound.getCompoundTag("inventory"));
 		super.readFromNBT(compound);

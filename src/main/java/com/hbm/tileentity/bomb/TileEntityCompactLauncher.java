@@ -7,6 +7,7 @@ import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.MissileStruct;
 import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.ItemMissile;
@@ -410,19 +411,19 @@ public class TileEntityCompactLauncher extends TileEntityLoadedBase implements I
 
 		switch((FuelType) fuselage.attributes[0]) {
 		case KEROSENE:
-			tankTypes[0] = ModForgeFluids.kerosene;
-			tankTypes[1] = ModForgeFluids.acid;
+			tankTypes[0] = Fluids.KEROSENE.getFF();
+			tankTypes[1] = Fluids.PEROXIDE.getFF();
 			break;
 		case HYDROGEN:
-			tankTypes[0] = ModForgeFluids.hydrogen;
-			tankTypes[1] = ModForgeFluids.oxygen;
+			tankTypes[0] = Fluids.HYDROGEN.getFF();
+			tankTypes[1] = Fluids.OXYGEN.getFF();
 			break;
 		case XENON:
-			tankTypes[0] = ModForgeFluids.xenon;
+			tankTypes[0] = Fluids.XENON.getFF();
 			break;
 		case BALEFIRE:
-			tankTypes[0] = ModForgeFluids.balefire;
-			tankTypes[1] = ModForgeFluids.acid;
+			tankTypes[0] = Fluids.BALEFIRE.getFF();
+			tankTypes[1] = Fluids.PEROXIDE.getFF();
 			break;
 		default:
 			break;

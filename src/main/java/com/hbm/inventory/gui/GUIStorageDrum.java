@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerStorageDrum;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityStorageDrum;
 import net.minecraft.client.Minecraft;
@@ -28,8 +29,8 @@ public class GUIStorageDrum extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 16, guiTop + 23, 9, 108, drum.tanks[0], ModForgeFluids.wastefluid);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 151, guiTop + 23, 9, 108, drum.tanks[1], ModForgeFluids.wastegas);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 16, guiTop + 23, 9, 108, drum.tanks[0], Fluids.WASTEFLUID.getFF());
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 151, guiTop + 23, 9, 108, drum.tanks[1], Fluids.WASTEGAS.getFF());
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 	

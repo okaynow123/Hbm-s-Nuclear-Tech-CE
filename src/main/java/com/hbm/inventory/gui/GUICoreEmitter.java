@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerCoreEmitter;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.AuxButtonPacket;
@@ -62,7 +63,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		String[] output = new String[] { "Output: " + Library.getShortNumber(emitter.prev) + "SPK" };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 14, 8, 39, mouseX, mouseY, output);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 13, guiTop + 20, 16, 52, emitter.tank, ModForgeFluids.cryogel);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 13, guiTop + 20, 16, 52, emitter.tank, Fluids.CRYOGEL.getFF());
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 49, guiTop + 20, 16, 52, emitter.power, TileEntityCoreEmitter.maxPower);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}

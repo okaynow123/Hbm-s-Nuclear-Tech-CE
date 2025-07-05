@@ -105,7 +105,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	public void update() {
 		if(!world.isRemote) {
 			if(!converted){
-				convertAndSetFluid(Fluids.OIL.getFF();, tank, tankNew);
+				convertAndSetFluid(Fluids.OIL.getFF(), tank, tankNew);
 				converted = true;
 			}
 			this.trySubscribe(world, pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP);
