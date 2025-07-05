@@ -914,6 +914,7 @@ public class ModItems {
 	public static final Item ingot_silicon = new ItemBase("ingot_silicon").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_gunmetal = new ItemBase("ingot_gunmetal").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_weaponsteel = new ItemBase("ingot_weaponsteel").setCreativeTab(MainRegistry.partsTab);
+	public static final Item ingot_cft = new ItemBase("ingot_cft").setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item ingot_th232 = new ItemCustomLore( "ingot_th232").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_uranium = new ItemCustomLore( "ingot_uranium").setCreativeTab(MainRegistry.partsTab);
@@ -1484,7 +1485,6 @@ public class ModItems {
 	public static final Item ball_tnt = new ItemBase("ball_tnt").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ball_tatb = new ItemBase("ball_tatb").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ball_fireclay = new ItemBase("ball_fireclay").setCreativeTab(MainRegistry.partsTab);
-	public static final Item piston_pneumatic = new ItemBase("piston_pneumatic").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_hydraulic = new ItemBase("piston_hydraulic").setCreativeTab(MainRegistry.partsTab);
 	public static final Item piston_electro = new ItemBase("piston_electro").setCreativeTab(MainRegistry.partsTab);
 	public static final Item plant_item = new ItemEnumMulti("plant_item", EnumPlantType.class, true, true).setCreativeTab(MainRegistry.partsTab);
@@ -3487,6 +3487,8 @@ public class ModItems {
 	
 	public static final Item mysteryshovel = new ItemMS("mysteryshovel").setFull3D().setMaxStackSize(1).setCreativeTab(CreativeTabs.TOOLS);
 	public static final Item memory = new ItemBattery(Long.MAX_VALUE / 100L, 100000000000000L, 100000000000000L, "memory").setMaxStackSize(1).setCreativeTab(null);
+
+  	public static final Item part_generic = new ItemEnumMulti("part_generic", EnumPartType.class, true, true).setCreativeTab(MainRegistry.partsTab);
 
     public static void preInit(){
 		for(Item item : ALL_ITEMS){

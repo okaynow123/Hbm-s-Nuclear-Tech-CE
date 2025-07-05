@@ -2683,6 +2683,17 @@ public class ItemRenderLibrary {
                 ResourceManager.soldering_station.renderAll();
             }
         });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_arc_welder), new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -2, 0);
+                GlStateManager.scale(4, 4, 4);
+            }
+            public void renderCommon() {
+                bindTexture(ResourceManager.arc_welder_tex);
+                ResourceManager.arc_welder.renderAll();
+            }
+        });
     }
 
     private static void bindTexture(ResourceLocation res) {
