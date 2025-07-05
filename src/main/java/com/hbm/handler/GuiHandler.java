@@ -388,11 +388,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerHadron(player.inventory, (TileEntityHadron) entity);
 			}
 			return null;
-		case ModBlocks.guiID_machine_industrial_generator:
-			if(entity instanceof TileEntityMachineIGenerator) {
-				return new ContainerIGenerator(player.inventory, (TileEntityMachineIGenerator) entity);
-			}
-			return null;
 		case ModBlocks.guiID_armor_table:
 			if(world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.machine_armor_table) {
 				return new ContainerArmorTable(player.inventory);
@@ -875,11 +870,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_hadron:
 			if(entity instanceof TileEntityHadron) {
 				return new GUIHadron(player.inventory, (TileEntityHadron) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_industrial_generator:
-			if(entity instanceof TileEntityMachineIGenerator) {
-				return new GUIIGenerator(player.inventory, (TileEntityMachineIGenerator) entity);
 			}
 			return null;
 		case ModBlocks.guiID_armor_table:

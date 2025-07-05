@@ -512,7 +512,6 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntitySolarMirror.class, new ResourceLocation(RefStrings.MODID, "tileentity_solarmirror"));
         GameRegistry.registerTileEntity(TileEntityMachineDetector.class, new ResourceLocation(RefStrings.MODID, "tileentity_he_detector"));
         GameRegistry.registerTileEntity(TileEntityFireworks.class, new ResourceLocation(RefStrings.MODID, "tileentity_firework_box"));
-        GameRegistry.registerTileEntity(TileEntityMachineIGenerator.class, new ResourceLocation(RefStrings.MODID, "tileentity_igenerator"));
         GameRegistry.registerTileEntity(TileEntitySiloHatch.class, new ResourceLocation(RefStrings.MODID, "tileentity_silo_hatch"));
         GameRegistry.registerTileEntity(TileEntitySpinnyLight.class, new ResourceLocation(RefStrings.MODID, "tileentity_spinny_light"));
         GameRegistry.registerTileEntity(TileEntityControlPanel.class, new ResourceLocation(RefStrings.MODID, "tileentity_control_panel"));
