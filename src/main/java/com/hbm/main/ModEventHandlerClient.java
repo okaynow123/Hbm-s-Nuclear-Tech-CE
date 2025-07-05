@@ -6,11 +6,9 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
-import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.entity.siege.SiegeTier;
-import com.hbm.flashlight.Flashlight;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCanister;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumCell;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
@@ -99,7 +97,6 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -116,9 +113,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityEndGateway;
-import net.minecraft.tileentity.TileEntityEndPortal;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
@@ -148,7 +142,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.glu.Project;
 
 import java.nio.FloatBuffer;
@@ -175,8 +168,6 @@ public class ModEventHandlerClient {
     public static TextureAtlasSprite uv_debug;
     public static TextureAtlasSprite debugPower;
     public static TextureAtlasSprite debugFluid;
-    public static boolean renderingDepthOnly = false;
-    private static boolean sentUniforms = false;
     private static long canneryTimestamp;
     private static ComparableStack lastCannery = null;
     FloatBuffer MODELVIEW = GLAllocation.createDirectFloatBuffer(16);
@@ -237,137 +228,6 @@ public class ModEventHandlerClient {
         }
     }
 
-    // All of these are called via coremod, EntityRenderer on line 1018. current
-    // is the current value for each, and the returned value is added to the
-    // current
-    public static float getRLightmapColor(float current) {
-        return 0.0F;
-    }
-
-    // Drillgon200: All this random flashlight shader stuff was ultimately
-    // abandoned because it would have caused too many mod incompatibilities and
-    // isn't used anywhere. The coremod still exists, but has no transformers so it doesn't do anything.
-
-    public static float getGLightmapColor(float current) {
-        return 0.0F;
-    }
-
-    public static float getBLightmapColor(float current) {
-        return 0.0F;
-    }
-
-    // Called from asm via coremod, in ChunkRenderContainer#preRenderChunk
-    @Deprecated
-    public static void preRenderChunk(RenderChunk chunk) {
-        if (!GeneralConfig.useShaders || renderingDepthOnly)
-            return;
-        GL20.glUniform3i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "chunkPos"), chunk.getPosition().getX(), chunk.getPosition().getY(), chunk.getPosition().getZ());
-    }
-
-    // Called from asm via coremod, in Profiler#endStartSection
-    @Deprecated
-    public static void profilerStart(String name) {
-        if (!GeneralConfig.useShaders || renderingDepthOnly)
-            return;
-        if (name.equals("terrain")) {
-            HbmShaderManager.useShader(HbmShaderManager.flashlightWorld);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightmap"), 1);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "flashlightDepth"), 6);
-            GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-
-            if (!sentUniforms) {
-                Flashlight.setUniforms();
-                sentUniforms = true;
-            }
-        }
-        if (name.equals("sky")) {
-            HbmShaderManager.releaseShader();
-        }
-        if (name.equals("particles")) {
-            HbmShaderManager.releaseShader();
-        }
-        if (name.equals("litParticles")) {
-            if (!HbmShaderManager.isActiveShader(HbmShaderManager.flashlightWorld)) {
-                HbmShaderManager.useShader(HbmShaderManager.flashlightWorld);
-                GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightmap"), 1);
-                GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "flashlightDepth"), 6);
-                GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-            }
-        }
-        if (name.equals("weather")) {
-            HbmShaderManager.releaseShader();
-        }
-        if (name.equals("hand")) {
-            HbmShaderManager.releaseShader();
-        }
-        if (name.equals("translucent")) {
-            HbmShaderManager.useShader(HbmShaderManager.flashlightWorld);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightmap"), 1);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "flashlightDepth"), 6);
-            GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-        }
-        if (name.equals("gui")) {
-            HbmShaderManager.releaseShader();
-        }
-    }
-
-    // Called from asm via coremod, in RenderManager#renderEntity
-    @Deprecated
-    public static void onEntityRender(Entity e) {
-        if (!GeneralConfig.useShaders || renderingDepthOnly)
-            return;
-        if (!HbmShaderManager.isActiveShader(HbmShaderManager.flashlightWorld)) {
-            HbmShaderManager.useShader(HbmShaderManager.flashlightWorld);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightmap"), 1);
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "flashlightDepth"), 6);
-            GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-        } else {
-            GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-        }
-        if (e instanceof EntityLivingBase) {
-            EntityLivingBase living = (EntityLivingBase) e;
-            if (living.deathTime > 0 || living.hurtTime > 0) {
-                GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 0.0F, 0.0F, 0.3F);
-            } else {
-                GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-            }
-        }
-    }
-
-    // Called from asm via coremod, in TileEntityRendererDispatcher#render
-    @Deprecated
-    public static void onTileEntityRender(TileEntity t) {
-        if (!GeneralConfig.useShaders || renderingDepthOnly)
-            return;
-        if (t instanceof TileEntityEndPortal || t instanceof TileEntityEndGateway) {
-            HbmShaderManager.releaseShader();
-        } else {
-            if (!HbmShaderManager.isActiveShader(HbmShaderManager.flashlightWorld)) {
-                HbmShaderManager.useShader(HbmShaderManager.flashlightWorld);
-                GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightmap"), 1);
-                GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "flashlightDepth"), 6);
-                GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-            } else {
-                GL20.glUniform4f(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "colorMult"), 1.0F, 1.0F, 1.0F, 0.0F);
-            }
-        }
-    }
-
-    // Called from asm via coremod, in GlStateManager#disableLighting
-    @Deprecated
-    public static void onLightingDisable() {
-        if (HbmShaderManager.isActiveShader(HbmShaderManager.flashlightWorld)) {
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightingEnabled"), 0);
-        }
-    }
-
-    // Called from asm via coremod, in GlStateManager#enableLighting
-    @Deprecated
-    public static void onLightingEnable() {
-        if (HbmShaderManager.isActiveShader(HbmShaderManager.flashlightWorld)) {
-            GL20.glUniform1i(GL20.glGetUniformLocation(HbmShaderManager.flashlightWorld, "lightingEnabled"), 1);
-        }
-    }
 
     public static ItemStack getMouseOverStack() {
 
@@ -392,7 +252,6 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
-
 
 
         int i = 0;
@@ -448,8 +307,6 @@ public class ModEventHandlerClient {
         }
 
 
-
-
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemMold) ModItems.mold).registerModels();
@@ -458,7 +315,9 @@ public class ModEventHandlerClient {
         //FIXME: this is a dogshit solution
 
 
-        for(ItemAutogen item : ItemAutogen.INSTANCES){ item.registerModels(); }
+        for (ItemAutogen item : ItemAutogen.INSTANCES) {
+            item.registerModels();
+        }
         registerBedrockOreModels();
     }
 
@@ -2133,11 +1992,11 @@ public class ModEventHandlerClient {
             list.add(TextFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
         }
         /// NEUTRON RADS ///
-        if(event.getFlags().isAdvanced()) {
+        if (event.getFlags().isAdvanced()) {
             List<String> names = ItemStackUtil.getOreDictNames(stack);
-            if(names.size() > 0) {
+            if (names.size() > 0) {
                 list.add("§bOre Dict:");
-                for(String s : names) {
+                for (String s : names) {
                     list.add("§3 - " + s);
                 }
             }

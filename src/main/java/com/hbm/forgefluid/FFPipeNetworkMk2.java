@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.*;
 
+@Deprecated
 public class FFPipeNetworkMk2 implements IFluidHandler {
 
 	protected static Random rand = new Random();

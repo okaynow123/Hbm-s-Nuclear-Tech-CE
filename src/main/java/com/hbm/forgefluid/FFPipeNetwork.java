@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class FFPipeNetwork implements IFluidHandler {
 
 	

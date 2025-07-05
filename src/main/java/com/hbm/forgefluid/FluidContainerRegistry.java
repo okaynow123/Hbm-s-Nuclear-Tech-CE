@@ -11,16 +11,12 @@ import java.util.Map;
 
 //That's it, I'm making my own fluid container registry if forge won't provide one. It won't be compatible with other mods, and it's not as
 //good as the forge one, but it'll sure fix that one terrible override in FFUtils.
+@Deprecated
 public class FluidContainerRegistry {
 	
 	private static Map<Item, FluidContainerData> containers = new HashMap<>();
 	private static Map<Pair<Item, Fluid>, Item> containerToItem = new HashMap<>();
-	
-	public static void registerContainer(Item item, Item container, FluidStack fluid){
-		containers.put(item, new FluidContainerData(container, fluid));
-		containerToItem.put(Pair.of(container, fluid.getFluid()), item);
-	}
-	
+
 	public static boolean hasFluid(Item item){
 		return containers.containsKey(item);
 	}

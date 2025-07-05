@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 public interface ILaserable {
 
 
-    @Deprecated //Use blockpos damnit, its there so nobody complains
+    @Deprecated //Use BlockPos damnit, It's there so nobody complains
     public default void addEnergy(World world, int x, int y, int z, long energy, ForgeDirection dir) {
         addEnergy(world, new BlockPos(x, y, z), energy, dir.toEnumFacing());
     }

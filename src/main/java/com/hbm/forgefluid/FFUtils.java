@@ -2,8 +2,6 @@ package com.hbm.forgefluid;
 
 import com.google.common.base.Predicate;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.interfaces.IFluidPipeMk2;
-import com.hbm.interfaces.IFluidVisualConnectable;
 import com.hbm.interfaces.IItemFluidHandler;
 import com.hbm.inventory.EngineRecipes;
 import com.hbm.inventory.fluid.Fluids;
@@ -17,7 +15,6 @@ import com.hbm.lib.Library;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityDummy;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -28,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -39,7 +35,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -409,11 +404,11 @@ public class FFUtils {
 
 		//Mercury override
 		//Oh god, these overrides are getting worse and worse, but it would take a large amount of effort to make the code good
-//		if(in.getItem() == ModItems.nugget_mercury && tank.fill(new FluidStack(ModForgeFluids.mercury, 125), false) == 125){
-//			tank.fill(new FluidStack(ModForgeFluids.mercury, 125), true);
-//			in.shrink(1);
-//			return true;
-//		}
+		if(in.getItem() == ModItems.nugget_mercury && tank.fill(new FluidStack(Fluids.MERCURY.getFF(), 125), false) == 125){
+			tank.fill(new FluidStack(Fluids.MERCURY.getFF(), 125), true);
+			in.shrink(1);
+			return true;
+		}
 
 		//That's it. I'm making a fluid container registry just so I don't have to make this method any worse.
 		if(FluidContainerRegistry.hasFluid(in.getItem())) {
@@ -764,16 +759,4 @@ public class FFUtils {
 		}
 	}
 
-	public static boolean checkFluidConnectablesMk2(World world, BlockPos pos, Fluid type, @Nullable EnumFacing facing){
-		TileEntity tileentity = world.getTileEntity(pos);
-		if(tileentity instanceof IFluidPipeMk2 && ((IFluidPipeMk2)tileentity).getType() == type)
-			return true;
-		if(tileentity != null && !(tileentity instanceof IFluidPipeMk2) && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
-			return true;
-		}
-		Block block = world.getBlockState(pos).getBlock();
-		if(block instanceof IFluidVisualConnectable)
-			return ((IFluidVisualConnectable)block).shouldConnect(type);
-		return false;
-	}
 }
