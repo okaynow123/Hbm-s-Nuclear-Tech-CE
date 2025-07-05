@@ -1,6 +1,7 @@
 package com.hbm.tileentity.bomb;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.forgefluid.ModForgeFluids;
@@ -17,6 +18,9 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.*;
+import com.hbm.tileentity.IBufPacketReceiver;
+import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IRadarCommandReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -47,7 +51,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.List;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityLaunchTable extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2, IFluidHandler, ITankPacketAcceptor, SimpleComponent {
+public class TileEntityLaunchTable extends TileEntityLoadedBase implements ITickable, IFluidStandardReceiver, IGUIProvider, IBufPacketReceiver, IRadarCommandReceiver SimpleComponent {
 
 	public ItemStackHandler inventory;
 
