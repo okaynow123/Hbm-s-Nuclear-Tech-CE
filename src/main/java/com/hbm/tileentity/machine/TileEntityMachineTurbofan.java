@@ -49,8 +49,6 @@ import java.util.List;
 
 public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IFFtoNTMF {
 
-	public ItemStackHandler inventory;
-
 	public long power;
 	public static final long maxPower = 1_000_000;
 	public FluidTank tankOld;
