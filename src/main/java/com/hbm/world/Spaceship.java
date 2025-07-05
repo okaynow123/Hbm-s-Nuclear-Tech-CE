@@ -32,7 +32,6 @@ public class Spaceship extends WorldGenerator
 	Block Block3 = ModBlocks.deco_steel;
 	Block Block4 = ModBlocks.fusion_heater;
 	Block Block5 = ModBlocks.block_meteor;
-	Block Block6 = ModBlocks.reactor_element;
 	Block Block7 = ModBlocks.cable_switch;
 	Block Block8 = ModBlocks.fusion_hatch;
 	Block Block9 = ModBlocks.reinforced_light;
@@ -538,14 +537,12 @@ public class Spaceship extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 12, y + -2, z + 29), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -2, z + 30), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + -2, z + 30), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 30), ModBlocks.red_cable.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 30), ModBlocks.red_cable.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 10, y + -2, z + 30), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 30), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 12, y + -2, z + 30), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -2, z + 31), Block2.getDefaultState(), 3);

@@ -212,11 +212,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerRtgFurnace(player.inventory, (TileEntityRtgFurnace) entity);
 			}
 			return null;
-		case ModBlocks.guiID_machine_controller:
-			if(entity instanceof TileEntityReactorControl) {
-				return new ContainerReactorControl(player.inventory, (TileEntityReactorControl) entity);
-			}
-			return null;
 		case ModBlocks.guiID_electric_furnace:
 			if(entity instanceof TileEntityMachineElectricFurnace) {
 				return new ContainerElectricFurnace(player.inventory, (TileEntityMachineElectricFurnace) entity);
@@ -245,11 +240,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_factory_advanced:
 			if(entity instanceof TileEntityCoreAdvanced) {
 				return new ContainerCoreAdvanced(player.inventory, (TileEntityCoreAdvanced) entity);
-			}
-			return null;
-		case ModBlocks.guiID_reactor_multiblock:
-			if(entity instanceof TileEntityMachineReactorLarge) {
-				return new ContainerReactorMultiblock(player.inventory, (TileEntityMachineReactorLarge) entity);
 			}
 			return null;
 		case ModBlocks.guiID_nuke_gadget:
@@ -711,11 +701,6 @@ public class GuiHandler implements IGuiHandler {
 				return new GUIRtgFurnace(player.inventory, (TileEntityRtgFurnace) entity);
 			}
 			return null;
-		case ModBlocks.guiID_machine_controller:
-			if(entity instanceof TileEntityReactorControl) {
-				return new GUIReactorControl(player.inventory, (TileEntityReactorControl) entity);
-			}
-			return null;
 		case ModBlocks.guiID_electric_furnace:
 			if(entity instanceof TileEntityMachineElectricFurnace) {
 				return new GUIMachineElectricFurnace(player.inventory, (TileEntityMachineElectricFurnace) entity);
@@ -744,11 +729,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_factory_advanced:
 			if(entity instanceof TileEntityCoreAdvanced) {
 				return new GUICoreAdvanced(player.inventory, (TileEntityCoreAdvanced) entity);
-			}
-			return null;
-		case ModBlocks.guiID_reactor_multiblock:
-			if(entity instanceof TileEntityMachineReactorLarge) {
-				return new GUIReactorMultiblock(player.inventory, (TileEntityMachineReactorLarge) entity);
 			}
 			return null;
 		case ModBlocks.guiID_nuke_gadget:

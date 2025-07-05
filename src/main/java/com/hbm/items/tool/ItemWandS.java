@@ -45,12 +45,9 @@ public class ItemWandS extends Item {
 				tooltip.add(I18nUtil.resolveKey("desc.structurewand.factoryadvanced"));
 				break;
 			case 2:
-				tooltip.add(I18nUtil.resolveKey("desc.structurewand.nuclear"));
-				break;
-			case 3:
 				tooltip.add(I18nUtil.resolveKey("desc.structurewand.hadron"));
 				break;
-			case 4:
+			case 3:
 				tooltip.add(I18nUtil.resolveKey("desc.structurewand.watz"));
 				break;
 			}
@@ -86,9 +83,6 @@ public class ItemWandS extends Item {
 				new FactoryAdvanced().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 2 : pos.getY(), pos.getZ()));
 				break;
 			case 2:
-				new NuclearReactor().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 4 : pos.getY(), pos.getZ()));
-				break;
-			case 3:
 				new ParticleAccelerator().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY()-5 : pos.getY(), pos.getZ()));
 				break;
 			}

@@ -1,11 +1,20 @@
 package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
+import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.interfaces.ITankPacketAcceptor;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,20 +27,22 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidHandler, ILaserable, ITankPacketAcceptor {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2,  IFluidStandardReceiver, ILaserable, CompatHandler.OCComponent {
 
 	public long power;
 	public long joules;
 	//Because it get cleared after the te updates, it needs to be saved here for the container
 	public long syncJoules;
-	public FluidTank tank;
+	public FluidTankNTM tank;
 
 	public TileEntityCoreReceiver() {
 		super(0);
-		tank = new FluidTank(64000);
+		tank = new FluidTankNTM(Fluids.CRYOGEL, 64000);
 	}
 
 	@Override
@@ -56,8 +67,8 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 				}
 			}
 
-			syncJoules = joules;
-			
+			this.networkPackNT(50);
+
 			joules = 0;
 		}
 	}
@@ -67,27 +78,6 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 		return "container.dfcReceiver";
 	}
 
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		return tank.getTankProperties();
-	}
-
-	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		if(resource == null || resource.getFluid() != ModForgeFluids.cryogel)
-			return 0;
-		return tank.fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain) {
-		return null;
-	}
 
 	@Override
 	public void addEnergy(long energy, EnumFacing dir) {
@@ -103,37 +93,33 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 		}
 	}
 
-	@Override
-	public void recievePacket(NBTTagCompound[] tags) {
-		if(tags.length == 1)
-			tank.readFromNBT(tags[0]);
-	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return TileEntity.INFINITE_EXTENT_AABB;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{
 		return 65536.0D;
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 		power = compound.getLong("power");
 		joules = compound.getLong("joules");
-		tank.readFromNBT(compound.getCompoundTag("tank"));
-		super.readFromNBT(compound);
+		tank.readFromNBT(compound, "tank");
 	}
-	
+
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setLong("power", power);
 		compound.setLong("joules", joules);
-		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		tank.writeToNBT(compound, "tank");
 		return super.writeToNBT(compound);
 	}
 
@@ -141,7 +127,7 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
-	
+
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
@@ -149,7 +135,24 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 		}
 		return super.getCapability(capability, facing);
 	}
-	
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+
+		buf.writeLong(joules);
+		tank.serialize(buf);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+
+		joules = buf.readLong();
+		tank.deserialize(buf);
+	}
+
+
 	@Override
 	public long getPower() {
 		return power;
@@ -163,5 +166,40 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 	@Override
 	public long getMaxPower() {
 		return this.power;
+	}
+
+	@Override
+	public FluidTankNTM[] getReceivingTanks() {
+		return new FluidTankNTM[0];
+	}
+
+	@Override
+	public FluidTankNTM[] getAllTanks() {
+		return new FluidTankNTM[0];
+	}
+
+	// do some opencomputer stuff
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String getComponentName() {
+		return "dfc_receiver";
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getEnergyInfo(Context context, Arguments args) {
+		return new Object[] {joules, getPower()}; //literally only doing this for the consistency between components
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getCryogel(Context context, Arguments args) {
+		return new Object[] {tank.getFill()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		return new Object[] {joules, getPower(), tank.getFill()};
 	}
 }
