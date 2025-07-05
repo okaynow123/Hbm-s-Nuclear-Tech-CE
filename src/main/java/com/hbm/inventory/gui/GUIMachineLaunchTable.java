@@ -18,6 +18,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidTank;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -40,8 +41,8 @@ public class GUIMachineLaunchTable extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 34, launcher.tanks[0], launcher.tankTypes[0]);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 34, launcher.tanks[1], launcher.tankTypes[1]);
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 34, new FluidTank(launcher.tanks[0].getFluid(), launcher.tanks[0].getMaxFill()), launcher.tanks[0].getTankTypeFF());
+		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 34, new FluidTank(launcher.tanks[1].getFluid(), launcher.tanks[1].getMaxFill()), launcher.tanks[1].getTankTypeFF());
 
 		String[] text2 = I18nUtil.resolveKeyArray("desc.guimacheltable1");
 		String[] text3 = I18nUtil.resolveKeyArray("desc.guimacheltable2");
@@ -145,8 +146,8 @@ public class GUIMachineLaunchTable extends GuiInfoContainer {
 		this.drawInfoPanel(guiLeft - 16, guiTop + 36, 16, 16, 2);
 		this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 16, 16, 16, 11);
 		
-		FFUtils.drawLiquid(launcher.tanks[0], guiLeft, guiTop, zLevel, 16, 34, 116, 98);
-		FFUtils.drawLiquid(launcher.tanks[1], guiLeft, guiTop, zLevel, 16, 34, 134, 98);
+		FFUtils.drawLiquid(launcher.tanks[0].getFluid(), guiLeft, guiTop, zLevel, 16, 34, 116, 98);
+		FFUtils.drawLiquid(launcher.tanks[1].getFluid(), guiLeft, guiTop, zLevel, 16, 34, 134, 98);
 		
 		/// DRAW MISSILE START
 		GL11.glPushMatrix();
@@ -155,10 +156,8 @@ public class GUIMachineLaunchTable extends GuiInfoContainer {
 		
 		if(launcher.isMissileValid()) {
 			ItemStack custom = launcher.inventory.getStackInSlot(0);
-			
-			missile = new MissileMultipart();
-			
-			missile = MissileMultipart.loadFromStruct(ItemCustomMissile.getStruct(custom));
+
+            missile = MissileMultipart.loadFromStruct(ItemCustomMissile.getStruct(custom));
 		
 			GL11.glTranslatef(guiLeft + 88, guiTop + 115, 100);
 			
