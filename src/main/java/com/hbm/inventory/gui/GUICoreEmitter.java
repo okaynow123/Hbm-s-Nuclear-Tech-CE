@@ -36,7 +36,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		emitter = tedf;
 		
 		this.xSize = 176;
-		this.ySize = 170;
+		this.ySize = 166;
 	}
 	
 	public void initGui() {
@@ -63,7 +63,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		String[] output = new String[] { "Output: " + Library.getShortNumber(emitter.prev) + "SPK" };
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 14, 8, 39, mouseX, mouseY, output);
 
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 13, guiTop + 20, 16, 52, emitter.tank, Fluids.CRYOGEL.getFF());
+		emitter.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 13, guiTop + 17, 16, 52);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 49, guiTop + 20, 16, 52, emitter.power, TileEntityCoreEmitter.maxPower);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
@@ -128,7 +128,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		
         this.field.drawTextBox();
 
-        FFUtils.drawLiquid(emitter.tank, guiLeft, guiTop, zLevel, 16, 52, 13, 101);
+		emitter.tank.renderTank(guiLeft, guiTop, zLevel, 16, 52);
 	}
 	
     protected void keyTyped(char p_73869_1_, int p_73869_2_) throws IOException

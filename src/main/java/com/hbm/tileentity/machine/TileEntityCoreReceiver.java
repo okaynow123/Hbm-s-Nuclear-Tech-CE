@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -81,12 +82,9 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
 
     @Override
-    public void addEnergy(long energy, EnumFacing dir) {
+    public void addEnergy(World world, BlockPos pos, long energy,  EnumFacing dir) {
         // only accept lasers from the front
         if (dir.getOpposite().ordinal() == this.getBlockMetadata()) {
-            if (Long.MAX_VALUE - joules < energy)
-                joules = Long.MAX_VALUE;
-            else
                 joules += energy;
         } else {
             world.destroyBlock(pos, false);
