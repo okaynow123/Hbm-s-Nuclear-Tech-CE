@@ -81,10 +81,6 @@ public class FFUtils {
 		drawLiquid(tank, guiLeft, guiTop, zLevel, sizeX, sizeY, offsetX, offsetY, false);
 	}
 
-	public static void drawLogLiquid(FluidTank tank, int guiLeft, int guiTop, float zLevel, int sizeX, int sizeY, int offsetX, int offsetY){
-		drawLiquid(tank, guiLeft, guiTop, zLevel, sizeX, sizeY, offsetX, offsetY, true);
-	}
-
 	public static void drawLiquid(FluidTank tank, int guiLeft, int guiTop, float zLevel, int sizeX, int sizeY, int offsetX, int offsetY, boolean log){
 		// This is retarded, but it would be too much of a pain to fix it
 		offsetY -= 44;
@@ -267,13 +263,6 @@ public class FFUtils {
 
 			gui.drawFluidInfo(texts, mouseX, mouseY);
 		}
-	}
-
-	public static boolean hasEnoughFluid(FluidTank t, FluidStack f){
-		if(f == null || f.amount == 0) return true;
-		if(t == null || t.getFluid() == null) return false;
-		if(t.getFluid().isFluidEqual(f) && t.getFluidAmount() >= f.amount) return true;
-		return false;
 	}
 
 	/**

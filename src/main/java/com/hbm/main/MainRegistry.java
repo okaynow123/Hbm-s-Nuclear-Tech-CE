@@ -802,7 +802,6 @@ public class MainRegistry {
         PlanetGen.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
-        FluidTypeHandler.registerFluidProperties();
         CraftingManager.addBedrockOreSmelting();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();

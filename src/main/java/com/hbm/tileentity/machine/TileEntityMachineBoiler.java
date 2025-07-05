@@ -253,12 +253,12 @@ public class TileEntityMachineBoiler extends TileEntityMachineBase implements IT
 		if(tanks[0].getFluid() != null) {
 			fluid1 = tanks[0].getFluid().getFluid();
 		} else {
-			fluid1 = ModForgeFluids.none;
+			fluid1 =Fluids.NONE.getFF();;
 		}
 		if(tanks[1].getFluid() != null) {
 			fluid2 = tanks[1].getFluid().getFluid();
 		} else {
-			fluid2 = ModForgeFluids.none;
+			fluid2 =Fluids.NONE.getFF();;
 		}
 		return new Fluid[]{fluid1, fluid2};
 	}

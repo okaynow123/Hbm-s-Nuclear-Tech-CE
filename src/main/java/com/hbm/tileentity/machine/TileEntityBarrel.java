@@ -65,7 +65,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     protected boolean sendingBrake = false;
     private int age = 0;
     // Th3_Sl1ze: Ugh. Maybe there's a smarter way to convert fluids from forge tank to NTM tank but I don't know any other client-seamless methods.
-    private Fluid oldFluid = ModForgeFluids.none;
+    private Fluid oldFluid =Fluids.NONE.getFF();;
 
     public TileEntityBarrel() {
         super(6);

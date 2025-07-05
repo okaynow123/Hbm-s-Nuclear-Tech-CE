@@ -98,7 +98,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	public Fluid fluidType;
 	public FluidTankNTM tankNew;
 	private static boolean converted = false;
-	private Fluid oldFluid = ModForgeFluids.none;
+	private Fluid oldFluid =Fluids.NONE.getFF();;
 
 	private final UpgradeManager upgradeManager = new UpgradeManager();
 

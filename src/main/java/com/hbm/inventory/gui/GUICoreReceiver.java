@@ -58,6 +58,6 @@ public class GUICoreReceiver extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		FFUtils.drawLiquid(receiver.tank, guiLeft, guiTop, zLevel, 16, 52, 17, 97);
+		receiver.tank.renderTank(guiLeft + 8, guiTop + 69, this.zLevel, 16, 52);
 	}
 }

@@ -39,7 +39,7 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 
 	public static int drain = 2;
 
-	private Fluid oldFluid = ModForgeFluids.none;
+	private Fluid oldFluid =Fluids.NONE.getFF();;
 	private static boolean converted = false;
 	
 	public TileEntityTurretFritz() {

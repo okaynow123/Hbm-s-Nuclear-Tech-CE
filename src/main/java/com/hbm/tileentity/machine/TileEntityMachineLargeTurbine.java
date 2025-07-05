@@ -72,7 +72,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
 		tanks[0] = new FluidTank(512000);
 		tanks[1] = new FluidTank(10240000);
 		types[0] = ModForgeFluids.steam;
-		types[1] = ModForgeFluids.spentsteam;
+		types[1] = Fluids.SPENTSTEAM.getFF();;
 
 		Random rand = new Random();
 		audioDesync = rand.nextFloat() * 0.05F;

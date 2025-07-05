@@ -86,7 +86,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public void readFromNBT(NBTTagCompound compound) {
 		if(!converted) {
 			tank.readFromNBT(compound);
-			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() :Fluids.NONE.getFF();;
 		} else tankNew.readFromNBT(compound, "tank");
 		mode = compound.getShort("mode");
 		super.readFromNBT(compound);

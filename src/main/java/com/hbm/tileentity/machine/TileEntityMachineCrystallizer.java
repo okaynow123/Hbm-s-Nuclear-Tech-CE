@@ -57,7 +57,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 
 	public FluidTankNTM tankNew;
 	public FluidTank tank;
-	private Fluid oldFluid = ModForgeFluids.none;
+	private Fluid oldFluid =Fluids.NONE.getFF();;
 	private static boolean converted = false;
 	public UpgradeManager manager = new UpgradeManager();
 
@@ -318,7 +318,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 		power = nbt.getLong("power");
 		if(!converted){
 			tank.readFromNBT(nbt.getCompoundTag("tank"));
-			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() :Fluids.NONE.getFF();;
 		} else {
 			tankNew.readFromNBT(nbt, "tankNew");
 			nbt.removeTag("tank");

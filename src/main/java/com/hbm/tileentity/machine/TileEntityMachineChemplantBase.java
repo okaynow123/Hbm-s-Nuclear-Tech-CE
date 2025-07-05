@@ -125,7 +125,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		Fluid[] fluid = new Fluid[tanks.length];
 		for(int i = 0; i < tanks.length; i++){
 			if (tanks[i].getType() != null) fluid[i] = tanks[i].getType();
-			else fluid[i] = ModForgeFluids.none;
+			else fluid[i] =Fluids.NONE.getFF();;
 		}
 		return fluid;
 	}

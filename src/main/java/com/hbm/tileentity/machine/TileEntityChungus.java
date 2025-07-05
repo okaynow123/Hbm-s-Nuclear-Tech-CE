@@ -62,7 +62,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 	private float audioDesync;
 	
 	public FluidTank[] tanksOld;
-	public Fluid[] types = new Fluid[]{ ModForgeFluids.steam, ModForgeFluids.spentsteam };
+	public Fluid[] types;
 	// for convertation (for explanation. in some cases you can see here I did rename new tanks instead of old ones because I did port them before doing IFFtoNTMF. From this tileentity, I'm doing that in exact opposite order)
 	public FluidTankNTM[] tanks;
 	private static boolean converted = false;
@@ -79,8 +79,8 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 		types = new Fluid[2];
 		tanksOld[0] = new FluidTank(2000000000);
 		tanksOld[1] = new FluidTank(2000000000);
-		types[0] = ModForgeFluids.steam;
-		types[1] = ModForgeFluids.spentsteam;
+		types[0] = Fluids.STEAM.getFF();
+		types[1] = Fluids.SPENTSTEAM.getFF();
 
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.STEAM, inputTankSize);

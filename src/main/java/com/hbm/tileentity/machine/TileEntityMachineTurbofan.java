@@ -73,7 +73,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 	public AudioWrapper audio;
 
-	private Fluid oldFluid = ModForgeFluids.none;
+	private Fluid oldFluid =Fluids.NONE.getFF();;
 	private static boolean converted = false;
 
 	public TileEntityMachineTurbofan() {

@@ -76,7 +76,7 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 	@Override
 	public void update() {
 		if (!converted){
-			convertAndSetFluids(new Fluid[]{ModForgeFluids.spentsteam, FluidRegistry.WATER}, tanksOld, tanks);
+			convertAndSetFluids(new Fluid[]{Fluids.SPENTSTEAM.getFF(), FluidRegistry.WATER}, tanksOld, tanks);
 			converted = true;
 		}
 		if(!world.isRemote) {

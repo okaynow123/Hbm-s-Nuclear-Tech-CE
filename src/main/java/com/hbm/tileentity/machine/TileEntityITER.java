@@ -86,7 +86,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 		tanks[0] = new FluidTank(12800000);
 		types[0] = FluidRegistry.WATER;
 		tanks[1] = new FluidTank(1280000);
-		types[1] = ModForgeFluids.ultrahotsteam;
+		types[1] = Fluids.ULTRAHOTSTEAM.getFF();
 		plasma = new FluidTank(16000);
 
 		converted = true;

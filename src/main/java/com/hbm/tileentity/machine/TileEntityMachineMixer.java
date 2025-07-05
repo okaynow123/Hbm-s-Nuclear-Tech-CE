@@ -74,9 +74,9 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 		this.tanks[2] = new FluidTank(24_000); //Output
 
 		this.fluids = new Fluid[3];
-		this.fluids[0] = ModForgeFluids.none;
-		this.fluids[1] = ModForgeFluids.none;
-		this.fluids[2] = ModForgeFluids.none;
+		this.fluids[0] = Fluids.NONE.getFF();
+		this.fluids[1] = Fluids.NONE.getFF();
+		this.fluids[2] = Fluids.NONE.getFF();
 
 		converted = true;
 	}
@@ -309,9 +309,9 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 				FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
 			}
 			this.fluids = new Fluid[3];
-			this.fluids[0] = tanks[0].getFluid() != null ? tanks[0].getFluid().getFluid() : ModForgeFluids.none;
-			this.fluids[1] = tanks[1].getFluid() != null ? tanks[0].getFluid().getFluid() : ModForgeFluids.none;
-			this.fluids[2] = outputFluid != null ? outputFluid : ModForgeFluids.none;
+			this.fluids[0] = tanks[0].getFluid() != null ? tanks[0].getFluid().getFluid() :Fluids.NONE.getFF();;
+			this.fluids[1] = tanks[1].getFluid() != null ? tanks[0].getFluid().getFluid() :Fluids.NONE.getFF();;
+			this.fluids[2] = outputFluid != null ? outputFluid :Fluids.NONE.getFF();;
 		} else {
 			for (int i = 0; i < 3; i++) this.tanksNew[i].readFromNBT(nbt, i + "");
 			if(nbt.hasKey("f")){

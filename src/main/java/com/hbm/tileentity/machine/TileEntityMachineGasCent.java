@@ -79,7 +79,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		progress = nbt.getShort("progress");
 		if (!converted) {
 			tank.readFromNBT(nbt);
-			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() :Fluids.NONE.getFF();;
 		} else tankNew.readFromNBT(nbt, "tank");
 		inputTank.readFromNBT(nbt, "inputTank");
 		outputTank.readFromNBT(nbt, "outputTank");
