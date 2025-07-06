@@ -47,6 +47,17 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
                 .toArray(String[]::new);
     }
 
+    public ItemEnumMulti(String registryName, Class<? extends Enum> theEnum, boolean multiName, String texture) {
+        super(registryName);
+        this.setHasSubtypes(true);
+        this.theEnum = theEnum;
+        this.multiName = multiName;
+        this.multiTexture = false;
+        INSTANCES.add(this);
+        this.textures = new String[]{texture};
+    }
+
+
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
@@ -58,7 +69,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
     @SideOnly(Side.CLIENT)
     public void registerModel() {
         for (int i = 0; i < theEnum.getEnumConstants().length; i++) {
-            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + textures[i]), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + ( multiTexture ? textures[i] : textures[0])), "inventory"));
         }
     }
 
