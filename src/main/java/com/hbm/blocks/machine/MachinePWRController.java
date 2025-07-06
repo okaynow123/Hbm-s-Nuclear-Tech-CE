@@ -42,8 +42,8 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     private boolean errored;
     private static final int MAX_SIZE = 4096;
 
-    public MachinePWRController(Material mat, String name, String texture) {
-        super(mat, name, new BlockBakeFrame(BlockBakeFrame.BlockForm.ALL, texture));
+    public MachinePWRController(Material mat, String name, BlockBakeFrame frame) {
+        super(mat, name, frame);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
@@ -60,6 +60,7 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
         }
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
+
 
     @Override
     public int getMetaFromState(IBlockState state) {

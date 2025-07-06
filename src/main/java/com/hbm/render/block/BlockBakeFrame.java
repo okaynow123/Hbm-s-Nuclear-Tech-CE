@@ -3,6 +3,7 @@ package com.hbm.render.block;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +69,11 @@ public class BlockBakeFrame {
         return frames;
     }
 
+    public static BlockBakeFrame simpleNorthRotatable(String sides, String front){
+        return new BlockBakeFrame(FULL_CUSTOM, sides, sides, front, sides, sides, sides);
+    }
+
+
     public void registerBlockTextures(TextureMap map) {
         for (String texture : this.textureArray) {
             ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture);
@@ -118,5 +124,15 @@ public class BlockBakeFrame {
             this.textureWrap = textureWrap;
         }
 
+    }
+
+    public  static  int getYRotationForFacing(EnumFacing facing) {
+        switch (facing) {
+            case SOUTH: return 0;
+            case WEST:  return 90;
+            case NORTH: return 180;
+            case EAST:  return 270;
+            default:    return 0;
+        }
     }
 }

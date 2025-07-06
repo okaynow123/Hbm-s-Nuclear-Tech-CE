@@ -5,7 +5,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.items.IDynamicModels;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
@@ -42,17 +42,25 @@ public abstract class BlockContainerBakeable extends BlockContainer implements I
 
             blockFrame.putTextures(textureMap);
             IModel retexturedModel = baseModel.retexture(textureMap.build());
-            IBakedModel bakedModel = retexturedModel.bake(
-                    ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
-            );
+            IBakedModel[] models = new IBakedModel[4];
+            for (int i = 0; i < EnumFacing.HORIZONTALS.length; i++) {
+                EnumFacing facing = EnumFacing.HORIZONTALS[i];
+                models[i] = retexturedModel.bake(
+                        ModelRotation.getModelRotation(0, BlockBakeFrame.getYRotationForFacing(facing)), DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
+                );
+            }
             ModelResourceLocation modelLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");
-            event.getModelRegistry().putObject(modelLocation, bakedModel);
-            ModelResourceLocation worldLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "normal");
-            event.getModelRegistry().putObject(worldLocation, bakedModel);
+            event.getModelRegistry().putObject(modelLocation, models[2]);
+            for (int index = 0; index < models.length; index++) {
+                ModelResourceLocation worldLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "facing=" + EnumFacing.HORIZONTALS[index].getName());
+                event.getModelRegistry().putObject(worldLocation, models[index]);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
