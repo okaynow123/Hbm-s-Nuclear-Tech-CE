@@ -680,8 +680,8 @@ public class ItemRenderLibrary {
 
             public void renderCommon() {
                 GL11.glShadeModel(GL11.GL_SMOOTH);
-                bindTexture(ResourceManager.liquefactor_tex);
-                ResourceManager.liquefactor.renderPart("Main");
+                bindTexture(ResourceManager.solidifier_tex);
+                ResourceManager.solidifier.renderPart("Main");
                 GL11.glShadeModel(GL11.GL_FLAT);
             }
         });
