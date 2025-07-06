@@ -237,6 +237,9 @@ public class ResourceManager {
 	//Magnusson Device
 	public static final IModelCustom microwave = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/microwave.obj")).asVBO();
 
+	// Autosaw
+	public static final IModelCustom autosaw = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/autosaw.obj"));
+
 	//Cables
 	public static final IModelCustom cable_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/cable_neo.obj")).asVBO();
 
@@ -834,6 +837,9 @@ public class ResourceManager {
 	
 	//Magnusson Device
 	public static final ResourceLocation microwave_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/microwave.png");
+
+	//Big Man Johnson
+	public static final ResourceLocation autosaw_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/autosaw.png");
 
 	//Heat engines
 	public static final ResourceLocation stirling_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/stirling.png");
