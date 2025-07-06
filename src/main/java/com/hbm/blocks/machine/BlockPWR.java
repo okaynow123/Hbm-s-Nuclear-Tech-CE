@@ -1,6 +1,9 @@
 package com.hbm.blocks.machine;
 
+import api.hbm.fluid.IFluidConnector;
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.machine.TileEntityPWRController;
 import com.hbm.util.I18nUtil;
@@ -169,7 +172,7 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 
-    public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler {
+    public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler, IFluidConnector {
 
         public IBlockState originalBlockState;
         public BlockPos corePos;
@@ -188,7 +191,8 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
         /**
          * Finds and caches the core TileEntityPWRController.
          */
-        protected TileEntityPWRController getCore() {
+        @Nullable
+        private TileEntityPWRController getCore() {
             if (corePos == null) return null;
             if (cachedCore != null && !cachedCore.isInvalid() && cachedCore.getPos().equals(corePos)) {
                 return cachedCore;
@@ -253,7 +257,7 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
         public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
             if (world.getBlockState(pos).getValue(IO_ENABLED)) {
                 TileEntityPWRController core = getCore();
-                if (core != null && (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
+                if (core != null) {
                     return core.hasCapability(capability, facing);
                 }
             }
@@ -265,7 +269,7 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
         public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
             if (world.getBlockState(pos).getValue(IO_ENABLED)) {
                 TileEntityPWRController core = getCore();
-                if (core != null && (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {
+                if (core != null) {
                     return core.getCapability(capability, facing);
                 }
             }
@@ -312,6 +316,40 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
                 if (handler != null) return handler.drain(maxDrain, doDrain);
             }
             return null;
+        }
+
+        @Override
+        public boolean isLoaded() {
+            return true;
+        }
+
+        @Override
+        public long transferFluid(FluidType type, int pressure, long fluid) {
+
+            if(!world.getBlockState(pos).getValue(IO_ENABLED)) return fluid;
+
+            if(getCore() != null) {
+                return getCore().transferFluid(type, pressure, fluid);
+            }
+            return fluid;
+        }
+
+        @Override
+        public long getDemand(FluidType type, int pressure) {
+            if(!world.getBlockState(pos).getValue(IO_ENABLED)) return 0;
+            if(getCore() != null) {
+                return getCore().getDemand(type, pressure);
+            }
+            return 0;
+        }
+
+        @Override
+        public boolean canConnect(FluidType type, ForgeDirection dir) {
+            if(!world.getBlockState(pos).getValue(IO_ENABLED)) return false;
+            if(getCore() != null) {
+                return getCore().canConnect(type, dir);
+            }
+            return true;
         }
     }
 }

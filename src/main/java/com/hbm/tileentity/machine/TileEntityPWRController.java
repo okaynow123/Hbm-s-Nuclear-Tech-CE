@@ -2,9 +2,11 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerPWR;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
@@ -32,16 +34,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -441,6 +447,11 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     }
 
     @Override
+    public boolean canConnect(FluidType type, ForgeDirection dir){
+        return type == Fluids.COOLANT || type == Fluids.COOLANT_HOT;
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         tanks[0].readFromNBT(nbt, "t0");
@@ -535,6 +546,24 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
         } else {
             return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
         }
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+            );
+        }
+        return super.getCapability(capability, facing);
     }
 
     @Override
