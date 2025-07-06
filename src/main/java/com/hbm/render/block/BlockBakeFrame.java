@@ -106,8 +106,8 @@ public class BlockBakeFrame {
         PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
         FULL_CUSTOM("minecraft:block/cube_all", 6, new String[]{
-                "top",
-                "bottom",
+                "up",
+                "down",
                 "north",
                 "south",
                 "west",
