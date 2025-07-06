@@ -438,8 +438,8 @@ public class HazardRegistry {
 		HazardSystem.register(DictFrame.fromOne(ModItems.watz_pellet, ItemWatzPellet.EnumWatzType.NQD), makeData(RADIATION, u235 * ingot * 4));
 		HazardSystem.register(DictFrame.fromOne(ModItems.watz_pellet, ItemWatzPellet.EnumWatzType.NQR), makeData(RADIATION, pu239 * ingot * 4));
 
-		// PWR isn't added.. yet
-		/*registerPWRFuel(EnumPWRFuel.MEU, uf * billet * 2);
+
+		registerPWRFuel(EnumPWRFuel.MEU, uf * billet * 2);
 		registerPWRFuel(EnumPWRFuel.HEU233, u233 * billet * 2);
 		registerPWRFuel(EnumPWRFuel.HEU235, u235 * billet * 2);
 		registerPWRFuel(EnumPWRFuel.MEN, npf * billet * 2);
@@ -453,7 +453,7 @@ public class HazardRegistry {
 		registerPWRFuel(EnumPWRFuel.HES326, sa326 * billet * 2);
 		registerPWRFuel(EnumPWRFuel.HES327, sa327 * billet * 2);
 		registerPWRFuel(EnumPWRFuel.BFB_AM_MIX, amrg * billet);
-		registerPWRFuel(EnumPWRFuel.BFB_PU241, pu241 * billet);*/
+		registerPWRFuel(EnumPWRFuel.BFB_PU241, pu241 * billet);
 
 		HazardSystem.register(powder_yellowcake, makeData(RADIATION, yc * powder));
 		HazardSystem.register(block_yellowcake, makeData(RADIATION, yc * block * powder_mult));
@@ -515,11 +515,11 @@ public class HazardRegistry {
 	private static HazardData makeData(HazardTypeBase hazard, float level) { return new HazardData().addEntry(hazard, level); }
 	private static HazardData makeData(HazardTypeBase hazard, float level, boolean override) { return new HazardData().addEntry(hazard, level, override); }
 
-	/*private static void registerPWRFuel(EnumPWRFuel fuel, float baseRad) {
+	private static void registerPWRFuel(EnumPWRFuel fuel, float baseRad) {
 		HazardSystem.register(DictFrame.fromOne(ModItems.pwr_fuel, fuel), makeData(RADIATION, baseRad));
 		HazardSystem.register(DictFrame.fromOne(ModItems.pwr_fuel_hot, fuel), makeData(RADIATION, baseRad * 10).addEntry(HOT, 5));
 		HazardSystem.register(DictFrame.fromOne(ModItems.pwr_fuel_depleted, fuel), makeData(RADIATION, baseRad * 10));
-	}*/
+	}
 
 	private static void registerRBMKPellet(Item pellet, float base, float dep) { registerRBMKPellet(pellet, base, dep, false, 0F, 0F); }
 	private static void registerRBMKPellet(Item pellet, float base, float dep, boolean linear) { registerRBMKPellet(pellet, base, dep, linear, 0F, 0F); }
