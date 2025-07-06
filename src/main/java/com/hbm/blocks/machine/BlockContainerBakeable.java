@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.IDynamicModels;
 import com.hbm.render.block.BlockBakeFrame;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -71,5 +72,9 @@ public abstract class BlockContainerBakeable extends BlockContainer implements I
     @Override
     public void registerSprite(TextureMap map) {
         blockFrame.registerBlockTextures(map);
+    }
+
+    public Block getBlock() {
+        return this;
     }
 }

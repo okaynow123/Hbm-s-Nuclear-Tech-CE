@@ -2,6 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.machine.TileEntityPWRController;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -9,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -49,6 +51,8 @@ public class BlockPWR extends BlockContainerBakeable {
         this.portFrame = new BlockBakeFrame(BlockBakeFrame.BlockForm.ALL, portTexture);
         this.setDefaultState(this.blockState.getBaseState().withProperty(IO_ENABLED, false));
     }
+
+
 
     @NotNull
     @Override
@@ -121,6 +125,16 @@ public class BlockPWR extends BlockContainerBakeable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Block getBlock() {
+        return this;
+    }
+
+//    @Override
+//    public StateMapperBase getStateMapper(ResourceLocation loc) {
+//        return super.getStateMapper(loc);
+//    }
 
     private void bakeStateModel(ModelBakeEvent event, BlockBakeFrame frame, String variant) {
         try {

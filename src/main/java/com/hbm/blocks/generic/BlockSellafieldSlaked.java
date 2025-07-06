@@ -137,6 +137,11 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     }
 
     @Override
+    public Block getBlock() {
+        return this;
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack
             stack) {
         int meta = stack.getMetadata();

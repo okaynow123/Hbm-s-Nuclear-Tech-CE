@@ -25,6 +25,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +47,20 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     public MachinePWRController(Material mat, String name, BlockBakeFrame frame) {
         super(mat, name, frame);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.SOLID;
+    }
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return true;
     }
 
     @Override

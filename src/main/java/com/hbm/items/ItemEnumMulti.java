@@ -3,6 +3,7 @@ package com.hbm.items;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.EnumUtil;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -104,6 +105,11 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Block getBlock() {
+        return null;
     }
 
 

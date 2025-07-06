@@ -254,6 +254,8 @@ public class ModEventHandlerClient {
     public void registerModels(ModelRegistryEvent event) {
 
 
+
+
         int i = 0;
         ResourceLocation[] list = new ResourceLocation[EnumCell.values().length];
         for (EnumCell e : EnumCell.values()) {
@@ -311,6 +313,7 @@ public class ModEventHandlerClient {
         ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
         ((ItemMold) ModItems.mold).registerModels();
         IDynamicModels.registerModels();
+        IDynamicModels.registerCustomStateMappers();
         IMetaItemTesr.redirectModels();
         //FIXME: this is a dogshit solution
 
