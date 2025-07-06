@@ -156,7 +156,7 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
                         } else {
                             replacementState = ModBlocks.pwr_block.getDefaultState().withProperty(BlockPWR.IO_ENABLED, false);
                         }
-                        world.setBlockState(partPos, replacementState, 2);
+                        world.setBlockState(partPos, replacementState, 3);
 
                         TileEntity partTile = world.getTileEntity(partPos);
                         if (partTile instanceof TileEntityBlockPWR pwr) {

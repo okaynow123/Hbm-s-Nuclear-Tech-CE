@@ -1,7 +1,9 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.blocks.ILookOverlay;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.machine.TileEntityPWRController;
+import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -16,6 +18,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -24,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -37,11 +42,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 //MrNorwood: Oh my fucking god fristie,this dogshit should be thrown the fuck out
-public class BlockPWR extends BlockContainerBakeable {
+public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
 
     public static final PropertyBool IO_ENABLED = PropertyBool.create("io");
     private final BlockBakeFrame portFrame;
@@ -51,8 +58,6 @@ public class BlockPWR extends BlockContainerBakeable {
         this.portFrame = new BlockBakeFrame(BlockBakeFrame.BlockForm.ALL, portTexture);
         this.setDefaultState(this.blockState.getBaseState().withProperty(IO_ENABLED, false));
     }
-
-
 
     @NotNull
     @Override
@@ -148,7 +153,22 @@ public class BlockPWR extends BlockContainerBakeable {
         }
     }
 
-    // --- Tile Entity Inner Class ---
+    @Override
+    public void printHook(RenderGameOverlayEvent.Pre event, World world, int x, int y, int z) {
+        TileEntity tePWR = world.getTileEntity(new BlockPos(x, y, z));
+        List<String> text = new ArrayList<>();
+        if (!(tePWR instanceof TileEntityBlockPWR blockPWR)) return;
+        if (!(blockPWR.corePos != null && world.getTileEntity(blockPWR.corePos) instanceof TileEntityPWRController controller)) {
+            text.add("No core detected.");
+        } else {
+            text.add("Core: " + controller.getPos());
+            text.add("Assembled: " + controller.assembled);
+        }
+        text.add("IO: " + world.getBlockState(blockPWR.getPos()).getValue(IO_ENABLED));
+        text.add("originalBlockstate: " + blockPWR.originalBlockState);
+        ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
+    }
+
     public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler {
 
         public IBlockState originalBlockState;
@@ -208,9 +228,29 @@ public class BlockPWR extends BlockContainerBakeable {
             return nbt;
         }
 
+        @NotNull
+        @Override
+        public NBTTagCompound getUpdateTag() {
+            return this.writeToNBT(new NBTTagCompound());
+        }
+
+        @Override
+        public void handleUpdateTag(@NotNull NBTTagCompound tag) {
+            this.readFromNBT(tag);
+        }
+
+        @Override
+        public SPacketUpdateTileEntity getUpdatePacket() {
+            return new SPacketUpdateTileEntity(this.pos, 1, this.getUpdateTag());
+        }
+
+        @Override
+        public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+            handleUpdateTag(pkt.getNbtCompound());
+        }
+
         @Override
         public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
-            // Only expose capabilities if this block is an I/O port.
             if (world.getBlockState(pos).getValue(IO_ENABLED)) {
                 TileEntityPWRController core = getCore();
                 if (core != null && (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)) {

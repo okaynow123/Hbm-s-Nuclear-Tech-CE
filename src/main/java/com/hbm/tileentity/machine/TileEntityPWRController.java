@@ -298,7 +298,6 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     }
 
     protected void meltDown() {
-        // Set controller block to air without dropping it, matching 1.7.10 behavior
         world.setBlockToAir(this.getPos());
 
         double x = 0;
@@ -326,7 +325,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public AudioWrapper createAudioLoop() {
-        // Ensure the sound event "hbm:block.reactorloop" is registered in your sounds.json file.
+        // TODO: add this to json
         return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 20);
     }
 
