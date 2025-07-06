@@ -331,7 +331,6 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public AudioWrapper createAudioLoop() {
-        // TODO: add this to json
         return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 20);
     }
 
@@ -352,7 +351,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
         }
     }
 
-    protected void updateCoolant() {
+    private void updateCoolant() {
         FT_Heatable trait = tanks[0].getTankType().getTrait(FT_Heatable.class);
         if (trait == null || trait.getEfficiency(HeatingType.PWR) <= 0) return;
 
@@ -379,6 +378,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
+        buf.writeBoolean(this.assembled);
         buf.writeInt(this.rodCount);
         buf.writeLong(this.coreHeat);
         buf.writeLong(this.hullHeat);
@@ -397,6 +397,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     @Override
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
+        this.assembled = buf.readBoolean();
         this.rodCount = buf.readInt();
         this.coreHeat = buf.readLong();
         this.hullHeat = buf.readLong();
@@ -412,7 +413,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
         tanks[1].deserialize(buf);
     }
 
-    protected void setupTanks() {
+    private void setupTanks() {
         FT_Heatable trait = tanks[0].getTankType().getTrait(FT_Heatable.class);
         if (trait == null || trait.getEfficiency(HeatingType.PWR) <= 0) {
             tanks[0].setTankType(Fluids.NONE);
@@ -448,7 +449,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public boolean canConnect(FluidType type, ForgeDirection dir){
-        return type == Fluids.COOLANT || type == Fluids.COOLANT_HOT;
+        return type == tanks[0].getTankType() || type == tanks[1].getTankType();
     }
 
     @Override
