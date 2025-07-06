@@ -157,6 +157,7 @@ public class MachineAutosaw extends BlockContainer
       World worldIn,
       @NotNull List<String> list,
       @NotNull ITooltipFlag flagIn) {
+    this.addStandardInfo(list);
     super.addInformation(stack, worldIn, list, flagIn);
   }
 }
