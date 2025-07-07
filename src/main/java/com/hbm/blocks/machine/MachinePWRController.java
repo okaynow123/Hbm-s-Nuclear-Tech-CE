@@ -15,17 +15,20 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MachinePWRController extends BlockContainerBakeable implements ITooltipProvider {
 
@@ -47,7 +51,7 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     private static final int MAX_SIZE = 4096;
 
     public MachinePWRController(String name) {
-        super(Material.IRON, name, BlockBakeFrame.simpleNorthRotatable("pwr_casing_blank", "pwr_controller"));
+        super(Material.IRON, name, BlockBakeFrame.simpleSouthRotatable("pwr_casing_blank", "pwr_controller"));
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
@@ -229,6 +233,15 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     @Override
     public void addInformation(@NotNull ItemStack stack, @Nullable World world, @NotNull List<String> tooltip, @NotNull ITooltipFlag flag) {
         this.addStandardInfo(tooltip);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModel() {
+        for(var facing :EnumFacing.HORIZONTALS)
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), facing.getHorizontalIndex(), new ModelResourceLocation(Objects.requireNonNull(this.getRegistryName()), "facing=" +facing.getName()));
+
+        super.registerModel();
     }
 
 

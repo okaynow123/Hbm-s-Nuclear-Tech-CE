@@ -69,8 +69,8 @@ public class BlockBakeFrame {
         return frames;
     }
 
-    public static BlockBakeFrame simpleNorthRotatable(String sides, String front){
-        return new BlockBakeFrame(FULL_CUSTOM, sides, sides, front, sides, sides, sides);
+    public static BlockBakeFrame simpleSouthRotatable(String sides, String front){
+        return new BlockBakeFrame(FULL_CUSTOM, sides, sides, sides, front, sides, sides);
     }
 
 
