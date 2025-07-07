@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -121,8 +122,8 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
 
     @Override
     public void bakeModel(ModelBakeEvent event) {
-        bakeStateModel(event, this.blockFrame, "");
-        bakeStateModel(event, this.portFrame, "port");
+        bakeStateModel(event, this.blockFrame, "io=false");
+        bakeStateModel(event, this.portFrame, "io=true");
         try {
             IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
             IBakedModel bakedModel = model.retexture(ImmutableMap.of("all", blockFrame.getSpriteLoc(0).toString()))
@@ -154,6 +155,12 @@ public class BlockPWR extends BlockContainerBakeable implements ILookOverlay {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void registerSprite(TextureMap map){
+        super.registerSprite(map);
+        this.portFrame.registerBlockTextures(map);
     }
 
     @Override

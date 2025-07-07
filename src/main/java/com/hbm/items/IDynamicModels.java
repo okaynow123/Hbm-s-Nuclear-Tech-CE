@@ -60,8 +60,6 @@ public interface IDynamicModels {
     @SideOnly(Side.CLIENT)
     void registerSprite(TextureMap map);
 
-    ;
-
     @SideOnly(Side.CLIENT)
     default StateMapperBase getStateMapper(ResourceLocation loc) {
         return null;
