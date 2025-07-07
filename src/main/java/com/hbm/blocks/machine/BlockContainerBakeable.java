@@ -51,7 +51,7 @@ public abstract class BlockContainerBakeable extends BlockContainer implements I
                 );
             }
             ModelResourceLocation modelLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");
-            event.getModelRegistry().putObject(modelLocation, models[3]);
+            event.getModelRegistry().putObject(modelLocation, models[1]);
             for (int index = 0; index < models.length; index++) {
                 ModelResourceLocation worldLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "facing=" + EnumFacing.HORIZONTALS[index].getName());
                 event.getModelRegistry().putObject(worldLocation, models[index]);

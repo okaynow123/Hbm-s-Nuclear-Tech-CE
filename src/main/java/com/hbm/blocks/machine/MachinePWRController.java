@@ -46,8 +46,8 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     private boolean errored;
     private static final int MAX_SIZE = 4096;
 
-    public MachinePWRController(Material mat, String name, BlockBakeFrame frame) {
-        super(mat, name, frame);
+    public MachinePWRController(String name) {
+        super(Material.IRON, name, BlockBakeFrame.simpleNorthRotatable("pwr_casing_blank", "pwr_controller"));
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 

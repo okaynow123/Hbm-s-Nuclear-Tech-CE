@@ -1185,7 +1185,7 @@ public class ModBlocks {
 	public static final Block pwr_reflector = new BlockGenericPWR(Material.IRON, "pwr_reflector").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block pwr_casing = new BlockGenericPWR(Material.IRON, "pwr_casing").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block pwr_port = new BlockGenericPWR(Material.IRON, "pwr_port").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block pwr_controller = new MachinePWRController(Material.IRON, "pwr_controller", BlockBakeFrame.simpleNorthRotatable("pwr_casing_blank", "pwr_controller") ).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_controller = new MachinePWRController("pwr_controller").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block pwr_block = new BlockPWR(Material.IRON, "pwr_block", "pwr_casing_port").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
 	//Fusion fellas
