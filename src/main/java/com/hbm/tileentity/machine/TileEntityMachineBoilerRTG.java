@@ -5,7 +5,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBoiler;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.MachineRecipes;
@@ -230,12 +229,12 @@ public class TileEntityMachineBoilerRTG extends TileEntityMachineBase implements
 		if(tanks[0].getFluid() != null) {
 			fluid1 = tanks[0].getFluid().getFluid();
 		} else {
-			fluid1 = ModForgeFluids.none;
+			fluid1 =Fluids.NONE.getFF();;
 		}
 		if(tanks[1].getFluid() != null) {
 			fluid2 = tanks[1].getFluid().getFluid();
 		} else {
-			fluid2 = ModForgeFluids.none;
+			fluid2 =Fluids.NONE.getFF();;
 		}
 		return new Fluid[]{fluid1, fluid2};
 	}

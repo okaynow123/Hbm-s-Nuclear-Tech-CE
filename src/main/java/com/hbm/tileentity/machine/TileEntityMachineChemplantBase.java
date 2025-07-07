@@ -4,13 +4,12 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidUser;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -125,7 +124,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		Fluid[] fluid = new Fluid[tanks.length];
 		for(int i = 0; i < tanks.length; i++){
 			if (tanks[i].getType() != null) fluid[i] = tanks[i].getType();
-			else fluid[i] = ModForgeFluids.none;
+			else fluid[i] =Fluids.NONE.getFF();;
 		}
 		return fluid;
 	}

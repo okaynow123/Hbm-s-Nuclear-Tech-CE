@@ -1,9 +1,7 @@
 package com.hbm.inventory.container;
 
 import api.hbm.energymk2.IBatteryItem;
-import com.blamejared.ctgui.api.SlotRecipeOutput;
 import com.hbm.inventory.SlotMachineOutput;
-import com.hbm.inventory.SlotMachineOutputVanilla;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;

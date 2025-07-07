@@ -18,7 +18,6 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hbm.blocks.BlockEnums.OreType;
-import static com.hbm.blocks.OreEnumUtil.*;
+import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
 
 public class ModBlocks {
@@ -911,12 +910,9 @@ public class ModBlocks {
 	public static final Block machine_diesel = new MachineDiesel(Material.IRON, "machine_diesel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_machine_diesel = 31;
 
-	public static final Block machine_industrial_generator = new MachineIGenerator(Material.IRON, "machine_industrial_generator").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final int guiID_machine_industrial_generator = 39;
 
 	public static final Block machine_generator = new MachineGenerator(Material.IRON, "machine_generator").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
-	public static final Block machine_controller = new MachineReactorControl(Material.IRON, "machine_controller").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_machine_controller = 78;
 
 	public static final int guiID_radio_torch_sender = 130;
@@ -1080,8 +1076,6 @@ public class ModBlocks {
 	public static final Block machine_schrabidium_transmutator = new MachineSchrabidiumTransmutator(Material.IRON, "machine_schrabidium_transmutator").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_schrabidium_transmutator = 30;
 
-	public static final Block machine_combine_factory = new MachineCMBFactory(Material.IRON, "machine_combine_factory").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final int guiID_combine_factory = 35;
 
 	public static final Block machine_teleporter = new MachineTeleporter(Material.IRON, "machine_teleporter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
@@ -1189,14 +1183,6 @@ public class ModBlocks {
 	public static final int guiID_factory_advanced = 25;
 
 	//Big reactor
-	public static final Block reactor_element = new BlockReactor(Material.IRON, "reactor_element").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_control = new BlockReactor(Material.IRON, "reactor_control").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_hatch = new ReactorHatch(Material.IRON, "reactor_hatch").setHardness(5.0F).setResistance(1000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_ejector = new BlockRotatable(Material.IRON, "reactor_ejector").setHardness(5.0F).setResistance(1000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_inserter = new BlockRotatable(Material.IRON, "reactor_inserter").setHardness(5.0F).setResistance(1000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_conductor = new BlockReactor(Material.IRON, "reactor_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block reactor_computer = new ReactorCore(Material.IRON, "reactor_computer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final int guiID_reactor_multiblock = 26;
 
 	//Fusion fellas
 	public static final Block fusion_conductor = new BlockReactor(Material.IRON, "fusion_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1236,11 +1222,6 @@ public class ModBlocks {
 	public static final Block dfc_receiver = new CoreComponent(Material.IRON, "dfc_receiver").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block dfc_stabilizer = new CoreComponent(Material.IRON, "dfc_stabilizer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block dfc_core = new CoreCore(Material.IRON, "dfc_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final int guiID_dfc_emitter = 87;
-	public static final int guiID_dfc_injector = 90;
-	public static final int guiID_dfc_receiver = 88;
-	public static final int guiID_dfc_stabilizer = 91;
-	public static final int guiID_dfc_core = 89;
 
 	//UU
 	//we don't really have UU as a fluid anymore..

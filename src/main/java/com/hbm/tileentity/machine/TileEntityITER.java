@@ -5,16 +5,15 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.recipes.BreederRecipes;
-import com.hbm.inventory.recipes.BreederRecipes.BreederRecipe;
 import com.hbm.inventory.FusionRecipes;
 import com.hbm.inventory.container.ContainerITER;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIITER;
+import com.hbm.inventory.recipes.BreederRecipes;
+import com.hbm.inventory.recipes.BreederRecipes.BreederRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemFusionShield;
 import com.hbm.lib.DirPos;
@@ -86,7 +85,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 		tanks[0] = new FluidTank(12800000);
 		types[0] = FluidRegistry.WATER;
 		tanks[1] = new FluidTank(1280000);
-		types[1] = ModForgeFluids.ultrahotsteam;
+		types[1] = Fluids.ULTRAHOTSTEAM.getFF();
 		plasma = new FluidTank(16000);
 
 		converted = true;

@@ -4,7 +4,6 @@ import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.GasCentrifugeRecipes;
 import com.hbm.inventory.container.ContainerMachineGasCent;
@@ -79,7 +78,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		progress = nbt.getShort("progress");
 		if (!converted) {
 			tank.readFromNBT(nbt);
-			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() : ModForgeFluids.none;
+			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() :Fluids.NONE.getFF();;
 		} else tankNew.readFromNBT(nbt, "tank");
 		inputTank.readFromNBT(nbt, "inputTank");
 		outputTank.readFromNBT(nbt, "outputTank");

@@ -1,7 +1,6 @@
 package com.hbm.packet;
 
 import com.hbm.interfaces.ITankPacketAcceptor;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +15,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Deprecated //This will crash the server, old FF shit
 public class FluidTankPacket implements IMessage {
 
 	int x;

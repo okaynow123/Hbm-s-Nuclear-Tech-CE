@@ -285,32 +285,6 @@ public class ItemRenderLibrary {
             }
         });
 
-        renderers.put(Item.getItemFromBlock(ModBlocks.machine_industrial_generator), new ItemRenderBase() {
-            public void renderInventory() {
-                GL11.glScaled(4, 4, 4);
-                GL11.glRotated(90, 0, 1, 0);
-            }
-
-            public void renderCommon() {
-                GL11.glScaled(0.25, 0.25, 0.25);
-                GlStateManager.shadeModel(GL11.GL_SMOOTH);
-                GlStateManager.disableCull();
-                bindTexture(ResourceManager.igen_tex);
-                ResourceManager.igen.renderPart("Base");
-                bindTexture(ResourceManager.igen_rotor);
-                ResourceManager.igen.renderPart("Rotor");
-                bindTexture(ResourceManager.igen_cog);
-                ResourceManager.igen.renderPart("CogLeft");
-                ResourceManager.igen.renderPart("CogRight");
-                bindTexture(ResourceManager.igen_pistons);
-                ResourceManager.igen.renderPart("Pistons");
-                bindTexture(ResourceManager.igen_arm);
-                ResourceManager.igen.renderPart("ArmLeft");
-                ResourceManager.igen.renderPart("ArmRight");
-                GlStateManager.enableCull();
-                GlStateManager.shadeModel(GL11.GL_FLAT);
-            }
-        });
 
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_radgen), new ItemRenderBase() {
             public void renderInventory() {

@@ -122,7 +122,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_heater), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_reactor_breeding), BREEDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_centrifuge), CENTRIFUGE);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_combine_factory), CMB);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_gascent), GAS_CENT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_waste_drum), WASTEDRUM);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_storage_drum), STORAGEDRUM);
@@ -217,7 +216,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUIMachineBoilerElectric.class, 61, 34, 17, 35, BOILER);
 		registry.addRecipeClickArea(GUIMachineBoilerRTG.class, 61, 34, 17, 17, BOILER);
 		registry.addRecipeClickArea(GUIMachineCentrifuge.class, 35, 9, 106, 40, CENTRIFUGE);
-		registry.addRecipeClickArea(GUIMachineCMBFactory.class, 111, 35, 21, 14, CMB);
 		registry.addRecipeClickArea(GUIMachineGasCent.class, 70, 36, 36, 12, GAS_CENT);
         registry.addRecipeClickArea(GUIMachineSolderingStation.class, 72, 29, 32, 13, SOLDERING_STATION);
 		registry.addRecipeClickArea(GUIMachineReactorBreeding.class, 73, 32, 30, 20, BREEDER);

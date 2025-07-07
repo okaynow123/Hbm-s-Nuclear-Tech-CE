@@ -8,7 +8,6 @@ import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.items.ItemFuelBlock;
 import com.hbm.blocks.machine.ItemSelfcharger;
 import com.hbm.config.BombConfig;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.ToolAbility;
 import com.hbm.handler.ToolAbility.LuckAbility;
 import com.hbm.handler.WeaponAbility;
@@ -736,13 +735,13 @@ public class ModItems {
 	public static final Item hat = new ArmorHat(ArmorMaterial.IRON, 7, EntityEquipmentSlot.HEAD, "nossy_hat").setMaxStackSize(1);
 	public static final Item beta = new ItemDrop("beta").setMaxStackSize(1);
 	
-	public static final Item jetpack_fly = new JetpackRegular(MainRegistry.enumArmorMaterialSteel, -1, EntityEquipmentSlot.CHEST, ModForgeFluids.kerosene, 12000, "jetpack_fly").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
-	public static final Item jetpack_break = new JetpackBreak(MainRegistry.enumArmorMaterialSteel, -1, EntityEquipmentSlot.CHEST, ModForgeFluids.kerosene, 12000, "jetpack_break").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
-	public static final Item jetpack_vector = new JetpackVectorized(MainRegistry.enumArmorMaterialSteel, -1, EntityEquipmentSlot.CHEST, ModForgeFluids.kerosene, 16000, "jetpack_vector").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
-	public static final Item jetpack_boost = new JetpackBooster(MainRegistry.enumArmorMaterialSteel, -1, EntityEquipmentSlot.CHEST, ModForgeFluids.balefire, 32000, "jetpack_boost").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item jetpack_fly = new JetpackRegular(Fluids.KEROSENE, 12000, "jetpack_fly").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item jetpack_break = new JetpackBreak(Fluids.KEROSENE, 12000, "jetpack_break").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item jetpack_vector = new JetpackVectorized(Fluids.KEROSENE, 16000, "jetpack_vector").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item jetpack_boost = new JetpackBooster(Fluids.BALEFIRE, 32000, "jetpack_boost").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
 	public static final Item jetpack_glider = new JetpackGlider(MainRegistry.enumArmorMaterialSteel, -1, EntityEquipmentSlot.CHEST, 20000, "jetpack_glider").setMaxStackSize(1).setCreativeTab(CreativeTabs.COMBAT);
-	public static final Item wings_murk = new WingsMurk(MainRegistry.aMatCobalt, "wings_murk").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
-	public static final Item wings_limp = new WingsMurk(MainRegistry.aMatCobalt, "wings_limp").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item wings_murk = new WingsMurk("wings_murk").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
+	public static final Item wings_limp = new WingsMurk("wings_limp").setCreativeTab(CreativeTabs.COMBAT).setMaxStackSize(1);
 	
 	public static final Item cape_radiation = new ArmorModel(ArmorMaterial.CHAIN, -1, EntityEquipmentSlot.CHEST, "cape_radiation").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1);
 	public static final Item cape_gasmask = new ArmorModel(ArmorMaterial.CHAIN, -1, EntityEquipmentSlot.CHEST, "cape_gasmask").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1);

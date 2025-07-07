@@ -119,11 +119,6 @@ public class AuxGaugePacket implements IMessage {
 
                         if (m.id == 0)
                             boiler.heat = m.value;
-                    } else if (te instanceof TileEntityMachineReactorLarge) {
-                        TileEntityMachineReactorLarge reactor = (TileEntityMachineReactorLarge) te;
-
-                        if (m.id == 0)
-                            reactor.size = m.value;
                     } else if (te instanceof TileEntityCompactLauncher) {
                         TileEntityCompactLauncher launcher = (TileEntityCompactLauncher) te;
 

@@ -9,7 +9,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.BedrockOreRegistry;
@@ -98,7 +97,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	public Fluid fluidType;
 	public FluidTankNTM tankNew;
 	private static boolean converted = false;
-	private Fluid oldFluid = ModForgeFluids.none;
+	private Fluid oldFluid =Fluids.NONE.getFF();;
 
 	private final UpgradeManager upgradeManager = new UpgradeManager();
 

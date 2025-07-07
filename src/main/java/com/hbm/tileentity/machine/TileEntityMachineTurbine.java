@@ -5,7 +5,6 @@ import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerMachineTurbine;
 import com.hbm.inventory.fluid.FluidType;
@@ -94,9 +93,9 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 		tanks = new FluidTank[2];
 		tankTypes = new Fluid[2];
 		tanks[0] = new FluidTank(64000);
-		tankTypes[0] = ModForgeFluids.steam;
+		tankTypes[0] = Fluids.STEAM.getFF();
 		tanks[1] = new FluidTank(128000);
-		tankTypes[1] = ModForgeFluids.spentsteam;
+		tankTypes[1] = Fluids.SPENTSTEAM.getFF();;
 
 		converted = true;
 	}

@@ -41,9 +41,9 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	public FluidTankNTM plasmaNew;
 
 	public FluidTank[] tanks;
-	public Fluid[] types = new Fluid[]{ModForgeFluids.deuterium, ModForgeFluids.tritium};
+	public Fluid[] types = new Fluid[]{Fluids.DEUTERIUM.getFF(), Fluids.TRITIUM.getFF()};
 	public FluidTank plasma;
-	public Fluid plasmaType = ModForgeFluids.plasma_dt;
+	public Fluid plasmaType = Fluids.PLASMA_DT.getFF();
 
 	private static boolean converted = false;
 	

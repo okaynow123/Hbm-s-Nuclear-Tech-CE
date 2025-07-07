@@ -1,29 +1,14 @@
 package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.jei.JeiRecipes.BoilerRecipe;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.items.machine.ItemFluidIcon;
-import com.hbm.lib.RefStrings;
-
-import com.hbm.util.I18nUtil;
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeCategory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class BoilerRecipeHandler extends JEIUniversalHandler {
 	

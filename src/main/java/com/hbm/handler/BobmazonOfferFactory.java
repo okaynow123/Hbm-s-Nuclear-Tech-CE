@@ -1,23 +1,17 @@
 package com.hbm.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.PlantEnums;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Requirement;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBattery;
-import com.hbm.items.tool.ItemFluidCanister;
-import com.hbm.items.tool.ItemGasCanister;
-
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import static com.hbm.blocks.PlantEnums.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
 
 public class BobmazonOfferFactory {
