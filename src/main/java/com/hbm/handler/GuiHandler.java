@@ -198,11 +198,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerWasteDrum(player.inventory, (TileEntityWasteDrum) entity);
 			}
 			return null;
-		case ModBlocks.guiID_combine_factory:
-			if(entity instanceof TileEntityMachineCMBFactory) {
-				return new ContainerMachineCMBFactory(player.inventory, (TileEntityMachineCMBFactory) entity);
-			}
-			return null;
 		case ModBlocks.guiID_factory_titanium:
 			if(entity instanceof TileEntityCoreTitanium) {
 				return new ContainerCoreTitanium(player.inventory, (TileEntityCoreTitanium) entity);
@@ -655,11 +650,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_waste_drum:
 			if(entity instanceof TileEntityWasteDrum) {
 				return new GUIWasteDrum(player.inventory, (TileEntityWasteDrum) entity);
-			}
-			return null;
-		case ModBlocks.guiID_combine_factory:
-			if(entity instanceof TileEntityMachineCMBFactory) {
-				return new GUIMachineCMBFactory(player.inventory, (TileEntityMachineCMBFactory) entity);
 			}
 			return null;
 		case ModBlocks.guiID_factory_titanium:
