@@ -41,7 +41,7 @@ import java.util.List;
 //Drillgon200: This is Library.java except for fluids
 //Drillgon200: Let's hope this works without bugs in 1.12.2...
 //Drillgon200: Still mad they removed the fluid container registry.
-@Deprecated(forRemoval = true)
+@Deprecated
 public class FFUtils {
 
 //	// Drillgon200: Wow that took a while to fix. Now the code is ugly and I'll
