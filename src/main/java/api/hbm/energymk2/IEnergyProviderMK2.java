@@ -8,12 +8,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-/** If it sends energy, use this */
-public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
+/**
+ * If it sends energy, use this
+ */
+public interface IEnergyProviderMK2 extends IEnergyHandlerMK2  {
 
-    /** Uses up available power, default implementation has no sanity checking, make sure that the requested power is lequal to the current power */
+    /**
+     * Uses up available power, default implementation has no sanity checking, make sure that the requested power is lequal to the current power
+     */
     public default void usePower(long power) {
         this.setPower(this.getPower() - power);
     }
@@ -27,22 +32,22 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
         TileEntity te = Compat.getTileStandard(world, x, y, z);
         boolean red = false;
 
-        if(te instanceof IEnergyConductorMK2) {
+        if (te instanceof IEnergyConductorMK2) {
             IEnergyConductorMK2 con = (IEnergyConductorMK2) te;
-            if(con.canConnect(dir.getOpposite())) {
+            if (con.canConnect(dir.getOpposite())) {
 
                 Nodespace.PowerNode node = Nodespace.getNode(world, new BlockPos(x, y, z));
 
-                if(node != null && node.net != null) {
+                if (node != null && node.net != null) {
                     node.net.addProvider(this);
                     red = true;
                 }
             }
         }
 
-        if(te instanceof IEnergyReceiverMK2 && te != this) {
+        if (te instanceof IEnergyReceiverMK2 && te != this) {
             IEnergyReceiverMK2 rec = (IEnergyReceiverMK2) te;
-            if(rec.canConnect(dir.getOpposite())) {
+            if (rec.canConnect(dir.getOpposite())) {
                 long provides = Math.min(this.getPower(), this.getProviderSpeed());
                 long receives = Math.min(rec.getMaxPower() - rec.getPower(), rec.getReceiverSpeed());
                 long toTransfer = Math.min(provides, receives);
@@ -51,7 +56,7 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
             }
         }
 
-        if(particleDebug) {
+        if (particleDebug) {
             NBTTagCompound data = new NBTTagCompound();
             data.setString("type", "network");
             data.setString("mode", "power");
@@ -63,5 +68,23 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
             data.setDouble("mZ", dir.offsetZ * (red ? 0.025 : 0.1));
             PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY, posZ), new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 25));
         }
+    }
+
+
+
+    @Override
+    default int extractEnergy(int maxExtract, boolean simulate) {
+        if (simulate) return Math.toIntExact(Math.min(maxExtract, getEnergyStored()));
+        return
+
+    }
+
+
+    default boolean canExtract() {
+        return true;
+    }
+
+    default boolean canRecieve() {
+        return false;
     }
 }
