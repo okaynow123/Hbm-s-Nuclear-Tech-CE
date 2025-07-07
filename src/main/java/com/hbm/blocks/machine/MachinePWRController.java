@@ -7,6 +7,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.render.block.BlockBakeFrame;
+import com.hbm.render.block.RotatableStateMapper;
 import com.hbm.tileentity.machine.TileEntityPWRController;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -14,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -227,5 +229,11 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
     @Override
     public void addInformation(@NotNull ItemStack stack, @Nullable World world, @NotNull List<String> tooltip, @NotNull ITooltipFlag flag) {
         this.addStandardInfo(tooltip);
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    public StateMapperBase getStateMapper(ResourceLocation loc) {
+        return new RotatableStateMapper(loc);
     }
 }
