@@ -222,14 +222,12 @@ public class HazardRegistry {
 		HazardSystem.register(block_corium_cobble, makeData(RADIATION, 150F));
 
 		HazardSystem.register(new ItemStack(sellafield_0, 1, 0), makeData(RADIATION, 0.5F));
-		HazardSystem.register(new ItemStack(sellafield_1, 1, 1), makeData(RADIATION, 1F));
-		HazardSystem.register(new ItemStack(sellafield_2, 1, 2), makeData(RADIATION, 2.5F));
-		HazardSystem.register(new ItemStack(sellafield_3, 1, 3), makeData(RADIATION, 4F));
-		HazardSystem.register(new ItemStack(sellafield_4, 1, 4), makeData(RADIATION, 5F));
-		HazardSystem.register(new ItemStack(sellafield_core, 1, 5), makeData(RADIATION, 10F));
+		HazardSystem.register(new ItemStack(sellafield_1, 1, 0), makeData(RADIATION, 1F));
+		HazardSystem.register(new ItemStack(sellafield_2, 1, 0), makeData(RADIATION, 2.5F));
+		HazardSystem.register(new ItemStack(sellafield_3, 1, 0), makeData(RADIATION, 4F));
+		HazardSystem.register(new ItemStack(sellafield_4, 1, 0), makeData(RADIATION, 5F));
+		HazardSystem.register(new ItemStack(sellafield_core, 1, 0), makeData(RADIATION, 10F));
 
-		HazardSystem.register(new ItemStack(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
-		HazardSystem.register(new ItemStack(ModItems.gem_rad), makeData(RADIATION, 25F));
 
 
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal(), u * rod_dual, wst * rod_dual * 11.5F, false);
