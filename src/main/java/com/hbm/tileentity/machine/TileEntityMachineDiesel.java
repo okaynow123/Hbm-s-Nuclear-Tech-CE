@@ -25,7 +25,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-public class TileEntityMachineDiesel extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver {
+public class TileEntityMachineDiesel extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver {
 
 	public long power;
 	public int soundCycle = 0;
@@ -46,7 +46,7 @@ public class TileEntityMachineDiesel extends TileEntityMachineBase implements IT
 	}
 
 	public TileEntityMachineDiesel() {
-		super(3);
+		super(3, 100);
 		tank = new FluidTankNTM(Fluids.NONE, 16000);
 	}
 	
@@ -86,6 +86,7 @@ public class TileEntityMachineDiesel extends TileEntityMachineBase implements IT
 		if (!world.isRemote) {
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
+				this.sendSmoke(pos.getX() + dir.offsetX, pos.getX() + dir.offsetY, pos.getX() + dir.offsetZ, dir);
 			}
 
 			//Tank Management
@@ -207,7 +208,7 @@ public class TileEntityMachineDiesel extends TileEntityMachineBase implements IT
 
 	@Override
 	public FluidTankNTM[] getSendingTanks() {
-		return null;
+		return this.getSmokeTanks();
 	}
 
 	@Override
