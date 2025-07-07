@@ -63,7 +63,7 @@ public class GUICore extends GuiInfoContainer {
             j = 70;
         drawTexturedModalRect(guiLeft + 53, guiTop + 102, 0, 208, j, 4);
 
-        if (core.hasCore)
+        if (core.hasCore())
             drawTexturedModalRect(guiLeft + 70, guiTop + 29, 220, 0, 36, 36);
 
         core.tanks[0].renderTank(guiLeft + 26, guiTop + 69, this.zLevel, 16, 52);

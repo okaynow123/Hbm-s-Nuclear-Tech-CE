@@ -282,6 +282,9 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
             return 2.7F;
         return 0;
     }
+    public boolean hasCore(){
+        return getCore() != 0;
+    }
 
     public int getCore() {
         ItemStack slot = inventory.getStackInSlot(1);
