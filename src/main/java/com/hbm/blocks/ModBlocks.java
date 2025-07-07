@@ -1224,11 +1224,6 @@ public class ModBlocks {
 	public static final Block dfc_receiver = new CoreComponent(Material.IRON, "dfc_receiver").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block dfc_stabilizer = new CoreComponent(Material.IRON, "dfc_stabilizer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block dfc_core = new CoreCore(Material.IRON, "dfc_core").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final int guiID_dfc_emitter = 87;
-	public static final int guiID_dfc_injector = 90;
-	public static final int guiID_dfc_receiver = 88;
-	public static final int guiID_dfc_stabilizer = 91;
-	public static final int guiID_dfc_core = 89;
 
 	//UU
 	//we don't really have UU as a fluid anymore..

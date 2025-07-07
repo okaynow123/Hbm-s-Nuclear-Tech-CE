@@ -308,31 +308,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerBarrel(player.inventory, (TileEntityBarrel) entity);
 			}
 			return null;
-		case ModBlocks.guiID_dfc_emitter:
-			if(entity instanceof TileEntityCoreEmitter) {
-				return new ContainerCoreEmitter(player, (TileEntityCoreEmitter) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_receiver:
-			if(entity instanceof TileEntityCoreReceiver) {
-				return new ContainerCoreReceiver(player, (TileEntityCoreReceiver) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_injector:
-			if(entity instanceof TileEntityCoreInjector) {
-				return new ContainerCoreInjector(player.inventory, (TileEntityCoreInjector) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_stabilizer:
-			if(entity instanceof TileEntityCoreStabilizer) {
-				return new ContainerCoreStabilizer(player, (TileEntityCoreStabilizer) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_core:
-			if(entity instanceof TileEntityCore) {
-				return new ContainerCore(player.inventory, (TileEntityCore) entity);
-			}
-			return null;
 		case ModBlocks.guiID_capsule:
 			if(entity instanceof TileEntitySoyuzCapsule) {
 				return new ContainerSoyuzCapsule(player.inventory, (TileEntitySoyuzCapsule) entity);
@@ -790,31 +765,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_barrel:
 			if(entity instanceof TileEntityBarrel) {
 				return new GUIBarrel(player.inventory, (TileEntityBarrel) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_emitter:
-			if(entity instanceof TileEntityCoreEmitter) {
-				return new GUICoreEmitter(player, (TileEntityCoreEmitter) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_receiver:
-			if(entity instanceof TileEntityCoreReceiver) {
-				return new GUICoreReceiver(player, (TileEntityCoreReceiver) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_injector:
-			if(entity instanceof TileEntityCoreInjector) {
-				return new GUICoreInjector(player.inventory, (TileEntityCoreInjector) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_stabilizer:
-			if(entity instanceof TileEntityCoreStabilizer) {
-				return new GUICoreStabilizer(player, (TileEntityCoreStabilizer) entity);
-			}
-			return null;
-		case ModBlocks.guiID_dfc_core:
-			if(entity instanceof TileEntityCore) {
-				return new GUICore(player.inventory, (TileEntityCore) entity);
 			}
 			return null;
 		case ModBlocks.guiID_capsule:
