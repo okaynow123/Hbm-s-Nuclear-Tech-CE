@@ -55,18 +55,14 @@ public class ModForgeFluids {
 		ModBlocks.schrabidic_block = new SchrabidicBlock(schrabidic, ModBlocks.fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
 		ModBlocks.corium_block = new CoriumBlock(corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
 		ModBlocks.volcanic_lava_block = new VolcanicBlock(volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
-		//ModBlocks.mercury_block = new BlockFluidClassic(mercury, Material.WATER).setResistance(500F);
 		ModBlocks.bromine_block = new BlockFluidClassic(bromine_fluid, Material.WATER).setResistance(500F);
-		////////////////ModBlocks.bromine_block = new BlockFluidClassic(sulfuric_acid, Material.WATER).setResistance(500F);
 		toxic_fluid.setBlock(ModBlocks.toxic_block);
 		radwater_fluid.setBlock(ModBlocks.radwater_block);
 		mud_fluid.setBlock(ModBlocks.mud_block);
 		schrabidic.setBlock(ModBlocks.schrabidic_block);
 		corium_fluid.setBlock(ModBlocks.corium_block);
 		volcanic_lava_fluid.setBlock(ModBlocks.volcanic_lava_block);
-//		mercury.setBlock(ModBlocks.mercury_block);
 		bromine_fluid.setBlock(ModBlocks.bromine_block);
-//		sulfuric_acid.setBlock(ModBlocks.sulfuric_acid_block);
 		FluidRegistry.addBucketForFluid(toxic_fluid);
 		FluidRegistry.addBucketForFluid(radwater_fluid);
 		FluidRegistry.addBucketForFluid(mud_fluid);
