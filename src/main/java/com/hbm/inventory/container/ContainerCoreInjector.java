@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerCoreInjector extends Container {
 
+	//TODO: add slots
 	private TileEntityCoreInjector nukeBoy;
 	
 	public ContainerCoreInjector(InventoryPlayer invPlayer, TileEntityCoreInjector tedf) {
