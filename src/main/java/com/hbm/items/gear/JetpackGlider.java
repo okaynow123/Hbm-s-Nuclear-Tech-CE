@@ -30,7 +30,7 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 	}
 
 	public FluidTankNTM getTank(ItemStack stack){
-		FluidTankNTM tank = new FluidTankNTM(null, capacity);
+		FluidTankNTM tank = new FluidTankNTM(Fluids.NONE, capacity);
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 			return tank;

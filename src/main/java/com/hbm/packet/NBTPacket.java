@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
+@Deprecated
 public class NBTPacket implements IMessage {
 
 	PacketBuffer buffer;

@@ -1,7 +1,5 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerRBMKBoiler;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
@@ -35,10 +33,8 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 126, guiTop + 24, 16, 56, boiler.feedOld);
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 89, guiTop + 39, 8, 28, boiler.steamOld);
-		
+		boiler.feed.renderTankInfo(this, mouseX, mouseY, guiLeft + 126, guiTop + 24, 16, 56);
+		boiler.steam.renderTankInfo(this, mouseX, mouseY, guiLeft + 89, guiTop + 39, 8, 28);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 

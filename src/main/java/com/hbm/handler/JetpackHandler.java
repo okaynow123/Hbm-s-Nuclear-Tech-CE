@@ -3,7 +3,6 @@ package com.hbm.handler;
 import com.hbm.animloader.AnimationWrapper;
 import com.hbm.animloader.AnimationWrapper.EndResult;
 import com.hbm.animloader.AnimationWrapper.EndType;
-import com.hbm.forgefluid.FFUtils;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -533,7 +532,7 @@ public class JetpackHandler {
 			//GlStateManager.disableBlend();
 			if(tank.getFluid() != null){
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-				TextureAtlasSprite fuel = FFUtils.getTextureFromFluid(tank.getFluid().getFluid());
+				TextureAtlasSprite fuel = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tank.getFluid().getFluid().getStill().toString());
 				NTMRenderHelper.drawGuiRect(66.8F, res.getScaledHeight()-71.3F, fuel.getMinU(), fuel.getMinV(), 6.5F, 6.8F, fuel.getMaxU(), fuel.getMaxV());
 			}
 		}

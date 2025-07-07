@@ -2,6 +2,7 @@ package com.hbm.forgefluid;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.fluid.*;
+import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import net.minecraft.block.material.Material;
@@ -93,7 +94,7 @@ public class ModForgeFluids {
 
 	public static void registerFluidColors(){
 		for(Fluid f : FluidRegistry.getRegisteredFluids().values()){
-			fluidColors.put(f, FFUtils.getColorFromFluid(f));
+			fluidColors.put(f, Library.getColorFromResourceLocation(new ResourceLocation(f.getStill().getNamespace(), "textures/"+f.getStill().getPath()+".png")));
 		}
 	}
 

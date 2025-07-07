@@ -79,7 +79,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     public abstract String getName();
 
     public boolean hasCustomInventoryName() {
-        return this.customName != null && this.customName.length() > 0;
+        return this.customName != null && !this.customName.isEmpty();
     }
 
     public void setCustomName(String name) {

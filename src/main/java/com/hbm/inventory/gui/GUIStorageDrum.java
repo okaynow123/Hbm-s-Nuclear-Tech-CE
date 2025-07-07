@@ -1,9 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.forgefluid.FFUtils;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.container.ContainerStorageDrum;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityStorageDrum;
 import net.minecraft.client.Minecraft;
@@ -14,8 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIStorageDrum extends GuiInfoContainer {
 	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_drum.png");
-	private TileEntityStorageDrum drum;
+	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_drum.png");
+	private final TileEntityStorageDrum drum;
 
 	public GUIStorageDrum(InventoryPlayer invPlayer, TileEntityStorageDrum tedf) {
 		super(new ContainerStorageDrum(invPlayer, tedf));
@@ -28,9 +25,8 @@ public class GUIStorageDrum extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
-
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 16, guiTop + 23, 9, 108, drum.tanks[0], Fluids.WASTEFLUID.getFF());
-		FFUtils.renderTankInfo(this, mouseX, mouseY, guiLeft + 151, guiTop + 23, 9, 108, drum.tanks[1], Fluids.WASTEGAS.getFF());
+		drum.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 16, guiTop + 23, 9, 108);
+		drum.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 151, guiTop + 23, 9, 108);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
