@@ -88,8 +88,6 @@ public class BobmazonOfferFactory {
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_lithium_battery), Requirement.CHEMICS, 60 * inflation));
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_assembler), Requirement.ASSEMBLY, 30 * inflation));
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_chemplant), Requirement.CHEMICS, 50 * inflation));
-		machines.add(new Offer(new ItemStack(ModBlocks.machine_boiler_off), Requirement.CHEMICS, 25 * inflation));
-		machines.add(new Offer(new ItemStack(ModBlocks.machine_boiler_electric_off), Requirement.OIL, 60 * inflation));
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_shredder), Requirement.ASSEMBLY, 45 * inflation));
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_well), Requirement.OIL, 40 * inflation));
 		machines.add(new Offer(new ItemStack(ModBlocks.machine_refinery), Requirement.OIL, 80 * inflation));
@@ -196,7 +194,6 @@ public class BobmazonOfferFactory {
 		special.add(new Offer(new ItemStack(ModBlocks.machine_epress, 2), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModBlocks.machine_assembler, 1), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModBlocks.machine_chemplant, 1), Requirement.HIDDEN, 5 * inflation));
-		special.add(new Offer(new ItemStack(ModBlocks.machine_boiler_off, 1), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModBlocks.machine_well, 1), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModBlocks.machine_refinery, 1), Requirement.HIDDEN, 8 * inflation));
 		special.add(new Offer(new ItemStack(ModBlocks.machine_fluidtank, 4), Requirement.HIDDEN, 3 * inflation));

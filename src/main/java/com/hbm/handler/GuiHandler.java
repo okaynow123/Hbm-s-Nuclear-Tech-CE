@@ -98,21 +98,6 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerLaunchPadTier1(player.inventory, (TileEntityLaunchPad) entity);
 			}
 			return null;
-		case ModBlocks.guiID_machine_boiler:
-			if(entity instanceof TileEntityMachineBoiler) {
-				return new ContainerMachineBoiler(player.inventory, (TileEntityMachineBoiler) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_boiler_electric:
-			if(entity instanceof TileEntityMachineBoilerElectric) {
-				return new ContainerMachineBoilerElectric(player.inventory, (TileEntityMachineBoilerElectric) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_boiler_rtg:
-			if(entity instanceof TileEntityMachineBoilerRTG) {
-				return new ContainerMachineBoilerRTG(player.inventory, (TileEntityMachineBoilerRTG) entity);
-			}
-			return null;
 		case ModBlocks.guiID_machine_epress:
 			if(entity instanceof TileEntityMachineEPress) {
 				return new ContainerMachineEPress(player.inventory, (TileEntityMachineEPress) entity);
@@ -545,21 +530,6 @@ public class GuiHandler implements IGuiHandler {
 		case ModBlocks.guiID_launch_pad:
 			if(entity instanceof TileEntityLaunchPad) {
 				return new GUILaunchPadTier1(player.inventory, (TileEntityLaunchPad) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_boiler:
-			if(entity instanceof TileEntityMachineBoiler) {
-				return new GUIMachineBoiler(player.inventory, (TileEntityMachineBoiler) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_boiler_electric:
-			if(entity instanceof TileEntityMachineBoilerElectric) {
-				return new GUIMachineBoilerElectric(player.inventory, (TileEntityMachineBoilerElectric) entity);
-			}
-			return null;
-		case ModBlocks.guiID_machine_boiler_rtg:
-			if(entity instanceof TileEntityMachineBoilerRTG) {
-				return new GUIMachineBoilerRTG(player.inventory, (TileEntityMachineBoilerRTG) entity);
 			}
 			return null;
 		case ModBlocks.guiID_machine_epress:

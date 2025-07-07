@@ -76,7 +76,6 @@ public class JEIConfig implements IModPlugin {
     private CrackingHandler crackingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
     private FractioningRecipeHandler fractioningHandler;
-    private BoilerRecipeHandler boilerHandler;
     private HydrotreatingHandler hydrotreatHandler;
     private LiquefactionHandler liquefactHandler;
     private MixerRecipeHandler mixerHandler;
@@ -114,9 +113,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_epress), PRESS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_off), ALLOY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_rtg_off), ALLOY);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_boiler_off), BOILER);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_boiler_electric_off), BOILER);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_boiler_rtg_off), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_solar_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.heat_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_heater), BOILER);
@@ -163,7 +159,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getTransmutationRecipes(), TRANSMUTATION);
         registry.addRecipes(JeiRecipes.getPressRecipes(), PRESS);
         registry.addRecipes(JeiRecipes.getAlloyRecipes(), ALLOY);
-        registry.addRecipes(boilerHandler.getRecipes(), BOILER);
         registry.addRecipes(CentrifugeRecipes.getCentrifugeRecipes(), CENTRIFUGE);
         registry.addRecipes(JeiRecipes.getCMBRecipes(), CMB);
         registry.addRecipes(JeiRecipes.getGasCentrifugeRecipes(), GAS_CENT);
@@ -212,9 +207,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUIMachineEPress.class, 80, 35, 15, 15, PRESS);
 		registry.addRecipeClickArea(GUITestDiFurnace.class, 102, 36, 21, 14, ALLOY);
 		registry.addRecipeClickArea(GUIDiFurnaceRTG.class, 102, 36, 21, 14, ALLOY);
-		registry.addRecipeClickArea(GUIMachineBoiler.class, 61, 34, 17, 35, BOILER);
-		registry.addRecipeClickArea(GUIMachineBoilerElectric.class, 61, 34, 17, 35, BOILER);
-		registry.addRecipeClickArea(GUIMachineBoilerRTG.class, 61, 34, 17, 17, BOILER);
 		registry.addRecipeClickArea(GUIMachineCentrifuge.class, 35, 9, 106, 40, CENTRIFUGE);
 		registry.addRecipeClickArea(GUIMachineGasCent.class, 70, 36, 36, 12, GAS_CENT);
         registry.addRecipeClickArea(GUIMachineSolderingStation.class, 72, 29, 32, 13, SOLDERING_STATION);
@@ -291,7 +283,6 @@ public class JEIConfig implements IModPlugin {
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),
-                boilerHandler = new BoilerRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),
                 crystallizerHandler = new CrystallizerRecipeHandler(help),
