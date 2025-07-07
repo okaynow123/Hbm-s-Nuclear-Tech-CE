@@ -8,13 +8,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  * If it sends energy, use this
  */
-public interface IEnergyProviderMK2 extends IEnergyHandlerMK2  {
+public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
 
     /**
      * Uses up available power, default implementation has no sanity checking, make sure that the requested power is lequal to the current power
@@ -71,20 +70,4 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2  {
     }
 
 
-
-    @Override
-    default int extractEnergy(int maxExtract, boolean simulate) {
-        if (simulate) return Math.toIntExact(Math.min(maxExtract, getEnergyStored()));
-        return
-
-    }
-
-
-    default boolean canExtract() {
-        return true;
-    }
-
-    default boolean canRecieve() {
-        return false;
-    }
 }

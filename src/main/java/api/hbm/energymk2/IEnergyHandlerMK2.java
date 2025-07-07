@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /** DO NOT USE DIRECTLY! This is simply the common ancestor to providers and receivers, because all this behavior has to be excluded from conductors! */
-public interface IEnergyHandlerMK2 extends IEnergyConnectorMK2, ILoadedTile, IEnergyStorage {
+public interface IEnergyHandlerMK2 extends IEnergyConnectorMK2, ILoadedTile {
 
     public long getPower();
     public void setPower(long power);
@@ -20,14 +20,4 @@ public interface IEnergyHandlerMK2 extends IEnergyConnectorMK2, ILoadedTile, IEn
         return vec;
     }
 
-    //Uhoh
-    @Override
-    default int getEnergyStored() {
-        return (int) (getPower() / 5);
-    }
-
-
-    default int getMaxEnergyStored() {
-        return (int) (getMaxPower() / 5);
-    }
 }
