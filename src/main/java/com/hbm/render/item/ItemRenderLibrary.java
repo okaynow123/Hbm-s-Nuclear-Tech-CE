@@ -2709,6 +2709,19 @@ public class ItemRenderLibrary {
                 renderAutosaw.renderCommon(0, 80, (float) (System.currentTimeMillis() % 3600 * 0.1), 0);
             }
         });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_ammo_press), new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -2.5, 0);
+                GlStateManager.scale(5, 5, 5);
+            }
+            public void renderCommon() {
+                GlStateManager.rotate(90, 0F, 1F, 0F);
+                bindTexture(ResourceManager.ammo_press_tex);
+                ResourceManager.ammo_press.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
     }
 
     private static void bindTexture(ResourceLocation res) {

@@ -171,9 +171,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
             if (inventory.getStackInSlot(3).isEmpty()) {
               inventory.setStackInSlot(3, recipe.output.copy());
             } else {
-              inventory
-                  .getStackInSlot(3)
-                  .setCount(inventory.getStackInSlot(3).getCount() + recipe.output.getCount());
+              inventory.getStackInSlot(3).grow(recipe.output.getCount());
             }
 
             this.markDirty();
@@ -389,27 +387,28 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
     return slot < 3;
   }
 
-//  @Override
-//  public int[] getAccessibleSlotsFromSide(int x, int y, int z, EnumFacing side) {
-//    BlockPos pos = new BlockPos(x, y, z);
-//    ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-//    ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-//    BlockPos core = new BlockPos(xCoord, yCoord, zCoord);
-//
-//    // Red
-//    if (pos.equals(core.clone().offset(rot))
-//        || pos.equals(core.clone().offset(rot.getOpposite()).offset(dir.getOpposite())))
-//      return new int[] {0, 3};
-//
-//    // Yellow
-//    if (pos.equals(core.clone().offset(dir.getOpposite()))) return new int[] {1, 3};
-//
-//    // Green
-//    if (pos.equals(core.clone().offset(rot.getOpposite()))
-//        || pos.equals(core.clone().offset(rot).offset(dir.getOpposite()))) return new int[] {2, 3};
-//
-//    return new int[] {};
-//  }
+  //  @Override
+  //  public int[] getAccessibleSlotsFromSide(int x, int y, int z, EnumFacing side) {
+  //    BlockPos pos = new BlockPos(x, y, z);
+  //    ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+  //    ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+  //    BlockPos core = new BlockPos(xCoord, yCoord, zCoord);
+  //
+  //    // Red
+  //    if (pos.equals(core.clone().offset(rot))
+  //        || pos.equals(core.clone().offset(rot.getOpposite()).offset(dir.getOpposite())))
+  //      return new int[] {0, 3};
+  //
+  //    // Yellow
+  //    if (pos.equals(core.clone().offset(dir.getOpposite()))) return new int[] {1, 3};
+  //
+  //    // Green
+  //    if (pos.equals(core.clone().offset(rot.getOpposite()))
+  //        || pos.equals(core.clone().offset(rot).offset(dir.getOpposite()))) return new int[] {2,
+  // 3};
+  //
+  //    return new int[] {};
+  //  }
 
   @Override
   public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
