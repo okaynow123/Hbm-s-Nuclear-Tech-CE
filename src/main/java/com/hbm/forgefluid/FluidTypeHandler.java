@@ -37,21 +37,7 @@ public class FluidTypeHandler {
 	public static boolean isCorrosiveIron(Fluid f){
 		return containsTrait(f, FluidTrait.CORROSIVE_2);
 	}
-	
-	public static boolean isHot(Fluid f){
-		if(f == null)
-			return false;
-		return f.getTemperature() >= 373;
-	}
 
-	public static boolean noID(Fluid f){
-		return containsTrait(f, FluidTrait.NO_ID);
-	}
-
-	public static boolean noContainer(Fluid f){
-		return containsTrait(f, FluidTrait.NO_CONTAINER);
-	}
-	
 	public static boolean containsTrait(Fluid f, FluidTrait t){
 		if(f == null)
 			return false;
