@@ -37,24 +37,7 @@ public class NTMFluidCapabilityHandler {
     private static final Map<FluidType, String> HBM_TO_FORGE_MAP = new HashMap<>();
     private static final Map<String, FluidType> FORGE_TO_HBM_MAP = new HashMap<>();
 
-    private static boolean initialized = false;
-    private static boolean containerRegistryReady = false;
-    private static boolean typeHandlerReady = false;
-
-    public static void setContainerRegistryReady() {
-        containerRegistryReady = true;
-        tryInitialize();
-    }
-
-    public static void setTypeHandlerReady() {
-        typeHandlerReady = true;
-        tryInitialize();
-    }
-
-    private static synchronized void tryInitialize() {
-        if (initialized || !containerRegistryReady || !typeHandlerReady) {
-            return;
-        }
+    public static void initialize() {
         for (FluidType type : Fluids.getAll()) {
             if (type == null || type == Fluids.NONE || type.getName() == null) continue;
 
@@ -77,7 +60,6 @@ public class NTMFluidCapabilityHandler {
         }
 
         MinecraftForge.EVENT_BUS.register(new NTMFluidCapabilityHandler());
-        initialized = true;
         MainRegistry.logger.info("Initialization complete. Mapped {} fluids. Tracking {} items.", HBM_TO_FORGE_MAP.size(), HBM_FLUID_ITEMS.size());
     }
 
