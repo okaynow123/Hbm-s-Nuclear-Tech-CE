@@ -188,6 +188,14 @@ public class ModuleBurnTime {
 		
 		return num;
 	}
+
+	public double[] getModHeat() {
+		return modHeat;
+	}
+
+	public double[] getModTime() {
+		return modTime;
+	}
 	
 	public ModuleBurnTime setLogTimeMod(double mod) { this.modTime[modLog] = mod; return this; }
 	public ModuleBurnTime setWoodTimeMod(double mod) { this.modTime[modWood] = mod; return this; }

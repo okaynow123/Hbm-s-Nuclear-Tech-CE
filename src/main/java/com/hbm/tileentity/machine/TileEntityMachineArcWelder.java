@@ -30,6 +30,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,6 +38,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -107,7 +109,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   }
 
   @Override
-  public String getName() {
+  public @NotNull String getName() {
     return "container.machineArcWelder";
   }
 
@@ -368,7 +370,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   }
 
   @Override
-  public boolean isItemValidForSlot(int slot, ItemStack stack) {
+  public boolean isItemValidForSlot(int slot, @NotNull ItemStack stack) {
     return slot < 3;
   }
 
@@ -378,37 +380,38 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   }
 
   @Override
-  public int[] getAccessibleSlotsFromSide(EnumFacing side) {
-    return new int[] {1, 3};
-  }
-
-  @Override
-  public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+  public boolean canInsertItem(int slot, ItemStack stack, int side) {
     return slot < 3;
   }
 
-  //  @Override
-  //  public int[] getAccessibleSlotsFromSide(int x, int y, int z, EnumFacing side) {
-  //    BlockPos pos = new BlockPos(x, y, z);
-  //    ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-  //    ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-  //    BlockPos core = new BlockPos(xCoord, yCoord, zCoord);
-  //
-  //    // Red
-  //    if (pos.equals(core.clone().offset(rot))
-  //        || pos.equals(core.clone().offset(rot.getOpposite()).offset(dir.getOpposite())))
-  //      return new int[] {0, 3};
-  //
-  //    // Yellow
-  //    if (pos.equals(core.clone().offset(dir.getOpposite()))) return new int[] {1, 3};
-  //
-  //    // Green
-  //    if (pos.equals(core.clone().offset(rot.getOpposite()))
-  //        || pos.equals(core.clone().offset(rot).offset(dir.getOpposite()))) return new int[] {2,
-  // 3};
-  //
-  //    return new int[] {};
-  //  }
+  @Override
+  public int[] getAccessibleSlotsFromSide(EnumFacing side) {
+    EnumFacing dir = EnumFacing.byIndex(this.getBlockMetadata() - 10);
+    EnumFacing rot = dir.rotateY();
+    BlockPos core = this.pos;
+
+    // Red
+    BlockPos red1 = core.offset(rot);
+    BlockPos red2 = core.offset(rot.getOpposite()).offset(dir.getOpposite());
+    if (this.pos.equals(red1) || this.pos.equals(red2)) {
+      return new int[] {0, 3};
+    }
+
+    // Yellow
+    BlockPos yellow = core.offset(dir.getOpposite());
+    if (this.pos.equals(yellow)) {
+      return new int[] {1, 3};
+    }
+
+    // Green
+    BlockPos green1 = core.offset(rot.getOpposite());
+    BlockPos green2 = core.offset(rot).offset(dir.getOpposite());
+    if (this.pos.equals(green1) || this.pos.equals(green2)) {
+      return new int[] {2, 3};
+    }
+
+    return new int[] {};
+  }
 
   @Override
   public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {

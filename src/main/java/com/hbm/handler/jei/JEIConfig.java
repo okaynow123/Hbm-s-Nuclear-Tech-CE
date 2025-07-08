@@ -25,6 +25,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 @JEIPlugin
 public class JEIConfig implements IModPlugin {
 
@@ -72,6 +74,7 @@ public class JEIConfig implements IModPlugin {
     public static final String TRANSMUTATION = "hbm.transmutation";
     public static final String SOLDERING_STATION = "hbm.soldering_station";
     public static final String ARC_WELDER = "hbm.arc_welder";
+    public static final String ROTARY_FURNACE = "hbm.rotary_furnace";
     private CokingRecipeHandler cokingHandler;
     private CrackingHandler crackingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
@@ -84,6 +87,7 @@ public class JEIConfig implements IModPlugin {
     private SolidificationHandler solidificationHandler;
     private SolderingStationRecipeHandler solderingStationHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
+    private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -134,6 +138,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crystallizer), CRYSTALLIZER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_soldering_station), SOLDERING_STATION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_welder), ARC_WELDER);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rotary_furnace), ROTARY_FURNACE);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
         registry.addRecipeCatalyst(new ItemStack(ModItems.book_of_), BOOK);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.iter), FUSION_BYPRODUCT);
@@ -150,7 +155,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.anvil_iron), SMITHING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.anvil_steel), ANVIL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_outgasser), RBMKOUTGASSER);
-        registry.addRecipeCatalyst(new ItemStack(Blocks.CRAFTING_TABLE), RBMKFUEL);
+        registry.addRecipeCatalyst(new ItemStack(Objects.requireNonNull(Blocks.CRAFTING_TABLE)), RBMKFUEL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), DFC);
 
         // registry.addRecipes(ItemAssemblyTemplate.recipes, ASSEMBLY);
@@ -175,6 +180,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(solidificationHandler.getRecipes(), SOLIDIFICATION);
         registry.addRecipes(solderingStationHandler.getRecipes(), SOLDERING_STATION);
         registry.addRecipes(arcWelderRecipeHandler.getRecipes(), ARC_WELDER);
+        registry.addRecipes(rotaryFurnaceRecipeHandler.getRecipes(), ROTARY_FURNACE);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
@@ -222,6 +228,7 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUIRBMKOutgasser.class, 64, 53, 48, 16, RBMKOUTGASSER);
 		registry.addRecipeClickArea(GUIMachineSchrabidiumTransmutator.class, 64, 56, 66, 31, TRANSMUTATION);
         registry.addRecipeClickArea(GUIMachineArcWelder.class, 72, 38, 32, 13, ARC_WELDER);
+        registry.addRecipeClickArea(GUIMachineRotaryFurnace.class, 63, 31, 32, 9, ROTARY_FURNACE);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
@@ -295,6 +302,7 @@ public class JEIConfig implements IModPlugin {
                 solidificationHandler = new SolidificationHandler(help),
                 solderingStationHandler = new SolderingStationRecipeHandler(help),
                 arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
+                rotaryFurnaceRecipeHandler = new RotaryFurnaceRecipeHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),

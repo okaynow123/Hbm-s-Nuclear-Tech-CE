@@ -2696,6 +2696,21 @@ public class ItemRenderLibrary {
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
         });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_rotary_furnace), new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -2, 0);
+                GlStateManager.scale(3.5, 3.5, 3.5);
+            }
+            public void renderCommon() {
+                GlStateManager.scale(0.625, 0.625, 0.625);
+                GlStateManager.rotate(90, 0F, 1F, 0F);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.rotary_furnace_tex);
+                ResourceManager.rotary_furnace.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
     }
 
     private static void bindTexture(ResourceLocation res) {

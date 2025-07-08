@@ -316,6 +316,9 @@ public class ResourceManager {
 	//Belt
 	public static final IModelCustom arrow = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/arrow.obj")).asVBO();
 
+	//RotaryFurnace
+	public static final IModelCustom rotary_furnace = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/rotary_furnace.obj")).asVBO();
+
 	//Selenium Engine
 	public static final IModelCustom selenium_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/selenium_engine_body.obj")).asVBO();
 	public static final IModelCustom selenium_rotor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/selenium_engine_rotor.obj")).asVBO();
@@ -740,6 +743,9 @@ public class ResourceManager {
 	//ZIRNOX
 	public static final ResourceLocation zirnox_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/zirnox.png");
 	public static final ResourceLocation zirnox_destroyed_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/zirnox_destroyed.png");
+
+	//Rotary Furnace
+	public static final ResourceLocation rotary_furnace_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rotary_furnace.png");
 
 	//Large Cable
 	public static final ResourceLocation pylon_large_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_large.png");
