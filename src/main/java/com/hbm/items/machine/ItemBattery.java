@@ -93,10 +93,11 @@ public class ItemBattery extends Item implements IBatteryItem {
         if (stack.getItem() == ModItems.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
-                stack.getTagCompound().setLong("charge", stack.getTagCompound().getLong("charge") + i);
+                long charge = stack.getTagCompound().getLong("charge");
+                stack.getTagCompound().setLong("charge", Math.min(charge + i, maxCharge));
             } else {
                 stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setLong("charge", i);
+                stack.getTagCompound().setLong("charge", Math.min(i, maxCharge));
             }
         }
     }
@@ -105,10 +106,10 @@ public class ItemBattery extends Item implements IBatteryItem {
         if (stack.getItem() == ModItems.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
-                stack.getTagCompound().setLong("charge", i);
+                stack.getTagCompound().setLong("charge", Math.min(i, maxCharge));
             } else {
                 stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setLong("charge", i);
+                stack.getTagCompound().setLong("charge", Math.min(i, maxCharge));
             }
         }
     }
@@ -117,10 +118,11 @@ public class ItemBattery extends Item implements IBatteryItem {
         if (stack.getItem() == ModItems.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
-                stack.getTagCompound().setLong("charge", stack.getTagCompound().getLong("charge") - i);
+                long charge = stack.getTagCompound().getLong("charge");
+                stack.getTagCompound().setLong("charge", Math.max(charge - i, 0));
             } else {
                 stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setLong("charge", this.maxCharge - i);
+                stack.getTagCompound().setLong("charge", Math.max(this.maxCharge - i, 0));
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.NuclearTransmutationRecipes;
 import com.hbm.items.ModItems;
@@ -55,7 +55,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				return true;
 			break;
 		case 3:
-			if(stack.getItem() instanceof IBatteryItem)
+			if(NTMBatteryCapabilityHandler.isBattery(stack))
 				return true;
 			break;
 		}
@@ -70,7 +70,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 	
 	@Override
 	public boolean canExtractItem(int i, ItemStack stack, int amount) {
-		if(i == 2 && stack.getItem() != null && stack.getItem() == ModItems.redcoil_capacitor && ItemCapacitor.getDura(stack) <= 0) {
+		if(i == 2 && stack.getItem() == ModItems.redcoil_capacitor && ItemCapacitor.getDura(stack) <= 0) {
 			return true;
 		}
 		if(i == 1) {
@@ -78,8 +78,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 		}
 
 		if(i == 3) {
-			if(stack.getItem() instanceof IBatteryItem && ((IBatteryItem)stack.getItem()).getCharge(stack) == 0)
-				return true;
+			return NTMBatteryCapabilityHandler.isEmptyBattery(stack);
 		}
 
 		return false;

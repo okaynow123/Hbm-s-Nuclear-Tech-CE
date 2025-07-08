@@ -3,7 +3,9 @@ package com.hbm.tileentity.machine;
 import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineCharger;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.config.GeneralConfig;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -16,6 +18,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 
 	public static final int range = 3;
 
-	private List<EntityPlayer> players = new ArrayList();
+	private List<EntityPlayer> players = new ArrayList<>();
 	private long maxChargeRate;
 	public long charge = 0;
 	public long actualCharge = 0;
@@ -58,11 +61,22 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 				for(int i = 0; i < inv.getSizeInventory(); i ++){
 
 					ItemStack stack = inv.getStackInSlot(i);
-					if(stack != null && stack.getItem() instanceof IBatteryItem) {
-						IBatteryItem battery = (IBatteryItem) stack.getItem();
-						totalCapacity += battery.getMaxCharge();
-						totalEnergy += battery.getCharge(stack);
-						charge += Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
+
+					if(NTMBatteryCapabilityHandler.isBattery(stack)) {
+						if (stack.getItem() instanceof IBatteryItem battery) {
+							totalCapacity += battery.getMaxCharge();
+							totalEnergy += battery.getCharge(stack);
+							charge += Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
+						} else {
+							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
+							if (cap != null && GeneralConfig.conversionRateHeToRF > 0) {
+								long maxHe = (long) (cap.getMaxEnergyStored() / GeneralConfig.conversionRateHeToRF);
+								long currentHe = (long) (cap.getEnergyStored() / GeneralConfig.conversionRateHeToRF);
+								totalCapacity += maxHe;
+								totalEnergy += currentHe;
+								charge += maxHe - currentHe;
+							}
+						}
 					}
 				}
 			}
@@ -115,33 +129,42 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 			actualCharge = 0;
 		}
 		long chargeBudget = maxChargeRate;
+		long powerBudget = power;
 		for(EntityPlayer player : players) {
 			InventoryPlayer inv = player.inventory;
 			for(int i = 0; i < inv.getSizeInventory(); i ++){
-				if(chargeBudget <= 0 || power <= 0) {
-					break;
-				}
+				if(chargeBudget <= 0 || powerBudget <= 0) break;
 				ItemStack stack = inv.getStackInSlot(i);
-				if(stack.getItem() instanceof IBatteryItem battery) {
-					long toCharge = Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
-					toCharge = Math.min(toCharge, chargeBudget);
-					toCharge = Math.min(toCharge, power);
-					if (toCharge > 0) {
-						if(!simulate) {
-							battery.chargeBattery(stack, toCharge);
-							actualCharge += toCharge;
-							lastOp = 4;
-						}
-						power -= toCharge;
-						chargeBudget -= toCharge;
-					}
-				}
+				if(NTMBatteryCapabilityHandler.isChargeableBattery(stack)) {
+					long powerToOffer = Math.min(powerBudget, chargeBudget);
+                    if (!simulate) {
+                        long chargedAmount = NTMBatteryCapabilityHandler.addChargeIfValid(stack, powerToOffer, false);
+
+                        if (chargedAmount > 0) {
+                            actualCharge += chargedAmount;
+                            powerBudget -= chargedAmount;
+                            chargeBudget -= chargedAmount;
+                            lastOp = 4;
+                        }
+                    } else {
+                        long chargedAmount;
+                        if (stack.getItem() instanceof IBatteryItem battery) {
+                            chargedAmount = Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
+                        } else {
+							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
+                            chargedAmount = (long) ((cap.getMaxEnergyStored() - cap.getEnergyStored()) / GeneralConfig.conversionRateHeToRF);
+                        }
+                        chargedAmount = Math.min(chargedAmount, powerToOffer);
+                        powerBudget -= chargedAmount;
+                        chargeBudget -= chargedAmount;
+                    }
+                }
 			}
-			if(chargeBudget <= 0 || power <= 0) {
+			if(chargeBudget <= 0 || powerBudget <= 0) {
 				break;
 			}
 		}
-		return power;
+		return powerBudget;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.hbm.lib;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyConnectorBlock;
 import api.hbm.energymk2.IEnergyConnectorMK2;
 import api.hbm.fluid.IFluidConnector;
@@ -10,6 +9,7 @@ import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
@@ -263,53 +263,27 @@ public class Library {
 
 	// Drillgon200: Just realized I copied the wrong method. God dang it.
 	// It works though. Not sure why, but it works.
+	// mlbv: refactored with brand new NTMBatteryCapabilityHandler helpers
 	public static long chargeTEFromItems(IItemHandlerModifiable inventory, int index, long power, long maxPower) {
-		if(inventory.getStackInSlot(index).getItem() == ModItems.battery_creative)
-		{
+		ItemStack stack = inventory.getStackInSlot(index);
+		if (stack.getItem() == ModItems.battery_creative || stack.getItem() == ModItems.fusion_core_infinite) {
 			return maxPower;
 		}
-		
-		if(inventory.getStackInSlot(index).getItem() == ModItems.fusion_core_infinite)
-		{
-			return maxPower;
-		}
-		
-		if(inventory.getStackInSlot(index).getItem() instanceof IBatteryItem) {
-			
-			IBatteryItem battery = (IBatteryItem) inventory.getStackInSlot(index).getItem();
-
-			long batCharge = battery.getCharge(inventory.getStackInSlot(index));
-			long batRate = battery.getDischargeRate();
-			
-			//in hHe
-			long toDischarge = Math.min(Math.min((maxPower - power), batRate), batCharge);
-			
-			battery.dischargeBattery(inventory.getStackInSlot(index), toDischarge);
-			power += toDischarge;
-		}
-		
-		return power;
+		long powerNeeded = maxPower - power;
+		if (powerNeeded <= 0) return power;
+		long heExtracted = NTMBatteryCapabilityHandler.extractChargeIfValid(stack, powerNeeded, false);
+		return power + heExtracted;
 	}
 
 	//not great either but certainly better
+	// mlbv: a lot better now
 	public static long chargeItemsFromTE(IItemHandlerModifiable inventory, int index, long power, long maxPower) {
-		if(inventory.getStackInSlot(index).getItem() instanceof IBatteryItem) {
-			IBatteryItem battery = (IBatteryItem) inventory.getStackInSlot(index).getItem();
-			ItemStack stack = inventory.getStackInSlot(index);
-			
-			long batMax = battery.getMaxCharge();
-			long batCharge = battery.getCharge(stack);
-			long batRate = battery.getChargeRate();
-			
-			//in hHE
-			long toCharge = Math.min(Math.min(power, batRate), batMax - batCharge);
-			
-			power -= toCharge;
-			
-			battery.chargeBattery(stack, toCharge);
+		ItemStack stackToCharge = inventory.getStackInSlot(index);
+		if (stackToCharge.isEmpty() || power <= 0) {
+			return power;
 		}
-		
-		return power;
+		long heCharged = NTMBatteryCapabilityHandler.addChargeIfValid(stackToCharge, power, false);
+		return power - heCharged;
 	}
 
 	public static boolean isArrayEmpty(Object[] array) {

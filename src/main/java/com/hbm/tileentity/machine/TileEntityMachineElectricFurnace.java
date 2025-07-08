@@ -1,8 +1,8 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineElectricFurnace;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -74,13 +74,8 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 0)
-			if(stack.getItem() instanceof IBatteryItem)
-				return true;
-		
-		if(i == 1)
-			return true;
-		
+		if(i == 0) return NTMBatteryCapabilityHandler.isBattery(stack);
+		if(i == 1) return true;
 		return false;
 	}
 	
@@ -91,12 +86,8 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
-		if(slot == 0)
-			if (itemStack.getItem() instanceof IBatteryItem && ((IBatteryItem)itemStack.getItem()).getCharge(itemStack) == 0)
-				return true;
-		if(slot == 2)
-			return true;
-		
+		if(slot == 0) return NTMBatteryCapabilityHandler.isEmptyBattery(itemStack);
+		if(slot == 2) return true;
 		return false;
 	}
 	

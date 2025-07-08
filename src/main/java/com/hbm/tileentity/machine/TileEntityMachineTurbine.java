@@ -1,8 +1,8 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
@@ -40,6 +40,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -71,14 +72,13 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			}
 
 			@Override
-			public boolean isItemValid(int slot, ItemStack stack) {
+			public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 				if(slot == 0)
-					return stack != null && stack.getItem() == ModItems.forge_fluid_identifier;
+					return stack.getItem() == ModItems.forge_fluid_identifier;
 				if(slot == 4)
-					if(stack != null && stack.getItem() instanceof IBatteryItem)
-						return true;
+					return NTMBatteryCapabilityHandler.isBattery(stack);
 
-				return slot != 4 && stack != null;
+				return true;
 			}
 
 			@Override

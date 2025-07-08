@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.PressRecipes;
 import com.hbm.items.machine.ItemStamp;
@@ -57,7 +57,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 		if(stack.getItem() instanceof ItemStamp && i == 1)
 			return true;
 		
-		if(i == 0 && stack.getItem() instanceof IBatteryItem)
+		if(i == 0 && NTMBatteryCapabilityHandler.isBattery(stack))
 			return true;
 		
 		if(!(stack.getItem() instanceof ItemStamp) && i == 2)

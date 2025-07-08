@@ -1,9 +1,9 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.CentrifugeRecipes;
 import com.hbm.inventory.container.ContainerCentrifuge;
@@ -88,16 +88,15 @@ public class TileEntityMachineCentrifuge extends TileEntityMachineBase implement
 	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 2 || i == 3 || i == 4 || i == 5)
-		{
+		if(i == 2 || i == 3 || i == 4 || i == 5) {
 			return false;
 		}
 		
 		if(i == 1) {
-			return stack.getItem() instanceof IBatteryItem;
+			return NTMBatteryCapabilityHandler.isBattery(stack);
 		}
 		
-		return !(stack.getItem() instanceof IBatteryItem);
+		return !(NTMBatteryCapabilityHandler.isBattery(stack));
 	}
 	
 	@Override

@@ -1,7 +1,11 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.*;
+import api.hbm.energymk2.IEnergyConductorMK2;
+import api.hbm.energymk2.IEnergyProviderMK2;
+import api.hbm.energymk2.IEnergyReceiverMK2;
+import api.hbm.energymk2.Nodespace;
 import com.hbm.blocks.machine.MachineBattery;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -137,20 +141,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 0)
-			if(stack.getItem() instanceof IBatteryItem){
-				IBatteryItem batteryItem = ((IBatteryItem)stack.getItem());
-				if(batteryItem.getCharge(stack) > 0 && batteryItem.getDischargeRate() > 0){
-					return true;
-				}
-			}
-		if(i == 2)
-			if(stack.getItem() instanceof IBatteryItem){
-				IBatteryItem batteryItem = ((IBatteryItem)stack.getItem());
-				if(batteryItem.getCharge(stack) < batteryItem.getMaxCharge() && batteryItem.getChargeRate() > 0){
-					return true;
-				}
-			}
+		if(i == 0) return NTMBatteryCapabilityHandler.isDischargeableBattery(stack);
+		if(i == 2) return NTMBatteryCapabilityHandler.isChargeableBattery(stack);
 		return false;
 	}
 	
@@ -166,23 +158,17 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 
 	public void tryMoveItems() {
 		ItemStack itemStackDrain = inventory.getStackInSlot(0);
-		if(itemStackDrain.getItem() instanceof IBatteryItem) {
-			IBatteryItem itemDrain = ((IBatteryItem)itemStackDrain.getItem());
-			if(itemDrain.getCharge(itemStackDrain) == 0) {
-				if(inventory.getStackInSlot(1) == null || inventory.getStackInSlot(1).isEmpty()){
-					inventory.setStackInSlot(1, itemStackDrain);
-					inventory.setStackInSlot(0, ItemStack.EMPTY);
-				}
+		if(NTMBatteryCapabilityHandler.isEmptyBattery(itemStackDrain)) {
+			if(inventory.getStackInSlot(1).isEmpty()){
+				inventory.setStackInSlot(1, itemStackDrain);
+				inventory.setStackInSlot(0, ItemStack.EMPTY);
 			}
 		}
 		ItemStack itemStackFill = inventory.getStackInSlot(2);
-		if(itemStackFill.getItem() instanceof IBatteryItem) {
-			IBatteryItem itemFill = ((IBatteryItem)itemStackFill.getItem());
-			if(itemFill.getCharge(itemStackFill) == itemFill.getMaxCharge()) {
-				if(inventory.getStackInSlot(3) == null || inventory.getStackInSlot(3).isEmpty()){
-					inventory.setStackInSlot(3, itemStackFill);
-					inventory.setStackInSlot(2, ItemStack.EMPTY);
-				}
+		if(NTMBatteryCapabilityHandler.isFullBattery(itemStackFill)) {
+			if(inventory.getStackInSlot(3).isEmpty()){
+				inventory.setStackInSlot(3, itemStackFill);
+				inventory.setStackInSlot(2, ItemStack.EMPTY);
 			}
 		}
 	}

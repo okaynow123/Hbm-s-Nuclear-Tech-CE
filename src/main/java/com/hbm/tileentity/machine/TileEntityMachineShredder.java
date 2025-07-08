@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.Untested;
 import com.hbm.inventory.ShredderRecipes;
@@ -66,7 +66,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	public boolean isItemValidForSlot(int i, ItemStack stack){
 		if (i < 9) {
 			return true;
-		} else if (i == 29 && stack.getItem() instanceof IBatteryItem) {
+		} else if (i == 29 && NTMBatteryCapabilityHandler.isBattery(stack)) {
 			return true;
 		} else {
 			return (i == 27 || i == 28) && stack.getItem() instanceof ItemBlades;
