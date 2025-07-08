@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 //FIXME This may have gotten mangled in a merge
+import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
@@ -36,6 +37,7 @@ import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
 import com.hbm.handler.crt.NTMCraftTweaker;
+import com.hbm.handler.imc.IMCHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardRegistry;
@@ -98,10 +100,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -785,6 +784,24 @@ public class MainRegistry {
         OreDictManager.registerOres();
         Fluids.initForgeFluidCompat();
         PacketThreading.init();
+        IMCHandler.init();
+    }
+
+    @EventHandler //Apparently this is "legacy", well I am not making my own protocol
+    public static void initIMC(FMLInterModComms.IMCEvent event) {
+
+        ImmutableList<FMLInterModComms.IMCMessage> inbox = event.getMessages();
+
+        for(FMLInterModComms.IMCMessage message : inbox) {
+            IMCHandler handler = IMCHandler.getHandler(message.key);
+
+            if(handler != null) {
+                MainRegistry.logger.info("Received IMC of type >" + message.key + "< from " + message.getSender() + "!");
+                handler.process(message);
+            } else {
+                MainRegistry.logger.error("Could not process unknown IMC type \"" + message.key + "\"");
+            }
+        }
     }
 
     @EventHandler
@@ -1115,5 +1132,7 @@ public class MainRegistry {
             }
         });
     }
+
+
 
 }
