@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.handler.imc.IMCBlastFurnace;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
