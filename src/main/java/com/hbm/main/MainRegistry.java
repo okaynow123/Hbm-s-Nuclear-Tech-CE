@@ -11,6 +11,7 @@ import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.blocks.network.energy.CableDiode.TileEntityDiode;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmLivingCapability;
+import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.command.CommandHbm;
 import com.hbm.command.CommandPacketInfo;
 import com.hbm.command.CommandRadiation;
@@ -828,7 +829,7 @@ public class MainRegistry {
         EngineRecipes.registerEngineRecipes();
         FluidCombustionRecipes.registerFluidCombustionRecipes();
         HbmDetox.init();
-
+        NTMBatteryCapabilityHandler.initialize();
         // Load compatibility for OC.
         CompatHandler.init();
 
