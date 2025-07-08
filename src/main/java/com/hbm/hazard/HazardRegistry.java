@@ -13,6 +13,7 @@ import com.hbm.hazard.type.*;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
+import com.hbm.items.machine.ItemPWRFuel;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
 import net.minecraft.init.Blocks;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.items.ModItems.*;
+import static com.hbm.items.machine.ItemPWRFuel.*;
 import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
 @SuppressWarnings("unused") //shut the fuck up
