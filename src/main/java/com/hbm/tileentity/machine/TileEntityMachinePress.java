@@ -1,12 +1,16 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.inventory.PressRecipes;
+import com.hbm.inventory.container.ContainerMachinePress;
+import com.hbm.inventory.gui.GUIMachinePress;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEPressPacket;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -14,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -21,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityMachinePress extends TileEntityMachineBase implements ITickable, ICapabilityProvider {
+public class TileEntityMachinePress extends TileEntityMachineBase implements ITickable, ICapabilityProvider, IGUIProvider {
 
 	public int progress = 0;
 	public int power = 0;
@@ -274,5 +279,15 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 			markDirty();
 		PacketDispatcher.wrapper.sendToAllAround(new TEPressPacket(this.pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(2), progress), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
 	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachinePress(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IGUIProvider provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachinePress(player.inventory, this);
 
 }
