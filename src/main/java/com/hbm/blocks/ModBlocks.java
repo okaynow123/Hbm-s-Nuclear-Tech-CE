@@ -1176,6 +1176,20 @@ public class ModBlocks {
 
 	//Big reactor
 
+	// PWR
+	/** mlbv: I have no idea why the rod block and the actual fuel rods have the same name in 1.7.10. To avoid conflicts I renamed it to pwr_fuelrod.*/
+	public static final Block pwr_fuelrod = new BlockPillarPWR(Material.IRON, "pwr_fuelrod", "pwr_fuelrod_top", "pwr_fuelrod_side").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_control = new BlockPillarPWR(Material.IRON, "pwr_control", "pwr_control_top", "pwr_control_side").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_channel = new BlockPillarPWR(Material.IRON, "pwr_channel", "pwr_channel_top", "pwr_channel_side").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_heatex = new BlockGenericPWR(Material.IRON, "pwr_heatex").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_heatsink = new BlockGenericPWR(Material.IRON, "pwr_heatsink").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_neutron_source = new BlockGenericPWR(Material.IRON, "pwr_neutron_source").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_reflector = new BlockGenericPWR(Material.IRON, "pwr_reflector").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_casing = new BlockGenericPWR(Material.IRON, "pwr_casing").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_port = new BlockGenericPWR(Material.IRON, "pwr_port").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_controller = new MachinePWRController("pwr_controller").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block pwr_block = new BlockPWR(Material.IRON, "pwr_block", "pwr_casing_port").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+
 	//Fusion fellas
 	public static final Block fusion_conductor = new BlockReactor(Material.IRON, "fusion_conductor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block fusion_center = new BlockReactor(Material.IRON, "fusion_center").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
