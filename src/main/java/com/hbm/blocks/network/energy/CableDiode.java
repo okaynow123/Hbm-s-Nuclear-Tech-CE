@@ -9,6 +9,7 @@ import api.hbm.energymk2.Nodespace;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.INBTPacketReceiver;
@@ -34,6 +35,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -301,6 +304,24 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 		@Override
 		public ConnectionPriority getPriority() {
 			return this.priority;
+		}
+
+		@Override
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+			if (capability == CapabilityEnergy.ENERGY) {
+				return true;
+			}
+			return super.hasCapability(capability, facing);
+		}
+
+		@Override
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+			if (capability == CapabilityEnergy.ENERGY) {
+				return CapabilityEnergy.ENERGY.cast(
+						new NTMEnergyCapabilityWrapper(this)
+				);
+			}
+			return super.getCapability(capability, facing);
 		}
 	}
 }

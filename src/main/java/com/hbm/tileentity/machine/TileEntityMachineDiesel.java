@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyProviderMK2;
 import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.inventory.EngineRecipes;
 import com.hbm.inventory.EngineRecipes.FuelGrade;
@@ -17,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -175,7 +177,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -186,6 +188,11 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
 					new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+			);
+		}
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(
+					new NTMEnergyCapabilityWrapper(this)
 			);
 		}
 		return super.getCapability(capability, facing);

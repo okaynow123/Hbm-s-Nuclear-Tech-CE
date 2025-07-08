@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.*;
 import com.hbm.blocks.machine.MachineBattery;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -15,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
@@ -317,6 +320,23 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	@Override public void setPower(long power) { this.power = power; }
 	@Override public ConnectionPriority getPriority() { return this.priority; }
 
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(
+					new NTMEnergyCapabilityWrapper(this)
+			);
+		}
+		return super.getCapability(capability, facing);
+	}
 
 	// opencomputers interface
 

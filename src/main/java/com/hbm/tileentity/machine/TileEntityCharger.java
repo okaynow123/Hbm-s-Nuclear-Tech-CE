@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineCharger;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -10,8 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,5 +142,23 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 			}
 		}
 		return power;
+	}
+
+	@Override
+	public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(
+					new NTMEnergyCapabilityWrapper(this)
+			);
+		}
+		return super.getCapability(capability, facing);
 	}
 }
