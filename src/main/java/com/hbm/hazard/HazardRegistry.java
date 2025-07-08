@@ -1,34 +1,29 @@
 package com.hbm.hazard;
 
+import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
+import com.hbm.hazard.modifier.HazardModifierFuelRadiation;
+import com.hbm.hazard.modifier.HazardModifierRBMKHot;
+import com.hbm.hazard.modifier.HazardModifierRBMKRadiation;
+import com.hbm.hazard.modifier.HazardModifierRTGRadiation;
+import com.hbm.hazard.transformer.HazardTransformerRadiationContainer;
+import com.hbm.hazard.transformer.HazardTransformerRadiationME;
+import com.hbm.hazard.transformer.HazardTransformerRadiationNBT;
+import com.hbm.hazard.type.*;
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
-
-import static com.hbm.blocks.ModBlocks.*;
-import static com.hbm.inventory.OreDictManager.*;
-import static com.hbm.items.ModItems.*;
-
-import com.hbm.blocks.ModBlocks;
-import com.hbm.config.GeneralConfig;
-import com.hbm.hazard.modifier.*;
-import com.hbm.hazard.transformer.*;
-import com.hbm.hazard.type.*;
-import com.hbm.items.ModItems;
-//import com.hbm.items.machine.ItemBreedingRod.BreedingRodType;
-//import com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
-//import com.hbm.items.machine.ItemRTGPelletDepleted.DepletedRTGMaterial;
-//import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
-//import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
-//import com.hbm.items.special.ItemHolotapeImage.EnumHoloImage;
-//import com.hbm.items.machine.BreedingRodType;
-//import com.hbm.items.machine.EnumWatzType;
-
-import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import static com.hbm.blocks.ModBlocks.*;
+import static com.hbm.inventory.OreDictManager.*;
+import static com.hbm.items.ModItems.*;
+import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
 @SuppressWarnings("unused") //shut the fuck up
 public class HazardRegistry {
@@ -222,14 +217,12 @@ public class HazardRegistry {
 		HazardSystem.register(block_corium_cobble, makeData(RADIATION, 150F));
 
 		HazardSystem.register(new ItemStack(sellafield_0, 1, 0), makeData(RADIATION, 0.5F));
-		HazardSystem.register(new ItemStack(sellafield_1, 1, 1), makeData(RADIATION, 1F));
-		HazardSystem.register(new ItemStack(sellafield_2, 1, 2), makeData(RADIATION, 2.5F));
-		HazardSystem.register(new ItemStack(sellafield_3, 1, 3), makeData(RADIATION, 4F));
-		HazardSystem.register(new ItemStack(sellafield_4, 1, 4), makeData(RADIATION, 5F));
-		HazardSystem.register(new ItemStack(sellafield_core, 1, 5), makeData(RADIATION, 10F));
+		HazardSystem.register(new ItemStack(sellafield_1, 1, 0), makeData(RADIATION, 1F));
+		HazardSystem.register(new ItemStack(sellafield_2, 1, 0), makeData(RADIATION, 2.5F));
+		HazardSystem.register(new ItemStack(sellafield_3, 1, 0), makeData(RADIATION, 4F));
+		HazardSystem.register(new ItemStack(sellafield_4, 1, 0), makeData(RADIATION, 5F));
+		HazardSystem.register(new ItemStack(sellafield_core, 1, 0), makeData(RADIATION, 10F));
 
-		HazardSystem.register(new ItemStack(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
-		HazardSystem.register(new ItemStack(ModItems.gem_rad), makeData(RADIATION, 25F));
 
 
 		registerOtherFuel(rod_zirnox, ItemZirnoxRod.EnumZirnoxType.NATURAL_URANIUM_FUEL.ordinal(), u * rod_dual, wst * rod_dual * 11.5F, false);
