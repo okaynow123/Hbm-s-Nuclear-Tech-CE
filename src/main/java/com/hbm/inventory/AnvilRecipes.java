@@ -70,16 +70,7 @@ public class AnvilRecipes {
 		smithingRecipes.add(new AnvilSmithingMold(1, new OreDictStack(U.billet()),  new OreDictStack("billet")));
 		smithingRecipes.add(new AnvilSmithingMold(2, new OreDictStack(IRON.ingot()),  new OreDictStack("ingot")));
 		smithingRecipes.add(new AnvilSmithingMold(3, new OreDictStack(IRON.plate()),  new OreDictStack("plate")));
-		smithingRecipes.add(new AnvilSmithingMold(4, new ComparableStack(ModItems.wire_aluminium, 8), new ItemStack[] {
-				new ItemStack(ModItems.wire_advanced_alloy, 8),
-				new ItemStack(ModItems.wire_aluminium, 8),
-				new ItemStack(ModItems.wire_copper, 8),
-				new ItemStack(ModItems.wire_gold, 8),
-				new ItemStack(ModItems.wire_magnetized_tungsten, 8),
-				new ItemStack(ModItems.wire_red_copper, 8),
-				new ItemStack(ModItems.wire_schrabidium, 8),
-				new ItemStack(ModItems.wire_tungsten, 8)
-				}));
+		smithingRecipes.add(new AnvilSmithingMold(4, new OreDictStack(AL.wireFine(), 8), new OreDictStack("wireFine")));
 		smithingRecipes.add(new AnvilSmithingMold(5, new OreDictStack(IRON.plateCast()),  new OreDictStack("plateTriple")));
 		smithingRecipes.add(new AnvilSmithingMold(6, new OreDictStack(ALLOY.wireDense(), 1),  new OreDictStack("wireDense", 1)));
 		smithingRecipes.add(new AnvilSmithingMold(7, new ComparableStack(ModItems.blade_titanium), new ItemStack[] {
@@ -390,7 +381,7 @@ public class AnvilRecipes {
 				new AnvilOutput(new ItemStack(ModItems.plate_dineutronium, 4))).setTier(7));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
-				new AStack[] {new OreDictStack("plateTitanium", 2), new OreDictStack(STEEL.ingot(), 1), new ComparableStack(ModItems.bolt_tungsten, 2)},
+				new AStack[] {new OreDictStack("plateTitanium", 2), new OreDictStack(STEEL.ingot(), 1), new OreDictStack(W.bolt(), 2)},
 				new AnvilOutput(new ItemStack(ModItems.plate_armor_titanium))).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {new OreDictStack(IRON.plate(), 4), new OreDictStack(BIGMT.plate(), 2), new ComparableStack(ModItems.plate_armor_titanium, 1)},
