@@ -107,6 +107,7 @@ public class ModItems {
 	public static final Item linker = new ItemTeleLink("linker").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item reactor_sensor = new ItemReactorSensor("reactor_sensor").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item radar_linker = new ItemRadarLinker("radar_linker").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item ore_density_scanner = new ItemOreDensityScanner("ore_density_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 
 	//Syringe
 	public static final Item syringe_empty = new ItemBase("syringe_empty").setFull3D().setCreativeTab(MainRegistry.consumableTab);
@@ -248,6 +249,7 @@ public class ModItems {
 	public static final Item pocket_ptsd = new ItemModRadar("pocket_ptsd", 1000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item v1 = new ItemModV1("v1").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item neutrino_lens = new ItemModLens("neutrino_lens").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item night_vision = new ItemModNightVision("night_vision").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item protection_charm = new ItemModCharm("protection_charm").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item meteor_charm = new ItemModCharm("meteor_charm").setCreativeTab(MainRegistry.consumableTab);
 		
@@ -1340,6 +1342,9 @@ public class ModItems {
 	public static final Item plate_fuel_ra226be = new ItemPlateFuel(1300000, "plate_fuel_ra226be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 30).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item plate_fuel_pu238be = new ItemPlateFuel(1000000, "plate_fuel_pu238be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 
+	public static final Item pwr_fuel = new ItemPWRFuel().setCreativeTab(MainRegistry.controlTab);
+	public static final Item pwr_fuel_hot = new ItemEnumMulti("pwr_fuel_hot", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_hot").setCreativeTab(MainRegistry.controlTab);
+	public static final Item pwr_fuel_depleted = new ItemEnumMulti("pwr_fuel_depleted", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_depleted").setCreativeTab(MainRegistry.controlTab);
 
 	public static final Item rod = new ItemBreedingRod("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
 	public static final Item rod_dual = new ItemBreedingRod("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
@@ -1579,9 +1584,7 @@ public class ModItems {
 	public static final Item turbine_titanium = new ItemBase("turbine_titanium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item blade_tungsten = new ItemBase("blade_tungsten").setCreativeTab(MainRegistry.partsTab);
 	public static final Item turbine_tungsten = new ItemBase("turbine_tungsten").setCreativeTab(MainRegistry.partsTab);
-	public static final Item bolt_tungsten = new ItemBase("bolt_tungsten").setCreativeTab(MainRegistry.partsTab);
 	public static final Item board_copper = new ItemBase("board_copper").setCreativeTab(MainRegistry.partsTab);
-	public static final Item bolt_dura_steel = new ItemBase("bolt_dura_steel").setCreativeTab(MainRegistry.partsTab);
 	public static final Item pipes_steel = new ItemBase("pipes_steel").setCreativeTab(MainRegistry.partsTab);
 	public static final Item drill_titanium = new ItemBase("drill_titanium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item bolt_compound = new ItemBase("bolt_compound").setCreativeTab(MainRegistry.partsTab);
@@ -2193,25 +2196,15 @@ public class ModItems {
 	// Wires and things
 	// Th3_Sl1ze: the only reason why I'm even keeping old wires, plates and etc - I want to convert them to the new meta ones
 	// because why the fuck people should lose half of their resources?
-	public static final Item wire_advanced_alloy = new ItemBase("wire_advanced_alloy").setCreativeTab(MainRegistry.partsTab);
+	// mlbv: no im having them deleted
 	public static final Item coil_advanced_alloy = new ItemBase("coil_advanced_alloy").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_advanced_torus = new ItemBase("coil_advanced_torus").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_gold = new ItemBase("wire_gold").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_gold = new ItemBase("coil_gold").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_gold_torus = new ItemBase("coil_gold_torus").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_red_copper = new ItemBase("wire_red_copper").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_tungsten = new ItemCustomLore("wire_tungsten").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_tungsten = new ItemBase("coil_tungsten").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_aluminium = new ItemBase("wire_aluminium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_copper = new ItemBase("wire_copper").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_copper = new ItemBase("coil_copper").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_copper_torus = new ItemBase("coil_copper_torus").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_schrabidium = new ItemCustomLore("wire_schrabidium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item wire_magnetized_tungsten = new ItemCustomLore("wire_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_magnetized_tungsten = new ItemCustomLore("coil_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
-	
-	
-	
 	
 	//Gun ammo assemblies and ammo
 	public static final Item assembly_iron = new ItemBase("assembly_iron").setCreativeTab(MainRegistry.partsTab);
@@ -3043,6 +3036,7 @@ public class ModItems {
 	
 	
 	//Missiles
+	public static final Item rangefinder = new ItemRangefinder("rangefinder").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
 	public static final Item designator = new ItemDesignator("designator").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
 	public static final Item designator_range = new ItemDesignatorRange("designator_range").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
 	public static final Item designator_manual = new ItemDesignatorManual("designator_manual").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
