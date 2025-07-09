@@ -15,14 +15,15 @@ import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemScraps;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class CrucibleRecipes extends SerializableRecipe {
 
@@ -368,7 +369,7 @@ public class CrucibleRecipes extends SerializableRecipe {
 
       for (ItemMold.Mold mold : ItemMold.molds) {
         ItemStack out = mold.getOutput(material);
-        if (out != null) {
+        if (out != null && !out.isEmpty()) {
           ItemStack scrap =
               ItemScraps.create(new Mats.MaterialStack(material, mold.getCost()), true);
           ItemStack shape = new ItemStack(ModItems.mold, 1, mold.id);
