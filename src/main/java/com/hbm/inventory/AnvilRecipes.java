@@ -257,15 +257,6 @@ public class AnvilRecipes {
 						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.VACUUM_TUBE.ordinal()),
 						new ComparableStack(ModItems.sawblade)
 				}, new AnvilOutput(new ItemStack(ModBlocks.machine_autosaw))).setTier(2));
-		constructionRecipes.add(new AnvilConstructionRecipe(
-				new AStack[] {
-						new OreDictStack("blockGlassColorless", 4 * ukModifier),
-						new OreDictStack(STEEL.ingot(), 8 * ukModifier),
-						new OreDictStack(CU.ingot(), 8 * ukModifier),
-						new ComparableStack(ModItems.motor, 2 * ukModifier),
-						new ComparableStack(ModItems.circuit_aluminium, 1 * ukModifier)
-				},
-				new AnvilOutput(new ItemStack(ModBlocks.machine_assembler))).setTier(2));
 		
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
@@ -383,13 +374,10 @@ public class AnvilRecipes {
 				new AnvilOutput(new ItemStack(ModItems.wings_limp))).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
-						new OreDictStack(S.dust(), 8),
-						new OreDictStack(STEEL.plate(), 4),
-						new OreDictStack(AL.plate(), 2),
-						new ComparableStack(ModItems.hull_small_steel, 4),
-						new ComparableStack(ModItems.board_copper, 1),
-						new ComparableStack(ModItems.turbine_titanium, 1),
-						new ComparableStack(ModItems.circuit_aluminium, 1)
+						new ComparableStack(ModItems.sulfur, 12),
+						new OreDictStack(STEEL.shell(), 4),
+						new OreDictStack(CU.plateCast(), 6),
+						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.BASIC.ordinal())
 				},
 				new AnvilOutput(new ItemStack(ModBlocks.machine_deuterium_extractor))).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
@@ -754,9 +742,10 @@ public class AnvilRecipes {
 				}).setTier(4));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.rbmk_control_auto), new AnvilOutput[] {
-						new AnvilOutput(new ItemStack(ModBlocks.rbmk_control, 1)),
-						new AnvilOutput(new ItemStack(ModItems.circuit_targeting_tier1, 2))
-				}).setTier(4));
+				new AnvilOutput(new ItemStack(ModBlocks.rbmk_control, 1)),
+				new AnvilOutput(new ItemStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED.ordinal())),
+				new AnvilOutput(new ItemStack(ModItems.crt_display, 1))
+		}).setTier(4));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.rbmk_rod_reasim), new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModBlocks.rbmk_blank, 1)),
@@ -810,7 +799,17 @@ public class AnvilRecipes {
 						new AnvilOutput(new ItemStack(ModItems.pipes_steel, 2)),
 						new AnvilOutput(new ItemStack(ModItems.plate_polymer, 2))
 				}).setTier(4));
-
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new ComparableStack(ModBlocks.reactor_research), new AnvilOutput[] {
+				new AnvilOutput(new ItemStack(ModItems.ingot_steel, 8)),
+				new AnvilOutput(new ItemStack(ModItems.ingot_tcalloy, 4)),
+				new AnvilOutput(new ItemStack(ModItems.motor_desh, 2)),
+				new AnvilOutput(new ItemStack(ModItems.ingot_boron, 5)),
+				new AnvilOutput(new ItemStack(ModItems.plate_lead, 8)),
+				new AnvilOutput(new ItemStack(ModItems.crt_display, 3)),
+				new AnvilOutput(new ItemStack(ModItems.circuit, 1, EnumCircuitType.BASIC.ordinal())),
+				new AnvilOutput(new ItemStack(ModItems.circuit, 1, EnumCircuitType.BASIC.ordinal()), 0.5F),
+		}).setTier(4));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.machine_turbine), new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.turbine_titanium, 1)),
