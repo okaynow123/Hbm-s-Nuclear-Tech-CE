@@ -711,15 +711,14 @@ public class JeiRecipes {
 		
 		return cyclotronRecipes;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public static List<PressRecipe> getPressRecipes() {
 		if(pressRecipes != null)
 			return pressRecipes;
 
-		pressRecipes = new ArrayList<PressRecipe>();
+		pressRecipes = new ArrayList<>();
 		
-		for(Map.Entry<Pair<PressRecipes.PressType, AStack>, ItemStack> entry : PressRecipes.pressRecipes.entrySet()){
+		for(Map.Entry<Pair<PressRecipes.StampType, AStack>, ItemStack> entry : PressRecipes.pressRecipes.entrySet()){
 
 			pressRecipes.add(new PressRecipe(PressRecipes.getStampList(entry.getKey().getKey()), entry.getKey().getValue().getStackList(), entry.getValue()));
 		}
