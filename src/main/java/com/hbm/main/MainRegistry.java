@@ -38,7 +38,6 @@ import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
-import com.hbm.handler.crt.NTMCraftTweaker;
 import com.hbm.handler.imc.IMCHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
@@ -861,7 +860,7 @@ public class MainRegistry {
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_gneiss.getDefaultState(), 0.01D, 5, 8, 30)); //DecorateBiomeEvent.Pre
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.HEMATITE.ordinal()), 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
 
-        NTMCraftTweaker.applyPostInitActions();
+//        NTMCraftTweaker.applyPostInitActions();
         AssemblerRecipes.generateList();
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();
