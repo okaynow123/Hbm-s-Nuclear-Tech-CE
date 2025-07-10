@@ -32,8 +32,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import static com.hbm.tileentity.machine.TileEntityMachineFluidTank.slots;
-
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 public class TileEntityCoreInjector extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent {
 
