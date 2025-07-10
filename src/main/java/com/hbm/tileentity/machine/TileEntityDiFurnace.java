@@ -13,6 +13,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import com.hbm.inventory.gui.GUIDiFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -150,7 +151,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
             if (trigger) {
                 markDirty = true;
-                MachineDiFurnace.updateBlockState(this.progress > 0, world, pos);
+                MachineDiFurnace.updateBlockState(this.progress > 0, extension, world, pos);
             }
 
             networkPackNT(15);
@@ -210,11 +211,11 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     public int getDiFurnaceProgressScaled(int i) {
-        return (dualCookTime * i) / processingSpeed;
+        return (progress * i) / processingSpeed;
     }
 
     public int getPowerRemainingScaled(int i) {
-        return (dualPower * i) / maxPower;
+        return (fuel * i) / maxFuel;
     }
 
     public boolean canProcess() {
@@ -259,25 +260,11 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     public boolean hasPower() {
-        return dualPower > 0;
+        return fuel > 0;
     }
 
     public boolean isProcessing() {
-        return this.dualCookTime > 0;
-    }
-
-    private void detectAndSendChanges() {
-        boolean mark = false;
-        if (detectDualCookTime != dualCookTime) {
-            mark = true;
-            detectDualCookTime = dualCookTime;
-        }
-        if (detectDualPower != dualPower) {
-            mark = true;
-            detectDualPower = dualPower;
-        }
-        if (mark)
-            markDirty();
+        return this.progress > 0;
     }
 
     @Override

@@ -1,21 +1,27 @@
 package com.hbm.tileentity.machine;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.inventory.container.ContainerForceField;
+import com.hbm.inventory.gui.GUIForceField;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEFFPacket;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,7 +30,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityForceField extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityForceField extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public ItemStackHandler inventory;
 	
@@ -351,4 +357,14 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 		return 65536.0D;
 	}
 
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerForceField(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIForceField(player.inventory, this);
+	}
 }

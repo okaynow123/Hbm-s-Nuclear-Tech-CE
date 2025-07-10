@@ -3,6 +3,8 @@ package com.hbm.tileentity.machine;
 import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.inventory.PressRecipes;
+import com.hbm.inventory.container.ContainerMachineEPress;
+import com.hbm.inventory.gui.GUIMachineEPress;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -10,20 +12,26 @@ import com.hbm.lib.Library;
 import com.hbm.packet.AuxElectricityPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEPressPacket;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
-public class TileEntityMachineEPress extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityMachineEPress extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public int progress = 0;
 	public long power = 0;
@@ -230,14 +238,15 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 	public long getMaxPower() {
 		return maxPower;
 	}
-	
+
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return super.hasCapability(capability, facing);
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineEPress(player.inventory, this);
 	}
-	
+
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return super.getCapability(capability, facing);
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineEPress(player.inventory, this);
 	}
 }

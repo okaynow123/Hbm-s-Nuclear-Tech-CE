@@ -9,6 +9,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.TEPressPacket;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class TileEntityMachinePress extends TileEntityMachineBase implements ITickable, ICapabilityProvider, IGUIProvider {
 
@@ -76,7 +78,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("progress", progress);
@@ -287,7 +289,9 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IGUIProvider provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachinePress(player.inventory, this);
+	}
+
 
 }

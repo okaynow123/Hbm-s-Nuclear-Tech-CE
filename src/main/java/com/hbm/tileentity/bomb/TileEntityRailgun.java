@@ -3,6 +3,8 @@ package com.hbm.tileentity.bomb;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import com.hbm.config.RadiationConfig;
 import com.hbm.entity.projectile.EntityRailgunBlast;
+import com.hbm.inventory.container.ContainerRailgun;
+import com.hbm.inventory.gui.GUIRailgun;
 import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
@@ -12,8 +14,11 @@ import com.hbm.packet.AuxGaugePacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.RailgunRotationPacket;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +27,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -29,8 +35,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
-public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public ItemStackHandler inventory;
 	public ICapabilityProvider specialProvider;
@@ -119,7 +126,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setLong("power", power);
 		nbt.setFloat("pitch", pitch);
 		nbt.setFloat("yaw", yaw);
@@ -271,12 +278,12 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 	{
 		return 65536.0D;
 	}
-	
+
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		return super.getCapability(capability, facing);
 	}
-	
+
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
 		return super.hasCapability(capability, facing);
@@ -301,5 +308,16 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 		//System.out.println(power * i);
 		//System.out.println(MainRegistry.railgunBuffer);
 		return (power * i) / RadiationConfig.railgunBuffer;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerRailgun(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIRailgun(player.inventory, this);
 	}
 }
