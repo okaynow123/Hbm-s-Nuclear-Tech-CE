@@ -49,6 +49,7 @@ import com.hbm.particle.ParticleBatchRenderer;
 import com.hbm.particle.ParticleDSmokeFX;
 import com.hbm.particle.ParticleFirstPerson;
 import com.hbm.particle.gluon.ParticleGluonBurnTrail;
+import com.hbm.physics.ParticlePhysicsBlocks;
 import com.hbm.render.LightRenderer;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -1136,7 +1137,7 @@ public class ModEventHandlerClient {
 
             ItemGunShotty.screenPos = new Vec2f(POSITION.get(0), POSITION.get(1));
         } else {
-            ItemGunShotty.screenPos = new Vec2f(Minecraft.getMinecraft().displayWidth / 2, Minecraft.getMinecraft().displayHeight / 2);
+            ItemGunShotty.screenPos = new Vec2f( (float)Minecraft.getMinecraft().displayWidth / 2, (float) Minecraft.getMinecraft().displayHeight / 2);
         }
 
         //SSG meathook chain rendering
@@ -1464,15 +1465,13 @@ public class ModEventHandlerClient {
         ParticleBatchRenderer.renderLast(evt);
 
         LightRenderer.worldRender();
-        //RenderHelper.renderFlashlights();
 
-        //WorldSpaceFPRender.doHandRendering(evt);
+       WorldSpaceFPRender.doHandRendering(evt);
 
-		/*for(Particle p : firstPersonAuxParticles){
+		for(Particle p : firstPersonAuxParticles){
 			if(p instanceof ParticlePhysicsBlocks)
 				p.renderParticle(null, Minecraft.getMinecraft().getRenderViewEntity(), MainRegistry.proxy.partialTicks(), 0, 0, 0, 0, 0);
-		}*/
-        //HbmShaderManager2.doPostProcess();
+		}
         if (!(Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof IPostRender || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof IPostRender)) {
             HbmShaderManager2.postProcess();
         }
