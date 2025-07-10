@@ -1,6 +1,6 @@
 package com.hbm.blocks.machine;
 
-import api.hbm.fluid.IFluidConnector;
+import com.hbm.api.fluid.IFluidConnector;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.FluidType;

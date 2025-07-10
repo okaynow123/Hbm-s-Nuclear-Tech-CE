@@ -1,6 +1,6 @@
 package com.hbm.items;
 
-import api.hbm.block.IToolable.ToolType;
+import com.hbm.api.block.IToolable.ToolType;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockFuel;

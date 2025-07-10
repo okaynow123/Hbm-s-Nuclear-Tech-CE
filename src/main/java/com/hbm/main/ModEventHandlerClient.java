@@ -79,7 +79,6 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
-import glmath.glm.vec._2.Vec2;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -117,11 +116,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -1138,9 +1134,9 @@ public class ModEventHandlerClient {
 
             Project.gluProject((float) (ItemGunShotty.rayTrace.x - d3), (float) (ItemGunShotty.rayTrace.y - d4), (float) (ItemGunShotty.rayTrace.z - d5), MODELVIEW, PROJECTION, VIEWPORT, POSITION);
 
-            ItemGunShotty.screenPos = new Vec2(POSITION.get(0), POSITION.get(1));
+            ItemGunShotty.screenPos = new Vec2f(POSITION.get(0), POSITION.get(1));
         } else {
-            ItemGunShotty.screenPos = new Vec2(Minecraft.getMinecraft().displayWidth / 2, Minecraft.getMinecraft().displayHeight / 2);
+            ItemGunShotty.screenPos = new Vec2f(Minecraft.getMinecraft().displayWidth / 2, Minecraft.getMinecraft().displayHeight / 2);
         }
 
         //SSG meathook chain rendering
@@ -1190,6 +1186,8 @@ public class ModEventHandlerClient {
                 }
                 float scale = (float) (len / 20F);
                 buffer.setTranslation(0, i, offset * scale);
+
+
                 ResourceManager.n45_chain.renderAll();
             }
 

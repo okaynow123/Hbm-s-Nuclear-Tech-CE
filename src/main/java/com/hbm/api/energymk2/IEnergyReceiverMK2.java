@@ -1,4 +1,4 @@
-package api.hbm.energymk2;
+package com.hbm.api.energymk2;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
@@ -10,19 +10,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-/** If it receives energy, use this */
+/**
+ * If it receives energy, use this
+ */
 public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
     /**
      * Transfers a specified amount of energy to this receiver.
      * If the receiver has enough capacity, all the energy is absorbed.
      * Otherwise, it absorbs as much as it can and returns the excess energy.
      *
-     * @param power The amount of energy to transfer.
+     * @param power    The amount of energy to transfer.
      * @param simulate If true, the transfer is simulated and no energy is actually transferred.
      * @return The amount of energy that could not be absorbed (excess energy), or 0 if all energy was absorbed.
      */
     default long transferPower(long power, boolean simulate) {
-        if(power + this.getPower() <= this.getMaxPower()) {
+        if (power + this.getPower() <= this.getMaxPower()) {
             if (!simulate) this.setPower(power + this.getPower());
             return 0;
         }
@@ -48,18 +50,18 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
         TileEntity te = Compat.getTileStandard(world, x, y, z);
         boolean red = false;
 
-        if(te instanceof IEnergyConductorMK2 con) {
-            if(!con.canConnect(dir.getOpposite())) return;
+        if (te instanceof IEnergyConductorMK2 con) {
+            if (!con.canConnect(dir.getOpposite())) return;
 
             Nodespace.PowerNode node = Nodespace.getNode(world, new BlockPos(x, y, z));
 
-            if(node != null && node.net != null) {
+            if (node != null && node.net != null) {
                 node.net.addReceiver(this);
                 red = true;
             }
         }
 
-        if(particleDebug) {
+        if (particleDebug) {
             NBTTagCompound data = new NBTTagCompound();
             data.setString("type", "network");
             data.setString("mode", "power");
@@ -77,10 +79,10 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
 
         TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 
-        if(te instanceof IEnergyConductorMK2 con) {
+        if (te instanceof IEnergyConductorMK2 con) {
             Nodespace.PowerNode node = con.createNode();
 
-            if(node != null && node.net != null) {
+            if (node != null && node.net != null) {
                 node.net.removeReceiver(this);
             }
         }
@@ -105,14 +107,16 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
      * investigations relied on the sworn testimony of direct participants and on the small number of documents that survived Helms's order.
      * In 1977, a Freedom of Information Act request uncovered a cache of 20,000 documents relating to MKUltra, which led to Senate hearings.
      * Some surviving information about MKUltra was declassified in 2001.
-     *
+     * <p>
      * wtf is that lol xd (Slize's reaction be like)
-     * */
+     */
     default ConnectionPriority getPriority() {
         return ConnectionPriority.NORMAL;
     }
 
-    /** More is better-er */
+    /**
+     * More is better-er
+     */
     enum ConnectionPriority {
         LOWEST,
         LOW,

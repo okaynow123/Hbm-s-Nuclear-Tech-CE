@@ -1,4 +1,4 @@
-package api.hbm.fluid;
+package com.hbm.api.fluid;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;

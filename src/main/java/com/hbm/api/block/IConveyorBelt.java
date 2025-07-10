@@ -1,4 +1,4 @@
-package api.hbm.block;
+package com.hbm.api.block;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;

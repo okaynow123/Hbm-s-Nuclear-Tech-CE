@@ -1,6 +1,6 @@
-package api.hbm.energymk2;
+package com.hbm.api.energymk2;
 
-import api.hbm.tile.ILoadedTile;
+import com.hbm.api.tile.ILoadedTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.energy.IEnergyStorage;

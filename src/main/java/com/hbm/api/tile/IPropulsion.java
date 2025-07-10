@@ -1,4 +1,4 @@
-package api.hbm.tile;
+package com.hbm.api.tile;
 
 import com.hbm.dim.orbit.OrbitalStation;
 import net.minecraft.tileentity.TileEntity;

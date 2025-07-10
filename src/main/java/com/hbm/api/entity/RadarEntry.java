@@ -1,4 +1,4 @@
-package api.hbm.entity;
+package com.hbm.api.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;

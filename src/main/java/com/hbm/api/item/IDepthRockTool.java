@@ -1,4 +1,4 @@
-package api.hbm.item;
+package com.hbm.api.item;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

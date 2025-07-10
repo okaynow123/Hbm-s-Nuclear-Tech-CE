@@ -1,4 +1,4 @@
-package api.hbm.item;
+package com.hbm.api.item;
 
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.item.ItemStack;

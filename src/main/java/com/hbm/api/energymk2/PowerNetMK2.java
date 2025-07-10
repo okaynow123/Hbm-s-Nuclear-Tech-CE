@@ -1,4 +1,4 @@
-package api.hbm.energymk2;
+package com.hbm.api.energymk2;
 
 import com.hbm.util.Tuple;
 

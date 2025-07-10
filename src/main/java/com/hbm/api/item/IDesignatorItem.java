@@ -1,4 +1,4 @@
-package api.hbm.item;
+package com.hbm.api.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;

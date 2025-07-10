@@ -1,4 +1,4 @@
-package api.hbm.tile;
+package com.hbm.api.tile;
 
 public interface IHeatSource {
 

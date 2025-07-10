@@ -1,4 +1,4 @@
-package api.hbm.block;
+package com.hbm.api.block;
 
 import com.hbm.inventory.RecipesCommon;
 import net.minecraft.entity.player.EntityPlayer;

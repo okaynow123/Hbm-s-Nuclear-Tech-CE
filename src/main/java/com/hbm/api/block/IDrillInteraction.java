@@ -1,4 +1,4 @@
-package api.hbm.block;
+package com.hbm.api.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;

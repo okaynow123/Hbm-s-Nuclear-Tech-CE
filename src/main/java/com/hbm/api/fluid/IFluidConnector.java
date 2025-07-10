@@ -1,6 +1,6 @@
-package api.hbm.fluid;
+package com.hbm.api.fluid;
 
-import api.hbm.tile.ILoadedTile;
+import com.hbm.api.tile.ILoadedTile;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.ForgeDirection;
