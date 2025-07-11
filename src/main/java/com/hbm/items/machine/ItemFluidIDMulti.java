@@ -1,15 +1,16 @@
 package com.hbm.items.machine;
 
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenFluid;
 import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.PlayerInformPacketLegacy;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.I18nUtil;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -29,10 +30,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IItemControlReceiver, IGUIProvider {
 
@@ -45,7 +46,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote && !player.isSneaking()) {
@@ -55,12 +56,13 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
             setType(stack, primary, false);
             world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.25F, 1.25F);
             if (player instanceof EntityPlayerMP) {
-                PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(new TextComponentTranslation(secondary.getConditionalName()), 7, 3000), (EntityPlayerMP) player);
+                PacketThreading.createSendToThreadedPacket(new PlayerInformPacketLegacy(new TextComponentTranslation(secondary.getConditionalName()), 7, 3000), (EntityPlayerMP) player);
             }
         }
 
         if (world.isRemote && player.isSneaking()) {
-            player.openGui(MainRegistry.instance, ModItems.guiID_item_fluid_identifier, world, 0, 0, 0);
+            BlockPos pos = player.getPosition();
+            FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return super.onItemRightClick(world, player, hand);
