@@ -57,6 +57,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
         this.progress = compound.getShort("cookTime");
 
         byte[] modes = compound.getByteArray("modes");
+        if (modes.length != 3) return;
         this.sideFuel = modes[0];
         this.sideUpper = modes[1];
         this.sideLower = modes[2];
@@ -89,10 +90,11 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     @NotNull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
         compound.setInteger("powerTime", fuel);
         compound.setShort("cookTime", (short) progress);
-        compound.setByteArray("modes", new byte[]{(byte) sideFuel, (byte) sideUpper, (byte) sideLower});
-        return super.writeToNBT(compound);
+        compound.setByteArray("modes", new byte[]{sideFuel, sideUpper, sideLower});
+        return compound;
     }
 
     @Override
