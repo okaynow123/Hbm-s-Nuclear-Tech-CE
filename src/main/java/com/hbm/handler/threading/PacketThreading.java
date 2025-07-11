@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +103,7 @@ public class PacketThreading {
      * @param sendAction The lambda performing the network write (e.g., {@code () -> wrapper.sendTo(...)}).
      * @return A {@link Runnable} to be submitted to the thread pool.
      */
-    private static Runnable createTask(ThreadedPacket packet, Runnable sendAction) {
+    private static Runnable createTask(@NotNull ThreadedPacket packet, @NotNull Runnable sendAction) {
         return () -> {
             packet.getCompiledBuffer();
             sendAction.run();
@@ -110,19 +111,19 @@ public class PacketThreading {
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToServer(IMessage)}. */
-    public static void createSendToServerThreadedPacket(ThreadedPacket message) {
+    public static void createSendToServerThreadedPacket(@NotNull ThreadedPacket message) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToServer(message)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToDimension(IMessage, int)}. */
-    public static void createSendToDimensionThreadedPacket(ThreadedPacket message, int dimensionId) {
+    public static void createSendToDimensionThreadedPacket(@NotNull ThreadedPacket message, int dimensionId) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToDimension(message, dimensionId)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllAround(IMessage, TargetPoint)}. */
-    public static void createAllAroundThreadedPacket(ThreadedPacket message, TargetPoint target) {
+    public static void createAllAroundThreadedPacket(@NotNull ThreadedPacket message, @NotNull TargetPoint target) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllAround(message, target)));
     }
@@ -131,11 +132,7 @@ public class PacketThreading {
      * Mirrors {@link com.hbm.main.NetworkHandler#sendToAllAround(ByteBuf, TargetPoint)}.
      * This method is safer for concurrency as it deals with a stateless buffer.
      */
-    public static void createAllAroundThreadedPacket(ByteBuf buffer, TargetPoint target) {
-        if (buffer == null) {
-            MainRegistry.logger.error("Attempted to dispatch a null ByteBuf through packet threading.");
-            return;
-        }
+    public static void createAllAroundThreadedPacket(@NotNull ByteBuf buffer, @NotNull TargetPoint target) {
         totalCnt++;
 
         // Retain a reference for thread-safe use; will be released inside the task.
@@ -153,29 +150,25 @@ public class PacketThreading {
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllTracking(IMessage, TargetPoint)}. */
-    public static void createSendToAllTrackingThreadedPacket(ThreadedPacket message, TargetPoint point) {
+    public static void createSendToAllTrackingThreadedPacket(@NotNull ThreadedPacket message, @NotNull TargetPoint point) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, point)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllTracking(IMessage, Entity)}. */
-    public static void createSendToAllTrackingThreadedPacket(ThreadedPacket message, Entity entity) {
+    public static void createSendToAllTrackingThreadedPacket(@NotNull ThreadedPacket message, @NotNull Entity entity) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, entity)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendTo(IMessage, EntityPlayerMP)}. */
-    public static void createSendToThreadedPacket(ThreadedPacket message, EntityPlayerMP player) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToThreadedPacket(@NotNull ThreadedPacket message, @NotNull EntityPlayerMP player) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendTo(message, player)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAll(IMessage)}. */
-    public static void createSendToAllThreadedPacket(ThreadedPacket message) {
+    public static void createSendToAllThreadedPacket(@NotNull ThreadedPacket message) {
         totalCnt++;
         addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAll(message)));
     }
