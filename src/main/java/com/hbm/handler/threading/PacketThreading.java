@@ -110,33 +110,21 @@ public class PacketThreading {
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToServer(IMessage)}. */
-    public static void createSendToServerThreadedPacket(IMessage message) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToServerThreadedPacket(ThreadedPacket message) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToServer(message)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToServer(message)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToDimension(IMessage, int)}. */
-    public static void createSendToDimensionThreadedPacket(IMessage message, int dimensionId) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToDimensionThreadedPacket(ThreadedPacket message, int dimensionId) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToDimension(message, dimensionId)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToDimension(message, dimensionId)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllAround(IMessage, TargetPoint)}. */
-    public static void createAllAroundThreadedPacket(IMessage message, TargetPoint target) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createAllAroundThreadedPacket(ThreadedPacket message, TargetPoint target) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToAllAround(message, target)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllAround(message, target)));
     }
 
     /**
@@ -165,43 +153,31 @@ public class PacketThreading {
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllTracking(IMessage, TargetPoint)}. */
-    public static void createSendToAllTrackingThreadedPacket(IMessage message, TargetPoint point) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToAllTrackingThreadedPacket(ThreadedPacket message, TargetPoint point) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, point)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, point)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAllTracking(IMessage, Entity)}. */
-    public static void createSendToAllTrackingThreadedPacket(IMessage message, Entity entity) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToAllTrackingThreadedPacket(ThreadedPacket message, Entity entity) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, entity)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAllTracking(message, entity)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendTo(IMessage, EntityPlayerMP)}. */
-    public static void createSendToThreadedPacket(IMessage message, EntityPlayerMP player) {
+    public static void createSendToThreadedPacket(ThreadedPacket message, EntityPlayerMP player) {
         if (!(message instanceof ThreadedPacket)) {
             MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
             return;
         }
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendTo(message, player)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendTo(message, player)));
     }
 
     /** Mirrors {@link com.hbm.main.NetworkHandler#sendToAll(IMessage)}. */
-    public static void createSendToAllThreadedPacket(IMessage message) {
-        if (!(message instanceof ThreadedPacket)) {
-            MainRegistry.logger.error("Invalid packet class for threading, expected ThreadedPacket, got {}.", message.getClass().getSimpleName());
-            return;
-        }
+    public static void createSendToAllThreadedPacket(ThreadedPacket message) {
         totalCnt++;
-        addTask(createTask((ThreadedPacket) message, () -> PacketDispatcher.wrapper.sendToAll(message)));
+        addTask(createTask(message, () -> PacketDispatcher.wrapper.sendToAll(message)));
     }
 
     /**
