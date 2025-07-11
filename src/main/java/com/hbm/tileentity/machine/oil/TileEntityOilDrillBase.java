@@ -34,9 +34,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Queue;
 
 public abstract class TileEntityOilDrillBase extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IConfigurableMachine, IPersistentNBT, IGUIProvider, IFluidCopiable, IFFtoNTMF {
     private static boolean converted = false;
@@ -49,8 +49,7 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
     public int speedLevel;
     public int energyLevel;
     public int overLevel;
-    List<int[]> list = new ArrayList<int[]>();
-    HashSet<BlockPos> processed = new HashSet<BlockPos>();
+    HashSet<BlockPos> processed = new HashSet<>();
     private String customName;
 
 
@@ -271,51 +270,38 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
     }
 
     public boolean trySuck(int y) {
-        BlockPos sPos = new BlockPos(pos.getX(), y, pos.getZ());
-        Block b = world.getBlockState(sPos).getBlock();
-
-        if (!canSuckBlock(b))
-            return false;
-
-        if (!this.canPump())
-            return true;
-
+        BlockPos startPos = new BlockPos(pos.getX(), y, pos.getZ());
+        Block startBlock = world.getBlockState(startPos).getBlock();
+        if (!canSuckBlock(startBlock)) return false;
+        if (!this.canPump()) return true;
+        Queue<BlockPos> queue = new ArrayDeque<>();
         processed.clear();
+        queue.offer(startPos);
+        processed.add(startPos);
 
-        return suckRec(new BlockPos(pos.getX(), y, pos.getZ()), 0);
+        int nodesVisited = 0;
+        while (!queue.isEmpty() && nodesVisited < 256) {
+            BlockPos currentPos = queue.poll();
+            nodesVisited++;
+            Block currentBlock = world.getBlockState(currentPos).getBlock();
+            if (currentBlock == ModBlocks.ore_oil || currentBlock == ModBlocks.ore_bedrock_oil || currentBlock == ModBlocks.ore_gas) {
+                doSuck(currentPos);
+                return true;
+            }
+            if (currentBlock != ModBlocks.ore_oil_empty && currentBlock != ModBlocks.ore_gas_empty) continue;
+            for (ForgeDirection dir : BobMathUtil.getShuffledDirs()) {
+                BlockPos neighborPos = currentPos.add(dir.offsetX, dir.offsetY, dir.offsetZ);
+                if (!processed.contains(neighborPos) && canSuckBlock(world.getBlockState(neighborPos).getBlock())) {
+                    processed.add(neighborPos);
+                    queue.offer(neighborPos);
+                }
+            }
+        }
+        return false;
     }
 
     public boolean canSuckBlock(Block b) {
         return b == ModBlocks.ore_oil || b == ModBlocks.ore_oil_empty || b == ModBlocks.ore_gas || b == ModBlocks.ore_gas_empty;
-    }
-
-    public boolean suckRec(BlockPos pos, int layer) {
-
-        if (processed.contains(pos))
-            return false;
-
-        processed.add(pos);
-
-        if (layer > 64)
-            return false;
-
-        Block b = world.getBlockState(pos).getBlock();
-
-        if (b == ModBlocks.ore_oil || b == ModBlocks.ore_bedrock_oil || b == ModBlocks.ore_gas) {
-            doSuck(pos);
-            return true;
-        }
-
-        if (b == ModBlocks.ore_oil_empty || b == ModBlocks.ore_gas_empty) {
-            ForgeDirection[] dirs = BobMathUtil.getShuffledDirs();
-
-            for (ForgeDirection dir : dirs) {
-                if (suckRec(pos.add(dir.offsetX, dir.offsetY, dir.offsetZ), layer + 1))
-                    return true;
-            }
-        }
-
-        return false;
     }
 
     public void doSuck(BlockPos pos) {
