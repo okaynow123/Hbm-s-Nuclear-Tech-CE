@@ -73,33 +73,30 @@ public class NTMFluidCapabilityHandler {
     @SubscribeEvent
     public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
-        if (stack.isEmpty() || !HBM_FLUID_ITEMS.contains(stack.getItem())) {
-            return;
-        }
-
-        event.addCapability(HBM_FLUID_CAPABILITY, new ICapabilityProvider() {
-            @Override
-            public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
-                return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
-            }
-
-            @Nullable
-            @Override
-            public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
-                if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
-                    return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(new Wrapper(stack));
-                }
-                return null;
-            }
-        });
+        if (stack.isEmpty() || !HBM_FLUID_ITEMS.contains(stack.getItem())) return;
+        event.addCapability(HBM_FLUID_CAPABILITY, new Wrapper(stack));
     }
 
-    private static class Wrapper implements IFluidHandlerItem {
+    private static class Wrapper implements ICapabilityProvider, IFluidHandlerItem {
         private ItemStack container;
 
         public Wrapper(@NotNull ItemStack container) {
             this.container = container.copy();
             this.container.setCount(1);
+        }
+
+        @Override
+        public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
+                return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(this);
+            }
+            return null;
         }
 
         @Override
