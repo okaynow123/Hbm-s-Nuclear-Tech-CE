@@ -39,7 +39,6 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
 
   public FiringMode mode = FiringMode.AUTO;
 
-  // TODO: Change var type typeLoaded from int to RocketType
   public int typeLoaded = -1;
   public int ammo = 0;
   public float crane;
