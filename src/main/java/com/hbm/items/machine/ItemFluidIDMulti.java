@@ -1,16 +1,15 @@
 package com.hbm.items.machine;
 
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenFluid;
 import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.PlayerInformPacketLegacy;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.I18nUtil;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -35,6 +34,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IItemControlReceiver, IGUIProvider {
 
     public ItemFluidIDMulti(String s) {
@@ -56,7 +57,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
             setType(stack, primary, false);
             world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.25F, 1.25F);
             if (player instanceof EntityPlayerMP) {
-                PacketThreading.createSendToThreadedPacket(new PlayerInformPacketLegacy(new TextComponentTranslation(secondary.getConditionalName()), 7, 3000), (EntityPlayerMP) player);
+                PacketDispatcher.wrapper.sendTo(new PlayerInformPacketLegacy(new TextComponentTranslation(secondary.getConditionalName()), 7, 3000), (EntityPlayerMP) player);
             }
         }
 
