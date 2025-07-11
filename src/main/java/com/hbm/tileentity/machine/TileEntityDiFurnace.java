@@ -26,6 +26,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class TileEntityDiFurnace extends TileEntityMachinePolluting implements ITickable, IFluidStandardSender, IGUIProvider {
 
@@ -40,11 +41,10 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 //	private static final int[] slots_bottom = new int[] {3};
 //	private static final int[] slots_side = new int[] {2};
     public int fuel;
+    // mlbv: yeah 1.7 have them all set to 1 as well
     public byte sideFuel = 1;
     public byte sideUpper = 1;
     public byte sideLower = 1;
-    private int detectDualCookTime;
-    private int detectDualPower;
 
     public TileEntityDiFurnace() {
         super(4, 50);
@@ -86,6 +86,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
         }
     }
 
+    @NotNull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setInteger("powerTime", fuel);
@@ -197,9 +198,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
     @Override
     public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
-        if (slot == 3)
-            return true;
-        return false;
+        return slot == 3;
     }
 
     public boolean isUsableByPlayer(EntityPlayer player) {
