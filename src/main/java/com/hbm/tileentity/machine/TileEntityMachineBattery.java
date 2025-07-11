@@ -5,7 +5,6 @@ import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.machine.MachineBattery;
-import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.container.ContainerMachineBattery;
 import com.hbm.inventory.gui.GUIMachineBattery;
@@ -150,8 +149,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 0) return NTMBatteryCapabilityHandler.isDischargeableBattery(stack);
-		if(i == 2) return NTMBatteryCapabilityHandler.isChargeableBattery(stack);
+		if(i == 0) return Library.isItemDischargeableBattery(stack);
+		if(i == 2) return Library.isItemChargeableBattery(stack);
 		return false;
 	}
 	
@@ -167,14 +166,14 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 
 	public void tryMoveItems() {
 		ItemStack itemStackDrain = inventory.getStackInSlot(0);
-		if(NTMBatteryCapabilityHandler.isEmptyBattery(itemStackDrain)) {
+		if(Library.isItemEmptyBattery(itemStackDrain)) {
 			if(inventory.getStackInSlot(1).isEmpty()){
 				inventory.setStackInSlot(1, itemStackDrain);
 				inventory.setStackInSlot(0, ItemStack.EMPTY);
 			}
 		}
 		ItemStack itemStackFill = inventory.getStackInSlot(2);
-		if(NTMBatteryCapabilityHandler.isFullBattery(itemStackFill)) {
+		if(Library.isItemFullBattery(itemStackFill)) {
 			if(inventory.getStackInSlot(3).isEmpty()){
 				inventory.setStackInSlot(3, itemStackFill);
 				inventory.setStackInSlot(2, ItemStack.EMPTY);

@@ -17,11 +17,13 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Attaches Forge Energy capabilities to any item that implements IBatteryItem.
+ *
  * @author mlbv
  */
 public class NTMBatteryCapabilityHandler {
 
     public static final ResourceLocation HBM_BATTERY_CAPABILITY = new ResourceLocation("hbm", "battery_wrapper");
+
     public static void initialize() {
         MinecraftForge.EVENT_BUS.register(new NTMBatteryCapabilityHandler());
     }
@@ -29,121 +31,83 @@ public class NTMBatteryCapabilityHandler {
     @SubscribeEvent
     public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
-        if (stack.isEmpty() || !(stack.getItem() instanceof IBatteryItem)) return;
+        if (stack.isEmpty() || !(stack.getItem() instanceof IBatteryItem batteryItem)) return;
         event.addCapability(HBM_BATTERY_CAPABILITY, new ICapabilityProvider() {
-            private NTMBatteryWrapper instance;
+            private IEnergyStorage instance;
+
             @Override
             public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
                 return capability == CapabilityEnergy.ENERGY;
             }
+
             @Nullable
             @Override
             public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
-                if (capability == CapabilityEnergy.ENERGY) {
-                    if (instance == null) instance = new NTMBatteryWrapper(stack);
-                    return CapabilityEnergy.ENERGY.cast(instance);
+                if (capability != CapabilityEnergy.ENERGY) return null;
+                if (instance == null) {
+                    instance = new IEnergyStorage() {
+                        @Override
+                        public int receiveEnergy(int maxReceive, boolean simulate) {
+                            if (!canReceive() || maxReceive <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
+                            long powerToOfferInHE = (long) (maxReceive / GeneralConfig.conversionRateHeToRF);
+                            if (powerToOfferInHE <= 0) return 0;
+                            long spaceInBattery = batteryItem.getMaxCharge() - batteryItem.getCharge(stack);
+                            long batteryCanTakeHE = Math.min(spaceInBattery, batteryItem.getChargeRate());
+                            long actualToReceiveHE = Math.min(powerToOfferInHE, batteryCanTakeHE);
+                            if (actualToReceiveHE > 0 && !simulate) {
+                                batteryItem.chargeBattery(stack, actualToReceiveHE);
+                            }
+                            long receivedFE = (long) (actualToReceiveHE * GeneralConfig.conversionRateHeToRF);
+                            return (int) Math.min(Integer.MAX_VALUE, receivedFE);
+                        }
+
+                        @Override
+                        public int extractEnergy(int maxExtract, boolean simulate) {
+                            if (!canExtract() || maxExtract <= 0 || GeneralConfig.conversionRateHeToRF <= 0) {
+                                return 0;
+                            }
+                            long maxExtractHE = (long) (maxExtract / GeneralConfig.conversionRateHeToRF);
+                            if (maxExtractHE <= 0) {
+                                return 0;
+                            }
+                            long batteryCanProvideHE = Math.min(batteryItem.getCharge(stack), batteryItem.getDischargeRate());
+                            long actualToExtractHE = Math.min(maxExtractHE, batteryCanProvideHE);
+                            if (actualToExtractHE > 0 && !simulate) {
+                                batteryItem.dischargeBattery(stack, actualToExtractHE);
+                            }
+                            long extractedFE = (long) (actualToExtractHE * GeneralConfig.conversionRateHeToRF);
+                            return (int) Math.min(Integer.MAX_VALUE, extractedFE);
+                        }
+
+                        @Override
+                        public int getEnergyStored() {
+                            if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
+                            long storedFE = (long) (batteryItem.getCharge(stack) * GeneralConfig.conversionRateHeToRF);
+                            return (int) Math.min(Integer.MAX_VALUE, storedFE);
+                        }
+
+                        @Override
+                        public int getMaxEnergyStored() {
+                            if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
+                            long maxStoredHE = batteryItem.getMaxCharge();
+                            long maxStoredFE = (long) (maxStoredHE * GeneralConfig.conversionRateHeToRF);
+                            return (int) Math.min(Integer.MAX_VALUE, maxStoredFE);
+                        }
+
+                        @Override
+                        public boolean canExtract() {
+                            return batteryItem.getDischargeRate() > 0 && batteryItem.getCharge(stack) > 0;
+                        }
+
+                        @Override
+                        public boolean canReceive() {
+                            return batteryItem.getChargeRate() > 0 && batteryItem.getCharge(stack) < batteryItem.getMaxCharge();
+                        }
+                    };
                 }
-                return null;
+                return CapabilityEnergy.ENERGY.cast(instance);
             }
         });
     }
 
-    public static boolean isBattery(@NotNull ItemStack stack){
-    	if(stack.isEmpty()) return false;
-        return stack.getItem() instanceof IBatteryItem || stack.hasCapability(CapabilityEnergy.ENERGY, null);
-    }
-
-    public static boolean isDischargeableBattery(@NotNull ItemStack stack){
-    	if(stack.isEmpty()) return false;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            return battery.getCharge(stack) > 0 && battery.getDischargeRate() > 0;
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap != null) return cap.getEnergyStored() > 0 && cap.canExtract();
-        }
-        return false;
-    }
-
-    public static boolean isChargeableBattery(@NotNull ItemStack stack) {
-        if (stack.isEmpty()) return false;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            return battery.getMaxCharge() > battery.getCharge(stack) && battery.getChargeRate() > 0;
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap != null) return cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
-        }
-        return false;
-    }
-
-    public static boolean isEmptyBattery(@NotNull ItemStack stack){
-    	if(stack.isEmpty()) return true;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            return battery.getCharge(stack) == 0;
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap!= null) return cap.getEnergyStored() == 0;
-        }
-        return false;
-    }
-
-    public static boolean isFullBattery(@NotNull ItemStack stack){
-    	if(stack.isEmpty()) return false;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            return battery.getCharge(stack) == battery.getMaxCharge();
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap!= null) return cap.getEnergyStored() == cap.getMaxEnergyStored();
-        }
-        return false;
-    }
-
-    /**
-     * @return amount of energy charged in HE
-     */
-    public static long addChargeIfValid(@NotNull ItemStack stack, long heCharge, boolean instant) {
-        if (stack.isEmpty()) return 0;
-        long added = 0;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            long maxcharge = battery.getMaxCharge();
-            long charge = battery.getCharge(stack);
-            added = instant ? heCharge : Math.min(heCharge, battery.getChargeRate());
-            added = charge + added > maxcharge ? maxcharge - charge : added;
-            battery.setCharge(stack, charge + added);
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap != null) {
-                int feReceived = cap.receiveEnergy((int) (heCharge * GeneralConfig.conversionRateHeToRF), false);
-                added = (long) (feReceived / GeneralConfig.conversionRateHeToRF);
-            }
-        }
-        return added;
-    }
-
-    /**
-     * @return The amount of energy that was actually extracted, in HE.
-     */
-    public static long extractChargeIfValid(@NotNull ItemStack stack, long ntmCharge, boolean instant) {
-        if (stack.isEmpty()) return 0;
-        if (stack.getItem() instanceof IBatteryItem battery) {
-            long currentCharge = battery.getCharge(stack);
-            long extractLimit = instant ? ntmCharge : Math.min(ntmCharge, battery.getDischargeRate());
-            long actualExtracted = Math.min(extractLimit, currentCharge);
-            if (actualExtracted > 0) {
-                battery.setCharge(stack, currentCharge - actualExtracted);
-            }
-            return actualExtracted;
-        } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            if (GeneralConfig.conversionRateHeToRF <= 0) {
-                return 0;
-            }
-            IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-            if (cap != null) {
-                int feToExtract = (int) (ntmCharge * GeneralConfig.conversionRateHeToRF);
-                int feExtracted = cap.extractEnergy(feToExtract, false);
-                return (long) (feExtracted / GeneralConfig.conversionRateHeToRF);
-            }
-        }
-        return 0;
-    }
 }

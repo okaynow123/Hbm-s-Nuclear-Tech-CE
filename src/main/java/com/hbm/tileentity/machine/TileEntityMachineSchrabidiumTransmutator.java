@@ -1,7 +1,6 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.NuclearTransmutationRecipes;
 import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
@@ -65,7 +64,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				return true;
 			break;
 		case 3:
-			if(NTMBatteryCapabilityHandler.isBattery(stack))
+			if(Library.isItemBattery(stack))
 				return true;
 			break;
 		}
@@ -88,7 +87,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 		}
 
 		if(i == 3) {
-			return NTMBatteryCapabilityHandler.isEmptyBattery(stack);
+			return Library.isItemEmptyBattery(stack);
 		}
 
 		return false;

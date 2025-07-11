@@ -16,8 +16,6 @@ public class PacketDispatcher {
 
 		//Fluid packet for GUI
 		wrapper.registerMessage(TEFluidPacket.Handler.class, TEFluidPacket.class, i++, Side.CLIENT);
-		//PressPacket
-		wrapper.registerMessage(TEPressPacket.Handler.class, TEPressPacket.class, i++, Side.CLIENT);
 		//Send chunk radiation packet to individual players
 		wrapper.registerMessage(SurveyPacket.Handler.class, SurveyPacket.class, i++, Side.CLIENT);
 		//Packet for rendering of rubble

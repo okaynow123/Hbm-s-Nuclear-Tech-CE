@@ -3,10 +3,10 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineCharger;
-import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.config.GeneralConfig;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +62,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 
 					ItemStack stack = inv.getStackInSlot(i);
 
-					if(NTMBatteryCapabilityHandler.isBattery(stack)) {
+					if(Library.isItemBattery(stack)) {
 						if (stack.getItem() instanceof IBatteryItem battery) {
 							totalCapacity += battery.getMaxCharge();
 							totalEnergy += battery.getCharge(stack);
@@ -135,10 +135,10 @@ public class TileEntityCharger extends TileEntityLoadedBase implements ITickable
 			for(int i = 0; i < inv.getSizeInventory(); i ++){
 				if(chargeBudget <= 0 || powerBudget <= 0) break;
 				ItemStack stack = inv.getStackInSlot(i);
-				if(NTMBatteryCapabilityHandler.isChargeableBattery(stack)) {
+				if(Library.isItemChargeableBattery(stack)) {
 					long powerToOffer = Math.min(powerBudget, chargeBudget);
                     if (!simulate) {
-                        long chargedAmount = NTMBatteryCapabilityHandler.addChargeIfValid(stack, powerToOffer, false);
+                        long chargedAmount = Library.chargeBatteryIfValid(stack, powerToOffer, false);
 
                         if (chargedAmount > 0) {
                             actualCharge += chargedAmount;
