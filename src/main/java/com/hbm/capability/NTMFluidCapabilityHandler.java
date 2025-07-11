@@ -81,8 +81,7 @@ public class NTMFluidCapabilityHandler {
         private ItemStack container;
 
         public Wrapper(@NotNull ItemStack container) {
-            this.container = container.copy();
-            this.container.setCount(1);
+            this.container = container;
         }
 
         @Override
