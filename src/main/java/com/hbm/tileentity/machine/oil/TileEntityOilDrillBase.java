@@ -16,6 +16,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.*;
 import com.hbm.util.BobMathUtil;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -217,19 +218,25 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
     }
 
     public void sendUpdate() {
-        NBTTagCompound data = new NBTTagCompound();
-        data.setLong("power", power);
-        data.setInteger("indicator", this.indicator);
-        for (int i = 0; i < tanks.length; i++) tanks[i].writeToNBT(data, "t" + i);
-        this.networkPack(data, 25);
+        networkPackNT(25);
     }
 
-    public void networkUnpack(NBTTagCompound nbt) {
-        super.networkUnpack(nbt);
+    @Override
+    public void serialize(ByteBuf buf) {
+        buf.writeLong(power);
+        buf.writeInt(indicator);
 
-        this.power = nbt.getLong("power");
-        this.indicator = nbt.getInteger("indicator");
-        for (int i = 0; i < tanks.length; i++) tanks[i].readFromNBT(nbt, "t" + i);
+        for (FluidTankNTM tank : tanks)
+            tank.serialize(buf);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        this.power = buf.readLong();
+        this.indicator = buf.readInt();
+
+        for (FluidTankNTM tank : tanks)
+            tank.deserialize(buf);
     }
 
     public boolean canPump() {
