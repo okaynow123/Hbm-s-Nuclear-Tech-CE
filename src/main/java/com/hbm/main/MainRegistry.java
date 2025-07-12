@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 //FIXME This may have gotten mangled in a merge
+import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
@@ -37,7 +38,7 @@ import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
-import com.hbm.handler.crt.NTMCraftTweaker;
+import com.hbm.handler.imc.IMCHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardRegistry;
@@ -100,10 +101,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -580,8 +578,12 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityCraneUnboxer.class, new ResourceLocation(RefStrings.MODID, "tileentity_craneunboxer"));
         GameRegistry.registerTileEntity(TileEntityCraneRouter.class, new ResourceLocation(RefStrings.MODID, "tileentity_cranerouter"));
         GameRegistry.registerTileEntity(TileEntityCraneGrabber.class, new ResourceLocation(RefStrings.MODID, "tileentity_cranegrabber"));
-		GameRegistry.registerTileEntity(TileEntityPWRController.class, new ResourceLocation(RefStrings.MODID, "tileentity_pwr_controller"));
-		GameRegistry.registerTileEntity(BlockPWR.TileEntityBlockPWR.class, new ResourceLocation(RefStrings.MODID, "tileentity_block_pwr"));
+        GameRegistry.registerTileEntity(TileEntityPWRController.class, new ResourceLocation(RefStrings.MODID, "tileentity_pwr_controller"));
+        GameRegistry.registerTileEntity(TileEntityMachineHTR3.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_htr3"));
+        GameRegistry.registerTileEntity(TileEntityMachineHTRF4.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_htrf4"));
+        GameRegistry.registerTileEntity(TileEntityMachineLPW2.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_lpw2"));
+        GameRegistry.registerTileEntity(TileEntityXenonThruster.class, new ResourceLocation(RefStrings.MODID, "tileentity_xenonthruster"));
+        GameRegistry.registerTileEntity(BlockPWR.TileEntityBlockPWR.class, new ResourceLocation(RefStrings.MODID, "tileentity_block_pwr"));
 
         int i = 0;
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_nuke_mk5"), EntityNukeExplosionMK5.class, "entity_nuke_mk5", i++, MainRegistry.instance, 1000, 1, true);
@@ -791,6 +793,24 @@ public class MainRegistry {
         OreDictManager.registerOres();
         Fluids.initForgeFluidCompat();
         PacketThreading.init();
+        IMCHandler.init();
+    }
+
+    @EventHandler //Apparently this is "legacy", well I am not making my own protocol
+    public static void initIMC(FMLInterModComms.IMCEvent event) {
+
+        ImmutableList<FMLInterModComms.IMCMessage> inbox = event.getMessages();
+
+        for(FMLInterModComms.IMCMessage message : inbox) {
+            IMCHandler handler = IMCHandler.getHandler(message.key);
+
+            if(handler != null) {
+                MainRegistry.logger.info("Received IMC of type >" + message.key + "< from " + message.getSender() + "!");
+                handler.process(message);
+            } else {
+                MainRegistry.logger.error("Could not process unknown IMC type \"" + message.key + "\"");
+            }
+        }
     }
 
     @EventHandler
@@ -844,7 +864,7 @@ public class MainRegistry {
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_gneiss.getDefaultState(), 0.01D, 5, 8, 30)); //DecorateBiomeEvent.Pre
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.HEMATITE.ordinal()), 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
 
-        NTMCraftTweaker.applyPostInitActions();
+//        NTMCraftTweaker.applyPostInitActions();
         AssemblerRecipes.generateList();
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();
@@ -867,6 +887,7 @@ public class MainRegistry {
     }
 
 
+    @Spaghetti("USE FUCKING INTERFACES")
     private void registerDispenserBehaviors() {
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ModItems.grenade_generic, new BehaviorProjectileDispense() {
             @Override

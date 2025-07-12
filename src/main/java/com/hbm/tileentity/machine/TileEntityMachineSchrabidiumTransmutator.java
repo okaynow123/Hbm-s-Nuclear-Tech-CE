@@ -1,9 +1,10 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
-import com.hbm.capability.NTMBatteryCapabilityHandler;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.inventory.NuclearTransmutationRecipes;
+import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
+import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemCapacitor;
 import com.hbm.lib.ForgeDirection;
@@ -11,18 +12,26 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power = 0;
 	public int process = 0;
@@ -56,7 +65,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				return true;
 			break;
 		case 3:
-			if(NTMBatteryCapabilityHandler.isBattery(stack))
+			if(Library.isItemBattery(stack))
 				return true;
 			break;
 		}
@@ -79,7 +88,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 		}
 
 		if(i == 3) {
-			return NTMBatteryCapabilityHandler.isEmptyBattery(stack);
+			return Library.isItemEmptyBattery(stack);
 		}
 
 		return false;
@@ -112,11 +121,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				process = 0;
 			}
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setLong("power", power);
-			data.setInteger("progress", process);
-			this.networkPack(data, 50);
-			
+			networkPackNT(50);
 			detectAndSendChanges();
 		} else {
 			if(process > 0) {
@@ -151,11 +156,17 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 			audio = null;
     	}
 	}
-	
+
 	@Override
-	public void networkUnpack(NBTTagCompound data) {
-		this.power = data.getLong("power");
-		this.process = data.getInteger("progress");
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		buf.writeInt(process);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		this.power = buf.readLong();
+		this.process = buf.readInt();
 	}
 	
 	private long detectPower;
@@ -271,5 +282,16 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMachineSchrabidiumTransmutator(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMachineSchrabidiumTransmutator(player.inventory, this);
 	}
 }

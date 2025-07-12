@@ -1,24 +1,30 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.BlockHadronCoil;
 import com.hbm.blocks.machine.BlockHadronPlating;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.HadronRecipes;
+import com.hbm.inventory.container.ContainerHadron;
+import com.hbm.inventory.gui.GUIHadron;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
 import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.machine.TileEntityHadronDiode.DiodeConfig;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +35,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,7 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityHadron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityHadron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;
 	public static final long maxPower = 10000000;
@@ -117,23 +126,9 @@ public class TileEntityHadron extends TileEntityMachineBase implements ITickable
 				particles.remove(p);
 			}
 			particlesToRemove.clear();
-			
-			NBTTagCompound data = new NBTTagCompound();
-			data.setBoolean("isOn", isOn);
-			data.setLong("power", power);
-			data.setBoolean("analysis", analysisOnly);
-			data.setBoolean("hopperMode", hopperMode);
-			data.setByte("state", (byte) state.ordinal());
 
-			data.setBoolean("stat_success", stat_success);
-			data.setByte("stat_state", (byte) stat_state.ordinal());
-			data.setInteger("stat_charge", stat_charge);
-			data.setInteger("stat_x", stat_x);
-			data.setInteger("stat_y", stat_y);
-			data.setInteger("stat_z", stat_z);
-			this.networkPack(data, 50);
+			networkPackNT(50);
 		}
-		
 	}
 	
 	private void process(Particle p) {
@@ -175,21 +170,37 @@ public class TileEntityHadron extends TileEntityMachineBase implements ITickable
 		this.state = EnumHadronState.SUCCESS;
 		this.setStats(this.state, p.momentum, true);
 	}
-	
-	@Override
-	public void networkUnpack(NBTTagCompound data) {
-		this.isOn = data.getBoolean("isOn");
-		this.power = data.getLong("power");
-		this.analysisOnly = data.getBoolean("analysis");
-		this.hopperMode = data.getBoolean("hopperMode");
-		this.state = EnumHadronState.values()[data.getByte("state")];
 
-		this.stat_success = data.getBoolean("stat_success");
-		this.stat_state = EnumHadronState.values()[data.getByte("stat_state")];
-		this.stat_charge = data.getInteger("stat_charge");
-		this.stat_x = data.getInteger("stat_x");
-		this.stat_y = data.getInteger("stat_y");
-		this.stat_z = data.getInteger("stat_z");
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeBoolean(isOn);
+		buf.writeLong(power);
+		buf.writeBoolean(analysisOnly);
+		buf.writeBoolean(hopperMode);
+		buf.writeByte(state.ordinal());
+
+		buf.writeBoolean(stat_success);
+		buf.writeByte(stat_state.ordinal());
+		buf.writeInt(stat_charge);
+		buf.writeInt(stat_x);
+		buf.writeInt(stat_y);
+		buf.writeInt(stat_z);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		this.isOn = buf.readBoolean();
+		this.power = buf.readLong();
+		this.analysisOnly = buf.readBoolean();
+		this.hopperMode = buf.readBoolean();
+		this.state = EnumHadronState.values()[buf.readByte()];
+
+		this.stat_success = buf.readBoolean();
+		this.stat_state = EnumHadronState.values()[buf.readByte()];
+		this.stat_charge = buf.readInt();
+		this.stat_x = buf.readInt();
+		this.stat_y = buf.readInt();
+		this.stat_z = buf.readInt();
 	}
 	
 	@Override
@@ -761,5 +772,15 @@ public class TileEntityHadron extends TileEntityMachineBase implements ITickable
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerHadron(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIHadron(player.inventory, this);
 	}
 }

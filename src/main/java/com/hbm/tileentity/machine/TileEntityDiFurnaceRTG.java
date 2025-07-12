@@ -2,17 +2,26 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineDiFurnaceRTG;
 import com.hbm.inventory.DiFurnaceRecipes;
+import com.hbm.inventory.container.ContainerDiFurnaceRTG;
+import com.hbm.inventory.gui.GUIDiFurnaceRTG;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.RTGUtil;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITickable, ICapabilityProvider {
+public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITickable, ICapabilityProvider, IGUIProvider {
 
 	public int rtgPower;
 	public static final int maxRTGPower = 6000;
@@ -67,17 +76,20 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
 				MachineDiFurnaceRTG.updateBlockState(trigger, this.world, pos);
 			lastTrigger = trigger;
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setShort("progress", progress);
-			data.setInteger("rtgPower", rtgPower);
-			networkPack(data, 10);
+			networkPackNT(10);
 		}
 	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound nbt) {
-		progress = nbt.getShort("progress");
-		rtgPower = nbt.getShort("rtgPower");
+	public void serialize(ByteBuf buf) {
+		buf.writeShort(progress);
+		buf.writeInt(rtgPower);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		progress = buf.readShort();
+		rtgPower = buf.readInt();
 	}
 	
 	@Override
@@ -192,5 +204,16 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
 	
 	public boolean isProcessing() {
 		return this.progress > 0;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerDiFurnaceRTG(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIDiFurnaceRTG(player.inventory, this);
 	}
 }

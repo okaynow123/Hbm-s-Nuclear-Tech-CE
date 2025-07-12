@@ -1,10 +1,9 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyProviderMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.api.energymk2.IEnergyProviderMK2;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.UpgradeManager;
@@ -22,6 +21,7 @@ import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,7 +44,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -299,14 +298,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 				this.power = this.maxPower;
 			}
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setLong("power", power);
-			data.setByte("after", (byte) afterburner);
-			data.setBoolean("wasOn", wasOn);
-			data.setBoolean("showBlood", showBlood);
-			tank.writeToNBT(data, "tank");
-			blood.writeToNBT(data, "blood");
-			this.networkPack(data, 150);
+			networkPackNT(150);
 
 		} else {
 
@@ -400,15 +392,25 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		}
 	}
 
-	public void networkUnpack(NBTTagCompound nbt) {
-		super.networkUnpack(nbt);
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		buf.writeByte(afterburner);
+		buf.writeBoolean(wasOn);
+		buf.writeBoolean(showBlood);
+		tank.serialize(buf);
+		blood.serialize(buf);
+	}
 
-		this.power = nbt.getLong("power");
-		this.afterburner = nbt.getByte("after");
-		this.wasOn = nbt.getBoolean("wasOn");
-		this.showBlood = nbt.getBoolean("showBlood");
-		tank.readFromNBT(nbt, "tank");
-		blood.readFromNBT(nbt, "blood");
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.power = buf.readLong();
+		this.afterburner = buf.readByte();
+		this.wasOn = buf.readBoolean();
+		this.showBlood = buf.readBoolean();
+		tank.deserialize(buf);
+		blood.deserialize(buf);
 	}
 
 	public AudioWrapper createAudioLoop() {

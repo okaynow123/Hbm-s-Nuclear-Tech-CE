@@ -1,23 +1,31 @@
 package com.hbm.tileentity.bomb;
 
-import api.hbm.energymk2.IBatteryItem;
+import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
+import com.hbm.inventory.container.ContainerNukeBalefire;
+import com.hbm.inventory.gui.GUINukeBalefire;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITickable {
+public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	public boolean loaded;
 	public boolean started;
@@ -52,11 +60,7 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 				explode();
 			}
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setInteger("timer", timer);
-			data.setBoolean("loaded", this.isLoaded());
-			data.setBoolean("started", started);
-			networkPack(data, 250);
+			networkPackNT(250);
 		}
 	}
 	
@@ -70,12 +74,19 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 		if(meta == 1)
 			timer = value * 20;
 	}
-	
+
 	@Override
-	public void networkUnpack(NBTTagCompound data) {
-		timer = data.getInteger("timer");
-		started = data.getBoolean("started");
-		loaded = data.getBoolean("loaded");
+	public void serialize(ByteBuf buf) {
+		buf.writeInt(timer);
+		buf.writeBoolean(this.isLoaded());
+		buf.writeBoolean(started);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		timer = buf.readInt();
+		started = buf.readBoolean();
+		loaded = buf.readBoolean();
 	}
 	
 	public boolean isLoaded() {
@@ -172,5 +183,16 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	public double getMaxRenderDistanceSquared()
 	{
 		return 65536.0D;
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerNukeBalefire(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUINukeBalefire(player.inventory, this);
 	}
 }

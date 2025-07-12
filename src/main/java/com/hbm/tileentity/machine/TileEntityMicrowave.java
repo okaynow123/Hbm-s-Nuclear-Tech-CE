@@ -1,10 +1,17 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.inventory.container.ContainerMicrowave;
+import com.hbm.inventory.gui.GUIMicrowave;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,13 +19,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityMicrowave extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityMicrowave extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;
 	public static final long maxPower = 50000;
@@ -64,19 +72,22 @@ public class TileEntityMicrowave extends TileEntityMachineBase implements ITicka
 				}
 			}
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setLong("power", power);
-			data.setInteger("time", time);
-			data.setInteger("speed", speed);
-			networkPack(data, 50);
+			networkPackNT(50);
 		}
 	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound data) {
-		power = data.getLong("power");
-		time = data.getInteger("time");
-		speed = data.getInteger("speed");
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		buf.writeInt(time);
+		buf.writeInt(speed);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		power = buf.readLong();
+		time = buf.readInt();
+		speed = buf.readInt();
 	}
 	
 	@Override
@@ -217,5 +228,15 @@ public class TileEntityMicrowave extends TileEntityMachineBase implements ITicka
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerMicrowave(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIMicrowave(player.inventory, this);
 	}
 }

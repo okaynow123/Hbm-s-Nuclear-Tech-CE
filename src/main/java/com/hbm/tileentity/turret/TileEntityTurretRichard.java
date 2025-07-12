@@ -3,17 +3,27 @@ package com.hbm.tileentity.turret;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.inventory.container.ContainerTurretBase;
+import com.hbm.inventory.gui.GUITurretRichard;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.tileentity.IGUIProvider;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
+public class TileEntityTurretRichard extends TileEntityTurretBaseNT implements IGUIProvider {
 
 	static List<Integer> configs = new ArrayList<>();
 
@@ -96,10 +106,8 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 			if(this.getFirstConfigLoaded() == null) {
 				this.loaded = 0;
 			}
-			
-			NBTTagCompound data = new NBTTagCompound();
-			data.setInteger("loaded", this.loaded);
-			this.networkPack(data, 250);
+
+			networkPackNT(250);
 		}
 	}
 
@@ -130,11 +138,15 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound nbt){
-		if(nbt.hasKey("loaded"))
-			this.loaded = nbt.getInteger("loaded");
-		else
-			super.networkUnpack(nbt);
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeInt(this.loaded);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.loaded = buf.readInt();
 	}
 
 	@Override
@@ -161,6 +173,17 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT {
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		nbt.setInteger("loaded", this.loaded);
 		return super.writeToNBT(nbt);
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerTurretBase(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUITurretRichard(player.inventory, this);
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine.oil;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -21,6 +21,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.Tuple;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -84,19 +85,23 @@ public class TileEntityMachineCatalyticReformer extends TileEntityMachineBase im
                 }
             }
 
-            NBTTagCompound data = new NBTTagCompound();
-            data.setLong("power", this.power);
-            for(int i = 0; i < 4; i++) tanks[i].writeToNBT(data, "" + i);
-            this.networkPack(data, 150);
+            networkPackNT(150);
         }
     }
 
     @Override
-    public void networkUnpack(NBTTagCompound nbt) {
-        super.networkUnpack(nbt);
+    public void serialize(ByteBuf buf) {
+        buf.writeLong(this.power);
+        for(int i = 0; i < 4; i++)
+            tanks[i].serialize(buf);
+    }
 
-        this.power = nbt.getLong("power");
-        for(int i = 0; i < 4; i++) tanks[i].readFromNBT(nbt, "" + i);
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+        this.power = buf.readLong();
+        for(int i = 0; i < 4; i++)
+            tanks[i].deserialize(buf);
     }
 
     private void reform() {

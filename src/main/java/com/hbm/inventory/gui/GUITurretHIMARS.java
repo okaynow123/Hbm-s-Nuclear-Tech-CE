@@ -6,9 +6,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.turret.TileEntityTurretBaseNT;
 import com.hbm.tileentity.turret.TileEntityTurretHIMARS;
 import com.hbm.util.I18nUtil;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -54,7 +52,7 @@ public class GUITurretHIMARS extends GUITurretBase {
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    super.drawDefaultBackground();
+    super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
     TileEntityTurretHIMARS.FiringMode mode = ((TileEntityTurretHIMARS) turret).mode;
     if (mode == TileEntityTurretHIMARS.FiringMode.MANUAL)

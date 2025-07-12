@@ -1,22 +1,31 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.inventory.container.ContainerTurretBase;
+import com.hbm.inventory.gui.GUITurretMaxwell;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.EntityDamageUtil;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT {
+public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements IGUIProvider {
 
 	@Override
 	public String getName() {
@@ -168,19 +177,32 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT {
 			}
 			
 			this.power -= demand;
-			
-			NBTTagCompound data = new NBTTagCompound();
-			data.setBoolean("shot", true);
-			this.networkPack(data, 250);
+
+			networkPackNT(250);
 		}
 	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound nbt) {
-		
-		if(nbt.hasKey("shot"))
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeBoolean(true);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		if(buf.readBoolean())
 			beam = 5;
-		else
-			super.networkUnpack(nbt);
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerTurretBase(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUITurretMaxwell(player.inventory, this);
 	}
 }

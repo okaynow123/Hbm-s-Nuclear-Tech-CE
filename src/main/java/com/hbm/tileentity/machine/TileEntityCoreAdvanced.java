@@ -1,14 +1,20 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.inventory.container.ContainerCoreAdvanced;
+import com.hbm.inventory.gui.GUICoreAdvanced;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.INBTPacketReceiver;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,11 +24,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityCoreAdvanced extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, INBTPacketReceiver {
+public class TileEntityCoreAdvanced extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public int progress = 0;
 	public int progressStep = 1;
@@ -152,12 +160,8 @@ public class TileEntityCoreAdvanced extends TileEntityMachineBase implements ITi
 							inventory.setStackInSlot(slot, ItemStack.EMPTY);
 							return;
 						} else {
-							
-							if(k < 0) {
-								inventory.getStackInSlot(j).grow(k);
-								inventory.getStackInSlot(26).shrink(k);
-								continue;
-							}
+							inventory.getStackInSlot(j).grow(k);
+							inventory.getStackInSlot(26).shrink(k);
 						}
 					}
 				}
@@ -211,19 +215,22 @@ public class TileEntityCoreAdvanced extends TileEntityMachineBase implements ITi
 			moveToOuput(25);
 			moveToOuput(26);
 
-			NBTTagCompound data = new NBTTagCompound();
-			data.setInteger("cookTime", progress);
-			data.setInteger("speed", progressStep);
-			data.setLong("power", power);
-			this.networkPack(data, 250);
+			this.networkPackNT(250);
 		}
 	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound nbt) {
-		this.progress = nbt.getInteger("cookTime");
-		this.progressStep = nbt.getInteger("speed");
-		this.power = nbt.getLong("power");
+	public void serialize(ByteBuf buf) {
+		buf.writeInt(progress);
+		buf.writeInt(progressStep);
+		buf.writeLong(power);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		this.progress = buf.readInt();
+		this.progressStep = buf.readInt();
+		this.power = buf.readLong();
 	}
 
 	public boolean isStructureValid(World world) {
@@ -334,5 +341,16 @@ public class TileEntityCoreAdvanced extends TileEntityMachineBase implements ITi
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerCoreAdvanced(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUICoreAdvanced(player.inventory, this);
 	}
 }

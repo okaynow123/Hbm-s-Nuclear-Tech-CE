@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine.oil;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.inventory.RefineryRecipes;
@@ -22,6 +22,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.Tuple;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -93,11 +94,7 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
                 }
             }
 
-            NBTTagCompound data = new NBTTagCompound();
-            data.setLong("power", this.power);
-            data.setBoolean("isOn", this.isOn);
-            for(int i = 0; i < 5; i++) tanks[i].writeToNBT(data, "" + i);
-            this.networkPack(data, 150);
+            networkPackNT(150);
         } else {
 
             if(this.isOn) audioTime = 20;
@@ -152,12 +149,21 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     }
 
     @Override
-    public void networkUnpack(NBTTagCompound nbt) {
-        super.networkUnpack(nbt);
+    public void serialize(ByteBuf buf) {
+        buf.writeLong(this.power);
+        buf.writeBoolean(this.isOn);
 
-        this.power = nbt.getLong("power");
-        this.isOn = nbt.getBoolean("isOn");
-        for(int i = 0; i < 5; i++) tanks[i].readFromNBT(nbt, "" + i);
+        for(int i = 0; i < 5; i++)
+            tanks[i].serialize(buf);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        this.power = buf.readLong();
+        this.isOn = buf.readBoolean();
+
+        for(int i = 0; i < 5; i++)
+            tanks[i].deserialize(buf);
     }
 
     private void refine() {

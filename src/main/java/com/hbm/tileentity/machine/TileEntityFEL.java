@@ -1,10 +1,12 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineSILEX;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.inventory.container.ContainerFEL;
+import com.hbm.inventory.gui.GUIFEL;
 import com.hbm.items.machine.ItemFELCrystal;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.ForgeDirection;
@@ -12,16 +14,22 @@ import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.BufferUtil;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +41,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityFEL extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
+public class TileEntityFEL extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 	
 	public long power;
 	public static final long maxPower = 2000000000;
@@ -229,15 +238,9 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 					}
 				}
 			}
-			
+
 			PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
-			NBTTagCompound data = new NBTTagCompound();
-			data.setLong("power", power);
-			data.setString("mode", mode.toString());
-			data.setBoolean("isOn", isOn);
-			data.setBoolean("valid", missingValidSilex);
-			data.setInteger("distance", distance);
-			this.networkPack(data, 250);
+			networkPackNT(250);
 		}
 	}
 	
@@ -250,14 +253,23 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		 
 		return false;
 	}
+	
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		BufferUtil.writeString(buf, mode.toString());
+		buf.writeBoolean(isOn);
+		buf.writeBoolean(missingValidSilex);
+		buf.writeInt(distance);
+	}
 
 	@Override
-	public void networkUnpack(NBTTagCompound nbt) {
-		this.power = nbt.getLong("power");
-		this.mode = EnumWavelengths.valueOf(nbt.getString("mode"));
-		this.isOn = nbt.getBoolean("isOn");
-		this.distance = nbt.getInteger("distance");
-		this.missingValidSilex = nbt.getBoolean("valid");
+	public void deserialize(ByteBuf buf) {
+		this.power = buf.readLong();
+		this.mode = EnumWavelengths.valueOf(BufferUtil.readString(buf));
+		this.isOn = buf.readBoolean();
+		this.distance = buf.readInt();
+		this.missingValidSilex = buf.readBoolean();
 	}
 
 	@Override
@@ -337,5 +349,15 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new ContainerFEL(player.inventory, this);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIFEL(player.inventory, this);
 	}
 }

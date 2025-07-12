@@ -1,6 +1,6 @@
 package com.hbm.items;
 
-import api.hbm.block.IToolable.ToolType;
+import com.hbm.api.block.IToolable.ToolType;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockFuel;
@@ -70,15 +70,6 @@ public class ModItems {
 	
 	public static final List<Item> ALL_ITEMS = new ArrayList<Item>();
 	
-	public static final int guiID_item_folder = 1099;
-	public static final int guiID_item_designator = 10100;
-	public static final int guiID_item_sat_interface = 10101;
-	public static final int guiID_item_bobmazon = 10103;
-	public static final int guiID_item_sat_coord = 10104;
-	public static final int guiID_item_book = 10105;
-	public static final int guiID_item_guide = 10106;
-	public static final int guiID_item_fluid_identifier = 10107;
-	
 	public static final Item redstone_sword = new RedstoneSword(ToolMaterial.STONE, "redstone_sword").setCreativeTab(CreativeTabs.COMBAT);
 	public static final Item big_sword = new BigSword(ToolMaterial.DIAMOND, "big_sword").setCreativeTab(CreativeTabs.COMBAT);
 	
@@ -107,6 +98,7 @@ public class ModItems {
 	public static final Item linker = new ItemTeleLink("linker").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item reactor_sensor = new ItemReactorSensor("reactor_sensor").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item radar_linker = new ItemRadarLinker("radar_linker").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item pollution_detector = new ItemPollutionDetector("pollution_detector").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item ore_density_scanner = new ItemOreDensityScanner("ore_density_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 
 	//Syringe
@@ -254,30 +246,30 @@ public class ModItems {
 	public static final Item meteor_charm = new ItemModCharm("meteor_charm").setCreativeTab(MainRegistry.consumableTab);
 		
 	//Stamps
-	public static final Item stamp_stone_flat = new ItemStamp("stamp_stone_flat", 16);
-	public static final Item stamp_stone_plate = new ItemStamp("stamp_stone_plate", 16);
-	public static final Item stamp_stone_wire = new ItemStamp("stamp_stone_wire", 16);
-	public static final Item stamp_stone_circuit = new ItemStamp("stamp_stone_circuit", 16);
+	public static final Item stamp_stone_flat = new ItemStamp("stamp_stone_flat", 32);
+	public static final Item stamp_stone_plate = new ItemStamp("stamp_stone_plate", 32);
+	public static final Item stamp_stone_wire = new ItemStamp("stamp_stone_wire", 32);
+	public static final Item stamp_stone_circuit = new ItemStamp("stamp_stone_circuit", 32);
 	public static final Item stamp_iron_flat = new ItemStamp("stamp_iron_flat", 64);
 	public static final Item stamp_iron_plate = new ItemStamp("stamp_iron_plate", 64);
 	public static final Item stamp_iron_wire = new ItemStamp("stamp_iron_wire", 64);
-	public static final Item stamp_iron_circuit = new ItemStamp("stamp_iron_circuit", 128);
-	public static final Item stamp_steel_flat = new ItemStamp("stamp_steel_flat", 128);
-	public static final Item stamp_steel_plate = new ItemStamp("stamp_steel_plate", 128);
-	public static final Item stamp_steel_wire = new ItemStamp("stamp_steel_wire", 128);
-	public static final Item stamp_steel_circuit = new ItemStamp("stamp_steel_circuit", 128);
-	public static final Item stamp_titanium_flat = new ItemStamp("stamp_titanium_flat", 96);
-	public static final Item stamp_titanium_plate = new ItemStamp("stamp_titanium_plate", 96);
-	public static final Item stamp_titanium_wire = new ItemStamp("stamp_titanium_wire", 96);
-	public static final Item stamp_titanium_circuit = new ItemStamp("stamp_titanium_circuit", 96);
-	public static final Item stamp_obsidian_flat = new ItemStamp("stamp_obsidian_flat", 128);
-	public static final Item stamp_obsidian_plate = new ItemStamp("stamp_obsidian_plate", 128);
-	public static final Item stamp_obsidian_wire = new ItemStamp("stamp_obsidian_wire", 128);
-	public static final Item stamp_obsidian_circuit = new ItemStamp("stamp_obsidian_circuit", 128);
-	public static final Item stamp_schrabidium_flat = new ItemStamp("stamp_schrabidium_flat", 4096);
-	public static final Item stamp_schrabidium_plate = new ItemStamp("stamp_schrabidium_plate", 4096);
-	public static final Item stamp_schrabidium_wire = new ItemStamp("stamp_schrabidium_wire", 4096);
-	public static final Item stamp_schrabidium_circuit = new ItemStamp("stamp_schrabidium_circuit", 4096);
+	public static final Item stamp_iron_circuit = new ItemStamp("stamp_iron_circuit", 64);
+	public static final Item stamp_steel_flat = new ItemStamp("stamp_steel_flat", 192);
+	public static final Item stamp_steel_plate = new ItemStamp("stamp_steel_plate", 192);
+	public static final Item stamp_steel_wire = new ItemStamp("stamp_steel_wire", 192);
+	public static final Item stamp_steel_circuit = new ItemStamp("stamp_steel_circuit", 192);
+	public static final Item stamp_titanium_flat = new ItemStamp("stamp_titanium_flat", 256);
+	public static final Item stamp_titanium_plate = new ItemStamp("stamp_titanium_plate", 256);
+	public static final Item stamp_titanium_wire = new ItemStamp("stamp_titanium_wire", 256);
+	public static final Item stamp_titanium_circuit = new ItemStamp("stamp_titanium_circuit", 256);
+	public static final Item stamp_obsidian_flat = new ItemStamp("stamp_obsidian_flat", 512);
+	public static final Item stamp_obsidian_plate = new ItemStamp("stamp_obsidian_plate", 512);
+	public static final Item stamp_obsidian_wire = new ItemStamp("stamp_obsidian_wire", 512);
+	public static final Item stamp_obsidian_circuit = new ItemStamp("stamp_obsidian_circuit", 512);
+//	public static final Item stamp_schrabidium_flat = new ItemStamp("stamp_schrabidium_flat", 4096);
+//	public static final Item stamp_schrabidium_plate = new ItemStamp("stamp_schrabidium_plate", 4096);
+//	public static final Item stamp_schrabidium_wire = new ItemStamp("stamp_schrabidium_wire", 4096);
+//	public static final Item stamp_schrabidium_circuit = new ItemStamp("stamp_schrabidium_circuit", 4096);
 	public static final Item stamp_desh_flat = new ItemStamp("stamp_desh_flat", 0);
 	public static final Item stamp_desh_plate = new ItemStamp("stamp_desh_plate", 0);
 	public static final Item stamp_desh_wire = new ItemStamp("stamp_desh_wire", 0);
@@ -286,11 +278,12 @@ public class ModItems {
 	public static final Item stamp_desh_44 = new ItemStamp("stamp_desh_44", 0);
 	public static final Item stamp_desh_9 = new ItemStamp("stamp_desh_9", 0);
 	public static final Item stamp_desh_50 = new ItemStamp("stamp_desh_50", 0);
-	public static final Item stamp_357 = new ItemStamp("stamp_357", 512);
-	public static final Item stamp_44 = new ItemStamp("stamp_44", 512);
-	public static final Item stamp_9 = new ItemStamp("stamp_9", 512);
-	public static final Item stamp_50 = new ItemStamp("stamp_50", 512);
-	
+	public static final Item stamp_357 = new ItemStamp("stamp_357", 1000);
+	public static final Item stamp_44 = new ItemStamp("stamp_44", 1000);
+	public static final Item stamp_9 = new ItemStamp("stamp_9", 1000);
+	public static final Item stamp_50 = new ItemStamp("stamp_50", 1000);
+	// TODO: Port ItemStampBook
+
 	public static final Item blades_aluminum = new ItemBlades("blades_aluminum", 24);
 	public static final Item blades_gold = new ItemBlades("blades_gold", 32);
 	public static final Item blades_iron = new ItemBlades("blades_iron", 64);
@@ -1216,7 +1209,7 @@ public class ModItems {
 	public static final Item powder_fire = new ItemFuel("powder_fire", 6400).setCreativeTab(MainRegistry.partsTab);
 	public static final Item powder_meteorite = new ItemBase("powder_meteorite").setCreativeTab(MainRegistry.partsTab);
 	public static final Item powder_meteorite_tiny = new ItemBase("powder_meteorite_tiny").setCreativeTab(MainRegistry.partsTab);
-	public static final Item powder_flux = new ItemBase("powder_flux").setCreativeTab(MainRegistry.partsTab);
+	public static final Item powder_flux =  new ItemBakedBase("poweder_flux").setCreativeTab(MainRegistry.partsTab);
 
 	//Osmiridium
 	public static final Item powder_tektite = new ItemCustomLore("powder_tektite").setCreativeTab(MainRegistry.partsTab);
@@ -2069,7 +2062,11 @@ public class ModItems {
 	
 	//Templates
 	public static final Item template_folder = new ItemTemplateFolder("template_folder").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
-	
+	// TODO: implment this
+	public static final Item journal_pip = new ItemTemplateFolder("journal_pip").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
+	public static final Item journal_bj = new ItemTemplateFolder("journal_bj").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
+	public static final Item journal_silver = new ItemTemplateFolder("journal_silver").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
+
 	public static final Item bobmazon_materials = new ItemCatalog("bobmazon_materials").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item bobmazon_machines = new ItemCatalog("bobmazon_machines").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
 	public static final Item bobmazon_weapons = new ItemCatalog("bobmazon_weapons").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
@@ -2157,24 +2154,24 @@ public class ModItems {
 	public static final Item sawblade = new ItemBase("sawblade").setCreativeTab(MainRegistry.partsTab);
 	public static final Item gear_large = new ItemGear("gear_large").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crt_display = new ItemBase("crt_display").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_raw = new ItemBase("circuit_raw").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_aluminium = new ItemBase("circuit_aluminium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_copper = new ItemBase("circuit_copper").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_red_copper = new ItemBase("circuit_red_copper").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_gold = new ItemBase("circuit_gold").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_schrabidium = new ItemCustomLore("circuit_schrabidium").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_bismuth_raw = new ItemBase("circuit_bismuth_raw").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_bismuth = new ItemCustomLore("circuit_bismuth").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_arsenic_raw = new ItemBase("circuit_arsenic_raw").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_arsenic = new ItemCustomLore("circuit_arsenic").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_tantalium_raw = new ItemBase("circuit_tantalium_raw").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_tantalium = new ItemCustomLore("circuit_tantalium").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier1 = new ItemBase("circuit_targeting_tier1").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier2 = new ItemBase("circuit_targeting_tier2").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier3 = new ItemBase("circuit_targeting_tier3").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier4 = new ItemBase("circuit_targeting_tier4").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier5 = new ItemBase("circuit_targeting_tier5").setCreativeTab(MainRegistry.partsTab);
-	public static final Item circuit_targeting_tier6 = new ItemBase("circuit_targeting_tier6").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_raw = new ItemBase("circuit_raw").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_aluminium = new ItemBase("circuit_aluminium").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_copper = new ItemBase("circuit_copper").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_red_copper = new ItemBase("circuit_red_copper").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_gold = new ItemBase("circuit_gold").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_schrabidium = new ItemCustomLore("circuit_schrabidium").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_bismuth_raw = new ItemBase("circuit_bismuth_raw").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_bismuth = new ItemCustomLore("circuit_bismuth").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_arsenic_raw = new ItemBase("circuit_arsenic_raw").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_arsenic = new ItemCustomLore("circuit_arsenic").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_tantalium_raw = new ItemBase("circuit_tantalium_raw").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_tantalium = new ItemCustomLore("circuit_tantalium").setRarity(EnumRarity.UNCOMMON).setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier1 = new ItemBase("circuit_targeting_tier1").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier2 = new ItemBase("circuit_targeting_tier2").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier3 = new ItemBase("circuit_targeting_tier3").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier4 = new ItemBase("circuit_targeting_tier4").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier5 = new ItemBase("circuit_targeting_tier5").setCreativeTab(MainRegistry.partsTab);
+//	public static final Item circuit_targeting_tier6 = new ItemBase("circuit_targeting_tier6").setCreativeTab(MainRegistry.partsTab);
 	public static final Item mechanism_revolver_1 = new ItemBase("mechanism_revolver_1").setCreativeTab(MainRegistry.partsTab);
 	public static final Item mechanism_revolver_2 = new ItemBase("mechanism_revolver_2").setCreativeTab(MainRegistry.partsTab);
 	public static final Item mechanism_rifle_1 = new ItemBase("mechanism_rifle_1").setCreativeTab(MainRegistry.partsTab);
@@ -2205,7 +2202,7 @@ public class ModItems {
 	public static final Item coil_copper = new ItemBase("coil_copper").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_copper_torus = new ItemBase("coil_copper_torus").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_magnetized_tungsten = new ItemCustomLore("coil_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
-	
+
 	//Gun ammo assemblies and ammo
 	public static final Item assembly_iron = new ItemBase("assembly_iron").setCreativeTab(MainRegistry.partsTab);
 	public static final Item assembly_steel = new ItemBase("assembly_steel").setCreativeTab(MainRegistry.partsTab);

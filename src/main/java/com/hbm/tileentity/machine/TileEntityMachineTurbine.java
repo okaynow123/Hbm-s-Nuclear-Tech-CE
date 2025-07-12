@@ -1,8 +1,7 @@
 package com.hbm.tileentity.machine;
 
-import api.hbm.energymk2.IEnergyProviderMK2;
-import api.hbm.fluid.IFluidStandardTransceiver;
-import com.hbm.capability.NTMBatteryCapabilityHandler;
+import com.hbm.api.energymk2.IEnergyProviderMK2;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
@@ -76,7 +75,7 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 				if(slot == 0)
 					return stack.getItem() == ModItems.forge_fluid_identifier;
 				if(slot == 4)
-					return NTMBatteryCapabilityHandler.isBattery(stack);
+					return Library.isItemBattery(stack);
 
 				return true;
 			}
