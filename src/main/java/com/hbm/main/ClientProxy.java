@@ -1220,6 +1220,10 @@ public class ClientProxy extends ServerProxy {
                     Minecraft.getMinecraft().effectRenderer.addEffect(flash);
                 }
             }
+            case "radiationfog" -> {
+                ParticleRadiationFog fog = new ParticleRadiationFog(world, x, y, z);
+                Minecraft.getMinecraft().effectRenderer.addEffect(fog);
+            }
             case "vanillaburst" -> {
                 double motion = data.getDouble("motion");
 
