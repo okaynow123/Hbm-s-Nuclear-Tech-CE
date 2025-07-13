@@ -2118,11 +2118,6 @@ public class CraftingManager {
 		add1To9Pair(ModItems.powder_boron, ModItems.powder_boron_tiny);
 		add1To9Pair(ModBlocks.block_graphite, ModItems.ingot_graphite);
 		add1To9Pair(ModBlocks.block_coke, ModItems.coke);
-		add1To9Pair(ModBlocks.block_lignite, ModItems.lignite);
-		add1To9Pair(ModBlocks.block_coal_infernal, ModItems.coal_infernal);
-		add1To9Pair(ModBlocks.block_solid_fuel, ModItems.solid_fuel);
-		add1To9Pair(ModBlocks.block_solid_fuel_presto, ModItems.solid_fuel_presto);
-		add1To9Pair(ModBlocks.block_solid_fuel_presto_triplet, ModItems.solid_fuel_presto_triplet);
 
 		add1To9Pair(ModItems.ingot_osmiridium, ModItems.nugget_osmiridium);
 		add1To9Pair(ModItems.ingot_radspice, ModItems.nugget_radspice);

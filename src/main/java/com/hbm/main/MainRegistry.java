@@ -39,6 +39,7 @@ import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
+import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardRegistry;
@@ -65,7 +66,9 @@ import com.hbm.tileentity.conductor.TileEntityFFFluidDuctMk2;
 import com.hbm.tileentity.deco.*;
 import com.hbm.tileentity.machine.*;
 import com.hbm.tileentity.machine.oil.*;
+import com.hbm.tileentity.machine.pile.TileEntityPileBreedingFuel;
 import com.hbm.tileentity.machine.pile.TileEntityPileFuel;
+import com.hbm.tileentity.machine.pile.TileEntityPileNeutronDetector;
 import com.hbm.tileentity.machine.pile.TileEntityPileSource;
 import com.hbm.tileentity.machine.rbmk.*;
 import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
@@ -263,6 +266,7 @@ public class MainRegistry {
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerImpact());
         MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandlerImpact());
         MinecraftForge.EVENT_BUS.register(new PollutionHandler());
+        MinecraftForge.EVENT_BUS.register(new NeutronHandler());
 
         if (event.getSide() == Side.CLIENT) {
             HbmKeybinds keyHandler = new HbmKeybinds();
@@ -547,6 +551,8 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityStorageDrum.class, new ResourceLocation(RefStrings.MODID, "tileentity_storage_drum"));
         GameRegistry.registerTileEntity(TileEntityPileFuel.class, new ResourceLocation(RefStrings.MODID, "tileentity_pile_fuel"));
         GameRegistry.registerTileEntity(TileEntityPileSource.class, new ResourceLocation(RefStrings.MODID, "tileentity_pile_source"));
+        GameRegistry.registerTileEntity(TileEntityPileBreedingFuel.class, new ResourceLocation(RefStrings.MODID, "tileentity_pile_breedingfuel"));
+        GameRegistry.registerTileEntity(TileEntityPileNeutronDetector.class, new ResourceLocation(RefStrings.MODID, "tileentity_pile_neutrondetector"));
         GameRegistry.registerTileEntity(TileEntityMachineBAT9000.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_bat9000"));
         GameRegistry.registerTileEntity(TileEntityMachineOrbus.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_orbus"));
         GameRegistry.registerTileEntity(TileEntityCondenser.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_condenser"));
