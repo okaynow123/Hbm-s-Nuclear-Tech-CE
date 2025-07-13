@@ -263,6 +263,7 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(power);
 		buf.writeLong(delta);
 		buf.writeShort(redLow);
