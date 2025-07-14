@@ -805,6 +805,47 @@ public class ItemRenderLibrary {
                 GL11.glShadeModel(GL11.GL_FLAT);
             }
         });
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_ashpit), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(0, -1, 0);
+                GL11.glScaled(3.25, 3.25, 3.25);
+            }
+            public void renderCommon() {
+                bindTexture(ResourceManager.ashpit_tex);
+                ResourceManager.heater_oven.renderPart("Main");
+                ResourceManager.heater_oven.renderPart("Door");
+            }
+        });
+        renderers.put(Item.getItemFromBlock(ModBlocks.chimney_brick), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(0, -5, 0);
+                GL11.glScaled(2.25, 2.25, 2.25);
+            }
+            public void renderCommon() {
+                GL11.glScaled(0.5, 0.5, 0.5);
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                GL11.glShadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.chimney_brick_tex);
+                ResourceManager.chimney_brick.renderAll();
+                GL11.glShadeModel(GL11.GL_FLAT);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
+        });
+        renderers.put(Item.getItemFromBlock(ModBlocks.chimney_industrial), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(0, -5, 0);
+                GL11.glScaled(2.75, 2.75, 2.75);
+            }
+            public void renderCommon() {
+                GL11.glScaled(0.25, 0.25, 0.25);
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                GL11.glShadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.chimney_industrial_tex);
+                ResourceManager.chimney_industrial.renderAll();
+                GL11.glShadeModel(GL11.GL_FLAT);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
+        });
 
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_turbofan), new ItemRenderBase() {
             public void renderInventory() {

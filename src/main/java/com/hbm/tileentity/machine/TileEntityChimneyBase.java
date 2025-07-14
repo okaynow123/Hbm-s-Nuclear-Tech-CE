@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidUser;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
@@ -13,8 +14,13 @@ import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import javax.annotation.Nullable;
 
 public abstract class TileEntityChimneyBase extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidUser {
 
@@ -123,4 +129,23 @@ public abstract class TileEntityChimneyBase extends TileEntityLoadedBase impleme
     public FluidTankNTM[] getAllTanks() {
         return new FluidTankNTM[] {};
     }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+                    new NTMFluidHandlerWrapper(getAllTanks())
+            );
+        }
+        return super.getCapability(capability, facing);
+    }
+
 }

@@ -141,7 +141,7 @@ public class BlockFluidPipeMk2 extends BlockContainer implements ILookOverlay {
 		if(!(te instanceof TileEntityPipeBaseNT duct))
 			return;
 
-		List<String> text = new ArrayList();
+		List<String> text = new ArrayList<>();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}

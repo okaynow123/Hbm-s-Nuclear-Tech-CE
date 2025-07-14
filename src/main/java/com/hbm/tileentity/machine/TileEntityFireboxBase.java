@@ -12,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
@@ -52,18 +53,30 @@ public abstract class TileEntityFireboxBase extends TileEntityMachineBase implem
 			if(burnTime <= 0) {
 				
 				for(int i = 0; i < 2; i++) {
-					if(inventory.getStackInSlot(i) != null) {
-						
-						int fuel = (int) (getModule().getBurnTime(inventory.getStackInSlot(i)) * getTimeMult());
-						
-						if(fuel > 0) {
+					if(!inventory.getStackInSlot(i).isEmpty()) {
+
+						int baseTime = getModule().getBurnTime(inventory.getStackInSlot(i));
+
+						if(baseTime > 0) {
+							int fuel = (int) (baseTime * getTimeMult());
+
+							TileEntity below = world.getTileEntity(pos.down());
+
+							if(below instanceof TileEntityAshpit) {
+								TileEntityAshpit ashpit = (TileEntityAshpit) below;
+								ItemEnums.EnumAshType type = this.getAshFromFuel(inventory.getStackInSlot(i));
+								if(type == ItemEnums.EnumAshType.WOOD) ashpit.ashLevelWood += baseTime;
+								if(type == ItemEnums.EnumAshType.COAL) ashpit.ashLevelCoal += baseTime;
+								if(type == ItemEnums.EnumAshType.MISC) ashpit.ashLevelMisc += baseTime;
+							}
+
 							this.maxBurnTime = this.burnTime = fuel;
-							this.burnHeat = getModule().getBurnHeat(getBaseHeat(),inventory.getStackInSlot(i));
-							ItemStack copy = inventory.getStackInSlot(i).copy();
+							this.burnHeat = getModule().getBurnHeat(getBaseHeat(), inventory.getStackInSlot(i));
 							inventory.getStackInSlot(i).shrink(1);
 
-							if(inventory.getStackInSlot(i).isEmpty())
-								inventory.setStackInSlot(i, copy.getItem().getContainerItem(copy));
+							if(inventory.getStackInSlot(i).getCount() == 0) {
+								inventory.setStackInSlot(i, inventory.getStackInSlot(i).getItem().getContainerItem(inventory.getStackInSlot(i)));
+							}
 
 							this.wasOn = true;
 							break;
@@ -162,6 +175,22 @@ public abstract class TileEntityFireboxBase extends TileEntityMachineBase implem
 		this.heatEnergy = buf.readInt();
 		this.playersUsing = buf.readInt();
 		this.wasOn = buf.readBoolean();
+	}
+
+	public static ItemEnums.EnumAshType getAshFromFuel(ItemStack stack) {
+
+		List<String> names = ItemStackUtil.getOreDictNames(stack);
+
+		for(String name : names) {
+			if(name.contains("Coke"))		return ItemEnums.EnumAshType.COAL;
+			if(name.contains("Coal"))		return ItemEnums.EnumAshType.COAL;
+			if(name.contains("Lignite"))	return ItemEnums.EnumAshType.COAL;
+			if(name.startsWith("log"))		return ItemEnums.EnumAshType.WOOD;
+			if(name.contains("Wood"))		return ItemEnums.EnumAshType.WOOD;
+			if(name.contains("Sapling"))	return ItemEnums.EnumAshType.WOOD;
+		}
+
+		return ItemEnums.EnumAshType.MISC;
 	}
 	
 	@Override

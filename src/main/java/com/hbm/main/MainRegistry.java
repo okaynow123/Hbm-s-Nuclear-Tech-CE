@@ -9,6 +9,7 @@ import com.hbm.blocks.generic.BlockCrate;
 import com.hbm.blocks.generic.BlockResourceStone;
 import com.hbm.blocks.machine.BlockPWR;
 import com.hbm.blocks.machine.WatzPump;
+import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.blocks.network.energy.CableDiode.TileEntityDiode;
 import com.hbm.capability.HbmCapability;
@@ -417,6 +418,8 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityMachineCatalyticCracker.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_catalytic_cracker"));
         GameRegistry.registerTileEntity(TileEntityMachineCatalyticReformer.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_catalytic_reformer"));
         GameRegistry.registerTileEntity(TileEntityMachineCoker.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_coker"));
+        GameRegistry.registerTileEntity(TileEntityChimneyBrick.class, new ResourceLocation(RefStrings.MODID, "tileentity_chimney_brick"));
+        GameRegistry.registerTileEntity(TileEntityChimneyIndustrial.class, new ResourceLocation(RefStrings.MODID, "tileentity_chimney_industrial"));
         GameRegistry.registerTileEntity(TileEntityMachineHydrotreater.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_hydrotreater"));
         GameRegistry.registerTileEntity(TileEntityMachineGasFlare.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_gas_flare"));
         GameRegistry.registerTileEntity(TileEntityMachineExcavator.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_excavator"));
@@ -427,6 +430,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityDeconRad.class, new ResourceLocation(RefStrings.MODID, "tileentity_deconrad"));
         GameRegistry.registerTileEntity(TileEntityDeconDi.class, new ResourceLocation(RefStrings.MODID, "tileentity_decondi"));
         GameRegistry.registerTileEntity(TileEntityCharger.class, new ResourceLocation(RefStrings.MODID, "tileentity_charger"));
+        GameRegistry.registerTileEntity(TileEntityAshpit.class, new ResourceLocation(RefStrings.MODID, "tileentity_ashpit"));
         GameRegistry.registerTileEntity(TileEntityVent.class, new ResourceLocation(RefStrings.MODID, "tileentity_vent"));
         GameRegistry.registerTileEntity(TileEntityChlorineSeal.class, new ResourceLocation(RefStrings.MODID, "tileentity_chlorine_seal"));
         GameRegistry.registerTileEntity(TileEntityStructureMarker.class, new ResourceLocation(RefStrings.MODID, "tileentity_structure_marker"));

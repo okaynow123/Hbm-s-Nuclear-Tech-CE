@@ -27,6 +27,12 @@ public class GUIAshpit extends GuiInfoContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.renderHoveredToolTip(mouseX, mouseY);
+    }
+
+    @Override
     public void onGuiClosed() {
         super.onGuiClosed();
         if(!firebox.getWorld().isRemote) firebox.playersUsing--;
