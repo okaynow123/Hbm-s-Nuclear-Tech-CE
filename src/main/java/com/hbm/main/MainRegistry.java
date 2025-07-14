@@ -861,8 +861,6 @@ public class MainRegistry {
         FluidCombustionRecipes.registerFluidCombustionRecipes();
         HbmDetox.init();
         NTMBatteryCapabilityHandler.initialize();
-        // Load compatibility for OC.
-        CompatHandler.init();
 
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)

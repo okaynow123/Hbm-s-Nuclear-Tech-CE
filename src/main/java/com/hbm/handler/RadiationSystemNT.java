@@ -502,7 +502,7 @@ public class RadiationSystemNT {
 
         if (e.phase == Phase.END) {
             ticks++;
-            if (ticks % 20 == 17) {
+            if (ticks % 20 == 17 && radiationFuture == null) {
                 //Every second, do a full system update, which will spread around radiation and all that
                 radiationFuture = CompletableFuture.supplyAsync(RadiationSystemNT::computeRadiationUpdates, pool);
             }
