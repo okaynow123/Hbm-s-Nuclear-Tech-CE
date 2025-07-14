@@ -2,7 +2,7 @@
 An attempt at a "definitive" port of NTM to 1.12. Came from nessesity as other developers have failed to update and maintain other forks. Heavy WIP as there is much content to port
 
 #### Discord:
-[Warfactory Offical](https://discord.gg/VqVYYWEGrE)
+[Warfactory Offical](https://discord.gg/eKFrH7P5ZR)
 
 ## Development guide.
 For development Java17/21 is used.
