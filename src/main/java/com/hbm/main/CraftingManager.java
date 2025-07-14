@@ -3214,16 +3214,16 @@ public class CraftingManager {
 
 		boolean shouldUseOD = false;
 		boolean patternEnded = false;
-		for(int i = 0; i < args.length; i++) {
-			if(args[i] instanceof String) {
-				if(patternEnded) {
-					shouldUseOD = true;
-					break;
-				}
-			} else {
-				patternEnded = true;
-			}
-		}
+        for (Object arg : args) {
+            if (arg instanceof String) {
+                if (patternEnded) {
+                    shouldUseOD = true;
+                    break;
+                }
+            } else {
+                patternEnded = true;
+            }
+        }
 
 		ResourceLocation loc = getRecipeName(output);
 		IRecipe recipe;
@@ -3240,13 +3240,13 @@ public class CraftingManager {
 	public static void addShapelessAuto(ItemStack output, Object... args) {
 
 		boolean shouldUseOD = false;
-		
-		for(int i = 0; i < args.length; i ++) {		
-			if(args[i] instanceof String) {
-				shouldUseOD = true;
-				break;
-			}
-		}
+
+        for (Object arg : args) {
+            if (arg instanceof String) {
+                shouldUseOD = true;
+                break;
+            }
+        }
 
 		ResourceLocation loc = getRecipeName(output);
 		IRecipe recipe;
