@@ -41,9 +41,4 @@ public class SoundLoopFel extends SoundLoopMachine {
 				this.donePlaying = true;
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-
 }

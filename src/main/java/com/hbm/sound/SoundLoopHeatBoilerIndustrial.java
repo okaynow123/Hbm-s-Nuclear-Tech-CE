@@ -15,8 +15,4 @@ public class SoundLoopHeatBoilerIndustrial extends SoundLoopMachine {
         list.add(this);
         this.attenuationType = ISound.AttenuationType.NONE;
     }
-
-    public TileEntity getTE() {
-        return te;
-    }
 }

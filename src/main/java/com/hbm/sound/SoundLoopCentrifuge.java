@@ -22,20 +22,18 @@ public class SoundLoopCentrifuge extends SoundLoopMachine {
 	public void update() {
 		super.update();
 		
-		if(te instanceof TileEntityMachineCentrifuge) {
-			TileEntityMachineCentrifuge plant = (TileEntityMachineCentrifuge)te;
-			
-			if(this.volume != 1)
+		if(te instanceof TileEntityMachineCentrifuge plant) {
+
+            if(this.volume != 1)
 				volume = 1;
 			
 			if(!plant.isProgressing)
 				this.donePlaying = true;
 		}
 		
-		if(te instanceof TileEntityMachineGasCent) {
-			TileEntityMachineGasCent plant = (TileEntityMachineGasCent)te;
-			
-			if(this.volume != 1)
+		if(te instanceof TileEntityMachineGasCent plant) {
+
+            if(this.volume != 1)
 				volume = 1;
 			
 			if(!plant.isProgressing)
@@ -46,9 +44,5 @@ public class SoundLoopCentrifuge extends SoundLoopMachine {
 			stop();
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-	
+
 }

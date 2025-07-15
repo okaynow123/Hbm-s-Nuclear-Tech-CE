@@ -31,9 +31,4 @@ public class SoundLoopAssembler extends SoundLoopMachine {
 				this.donePlaying = true;
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-
 }

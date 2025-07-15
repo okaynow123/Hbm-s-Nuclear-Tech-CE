@@ -14,219 +14,92 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 public class LoopedSoundPacket implements IMessage {
 
-	int x;
-	int y;
-	int z;
+    private int x;
+    private int y;
+    private int z;
 
-	public LoopedSoundPacket()
-	{
-		
-	}
+    public LoopedSoundPacket() {
+    }
 
-	public LoopedSoundPacket(BlockPos pos)
-	{
-		this.x = pos.getX();
-		this.y = pos.getY();
-		this.z = pos.getZ();
-	}
-	
-	public LoopedSoundPacket(int xPos, int yPos, int zPos){
-		x = xPos;
-		y = yPos;
-		z = zPos;
-	}
+    public LoopedSoundPacket(BlockPos pos) {
+        this(pos.getX(), pos.getY(), pos.getZ());
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		x = buf.readInt();
-		y = buf.readInt();
-		z = buf.readInt();
-	}
+    public LoopedSoundPacket(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(x);
-		buf.writeInt(y);
-		buf.writeInt(z);
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
+    }
 
-	public static class Handler implements IMessageHandler<LoopedSoundPacket, IMessage> {
-		
-		@Override
-		//Tamaized, I love you!
-		@SideOnly(Side.CLIENT)
-		public IMessage onMessage(LoopedSoundPacket m, MessageContext ctx) {
-			
-			Minecraft.getMinecraft().addScheduledTask(() -> {
-				BlockPos pos = new BlockPos(m.x, m.y, m.z);
-				TileEntity te = Minecraft.getMinecraft().world.getTileEntity(pos);
-				
-				if (te != null && te instanceof TileEntityMachineChemplant) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopChemplant.list.size(); i++)  {
-						if(SoundLoopChemplant.list.get(i).getTE() == te && !SoundLoopChemplant.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineChemplant)te).isProgressing)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, te));
-				}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
+    }
 
-				if (te != null && te instanceof TileEntityMachineChemfac) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopChemplant.list.size(); i++)  {
-						if(SoundLoopChemplant.list.get(i).getTE() == te && !SoundLoopChemplant.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineChemfac)te).isProgressing)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, te));
-				}
+    @SideOnly(Side.CLIENT)
+    public static class Handler implements IMessageHandler<LoopedSoundPacket, IMessage> {
+        private static void process(LoopedSoundPacket msg) {
+            Minecraft mc = Minecraft.getMinecraft();
+            TileEntity te = mc.world.getTileEntity(new BlockPos(msg.x, msg.y, msg.z));
+            if (te == null) return;
+            if (te instanceof TileEntityMachineChemplant plant && plant.isProgressing) {
+                playUniqueSound(plant, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, plant));
+            } else if (te instanceof TileEntityMachineChemfac fac && fac.isProgressing) {
+                playUniqueSound(fac, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, fac));
+            } else if (te instanceof TileEntityFEL fel && fel.isOn) {
+                playUniqueSound(fel, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundHandler.fel, fel));
+            } else if (te instanceof TileEntityMachineMiningLaser laser && laser.isOn) {
+                playUniqueSound(laser, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundHandler.fel, laser));
+            } else if (te instanceof TileEntityMachineAssembler assembler && assembler.isProgressing) {
+                playUniqueSound(assembler, SoundLoopAssembler.list, () -> new SoundLoopAssembler(HBMSoundHandler.assemblerOperate, assembler));
+            } else if (te instanceof TileEntityMachineTurbofan turbofan && turbofan.wasOn) {
+                playUniqueSound(turbofan, SoundLoopTurbofan.list, () -> new SoundLoopTurbofan(HBMSoundHandler.turbofanOperate, turbofan));
+            } else if (te instanceof TileEntityBroadcaster broadcaster) {
+                SoundEvent event = switch (Math.abs(te.getPos().hashCode()) % 3) {
+                    case 1 -> HBMSoundHandler.broadcast2;
+                    case 2 -> HBMSoundHandler.broadcast3;
+                    default -> HBMSoundHandler.broadcast1;
+                };
+                playUniqueSound(broadcaster, SoundLoopBroadcaster.list, () -> new SoundLoopBroadcaster(event, broadcaster));
+            } else if (te instanceof TileEntityMachineCentrifuge centrifuge && centrifuge.isProgressing) {
+                playUniqueSound(centrifuge, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, centrifuge));
+            } else if (te instanceof TileEntityMachineGasCent gasCent && gasCent.isProgressing) {
+                playUniqueSound(gasCent, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, gasCent));
+            } else if (te instanceof TileEntityHeatBoilerIndustrial boiler) {
+                SoundEvent event = switch (Math.abs(te.getPos().hashCode()) % 3) {
+                    case 1 -> HBMSoundHandler.boiler_groan2;
+                    case 2 -> HBMSoundHandler.boiler_groan3;
+                    default -> HBMSoundHandler.boiler_groan1;
+                };
+                playUniqueSound(boiler, SoundLoopHeatBoilerIndustrial.list, () -> new SoundLoopHeatBoilerIndustrial(event, boiler));
+            }
+        }
 
-				if (te != null && te instanceof TileEntityFEL) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopFel.list.size(); i++)  {
-						if(SoundLoopFel.list.get(i).getTE() == te && !SoundLoopFel.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityFEL)te).isOn)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopFel(HBMSoundHandler.fel, te));
-				}
+        private static <T extends TileEntity, L extends SoundLoopMachine> void playUniqueSound(T te, List<L> soundLoops, Supplier<L> loopFactory) {
+            boolean alreadyPlaying = soundLoops.stream().anyMatch(loop -> loop.getTE() == te && !loop.isDonePlaying());
+            if (!alreadyPlaying && te.getWorld().isRemote) {
+                Minecraft.getMinecraft().getSoundHandler().playSound(loopFactory.get());
+            }
+        }
 
-				if (te != null && te instanceof TileEntityMachineMiningLaser) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopFel.list.size(); i++)  {
-						if(SoundLoopFel.list.get(i).getTE() == te && !SoundLoopFel.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineMiningLaser)te).isOn)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopFel(HBMSoundHandler.fel, te));
-				}
-				
-				if (te != null && te instanceof TileEntityMachineAssembler) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopAssembler.list.size(); i++)  {
-						if(SoundLoopAssembler.list.get(i).getTE() == te && !SoundLoopAssembler.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineAssembler)te).isProgressing)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopAssembler(HBMSoundHandler.assemblerOperate, te));
-				}
-				
-			/*	if (te != null && te instanceof TileEntityMachineIGenerator) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopIGen.list.size(); i++)  {
-						if(SoundLoopIGen.list.get(i).getTE() == te && !SoundLoopIGen.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorldObj().isRemote && ((TileEntityMachineIGenerator)te).torque > 0)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopIGen(new ResourceLocation("hbm:block.igeneratorOperate"), te));
-				}
-				*/
-				if (te != null && te instanceof TileEntityMachineTurbofan) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopTurbofan.list.size(); i++)  {
-						if(SoundLoopTurbofan.list.get(i).getTE() == te && !SoundLoopTurbofan.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineTurbofan)te).wasOn)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopTurbofan(HBMSoundHandler.turbofanOperate, te));
-				}
-				
-				if (te != null && te instanceof TileEntityBroadcaster) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopBroadcaster.list.size(); i++)  {
-						if(SoundLoopBroadcaster.list.get(i).getTE() == te && !SoundLoopBroadcaster.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					int j = te.getPos().getX() + te.getPos().getY() + te.getPos().getZ();
-					int rand = Math.abs(j) % 3 + 1;
-					SoundEvent sound;
-					switch(rand){
-					case 1:
-						sound = HBMSoundHandler.broadcast1;
-						break;
-					case 2:
-						sound = HBMSoundHandler.broadcast2;
-						break;
-					case 3:
-						sound = HBMSoundHandler.broadcast3;
-						break;
-					default:
-						sound = HBMSoundHandler.broadcast1;
-						break;
-					}
-					
-					if(flag && te.getWorld().isRemote)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopBroadcaster(sound, te));
-				}
-				
-				if (te != null && te instanceof TileEntityMachineCentrifuge) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopCentrifuge.list.size(); i++)  {
-						if(SoundLoopCentrifuge.list.get(i).getTE() == te && !SoundLoopCentrifuge.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineCentrifuge)te).isProgressing)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, te));
-				}
-				
-				if (te != null && te instanceof TileEntityMachineGasCent) {
-					
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopCentrifuge.list.size(); i++)  {
-						if(SoundLoopCentrifuge.list.get(i).getTE() == te && !SoundLoopCentrifuge.list.get(i).isDonePlaying())
-							flag = false;
-					}
-					
-					if(flag && te.getWorld().isRemote && ((TileEntityMachineGasCent)te).isProgressing)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, te));
-				}
-
-				if (te instanceof TileEntityHeatBoilerIndustrial) {
-
-					boolean flag = true;
-					for(int i = 0; i < SoundLoopHeatBoilerIndustrial.list.size(); i++)  {
-						if(SoundLoopHeatBoilerIndustrial.list.get(i).getTE() == te && !SoundLoopHeatBoilerIndustrial.list.get(i).isDonePlaying()) {
-                            flag = false;
-                            break;
-                        }
-					}
-
-					int j = te.getPos().getX() + te.getPos().getY() + te.getPos().getZ();
-					int rand = Math.abs(j) % 3 + 1;
-					SoundEvent sound = switch (rand) {
-                        case 2 -> HBMSoundHandler.boiler_groan2;
-                        case 3 -> HBMSoundHandler.boiler_groan3;
-                        default -> HBMSoundHandler.boiler_groan1;
-                    };
-
-                    if(flag && te.getWorld().isRemote)
-						Minecraft.getMinecraft().getSoundHandler().playSound(new SoundLoopHeatBoilerIndustrial(sound, te));
-				}
-			});
-			
-			
-			return null;
-		}
-	}
+        @Override
+        public IMessage onMessage(LoopedSoundPacket msg, MessageContext ctx) {
+            Minecraft.getMinecraft().addScheduledTask(() -> process(msg));
+            return null;
+        }
+    }
 }

@@ -44,4 +44,8 @@ public class SoundLoopMachine extends PositionedSound implements ITickableSound 
 	public void stop() {
 		donePlaying = true;
 	}
+
+	public TileEntity getTE() {
+		return te;
+	}
 }

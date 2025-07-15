@@ -41,12 +41,8 @@ public class SoundLoopBroadcaster extends SoundLoopMachine {
 			volume = intendedVolume;
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-	
-	public float func(float f, float v) {
+
+    public float func(float f, float v) {
 		return (f / v) * -2 + 2;
 	}
 

@@ -41,9 +41,4 @@ public class SoundLoopChemplant extends SoundLoopMachine {
 				this.donePlaying = true;
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-
 }

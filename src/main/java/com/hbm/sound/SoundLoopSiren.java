@@ -45,12 +45,8 @@ public class SoundLoopSiren extends SoundLoopMachine {
 			this.donePlaying = true;
 		}
 	}
-	
-	public TileEntity getTE() {
-		return te;
-	}
-	
-	public void endSound() {
+
+    public void endSound() {
 		this.donePlaying = true;
 	}
 	
