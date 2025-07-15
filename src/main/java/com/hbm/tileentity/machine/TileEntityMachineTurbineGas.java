@@ -158,8 +158,8 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 			this.tryProvide(world, pos.getX() - dir.offsetZ * 5, pos.getY() + 1, pos.getZ() + dir.offsetX * 5, rot); //sends out power
 
 			//...and then cap it. Prevents potential future cases where power would be limited due to the fuel being too strong and the buffer too small.
-			if(this.power > this.maxPower)
-				this.power = this.maxPower;
+			if(this.power > maxPower)
+				this.power = maxPower;
 
 			for(int i = 0; i < 2; i++) { //fuel and lube
 				this.trySubscribe(tanks[i].getTankType(), world, pos.getX() - dir.offsetX * 2 + rot.offsetX, pos.getY(), pos.getZ() - dir.offsetZ * 2 + rot.offsetZ, dir.getOpposite());
@@ -271,7 +271,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 
 		if(counter <= 20) //rpm gauge 0-100-0
 			rpm = 5 * counter;
-		else if (counter > 20 && counter <= 40)
+		else if (counter <= 40)
 			rpm = 100 - 5 * (counter - 20);
 		else if (counter > 50) {
 			rpm = (int) (rpmIdle * (counter - 50) / 530); //slowly ramps up temp and RPM
@@ -353,7 +353,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 			}
 		}
 
-		double consumption = fuelMaxCons.containsKey(tanks[0].getTankType()) ? fuelMaxCons.get(tanks[0].getTankType()) : 5D;
+		double consumption = fuelMaxCons.getOrDefault(tanks[0].getTankType(), 5D);
 		if(world.getTotalWorldTime() % 20 == 0 && tanks[0].getTankType() != Fluids.OXYHYDROGEN) PollutionHandler.incrementPollution(world, pos, PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND * 3);
 		makePower(consumption, throttle);
 	}
