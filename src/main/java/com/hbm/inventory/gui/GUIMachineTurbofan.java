@@ -12,8 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIMachineTurbofan extends GuiInfoContainer {
 	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbofan.png");
-	private TileEntityMachineTurbofan turbofan;
+	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbofan.png");
+	private final TileEntityMachineTurbofan turbofan;
 
 	public GUIMachineTurbofan(InventoryPlayer invPlayer, TileEntityMachineTurbofan tedf) {
 		super(new ContainerMachineTurbofan(invPlayer, tedf));

@@ -45,8 +45,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IFFtoNTMF {
@@ -294,8 +294,8 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 				}
 			}
 
-			if(this.power > this.maxPower) {
-				this.power = this.maxPower;
+			if(this.power > maxPower) {
+				this.power = maxPower;
 			}
 
 			networkPackNT(150);
@@ -312,7 +312,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 					this.momentum--;
 			}
 
-			this.spin += momentum / 2;
+			this.spin += momentum / 2F;
 
 			if(this.spin >= 360) {
 				this.spin -= 360F;
@@ -329,7 +329,9 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 				}
 
 				audio.keepAlive();
-				audio.updateVolume(getVolume(momentum / 50F));
+				// mlbv: original value = momentum / 50F but this somehow made the sound range extremely short
+				// so I lowered the denominator to 10F
+				audio.updateVolume(getVolume(momentum / 10F));
 				audio.updatePitch(momentum / 200F + 0.5F + this.afterburner * 0.16F);
 
 			} else {
@@ -394,9 +396,9 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 	@Override
 	public void serialize(ByteBuf buf) {
-		super.deserialize(buf);
+		super.serialize(buf);
 		buf.writeLong(power);
-		buf.writeByte(afterburner);
+		buf.writeInt(afterburner);
 		buf.writeBoolean(wasOn);
 		buf.writeBoolean(showBlood);
 		tank.serialize(buf);
@@ -407,7 +409,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	public void deserialize(ByteBuf buf) {
 		super.deserialize(buf);
 		this.power = buf.readLong();
-		this.afterburner = buf.readByte();
+		this.afterburner = buf.readInt();
 		this.wasOn = buf.readBoolean();
 		this.showBlood = buf.readBoolean();
 		tank.deserialize(buf);
@@ -453,6 +455,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		this.power = i;
 	}
 
+	@NotNull
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return TileEntity.INFINITE_EXTENT_AABB;
