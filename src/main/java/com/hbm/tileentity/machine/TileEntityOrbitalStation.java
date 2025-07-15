@@ -286,7 +286,7 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 			}
 		}
 
-		for(int i = 0; i < tanks.length; i++) tanks[i].serialize(buf);
+        for (FluidTankNTM tank : tanks) tank.serialize(buf);
 	}
 
 	@Override
@@ -309,7 +309,7 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 			}
 		}
 
-		for(int i = 0; i < tanks.length; i++) tanks[i].deserialize(buf);
+        for (FluidTankNTM tank : tanks) tank.deserialize(buf);
 	}
 
 	@Override

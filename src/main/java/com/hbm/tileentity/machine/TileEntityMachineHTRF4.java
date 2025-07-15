@@ -245,7 +245,7 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements ITi
 		buf.writeFloat(soundtime);
 		buf.writeInt(fuelCost);
 		buf.writeLong(power);
-		for(int i = 0; i < tanks.length; i++) tanks[i].serialize(buf);
+        for (FluidTankNTM tank : tanks) tank.serialize(buf);
 	}
 	
 	@Override
@@ -255,7 +255,7 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements ITi
 		soundtime = buf.readFloat();
 		fuelCost = buf.readInt();
 		power = buf.readLong();
-		for(int i = 0; i < tanks.length; i++) tanks[i].deserialize(buf);
+        for (FluidTankNTM tank : tanks) tank.deserialize(buf);
 	}
 
 	@Override

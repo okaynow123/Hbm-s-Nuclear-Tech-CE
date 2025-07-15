@@ -281,11 +281,9 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(this.power);
-
-        for (int i = 0; i < 5; i++)
-            tanks[i].serialize(buf);
-
+        for (FluidTankNTM tank : tanks) tank.serialize(buf);
         buf.writeBoolean(hasExploded);
         buf.writeBoolean(onFire);
         buf.writeBoolean(isOn);
@@ -295,10 +293,7 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
         this.power = buf.readLong();
-
-        for (int i = 0; i < 5; i++)
-            tanks[i].deserialize(buf);
-
+        for (FluidTankNTM tank : tanks) tank.deserialize(buf);
         this.hasExploded = buf.readBoolean();
         this.onFire = buf.readBoolean();
         this.isOn = buf.readBoolean();

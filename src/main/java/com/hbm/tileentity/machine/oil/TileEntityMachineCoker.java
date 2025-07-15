@@ -174,6 +174,7 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeBoolean(this.wasOn);
         buf.writeInt(this.heat);
         buf.writeInt(this.progress);

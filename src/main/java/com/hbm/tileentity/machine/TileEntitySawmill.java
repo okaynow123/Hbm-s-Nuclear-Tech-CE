@@ -167,6 +167,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(heat);
         buf.writeInt(progress);
         buf.writeBoolean(hasBlade);
@@ -179,6 +180,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.heat = buf.readInt();
         this.progress = buf.readInt();
         this.hasBlade = buf.readBoolean();

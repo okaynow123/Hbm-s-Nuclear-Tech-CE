@@ -131,6 +131,7 @@ public class TileEntityAshpit extends TileEntityMachineBase implements ITickable
     
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(this.playersUsing);
         buf.writeBoolean(this.isFull);
     }

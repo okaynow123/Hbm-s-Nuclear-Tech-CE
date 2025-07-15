@@ -44,7 +44,7 @@ public class BlockCoalOil extends BlockOre {
 
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
-		if(player.getHeldItemMainhand() == null)
+		if(player.getHeldItemMainhand().isEmpty())
     		return;
 
     	if(!(player.getHeldItemMainhand().getItem() instanceof ItemTool || player.getHeldItemMainhand().getItem() instanceof ItemToolAbility))
@@ -52,7 +52,7 @@ public class BlockCoalOil extends BlockOre {
 
     	ItemTool tool = (ItemTool)player.getHeldItemMainhand().getItem();
 
-    	if(tool.getToolMaterialName() != ToolMaterial.WOOD.toString()) {
+    	if(!tool.getToolMaterialName().equals(ToolMaterial.WOOD.toString())) {
 
     		if(world.rand.nextInt(10) == 0)
     			world.setBlockState(pos, Blocks.FIRE.getDefaultState());

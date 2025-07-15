@@ -79,6 +79,9 @@ public final class HBMSoundHandler {
     public static SoundEvent ricochet;
     public static SoundEvent grenadeBounce;
     public static SoundEvent boiler;
+    public static SoundEvent boiler_groan1;
+    public static SoundEvent boiler_groan2;
+    public static SoundEvent boiler_groan3;
     public static SoundEvent alarmGambit;
     public static SoundEvent revolverShoot;
     public static SoundEvent heavyShoot;
@@ -299,7 +302,7 @@ public final class HBMSoundHandler {
 
     public static SoundEvent[] geigerSounds;
     public static SoundEvent[] voiceSounds;
-
+    public static SoundEvent[] boilerGroanSounds;
 
     public static void init() {
 
@@ -336,6 +339,9 @@ public final class HBMSoundHandler {
         oldExplosion = register("entity.oldExplosion");
         nuclearExplosion = register("weapon.nuclearExplosion");
         boiler = register("block.boiler");
+        boiler_groan1 = register("block.boilerGroan0");
+        boiler_groan2 = register("block.boilerGroan1");
+        boiler_groan3 = register("block.boilerGroan2");
         ciwsSpindown = register("weapon.ciwsSpindown");
         ciwsSpinup = register("weapon.ciwsSpinup");
         ciwsFiringLoop = register("weapon.ciwsFiringLoop");
@@ -554,6 +560,7 @@ public final class HBMSoundHandler {
 
         geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6, geiger7, geiger8};
         voiceSounds = new SoundEvent[]{voices1, voices2, voices3, voices4, voices5, voices6, voices7, voices8};
+        boilerGroanSounds = new SoundEvent[]{boiler_groan1, boiler_groan2, boiler_groan3};
     }
 
     public static SoundEvent register(String name) {

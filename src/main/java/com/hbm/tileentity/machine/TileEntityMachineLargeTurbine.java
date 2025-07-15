@@ -185,6 +185,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(power);
         buf.writeBoolean(shouldTurn);
     }

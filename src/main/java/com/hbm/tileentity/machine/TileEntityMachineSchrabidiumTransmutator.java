@@ -159,12 +159,14 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(power);
 		buf.writeInt(process);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
 		this.power = buf.readLong();
 		this.process = buf.readInt();
 	}

@@ -168,6 +168,7 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(this.power);
         buf.writeInt(this.progress);
         buf.writeInt(this.usage);

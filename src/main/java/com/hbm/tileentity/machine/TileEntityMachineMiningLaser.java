@@ -212,6 +212,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(power);
 		buf.writeInt(lastTargetX);
 		buf.writeInt(lastTargetY);

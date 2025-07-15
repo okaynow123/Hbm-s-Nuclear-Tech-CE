@@ -55,12 +55,14 @@ public class TileEntityHeaterRadioThermal extends TileEntityMachineBase implemen
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(this.heatGen);
         buf.writeInt(this.heatEnergy);
     }
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.heatGen = buf.readInt();
         this.heatEnergy = buf.readInt();
     }

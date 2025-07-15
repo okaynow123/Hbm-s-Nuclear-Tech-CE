@@ -78,6 +78,7 @@ public class TileEntityMicrowave extends TileEntityMachineBase implements ITicka
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(power);
 		buf.writeInt(time);
 		buf.writeInt(speed);
@@ -85,6 +86,7 @@ public class TileEntityMicrowave extends TileEntityMachineBase implements ITicka
 
 	@Override
 	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
 		power = buf.readLong();
 		time = buf.readInt();
 		speed = buf.readInt();
