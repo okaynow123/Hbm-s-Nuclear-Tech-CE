@@ -459,7 +459,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 			nbt.setInteger("rpm", 0);
 			nbt.setInteger("temperature", 20);
 			nbt.setInteger("slidPos", 0);
-			nbt.setInteger("instpwr", 0);
+			nbt.setInteger("instPwr", 0);
 			nbt.setInteger("counter", 0);
 		}
 		return nbt;
