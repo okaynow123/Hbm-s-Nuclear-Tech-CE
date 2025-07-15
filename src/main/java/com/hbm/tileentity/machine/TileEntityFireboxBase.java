@@ -2,10 +2,12 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.items.ItemEnums;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.modules.ModuleBurnTime;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.ItemStackUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public abstract class TileEntityFireboxBase extends TileEntityMachineBase implements ITickable, IGUIProvider, IHeatSource {
 
@@ -106,6 +110,22 @@ public abstract class TileEntityFireboxBase extends TileEntityMachineBase implem
 				world.spawnParticle(EnumParticleTypes.FLAME, wasOn, x + world.rand.nextDouble() * 0.5 - 0.25, y + world.rand.nextDouble() * 0.25, z + world.rand.nextDouble() * 0.5 - 0.25, 0, 0, 0);
 			}
 		}
+	}
+
+	public static ItemEnums.EnumAshType getAshFromFuel(ItemStack stack) {
+
+		List<String> names = ItemStackUtil.getOreDictNames(stack);
+
+		for(String name : names) {
+			if(name.contains("Coke"))		return ItemEnums.EnumAshType.COAL;
+			if(name.contains("Coal"))		return ItemEnums.EnumAshType.COAL;
+			if(name.contains("Lignite"))	return ItemEnums.EnumAshType.COAL;
+			if(name.startsWith("log"))		return ItemEnums.EnumAshType.WOOD;
+			if(name.contains("Wood"))		return ItemEnums.EnumAshType.WOOD;
+			if(name.contains("Sapling"))	return ItemEnums.EnumAshType.WOOD;
+		}
+
+		return ItemEnums.EnumAshType.MISC;
 	}
 
 	public abstract ModuleBurnTime getModule();

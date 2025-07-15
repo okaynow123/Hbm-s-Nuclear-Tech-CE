@@ -90,6 +90,7 @@ import com.hbm.tileentity.network.TileEntityCraneSplitter;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import com.hbm.tileentity.network.energy.TileEntityPylon;
+import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
 import com.hbm.tileentity.network.energy.TileEntityPylonLarge;
 import com.hbm.tileentity.network.energy.TileEntitySubstation;
 import com.hbm.tileentity.turret.*;
@@ -240,6 +241,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaunchPadLarge.class, new RenderLaunchPadLarge());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineEPress.class, new RenderEPress());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylon.class, new RenderPylon());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylonMedium.class, new RenderPylonMedium());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPylonLarge.class, new RenderPylonLarge());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySubstation.class, new RenderSubstation());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineCentrifuge.class, new RenderCentrifuge());
@@ -291,6 +293,8 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineSatDock.class, new RenderSatDock());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySawmill.class, new RenderSawmill());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStirling.class, new RenderStirling());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineWoodBurner.class, new RenderWoodBurner());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineTurbineGas.class, new RenderTurbineGas());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrucible.class, new RenderCrucible());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReactorResearch.class, new RenderSmallReactor());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineArcWelder.class, new RenderArcWelder());

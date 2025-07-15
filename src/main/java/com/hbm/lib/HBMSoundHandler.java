@@ -245,6 +245,9 @@ public final class HBMSoundHandler {
     public static SoundEvent crateClose;
     public static SoundEvent storageOpen;
     public static SoundEvent storageClose;
+    public static SoundEvent turbinegasRunning;
+    public static SoundEvent turbinegasShutdown;
+    public static SoundEvent turbinegasStartup;
     public static SoundEvent dflash;
     public static SoundEvent cough;
     public static SoundEvent ufoBeam;
@@ -534,6 +537,9 @@ public final class HBMSoundHandler {
         crateClose = register("block.crateClose");
         storageOpen = register("block.storageOpen");
         storageClose = register("block.storageClose");
+        turbinegasRunning = register("block.turbinegasRunning");
+        turbinegasShutdown = register("block.turbinegasShutdown");
+        turbinegasStartup = register("block.turbinegasStartup");
         chungus_lever = register("block.chungusLever");
         chungusOperate = register("block.chungusTurbineRunning");
         dflash = register("weapon.dFlash");

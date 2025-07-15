@@ -244,6 +244,7 @@ public class ResourceManager {
 
 	//Big Cables
 	public static final IModelCustom pylon_large = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_large.obj")).asVBO();
+	public static final IModelCustom pylon_medium = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_medium.obj")).asVBO();
 	public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/substation.obj")).asVBO();
 
 	//Pipe
@@ -393,7 +394,14 @@ public class ResourceManager {
 	public static final IModelCustom heat_boiler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/boiler.obj")).asVBO();
 	//Heat-Based Machines
 	public static final IModelCustom stirling = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/stirling.obj")).asVBO();
-	
+
+	//Wood Burner gen
+	public static final IModelCustom wood_burner = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/wood_burner.obj")).asVBO();
+
+	//Not wood burner gen
+	public static final IModelCustom turbine_gas = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/turbinegas.obj")).asVBO();
+
+
 	//Bombs
 	public static final IModelCustom bomb_solinium = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bombs/ufp.obj")).asVBO();
 	public static final IModelCustom n2 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bombs/n2.obj")).asVBO();
@@ -763,6 +771,9 @@ public class ResourceManager {
 	public static final ResourceLocation pylon_large_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_large.png");
 	public static final ResourceLocation substation_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/substation.png");
 
+	public static final ResourceLocation pylon_medium_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium.png");
+	public static final ResourceLocation pylon_medium_steel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium_steel.png");
+
 	//Pipe
 	public static final ResourceLocation pipe_neo_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/pipe_neo.png");
 	public static final ResourceLocation pipe_neo_succ_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/pipe_neo_succ.png");
@@ -865,6 +876,12 @@ public class ResourceManager {
 	public static final ResourceLocation stirling_creative_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/stirling_creative.png");
 	//B.O.P
 	public static final ResourceLocation ore_slopper_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ore_slopper.png");
+
+	//Wood burner gen
+	public static final ResourceLocation wood_burner_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/wood_burner.png");
+
+	//Not wood burner gen
+	public static final ResourceLocation turbine_gas_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbinegas.png");
 
 	//Laser Miner
 	public static final ResourceLocation mining_laser_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/mining_laser_base.png");

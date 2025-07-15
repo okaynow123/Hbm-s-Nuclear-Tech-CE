@@ -84,6 +84,7 @@ public class RenderInfoSystemLegacy {
         GlStateManager.disableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
+
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         bufferbuilder.pos(pX - 5, pZ - 5, z).color(0.25F, 0.25F, 0.25F, 0.5F).endVertex();
         bufferbuilder.pos(pX - 5, height, z).color(0.25F, 0.25F, 0.25F, 0.5F).endVertex();

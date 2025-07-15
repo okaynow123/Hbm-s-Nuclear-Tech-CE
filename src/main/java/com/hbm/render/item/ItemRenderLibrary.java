@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import scala.reflect.internal.Trees;
 
 import java.util.HashMap;
 
@@ -704,6 +705,27 @@ public class ItemRenderLibrary {
             }
         });
 
+        renderers.put(Item.getItemFromBlock(ModBlocks.red_pylon_medium_wood),
+                new ItemRenderBase() {
+                    public void renderInventory() {
+                        GL11.glTranslated(0, -5, 0);
+                        GL11.glScaled(2.25, 2.25, 2.25);
+                    }
+
+                    public void renderCommon(ItemStack stack) {
+                        GL11.glScaled(0.5, 0.5, 0.5);
+                        if(stack.getItem() == Item.getItemFromBlock(ModBlocks.red_pylon_medium_steel) || stack.getItem() == Item.getItemFromBlock(ModBlocks.red_pylon_medium_steel_transformer))
+                            bindTexture(ResourceManager.pylon_medium_steel_tex);
+                        else
+                            bindTexture(ResourceManager.pylon_medium_tex);
+
+                        ResourceManager.pylon_medium.renderPart("Pylon");
+
+                        if(stack.getItem() == Item.getItemFromBlock(ModBlocks.red_pylon_medium_wood_transformer) || stack.getItem() == Item.getItemFromBlock(ModBlocks.red_pylon_medium_steel_transformer))
+                            ResourceManager.pylon_medium.renderPart("Transformer");
+                    }
+                });
+
         renderers.put(Item.getItemFromBlock(ModBlocks.substation), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -2.5, 0);
@@ -848,10 +870,42 @@ public class ItemRenderLibrary {
             }
         });
 
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_wood_burner), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(-1, -1, 0);
+                GL11.glScaled(3.5, 3.5, 3.5);
+            }
+
+            public void renderCommon() {
+                GL11.glRotated(-180, 0, 1, 0);
+                GL11.glScaled(1, 1, 1);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.wood_burner_tex);
+                ResourceManager.wood_burner.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
+
+        renderers.put(Item.getItemFromBlock(ModBlocks.machine_turbine_gas), new ItemRenderBase() {
+            public void renderInventory() {
+                GL11.glTranslated(-1, -1, 0);
+                GL11.glScaled(2, 2, 2);
+            }
+
+            public void renderCommon() {
+                GL11.glRotated(-180, 0, 1, 0);
+                GL11.glScaled(1, 1, 1);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.turbine_gas_tex);
+                ResourceManager.turbine_gas.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        });
+
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(-1, -1, 0);
-                GL11.glScaled(3, 3, 3);
+                GL11.glScaled(3.5, 3.5, 3.5);
             }
 
             public void renderCommon() {
@@ -867,14 +921,14 @@ public class ItemRenderLibrary {
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling_steel), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -1, 0);
-                GL11.glScaled(1.9, 1.9, 1.9);
+                GL11.glScaled(3.5, 3.5, 3.5);
             }
 
             public void renderCommon() {
                 GL11.glRotated(180, 0, 1, 0);
                 GL11.glScaled(1, 1, 1);
                 GlStateManager.shadeModel(GL11.GL_SMOOTH);
-                bindTexture(ResourceManager.stirling_tex);
+                bindTexture(ResourceManager.stirling_steel_tex);
                 ResourceManager.stirling.renderAll();
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
@@ -883,7 +937,7 @@ public class ItemRenderLibrary {
         renderers.put(Item.getItemFromBlock(ModBlocks.machine_stirling_creative), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, -1, 0);
-                GL11.glScaled(1.9, 1.9, 1.9);
+                GL11.glScaled(3.5, 3.5, 3.5);
             }
 
             public void renderCommon() {

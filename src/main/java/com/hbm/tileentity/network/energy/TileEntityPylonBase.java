@@ -168,6 +168,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 
 	public static enum ConnectionType {
 		SINGLE,
+		TRIPLE,
 		QUAD
 		//more to follow
 	}

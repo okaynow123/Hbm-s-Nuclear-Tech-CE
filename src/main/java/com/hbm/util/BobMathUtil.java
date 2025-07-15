@@ -28,6 +28,47 @@ import java.util.function.ToIntFunction;
 
 public class BobMathUtil {
 
+    public static int min(int... nums) {
+        int smallest = Integer.MAX_VALUE;
+        for(int num : nums) if(num < smallest) smallest = num;
+        return smallest;
+    }
+    public static int max(int... nums) {
+        int largest = Integer.MIN_VALUE;
+        for(int num : nums) if(num > largest) largest = num;
+        return largest;
+    }
+    public static long min(long... nums) {
+        long smallest = Long.MAX_VALUE;
+        for(long num : nums) if(num < smallest) smallest = num;
+        return smallest;
+    }
+    public static long max(long... nums) {
+        long largest = Long.MIN_VALUE;
+        for(long num : nums) if(num > largest) largest = num;
+        return largest;
+    }
+    public static float min(float... nums) {
+        float smallest = Float.MAX_VALUE;
+        for(float num : nums) if(num < smallest) smallest = num;
+        return smallest;
+    }
+    public static float max(float... nums) {
+        float largest = Float.MIN_VALUE;
+        for(float num : nums) if(num > largest) largest = num;
+        return largest;
+    }
+    public static double min(double... nums) {
+        double smallest = Double.MAX_VALUE;
+        for(double num : nums) if(num < smallest) smallest = num;
+        return smallest;
+    }
+    public static double max(double... nums) {
+        double largest = Double.MIN_VALUE;
+        for(double num : nums) if(num > largest) largest = num;
+        return largest;
+    }
+
     public static Random rand = new Random();
 
     public static String getShortNumber(long number) {

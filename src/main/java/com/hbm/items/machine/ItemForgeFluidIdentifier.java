@@ -70,10 +70,19 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 		else
 			list.add("   " + "ERROR - bad data");
 	}
+
 	@Override
 	public FluidType getType(World world, int x, int y, int z, ItemStack stack) {
 		return Fluids.fromID(stack.getItemDamage());
 	}
+
+	public static FluidType getType(ItemStack stack) {
+		if(stack != null && stack.getItem() instanceof ItemForgeFluidIdentifier)
+			return Fluids.fromID(stack.getItemDamage());
+		else
+			return Fluids.NONE;
+	}
+
 
 	public static void spreadType(World worldIn, BlockPos pos, FluidType hand, FluidType pipe, int x){
 		if(x > 0){

@@ -367,6 +367,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityHeatBoiler.class, new ResourceLocation(RefStrings.MODID, "tileentity_heat_boiler"));
         GameRegistry.registerTileEntity(TileEntityMachineEPress.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_epress"));
         GameRegistry.registerTileEntity(TileEntityPylon.class, new ResourceLocation(RefStrings.MODID, "tileentity_pylon_red_wire"));
+        GameRegistry.registerTileEntity(TileEntityPylonMedium.class, new ResourceLocation(RefStrings.MODID, "tileentity_pylon_medium"));
         GameRegistry.registerTileEntity(TileEntityPylonLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_pylon_large"));
         GameRegistry.registerTileEntity(TileEntitySubstation.class, new ResourceLocation(RefStrings.MODID, "tileentity_pylon_substation"));
         GameRegistry.registerTileEntity(TileEntityMachineCentrifuge.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_centrifuge"));
@@ -401,6 +402,8 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityMachineAmgen.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_amgen"));
         GameRegistry.registerTileEntity(TileEntityMachineSPP.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_spp"));
         GameRegistry.registerTileEntity(TileEntityStirling.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_stirling"));
+        GameRegistry.registerTileEntity(TileEntityMachineTurbineGas.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_turbine_gas"));
+        GameRegistry.registerTileEntity(TileEntityMachineWoodBurner.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_wood_burner"));
         GameRegistry.registerTileEntity(TileEntityMachineArcFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_arc_furnace"));
         GameRegistry.registerTileEntity(TileEntityMachineElectricFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_electric_furnace"));
         GameRegistry.registerTileEntity(TileEntityMachineSolderingStation.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_soldering_station"));

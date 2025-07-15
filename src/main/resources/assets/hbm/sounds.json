@@ -320,6 +320,11 @@
     "block.crateClose": {"category": "block", "sounds": [{"name": "hbm:block/crateclose", "stream": false}]},
     "block.storageOpen": {"category": "block", "sounds": [{"name": "hbm:block/storageopen", "stream": false}]},
     "block.storageClose": {"category": "block", "sounds": [{"name": "hbm:block/storageclose", "stream": false}]},
+    "block.turbinegasRunning": {"category": "block", "sounds": [{"name": "hbm:block/turbinegasRunning", "stream": false}]},
+    "block.turbinegasShutdown": {"category": "block", "sounds": [{"name": "hbm:block/turbinegasShutdown", "stream": false}]},
+    "block.turbinegasStartup": {"category": "block", "sounds": [{"name": "hbm:block/turbinegasStartup", "stream": false}]},
+    "block.sentry_fire": {"category": "block", "sounds": [{"name": "hbm:block/sentry_fire", "stream": false}]},
+    "block.sentry_lockon": {"category": "block", "sounds": [{"name": "hbm:block/sentry_lockon", "stream": false}]},
 	"item.upgradePlug": {"category": "player", "sounds": [{"name": "hbm:tool/upgradePlug", "stream": false}]},
 	"item.battery": {"category": "player", "sounds": [{"name": "hbm:tool/battery", "stream": false}]},
 	

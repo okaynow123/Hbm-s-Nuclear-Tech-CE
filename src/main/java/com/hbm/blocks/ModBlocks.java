@@ -674,7 +674,14 @@ public class ModBlocks {
 
 	public static final Block red_pylon = new PylonRedWire(Material.IRON, "red_pylon").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block red_pylon_large = new PylonLarge(Material.IRON, "red_pylon_large").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
+	public static final Block red_pylon_medium_wood = new PylonMedium(Material.IRON, "red_pylon_medium_wood").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block red_pylon_medium_wood_transformer = new PylonMedium(Material.IRON, "red_pylon_medium_transformer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block red_pylon_medium_steel = new PylonMedium(Material.IRON, "red_pylon_steel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block red_pylon_medium_steel_transformer = new PylonMedium(Material.IRON, "red_pylon_steel_transformer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
 	public static final Block substation = new Substation(Material.IRON,"substation").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
 
 	//Tanks
 	public static final Block barrel_plastic = new BlockFluidBarrel(Material.IRON, 12000, "barrel_plastic").setSoundType(SoundType.STONE).setHardness(2.0F).setResistance(5.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1058,6 +1065,10 @@ public class ModBlocks {
 	public static final int guiID_mining_laser = 96;
 
 	public static final Block machine_turbofan = new MachineTurbofan(Material.IRON, "machine_turbofan").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
+	public static final Block machine_wood_burner = new MachineWoodBurner(Material.IRON, "machine_wood_burner").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_turbine_gas = new MachineTurbineGas(Material.IRON, "machine_turbine_gas").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
 
 	public static final Block machine_schrabidium_transmutator = new MachineSchrabidiumTransmutator(Material.IRON, "machine_schrabidium_transmutator").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_schrabidium_transmutator = 30;
