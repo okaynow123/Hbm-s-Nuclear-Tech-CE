@@ -1,9 +1,7 @@
 package com.hbm.render.model;
 
-import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.network.FluidDuctBox;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
@@ -11,12 +9,9 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
 
-import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,74 +24,141 @@ public class DuctBakedModel implements IBakedModel {
         this.meta = meta;
     }
     // Th3_Sl1ze: okay, so half of this clusterfuck is made by me, and half of it by llm
-    // Main problem - uv-based texture rotation (straight textures one!)
-    // Somehow when dealing with straight textures it doesn't give a fuck about uv rotation (prob I'm too shitty at it)
-    // for example, EnumFacing.UP texture is always headed along Z axis while west/east/north/south is facing along Y axis
-    // that also applies to some curve textures, when they're using the straight texture
-    // And also the inventory model is completely fucked. But that's mostly the model rotation in inventory gui + fucked up uv textures as well as they are in the world
+    // It's still quite a big method but it's as debloated as I can do rn (considering that you need to rotate uv fucking manually)
+    // UV's not perfect, but I'm NOT going to try finding where it fucks itself
     // COLOR HANDLER WILL BE DONE LATER
-    //Norwoood: redid that, idk why you made it so grandiose
     @Override
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-        if (side != null || !(state instanceof IExtendedBlockState)) return ImmutableList.of();
+        if (side != null) return Collections.emptyList();
 
-        IExtendedBlockState ext = (IExtendedBlockState) state;
-        boolean nZ = ext.getValue(FluidDuctBox.CONN_NORTH);
-        boolean pZ = ext.getValue(FluidDuctBox.CONN_SOUTH);
-        boolean nX = ext.getValue(FluidDuctBox.CONN_WEST);
-        boolean pX = ext.getValue(FluidDuctBox.CONN_EAST);
-        boolean nY = ext.getValue(FluidDuctBox.CONN_DOWN);
-        boolean pY = ext.getValue(FluidDuctBox.CONN_UP);
+        List<BakedQuad> quads = new ArrayList<>();
 
+        boolean pX, nX, pY, nY, pZ, nZ;
+        int useMeta = this.meta;
 
-        int useMeta = state.getBlock().getMetaFromState(state);
+        if (state == null) {
+            pX = true; nX = true; pY = false; nY = false; pZ = false; nZ = false;
+        } else {
+            IExtendedBlockState ext = (IExtendedBlockState) state;
+            nZ = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_NORTH));
+            pZ = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_SOUTH));
+            nX = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_WEST));
+            pX = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_EAST));
+            nY = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_DOWN));
+            pY = Boolean.TRUE.equals(ext.getValue(FluidDuctBox.CONN_UP));
+            useMeta = ext.getValue(FluidDuctBox.META);
+        }
 
-        List<BakedQuad> quads = new ArrayList<>(24);
+        int sizeLevel = Math.min(useMeta / 3, 4);
+        float lower = 0.125f + sizeLevel * 0.0625f;
+        float upper = 0.875f - sizeLevel * 0.0625f;
+        float jLower = 0.0625f + sizeLevel * 0.0625f;
+        float jUpper = 0.9375f - sizeLevel * 0.0625f;
+
+        int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
+        int count = Integer.bitCount(mask);
+        boolean straightX = (mask & 0b001111) == 0 && mask > 0;
+        boolean straightY = (mask & 0b110011) == 0 && mask > 0;
+        boolean straightZ = (mask & 0b111100) == 0 && mask > 0;
+
+        int[] uvRotate = new int[6];
+
+        List<float[]> boundsList = new ArrayList<>();
+        if (straightX) boundsList.add(new float[]{0, lower, lower, 1, upper, upper});
+        else if (straightZ) boundsList.add(new float[]{lower, lower, 0, upper, upper, 1});
+        else if (straightY) boundsList.add(new float[]{lower, 0, lower, upper, 1, upper});
+        else if (count == 2) {
+            boundsList.add(new float[]{lower, lower, lower, upper, upper, upper});
+            if (nY) boundsList.add(new float[]{lower, 0, lower, upper, lower, upper});
+            if (pY) boundsList.add(new float[]{lower, upper, lower, upper, 1, upper});
+            if (nX) boundsList.add(new float[]{0, lower, lower, lower, upper, upper});
+            if (pX) boundsList.add(new float[]{upper, lower, lower, 1, upper, upper});
+            if (nZ) boundsList.add(new float[]{lower, lower, 0, upper, upper, lower});
+            if (pZ) boundsList.add(new float[]{lower, lower, upper, upper, upper, 1});
+        } else {
+            boundsList.add(new float[]{jLower, jLower, jLower, jUpper, jUpper, jUpper});
+            if (nY) boundsList.add(new float[]{lower, 0, lower, upper, jLower, upper});
+            if (pY) boundsList.add(new float[]{lower, jUpper, lower, upper, 1, upper});
+            if (nX) boundsList.add(new float[]{0, lower, lower, jLower, upper, upper});
+            if (pX) boundsList.add(new float[]{jUpper, lower, lower, 1, upper, upper});
+            if (nZ) boundsList.add(new float[]{lower, lower, 0, upper, upper, jLower});
+            if (pZ) boundsList.add(new float[]{lower, lower, jUpper, upper, upper, 1});
+        }
+
         FaceBakery faceBakery = new FaceBakery();
 
-        float minX = nX ? 0.0F : 4.0F;
-        float maxX = pX ? 16.0F : 12.0F;
-        float minY = nY ? 0.0F : 4.0F;
-        float maxY = pY ? 16.0F : 12.0F;
-        float minZ = nZ ? 0.0F : 4.0F;
-        float maxZ = pZ ? 16.0F : 12.0F;
+        for (float[] b : boundsList) {
+            float minX = b[0] * 16f, minY = b[1] * 16f, minZ = b[2] * 16f;
+            float maxX = b[3] * 16f, maxY = b[4] * 16f, maxZ = b[5] * 16f;
+            if (minX == maxX || minY == maxY || minZ == maxZ) continue;
 
-        for (EnumFacing face : EnumFacing.VALUES) {
-            int s = face.ordinal();
-            TextureAtlasSprite sprite = FluidDuctBox.getPipeIcon(useMeta, s, pX, nX, pY, nY, pZ, nZ);
-            if (sprite == null) continue;
+            for (EnumFacing face : EnumFacing.VALUES) {
+                int s = face.ordinal();
+                TextureAtlasSprite sprite = FluidDuctBox.getPipeIcon(useMeta, s, pX, nX, pY, nY, pZ, nZ);
+                if (sprite == null) continue;
 
-            Vector3f from = new Vector3f();
-            Vector3f to = new Vector3f();
-            switch (face) {
-                case DOWN:  from.set(minX, minY, minZ); to.set(maxX, minY, maxZ); break;
-                case UP:    from.set(minX, maxY, minZ); to.set(maxX, maxY, maxZ); break;
-                case NORTH: from.set(minX, minY, minZ); to.set(maxX, maxY, minZ); break;
-                case SOUTH: from.set(minX, minY, maxZ); to.set(maxX, maxY, maxZ); break;
-                case WEST:  from.set(minX, minY, minZ); to.set(minX, maxY, maxZ); break;
-                case EAST:  from.set(maxX, minY, minZ); to.set(maxX, maxY, maxZ); break;
+                float uMin = 0, uMax = 0, vMin = 0, vMax = 0;
+                switch (face) {
+                    case UP:
+                        boolean swapUV = !straightZ && (straightX || ((nY || pY) && (nX || pX)));
+                        uMin = swapUV ? minZ : minX; uMax = swapUV ? maxZ : maxX;
+                        vMin = swapUV ? minX : minZ; vMax = swapUV ? maxX : maxZ;
+                        uvRotate[s] = swapUV ? 90 : 0;
+                        break;
+                    case DOWN:
+                        uMin = minX; uMax = maxX; vMin = minZ; vMax = maxZ; uvRotate[s] = 0;
+                        if (straightX || (pZ && nX) || (pX && nZ)) {
+                            uMin = minZ; uMax = maxZ; vMin = minX; vMax = maxX; uvRotate[s] = 90;
+                        } else if (nZ && nX) {
+                            uMin = maxZ; uMax = minZ; vMin = maxX; vMax = minX; uvRotate[s] = 270;
+                        } else if (pX && pZ) {
+                            uMin = maxZ; uMax = minZ; vMin = maxX; vMax = minX; uvRotate[s] = 270;
+                        }
+                        break;
+                    case SOUTH:
+                        vMin = minY; vMax = maxY; uMin = 16f - maxZ; uMax = 16f - minZ; uvRotate[s] = 90;
+                        if (straightY || (count == 2 && !straightX)) { uMin = minX; uMax = maxX; uvRotate[s] = 0; }
+                        if ((nZ && nX) || (nZ && pX)) { uMin = 16f - maxZ; uMax = 16f - minZ; uvRotate[s] = 90; }
+                        break;
+                    case NORTH:
+                        vMin = minY; vMax = maxY; uMin = minZ; uMax = maxZ; uvRotate[s] = 90;
+                        if (straightY || (count == 2 && !straightX)) { uMin = 16f - maxX; uMax = 16f - minX; uvRotate[s] = 0; }
+                        if ((pZ && nX) || (pZ && pX)) { uMin = minZ; uMax = maxZ; uvRotate[s] = 90; }
+                        break;
+                    case EAST:
+                        vMin = minY; vMax = maxY; uMin = 16f - maxX; uMax = 16f - minX; uvRotate[s] = 90;
+                        if (straightY || (count == 2 && !straightZ)) { uMin = minZ; uMax = maxZ; uvRotate[s] = 0; }
+                        if ((nX && nZ) || (nX && pZ)) { uMin = 16f - maxX; uMax = 16f - minX; uvRotate[s] = 90; }
+                        break;
+                    case WEST:
+                        vMin = minY; vMax = maxY; uMin = 16f - maxX; uMax = 16f - minX; uvRotate[s] = 90;
+                        if (straightY || (count == 2 && !straightZ)) { uMin = minZ; uMax = maxZ; uvRotate[s] = 0; }
+                        if ((pX && nZ) || (pX && pZ)) { uMin = 16f - maxX; uMax = 16f - minX; uvRotate[s] = 90; }
+                        break;
+                }
+
+                if (uMin > uMax) { float temp = uMin; uMin = uMax; uMax = temp; }
+                if (vMin > vMax) { float temp = vMin; vMin = vMax; vMax = temp; }
+
+                float[] uvs = new float[]{uMin, vMin, uMax, vMax};
+                BlockPartFace bpf = new BlockPartFace(null, 0, "", new BlockFaceUV(uvs, uvRotate[s]));
+
+                Vector3f from = new Vector3f(), to = new Vector3f();
+                switch (face) {
+                    case DOWN: from.set(minX, minY, minZ); to.set(maxX, minY, maxZ); break;
+                    case UP: from.set(minX, maxY, minZ); to.set(maxX, maxY, maxZ); break;
+                    case NORTH: from.set(minX, minY, minZ); to.set(maxX, maxY, minZ); break;
+                    case SOUTH: from.set(minX, minY, maxZ); to.set(maxX, maxY, maxZ); break;
+                    case WEST: from.set(minX, minY, minZ); to.set(minX, maxY, maxZ); break;
+                    case EAST: from.set(maxX, minY, minZ); to.set(maxX, maxY, maxZ); break;
+                }
+
+                BakedQuad quad = faceBakery.makeBakedQuad(from, to, bpf, sprite, face, ModelRotation.X0_Y0, null, false, true);
+                quads.add(quad);
             }
-
-            float[] uvs = new float[]{0, 0, 16, 16};
-            int rotation = getUVRotationFor(face);
-            BlockPartFace bpf = new BlockPartFace(null, 0, "", new BlockFaceUV(uvs, rotation));
-
-            BakedQuad quad = faceBakery.makeBakedQuad(from, to, bpf, sprite, face, ModelRotation.X0_Y0, null, false, true);
-            quads.add(quad);
         }
 
         return quads;
-    }
-    private int getUVRotationFor(EnumFacing face) {
-        switch (face) {
-            case DOWN:  return 180;
-            case UP:    return 0;
-            case NORTH: return 90;
-            case SOUTH: return 90;
-            case WEST:  return 90;
-            case EAST:  return 90;
-            default:    return 0;
-        }
     }
 
     @Override
@@ -118,6 +180,51 @@ public class DuctBakedModel implements IBakedModel {
     public TextureAtlasSprite getParticleTexture() {
         return FluidDuctBox.iconStraight[0];
     }
+
+    // Th3_Sl1ze: This is heavily fucked rn
+    // btw, haven't I said I'm terrible at openGL?... Welp, you can take a look at how terrible I am at it yet again
+
+    /*private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
+
+    private static ItemCameraTransforms createCustomTransforms() {
+        ItemTransformVec3f gui = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, 0, 0),
+                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(30, 45, 0)),
+                new javax.vecmath.Vector3f(0.625f, 0.625f, 0.625f),
+                null)).toItemTransform();
+
+        ItemTransformVec3f thirdPerson = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, 1.25f / 16, -2.75f / 16),
+                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(0, 0, 0)),
+                new javax.vecmath.Vector3f(0.375f, 0.375f, 0.375f),
+                null)).toItemTransform();
+
+        ItemTransformVec3f firstPerson = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, -0.5f / 16, 1.5f / 16),
+                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(0, 90, 25)),
+                new javax.vecmath.Vector3f(0.4f, 0.4f, 0.4f),
+                null)).toItemTransform();
+
+        ItemTransformVec3f ground = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, 2 / 16f, 0),
+                null,
+                new javax.vecmath.Vector3f(0.5f, 0.5f, 0.5f),
+                null)).toItemTransform();
+
+        ItemTransformVec3f head = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, 13 / 16f, -3 / 16f),
+                null,
+                new javax.vecmath.Vector3f(1, 1, 1),
+                null)).toItemTransform();
+
+        ItemTransformVec3f fixed = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
+                new javax.vecmath.Vector3f(0, 0, 0),
+                null,
+                new javax.vecmath.Vector3f(0.75f, 0.75f, 0.75f),
+                null)).toItemTransform();
+
+        return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
+    }*/
 
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
