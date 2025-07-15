@@ -61,7 +61,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
     public float fanAcceleration = 0F;
     private boolean shouldTurn;
     private AudioWrapper audio;
-    private float audioDesync;
+    private final float audioDesync;
 
     public TileEntityMachineLargeTurbine() {
         super(7);
@@ -73,9 +73,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
         tanks[0] = new FluidTank(512000);
         tanks[1] = new FluidTank(10240000);
         types[0] = Fluids.STEAM.getFF();
-        ;
         types[1] = Fluids.SPENTSTEAM.getFF();
-        ;
 
         Random rand = new Random();
         audioDesync = rand.nextFloat() * 0.05F;
@@ -115,13 +113,13 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
                 double eff = trait.getEfficiency(FT_Coolable.CoolingType.TURBINE); //100% efficiency
                 if (eff > 0) {
                     tanksNew[1].setTankType(trait.coolsTo);
-                    int inputOps = (int) Math.floor(tanksNew[0].getFill() / trait.amountReq); //amount of cycles possible with the entire input buffer
+                    int inputOps = (int) Math.floor((double) tanksNew[0].getFill() / trait.amountReq); //amount of cycles possible with the entire input buffer
                     int outputOps = (tanksNew[1].getMaxFill() - tanksNew[1].getFill()) / trait.amountProduced; //amount of cycles possible with the output buffer's remaining space
-                    int cap = (int) Math.ceil(tanksNew[0].getFill() / trait.amountReq / 5F); //amount of cycles by the "at least 20%" rule
+                    int cap = (int) Math.ceil((double) tanksNew[0].getFill() / trait.amountReq / 5F); //amount of cycles by the "at least 20%" rule
                     int ops = Math.min(inputOps, Math.min(outputOps, cap)); //defacto amount of cycles
                     tanksNew[0].setFill(tanksNew[0].getFill() - ops * trait.amountReq);
                     tanksNew[1].setFill(tanksNew[1].getFill() + ops * trait.amountProduced);
-                    this.power += (ops * trait.heatEnergy * eff);
+                    this.power += (long) (ops * trait.heatEnergy * eff);
                     valid = true;
                     shouldTurn = ops > 0;
                 }
@@ -188,6 +186,8 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
         super.serialize(buf);
         buf.writeLong(power);
         buf.writeBoolean(shouldTurn);
+        for (FluidTankNTM tank : tanksNew)
+            tank.serialize(buf);
     }
 
     @Override
@@ -195,6 +195,8 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
         super.deserialize(buf);
         this.power = buf.readLong();
         this.shouldTurn = buf.readBoolean();
+        for (FluidTankNTM tank : tanksNew)
+            tank.deserialize(buf);
     }
 
     public long getPowerScaled(int i) {
