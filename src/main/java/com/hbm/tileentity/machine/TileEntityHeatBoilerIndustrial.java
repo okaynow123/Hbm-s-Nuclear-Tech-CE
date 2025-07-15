@@ -239,7 +239,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase
               pos.getX() + 0.5,
               pos.getY() + 2,
               pos.getZ() + 0.5,
-              HBMSoundHandler.boilerGroanSounds[world.rand.nextInt(6)],
+              HBMSoundHandler.boilerGroanSounds[world.rand.nextInt(3)],
               SoundCategory.BLOCKS,
               0.5F,
               1.0F);
