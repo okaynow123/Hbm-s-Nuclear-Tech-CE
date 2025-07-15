@@ -41,7 +41,7 @@ dependencies {
 
     api("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.700")
 
-    compileOnly rfg.deobf("curse.maven:opencomputers-223008:5274236")
+    compileOnly rfg.deobf("curse.maven:opencomputers-223008:6608365")
 
     //compileOnly rfg.deobf("dev.galacticraft:galacticraft-legacy:${version_gc}")
 
@@ -54,13 +54,13 @@ dependencies {
     compileOnly rfg.deobf("cofh:CoFHCore:1.12.2-${version_cofhcore}:universal")
 
 
-    implementation rfg.deobf('curse.maven:had-enough-items-557549:5471944')
+    implementation rfg.deobf('curse.maven:had-enough-items-557549:6463525')
 
     implementation 'com.google.guava:guava:31.0.1-jre'
 
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:6344449")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6344429")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")
