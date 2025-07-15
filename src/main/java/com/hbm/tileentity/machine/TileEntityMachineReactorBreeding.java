@@ -68,6 +68,7 @@ public class TileEntityMachineReactorBreeding extends TileEntityMachineBase impl
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(flux);
         buf.writeFloat(progress);
     }

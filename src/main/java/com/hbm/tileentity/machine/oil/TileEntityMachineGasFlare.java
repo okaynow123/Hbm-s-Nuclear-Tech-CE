@@ -224,6 +224,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 	
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(this.power);
 		buf.writeBoolean(isOn);
 		buf.writeBoolean(doesBurn);

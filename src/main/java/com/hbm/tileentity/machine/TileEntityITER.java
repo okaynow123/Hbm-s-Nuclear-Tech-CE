@@ -314,6 +314,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeBoolean(isOn);
 		buf.writeLong(power);
 
@@ -336,6 +337,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 	@Override
 	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
 		this.isOn = buf.readBoolean();
 		this.power = buf.readLong();
 		this.blanket = buf.readInt();

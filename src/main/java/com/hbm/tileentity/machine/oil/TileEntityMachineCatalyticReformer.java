@@ -91,6 +91,7 @@ public class TileEntityMachineCatalyticReformer extends TileEntityMachineBase im
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(this.power);
         for(int i = 0; i < 4; i++)
             tanks[i].serialize(buf);

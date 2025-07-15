@@ -162,11 +162,13 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
 		buf.writeLong(power);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
 		this.power = buf.readLong();
 	}
 

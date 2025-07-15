@@ -223,6 +223,7 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(power);
         buf.writeInt(indicator);
 
@@ -232,6 +233,7 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.power = buf.readLong();
         this.indicator = buf.readInt();
 

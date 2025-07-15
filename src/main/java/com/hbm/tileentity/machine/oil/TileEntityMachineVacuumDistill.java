@@ -150,20 +150,18 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(this.power);
         buf.writeBoolean(this.isOn);
-
-        for(int i = 0; i < 5; i++)
-            tanks[i].serialize(buf);
+        for (FluidTankNTM tank : tanks) tank.serialize(buf);
     }
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.power = buf.readLong();
         this.isOn = buf.readBoolean();
-
-        for(int i = 0; i < 5; i++)
-            tanks[i].deserialize(buf);
+        for (FluidTankNTM tank : tanks) tank.deserialize(buf);
     }
 
     private void refine() {

@@ -333,6 +333,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeLong(power);
         buf.writeInt(progress);
         buf.writeInt(maxProgress);
@@ -342,6 +343,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.power = buf.readLong();
         this.progress = buf.readInt();
         this.maxProgress = buf.readInt();

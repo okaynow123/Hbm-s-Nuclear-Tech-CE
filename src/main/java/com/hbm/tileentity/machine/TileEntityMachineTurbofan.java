@@ -394,6 +394,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		super.deserialize(buf);
 		buf.writeLong(power);
 		buf.writeByte(afterburner);
 		buf.writeBoolean(wasOn);

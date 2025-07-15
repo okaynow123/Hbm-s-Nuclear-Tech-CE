@@ -267,7 +267,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements ITic
 		buf.writeBoolean(isOn);
 		buf.writeFloat(soundtime);
 		buf.writeInt(fuelCost);
-		for(int i = 0; i < tanks.length; i++) tanks[i].serialize(buf);
+        for (FluidTankNTM tank : tanks) tank.serialize(buf);
 	}
 	
 	@Override
@@ -276,7 +276,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements ITic
 		isOn = buf.readBoolean();
 		soundtime = buf.readFloat();
 		fuelCost = buf.readInt();
-		for(int i = 0; i < tanks.length; i++) tanks[i].deserialize(buf);
+        for (FluidTankNTM tank : tanks) tank.deserialize(buf);
 	}
 
 	@Override

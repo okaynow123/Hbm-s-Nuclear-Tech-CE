@@ -152,6 +152,7 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(heat);
         buf.writeByte(water);
         buf.writeDouble(level);
@@ -162,6 +163,7 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.heat = buf.readInt();
         this.water = buf.readByte();
         this.level = buf.readDouble();
