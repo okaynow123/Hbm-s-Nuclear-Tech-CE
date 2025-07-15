@@ -60,6 +60,10 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
     public static final String basePath = "blocks/";
 
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, sellafieldTextures.length - 1);
+
+    /**
+     * If false, the block is placed by players.
+     */
     public static final PropertyBool NATURAL = PropertyBool.create("natural");
 
     public static final boolean showMetaInCreative = true;
@@ -209,16 +213,17 @@ public class BlockSellafieldSlaked extends BlockBase implements ICustomBlockItem
         }
     }
 
+    @Override
     public void registerItem() {
-        ItemBlock itemBlock = new SellafieldSlackedItemBlock(this);
+        ItemBlock itemBlock = new SellafieldSlakedItemBlock(this);
         itemBlock.setRegistryName(Objects.requireNonNull(this.getRegistryName()));
         if (showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
     }
 
 
-    public class SellafieldSlackedItemBlock extends ItemBlock implements IModelRegister {
-        public SellafieldSlackedItemBlock(Block block) {
+    public static class SellafieldSlakedItemBlock extends ItemBlock implements IModelRegister {
+        public SellafieldSlakedItemBlock(Block block) {
             super(block);
             this.hasSubtypes = true;
             this.canRepair = false;

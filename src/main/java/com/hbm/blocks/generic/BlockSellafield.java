@@ -49,7 +49,7 @@ import java.util.Random;
 public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicModels {
 
     public static final int LEVELS = 7;
-    public static final float rad = 0.5f;
+    public static final float rad = 2f;
     public final int level;
     public static final int[][] colors = new int[][]{
             {0x4C7939, 0x41463F},
@@ -75,7 +75,6 @@ public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicMo
     public BlockSellafield(Material mat, SoundType type, String s, int level) {
         super(mat, type, s);
         this.level = level;
-        this.needsRandomTick = true;
     }
 
     public static Block getSellafiteFromLvl(int level) {
@@ -87,6 +86,14 @@ public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicMo
 
     public static int getLvlFromSellafite(Block block) {
         return SELLAFIETE_LEVELS.inverse().getOrDefault(block, -1);
+    }
+
+    @Override
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        super.onBlockAdded(worldIn, pos, state);
+        if (!worldIn.isRemote) {
+            worldIn.scheduleUpdate(pos, this, 5 + worldIn.rand.nextInt(20));
+        }
     }
 
     @Override
@@ -104,7 +111,7 @@ public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicMo
     }
 
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        if (!state.getValue(NATURAL)) return;
+        if (world.isRemote || !state.getValue(NATURAL)) return;
         IBlockState currentState = world.getBlockState(pos);
         int level = getLvlFromSellafite(currentState.getBlock());
         int variant = currentState.getValue(VARIANT);
@@ -113,12 +120,13 @@ public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicMo
         float netRad = rad * (level + 1);
         RadiationSystemNT.incrementRad(world, pos, netRad, netRad);
 
-
         if (rand.nextInt(level == 0 ? 25 : 15) == 0) {
             if (level > 0)
-                world.setBlockState(pos, getSellafiteFromLvl(level - 1).getDefaultState().withProperty(VARIANT, variant), 3);
+                world.setBlockState(pos, getSellafiteFromLvl(level - 1).getDefaultState().withProperty(VARIANT, variant).withProperty(NATURAL, true), 3);
             else
-                world.setBlockState(pos, ModBlocks.sellafield_slaked.getDefaultState().withProperty(VARIANT, variant));
+                world.setBlockState(pos, ModBlocks.sellafield_slaked.getDefaultState().withProperty(VARIANT, variant).withProperty(NATURAL, true));
+        } else {
+            world.scheduleUpdate(pos, this, 5 + world.rand.nextInt(20));
         }
     }
 
@@ -181,13 +189,11 @@ public class BlockSellafield extends BlockSellafieldSlaked implements IDynamicMo
         }
     }
 
-    public class SellafieldItemBlock extends SellafieldSlackedItemBlock implements IModelRegister {
+    public static class SellafieldItemBlock extends SellafieldSlakedItemBlock implements IModelRegister {
         public SellafieldItemBlock(Block block) {
             super(block);
             this.hasSubtypes = true;
             this.canRepair = false;
         }
-
-
     }
 }
