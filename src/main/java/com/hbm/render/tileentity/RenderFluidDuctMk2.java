@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.Library;
@@ -15,7 +16,7 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 
 	@Override
 	public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		if(te.getBlockType() == ModBlocks.fluid_duct_solid)
+		if(te.getBlockType() == ModBlocks.fluid_duct_solid || te.getBlockType() instanceof FluidDuctBox)
 			return;
 		GL11.glPushMatrix();
 		GlStateManager.enableLighting();

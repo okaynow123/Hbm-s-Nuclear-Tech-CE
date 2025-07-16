@@ -6,11 +6,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.checkerframework.checker.units.qual.degrees;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.vecmath.Quat4f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -228,54 +231,50 @@ public class DuctBakedModel implements IBakedModel {
         return getPipeIcon(meta, EnumFacing.UP.getIndex(), false, false, false, false, false, false, isExhaust);
     }
 
-    // Th3_Sl1ze: This is heavily fucked rn
-    // btw, haven't I said I'm terrible at openGL?... Welp, you can take a look at how terrible I am at it yet again
-
-    /*private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
-
+    private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
     private static ItemCameraTransforms createCustomTransforms() {
-        ItemTransformVec3f gui = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, 0, 0),
-                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(30, 45, 0)),
-                new javax.vecmath.Vector3f(0.625f, 0.625f, 0.625f),
-                null)).toItemTransform();
+        ItemTransformVec3f gui = new ItemTransformVec3f(
+                new Vector3f(30, -135, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0.625f, 0.625f, 0.625f)
+        );
 
-        ItemTransformVec3f thirdPerson = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, 1.25f / 16, -2.75f / 16),
-                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(0, 0, 0)),
-                new javax.vecmath.Vector3f(0.375f, 0.375f, 0.375f),
-                null)).toItemTransform();
+        ItemTransformVec3f thirdPerson = new ItemTransformVec3f(
+                new Vector3f(75, 45, 0),
+                new Vector3f(0, 1.5f / 16, -2.5f / 16),
+                new Vector3f(0.5f, 0.5f, 0.5f)
+        );
 
-        ItemTransformVec3f firstPerson = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, -0.5f / 16, 1.5f / 16),
-                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(0, 90, 25)),
-                new javax.vecmath.Vector3f(0.4f, 0.4f, 0.4f),
-                null)).toItemTransform();
+        ItemTransformVec3f firstPerson = new ItemTransformVec3f(
+                new Vector3f(0, 45, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0.5f, 0.5f, 0.5f)
+        );
 
-        ItemTransformVec3f ground = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, 2 / 16f, 0),
-                null,
-                new javax.vecmath.Vector3f(0.5f, 0.5f, 0.5f),
-                null)).toItemTransform();
+        ItemTransformVec3f ground = new ItemTransformVec3f(
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 2f / 16, 0),
+                new Vector3f(0.5f, 0.5f, 0.5f)
+        );
 
-        ItemTransformVec3f head = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, 13 / 16f, -3 / 16f),
-                null,
-                new javax.vecmath.Vector3f(1, 1, 1),
-                null)).toItemTransform();
+        ItemTransformVec3f head = new ItemTransformVec3f(
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 13f / 16, 7f / 16),
+                new Vector3f(1, 1, 1)
+        );
 
-        ItemTransformVec3f fixed = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(
-                new javax.vecmath.Vector3f(0, 0, 0),
-                null,
-                new javax.vecmath.Vector3f(0.75f, 0.75f, 0.75f),
-                null)).toItemTransform();
+        ItemTransformVec3f fixed = new ItemTransformVec3f(
+                new Vector3f(0, 180, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0.75f, 0.75f, 0.75f)
+        );
 
         return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
-    }*/
+    }
 
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
-        return ItemCameraTransforms.DEFAULT;
+        return CUSTOM_TRANSFORMS;
     }
 
     @Override
