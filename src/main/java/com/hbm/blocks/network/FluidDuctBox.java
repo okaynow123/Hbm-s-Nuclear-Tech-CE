@@ -64,17 +64,17 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
     @SideOnly(Side.CLIENT)
     public static TextureAtlasSprite[] iconStraight;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] iconEnd;
+    public static TextureAtlasSprite[] iconEnd;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] iconCurveTL;
+    public static TextureAtlasSprite[] iconCurveTL;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] iconCurveTR;
+    public static TextureAtlasSprite[] iconCurveTR;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] iconCurveBL;
+    public static TextureAtlasSprite[] iconCurveBL;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[] iconCurveBR;
+    public static TextureAtlasSprite[] iconCurveBR;
     @SideOnly(Side.CLIENT)
-    private static TextureAtlasSprite[][] iconJunction;
+    public static TextureAtlasSprite[][] iconJunction;
 
     public FluidDuctBox(String s) {
         super(Material.IRON, s);
@@ -296,44 +296,6 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static TextureAtlasSprite getPipeIcon(int meta, int side, boolean pX, boolean nX, boolean pY, boolean nY, boolean pZ, boolean nZ) {
-        int m = meta % 3;
-        int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
-        int count = Integer.bitCount(mask);
-
-        if ((mask & 0b001111) == 0 && mask > 0) {
-            return (side == 4 || side == 5) ? iconEnd[m] : iconStraight[m];
-        } else if ((mask & 0b111100) == 0 && mask > 0) {
-            return (side == 2 || side == 3) ? iconEnd[m] : iconStraight[m];
-        } else if ((mask & 0b110011) == 0 && mask > 0) {
-            return (side == 0 || side == 1) ? iconEnd[m] : iconStraight[m];
-        } else if (count == 2) {
-            if (side == 0 && nY || side == 1 && pY || side == 2 && nZ || side == 3 && pZ || side == 4 && nX || side == 5 && pX)
-                return iconEnd[m];
-            if (side == 1 && nY || side == 0 && pY || side == 3 && nZ || side == 2 && pZ || side == 5 && nX || side == 4 && pX)
-                return iconStraight[m];
-
-            if (nY && pZ) return side == 4 ? iconCurveBR[m] : iconCurveBL[m];
-            if (nY && nZ) return side == 5 ? iconCurveBR[m] : iconCurveBL[m];
-            if (nY && pX) return side == 3 ? iconCurveBR[m] : iconCurveBL[m];
-            if (nY && nX) return side == 2 ? iconCurveBR[m] : iconCurveBL[m];
-            if (pY && pZ) return side == 4 ? iconCurveTR[m] : iconCurveTL[m];
-            if (pY && nZ) return side == 5 ? iconCurveTR[m] : iconCurveTL[m];
-            if (pY && pX) return side == 3 ? iconCurveTR[m] : iconCurveTL[m];
-            if (pY && nX) return side == 2 ? iconCurveTR[m] : iconCurveTL[m];
-
-            if (pX && nZ) return side == 0 ? iconCurveTR[m] : iconCurveTR[m];
-            if (pX && pZ) return side == 0 ? iconCurveBR[m] : iconCurveBR[m];
-            if (nX && nZ) return side == 0 ? iconCurveTL[m] : iconCurveTL[m];
-            if (nX && pZ) return side == 0 ? iconCurveBL[m] : iconCurveBL[m];
-
-            return iconJunction[m][meta / 3];  // Изменено на junction, как в оригинале (fallback)
-        }
-
-        return iconJunction[m][meta / 3];
-    }
-
     @Override
     public Block getBlock() {
         return this;
@@ -368,7 +330,7 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
     @Override
     public void bakeModel(ModelBakeEvent event) {
         for (int meta = 0; meta < 15; meta++) {
-            IBakedModel bakedModel = new DuctBakedModel(meta);
+            IBakedModel bakedModel = new DuctBakedModel(meta, false);
             ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
             event.getModelRegistry().putObject(modelLocation, bakedModel);
         }

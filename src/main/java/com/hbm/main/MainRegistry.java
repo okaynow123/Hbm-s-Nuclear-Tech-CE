@@ -482,6 +482,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityDecoBlockAlt.class, new ResourceLocation(RefStrings.MODID, "tileentity_deco_block_alt"));
         GameRegistry.registerTileEntity(TileEntityFFFluidDuctMk2.class, new ResourceLocation(RefStrings.MODID, "tileentity_ff_fludi_duct_mk2"));
         GameRegistry.registerTileEntity(TileEntityPipeBaseNT.class, new ResourceLocation(RefStrings.MODID, "tileentity_pipe_base"));
+        GameRegistry.registerTileEntity(TileEntityPipeExhaust.class, new ResourceLocation(RefStrings.MODID, "tileentity_pipe_exhaust"));
         GameRegistry.registerTileEntity(TileEntityFFDuctBaseMk2.class, new ResourceLocation(RefStrings.MODID, "tileentity_ff_fludi_duct_base_mk2"));
         GameRegistry.registerTileEntity(TileEntityBarrel.class, new ResourceLocation(RefStrings.MODID, "tileentity_barrel"));
         GameRegistry.registerTileEntity(TileEntityTesla.class, new ResourceLocation(RefStrings.MODID, "tileentity_tesla"));

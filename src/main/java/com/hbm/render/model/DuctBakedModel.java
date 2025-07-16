@@ -1,11 +1,11 @@
 package com.hbm.render.model;
 
 import com.hbm.blocks.network.FluidDuctBox;
+import com.hbm.blocks.network.FluidDuctBoxExhaust;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,9 +19,56 @@ import java.util.List;
 public class DuctBakedModel implements IBakedModel {
 
     private final int meta;
+    private final boolean isExhaust;  // note: I'd do it in an enum but there are only 2 blocks using this model, so it's redundant for now I guess?..
 
-    public DuctBakedModel(int meta) {
+    public DuctBakedModel(int meta, boolean isExhaust) {
         this.meta = meta;
+        this.isExhaust = isExhaust;
+    }
+
+    public static TextureAtlasSprite getPipeIcon(int meta, int side, boolean pX, boolean nX, boolean pY, boolean nY, boolean pZ, boolean nZ, boolean isExhaust) {
+        int m = isExhaust ? 0 : (meta % 3);  // Для Exhaust всегда 0, для обычного — meta % 3 (как в оригинале, предполагая rectify(meta) = meta % 3)
+        int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
+        int count = Integer.bitCount(mask);
+
+        TextureAtlasSprite[] straight = isExhaust ? FluidDuctBoxExhaust.iconStraight : FluidDuctBox.iconStraight;
+        TextureAtlasSprite[] end = isExhaust ? FluidDuctBoxExhaust.iconEnd : FluidDuctBox.iconEnd;
+        TextureAtlasSprite[] curveTL = isExhaust ? FluidDuctBoxExhaust.iconCurveTL : FluidDuctBox.iconCurveTL;
+        TextureAtlasSprite[] curveTR = isExhaust ? FluidDuctBoxExhaust.iconCurveTR : FluidDuctBox.iconCurveTR;
+        TextureAtlasSprite[] curveBL = isExhaust ? FluidDuctBoxExhaust.iconCurveBL : FluidDuctBox.iconCurveBL;
+        TextureAtlasSprite[] curveBR = isExhaust ? FluidDuctBoxExhaust.iconCurveBR : FluidDuctBox.iconCurveBR;
+        TextureAtlasSprite[][] junction = isExhaust ? FluidDuctBoxExhaust.iconJunction : FluidDuctBox.iconJunction;
+
+        if ((mask & 0b001111) == 0 && mask > 0) {
+            return (side == 4 || side == 5) ? end[m] : straight[m];
+        } else if ((mask & 0b111100) == 0 && mask > 0) {
+            return (side == 2 || side == 3) ? end[m] : straight[m];
+        } else if ((mask & 0b110011) == 0 && mask > 0) {
+            return (side == 0 || side == 1) ? end[m] : straight[m];
+        } else if (count == 2) {
+            if (side == 0 && nY || side == 1 && pY || side == 2 && nZ || side == 3 && pZ || side == 4 && nX || side == 5 && pX)
+                return end[m];
+            if (side == 1 && nY || side == 0 && pY || side == 3 && nZ || side == 2 && pZ || side == 5 && nX || side == 4 && pX)
+                return straight[m];
+
+            if (nY && pZ) return side == 4 ? curveBR[m] : curveBL[m];
+            if (nY && nZ) return side == 5 ? curveBR[m] : curveBL[m];
+            if (nY && pX) return side == 3 ? curveBR[m] : curveBL[m];
+            if (nY && nX) return side == 2 ? curveBR[m] : curveBL[m];
+            if (pY && pZ) return side == 4 ? curveTR[m] : curveTL[m];
+            if (pY && nZ) return side == 5 ? curveTR[m] : curveTL[m];
+            if (pY && pX) return side == 3 ? curveTR[m] : curveTL[m];
+            if (pY && nX) return side == 2 ? curveTR[m] : curveTL[m];
+
+            if (pX && nZ) return side == 0 ? curveTR[m] : curveTR[m];
+            if (pX && pZ) return side == 0 ? curveBR[m] : curveBR[m];
+            if (nX && nZ) return side == 0 ? curveTL[m] : curveTL[m];
+            if (nX && pZ) return side == 0 ? curveBL[m] : curveBL[m];
+
+            return straight[m];
+        }
+
+        return junction[m][meta / 3];
     }
     // Th3_Sl1ze: okay, so half of this clusterfuck is made by me, and half of it by llm
     // It's still quite a big method but it's as debloated as I can do rn (considering that you need to rotate uv fucking manually)
@@ -94,7 +141,7 @@ public class DuctBakedModel implements IBakedModel {
 
             for (EnumFacing face : EnumFacing.VALUES) {
                 int s = face.ordinal();
-                TextureAtlasSprite sprite = FluidDuctBox.getPipeIcon(useMeta, s, pX, nX, pY, nY, pZ, nZ);
+                TextureAtlasSprite sprite = getPipeIcon(useMeta, s, pX, nX, pY, nY, pZ, nZ, isExhaust);
                 if (sprite == null) continue;
 
                 float uMin = 0, uMax = 0, vMin = 0, vMax = 0;
@@ -178,7 +225,7 @@ public class DuctBakedModel implements IBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return FluidDuctBox.iconStraight[0];
+        return getPipeIcon(meta, EnumFacing.UP.getIndex(), false, false, false, false, false, false, isExhaust);
     }
 
     // Th3_Sl1ze: This is heavily fucked rn
