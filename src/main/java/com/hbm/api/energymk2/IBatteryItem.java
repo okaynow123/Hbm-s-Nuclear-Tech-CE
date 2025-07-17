@@ -8,7 +8,7 @@ public interface IBatteryItem {
 
 	/**
 	 * Adds energy to the battery item.
-	 * The implementation should ensure the charge does not exceed {@link #getMaxCharge()}.
+	 * The implementation should ensure the charge does not exceed {@link #getMaxCharge(ItemStack)}.
 	 *
 	 * @param stack The ItemStack to charge.
 	 * @param i     The amount of energy in HE (HBM Energy) to add.
@@ -17,7 +17,7 @@ public interface IBatteryItem {
 
 	/**
 	 * Sets the energy level of the battery item to a specific value.
-	 * The implementation should ensure the charge does not exceed {@link #getMaxCharge()}.
+	 * The implementation should ensure the charge does not exceed {@link #getMaxCharge(ItemStack)}.
 	 *
 	 * @param stack The ItemStack to modify.
 	 * @param i     The absolute amount of energy in HE to set.
@@ -44,9 +44,10 @@ public interface IBatteryItem {
 	/**
 	 * Gets the maximum amount of energy this item can store.
 	 *
+	 * @param stack The ItemStack to query.
 	 * @return The maximum charge (capacity) in HE.
 	 */
-	long getMaxCharge();
+	long getMaxCharge(ItemStack stack);
 
 	/**
 	 * Gets the maximum rate at which this item can receive energy.

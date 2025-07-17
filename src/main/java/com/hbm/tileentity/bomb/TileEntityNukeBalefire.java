@@ -30,7 +30,7 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	public boolean loaded;
 	public boolean started;
 	public int timer;
-	
+
 	public TileEntityNukeBalefire() {
 		super(2);
 		timer = 18000;
@@ -109,13 +109,13 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	}
 
 	public int getBattery() {
-		
-		if(inventory.getStackInSlot(1).getItem() == ModItems.battery_spark &&
-				((IBatteryItem)ModItems.battery_spark).getCharge(inventory.getStackInSlot(1)) == ((IBatteryItem)ModItems.battery_spark).getMaxCharge()) {
+		ItemStack stackInSlot = inventory.getStackInSlot(1);
+		if(stackInSlot.getItem() == ModItems.battery_spark &&
+				((IBatteryItem)ModItems.battery_spark).getCharge(stackInSlot) == ((IBatteryItem)ModItems.battery_spark).getMaxCharge(stackInSlot)) {
 			return 1;
 		}
-		if(inventory.getStackInSlot(1).getItem() == ModItems.battery_trixite &&
-				((IBatteryItem)ModItems.battery_trixite).getCharge(inventory.getStackInSlot(1)) == ((IBatteryItem)ModItems.battery_trixite).getMaxCharge()) {
+		if(stackInSlot.getItem() == ModItems.battery_trixite &&
+				((IBatteryItem)ModItems.battery_trixite).getCharge(stackInSlot) == ((IBatteryItem)ModItems.battery_trixite).getMaxCharge(stackInSlot)) {
 			return 2;
 		}
 

@@ -11,68 +11,82 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.Collections;
 
 public class GUIArmorTable extends GuiContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_armor_modifier.png");
-	public int left;
-	public int top;
+    public static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_armor_modifier.png");
 
-	public GUIArmorTable(InventoryPlayer player) {
-		super(new ContainerArmorTable(player));
+    public GUIArmorTable(InventoryPlayer player) {
+        super(new ContainerArmorTable(player));
 
-		this.xSize = 176;
-		this.ySize = 222;
+        this.xSize = 176 + 22;
+        this.ySize = 222;
+    }
 
-		guiLeft = (this.width - this.xSize) / 2;
-		guiTop = (this.height - this.ySize) / 2;
-	}
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
 
-	protected void drawGuiContainerForegroundLayer(int mX, int mY) {
-		this.fontRenderer.drawString(I18n.format("container.armorTable"), 28, 6, 4210752);
-		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
-	}
+        if (this.mc.player.inventory.getItemStack().isEmpty()) {
+            String[] unloc = new String[]{"armorMod.type.helmet", "armorMod.type.chestplate", "armorMod.type.leggings", "armorMod.type.boots",
+                    "armorMod.type.servo", "armorMod.type.cladding", "armorMod.type.insert", "armorMod.type.special", "armorMod.type.battery",
+                    "armorMod.insertHere"};
 
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		super.renderHoveredToolTip(mouseX, mouseY);
-	}
-	
-	protected void drawGuiContainerBackgroundLayer(float inter, int mX, int mY) {
-		super.drawDefaultBackground();
-		GlStateManager.color(1, 1, 1, 1);
-		this.mc.getTextureManager().bindTexture(texture);
+            for (int i = 0; i < ArmorModHandler.MOD_SLOTS + 1; ++i) {
+                Slot slot = this.inventorySlots.getSlot(i);
 
-		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
+                if (this.isMouseOverSlot(slot, mouseX, mouseY) && !slot.getHasStack()) {
+                    String text = (i < ArmorModHandler.MOD_SLOTS ? TextFormatting.LIGHT_PURPLE : TextFormatting.YELLOW) + I18n.format(unloc[i]);
+                    this.drawHoveringText(Collections.singletonList(text), mouseX, mouseY);
+                }
+            }
+        }
+    }
 
-		ItemStack armor = this.inventorySlots.getSlot(8).getStack();
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        String name = I18n.format("container.armorTable");
+        this.fontRenderer.drawString(name, 22 + (176 / 2 - this.fontRenderer.getStringWidth(name) / 2), 6, 4210752);
+        this.fontRenderer.drawString(I18n.format("container.inventory"), 22 + 8, this.ySize - 96 + 2, 4210752);
+    }
 
-		if(armor != null) {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(TEXTURE);
+        this.drawTexturedModalRect(this.guiLeft + 22, this.guiTop, 0, 0, 176, this.ySize);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop + 31, 176, 96, 22, 100);
 
-			if(armor.getItem() instanceof ItemArmor)
-				this.drawTexturedModalRect(guiLeft + 41, guiTop + 60, 176, 74, 22, 22);
-			else
-				this.drawTexturedModalRect(guiLeft + 41, guiTop + 60, 176, 52, 22, 22);
-		}
-		
-		for(int i = 0; i < 8; i++) {
-			Slot slot = this.inventorySlots.getSlot(i);
-			drawIndicator(i, slot.xPos - 1, slot.yPos - 1);
-		}
-	}
+        ItemStack armor = this.inventorySlots.getSlot(ArmorModHandler.MOD_SLOTS).getStack();
 
-	private void drawIndicator(int index, int x, int y) {
-		ItemStack mod = this.inventorySlots.getSlot(index).getStack();
-		ItemStack armor = this.inventorySlots.getSlot(8).getStack();
+        if (!armor.isEmpty()) {
+            if (armor.getItem() instanceof ItemArmor) this.drawTexturedModalRect(this.guiLeft + 41 + 22, this.guiTop + 60, 176, 74, 22, 22);
+            else this.drawTexturedModalRect(this.guiLeft + 41 + 22, this.guiTop + 60, 176, 52, 22, 22);
+        } else {
+            if (System.currentTimeMillis() % 1000 < 500) this.drawTexturedModalRect(this.guiLeft + 41 + 22, this.guiTop + 60, 176, 52, 22, 22);
+        }
 
-		if(mod.isEmpty())
-			return;
+        for (int i = 0; i < ArmorModHandler.MOD_SLOTS; i++) {
+            Slot slot = this.inventorySlots.getSlot(i);
+            drawIndicator(i, slot.xPos - 1, slot.yPos - 1);
+        }
+    }
 
-		if(ArmorModHandler.isApplicable(armor, mod)) {
-			this.drawTexturedModalRect(guiLeft + x, guiTop + y, 176, 34, 18, 18);
-		} else {
-			this.drawTexturedModalRect(guiLeft + x, guiTop + y, 176, 16, 18, 18);
-		}
-	}
+    private void drawIndicator(int index, int x, int y) {
+        ItemStack mod = this.inventorySlots.getSlot(index).getStack();
+        ItemStack armor = this.inventorySlots.getSlot(ArmorModHandler.MOD_SLOTS).getStack();
+
+        if (mod.isEmpty()) return;
+
+        if (ArmorModHandler.isApplicable(armor, mod)) {
+            this.drawTexturedModalRect(this.guiLeft + x, this.guiTop + y, 176, 34, 18, 18);
+        } else {
+            this.drawTexturedModalRect(this.guiLeft + x, this.guiTop + y, 176, 16, 18, 18);
+        }
+    }
 }

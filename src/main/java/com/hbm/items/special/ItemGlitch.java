@@ -1,11 +1,13 @@
 package com.hbm.items.special;
 
+import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.effect.EntityVortex;
 import com.hbm.entity.missile.EntityMIRV;
 import com.hbm.entity.projectile.EntityBoxcar;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
@@ -26,7 +28,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemGlitch extends Item {
+// mlbv: this annotation was added by bobcat
+@Spaghetti("why do you even exist")
+public class ItemGlitch extends Item implements IBatteryItem {
 
 	public ItemGlitch(String s) {
 		this.setTranslationKey(s);
@@ -186,5 +190,37 @@ public class ItemGlitch extends Item {
 		list.add("");
 		if(MainRegistry.polaroidID > 0 && MainRegistry.polaroidID < 19)
 			list.add(I18nUtil.resolveKey("desc.glitch."+MainRegistry.polaroidID));
+	}
+
+	@Override
+	public void chargeBattery(ItemStack stack, long i) {
+	}
+
+	@Override
+	public void setCharge(ItemStack stack, long i) {
+	}
+
+	@Override
+	public void dischargeBattery(ItemStack stack, long i) {
+	}
+
+	@Override
+	public long getCharge(ItemStack stack) {
+		return 200;
+	}
+
+	@Override
+	public long getMaxCharge(ItemStack stack) {
+		return 200;
+	}
+
+	@Override
+	public long getChargeRate() {
+		return 0;
+	}
+
+	@Override
+	public long getDischargeRate() {
+		return 200;
 	}
 }

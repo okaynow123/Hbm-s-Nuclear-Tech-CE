@@ -66,9 +66,9 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 
 					if(Library.isItemBattery(stack)) {
 						if (stack.getItem() instanceof IBatteryItem battery) {
-							totalCapacity += battery.getMaxCharge();
+							totalCapacity += battery.getMaxCharge(stack);
 							totalEnergy += battery.getCharge(stack);
-							charge += Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
+							charge += Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
 						} else {
 							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 							if (cap != null && GeneralConfig.conversionRateHeToRF > 0) {
@@ -159,7 +159,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
                     } else {
                         long chargedAmount;
                         if (stack.getItem() instanceof IBatteryItem battery) {
-                            chargedAmount = Math.min(battery.getMaxCharge() - battery.getCharge(stack), battery.getChargeRate());
+                            chargedAmount = Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
                         } else {
 							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
                             chargedAmount = (long) ((cap.getMaxEnergyStored() - cap.getEnergyStored()) / GeneralConfig.conversionRateHeToRF);

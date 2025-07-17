@@ -1128,7 +1128,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	public static boolean isItemChargeableBattery(@NotNull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getMaxCharge() > battery.getCharge(stack) && battery.getChargeRate() > 0;
+			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate() > 0;
 		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
 			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 			if (cap != null) return cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
@@ -1150,7 +1150,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	public static boolean isItemFullBattery(@NotNull ItemStack stack){
 		if(stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getCharge(stack) == battery.getMaxCharge();
+			return battery.getCharge(stack) == battery.getMaxCharge(stack);
 		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
 			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 			if (cap!= null) return cap.getEnergyStored() == cap.getMaxEnergyStored();
@@ -1165,7 +1165,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		if (stack.isEmpty()) return 0;
 		long added = 0;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			long maxcharge = battery.getMaxCharge();
+			long maxcharge = battery.getMaxCharge(stack);
 			long charge = battery.getCharge(stack);
 			added = instant ? heCharge : Math.min(heCharge, battery.getChargeRate());
 			added = charge + added > maxcharge ? maxcharge - charge : added;

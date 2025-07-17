@@ -67,16 +67,14 @@ public class ItemModPads extends ItemArmorMod {
 						
 						ItemStack stack = player.inventory.armorInventory.get(i);
 						
-						if(stack.getItem() instanceof ArmorFSBPowered) {
-							
-							ArmorFSBPowered powered = (ArmorFSBPowered) stack.getItem();
-							
-							long charge = powered.drain / 2;
+						if(stack.getItem() instanceof ArmorFSBPowered powered) {
+
+                            long charge = powered.drain / 2;
 							
 							if(charge == 0)
 								charge = powered.consumption / 40;
 							
-							long power = Math.min(powered.maxPower, powered.getCharge(stack) + charge);
+							long power = Math.min(powered.getMaxCharge(stack), powered.getCharge(stack) + charge);
 							powered.setCharge(stack, power);
 						}
 					}

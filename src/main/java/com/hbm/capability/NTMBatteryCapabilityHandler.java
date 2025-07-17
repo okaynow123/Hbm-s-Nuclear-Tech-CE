@@ -62,7 +62,7 @@ public class NTMBatteryCapabilityHandler {
             if (!canReceive() || maxReceive <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
             long heBudget = (long) Math.floor(maxReceive / GeneralConfig.conversionRateHeToRF);
             if (heBudget <= 0) return simulate ? 1 : 0;
-            long spaceHE = batteryItem.getMaxCharge() - batteryItem.getCharge(container);
+            long spaceHE = batteryItem.getMaxCharge(container) - batteryItem.getCharge(container);
             long heCanAccept = Math.min(spaceHE, batteryItem.getChargeRate());
             long heAccepted = Math.min(heBudget, heCanAccept);
             if (heAccepted > 0 && !simulate) batteryItem.chargeBattery(container, heAccepted);
@@ -91,7 +91,7 @@ public class NTMBatteryCapabilityHandler {
         @Override
         public int getMaxEnergyStored() {
             return GeneralConfig.conversionRateHeToRF <= 0 ? 0 : (int) Math.min(Integer.MAX_VALUE,
-                    Math.round(batteryItem.getMaxCharge() * GeneralConfig.conversionRateHeToRF));
+                    Math.round(batteryItem.getMaxCharge(container) * GeneralConfig.conversionRateHeToRF));
         }
 
         @Override
@@ -101,7 +101,7 @@ public class NTMBatteryCapabilityHandler {
 
         @Override
         public boolean canReceive() {
-            return batteryItem.getChargeRate() > 0 && batteryItem.getCharge(container) < batteryItem.getMaxCharge();
+            return batteryItem.getChargeRate() > 0 && batteryItem.getCharge(container) < batteryItem.getMaxCharge(container);
         }
     }
 }

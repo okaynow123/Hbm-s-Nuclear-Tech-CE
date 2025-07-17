@@ -5,6 +5,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -19,6 +20,9 @@ public class ArmorModHandler {
 	public static final int cladding = 5;
 	public static final int kevlar = 6;
 	public static final int extra = 7;
+	public static final int battery = 8;
+
+	public static final int MOD_SLOTS = 9;
 	
 	public static final UUID[] UUIDs = new UUID[] {
 			UUID.fromString("8d6e5c77-133e-4056-9c80-a9e42a1a0b65"),
@@ -38,7 +42,7 @@ public class ArmorModHandler {
 	public static final String MOD_COMPOUND_KEY = "ntm_armor_mods";
 	//The key for the specific slot inside the armor mod NBT Tag
 	public static final String MOD_SLOT_KEY = "mod_slot_";
-	
+
 	/**
 	 * Checks if a mod can be applied to an armor piece
 	 * Needs to be used to prevent people from inserting invalid items into the armor table
@@ -46,22 +50,17 @@ public class ArmorModHandler {
 	 * @param mod
 	 * @return
 	 */
-	public static boolean isApplicable(ItemStack armor, ItemStack mod) {
-		
-		if(armor == null || mod == null)
-			return false;
+	public static boolean isApplicable(@NotNull ItemStack armor, @NotNull ItemStack mod) {
 		
 		if(!(armor.getItem() instanceof ItemArmor))
 			return false;
 		
-		if(!(mod.getItem() instanceof ItemArmorMod))
+		if(!(mod.getItem() instanceof ItemArmorMod aMod))
 			return false;
 		
 		EntityEquipmentSlot type = ((ItemArmor)armor.getItem()).armorType;
-		
-		ItemArmorMod aMod = (ItemArmorMod)mod.getItem();
-		
-		return (type == EntityEquipmentSlot.HEAD && aMod.helmet) || (type == EntityEquipmentSlot.CHEST && aMod.chestplate) || (type == EntityEquipmentSlot.LEGS && aMod.leggings) || (type == EntityEquipmentSlot.FEET && aMod.boots);
+
+        return (type == EntityEquipmentSlot.HEAD && aMod.helmet) || (type == EntityEquipmentSlot.CHEST && aMod.chestplate) || (type == EntityEquipmentSlot.LEGS && aMod.leggings) || (type == EntityEquipmentSlot.FEET && aMod.boots);
 	}
 	
 	/**
@@ -150,7 +149,7 @@ public class ArmorModHandler {
 	
 	public static ItemStack[] pryMods(ItemStack armor) {
 		
-		ItemStack[] slots = new ItemStack[8];
+		ItemStack[] slots = new ItemStack[MOD_SLOTS];
 
 		if(!hasMods(armor)){
 			Arrays.fill(slots, ItemStack.EMPTY);
@@ -160,7 +159,7 @@ public class ArmorModHandler {
 		NBTTagCompound nbt = armor.getTagCompound();
 		NBTTagCompound mods = nbt.getCompoundTag(MOD_COMPOUND_KEY);
 		
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < MOD_SLOTS; i++) {
 			
 			NBTTagCompound cmp = mods.getCompoundTag(MOD_SLOT_KEY + i);
 			
@@ -177,10 +176,8 @@ public class ArmorModHandler {
 			return ItemStack.EMPTY;
 		NBTTagCompound nbt = armor.getTagCompound();
 		NBTTagCompound mods = nbt.getCompoundTag(MOD_COMPOUND_KEY);
-		
 		NBTTagCompound cmp = mods.getCompoundTag(MOD_SLOT_KEY + slot);
-		ItemStack stack = new ItemStack(cmp);
-		
-		return stack;
+
+        return new ItemStack(cmp);
 	}
 }
