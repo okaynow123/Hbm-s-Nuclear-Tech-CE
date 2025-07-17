@@ -177,22 +177,6 @@ public abstract class TileEntityFireboxBase extends TileEntityMachineBase implem
 		this.wasOn = buf.readBoolean();
 	}
 
-	public static ItemEnums.EnumAshType getAshFromFuel(ItemStack stack) {
-
-		List<String> names = ItemStackUtil.getOreDictNames(stack);
-
-		for(String name : names) {
-			if(name.contains("Coke"))		return ItemEnums.EnumAshType.COAL;
-			if(name.contains("Coal"))		return ItemEnums.EnumAshType.COAL;
-			if(name.contains("Lignite"))	return ItemEnums.EnumAshType.COAL;
-			if(name.startsWith("log"))		return ItemEnums.EnumAshType.WOOD;
-			if(name.contains("Wood"))		return ItemEnums.EnumAshType.WOOD;
-			if(name.contains("Sapling"))	return ItemEnums.EnumAshType.WOOD;
-		}
-
-		return ItemEnums.EnumAshType.MISC;
-	}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
