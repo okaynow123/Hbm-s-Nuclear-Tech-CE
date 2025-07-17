@@ -47,7 +47,7 @@ public enum ForgeDirection {
     	{0, 1, 2, 3, 4, 5, 6},
     };
 
-    private ForgeDirection(int x, int y, int z)
+    ForgeDirection(int x, int y, int z)
     {
         offsetX = x;
         offsetY = y;
@@ -79,28 +79,25 @@ public enum ForgeDirection {
     }
     
     public Rotation getBlockRotation(){
-    	switch(this){
-    	case NORTH: return Rotation.NONE;
-    	case SOUTH: return Rotation.CLOCKWISE_180;
-    	case EAST: return Rotation.COUNTERCLOCKWISE_90;
-    	case WEST: return Rotation.CLOCKWISE_90;
-    	default:
-    	return Rotation.NONE;
-    	}
+        return switch (this) {
+            case SOUTH -> Rotation.CLOCKWISE_180;
+            case EAST -> Rotation.COUNTERCLOCKWISE_90;
+            case WEST -> Rotation.CLOCKWISE_90;
+            default -> Rotation.NONE;
+        };
     }
-    
-    public EnumFacing toEnumFacing(){
-    	return EnumFacing.values()[ordinal()];
+
+    public EnumFacing toEnumFacing() {
+        return this == UNKNOWN ? null : EnumFacing.values()[ordinal()];
     }
     
     public float getRotationDegrees(){
-    	switch(this.ordinal()) {
-		case 2: return 0;
-		case 4: return 90;
-		case 3: return 180;
-		case 5: return 270;
-		default: return 0;
-		}
+        return switch (this.ordinal()) {
+            case 4 -> 90;
+            case 3 -> 180;
+            case 5 -> 270;
+            default -> 0;
+        };
     }
     
     public float getRotationRadians(){
