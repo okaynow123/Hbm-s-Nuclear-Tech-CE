@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Attaches Forge Energy capabilities to any item that implements IBatteryItem.
+ * Attaches {@link CapabilityEnergy#ENERGY} capability to any item that implements {@link IBatteryItem}.
  *
  * @author mlbv
  */
@@ -36,10 +36,12 @@ public class NTMBatteryCapabilityHandler {
     }
 
     private static class Wrapper implements ICapabilityProvider, IEnergyStorage {
+
+        @NotNull
         private final ItemStack container;
         private final IBatteryItem batteryItem;
 
-        public Wrapper(ItemStack container) {
+        public Wrapper(@NotNull ItemStack container) {
             this.container = container;
             this.batteryItem = (IBatteryItem) container.getItem();
         }
@@ -52,71 +54,54 @@ public class NTMBatteryCapabilityHandler {
         @Nullable
         @Override
         public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
-            if (capability == CapabilityEnergy.ENERGY) {
-                return CapabilityEnergy.ENERGY.cast(this);
-            }
-            return null;
+            return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(this) : null;
         }
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             if (!canReceive() || maxReceive <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
-
-            long powerToOfferInHE = (long) (maxReceive / GeneralConfig.conversionRateHeToRF);
-            if (powerToOfferInHE <= 0) return 0;
-
-            long spaceInBattery = this.batteryItem.getMaxCharge() - this.batteryItem.getCharge(this.container);
-            long batteryCanTakeHE = Math.min(spaceInBattery, this.batteryItem.getChargeRate());
-            long actualToReceiveHE = Math.min(powerToOfferInHE, batteryCanTakeHE);
-
-            if (actualToReceiveHE > 0 && !simulate) {
-                this.batteryItem.chargeBattery(this.container, actualToReceiveHE);
-            }
-
-            long receivedFE = (long) (actualToReceiveHE * GeneralConfig.conversionRateHeToRF);
-            return (int) Math.min(Integer.MAX_VALUE, receivedFE);
+            long heBudget = (long) Math.floor(maxReceive / GeneralConfig.conversionRateHeToRF);
+            if (heBudget <= 0) return simulate ? 1 : 0;
+            long spaceHE = batteryItem.getMaxCharge() - batteryItem.getCharge(container);
+            long heCanAccept = Math.min(spaceHE, batteryItem.getChargeRate());
+            long heAccepted = Math.min(heBudget, heCanAccept);
+            if (heAccepted > 0 && !simulate) batteryItem.chargeBattery(container, heAccepted);
+            long feAccepted = Math.round(heAccepted * GeneralConfig.conversionRateHeToRF);
+            return (int) Math.min(maxReceive, Math.min(Integer.MAX_VALUE, feAccepted));
         }
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
             if (!canExtract() || maxExtract <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
-
-            long maxExtractHE = (long) (maxExtract / GeneralConfig.conversionRateHeToRF);
-            if (maxExtractHE <= 0) return 0;
-
-            long batteryCanProvideHE = Math.min(this.batteryItem.getCharge(this.container), this.batteryItem.getDischargeRate());
-            long actualToExtractHE = Math.min(maxExtractHE, batteryCanProvideHE);
-
-            if (actualToExtractHE > 0 && !simulate) {
-                this.batteryItem.dischargeBattery(this.container, actualToExtractHE);
-            }
-
-            long extractedFE = (long) (actualToExtractHE * GeneralConfig.conversionRateHeToRF);
-            return (int) Math.min(Integer.MAX_VALUE, extractedFE);
+            long heBudget = (long) Math.floor(maxExtract / GeneralConfig.conversionRateHeToRF);
+            if (heBudget <= 0) return simulate ? 1 : 0;
+            long heAvailable = Math.min(batteryItem.getCharge(container), batteryItem.getDischargeRate());
+            long heExtracted = Math.min(heBudget, heAvailable);
+            if (heExtracted > 0 && !simulate) batteryItem.dischargeBattery(container, heExtracted);
+            long feExtracted = Math.round(heExtracted * GeneralConfig.conversionRateHeToRF);
+            return (int) Math.min(maxExtract, Math.min(Integer.MAX_VALUE, feExtracted));
         }
 
         @Override
         public int getEnergyStored() {
-            if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
-            long storedFE = (long) (this.batteryItem.getCharge(this.container) * GeneralConfig.conversionRateHeToRF);
-            return (int) Math.min(Integer.MAX_VALUE, storedFE);
+            return GeneralConfig.conversionRateHeToRF <= 0 ? 0 : (int) Math.min(Integer.MAX_VALUE,
+                    Math.round(batteryItem.getCharge(container) * GeneralConfig.conversionRateHeToRF));
         }
 
         @Override
         public int getMaxEnergyStored() {
-            if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
-            long maxStoredFE = (long) (this.batteryItem.getMaxCharge() * GeneralConfig.conversionRateHeToRF);
-            return (int) Math.min(Integer.MAX_VALUE, maxStoredFE);
+            return GeneralConfig.conversionRateHeToRF <= 0 ? 0 : (int) Math.min(Integer.MAX_VALUE,
+                    Math.round(batteryItem.getMaxCharge() * GeneralConfig.conversionRateHeToRF));
         }
 
         @Override
         public boolean canExtract() {
-            return this.batteryItem.getDischargeRate() > 0 && this.batteryItem.getCharge(this.container) > 0;
+            return batteryItem.getDischargeRate() > 0 && batteryItem.getCharge(container) > 0;
         }
 
         @Override
         public boolean canReceive() {
-            return this.batteryItem.getChargeRate() > 0 && this.batteryItem.getCharge(this.container) < this.batteryItem.getMaxCharge();
+            return batteryItem.getChargeRate() > 0 && batteryItem.getCharge(container) < batteryItem.getMaxCharge();
         }
     }
 }

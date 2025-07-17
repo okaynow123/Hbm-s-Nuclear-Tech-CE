@@ -102,7 +102,6 @@ public class MudBlock extends BlockFluidClassic {
 		Block block = state.getBlock();
 		ResourceLocation rl = block.getRegistryName();
 		String blockName = (rl != null ? rl.getPath() : "");
-		String matName = state.getMaterial().toString();
 		switch (blockName) {
 			case "stone_brick_stairs", "stonebrick", "stone_slab", "stone" -> {
 				if (rand.nextInt(20) == 0) {
@@ -125,17 +124,48 @@ public class MudBlock extends BlockFluidClassic {
 				}
 			}
 			default -> {
-				switch (matName) {
-					case "WOOD", "CACTUS", "CAKE", "CIRCUITS", "CLOTH",
-						 "CORAL", "CRAFTED_SNOW", "GLASS", "GOURD",
-						 "ICE", "LEAVES", "PACKED_ICE", "PISTON",
-						 "PLANTS", "PORTAL", "REDSTONE_LIGHT", "SNOW",
-						 "SPONGE", "VINE", "WEB" -> world.setBlockToAir(pos);
-					default -> {
-						if (block.getExplosionResistance(null) < 1.2F) {
-							world.setBlockToAir(pos);
-						}
-					}
+				if (state.getMaterial() == Material.WOOD) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CACTUS) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CAKE) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CIRCUITS) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CLOTH) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CORAL) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.CRAFTED_SNOW) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.GLASS) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.GOURD) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.ICE) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.LEAVES) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.PACKED_ICE) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.PISTON) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.PLANTS) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.PORTAL) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.REDSTONE_LIGHT) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.SNOW) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.SPONGE) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.VINE) {
+					world.setBlockToAir(pos);
+				} else if (state.getMaterial() == Material.WEB) {
+					world.setBlockToAir(pos);
+				} else if (block.getExplosionResistance(null) < 1.2F) {
+					world.setBlockToAir(pos);
 				}
 			}
 		}
