@@ -1,14 +1,18 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineLPW2;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
-public class RenderLPW2 extends TileEntitySpecialRenderer<TileEntityMachineLPW2> {
+public class RenderLPW2 extends TileEntitySpecialRenderer<TileEntityMachineLPW2> implements IItemRendererProvider {
 
 	@Override
 	public void render(TileEntityMachineLPW2 te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -149,6 +153,29 @@ public class RenderLPW2 extends TileEntitySpecialRenderer<TileEntityMachineLPW2>
 
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.machine_lpw2);
+	}
+
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+				GlStateManager.translate(1, -1, 0);
+				GlStateManager.scale(1.6, 1.6, 1.6);
+			}
+
+			public void renderCommon() {
+				GlStateManager.scale(0.5, 0.5, 0.5);
+				GlStateManager.shadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.lpw2_tex);
+				ResourceManager.lpw2.renderAll();
+				GlStateManager.shadeModel(GL11.GL_FLAT);
+			}
+		};
 	}
 	
 	public static void renderMainAssembly(double sway, double h, double v, double piston, double rotor, double turbine) {

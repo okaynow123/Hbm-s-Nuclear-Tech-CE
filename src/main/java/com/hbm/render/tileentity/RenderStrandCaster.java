@@ -1,18 +1,22 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
 import java.nio.DoubleBuffer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMachineStrandCaster> {
+public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMachineStrandCaster>
+    implements IItemRendererProvider {
   public static final ResourceLocation lava =
       new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
   private static DoubleBuffer buf = null;
@@ -107,5 +111,28 @@ public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMach
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
     GlStateManager.popMatrix();
+  }
+
+  @Override
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.machine_strand_caster);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.translate(2, 0, 2);
+        GlStateManager.scale(2, 2, 2);
+      }
+
+      public void renderCommon() {
+        GlStateManager.scale(1, 1, 1);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        bindTexture(ResourceManager.strand_caster_tex);
+        ResourceManager.strand_caster.renderAll();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+      }
+    };
   }
 }

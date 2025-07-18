@@ -1,6 +1,8 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachinePress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,7 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
-public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePress> {
+public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePress> implements IItemRendererProvider {
 
 	/*private static final float[] IDENTITY_MATRIX =
 			new float[] {
@@ -268,5 +270,28 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 	public float normalize(float value, float min, float max){
 		return this.normalize(value, min, max, 1.0f);
 	}*/
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.machine_press);
+	}
+
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+                GlStateManager.translate(0, -4, 0);
+				GlStateManager.scale(4.5, 4.5, 4.5);
+            }
+
+            public void renderCommon() {
+                bindTexture(ResourceManager.press_body_tex);
+                ResourceManager.press_body.renderAll();
+				GlStateManager.translate(0, 0.5, 0);
+                bindTexture(ResourceManager.press_head_tex);
+                ResourceManager.press_head.renderAll();
+            }
+		};
+	}
 
 }

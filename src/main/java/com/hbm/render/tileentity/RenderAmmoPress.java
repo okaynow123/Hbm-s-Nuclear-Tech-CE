@@ -1,13 +1,17 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineAmmoPress;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
-public class RenderAmmoPress extends TileEntitySpecialRenderer<TileEntityMachineAmmoPress> {
+public class RenderAmmoPress extends TileEntitySpecialRenderer<TileEntityMachineAmmoPress>
+    implements IItemRendererProvider {
 
   @Override
   public void render(
@@ -60,5 +64,27 @@ public class RenderAmmoPress extends TileEntitySpecialRenderer<TileEntityMachine
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
     GlStateManager.popMatrix();
+  }
+
+  @Override
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.machine_ammo_press);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.translate(0, -2.5, 0);
+        GlStateManager.scale(5, 5, 5);
+      }
+
+      public void renderCommon() {
+        GlStateManager.rotate(90, 0F, 1F, 0F);
+        bindTexture(ResourceManager.ammo_press_tex);
+        ResourceManager.ammo_press.renderAll();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+      }
+    };
   }
 }

@@ -1,14 +1,18 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.turret.TileEntityTurretHIMARS;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
-public class RenderTurretHIMARS extends TileEntitySpecialRenderer<TileEntityTurretHIMARS> {
+public class RenderTurretHIMARS extends TileEntitySpecialRenderer<TileEntityTurretHIMARS>
+    implements IItemRendererProvider {
   @Override
   public void render(
       TileEntityTurretHIMARS turret,
@@ -29,12 +33,15 @@ public class RenderTurretHIMARS extends TileEntitySpecialRenderer<TileEntityTurr
     bindTexture(ResourceManager.turret_arty_tex);
     ResourceManager.turret_arty.renderPart("Base");
     float yaw =
-            (float) (-Math.toDegrees(
-                            turret.lastRotationYaw + (turret.rotationYaw - turret.lastRotationYaw) * interp)
-                        - 90F);
+        (float)
+            (-Math.toDegrees(
+                    turret.lastRotationYaw + (turret.rotationYaw - turret.lastRotationYaw) * interp)
+                - 90F);
     float pitch =
-            (float) Math.toDegrees(
-                turret.lastRotationPitch + (turret.rotationPitch - turret.lastRotationPitch) * interp);
+        (float)
+            Math.toDegrees(
+                turret.lastRotationPitch
+                    + (turret.rotationPitch - turret.lastRotationPitch) * interp);
 
     bindTexture(ResourceManager.turret_himars_tex);
     GlStateManager.rotate(yaw - 90, 0, 1, 0);
@@ -71,5 +78,35 @@ public class RenderTurretHIMARS extends TileEntitySpecialRenderer<TileEntityTurr
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
     GlStateManager.popMatrix();
+  }
+
+  @Override
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.turret_himars);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.translate(0, -2, 0);
+        GlStateManager.scale(3.5, 3.5, 3.5);
+      }
+
+      public void renderCommon() {
+        GlStateManager.rotate(-90, 0, 1, 0);
+        GlStateManager.scale(0.5, 0.5, 0.5);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        bindTexture(ResourceManager.turret_arty_tex);
+        ResourceManager.turret_arty.renderPart("Base");
+        bindTexture(ResourceManager.turret_himars_tex);
+        ResourceManager.turret_himars.renderPart("Carriage");
+        ResourceManager.turret_himars.renderPart("Launcher");
+        ResourceManager.turret_himars.renderPart("Crane");
+        bindTexture(ResourceManager.himars_standard_tex);
+        ResourceManager.turret_himars.renderPart("TubeStandard");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+      }
+    };
   }
 }

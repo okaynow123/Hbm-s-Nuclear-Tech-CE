@@ -1,15 +1,18 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineSteamEngine;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
-public class RenderSteamEngine extends TileEntitySpecialRenderer<TileEntityMachineSteamEngine> {
+public class RenderSteamEngine extends TileEntitySpecialRenderer<TileEntityMachineSteamEngine>
+    implements IItemRendererProvider {
   @Override
   public void render(
       TileEntityMachineSteamEngine tile,
@@ -92,7 +95,26 @@ public class RenderSteamEngine extends TileEntitySpecialRenderer<TileEntityMachi
   }
 
   @Override
-  protected void bindTexture(@NotNull ResourceLocation tex) {
-    Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.machine_steam_engine);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.rotate(90, 0F, -1F, 0F);
+        GlStateManager.translate(0, -1.5, 0);
+        GlStateManager.scale(2, 2, 2);
+      }
+
+      public void renderCommon(ItemStack item) {
+        GlStateManager.rotate(90, 0F, 1F, 0F);
+        bindTexture(ResourceManager.steam_engine_tex);
+
+        boolean cog = item.getItemDamage() != 1;
+        RenderSteamEngine.this.renderCommon(cog ? System.currentTimeMillis() % 3600 * 0.1F : 0F);
+      }
+    };
   }
 }

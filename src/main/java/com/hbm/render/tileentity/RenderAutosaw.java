@@ -1,12 +1,16 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineAutosaw;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;
 
-public class RenderAutosaw extends TileEntitySpecialRenderer<TileEntityMachineAutosaw> {
+public class RenderAutosaw extends TileEntitySpecialRenderer<TileEntityMachineAutosaw>
+    implements IItemRendererProvider {
 
   @Override
   public void render(
@@ -68,5 +72,27 @@ public class RenderAutosaw extends TileEntitySpecialRenderer<TileEntityMachineAu
     GlStateManager.rotate(spin, 0, -1, 0);
     GlStateManager.translate(0, -1.75, 10);
     ResourceManager.autosaw.renderPart("Sawblade");
+  }
+
+  @Override
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.machine_autosaw);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.translate(0, -3.5, -3);
+        GlStateManager.scale(5, 5, 5);
+      }
+
+      public void renderCommon() {
+        GlStateManager.scale(0.5, 0.5, 0.5);
+        GlStateManager.rotate(-90, 0F, 1F, 0F);
+        RenderAutosaw.this.renderCommon(
+            0, 80, (float) (System.currentTimeMillis() % 3600 * 0.1), 0);
+      }
+    };
   }
 }

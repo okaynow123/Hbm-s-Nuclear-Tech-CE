@@ -1,14 +1,17 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineRotaryFurnace;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
-public class RenderRotaryFurnace extends TileEntitySpecialRenderer<TileEntityMachineRotaryFurnace> {
+public class RenderRotaryFurnace extends TileEntitySpecialRenderer<TileEntityMachineRotaryFurnace> implements IItemRendererProvider {
 
   @Override
   public void render(
@@ -53,5 +56,29 @@ public class RenderRotaryFurnace extends TileEntitySpecialRenderer<TileEntityMac
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
     GlStateManager.popMatrix();
+  }
+
+  @Override
+  public Item getItemForRenderer() {
+    return Item.getItemFromBlock(ModBlocks.machine_rotary_furnace);
+  }
+
+  @Override
+  public ItemRenderBase getRenderer(Item item) {
+    return new ItemRenderBase() {
+      public void renderInventory() {
+        GlStateManager.translate(0, -2, 0);
+        GlStateManager.scale(3.5, 3.5, 3.5);
+      }
+
+      public void renderCommon() {
+        GlStateManager.scale(0.625, 0.625, 0.625);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        bindTexture(ResourceManager.rotary_furnace_tex);
+        ResourceManager.rotary_furnace.renderAll();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+      }
+    };
   }
 }

@@ -1,12 +1,16 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityOrbitalStation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
-public class RenderOrbitalStation extends TileEntitySpecialRenderer<TileEntityOrbitalStation> {
+public class RenderOrbitalStation extends TileEntitySpecialRenderer<TileEntityOrbitalStation> implements IItemRendererProvider {
 	
 	@Override
 	public void render(TileEntityOrbitalStation station, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -58,6 +62,30 @@ public class RenderOrbitalStation extends TileEntitySpecialRenderer<TileEntityOr
 
 		}
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.orbital_station);
+	}
+
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+                GlStateManager.translate(0, 2, 0);
+				GlStateManager.scale(2, 2, 2);
+            }
+
+            public void renderCommon() {
+				GlStateManager.disableCull();
+				GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.docking_port_tex);
+                ResourceManager.docking_port.renderAll();
+				GlStateManager.shadeModel(GL11.GL_FLAT);
+				GlStateManager.enableCull();
+            }
+		};
 	}
 
 }

@@ -1,17 +1,20 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineFENSU;
 import com.hbm.wiaj.WorldInAJar;
 import com.hbm.wiaj.actors.ITileActorRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.opengl.GL11;
 
-public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENSU> implements ITileActorRenderer {
+public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENSU> implements IItemRendererProvider, ITileActorRenderer {
 
 	@Override
 	public void render(TileEntityMachineFENSU te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -111,5 +114,36 @@ public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENS
 
 		data.setFloat("lastSpin", lastSpin);
 		data.setFloat("spin", spin);
+	}
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.machine_fensu);
+	}
+
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+                GlStateManager.rotate(90, 0, 1, 0);
+				GlStateManager.translate(0, -2, 0);
+				GlStateManager.scale(2.5, 2.5, 2.5);
+            }
+
+            public void renderCommon() {
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.fensu_tex[3]);
+                ResourceManager.fensu.renderPart("Base");
+                ResourceManager.fensu.renderPart("Disc");
+                GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+				GlStateManager.disableLighting();
+                GlStateManager.disableCull();
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+                ResourceManager.fensu.renderPart("Lights");
+				GlStateManager.enableLighting();
+                GL11.glPopAttrib();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+		};
 	}
 }

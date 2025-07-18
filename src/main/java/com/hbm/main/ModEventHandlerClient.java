@@ -25,6 +25,7 @@ import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
+import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.gear.ArmorFSB;
@@ -64,10 +65,7 @@ import com.hbm.render.misc.RenderAccessoryUtility;
 import com.hbm.render.misc.RenderScreenOverlay;
 import com.hbm.render.misc.SoyuzPronter;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
-import com.hbm.render.tileentity.RenderMultiblock;
-import com.hbm.render.tileentity.RenderSoyuzMultiblock;
-import com.hbm.render.tileentity.RenderStructureMarker;
-import com.hbm.render.tileentity.RenderWatzMultiblock;
+import com.hbm.render.tileentity.*;
 import com.hbm.render.util.RenderOverhead;
 import com.hbm.sound.*;
 import com.hbm.sound.MovingSoundPlayerLoop.EnumHbmSound;
@@ -80,6 +78,9 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -140,12 +141,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.*;
-import java.util.Map.Entry;
-
 
 public class ModEventHandlerClient {
 
@@ -619,9 +614,20 @@ public class ModEventHandlerClient {
         swapModels(ModItems.fluid_tank_full, reg);
         swapModels(ModItems.fluid_tank_lead_full, reg);
 
+        swapModels(ModItems.ammo_himars, reg);
+        swapModels(ModItems.jetpack_glider, reg);
+        swapModels(ModItems.gear_large, reg);
 
-        for (Entry<Item, ItemRenderBase> entry : ItemRenderLibrary.renderers.entrySet()) {
-            swapModels(entry.getKey(), reg);
+        for (Item item : RBMKItemRenderers.itemRenderers.keySet()) {
+            swapModels(item, reg);
+        }
+
+        for (Object renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
+            if (renderer instanceof IItemRendererProvider prov) {
+                for (Item item : prov.getItemsForRenderer()) {
+                    swapModels(item, reg);
+                }
+            }
         }
 
         MainRegistry.proxy.registerMissileItems(reg);

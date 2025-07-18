@@ -9,7 +9,6 @@ import com.hbm.blocks.generic.BMPowerBox;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.TrappedBrick;
 import com.hbm.blocks.machine.BlockSeal;
-import com.hbm.blocks.machine.MachineCapacitor;
 import com.hbm.blocks.machine.WatzPump;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
@@ -31,6 +30,7 @@ import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
+import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.special.ItemAutogen;
@@ -91,8 +91,8 @@ import com.hbm.tileentity.network.TileEntityCraneSplitter;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import com.hbm.tileentity.network.energy.TileEntityPylon;
-import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
 import com.hbm.tileentity.network.energy.TileEntityPylonLarge;
+import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
 import com.hbm.tileentity.network.energy.TileEntitySubstation;
 import com.hbm.tileentity.turret.*;
 import com.hbm.util.BobMathUtil;
@@ -101,11 +101,8 @@ import com.hbm.wiaj.cannery.Jars;
 import java.awt.*;
 import java.io.File;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockStainedHardenedClay;
@@ -125,6 +122,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -1886,8 +1884,6 @@ public class ClientProxy extends ServerProxy {
         }
         OBJLoader.INSTANCE.addDomain(RefStrings.MODID);
 
-        ItemRenderLibrary.init();
-
         ModItems.redstone_sword.setTileEntityItemStackRenderer(ItemRedstoneSwordRender.INSTANCE);
         ModItems.assembly_template.setTileEntityItemStackRenderer(AssemblyTemplateRender.INSTANCE);
         ModItems.chemistry_template.setTileEntityItemStackRenderer(ChemTemplateRender.INSTANCE);
@@ -2001,6 +1997,8 @@ public class ClientProxy extends ServerProxy {
         ModItems.gun_ar15.setTileEntityItemStackRenderer(new ItemRenderWeaponAR15());
 
         ModItems.ammo_himars.setTileEntityItemStackRenderer(new ItemRenderTurretHIMARSAmmo());
+        ModItems.jetpack_glider.setTileEntityItemStackRenderer(new ItemRenderJetpackGlider());
+        ModItems.gear_large.setTileEntityItemStackRenderer(new ItemRenderGearLarge());
 
         ModItems.meteorite_sword_seared.setTileEntityItemStackRenderer(new ItemRendererMeteorSword(1.0F, 0.5F, 0.0F));
         ModItems.meteorite_sword_reforged.setTileEntityItemStackRenderer(new ItemRendererMeteorSword(0.5F, 1.0F, 1.0F));
@@ -2032,9 +2030,16 @@ public class ClientProxy extends ServerProxy {
 
         ModItems.forge_fluid_identifier.setTileEntityItemStackRenderer(new FFIdentifierRender());
 
-        for (Entry<Item, ItemRenderBase> entry : ItemRenderLibrary.renderers.entrySet()) {
-
+        for (Map.Entry<Item, TileEntityItemStackRenderer> entry : RBMKItemRenderers.itemRenderers.entrySet()) {
             entry.getKey().setTileEntityItemStackRenderer(entry.getValue());
+        }
+
+        for (Object renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
+            if (renderer instanceof IItemRendererProvider prov) {
+                for (Item item : prov.getItemsForRenderer()) {
+                    item.setTileEntityItemStackRenderer(prov.getRenderer(item));
+                }
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntitySolarMirror;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,9 +11,10 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
-public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolarMirror> {
+public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolarMirror> implements IItemRendererProvider {
 
 	@Override
 	public boolean isGlobalRenderer(TileEntitySolarMirror te) {
@@ -97,5 +100,29 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
         }
 
         GL11.glPopMatrix();
+	}
+
+	@Override
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.solar_mirror);
+	}
+
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+				GlStateManager.translate(0, -3, 0);
+				GlStateManager.scale(8, 8, 8);
+			}
+
+			public void renderCommon() {
+				bindTexture(ResourceManager.solar_mirror_tex);
+				ResourceManager.solar_mirror.renderPart("Base");
+				GlStateManager.translate(0, 1, 0);
+				GlStateManager.rotate(45, 0, 0, -1);
+				GlStateManager.translate(0, -1, 0);
+				ResourceManager.solar_mirror.renderPart("Mirror");
+			}
+		};
 	}
 }
