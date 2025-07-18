@@ -8,10 +8,7 @@ import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.tileentity.RenderAutosaw;
-import com.hbm.render.tileentity.RenderDemonLamp;
-import com.hbm.render.tileentity.RenderSawmill;
-import com.hbm.render.tileentity.RenderSteamEngine;
+import com.hbm.render.tileentity.*;
 import com.hbm.tileentity.machine.TileEntityMachineAutosaw;
 import com.hbm.tileentity.machine.TileEntityMachineSteamEngine;
 import net.minecraft.block.Block;
@@ -23,7 +20,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import scala.reflect.internal.Trees;
 
 import java.util.HashMap;
 
@@ -99,6 +95,7 @@ public class ItemRenderLibrary {
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }
         });
+        //renderers.put(Item.getItemFromBlock(ModBlocks.capacitor_copper), new ItemRenderCapacitor(ModBlocks.capacitor_copper));
         renderers.put(Item.getItemFromBlock(ModBlocks.orbital_station), new ItemRenderBase() {
             public void renderInventory() {
                 GL11.glTranslated(0, 2, 0);

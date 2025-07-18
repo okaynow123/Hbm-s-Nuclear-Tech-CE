@@ -18,6 +18,7 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
+import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
@@ -1115,6 +1116,13 @@ public class ModBlocks {
 
 	public static final int guiID_microwave = 98;
 	public static final Block machine_microwave = new MachineMicrowave(Material.IRON, "machine_microwave").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
+	public static final Block capacitor_bus = new MachineCapacitorBus("capacitor_bus").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block capacitor_copper = new MachineCapacitor(1_000_000L, "copper", "capacitor_copper").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block capacitor_gold = new MachineCapacitor(5_000_000L, "gold", "capacitor_gold").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block capacitor_niobium = new MachineCapacitor(25_000_000L, "niobium", "capacitor_niobium").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block capacitor_tantalium = new MachineCapacitor(150_000_000L, "tantalium", "capacitor_tantalium").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block capacitor_schrabidate = new MachineCapacitor(50_000_000_000L, "schrabidate", "capacitor_schrabidate").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block machine_cyclotron = new MachineCyclotron(Material.IRON, "machine_cyclotron").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_machine_cyclotron = 41;

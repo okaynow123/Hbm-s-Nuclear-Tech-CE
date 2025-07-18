@@ -1,10 +1,13 @@
 package com.hbm.tileentity;
 
 import com.hbm.api.tile.ILoadedTile;
+import com.hbm.handler.threading.PacketThreading;
+import com.hbm.packet.BufPacket;
 import com.hbm.sound.AudioWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBufPacketReceiver {
@@ -59,24 +62,9 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 		this.muffled = buf.readBoolean();
 	}
 
-//	/** Sends a sync packet that uses ByteBuf for efficient information-cramming */
-//	public void networkPackNT(int range) {
-//		if(world.isRemote) return;
-//
-//		BufPacket packet = new BufPacket(xCoord, yCoord, zCoord, this);
-//		ByteBuf preBuf = packet.getPreBuf();
-//
-//		// Don't send unnecessary packets, except for maybe one every second or so.
-//		// If we stop sending duplicate packets entirely, this causes issues when
-//		// a client unloads and then loads back a chunk with an unchanged tile entity.
-//		// For that client, the tile entity will appear default until anything changes about it.
-//		// In my testing, this can be reliably reproduced with a full fluid barrel, for instance.
-//		// I think it might be fixable by doing something with getDescriptionPacket() and onDataPacket(),
-//		// but this sidesteps the problem for the mean time.
-//		if(preBuf.equals(lastPackedBuf) && this.world.getTotalWorldTime() % 20 != 0) return;
-//
-//		this.lastPackedBuf = preBuf.copy();
-//
-//		PacketThreading.createAllAroundThreadedPacket(packet, new NetworkRegistry.TargetPoint(this.world.provider.dimensionId, xCoord, yCoord, zCoord, range));
-//	}
+	/** Sends a sync packet that uses ByteBuf for efficient information-cramming */
+	public void networkPackNT(int range) {
+		if (!world.isRemote)
+			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
+	}
 }

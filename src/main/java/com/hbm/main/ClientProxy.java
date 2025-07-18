@@ -9,6 +9,7 @@ import com.hbm.blocks.generic.BMPowerBox;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.TrappedBrick;
 import com.hbm.blocks.machine.BlockSeal;
+import com.hbm.blocks.machine.MachineCapacitor;
 import com.hbm.blocks.machine.WatzPump;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
@@ -338,6 +339,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityITER.class, new RenderITER());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFENSU.class, new RenderFENSU());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePlasmaHeater.class, new RenderPlasmaHeater());
+        //ClientRegistry.bindTileEntitySpecialRenderer(MachineCapacitor.TileEntityCapacitor.class, new RenderCapacitor());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePumpSteam.class, new RenderPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePumpElectric.class, new RenderPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPlasmaStruct.class, new RenderPlasmaMultiblock());
@@ -1977,7 +1979,6 @@ public class ClientProxy extends ServerProxy {
         ModItems.gun_quadro.setTileEntityItemStackRenderer(new ItemRenderWeaponQuadro());
         ModItems.gun_sauer.setTileEntityItemStackRenderer(new ItemRenderWeaponSauer());
         ModItems.chernobylsign.setTileEntityItemStackRenderer(new ItemRenderShim());
-        Item.getItemFromBlock(ModBlocks.radiorec).setTileEntityItemStackRenderer(new ItemRendererMachine(1D));
         ModItems.gun_vortex.setTileEntityItemStackRenderer(new ItemRenderWeaponVortex());
         ModItems.gun_thompson.setTileEntityItemStackRenderer(new ItemRenderWeaponThompson());
         ModItems.wood_gavel.setTileEntityItemStackRenderer(new ItemRenderGavel());

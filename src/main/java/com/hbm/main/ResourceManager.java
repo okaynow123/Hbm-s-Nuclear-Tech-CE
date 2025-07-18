@@ -253,6 +253,8 @@ public class ResourceManager {
 	//Conveyor blocks/cranes //FIXME: Doesnt work with VBO
 	public static final IModelCustom crane_splitter = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/crane_splitter.obj"));
 
+	public static final IModelCustom capacitor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/capacitor.obj")).asVBO();
+
 	//B.O.P
 	public static final IModelCustom ore_slopper = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/ore_slopper.obj")).asVBO();
 

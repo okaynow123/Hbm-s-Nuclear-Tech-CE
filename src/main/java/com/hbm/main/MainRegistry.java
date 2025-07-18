@@ -8,6 +8,7 @@ import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.blocks.generic.BlockCrate;
 import com.hbm.blocks.generic.BlockResourceStone;
 import com.hbm.blocks.machine.BlockPWR;
+import com.hbm.blocks.machine.MachineCapacitor;
 import com.hbm.blocks.machine.WatzPump;
 import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
@@ -574,6 +575,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityTowerLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_tower_large"));
         GameRegistry.registerTileEntity(TileEntitySILEX.class, new ResourceLocation(RefStrings.MODID, "tileentity_silex"));
         GameRegistry.registerTileEntity(TileEntityFEL.class, new ResourceLocation(RefStrings.MODID, "tileentity_fel"));
+        GameRegistry.registerTileEntity(MachineCapacitor.TileEntityCapacitor.class, new ResourceLocation(RefStrings.MODID, "tileentity_capacitor"));
         GameRegistry.registerTileEntity(TileEntityHeaterFirebox.class, new ResourceLocation(RefStrings.MODID, "tileentity_heater_firebox"));
         GameRegistry.registerTileEntity(TileEntityHeaterOven.class, new ResourceLocation(RefStrings.MODID, "tileentity_heater_oven"));
         GameRegistry.registerTileEntity(TileEntityHeaterOilburner.class, new ResourceLocation(RefStrings.MODID, "tileentity_heater_oilburner"));
