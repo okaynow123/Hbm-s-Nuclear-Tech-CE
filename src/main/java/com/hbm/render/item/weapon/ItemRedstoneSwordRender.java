@@ -51,6 +51,7 @@ public class ItemRedstoneSwordRender extends TileEntityItemStackRenderer {
 				Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
 			}
 		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		super.renderByItem(stack);
 	}
 	
