@@ -28,7 +28,6 @@ import java.util.List;
 
 public class JetpackBooster extends JetpackFueledBase {
 
-    public static int maxFuel = 750;
     private ModelJetPack model;
 
     public JetpackBooster(FluidType fuel, int maxFuel, String s) {

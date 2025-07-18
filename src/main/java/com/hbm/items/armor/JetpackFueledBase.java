@@ -23,47 +23,22 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
         this.maxFuel = maxFuel;
     }
 
-    public static int getFuel(ItemStack stack) {
-        if (!stack.isEmpty()) {
-            stack.setTagCompound(new NBTTagCompound());
-            return 0;
-        }
-
-        return stack.getTagCompound().getInteger("fuel");
-
-    }
-
-    public static void setFuel(ItemStack stack, int i) {
-        if (!stack.isEmpty()) {
-            stack.setTagCompound(new NBTTagCompound());
-        }
-
-        stack.getTagCompound().setInteger("fuel", i);
-
-    }
-
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(TextFormatting.LIGHT_PURPLE + fuel.getLocalizedName() + ": " + this.getFuel(stack) + "mB / " + this.maxFuel + "mB");
+        tooltip.add(TextFormatting.LIGHT_PURPLE + fuel.getLocalizedName() + ": " + getFuel(stack) + "mB / " + this.maxFuel + "mB");
         tooltip.add("");
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Override
-    public void addDesc(List list, ItemStack stack, ItemStack armor) {
+    public void addDesc(List<String> list, ItemStack stack, ItemStack armor) {
 
         ItemStack jetpack = ArmorModHandler.pryMods(armor)[ArmorModHandler.plate_only];
 
         if (jetpack == null)
             return;
 
-        list.add(TextFormatting.RED + "  " + stack.getDisplayName() + " (" + fuel.getLocalizedName() + ": " + this.getFuel(jetpack) + "mB / " + this.maxFuel + "mB)");
-    }
-
-    protected void useUpFuel(EntityPlayer player, ItemStack stack, int rate) {
-        if (player.ticksExisted % rate == 0) {
-            this.setFuel(stack, this.getFuel(stack) - 1);
-        }
+        list.add(TextFormatting.RED + "  " + stack.getDisplayName() + " (" + fuel.getLocalizedName() + ": " + getFuel(jetpack) + "mB / " + this.maxFuel + "mB)");
     }
 
     public int getMaxFill(ItemStack stack) {
@@ -85,13 +60,13 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
         if (!acceptsFluid(type, stack))
             return amount;
 
-        int fill = this.getFuel(stack);
+        int fill = getFuel(stack);
         int req = maxFuel - fill;
 
         int toFill = Math.min(amount, req);
         //toFill = Math.min(toFill, getLoadSpeed(stack));
 
-        this.setFuel(stack, fill + toFill);
+        setFuel(stack, fill + toFill);
 
         return amount - toFill;
     }
@@ -108,11 +83,11 @@ public abstract class JetpackFueledBase extends JetpackBase implements IFillable
 
     @Override
     public FluidType getFirstFluidType(ItemStack stack) {
-        return null;
+                return fuel;
     }
 
     @Override
     public int getFill(ItemStack stack) {
-        return 0;
+        return getFuel(stack);
     }
 }

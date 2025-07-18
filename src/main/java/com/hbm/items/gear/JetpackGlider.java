@@ -23,7 +23,7 @@ import java.util.List;
 public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 
 	public int capacity;
-	
+
 	public JetpackGlider(ArmorMaterial enumArmorMaterialSteel, int i, EntityEquipmentSlot chest, int capacity, String s) {
 		super(ArmorModHandler.plate_only, false, true, false, false, s);
 		this.capacity = capacity;
@@ -31,19 +31,18 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 
 	public FluidTankNTM getTank(ItemStack stack){
 		FluidTankNTM tank = new FluidTankNTM(Fluids.NONE, capacity);
-		if(!stack.hasTagCompound()){
-			stack.setTagCompound(new NBTTagCompound());
+		if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey("fuelTank")){
 			return tank;
 		}
 		tank.readFromNBT(stack.getTagCompound().getCompoundTag("fuelTank"), "0");
 		return tank;
 	}
-	
+
 	public void setTank(ItemStack stack, FluidTankNTM tank){
 		if(!stack.hasTagCompound()){
 			stack.setTagCompound(new NBTTagCompound());
 		}
-		NBTTagCompound nbt = stack.getTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
 		tank.writeToNBT(nbt, "0");
 		stack.getTagCompound().setTag("fuelTank", nbt);
 	}
@@ -62,7 +61,7 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 		int percent = (int)(((float)tank.getFluidAmount()/tank.getCapacity())*100);
 		list.add(TextFormatting.RED + "    Fuel Amount: " + tank.getFluidAmount() + "/" + tank.getCapacity() + " (" + percent + "%)");
 	}
-	
+
 	@Override
 	public void addDesc(List<String> list, ItemStack stack, ItemStack armor) {
 		super.addDesc(list, stack, armor);
@@ -72,24 +71,21 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 	@Override
 	public boolean acceptsFluid(FluidType type, ItemStack stack) {
 		FluidType currentType = this.getTank(stack).getTankType();
-		if (currentType == null || currentType.equals(Fluids.NONE)){
+		if (Fluids.NONE.equals(currentType)){
 			return type.equals(Fluids.KEROSENE) || type.equals(Fluids.BALEFIRE) || type.equals(Fluids.NITAN);
 		} else return type.equals(currentType);
 	}
 
 	@Override
 	public int tryFill(FluidType type, int amount, ItemStack stack) {
-		if (stack.getCount() > 1) return amount;
+		if (stack.getCount() > 1 || !acceptsFluid(type, stack)) return amount;
 		FluidTankNTM contained = this.getTank(stack);
-		int filled;
-		if (contained == null) {
-			contained = new FluidTankNTM(type, capacity);
-			filled = Math.min(capacity, amount);
-		} else {
-			if (contained.getTankType() != type) return amount;
-			filled = Math.min(capacity - contained.getFill(), amount);
+		int filled = Math.min(capacity - contained.getFill(), amount);
+		if (filled <= 0) return amount;
+		if (contained.getFill() == 0) {
+			contained.setTankType(type);
 		}
-		contained.setFill(amount);
+		contained.setFill(contained.getFill() + filled);
 		this.setTank(stack, contained);
 		return amount - filled;
 	}
@@ -104,17 +100,19 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 	public int tryEmpty(FluidType type, int amount, ItemStack stack) {
 		if (stack.getCount() > 1) return 0;
 		FluidTankNTM contained = this.getTank(stack);
-		if (contained == null || contained.getTankType() != type) return 0;
+		if (contained == null || !contained.getTankType().equals(type)) return 0;
 		int drained = Math.min(contained.getFill(), amount);
+		if (drained <= 0) return 0;
 		contained.setFill(contained.getFill() - drained);
-		if (contained.getFill() == 0) contained.setTankType(null);
+		if (contained.getFill() == 0) contained.setTankType(Fluids.NONE);
 		this.setTank(stack, contained);
 		return drained;
 	}
 
 	@Override
 	public FluidType getFirstFluidType(ItemStack stack) {
-		return this.getTank(stack).getTankType();
+		FluidType type = this.getTank(stack).getTankType();
+		return Fluids.NONE.equals(type) ? null : type;
 	}
 
 	@Override
