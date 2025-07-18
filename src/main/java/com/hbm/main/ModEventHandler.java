@@ -19,6 +19,7 @@ import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.mob.EntityTaintedCreeper;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
+import com.hbm.events.InventoryChangedEvent;
 import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
@@ -588,6 +589,7 @@ public class ModEventHandler {
             RTTYSystem.updateBroadcastQueue();
             TileEntityMachineRadarNT.updateSystem();
             Nodespace.updateNodespace();
+            HazardSystem.onServerTick(e);
         } else {
             EntityHitDataHandler.updateSystem();
         }
@@ -733,9 +735,31 @@ public class ModEventHandler {
         if (event.phase == Phase.END) {
             JetpackHandler.postPlayerTick(event.player);
         }
-        /// NEW ITEM SYS START ///
-        if (player.ticksExisted % HAZARD_POLL_RATE == 0)
-            HazardSystem.updatePlayerInventory(player);
+    }
+
+    @SubscribeEvent
+    public void onPlayerInventoryChanged(InventoryChangedEvent event) {
+        EntityPlayer player = event.getPlayer();
+        if (player.world.isRemote) {
+            return;
+        }
+
+        if (event.getType() == InventoryChangedEvent.EventType.COMPLEX) {
+            HazardSystem.schedulePlayerUpdate(player);
+        } else {
+            ItemStack oldStack = event.getOldStack();
+            ItemStack newStack = event.getNewStack();
+            if (HazardSystem.isStackHazardous(oldStack) || HazardSystem.isStackHazardous(newStack)) {
+                HazardSystem.schedulePlayerUpdate(player);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (!event.player.world.isRemote) {
+            HazardSystem.onPlayerLogout(event.player);
+        }
     }
 
     @SubscribeEvent

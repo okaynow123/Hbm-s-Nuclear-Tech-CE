@@ -13,7 +13,6 @@ import com.hbm.hazard.type.*;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
-import com.hbm.items.machine.ItemPWRFuel;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
 import net.minecraft.init.Blocks;
