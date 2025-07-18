@@ -1,7 +1,6 @@
 package com.hbm.particle.bfg;
 
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -21,7 +20,7 @@ import org.lwjgl.opengl.GL11;
 public class ParticleBFGParticle extends Particle {
 
 	float prevAlpha;
-	Vec3 targetPoint;
+	Vec3d targetPoint;
 	
 	public ParticleBFGParticle(World worldIn, double posXIn, double posYIn, double posZIn) {
 		super(worldIn, posXIn, posYIn, posZIn);
@@ -48,7 +47,7 @@ public class ParticleBFGParticle extends Particle {
 		this.motionZ = mZ;
 	}
 	
-	public ParticleBFGParticle(World worldIn, double posXIn, double posYIn, double posZIn, double mX, double mY, double mZ, Vec3 targetPoint) {
+	public ParticleBFGParticle(World worldIn, double posXIn, double posYIn, double posZIn, double mX, double mY, double mZ, Vec3d targetPoint) {
 		super(worldIn, posXIn, posYIn, posZIn);
 		this.canCollide = false;
 		this.particleScale = 2;
@@ -78,16 +77,16 @@ public class ParticleBFGParticle extends Particle {
 		this.posY += this.motionY;
 		this.posZ += this.motionZ;
 		
-		Vec3 attraction = null;
+		Vec3d attraction = null;
 		if(targetPoint != null){
-			attraction = targetPoint.subtract(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)).normalize().mult(0.5F*timeScale);
+			attraction = targetPoint.subtract(new Vec3d(this.posX, this.posY, this.posZ)).normalize().scale(0.5F*timeScale);
 		} else {
-			attraction = Vec3.createVectorHelper(0, 0, 0);
+			attraction = new Vec3d(0, 0, 0);
 		}
 		
-		this.posX += attraction.xCoord;
-		this.posY += attraction.yCoord;
-		this.posZ += attraction.zCoord;
+		this.posX += attraction.x;
+		this.posY += attraction.y;
+		this.posZ += attraction.z;
 		
 		this.prevAlpha = particleAlpha;
 		this.particleAlpha = MathHelper.clamp(1-BobMathUtil.remap((float)MathHelper.clamp(timeScale, 0.8, 1), 0.8F, 1F, 0F, 1.1F), 0, 1);

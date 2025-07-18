@@ -53,7 +53,6 @@ import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.physics.ParticlePhysicsBlocks;
 import com.hbm.render.LightRenderer;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
@@ -1207,11 +1206,11 @@ public class ModEventHandlerClient {
         int y = 500;
         int z = 0;
 
-        Vec3 vec = Vec3.createVectorHelper(x - d3, y - d4, z - d5);
+        Vec3d vec = new Vec3d(x - d3, y - d4, z - d5);
 
         if (vec.length() < dist) {
             GL11.glPushMatrix();
-            GL11.glTranslated(vec.xCoord, vec.yCoord, vec.zCoord);
+            GL11.glTranslated(vec.x, vec.y, vec.z);
 
 
             net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
@@ -1400,7 +1399,7 @@ public class ModEventHandlerClient {
 
                 start = start.add(0, player.getEyeHeight(), 0);
                 GL11.glTranslated(start.x, start.y, start.z);
-                BeamPronter.gluonBeam(new Vec3(0, 0, 0), new Vec3(hitPos.subtract(pos).subtract(start.subtract(0, player.getEyeHeight(), 0))), 0.4F);
+                BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos).subtract(start.subtract(0, player.getEyeHeight(), 0)))), 0.4F);
                 GL11.glPopMatrix();
 
             }
@@ -1769,7 +1768,7 @@ public class ModEventHandlerClient {
 
             Vec3d diff = player.getPositionEyes(partialTicks).subtract(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
             GL11.glTranslated(start.x + diff.x, start.y + diff.y, start.z + diff.z);
-            BeamPronter.gluonBeam(new Vec3(0, 0, 0), new Vec3(hitPos.subtract(pos)), 0.4F);
+            BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos))), 0.4F);
             GL11.glPopMatrix();
         }
     }

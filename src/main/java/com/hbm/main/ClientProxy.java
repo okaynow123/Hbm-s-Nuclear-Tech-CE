@@ -52,7 +52,6 @@ import com.hbm.particle_instanced.ParticleContrailInstanced;
 import com.hbm.particle_instanced.ParticleExSmokeInstanced;
 import com.hbm.particle_instanced.ParticleRocketFlameInstanced;
 import com.hbm.render.GLCompat;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
 import com.hbm.render.anim.BusAnimationSequence;
@@ -97,6 +96,7 @@ import com.hbm.tileentity.network.energy.TileEntitySubstation;
 import com.hbm.tileentity.turret.*;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
+import com.hbm.util.Vec3dUtil;
 import com.hbm.wiaj.cannery.Jars;
 import java.awt.*;
 import java.io.File;
@@ -781,7 +781,7 @@ public class ClientProxy extends ServerProxy {
             int fireAge = (int) args[0];
             if (fireAge >= 0) {
                 if (fireAge >= 1 && fireAge <= 40) {
-                    Vec3 attractionPoint = Vec3.createVectorHelper(pos.getX() + 0.5, pos.getY() + 24, pos.getZ() + 0.5 - 60);
+                    Vec3d attractionPoint = new Vec3d(pos.getX() + 0.5, pos.getY() + 24, pos.getZ() + 0.5 - 60);
                     for (int i = 0; i < world.rand.nextInt(6); i++) {
                         float randPosX = BobMathUtil.remap(world.rand.nextFloat(), 0, 1, -10, 10);
                         float randPosY = BobMathUtil.remap(world.rand.nextFloat(), 0, 1, -10, 10);
@@ -862,7 +862,7 @@ public class ClientProxy extends ServerProxy {
         }
         switch (type) {
             case "missileContrail" -> {
-                if (Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350) return;
+                if (new Vec3d(player.posX - x, player.posY - y, player.posZ - z).length() > 350) return;
 
                 float scale = data.hasKey("scale") ? data.getFloat("scale") : 1F;
                 double mX = data.getDouble("moX");
@@ -922,82 +922,82 @@ public class ClientProxy extends ServerProxy {
                         }
                     }
                     case "radialDigamma" -> {
-                        Vec3 vec = Vec3.createVectorHelper(2, 0, 0);
-                        vec.rotateAroundY(rand.nextFloat() * (float) Math.PI * 2F);
+                        Vec3d vec = new Vec3d(2, 0, 0);
+                        vec = vec.rotateYaw(rand.nextFloat() * (float) Math.PI * 2F);
 
                         for (int i = 0; i < count; i++) {
                             ParticleDigammaSmoke fx = new ParticleDigammaSmoke(world, x, y, z);
-                            fx.motion((float) vec.xCoord, 0, (float) vec.zCoord);
+                            fx.motion((float) vec.x, 0, (float) vec.z);
                             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
-                            vec.rotateAroundY((float) Math.PI * 2F / (float) count);
+                            vec = vec.rotateYaw((float) Math.PI * 2F / (float) count);
                         }
                     }
                     case "shock" -> {
                         double strength = data.getDouble("strength");
 
-                        Vec3 vec = Vec3.createVectorHelper(strength, 0, 0);
-                        vec.rotateAroundY(rand.nextInt(360));
+                        Vec3d vec = new Vec3d(strength, 0, 0);
+                        vec = vec.rotateYaw(rand.nextInt(360));
 
                         for (int i = 0; i < count; i++) {
                             if (GeneralConfig.instancedParticles) {
                                 ParticleExSmokeInstanced fx = new ParticleExSmokeInstanced(world, x, y, z);
-                                fx.setMotion(vec.xCoord, 0, vec.zCoord);
+                                fx.setMotion(vec.x, 0, vec.z);
                                 InstancedParticleRenderer.addParticle(fx);
                             } else {
                                 ParticleExSmoke fx = new ParticleExSmoke(world, x, y, z);
-                                fx.setMotion(vec.xCoord, 0, vec.zCoord);
+                                fx.setMotion(vec.x, 0, vec.z);
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec.rotateAroundY(360F / count);
+                            vec = vec.rotateYaw(360F / count);
                         }
                     }
                     case "shockRand" -> {
                         double strength = data.getDouble("strength");
 
-                        Vec3 vec = Vec3.createVectorHelper(strength, 0, 0);
-                        vec.rotateAroundY(rand.nextInt(360));
+                        Vec3d vec = new Vec3d(strength, 0, 0);
+                        vec = vec.rotateYaw(rand.nextInt(360));
                         double r;
 
                         for (int i = 0; i < count; i++) {
                             r = rand.nextDouble();
                             if (GeneralConfig.instancedParticles) {
                                 ParticleExSmokeInstanced fx = new ParticleExSmokeInstanced(world, x, y, z);
-                                fx.setMotion(vec.xCoord * r, 0, vec.zCoord * r);
+                                fx.setMotion(vec.x * r, 0, vec.z * r);
                                 InstancedParticleRenderer.addParticle(fx);
                             } else {
                                 ParticleExSmoke fx = new ParticleExSmoke(world, x, y, z);
-                                fx.setMotion(vec.xCoord * r, 0, vec.zCoord * r);
+                                fx.setMotion(vec.x * r, 0, vec.z * r);
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec.rotateAroundY(360F / count);
+                            vec = vec.rotateYaw(360F / count);
                         }
                     }
                     case "wave" -> {
                         double strength = data.getDouble("range");
 
-                        Vec3 vec = Vec3.createVectorHelper(strength, 0, 0);
+                        Vec3d vec = new Vec3d(strength, 0, 0);
 
                         for (int i = 0; i < count; i++) {
 
-                            vec.rotateAroundY((float) Math.toRadians(rand.nextFloat() * 360F));
+                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
 
                             if (GeneralConfig.instancedParticles) {
-                                ParticleExSmokeInstanced fx = new ParticleExSmokeInstanced(world, x + vec.xCoord, y,
-                                        z + vec.zCoord);
+                                ParticleExSmokeInstanced fx = new ParticleExSmokeInstanced(world, x + vec.x, y,
+                                        z + vec.z);
                                 fx.setMotion(0, 0, 0);
                                 fx.setMaxAge(50);
                                 InstancedParticleRenderer.addParticle(fx);
                             } else {
-                                ParticleExSmoke fx = new ParticleExSmoke(world, x + vec.xCoord, y, z + vec.zCoord);
+                                ParticleExSmoke fx = new ParticleExSmoke(world, x + vec.x, y, z + vec.z);
                                 fx.setMotion(0, 0, 0);
                                 fx.setMaxAge(50);
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec.rotateAroundY(360F / count);
+                            vec = vec.rotateYaw(360F / count);
                         }
                     }
                 }
@@ -1022,7 +1022,7 @@ public class ClientProxy extends ServerProxy {
 
                 switch (mode) {
                     case "soyuz" -> {
-                        if (Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
+                        if (new Vec3d(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
                             return;
 
                         int count = Math.max(1, data.getInteger("count"));
@@ -1043,7 +1043,7 @@ public class ClientProxy extends ServerProxy {
                         }
                     }
                     case "meteor" -> {
-                        if (Vec3.createVectorHelper(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
+                        if (new Vec3d(player.posX - x, player.posY - y, player.posZ - z).length() > 350)
                             return;
 
                         int count = Math.max(1, data.getInteger("count"));
@@ -1346,20 +1346,20 @@ public class ClientProxy extends ServerProxy {
                     for (int i = 0; i < count; i++) {
                         //Gets a random vector rotated within a cone and then rotates it to the particle data's direction
                         //Create a new vector and rotate it randomly about the x-axis within the angle specified, then rotate that by random degrees to get the random cone vector
-                        Vec3 up = Vec3.createVectorHelper(0, 1, 0);
-                        up.rotateAroundX((float) Math.toRadians(rand.nextFloat() * (angle + rand.nextFloat() * randAngle)));
-                        up.rotateAroundY((float) Math.toRadians(rand.nextFloat() * 360));
+                        Vec3d up = new Vec3d(0, 1, 0);
+                        up = up.rotatePitch((float) Math.toRadians(rand.nextFloat() * (angle + rand.nextFloat() * randAngle)));
+                        up = up.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360));
                         //Finds the angles for the particle direction and rotate our random cone vector to it.
-                        Vec3 direction = Vec3.createVectorHelper(dirX, dirY, dirZ);
-                        Vec3 angles = BobMathUtil.getEulerAngles(direction);
-                        Vec3 newDirection = Vec3.createVectorHelper(up.xCoord, up.yCoord, up.zCoord);
-                        newDirection.rotateAroundX((float) Math.toRadians(angles.yCoord - 90));
-                        newDirection.rotateAroundY((float) Math.toRadians(angles.xCoord));
+                        Vec3d direction = new Vec3d(dirX, dirY, dirZ);
+                        Vec3d angles = BobMathUtil.getEulerAngles(direction);
+                        Vec3d newDirection = new Vec3d(up.x, up.y, up.z);
+                        newDirection = newDirection.rotatePitch((float) Math.toRadians(angles.y - 90));
+                        newDirection = newDirection.rotateYaw((float) Math.toRadians(angles.x));
                         //Multiply it by the original vector's length to ensure it has the right magnitude
-                        newDirection = newDirection.mult((float) direction.length() + rand.nextFloat() * velocityRand);
+                        newDirection = newDirection.scale((float) direction.length() + rand.nextFloat() * velocityRand);
                         Particle fx = new ParticleSpark(world, x, y, z, length + rand.nextFloat() * randLength, width
-                                , lifetime + rand.nextInt(randLifeTime), gravity).color(r, g, b, a).motion((float) newDirection.xCoord,
-(float) newDirection.yCoord, (float) newDirection.zCoord);
+                                , lifetime + rand.nextInt(randLifeTime), gravity).color(r, g, b, a).motion((float) newDirection.x,
+(float) newDirection.y, (float) newDirection.z);
                         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                     }
                 }
@@ -1405,18 +1405,18 @@ public class ClientProxy extends ServerProxy {
 
                 if (ent instanceof EntityPlayer p) {
 
-                    Vec3 vec = Vec3.createVectorHelper(0, 0, -0.25);
-                    Vec3 offset = Vec3.createVectorHelper(0.125, 0, 0);
+                    Vec3d vec = new Vec3d(0, 0, -0.25);
+                    Vec3d offset = new Vec3d(0.125, 0, 0);
                     float angle = (float) -Math.toRadians(p.rotationYawHead - (p.rotationYawHead - p.renderYawOffset));
 
-                    vec.rotateAroundY(angle);
-                    offset.rotateAroundY(angle);
+                    vec = vec.rotateYaw(angle);
+                    offset = offset.rotateYaw(angle);
 
-                    double ix = p.posX + vec.xCoord;
+                    double ix = p.posX + vec.x;
                     double iy = p.posY + p.eyeHeight - 1;
-                    double iz = p.posZ + vec.zCoord;
-                    double ox = offset.xCoord;
-                    double oz = offset.zCoord;
+                    double iz = p.posZ + vec.z;
+                    double ox = offset.x;
+                    double oz = offset.z;
 
                     double moX = 0;
                     double moY = 0;
@@ -1839,7 +1839,7 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
-    public void spawnSFX(World world, double posX, double posY, double posZ, int type, Vec3 payload) {
+    public void spawnSFX(World world, double posX, double posY, double posZ, int type, Vec3d payload) {
         int pow = 250;
         float angle = 25;
         float base = 0.5F;
@@ -1847,11 +1847,11 @@ public class ClientProxy extends ServerProxy {
 
             float momentum = base * world.rand.nextFloat();
             float sway = (pow - i) / (float) pow;
-            Vec3 vec = Vec3.createVectorHelper(((Vec3) payload).xCoord, ((Vec3) payload).yCoord, ((Vec3) payload).zCoord);
-            vec.rotateAroundZ((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D));
-            vec.rotateAroundY((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D));
+            Vec3d vec = new Vec3d(payload.x, payload.y, payload.z);
+            vec = Vec3dUtil.rotateRoll(vec, ((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D)));
+            vec = vec.rotateYaw((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D));
 
-            ParticleFirework.Spark blast = new ParticleFirework.Spark(world, posX, posY, posZ, vec.xCoord * momentum, vec.yCoord * momentum, vec.zCoord * momentum, Minecraft.getMinecraft().effectRenderer);
+            ParticleFirework.Spark blast = new ParticleFirework.Spark(world, posX, posY, posZ, vec.x * momentum, vec.y * momentum, vec.z * momentum, Minecraft.getMinecraft().effectRenderer);
 
             if (world.rand.nextBoolean())
                 blast.setColor(0x0088EA);

@@ -6,7 +6,6 @@ import com.hbm.dim.trait.CBT_Atmosphere.FluidEntry;
 import com.hbm.dim.trait.CelestialBodyTrait.CBT_Destroyed;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.render.amlfrom1710.Vec3;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -151,7 +150,7 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		}
 
 		float totalPressure = (float)atmosphere.getPressure();
-		Vec3 color = Vec3.createVectorHelper(0, 0, 0);
+		Vec3d color = new Vec3d(0, 0, 0);
 
 		for(int i = 0; i < atmosphere.fluids.size(); i++) {
 			FluidEntry entry = atmosphere.fluids.get(i);
@@ -170,37 +169,31 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			}
 
 			float percentage = (float)entry.pressure / totalPressure;
-			color = Vec3.createVectorHelper(
-				color.xCoord + fluidColor.x * percentage,
-				color.yCoord + fluidColor.y * percentage,
-				color.zCoord + fluidColor.z * percentage
+			color = new Vec3d(
+				color.x + fluidColor.x * percentage,
+				color.y + fluidColor.y * percentage,
+				color.z + fluidColor.z * percentage
 			);
 		}
 
 		// Add minimum fog colour, for night-time glow
 		if(!GeneralConfig.enableHardcoreDarkness) {
 			float nightDensity = MathHelper.clamp(totalPressure, 0.0F, 1.0F);
-			color.xCoord += 0.06F * nightDensity;
-			color.yCoord += 0.06F * nightDensity;
-			color.zCoord += 0.09F * nightDensity;
+			color = color.add(0.06F * nightDensity, 0.06F * nightDensity, 0.09F * nightDensity);
 		}
 
 		// Fog intensity remains high to simulate a thin looking atmosphere on low pressure planets
 		float pressureFactor = MathHelper.clamp(totalPressure * 10.0F, 0.0F, 1.0F);
-		color.xCoord *= pressureFactor;
-		color.yCoord *= pressureFactor;
-		color.zCoord *= pressureFactor;
+		color = color.scale(pressureFactor);
 		if(Minecraft.getMinecraft().getRenderViewEntity() != null) {
 			if(Minecraft.getMinecraft().getRenderViewEntity().posY > 600) {
 				double curvature = MathHelper.clamp((1000.0F - (float)Minecraft.getMinecraft().getRenderViewEntity().posY) / 400.0F, 0.0F, 1.0F);
-				color.xCoord *= curvature;
-				color.zCoord *= curvature;
-				color.yCoord *= curvature;
+				color = color.scale(curvature);
 			}
 		}
 
 		
-		return color.toVec3d();
+		return color;
 	}
 
 	@Override
@@ -213,7 +206,7 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 
 		float sun = this.getSunBrightnessFactor(1.0F);
 		float totalPressure = (float)atmosphere.getPressure();
-		Vec3 color = Vec3.createVectorHelper(0, 0, 0);
+		Vec3d color = new Vec3d(0, 0, 0);
 
 		for(int i = 0; i < atmosphere.fluids.size(); i++) {
 			FluidEntry entry = atmosphere.fluids.get(i);
@@ -232,20 +225,18 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 			}
 
 			float percentage = (float)entry.pressure / totalPressure;
-			color = Vec3.createVectorHelper(
-				color.xCoord + fluidColor.x * percentage,
-				color.yCoord + fluidColor.y * percentage,
-				color.zCoord + fluidColor.z * percentage
+			color = new Vec3d(
+				color.x + fluidColor.x * percentage,
+				color.y + fluidColor.y * percentage,
+				color.z + fluidColor.z * percentage
 			);
 		}
 
 		// Lower pressure sky renders thinner
 		float pressureFactor = MathHelper.clamp(totalPressure, 0.0F, 1.0F);
-		color.xCoord *= pressureFactor;
-		color.yCoord *= pressureFactor;
-		color.zCoord *= pressureFactor;
+		color = color.scale(pressureFactor);
 
-		return color.toVec3d();
+		return color;
 	}
 
 	private Vec3d getColorFromHex(int hexColor) {

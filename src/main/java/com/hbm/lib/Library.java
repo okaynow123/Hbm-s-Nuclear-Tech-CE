@@ -1,12 +1,12 @@
 package com.hbm.lib;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Sets;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyConnectorBlock;
 import com.hbm.api.energymk2.IEnergyConnectorMK2;
 import com.hbm.api.fluid.IFluidConnector;
 import com.hbm.api.fluid.IFluidConnectorBlock;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
@@ -21,9 +21,14 @@ import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.TileEntityProxyInventory;
 import com.hbm.util.BobMathUtil;
+import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
+import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.state.IBlockState;
@@ -58,13 +63,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
 
 @Spaghetti("this whole class")
 public class Library {
@@ -1060,11 +1058,11 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return true;
 	}
 	
-	public static List<int[]> getBlockPosInPath(BlockPos pos, int length, Vec3 vec0) {
+	public static List<int[]> getBlockPosInPath(BlockPos pos, int length, Vec3d vec0) {
 		List<int[]> list = new ArrayList<int[]>();
 		
 		for(int i = 0; i <= length; i++) {
-			list.add(new int[] { (int)(pos.getX() + (vec0.xCoord * i)), pos.getY(), (int)(pos.getZ() + (vec0.zCoord * i)), i });
+			list.add(new int[] { (int)(pos.getX() + (vec0.x * i)), pos.getY(), (int)(pos.getZ() + (vec0.z * i)), i });
 		}
 		
 		return list;

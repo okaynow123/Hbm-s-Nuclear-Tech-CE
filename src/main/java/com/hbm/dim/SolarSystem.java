@@ -7,11 +7,11 @@ import com.hbm.dim.trait.CBT_Water;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.AstronomyUtil;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -255,11 +255,11 @@ public class SolarSystem {
 		public double apparentSize;
 		public double phase;
 
-		protected Vec3 position;
+		protected Vec3d position;
 
 		public CelestialBody body;
 
-		public AstroMetric(CelestialBody body, Vec3 position) {
+		public AstroMetric(CelestialBody body, Vec3d position) {
 			this.body = body;
 			this.position = position;
 		}
@@ -286,9 +286,7 @@ public class SolarSystem {
 		calculateMetricsFromBody(metrics, body);
 
 		// Sort by increasing distance
-		metrics.sort((a, b) -> {
-			return (int)(b.distance - a.distance);
-		});
+		metrics.sort((a, b) -> (int)(b.distance - a.distance));
 
 		return metrics;
 	}
@@ -302,10 +300,10 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, orbiting.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 position = calculatePosition(orbiting, altitude, ticks);
+		Vec3d position = calculatePosition(orbiting, altitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
-				position = position.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				position = position.add(metric.position.x, metric.position.y, metric.position.z);
 				break;
 			}
 		}
@@ -314,9 +312,7 @@ public class SolarSystem {
 		calculateMetricsFromPosition(metrics, position);
 
 		// Sort by increasing distance
-		metrics.sort((a, b) -> {
-			return (int)(b.distance - a.distance);
-		});
+		metrics.sort((a, b) -> (int)(b.distance - a.distance));
 
 		return metrics;
 	}
@@ -330,19 +326,19 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, from.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 fromPos = calculatePosition(from, fromAltitude, ticks);
-		Vec3 toPos = calculatePosition(to, toAltitude, ticks);
+		Vec3d fromPos = calculatePosition(from, fromAltitude, ticks);
+		Vec3d toPos = calculatePosition(to, toAltitude, ticks);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == from) {
-				fromPos = fromPos.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				fromPos = fromPos.add(metric.position.x, metric.position.y, metric.position.z);
 			}
 			if(metric.body == to) {
-				toPos = toPos.add(metric.position.xCoord, metric.position.yCoord, metric.position.zCoord);
+				toPos = toPos.add(metric.position.x, metric.position.y, metric.position.z);
 			}
 		}
 
 		// Lerp smoothly between the two positions (maybe a fancy circular lerp somehow?)
-		Vec3 position = lerp(fromPos, toPos, t);
+		Vec3d position = lerp(fromPos, toPos, t);
 
 		// Get the metrics from the orbiting position
 		calculateMetricsFromPosition(metrics, position);
@@ -363,8 +359,8 @@ public class SolarSystem {
 		// Get our XYZ coordinates of all bodies
 		calculatePositionsRecursive(metrics, null, from.getStar(), ticks);
 
-		Vec3 fromPos = Vec3.createVectorHelper(0, 0, 0);
-		Vec3 toPos = Vec3.createVectorHelper(0, 0, 0);
+		Vec3d fromPos = new Vec3d(0, 0, 0);
+		Vec3d toPos = new Vec3d(0, 0, 0);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == from) fromPos = metric.position;
 			if(metric.body == to) toPos = metric.position;
@@ -373,20 +369,20 @@ public class SolarSystem {
 		return fromPos.distanceTo(toPos);
 	}
 
-	private static Vec3 lerp(Vec3 from, Vec3 to, double t) {
-		double x = BobMathUtil.clampedLerp(from.xCoord, to.xCoord, t);
-		double y = BobMathUtil.clampedLerp(from.yCoord, to.yCoord, t);
-		double z = BobMathUtil.clampedLerp(from.zCoord, to.zCoord, t);
+	private static Vec3d lerp(Vec3d from, Vec3d to, double t) {
+		double x = BobMathUtil.clampedLerp(from.x, to.x, t);
+		double y = BobMathUtil.clampedLerp(from.y, to.y, t);
+		double z = BobMathUtil.clampedLerp(from.z, to.z, t);
 
-		return Vec3.createVectorHelper(x, y, z);
+		return new Vec3d(x, y, z);
 	}
 
 	// Recursively calculate the XYZ position of all planets from polar coordinates + time
 	private static void calculatePositionsRecursive(List<AstroMetric> metrics, AstroMetric parentMetric, CelestialBody body, double ticks) {
-		Vec3 parentPosition = parentMetric != null ? parentMetric.position : Vec3.createVectorHelper(0, 0, 0);
+		Vec3d parentPosition = parentMetric != null ? parentMetric.position : new Vec3d(0, 0, 0);
 
 		for(CelestialBody satellite : body.satellites) {
-			Vec3 position = calculatePosition(satellite, ticks).add(parentPosition.xCoord, parentPosition.yCoord, parentPosition.zCoord);
+			Vec3d position = calculatePosition(satellite, ticks).add(parentPosition.x, parentPosition.y, parentPosition.z);
 			AstroMetric metric = new AstroMetric(satellite, position);
 
 			metrics.add(metric);
@@ -396,7 +392,7 @@ public class SolarSystem {
 	}
 
 	// Calculates the position of the body around its parent
-	private static Vec3 calculatePosition(CelestialBody body, double ticks) {
+	private static Vec3d calculatePosition(CelestialBody body, double ticks) {
 		// Get how far (in radians) a planet has gone around its parent
 		double yearTicks = body.getOrbitalPeriod() * (double)AstronomyUtil.TICKS_IN_DAY;
 		double angleRadians = 2 * Math.PI * (ticks / yearTicks);
@@ -404,11 +400,11 @@ public class SolarSystem {
 		double x = body.semiMajorAxisKm * Math.cos(angleRadians);
 		double y = body.semiMajorAxisKm * Math.sin(angleRadians);
 
-		return Vec3.createVectorHelper(x, y, 0);
+		return new Vec3d(x, y, 0);
 	}
 
 	// Same but for an arbitrary satellite around a body
-	private static Vec3 calculatePosition(CelestialBody body, double altitude, double ticks) {
+	private static Vec3d calculatePosition(CelestialBody body, double altitude, double ticks) {
 		double orbitalPeriod = 2 * Math.PI * Math.sqrt((altitude * altitude * altitude) / (AstronomyUtil.GRAVITATIONAL_CONSTANT * body.massKg));
 		orbitalPeriod /= (double)AstronomyUtil.SECONDS_IN_KSP_DAY;
 		double orbitTicks = orbitalPeriod * (double)AstronomyUtil.TICKS_IN_DAY;
@@ -417,7 +413,7 @@ public class SolarSystem {
 		double x = altitude / 1000 * Math.cos(angleRadians);
 		double y = altitude / 1000 * Math.sin(angleRadians);
 
-		return Vec3.createVectorHelper(x, y, 0);
+		return new Vec3d(x, y, 0);
 	}
 
 	// Calculates the metrics for a given body in the system
@@ -438,13 +434,13 @@ public class SolarSystem {
 		}
 	}
 
-	private static void calculateMetricsFromPosition(List<AstroMetric> metrics, Vec3 position) {
+	private static void calculateMetricsFromPosition(List<AstroMetric> metrics, Vec3d position) {
 		for(AstroMetric to : metrics) {
 			calculateMetric(to, position);
 		}
 	}
 
-	private static void calculateMetric(AstroMetric metric, Vec3 position) {
+	private static void calculateMetric(AstroMetric metric, Vec3d position) {
 		// Calculate distance between bodies, for sorting
 		metric.distance = position.distanceTo(metric.position);
 		
@@ -461,9 +457,9 @@ public class SolarSystem {
 		return 2D * (float)Math.atan((2D * radius) / (2D * distance)) * RENDER_SCALE;
 	}
 
-	private static double getApparentAngleDegrees(Vec3 from, Vec3 to) {
-		double angleToOrigin = Math.atan2(-from.yCoord, -from.xCoord);
-		double angleToTarget = Math.atan2(to.yCoord - from.yCoord, to.xCoord - from.xCoord);
+	private static double getApparentAngleDegrees(Vec3d from, Vec3d to) {
+		double angleToOrigin = Math.atan2(-from.y, -from.x);
+		double angleToTarget = Math.atan2(to.y - from.y, to.x - from.x);
 
 		return MathHelper.wrapDegrees(Math.toDegrees(angleToOrigin - angleToTarget));
 	}
@@ -507,12 +503,12 @@ public class SolarSystem {
 		calculatePositionsRecursive(metrics, null, orbiting.getStar(), ticks);
 
 		// Add our orbiting satellite position
-		Vec3 from = calculatePosition(orbiting, altitude, ticks);
-		Vec3 to = Vec3.createVectorHelper(0, 0, 0);
+		Vec3d from = calculatePosition(orbiting, altitude, ticks);
+		Vec3d to = new Vec3d(0, 0, 0);
 		for(AstroMetric metric : metrics) {
 			if(metric.body == orbiting) {
 				to = metric.position;
-				from = from.add(to.xCoord, to.yCoord, to.zCoord);
+				from = from.add(to.x, to.y, to.z);
 				break;
 			}
 		}

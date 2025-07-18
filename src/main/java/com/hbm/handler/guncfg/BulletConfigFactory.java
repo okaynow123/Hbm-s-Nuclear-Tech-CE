@@ -444,7 +444,7 @@ public class BulletConfigFactory {
 
 				List<EntityLivingBase> entities = bullet.world.getEntitiesWithinAABB(EntityLivingBase.class, bullet.getEntityBoundingBox().grow(range, range, range));
 
-				Vec3 mot = Vec3.createVectorHelper(bullet.motionX, bullet.motionY, bullet.motionZ);
+				Vec3d mot = new Vec3d(bullet.motionX, bullet.motionY, bullet.motionZ);
 
 				EntityLivingBase target = null;
 				double targetAngle = angle;
@@ -453,7 +453,7 @@ public class BulletConfigFactory {
 					if(!e.isEntityAlive() || e == bullet.shooter)
 						continue;
 
-					Vec3 delta = Vec3.createVectorHelper(e.posX - bullet.posX, e.posY + e.height / 2 - bullet.posY, e.posZ - bullet.posZ);
+					Vec3d delta = new Vec3d(e.posX - bullet.posX, e.posY + e.height / 2 - bullet.posY, e.posZ - bullet.posZ);
 
 					if(bullet.world.rayTraceBlocks(new Vec3d(bullet.posX, bullet.posY, bullet.posZ), new Vec3d(e.posX, e.posY + e.height / 2, e.posZ)) != null)
 						continue;

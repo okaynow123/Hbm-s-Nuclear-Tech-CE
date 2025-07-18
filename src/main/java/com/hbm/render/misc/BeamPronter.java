@@ -168,7 +168,7 @@ public class BeamPronter {
 	//public static void prontBeamWithIcon(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, TextureAtlasSprite icon, int innerColor, int start, int segments, float spinRadius, int layers, float thickness) {
 
 	
-	public static void gluonBeam(Vec3 pos1, Vec3 pos2, float size){
+	public static void gluonBeam(Vec3d pos1, Vec3d pos2, float size){
 		//long l = System.nanoTime();
 		GL11.glPushMatrix();
 		GlStateManager.depthMask(false);
@@ -179,13 +179,13 @@ public class BeamPronter {
 			GlStateManager.color(0.4F, 0.7F, 1, 1);
 		}
 		
-		Vec3 diff = pos1.subtract(pos2);
+		Vec3d diff = pos1.subtract(pos2);
 		float len = (float) diff.length();
-		Vec3 angles = BobMathUtil.getEulerAngles(diff);
-		GL11.glTranslated(pos1.xCoord, pos1.yCoord, pos1.zCoord);
+		Vec3d angles = BobMathUtil.getEulerAngles(diff);
+		GL11.glTranslated(pos1.x, pos1.y, pos1.z);
 		
-		GL11.glRotated(angles.xCoord+90, 0, 1, 0);
-		GL11.glRotated(-angles.yCoord, 0, 0, 1);
+		GL11.glRotated(angles.x+90, 0, 1, 0);
+		GL11.glRotated(-angles.y, 0, 0, 1);
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);

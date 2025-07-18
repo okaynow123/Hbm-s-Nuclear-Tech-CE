@@ -8,7 +8,8 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.render.amlfrom1710.Vec3;
+import java.util.List;
+import java.util.Random;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,9 +26,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
 
 public class ItemMultitoolPassive extends Item {
 
@@ -156,24 +154,24 @@ public class ItemMultitoolPassive extends Item {
 			float part = -1F / 16F;
 
 			Vec3d v = player.getLookVec();
-			Vec3 vec0 = Vec3.createVectorHelper(v.x, v.y, v.z);
-			vec0.rotateAroundY(.25F);
+			Vec3d vec0 = new Vec3d(v.x, v.y, v.z);
+			vec0 = vec0.rotateYaw(.25F);
 			List<int[]> list = Library.getBlockPosInPath(pos, l, vec0);
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
-			vec0.rotateAroundY(part);
+			vec0 = vec0.rotateYaw(part);
 			list.addAll(Library.getBlockPosInPath(pos, l, vec0));
 
 			if(!world.isRemote)

@@ -15,10 +15,10 @@ import com.hbm.packet.GunFXPacket.FXType;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.particle.tau.*;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.anim.HbmAnimations.AnimType;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.Vec3dUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
@@ -104,20 +104,20 @@ public class ItemGunGauss extends ItemGunBase {
 					for(int j = 0; j < 3 + world.rand.nextInt(5); j ++){
 						//Gets a random vector rotated within a cone and then rotates it to the particle data's direction
 						//Create a new vector and rotate it randomly about the x axis within the angle specified, then rotate that by random degrees to get the random cone vector
-						Vec3 up = Vec3.createVectorHelper(0, 1, 0);
-						up.rotateAroundX((float) Math.toRadians(world.rand.nextFloat()*75));
-						up.rotateAroundY((float) Math.toRadians(world.rand.nextFloat()*360));
+						Vec3d up = new Vec3d(0, 1, 0);
+						up = up.rotatePitch((float) Math.toRadians(world.rand.nextFloat()*75));
+						up = up.rotateYaw((float) Math.toRadians(world.rand.nextFloat()*360));
 						//Finds the angles for the particle direction and rotate our random cone vector to it.
-						Vec3 direction2 = new Vec3(direction);
-						Vec3 angles = BobMathUtil.getEulerAngles(direction2);
-						Vec3 newDirection = Vec3.createVectorHelper(up.xCoord, up.yCoord, up.zCoord);
-						newDirection.rotateAroundX((float) Math.toRadians(angles.yCoord-90));
-						newDirection.rotateAroundY((float) Math.toRadians(angles.xCoord));
-						newDirection = newDirection.mult(3);
-						RayTraceResult r2 = Library.rayTraceIncludeEntities(world, r.hitVec.add(newDirection.xCoord*0.01, newDirection.yCoord*0.01, newDirection.zCoord*0.01), r.hitVec.add(newDirection.xCoord, newDirection.yCoord, newDirection.zCoord), player);
+						Vec3d direction2 = new Vec3d(Vec3dUtil.convertToVec3i(direction));
+						Vec3d angles = BobMathUtil.getEulerAngles(direction2);
+						Vec3d newDirection = new Vec3d(up.x, up.y, up.z);
+						newDirection = newDirection.rotatePitch((float) Math.toRadians(angles.y-90));
+						newDirection = newDirection.rotateYaw((float) Math.toRadians(angles.x));
+						newDirection = newDirection.scale(3);
+						RayTraceResult r2 = Library.rayTraceIncludeEntities(world, r.hitVec.add(newDirection.x*0.01, newDirection.y*0.01, newDirection.z*0.01), r.hitVec.add(newDirection.x, newDirection.y, newDirection.z), player);
 						if(r2 != null && r2.typeOfHit == Type.BLOCK){
-							Vec3d vec1 = r2.hitVec.add(new Vec3d(newDirection.xCoord*0.01, newDirection.yCoord*0.01, newDirection.zCoord*0.01));
-							Vec3d vec2 = r.hitVec.add(new Vec3d(newDirection.xCoord, newDirection.yCoord, newDirection.zCoord));
+							Vec3d vec1 = r2.hitVec.add(new Vec3d(newDirection.x*0.01, newDirection.y*0.01, newDirection.z*0.01));
+							Vec3d vec2 = r.hitVec.add(new Vec3d(newDirection.x, newDirection.y, newDirection.z));
 							r2 = Library.rayTraceIncludeEntities(world, vec1, vec2, player);
 						}
 						//Yeah, it's some repeated code, but the alternative was even worse and buggier.
@@ -273,25 +273,25 @@ public class ItemGunGauss extends ItemGunBase {
 					for(int j = 0; j < 3 + world.rand.nextInt(5); j ++){
 						//Gets a random vector rotated within a cone and then rotates it to the particle data's direction
 						//Create a new vector and rotate it randomly about the x axis within the angle specified, then rotate that by random degrees to get the random cone vector
-						Vec3 up = Vec3.createVectorHelper(0, 1, 0);
-						up.rotateAroundX((float) Math.toRadians(world.rand.nextFloat()*45));
-						up.rotateAroundY((float) Math.toRadians(world.rand.nextFloat()*360));
+						Vec3d up = new Vec3d(0, 1, 0);
+						up = up.rotatePitch((float) Math.toRadians(world.rand.nextFloat()*45));
+						up = up.rotateYaw((float) Math.toRadians(world.rand.nextFloat()*360));
 						//Finds the angles for the particle direction and rotate our random cone vector to it.
-						Vec3 direction2 = new Vec3(direction);
-						Vec3 angles = BobMathUtil.getEulerAngles(direction2);
-						Vec3 newDirection = Vec3.createVectorHelper(up.xCoord, up.yCoord, up.zCoord);
-						newDirection.rotateAroundX((float) Math.toRadians(angles.yCoord-90));
-						newDirection.rotateAroundY((float) Math.toRadians(angles.xCoord));
-						newDirection = newDirection.mult(3);
-						RayTraceResult r2 = Library.rayTraceIncludeEntities(world, r.hitVec.add(newDirection.xCoord*0.01, newDirection.yCoord*0.01, newDirection.zCoord*0.01), r.hitVec.add(newDirection.xCoord, newDirection.yCoord, newDirection.zCoord), shooter);
+						Vec3d direction2 = new Vec3d(Vec3dUtil.convertToVec3i(direction));
+						Vec3d angles = BobMathUtil.getEulerAngles(direction2);
+						Vec3d newDirection = new Vec3d(up.x, up.y, up.z);
+						newDirection = newDirection.rotatePitch((float) Math.toRadians(angles.y-90));
+						newDirection = newDirection.rotateYaw((float) Math.toRadians(angles.x));
+						newDirection = newDirection.scale(3);
+						RayTraceResult r2 = Library.rayTraceIncludeEntities(world, r.hitVec.add(newDirection.x*0.01, newDirection.y*0.01, newDirection.z*0.01), r.hitVec.add(newDirection.x, newDirection.y, newDirection.z), shooter);
 						if(r2 != null && r2.typeOfHit == Type.BLOCK){
-							Vec3d vec1 = r2.hitVec.add(new Vec3d(newDirection.xCoord*0.01, newDirection.yCoord*0.01, newDirection.zCoord*0.01));
-							Vec3d vec2 = r.hitVec.add(new Vec3d(newDirection.xCoord, newDirection.yCoord, newDirection.zCoord));
+							Vec3d vec1 = r2.hitVec.add(new Vec3d(newDirection.x*0.01, newDirection.y*0.01, newDirection.z*0.01));
+							Vec3d vec2 = r.hitVec.add(new Vec3d(newDirection.x, newDirection.y, newDirection.z));
 							r2 = Library.rayTraceIncludeEntities(world, vec1, vec2, shooter);
 						}
 						//Yeah, it's some repeated code, but the alternative was even worse and buggier.
 						if(r2 == null || r2.typeOfHit == Type.MISS){
-							ParticleTauRay ray = new ParticleTauRay(world, new Vec3d[]{r.hitVec, new Vec3d(newDirection.xCoord, newDirection.yCoord, newDirection.zCoord).add(r.hitVec)}, 0.25F);
+							ParticleTauRay ray = new ParticleTauRay(world, new Vec3d[]{r.hitVec, new Vec3d(newDirection.x, newDirection.y, newDirection.z).add(r.hitVec)}, 0.25F);
 							Minecraft.getMinecraft().effectRenderer.addEffect(ray);
 						} else if(r2.typeOfHit == Type.ENTITY){
 							normal = new Vec3d(r2.sideHit.getXOffset(), r2.sideHit.getYOffset(), r2.sideHit.getZOffset());

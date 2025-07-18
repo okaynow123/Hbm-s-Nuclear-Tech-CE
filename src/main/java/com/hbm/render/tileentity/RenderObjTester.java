@@ -6,13 +6,14 @@ import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.util.ModelRendererUtil;
 import com.hbm.render.util.ModelRendererUtil.VertexData;
 import com.hbm.render.util.RenderMiscEffects;
 import com.hbm.tileentity.deco.TileEntityObjTester;
+import com.hbm.util.Vec3dUtil;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBox;
@@ -36,8 +37,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-
-import java.util.List;
 
 public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTester>
     implements IItemRendererProvider {
@@ -327,14 +326,11 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
             null);
     if (r != null && r.hitVec != null) {
       BeamPronter.gluonBeam(
-          Vec3.createVectorHelper(0, 0, 0),
-          new Vec3(
-              r.hitVec.subtract(
-                  te.getPos().getX(), te.getPos().getY() + 2, te.getPos().getZ() + 0.5)),
-          0.8F);
+          new Vec3d(0, 0, 0),
+          new Vec3d(Vec3dUtil.convertToVec3i(r.hitVec.subtract(te.getPos().getX(), te.getPos().getY() + 2, te.getPos().getZ() + 0.5))), 0.8F);
     } else {
       BeamPronter.gluonBeam(
-          Vec3.createVectorHelper(0, 0, 0), Vec3.createVectorHelper(11, 0, 0), 0.8F);
+          new Vec3d(0, 0, 0), new Vec3d(11, 0, 0), 0.8F);
     }
 
     /*if(spikeV == -1){

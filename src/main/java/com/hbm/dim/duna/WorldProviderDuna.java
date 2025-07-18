@@ -9,14 +9,16 @@ import com.hbm.dim.WorldTypeTeleport;
 import com.hbm.dim.duna.GenLayerDuna.GenLayerDiversifyDuna;
 import com.hbm.dim.duna.GenLayerDuna.GenLayerDunaBiomes;
 import com.hbm.dim.duna.GenLayerDuna.GenLayerDunaLowlands;
-import com.hbm.render.amlfrom1710.Vec3;
+
 import com.hbm.util.ParticleUtil;
+import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.layer.*;
@@ -56,10 +58,10 @@ public class WorldProviderDuna extends WorldProviderCelestial {
 		} else {
 			if(dustStormIntensity >= 0.5F) {
 				Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
-				Vec3 vec = Vec3.createVectorHelper(20, 0, 50);
-				vec.rotateAroundZ((float)(world.rand.nextDouble() * Math.PI * 10));
-				vec.rotateAroundY((float)(world.rand.nextDouble() * Math.PI * 2 * 5));
-				ParticleUtil.spawnDustFlame(world, viewEntity.posX + vec.xCoord, viewEntity.posY, viewEntity.posZ + vec.zCoord, -4, 0, 0);
+				Vec3d vec = new Vec3d(20, 0, 50);
+				vec = Vec3dUtil.rotateRoll(vec, (float)(world.rand.nextDouble() * Math.PI * 10));
+				vec = vec.rotateYaw((float)(world.rand.nextDouble() * Math.PI * 2 * 5));
+				ParticleUtil.spawnDustFlame(world, viewEntity.posX + vec.x, viewEntity.posY, viewEntity.posZ + vec.z, -4, 0, 0);
 			}
 		}
 	}

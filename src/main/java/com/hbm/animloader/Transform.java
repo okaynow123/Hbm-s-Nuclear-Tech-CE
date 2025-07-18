@@ -1,19 +1,19 @@
 package com.hbm.animloader;
 
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3dUtil;
+import java.nio.FloatBuffer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
-
-import java.nio.FloatBuffer;
 
 public class Transform {
 
 	protected static FloatBuffer auxGLMatrix = GLAllocation.createDirectFloatBuffer(16);
 	
-	Vec3 scale;
-	Vec3 translation;
+	Vec3d scale;
+	Vec3d translation;
 	Quaternion rotation;
 	
 	boolean hidden = false;
@@ -23,14 +23,14 @@ public class Transform {
 		auxGLMatrix.put(matrix);
 		auxGLMatrix.rewind();
 		rotation = new Quaternion().setFromMatrix((Matrix4f) new Matrix4f().load(auxGLMatrix));
-		translation = Vec3.createVectorHelper(matrix[0*4+3], matrix[1*4+3], matrix[2*4+3]);
+		translation = new Vec3d(matrix[0*4+3], matrix[1*4+3], matrix[2*4+3]);
 		auxGLMatrix.rewind();
 	}
 	
-	private Vec3 getScaleFromMatrix(float[] matrix){
-		float scaleX = (float) Vec3.createVectorHelper(matrix[0], matrix[1], matrix[2]).length();
-		float scaleY = (float) Vec3.createVectorHelper(matrix[4], matrix[5], matrix[6]).length();
-		float scaleZ = (float) Vec3.createVectorHelper(matrix[8], matrix[9], matrix[10]).length();
+	private Vec3d getScaleFromMatrix(float[] matrix){
+		float scaleX = (float) new Vec3d(matrix[0], matrix[1], matrix[2]).length();
+		float scaleY = (float) new Vec3d(matrix[4], matrix[5], matrix[6]).length();
+		float scaleZ = (float) new Vec3d(matrix[8], matrix[9], matrix[10]).length();
 		
 		matrix[0] = matrix[0]/scaleX;
 		matrix[1] = matrix[1]/scaleX;
@@ -43,18 +43,18 @@ public class Transform {
 		matrix[8] = matrix[8]/scaleZ;
 		matrix[9] = matrix[9]/scaleZ;
 		matrix[10] = matrix[10]/scaleZ;
-		return Vec3.createVectorHelper(scaleX, scaleY, scaleZ);
+		return new Vec3d(scaleX, scaleY, scaleZ);
 	}
 	
 	public void interpolateAndApply(Transform other, float inter){
-		Vec3 trans = translation.interpolate(other.translation, inter);
-		Vec3 scale = this.scale.interpolate(other.scale, inter);
+		Vec3d trans = Vec3dUtil.lerp(translation, other.translation, inter);
+		Vec3d scale = Vec3dUtil.lerp(this.scale, other.scale, inter);
 		Quaternion rot = slerp(rotation, other.rotation, inter);
 		GlStateManager.quatToGlMatrix(auxGLMatrix, rot);
 		scale(auxGLMatrix, scale);
-		auxGLMatrix.put(12, (float) trans.xCoord);
-		auxGLMatrix.put(13, (float) trans.yCoord);
-		auxGLMatrix.put(14, (float) trans.zCoord);
+		auxGLMatrix.put(12, (float) trans.x);
+		auxGLMatrix.put(13, (float) trans.y);
+		auxGLMatrix.put(14, (float) trans.z);
 		
 		//for(int i = 0; i < 16; i ++){
 			//System.out.print(auxGLMatrix.get(i) + " ");
@@ -63,21 +63,21 @@ public class Transform {
 		GlStateManager.multMatrix(auxGLMatrix);
 	}
 	
-	private void scale(FloatBuffer matrix, Vec3 scale){
-		matrix.put(0, (float) (matrix.get(0)*scale.xCoord));
-		matrix.put(4, (float) (matrix.get(4)*scale.xCoord));
-		matrix.put(8, (float) (matrix.get(8)*scale.xCoord));
-		matrix.put(12, (float) (matrix.get(12)*scale.xCoord));
+	private void scale(FloatBuffer matrix, Vec3d scale){
+		matrix.put(0, (float) (matrix.get(0)*scale.x));
+		matrix.put(4, (float) (matrix.get(4)*scale.x));
+		matrix.put(8, (float) (matrix.get(8)*scale.x));
+		matrix.put(12, (float) (matrix.get(12)*scale.x));
 		
-		matrix.put(1, (float) (matrix.get(1)*scale.yCoord));
-		matrix.put(5, (float) (matrix.get(5)*scale.yCoord));
-		matrix.put(9, (float) (matrix.get(9)*scale.yCoord));
-		matrix.put(13, (float) (matrix.get(13)*scale.yCoord));
+		matrix.put(1, (float) (matrix.get(1)*scale.y));
+		matrix.put(5, (float) (matrix.get(5)*scale.y));
+		matrix.put(9, (float) (matrix.get(9)*scale.y));
+		matrix.put(13, (float) (matrix.get(13)*scale.y));
 		
-		matrix.put(2, (float) (matrix.get(2)*scale.zCoord));
-		matrix.put(6, (float) (matrix.get(6)*scale.zCoord));
-		matrix.put(10, (float) (matrix.get(10)*scale.zCoord));
-		matrix.put(14, (float) (matrix.get(14)*scale.zCoord));
+		matrix.put(2, (float) (matrix.get(2)*scale.z));
+		matrix.put(6, (float) (matrix.get(6)*scale.z));
+		matrix.put(10, (float) (matrix.get(10)*scale.z));
+		matrix.put(14, (float) (matrix.get(14)*scale.z));
 	}
 	
 	//Thanks, wikipedia

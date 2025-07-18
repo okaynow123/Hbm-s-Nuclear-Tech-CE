@@ -3,7 +3,16 @@ package com.hbm.util;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.FloatBuffer;
+import java.text.NumberFormat;
+import java.util.*;
+import java.util.function.ToIntFunction;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nullable;
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Quat4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
@@ -14,17 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nullable;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Quat4f;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.FloatBuffer;
-import java.text.NumberFormat;
-import java.util.*;
-import java.util.function.ToIntFunction;
 
 public class BobMathUtil {
 
@@ -156,19 +154,6 @@ public class BobMathUtil {
         return angle;
     }
 
-    public static double getCrossAngle(Vec3 vel, Vec3 rel) {
-
-        vel = vel.normalize();
-        rel = rel.normalize();
-
-        double angle = Math.toDegrees(Math.acos(vel.dotProduct(rel)));
-
-        if (angle >= 180)
-            angle -= 180;
-
-        return angle;
-    }
-
     public static double perlinFade(double value) {
         return value * value * value * (value * (value * 6.0D - 15.0D) + 10.0D);
     }
@@ -177,12 +162,12 @@ public class BobMathUtil {
         return 30.0D * value * value * (value - 1.0D) * (value - 1.0D);
     }
 
-    public static Vec3 getDirectionFromAxisAngle(float pitch, float yaw, double length) {
-        double ox = (double) (-MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length);
-        double oz = (double) (MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length);
-        double oy = (double) (-MathHelper.sin(pitch / 180.0F * (float) Math.PI) * length);
+    public static Vec3d getDirectionFromAxisAngle(float pitch, float yaw, double length) {
+        double ox = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length;
+        double oz = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI) * length;
+        double oy = -MathHelper.sin(pitch / 180.0F * (float) Math.PI) * length;
 
-        return Vec3.createVectorHelper(ox, oy, oz);
+        return new Vec3d(ox, oy, oz);
     }
 
     public static float remap(float num, float min1, float max1, float min2, float max2) {
@@ -247,13 +232,6 @@ public class BobMathUtil {
 
     public static double lerpFromProgress(double lerpValue, double lerpStart, double lerpEnd, double start, double end) {
         return lerp(getLerpProgress(lerpValue, lerpStart, lerpEnd), start, end);
-    }
-
-    public static Vec3 getEulerAngles(Vec3 vec) {
-        double yaw = Math.toDegrees(Math.atan2(vec.xCoord, vec.zCoord));
-        double sqrt = MathHelper.sqrt(vec.xCoord * vec.xCoord + vec.zCoord * vec.zCoord);
-        double pitch = Math.toDegrees(Math.atan2(vec.yCoord, sqrt));
-        return Vec3.createVectorHelper(yaw, pitch, 0);
     }
 
     /**
@@ -392,31 +370,23 @@ public class BobMathUtil {
         return idx;
     }
 
-    public static Vec3 randVecInCone(Vec3 coneDirection, float angle) {
+    public static Vec3d randVecInCone(Vec3d coneDirection, float angle) {
         return randVecInCone(coneDirection, angle, rand);
     }
 
-    public static Vec3 randVecInCone(Vec3 coneDirection, float angle, Random rand) {
+    public static Vec3d randVecInCone(Vec3d coneDirection, float angle, Random rand) {
         //Gets a random vector rotated within a cone and then rotates it to the particle data's direction
         //Create a new vector and rotate it randomly about the x axis within the angle specified, then rotate that by random degrees to get the random cone vector
-        Vec3 up = Vec3.createVectorHelper(0, 1, 0);
-        up.rotateAroundX((float) Math.toRadians(rand.nextFloat() * (angle + rand.nextFloat() * angle)));
-        up.rotateAroundY((float) Math.toRadians(rand.nextFloat() * 360));
+        Vec3d up = new Vec3d(0, 1, 0);
+        up = up.rotatePitch((float) Math.toRadians(rand.nextFloat() * (angle + rand.nextFloat() * angle)));
+        up = up.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360));
         //Finds the angles for the particle direction and rotate our random cone vector to it.
-        Vec3 direction = Vec3.createVectorHelper(coneDirection.xCoord, coneDirection.yCoord, coneDirection.zCoord);
-        Vec3 angles = BobMathUtil.getEulerAngles(direction);
-        Vec3 newDirection = Vec3.createVectorHelper(up.xCoord, up.yCoord, up.zCoord);
-        newDirection.rotateAroundX((float) Math.toRadians(angles.yCoord - 90));
-        newDirection.rotateAroundY((float) Math.toRadians(angles.xCoord));
+        Vec3d direction = new Vec3d(coneDirection.x, coneDirection.y, coneDirection.z);
+        Vec3d angles = BobMathUtil.getEulerAngles(direction);
+        Vec3d newDirection = new Vec3d(up.x, up.y, up.z);
+        newDirection = newDirection.rotatePitch((float) Math.toRadians(angles.y - 90));
+        newDirection = newDirection.rotateYaw((float) Math.toRadians(angles.x));
         return newDirection;
-    }
-
-    public static Vec3d randVecInCone(Vec3d coneDirection, float angle) {
-        return randVecInCone(new Vec3(coneDirection), angle).toVec3d();
-    }
-
-    public static Vec3d randVecInCone(Vec3d coneDirection, float angle, Random rand) {
-        return randVecInCone(new Vec3(coneDirection), angle, rand).toVec3d();
     }
 
     public static Vec3d mix(Vec3d a, Vec3d b, float amount) {

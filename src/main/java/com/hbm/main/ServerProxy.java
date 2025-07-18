@@ -1,8 +1,10 @@
 package com.hbm.main;
 
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.sound.AudioWrapper;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -11,16 +13,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerProxy
 {
@@ -34,7 +33,7 @@ public class ServerProxy
 
 	public void spawnParticle(double x, double y, double z, String type, float[] args) { }
 	
-	public void spawnSFX(World world, double posX, double posY, double posZ, int type, Vec3 payload) { }
+	public void spawnSFX(World world, double posX, double posY, double posZ, int type, Vec3d payload) { }
 
 	public void effectNT(NBTTagCompound data) { }
 	

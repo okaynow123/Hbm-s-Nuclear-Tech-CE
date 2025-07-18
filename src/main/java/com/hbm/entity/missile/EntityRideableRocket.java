@@ -21,7 +21,6 @@ import com.hbm.items.weapon.ItemMissile;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.machine.TileEntityOrbitalStation;
@@ -30,6 +29,9 @@ import com.hbm.util.CompatExternal;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.ParticleUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -46,10 +48,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
@@ -60,10 +59,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOverlay {
 
@@ -300,10 +295,10 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 			}
 
 			if(state == RocketState.LAUNCHING) {
-				Vec3 motion = BobMathUtil.getDirectionFromAxisAngle(rotationPitch - 90.0F, 180.0F - rotationYaw, rocketVelocity);
-				motionX = motion.xCoord;
-				motionY = motion.yCoord;
-				motionZ = motion.zCoord;
+				Vec3d motion = BobMathUtil.getDirectionFromAxisAngle(rotationPitch - 90.0F, 180.0F - rotationYaw, rocketVelocity);
+				motionX = motion.x;
+				motionY = motion.y;
+				motionZ = motion.z;
 			} else {
 				motionX = 0;
 				motionY = rocketVelocity;

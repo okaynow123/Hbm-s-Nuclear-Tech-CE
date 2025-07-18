@@ -3,16 +3,17 @@ package com.hbm.packet;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.bomb.TileEntityCompactLauncher;
 import com.hbm.tileentity.bomb.TileEntityLaunchPad;
 import com.hbm.tileentity.bomb.TileEntityLaunchTable;
 import com.hbm.tileentity.bomb.TileEntityRailgun;
 import com.hbm.tileentity.machine.*;
+import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -125,13 +126,13 @@ public class AuxGaugePacket implements IMessage {
                         TileEntityRailgun gen = (TileEntityRailgun) te;
 
                         if (m.id == 0) {
-                            Vec3 vec = Vec3.createVectorHelper(5.5, 0, 0);
-                            vec.rotateAroundZ((float) (gen.pitch * Math.PI / 180D));
-                            vec.rotateAroundY((float) (gen.yaw * Math.PI / 180D));
+                            Vec3d vec = new Vec3d(5.5, 0, 0);
+                            vec = Vec3dUtil.rotateRoll(vec, (float) (gen.pitch * Math.PI / 180D));
+                            vec = vec.rotateYaw((float) (gen.yaw * Math.PI / 180D));
 
-                            double fX = gen.getPos().getX() + 0.5 + vec.xCoord;
-                            double fY = gen.getPos().getY() + 1 + vec.yCoord;
-                            double fZ = gen.getPos().getZ() + 0.5 + vec.zCoord;
+                            double fX = gen.getPos().getX() + 0.5 + vec.x;
+                            double fY = gen.getPos().getY() + 1 + vec.y;
+                            double fZ = gen.getPos().getZ() + 0.5 + vec.z;
 
                             MainRegistry.proxy.spawnSFX(gen.getWorld(), fX, fY, fZ, 0, vec.normalize());
                         }
