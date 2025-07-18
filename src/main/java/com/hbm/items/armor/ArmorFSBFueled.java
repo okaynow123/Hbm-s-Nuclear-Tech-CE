@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 public class ArmorFSBFueled extends ArmorFSB implements IFillableItem {
 
+
 	FluidType fuelType;
 	public int maxFuel = 1;
 	public int fillRate;
