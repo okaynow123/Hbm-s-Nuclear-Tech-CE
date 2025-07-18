@@ -598,7 +598,14 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onEntityHurt(LivingHurtEvent e) {
         EntityLivingBase ent = e.getEntityLiving();
-        if (e.getEntityLiving() instanceof EntityPlayer) {
+        if (e.getEntityLiving() instanceof EntityPlayer player) {
+            IHBMData props = HbmCapability.getData(player);
+            if(props.getShield() > 0) {
+                float reduce = Math.min(props.getShield(), e.getAmount());
+                props.setShield(props.getShield() - reduce);
+                e.setAmount(e.getAmount() - reduce);
+            }
+            props.setLastDamage(player.ticksExisted);
             if (ArmorUtil.checkArmor(e.getEntityLiving(), ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
                 e.setCanceled(true);
             }
@@ -626,7 +633,7 @@ public class ModEventHandler {
 
             ItemStack armor = ent.getItemStackFromSlot(EntityEquipmentSlot.values()[i]);
 
-            if (armor != null && ArmorModHandler.hasMods(armor)) {
+            if (!armor.isEmpty() && ArmorModHandler.hasMods(armor)) {
 
                 for (ItemStack mod : ArmorModHandler.pryMods(armor)) {
 

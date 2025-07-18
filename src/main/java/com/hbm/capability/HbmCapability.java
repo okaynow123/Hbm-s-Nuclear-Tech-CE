@@ -1,8 +1,15 @@
 package com.hbm.capability;
 
+import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
+import com.hbm.items.armor.ItemModShield;
 import com.hbm.main.MainRegistry;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,35 +18,83 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Callable;
 
+// TODO: Port stuff from 1.7, this is very outdated
+@SuppressWarnings("DataFlowIssue")
 public class HbmCapability {
 
 	public interface IHBMData {
-		public boolean getKeyPressed(EnumKeybind key);
-		public void setKeyPressed(EnumKeybind key, boolean pressed);
-		public boolean getEnableBackpack();
-		public boolean getEnableHUD();
-		public boolean getOnLadder();
-		public void setEnableBackpack(boolean b);
-		public void setEnableHUD(boolean b);
-		public void setOnLadder(boolean b);
-		
-		public default boolean isJetpackActive() {
+		float shieldCap = 100;
+		boolean getKeyPressed(EnumKeybind key);
+		void setKeyPressed(EnumKeybind key, boolean pressed);
+		boolean getEnableBackpack();
+		boolean getEnableHUD();
+		boolean getOnLadder();
+		float getShield();
+		float getMaxShield();
+		int getLastDamage();
+		void setEnableBackpack(boolean b);
+		void setEnableHUD(boolean b);
+		void setOnLadder(boolean b);
+		void setShield(float f);
+		void setMaxShield(float f);
+		void setLastDamage(int i);
+		default float getEffectiveMaxShield(EntityPlayer player){
+			float max = this.getMaxShield();
+			if(!player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()) {
+				ItemStack[] mods = ArmorModHandler.pryMods(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST));
+				if(mods[ArmorModHandler.kevlar] != null && mods[ArmorModHandler.kevlar].getItem() instanceof ItemModShield mod) {
+					max += mod.shield;
+				}
+			}
+			return max;
+		}
+        default boolean isJetpackActive() {
 			return getEnableBackpack() && getKeyPressed(EnumKeybind.JETPACK);
+		}
+		default void serialize(ByteBuf buf) {
+//			buf.writeBoolean(this.hasReceivedBook);
+			buf.writeFloat(this.getShield());
+			buf.writeFloat(this.getMaxShield());
+			buf.writeBoolean(this.getEnableBackpack());
+			buf.writeBoolean(this.getEnableHUD());
+//			buf.writeInt(this.reputation);
+			buf.writeBoolean(this.getOnLadder());
+//			buf.writeBoolean(this.enableMagnet);
+		}
+		default void deserialize(ByteBuf buf) {
+			if(buf.readableBytes() > 0) {
+//				this.hasReceivedBook = buf.readBoolean();
+				this.setShield(buf.readFloat());
+				this.setMaxShield(buf.readFloat());
+				this.setEnableBackpack(buf.readBoolean());
+				this.setEnableHUD(buf.readBoolean());
+//				this.reputation = buf.readInt();
+				this.setOnLadder(buf.readBoolean());
+//				this.enableMagnet = buf.readBoolean();
+			}
 		}
 	}
 	
 	public static class HBMData implements IHBMData {
 
-		public static final Callable<IHBMData> FACTORY = () -> {return new HBMData();};
+		public static final Callable<IHBMData> FACTORY = HBMData::new;
 		
-		private boolean[] keysPressed = new boolean[EnumKeybind.values().length];
+		private final boolean[] keysPressed = new boolean[EnumKeybind.values().length];
 		
 		public boolean enableBackpack = true;
 		public boolean enableHUD = true;
 		public boolean isOnLadder = false;
+		public float shield = 0;
+		public float maxShield = 0;
+		/**
+		 * mlbv: figure out what the fuck this is, there is a {@link EntityLivingBase#lastDamage} already
+		 * so what is its purpose?
+		 */
+		public int lastDamage = 0;
 		
 		@Override
 		public boolean getKeyPressed(EnumKeybind key) {
@@ -94,8 +149,37 @@ public class HbmCapability {
 		public boolean getOnLadder() {return isOnLadder;}
 
 		@Override
+		public float getShield() {
+			return shield;
+		}
+
+		@Override
+		public float getMaxShield() {
+			return maxShield;
+		}
+
+		@Override
+		public int getLastDamage() {
+			return lastDamage;
+		}
+
+		@Override
 		public void setOnLadder(boolean b){isOnLadder = b;}
-		
+
+		@Override
+		public void setShield(float f) {
+			shield = f;
+		}
+
+		@Override
+		public void setMaxShield(float f) {
+			maxShield = f;
+		}
+
+		@Override
+		public void setLastDamage(int i) {
+			lastDamage = i;
+		}
 	}
 	
 	public static class HBMDataStorage implements IStorage<IHBMData>{
@@ -109,19 +193,22 @@ public class HbmCapability {
 			tag.setBoolean("enableBackpack", instance.getEnableBackpack());
 			tag.setBoolean("enableHUD", instance.getEnableHUD());
 			tag.setBoolean("isOnLadder", instance.getOnLadder());
+			tag.setFloat("shield", instance.getShield());
+			tag.setFloat("maxShield", instance.getMaxShield());
 			return tag;
 		}
 
 		@Override
 		public void readNBT(Capability<IHBMData> capability, IHBMData instance, EnumFacing side, NBTBase nbt) {
-			if(nbt instanceof NBTTagCompound){
-				NBTTagCompound tag = (NBTTagCompound)nbt;
-				for(EnumKeybind key : EnumKeybind.values()){
+			if(nbt instanceof NBTTagCompound tag){
+                for(EnumKeybind key : EnumKeybind.values()){
 					instance.setKeyPressed(key, tag.getBoolean(key.name()));
 				}
 				instance.setEnableBackpack(tag.getBoolean("enableBackpack"));
 				instance.setEnableHUD(tag.getBoolean("enableHUD"));
 				instance.setOnLadder(tag.getBoolean("isOnLadder"));
+				instance.setShield(tag.getFloat("shield"));
+				instance.setMaxShield(tag.getFloat("maxShield"));
 			}
 		}
 		
@@ -164,23 +251,51 @@ public class HbmCapability {
 			}
 
 			@Override
+			public float getShield() {
+				return 0;
+			}
+
+			@Override
+			public float getMaxShield() {
+				return 0;
+			}
+
+			@Override
+			public int getLastDamage() {
+				return 0;
+			}
+
+			@Override
 			public void setOnLadder(boolean b){
+			}
+
+			@Override
+			public void setShield(float f) {
+			}
+
+			@Override
+			public void setMaxShield(float f) {
+			}
+
+			@Override
+			public void setLastDamage(int i) {
+
 			}
 		};
 		
 		@CapabilityInject(IHBMData.class)
 		public static final Capability<IHBMData> HBM_CAP = null;
-		
-		private IHBMData instance = HBM_CAP.getDefaultInstance();
-		
+
+		private final IHBMData instance = HBM_CAP.getDefaultInstance();
+
 		@Override
-		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
 			return capability == HBM_CAP;
 		}
 
 		@Override
 		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			return capability == HBM_CAP ? HBM_CAP.<T>cast(this.instance) : null;
+			return capability == HBM_CAP ? HBM_CAP.cast(this.instance) : null;
 		}
 
 		@Override

@@ -494,7 +494,7 @@ public class ModItems {
 	public static final Item paa_legs = new ArmorFSB(MainRegistry.enumArmorMaterialPaa, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/paa_2.png", "paa_legs").cloneStats((ArmorFSB) paa_helmet).setMaxStackSize(1);
 	public static final Item paa_boots = new ArmorFSB(MainRegistry.enumArmorMaterialPaa, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/paa_1.png", "paa_boots").cloneStats((ArmorFSB) paa_helmet).setMaxStackSize(1);
 	
-	public static final Item australium_iii = new ArmorAustralium(MainRegistry.enumArmorMaterialAusIII, -1, EntityEquipmentSlot.CHEST, "australium_iii").setMaxStackSize(1);
+	public static final Item australium_iii = new ItemModShield(25F, "australium_iii").setMaxStackSize(1);
 
 	public static final Item armor_battery = new ItemModBattery(1.25D, "armor_battery");
 	public static final Item armor_battery_mk2 = new ItemModBattery(1.5D, "armor_battery_mk2");
@@ -1654,6 +1654,7 @@ public class ModItems {
 	public static final Item bottle2_korl_special = new ItemEnergy("bottle2_korl_special").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item bottle2_fritz_special = new ItemEnergy("bottle2_fritz_special").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item bottle2_sunset = new ItemEnergy("bottle2_sunset").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item flask_infusion = new ItemFlask("flask_infusion").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item chocolate_milk = new ItemEnergy("chocolate_milk").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item cap_nuka = new ItemBase("cap_nuka").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item cap_quantum = new ItemBase("cap_quantum").setCreativeTab(MainRegistry.consumableTab);

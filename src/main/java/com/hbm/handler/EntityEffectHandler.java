@@ -1,5 +1,6 @@
 package com.hbm.handler;
 
+import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
 import com.hbm.capability.HbmLivingProps;
@@ -13,6 +14,7 @@ import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.AuxParticlePacketNT;
 import com.hbm.packet.ExtPropPacket;
+import com.hbm.packet.HbmCapabilityPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.saveddata.RadiationSavedData;
@@ -58,6 +60,19 @@ public class EntityEffectHandler {
 				IEntityHbmProps props = HbmLivingProps.getData(entity);
 				props.saveNBTData(data);
 				PacketThreading.createSendToThreadedPacket(new ExtPropPacket(data), (EntityPlayerMP) entity);
+			}
+
+			if(entity instanceof EntityPlayerMP playerMP) {
+				HbmCapability.IHBMData cap = HbmCapability.getData(entity);
+
+				if(cap.getShield() < cap.getEffectiveMaxShield(playerMP) && entity.ticksExisted > cap.getLastDamage() + 60) {
+					int tsd = entity.ticksExisted - (cap.getLastDamage() + 60);
+					cap.setShield(cap.getShield() + Math.min(cap.getEffectiveMaxShield(playerMP) - cap.getShield(), 0.005F * tsd));
+				}
+
+				if(cap.getShield() > cap.getEffectiveMaxShield(playerMP))
+					cap.setShield(cap.getEffectiveMaxShield(playerMP));
+				PacketThreading.createSendToThreadedPacket(new HbmCapabilityPacket(cap), playerMP);
 			}
 		}
 		

@@ -1673,6 +1673,19 @@ public class ModEventHandlerClient {
         }
     }
 
+    @SubscribeEvent(receiveCanceled = true)
+    public void onHUDRenderShield(RenderGameOverlayEvent.Pre event) {
+
+        EntityPlayer player = Minecraft.getMinecraft().player;
+
+        if(event.getType().equals(ElementType.ARMOR)) {
+            HbmCapability.IHBMData props = HbmCapability.getData(player);
+            if(props.getEffectiveMaxShield(player) > 0) {
+                RenderScreenOverlay.renderShieldBar(event.getResolution(), Minecraft.getMinecraft().ingameGUI);
+            }
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void preRenderPlayer(RenderPlayerEvent.Pre evt) {
         PotionEffect invis = evt.getEntityPlayer().getActivePotionEffect(MobEffects.INVISIBILITY);

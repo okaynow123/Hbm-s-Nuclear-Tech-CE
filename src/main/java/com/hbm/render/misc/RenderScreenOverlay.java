@@ -1,8 +1,11 @@
 package com.hbm.render.misc;
 
+import com.hbm.capability.HbmCapability;
 import com.hbm.config.RadiationConfig;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,10 +13,12 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -232,6 +237,51 @@ public class RenderScreenOverlay {
 
         GL11.glPopMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
+	}
+
+	//call in post health bar rendering event
+	public static void renderShieldBar(ScaledResolution resolution, Gui gui) {
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		HbmCapability.IHBMData props = HbmCapability.getData(player);
+		if (props == null || props.getShield() <= 0) return;
+
+		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+		int height = resolution.getScaledHeight();
+		int width = resolution.getScaledWidth();
+		int left = width / 2 - 91;
+		int top = height - GuiIngameForge.left_height;
+
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(misc);
+		gui.drawTexturedModalRect(left, top, 146, 0, 81, 9);
+		if (props.getEffectiveMaxShield(player) > 0) {
+			int barWidth = (int) Math.ceil(props.getShield() * 79.0F / props.getEffectiveMaxShield(player));
+			barWidth = Math.min(barWidth, 79);
+
+			if (barWidth > 0) {
+				gui.drawTexturedModalRect(left + 1, top + 1, 147, 10, barWidth, 7);
+			}
+		}
+
+		String label = "" + ((int) (props.getShield() * 10.0F)) / 10.0D;
+		int labelX = left + 40 - font.getStringWidth(label) / 2;
+		int labelY = top + 1;
+		int textColor = 0xFFFF80;
+		int shadowColor = 0x0000;
+
+		font.drawString(label, labelX + 1, labelY, shadowColor);
+		font.drawString(label, labelX - 1, labelY, shadowColor);
+		font.drawString(label, labelX, labelY + 1, shadowColor);
+		font.drawString(label, labelX, labelY - 1, shadowColor);
+		font.drawString(label, labelX, labelY, textColor);
+
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
+
+		GuiIngameForge.left_height += 10;
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
 	public enum Crosshair {
