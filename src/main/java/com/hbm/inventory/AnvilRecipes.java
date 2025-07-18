@@ -9,7 +9,6 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ModItems;
-import crafttweaker.CraftTweakerAPI;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -901,7 +900,6 @@ public class AnvilRecipes {
 					continue start;
 				}
 			}
-			CraftTweakerAPI.logInfo("remove anvil recipe"+ constructionRecipe );
 			constructionRecipes.remove(constructionRecipe);
 			return true;
 
@@ -920,7 +918,6 @@ public class AnvilRecipes {
 					continue start;
 				}
 			}
-			CraftTweakerAPI.logInfo("remove anvil recipe"+ constructionRecipe );
 			constructionRecipes.remove(constructionRecipe);
 			return true;
 		}

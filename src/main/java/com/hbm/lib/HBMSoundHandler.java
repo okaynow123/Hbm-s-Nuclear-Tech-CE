@@ -250,6 +250,8 @@ public final class HBMSoundHandler {
     public static SoundEvent turbinegasStartup;
     public static SoundEvent dflash;
     public static SoundEvent cough;
+    public static SoundEvent gulp;
+    public static SoundEvent groan;
     public static SoundEvent ufoBeam;
     public static SoundEvent ufoBlast;
 
@@ -544,6 +546,8 @@ public final class HBMSoundHandler {
         chungusOperate = register("block.chungusTurbineRunning");
         dflash = register("weapon.dFlash");
         cough = register("player.cough");
+        gulp = register("player.gulp");
+        groan = register("player.groan");
         ufoBeam = register("entity.ufoBeam");
         ufoBlast = register("entity.ufoBlast");
         transitionSealOpen = register("block.door.transitionseal");

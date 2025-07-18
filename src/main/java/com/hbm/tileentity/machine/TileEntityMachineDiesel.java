@@ -9,6 +9,7 @@ import com.hbm.inventory.EngineRecipes.FuelGrade;
 import com.hbm.inventory.container.ContainerMachineDiesel;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIMachineDiesel;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -162,6 +163,11 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 					soundCycle = 0;
 
 				tank.drain(1, true);
+
+				if(world.getTotalWorldTime() % 5 == 0) {
+					super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, 5F);
+				}
+
 				if (power + getHEFromFuel() <= powerCap) {
 					power += getHEFromFuel();
 				} else {

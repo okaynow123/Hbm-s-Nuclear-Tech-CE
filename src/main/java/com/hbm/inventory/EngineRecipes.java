@@ -24,6 +24,7 @@ public class EngineRecipes {
 		addFuel(Fluids.DIESEL.getFF(), FuelGrade.HIGH, 500_000);
 		addFuel(Fluids.LIGHTOIL.getFF(), FuelGrade.MEDIUM, 500_000);
 		addFuel(Fluids.KEROSENE.getFF(), FuelGrade.AERO, 1_250_000);
+		addFuel(Fluids.KEROSENE_REFORM.getFF(), FuelGrade.AERO, 1_750_000);
 		addFuel(Fluids.BIOGAS.getFF(), FuelGrade.AERO, 500_000);
 		addFuel(Fluids.BIOFUEL.getFF(), FuelGrade.HIGH, 400_000);
 		addFuel(Fluids.NITAN.getFF(), FuelGrade.HIGH, 5_000_000);

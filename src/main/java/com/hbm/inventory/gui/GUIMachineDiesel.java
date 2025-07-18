@@ -69,6 +69,6 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 		
 		if(!machineDiesel.hasAcceptableFuel())
 			this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 32, 16, 16, 6);
-		machineDiesel.tank.renderTank(guiLeft + 80, guiTop + 97, this.zLevel, 16, 52);
+		machineDiesel.tank.renderTank(guiLeft + 80, guiTop + 69, this.zLevel, 16, 52);
 	}
 }

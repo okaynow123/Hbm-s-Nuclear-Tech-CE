@@ -176,6 +176,7 @@ public class ModItems {
 	public static final Item attachment_mask_mono = new ItemModGasmask("attachment_mask_mono").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item cigarette = new ItemCigarette("cigarette").setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item crackpipe = new ItemCigarette("crackpipe").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item bdcl = new ItemBDCL("bdcl").setCreativeTab(MainRegistry.consumableTab);
 
 
 	public static final Item back_tesla = new ItemModTesla("back_tesla").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
@@ -1286,8 +1287,10 @@ public class ModItems {
 	public static final Item scrap_oil = new ItemBase("scrap_oil").setCreativeTab(MainRegistry.partsTab);
 	public static final Item dust = new ItemBase("dust").setCreativeTab(MainRegistry.partsTab);
 	public static final Item fallout = new ItemCustomLore("falloutitem").setCreativeTab(MainRegistry.partsTab);
-	public static final Item containment_box = new ItemLeadBox("containment_box").setCreativeTab(null);
-	
+	public static final Item containment_box = new ItemLeadBox("containment_box").setCreativeTab(MainRegistry.consumableTab);
+	public static final Item plastic_bag = new ItemPlasticBag("plastic_bag").setCreativeTab(MainRegistry.consumableTab);
+	public static final Item casing_bag = new ItemCasingBag("casing_bag").setCreativeTab(MainRegistry.consumableTab);
+
 	
 	public static final Item tritium_deuterium_cake = new ItemCustomLore("tritium_deuterium_cake").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
 	

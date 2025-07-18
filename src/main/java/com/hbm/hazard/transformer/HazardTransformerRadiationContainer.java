@@ -23,10 +23,9 @@ public class HazardTransformerRadiationContainer extends HazardTransformerBase {
 		
 		final boolean isCrate = Block.getBlockFromItem(stack.getItem()) instanceof BlockStorageCrate;
 		final boolean isBox = stack.getItem() == ModItems.containment_box;
-		//boolean isBag = stack.getItem() == ModItems.plastic_bag;
+		boolean isBag = stack.getItem() == ModItems.plastic_bag;
 
-		//TODO:Add that bag
-		//if(!isCrate && !isBox && !isBag) return;
+		if(!isCrate && !isBox && !isBag) return;
 		if(!isCrate && !isBox) return;
 		if(!stack.hasTagCompound()) return;
 
@@ -60,19 +59,19 @@ public class HazardTransformerRadiationContainer extends HazardTransformerBase {
 			radiation = (float) BobMathUtil.sqrt(radiation);
 		}
 		
-//		if(isBag) {
-//
-//			ItemStack[] fromNBT = ItemStackUtil.readStacksFromNBT(stack, 1);
-//			if(fromNBT == null) return;
-//
-//			for(ItemStack held : fromNBT) {
-//				if(held != null) {
-//					radiation += HazardSystem.getHazardLevelFromStack(held, HazardRegistry.RADIATION) * held.stackSize;
-//				}
-//			}
-//
-//			radiation *= 2F;
-//		}
+		if(isBag) {
+
+			final ItemStack[] fromNBT = ItemStackUtil.readStacksFromNBT(stack);
+			if(fromNBT == null) return;
+
+			for(ItemStack held : fromNBT) {
+				if(held != null) {
+					radiation += HazardSystem.getHazardLevelFromStack(held, HazardRegistry.RADIATION) * held.getCount();
+				}
+			}
+
+			radiation *= 2F;
+		}
 		
 		if(radiation > 0) {
 			entries.add(new HazardEntry(HazardRegistry.RADIATION, radiation));

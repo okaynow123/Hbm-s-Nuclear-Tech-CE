@@ -11,10 +11,6 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev/"
     }
-    maven { // CraftTweaker
-        name = "jared maven"
-        url = "http://maven.blamejared.com/"
-    }
 //    maven { //GC
 //        name = "galacticraft"
 //        url = "https://maven.galacticraft.net/repository/legacy/"

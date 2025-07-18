@@ -10,6 +10,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums.*;
 import com.hbm.items.ModItems;
+import com.hbm.main.CraftingManager;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -618,7 +619,6 @@ public class OreDictManager {
         OreDictionary.registerOre(KEY_OIL_TAR, fromOne(oil_tar, EnumTarType.CRUDE));
         OreDictionary.registerOre(KEY_CRACK_TAR, fromOne(oil_tar, EnumTarType.CRACK));
         OreDictionary.registerOre(KEY_COAL_TAR, fromOne(oil_tar, EnumTarType.COAL));
-        //TODO
         OreDictionary.registerOre(KEY_WOOD_TAR, fromOne(oil_tar, EnumTarType.WOOD));
 
         /*
@@ -697,7 +697,7 @@ public class OreDictManager {
             OreDictionary.registerOre(name, fromOne(coke, EnumCokeType.PETROLEUM));
         }
 
-        //TODO
+
 		OreDictionary.registerOre("briquetteCoal", fromOne(briquette, EnumBriquetteType.COAL));
 		OreDictionary.registerOre("briquetteLignite", fromOne(briquette, EnumBriquetteType.LIGNITE));
 		OreDictionary.registerOre("briquetteWood", fromOne(briquette, EnumBriquetteType.WOOD));
@@ -713,6 +713,7 @@ public class OreDictManager {
         OreDictionary.registerOre("stairWood", pink_stairs);
         OreDictionary.registerOre("stairWoodPink", pink_stairs);
 
+        //TODO
         String[] dyes = {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
         for (int i = 0; i < 16; i++) {
             String dyeName = "dye" + dyes[i];
@@ -766,21 +767,20 @@ public class OreDictManager {
         OreDictionary.registerOre("blockGlassRed", glass_polonium);
         OreDictionary.registerOre("blockGlassBlack", glass_ash);
 
-//		OreDictionary.registerOre("container1000lubricant", bdcl);
+		OreDictionary.registerOre("container1000lubricant", bdcl);
         OreDictionary.registerOre("itemSilicon", billet_silicon);
 
-        //TODO
-//		for(NTMMaterial mat : Mats.orderedList) {
-//			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
-//				String name = mat.names[0];
-//				if(!OreDictionary.getOres(MaterialShapes.DUST.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.DUST.name() + name).get(0));
-//				else if(!OreDictionary.getOres(MaterialShapes.GEM.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.GEM.name() + name).get(0));
-//				else if(!OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).get(0));
-//				else if(!OreDictionary.getOres(MaterialShapes.INGOT.name() + name).isEmpty()) MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.INGOT.name() + name).get(0));
-//				else if(!OreDictionary.getOres(MaterialShapes.BILLET.name() + name).isEmpty()) MineralRecipes.addBilletFragment(OreDictionary.getOres(MaterialShapes.BILLET.name() + name).get(0), mat.make(ModItems.bedrock_ore_fragment));
-//				else MineralRecipes.add9To1(mat.make(ModItems.bedrock_ore_fragment), new ItemStack(ModItems.nothing));
-//			}
-//		}
+		for(NTMMaterial mat : Mats.orderedList) {
+			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
+				String name = mat.names[0];
+				if(!OreDictionary.getOres(MaterialShapes.DUST.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.DUST.name() + name).get(0));
+				else if(!OreDictionary.getOres(MaterialShapes.GEM.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.GEM.name() + name).get(0));
+				else if(!OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).get(0));
+				else if(!OreDictionary.getOres(MaterialShapes.INGOT.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.INGOT.name() + name).get(0));
+				else if(!OreDictionary.getOres(MaterialShapes.BILLET.name() + name).isEmpty()) CraftingManager.addBilletFragmentForODM(OreDictionary.getOres(MaterialShapes.BILLET.name() + name).get(0), mat.make(ModItems.bedrock_ore_fragment));
+				else CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), new ItemStack(ModItems.nothing));
+			}
+		}
 
         MaterialShapes.registerCompatShapes();
     }

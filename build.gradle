@@ -465,10 +465,6 @@ repositories {
             url 'https://maven.cleanroommc.com'
         }
         maven {
-            name 'BlameJared Maven'
-            url 'https://maven.blamejared.com'
-        }
-        maven {
             name 'GTNH Maven'
             url 'https://nexus.gtnewhorizons.com/repository/public/'
         }
