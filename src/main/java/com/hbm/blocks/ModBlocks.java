@@ -18,7 +18,6 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
@@ -714,7 +713,9 @@ public class ModBlocks {
 	public static final Block turret_maxwell = new TurretMaxwell(Material.IRON, "turret_maxwell").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_fritz = new TurretFritz(Material.IRON, "turret_fritz").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_brandon = new TurretBrandon(Material.IRON, "turret_brandon").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
-
+	public static final Block turret_sentry = new TurretSentry(Material.IRON, "turret_sentry").setHardness(5.0F).setResistance(5.0F).setCreativeTab(MainRegistry.weaponTab);
+	public static final Block turret_sentry_damaged = new TurretSentryDamaged(Material.IRON, "turret_sentry_damaged").setHardness(5.0F).setResistance(5.0F).setCreativeTab(MainRegistry.weaponTab);
+	
 	//Rails
 	public static final Block rail_highspeed = new RailHighspeed("rail_highspeed").setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);
 	public static final Block rail_booster = new RailBooster("rail_booster").setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);

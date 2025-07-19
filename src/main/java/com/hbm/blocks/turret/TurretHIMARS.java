@@ -34,8 +34,17 @@ public class TurretHIMARS extends BlockDummyable {
         return 1;
     }
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+  @Override
+  public boolean onBlockActivated(
+      World worldIn,
+      BlockPos pos,
+      IBlockState state,
+      EntityPlayer playerIn,
+      EnumHand hand,
+      EnumFacing facing,
+      float hitX,
+      float hitY,
+      float hitZ) {
         return super.standardOpenBehavior(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, 0);
     }
 }

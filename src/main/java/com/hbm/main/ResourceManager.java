@@ -115,6 +115,7 @@ public class ResourceManager {
 	public static final IModelCustom turret_fritz = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_fritz.obj")).asVBO();
 	public static final IModelCustom turret_brandon = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_brandon.obj")).asVBO();
 	public static final IModelCustom turret_himars = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_himars.obj")).asVBO();
+	public static final IModelCustom turret_sentry = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_sentry.obj")).asVBO();
 
 	public static final IModelCustom turret_howard_damaged = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_howard_damaged.obj")).asVBO();
 	
@@ -710,6 +711,8 @@ public class ResourceManager {
 	public static final ResourceLocation turret_fritz_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/fritz.png");
 	public static final ResourceLocation turret_brandon_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/brandon.png");
 	public static final ResourceLocation turret_himars_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/himars.png");
+	public static final ResourceLocation turret_sentry_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/sentry.png");
+	public static final ResourceLocation turret_sentry_damaged_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/sentry_damaged.png");
 
 	public static final ResourceLocation himars_standard_tex = new ResourceLocation(RefStrings.MODID, "textures/models/projectiles/himars_standard.png");
 

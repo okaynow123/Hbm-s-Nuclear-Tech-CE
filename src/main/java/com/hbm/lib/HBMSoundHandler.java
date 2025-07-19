@@ -238,6 +238,8 @@ public final class HBMSoundHandler {
     public static SoundEvent richard_fire;
     public static SoundEvent howard_fire;
     public static SoundEvent howard_reload;
+    public static SoundEvent sentryFire;
+    public static SoundEvent sentryLockon;
     public static SoundEvent rbmk_explosion;
     public static SoundEvent rbmk_az5_cover;
     public static SoundEvent chungus_lever;
@@ -533,6 +535,8 @@ public final class HBMSoundHandler {
         richard_fire = register("turret.richard_fire");
         howard_fire = register("turret.howard_fire");
         howard_reload = register("turret.howard_reload");
+        sentryFire = register("turret.sentry_fire");
+        sentryLockon = register("turret.sentry_lockon");
         rbmk_explosion = register("block.rbmk_explosion");
         rbmk_az5_cover = register("block.rbmk_az5_cover");
         crateOpen = register("block.crateOpen");

@@ -78,7 +78,7 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 			reload--;
 		
 		if(reload == 1)
-			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_reload, SoundCategory.BLOCKS, 2.0F, 1.0F);
+			this.world.playSound(null, pos, HBMSoundHandler.jeremy_reload, SoundCategory.BLOCKS, 2.0F, 1.0F);
 		
 		super.update();
 	}

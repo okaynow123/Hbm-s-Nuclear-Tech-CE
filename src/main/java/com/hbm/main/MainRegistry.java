@@ -10,7 +10,6 @@ import com.hbm.blocks.generic.BlockResourceStone;
 import com.hbm.blocks.machine.BlockPWR;
 import com.hbm.blocks.machine.MachineCapacitor;
 import com.hbm.blocks.machine.WatzPump;
-import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.blocks.network.energy.CableDiode.TileEntityDiode;
 import com.hbm.capability.HbmCapability;
@@ -81,6 +80,10 @@ import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
@@ -112,11 +115,6 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
 @Spaghetti("Total cluserfuck")
@@ -541,6 +539,8 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityTurretMaxwell.class, new ResourceLocation(RefStrings.MODID, "tileentity_turret_maxwell"));
         GameRegistry.registerTileEntity(TileEntityTurretFritz.class, new ResourceLocation(RefStrings.MODID, "tileentity_turret_fritz"));
         GameRegistry.registerTileEntity(TileEntityTurretBrandon.class, new ResourceLocation(RefStrings.MODID, "tileentity_turret_brandon"));
+        GameRegistry.registerTileEntity(TileEntityTurretSentry.class, new ResourceLocation(RefStrings.MODID, "tileentity_turret_sentry"));
+        GameRegistry.registerTileEntity(TileEntityTurretSentryDamaged.class, new ResourceLocation(RefStrings.MODID, "tileentity_turret_sentry_damaged"));
         GameRegistry.registerTileEntity(TileEntityRBMKRod.class, new ResourceLocation(RefStrings.MODID, "tileentity_rbmk_rod"));
         GameRegistry.registerTileEntity(TileEntityRBMKRodReaSim.class, new ResourceLocation(RefStrings.MODID, "tileentity_rbmk_rod_reasim"));
         GameRegistry.registerTileEntity(TileEntityRBMKControlManual.class, new ResourceLocation(RefStrings.MODID, "tileentity_rbmk_control"));
