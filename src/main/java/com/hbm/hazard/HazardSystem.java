@@ -2,12 +2,14 @@ package com.hbm.hazard;
 
 import com.github.bsideup.jabel.Desugar;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.hazard.transformer.HazardTransformerBase;
 import com.hbm.hazard.type.HazardTypeBase;
 import com.hbm.interfaces.Untested;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
+import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.block.Block;
@@ -91,7 +93,12 @@ public class HazardSystem {
         if (server == null) return;
         for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
             if (player.isDead) continue;
-            PlayerHazardData phd = playerHazardDataMap.computeIfAbsent(player.getUniqueID(), k -> new PlayerHazardData(player));
+            PlayerHazardData phd = playerHazardDataMap.get(player.getUniqueID());
+            if (phd == null || phd.player != player) {
+                if (GeneralConfig.enableExtendedLogging) MainRegistry.logger.info("Player {} changed", player.getName());
+                phd = new PlayerHazardData(player);
+                playerHazardDataMap.put(player.getUniqueID(), phd);
+            }
             phd.applyActiveHazards();
         }
         if (scanFuture.isDone() && !playersToUpdate.isEmpty()) {
