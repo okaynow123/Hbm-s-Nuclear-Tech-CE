@@ -829,10 +829,10 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	public boolean isOn() {
 		return this.isOn;
 	}
-	
+
 	@Override
-	public void setPower(long i) {
-		this.power = i;
+	public void setPower(long newPower) {
+		this.power = Math.max(0, Math.min(newPower, this.getMaxPower()));
 	}
 	
 	@Override
