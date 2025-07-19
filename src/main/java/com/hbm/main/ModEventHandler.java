@@ -28,6 +28,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.IBomb;
 import com.hbm.inventory.recipes.AssemblerRecipes;
+import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.ItemArmorMod;
@@ -39,10 +40,7 @@ import com.hbm.items.tool.ItemDigammaDiagnostic;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.lib.*;
 import com.hbm.packet.*;
-import com.hbm.packet.toclient.AssemblerRecipeSyncPacket;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.packet.toclient.PlayerInformPacket;
-import com.hbm.packet.toclient.SurveyPacket;
+import com.hbm.packet.toclient.*;
 import com.hbm.packet.KeybindPacket;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmDetox;
@@ -114,11 +112,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.registries.DataSerializerEntry;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -1048,42 +1048,67 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
-    public void clientJoinServer(PlayerLoggedInEvent e) {
-        if (e.player instanceof EntityPlayerMP) {
-            EntityPlayerMP playerMP = (EntityPlayerMP) e.player;
-            PacketDispatcher.sendTo(new AssemblerRecipeSyncPacket(AssemblerRecipes.recipeList, AssemblerRecipes.hidden), playerMP);
-            JetpackHandler.playerLoggedIn(e);
-            IHBMData props = HbmCapability.getData(e.player);
+    public void onPlayerLogin(PlayerLoggedInEvent event) {
+        if (event.player instanceof EntityPlayerMP player) {
+            PacketDispatcher.sendTo(new AssemblerRecipeSyncPacket(AssemblerRecipes.recipeList, AssemblerRecipes.hidden), player);
+            JetpackHandler.playerLoggedIn(event);
+            IHBMData props = HbmCapability.getData(event.player);
 
-            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_JETPACK, props.getEnableBackpack()), playerMP);
-            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_HEAD, props.getEnableHUD()), playerMP);
+            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_JETPACK, props.getEnableBackpack()), player);
+            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_HEAD, props.getEnableHUD()), player);
 
             if (GeneralConfig.enableWelcomeMessage) {
-                e.player.sendMessage(new TextComponentTranslation("chat.welcome"));
+                event.player.sendMessage(new TextComponentTranslation("chat.welcome"));
             }
 
             if (HTTPHandler.newVersion && GeneralConfig.changelog) {
-                e.player.sendMessage(new TextComponentTranslation("chat.newver", HTTPHandler.versionNumber));
-                e.player.sendMessage(new TextComponentTranslation("chat.curver", RefStrings.VERSION));
+                event.player.sendMessage(new TextComponentTranslation("chat.newver", HTTPHandler.versionNumber));
+                event.player.sendMessage(new TextComponentTranslation("chat.curver", RefStrings.VERSION));
 
                 if (HTTPHandler.changes != "") {
                     String[] lines = HTTPHandler.changes.split("\\$");
-                    e.player.sendMessage(new TextComponentString("§6[Some of the new Features]§r"));//RefStrings.CHANGELOG
+                    event.player.sendMessage(new TextComponentString("§6[Some of the new Features]§r"));//RefStrings.CHANGELOG
                     for (String w : lines) {
-                        e.player.sendMessage(new TextComponentString(w));//RefStrings.CHANGELOG
+                        event.player.sendMessage(new TextComponentString(w));//RefStrings.CHANGELOG
                     }
                 }
             }
 
             if (HTTPHandler.optifine) {
-                e.player.sendMessage(new TextComponentString("Optifine detected, may cause compatibility issues. Check log for details."));
+                event.player.sendMessage(new TextComponentString("Optifine detected, may cause compatibility issues. Check log for details."));
             }
             if (GeneralConfig.duckButton) {
-                if (e.player instanceof EntityPlayerMP && !e.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked")) {
-                    PacketDispatcher.sendTo(new PlayerInformPacket("chat.duck"), (EntityPlayerMP) e.player);
+                if (event.player instanceof EntityPlayerMP && !event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked")) {
+                    PacketDispatcher.sendTo(new PlayerInformPacket("chat.duck"), (EntityPlayerMP) event.player);
+                }
+            }
+
+            if(GeneralConfig.enableServerRecipeSync) {
+                File recDir = new File(MainRegistry.configDir.getAbsolutePath() + File.separatorChar + "hbmRecipes");
+
+                MainRegistry.logger.info("Sending recipes to client!");
+
+                boolean hasSent = false;
+
+                for(SerializableRecipe recipe : SerializableRecipe.recipeHandlers) {
+                    File recFile = new File(recDir.getAbsolutePath() + File.separatorChar + recipe.getFileName());
+                    if(recFile.exists() && recFile.isFile()) {
+                        MainRegistry.logger.info("Sending recipe file: " + recFile.getName());
+                        PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(recFile), player);
+                        hasSent = true;
+                    }
+                }
+
+                if(hasSent) {
+                    PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(true), player);
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLeaveServer(ClientDisconnectionFromServerEvent event) {
+        SerializableRecipe.clearReceivedRecipes();
     }
 
     @SubscribeEvent

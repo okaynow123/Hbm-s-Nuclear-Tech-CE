@@ -3,9 +3,11 @@ package com.hbm.util;
 import com.hbm.api.energymk2.IEnergyHandlerMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.recipe.IRecipeRegisterListener;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.tileentity.machine.TileEntityDummy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -174,5 +176,13 @@ public class CompatExternal {
      */
     public static void registerTurretTargetingCondition(Class clazz, BiFunction<Entity, Object, Integer> bi) {
         turretTargetBlacklist.add(clazz);
+    }
+
+    /**
+     * Registers an IRecipeRegisterListener to the recipe system. The listener is called every time a SerializableRecipe instance has its recipes loaded, before the
+     * config files are written, but after the defaults are initialized.
+     */
+    public static void registerRecipeRegisterListener(IRecipeRegisterListener listener) {
+        SerializableRecipe.additionalListeners.add(listener);
     }
 }

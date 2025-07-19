@@ -76,6 +76,7 @@ import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
 import com.hbm.tileentity.network.*;
 import com.hbm.tileentity.network.energy.*;
 import com.hbm.tileentity.turret.*;
+import com.hbm.util.CrashHelper;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
@@ -153,6 +154,8 @@ public class MainRegistry {
     public static int y;
     public static int z;
     public static long time;
+    public static File configDir;
+    public static File configHbmDir;
     // Armor Materials
     // Drillgon200: I have no idea what the two strings and the number at the
     // end are.
@@ -238,6 +241,8 @@ public class MainRegistry {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        CrashHelper.init();
+
         if (logger == null)
             logger = event.getModLog();
 
@@ -248,6 +253,11 @@ public class MainRegistry {
             while (polaroidID == 4 || polaroidID == 9)
                 polaroidID = rand.nextInt(18) + 1;
         }
+
+        configDir = event.getModConfigurationDirectory();
+        configHbmDir = new File(configDir.getAbsolutePath() + File.separatorChar + "hbmConfig");
+
+        if(!configHbmDir.exists()) configHbmDir.mkdir();
 
         if (SharedMonsterAttributes.MAX_HEALTH.clampValue(Integer.MAX_VALUE) <= 2000) {
             ((RangedAttribute) SharedMonsterAttributes.MAX_HEALTH).maximumValue = Integer.MAX_VALUE;
