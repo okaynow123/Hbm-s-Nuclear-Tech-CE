@@ -12,7 +12,7 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.ExplosionThermo;
 import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.inventory.CyclotronRecipes;
+import com.hbm.inventory.recipes.CyclotronRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.container.ContainerMachineCyclotron;

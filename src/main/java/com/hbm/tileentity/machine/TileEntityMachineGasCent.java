@@ -6,7 +6,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.GasCentrifugeRecipes;
+import com.hbm.inventory.recipes.GasCentrifugeRecipes;
 import com.hbm.inventory.container.ContainerMachineGasCent;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

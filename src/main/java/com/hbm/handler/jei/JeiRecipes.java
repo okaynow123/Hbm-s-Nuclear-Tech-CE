@@ -1,10 +1,10 @@
 package com.hbm.handler.jei;
 
 import com.hbm.inventory.*;
-import com.hbm.inventory.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.AnvilRecipes.AnvilOutput;
-import com.hbm.inventory.AnvilRecipes.OverlayType;
-import com.hbm.inventory.MagicRecipes.MagicRecipe;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilOutput;
+import com.hbm.inventory.recipes.AnvilRecipes.OverlayType;
+import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
@@ -997,7 +997,7 @@ public class JeiRecipes {
 		if(hadronRecipes != null)
 			return hadronRecipes;
 		hadronRecipes = new ArrayList<>();
-		for(com.hbm.inventory.HadronRecipes.HadronRecipe recipe : com.hbm.inventory.HadronRecipes.getRecipes()){
+		for(HadronRecipes.HadronRecipe recipe : HadronRecipes.getRecipes()){
 			hadronRecipes.add(new HadronRecipe(recipe.in1.toStack(), recipe.in2.toStack(), recipe.out1, recipe.out2, recipe.momentum, recipe.analysisOnly));
 		}
 		return hadronRecipes;
@@ -1008,8 +1008,8 @@ public class JeiRecipes {
 		if(waveSilexRecipes.containsKey(wavelength))
 			return waveSilexRecipes.get(wavelength);
 		ArrayList<SILEXRecipe> wSilexRecipes = new ArrayList<>();
-		for(Entry<List<ItemStack>, com.hbm.inventory.SILEXRecipes.SILEXRecipe> e : com.hbm.inventory.SILEXRecipes.getRecipes().entrySet()){
-			com.hbm.inventory.SILEXRecipes.SILEXRecipe out = e.getValue();
+		for(Entry<List<ItemStack>, SILEXRecipes.SILEXRecipe> e : SILEXRecipes.getRecipes().entrySet()){
+			SILEXRecipes.SILEXRecipe out = e.getValue();
 			if(out.laserStrength == wavelength){
 				double weight = 0;
 				for(WeightedRandomObject obj : out.outputs) {
@@ -1034,8 +1034,8 @@ public class JeiRecipes {
 		if(silexRecipes != null)
 			return silexRecipes;
 		silexRecipes = new ArrayList<>();
-		for(Entry<List<ItemStack>, com.hbm.inventory.SILEXRecipes.SILEXRecipe> e : com.hbm.inventory.SILEXRecipes.getRecipes().entrySet()){
-			com.hbm.inventory.SILEXRecipes.SILEXRecipe out = e.getValue();
+		for(Entry<List<ItemStack>, SILEXRecipes.SILEXRecipe> e : SILEXRecipes.getRecipes().entrySet()){
+			SILEXRecipes.SILEXRecipe out = e.getValue();
 			double weight = 0;
 			for(WeightedRandomObject obj : out.outputs) {
 				weight += obj.itemWeight;

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.inventory.WasteDrumRecipes;
+import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.inventory.container.ContainerWasteDrum;
 import com.hbm.inventory.gui.GUIWasteDrum;
 import com.hbm.items.machine.ItemRBMKRod;

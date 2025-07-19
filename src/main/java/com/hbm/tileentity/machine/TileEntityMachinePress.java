@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.inventory.container.ContainerMachinePress;
 import com.hbm.inventory.gui.GUIMachinePress;
-import com.hbm.inventory.PressRecipes;
+import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IGUIProvider;

@@ -13,7 +13,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.BedrockOreRegistry;
-import com.hbm.inventory.ShredderRecipes;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineExcavator;
 import com.hbm.inventory.fluid.Fluids;

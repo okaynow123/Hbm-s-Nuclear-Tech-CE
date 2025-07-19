@@ -7,7 +7,7 @@ import com.hbm.blocks.machine.MachineITER;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.FusionRecipes;
+import com.hbm.inventory.recipes.FusionRecipes;
 import com.hbm.inventory.container.ContainerITER;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

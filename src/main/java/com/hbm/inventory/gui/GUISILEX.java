@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.SILEXRecipes;
+import com.hbm.inventory.recipes.SILEXRecipes;
 import com.hbm.inventory.container.ContainerSILEX;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;

@@ -1,7 +1,7 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.inventory.EngineRecipes.FuelGrade;
+import com.hbm.inventory.recipes.EngineRecipes.FuelGrade;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityMachineDiesel;

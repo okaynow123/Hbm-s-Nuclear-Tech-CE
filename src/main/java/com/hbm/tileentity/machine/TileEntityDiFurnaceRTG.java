@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineDiFurnaceRTG;
-import com.hbm.inventory.DiFurnaceRecipes;
+import com.hbm.inventory.recipes.DiFurnaceRecipes;
 import com.hbm.inventory.container.ContainerDiFurnaceRTG;
 import com.hbm.inventory.gui.GUIDiFurnaceRTG;
 import com.hbm.tileentity.IGUIProvider;

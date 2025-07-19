@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.inventory.StorageDrumRecipes;
+import com.hbm.inventory.recipes.StorageDrumRecipes;
 import com.hbm.inventory.container.ContainerStorageDrum;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;

@@ -1,5 +1,6 @@
-package com.hbm.inventory;
+package com.hbm.inventory.recipes;
 
+import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

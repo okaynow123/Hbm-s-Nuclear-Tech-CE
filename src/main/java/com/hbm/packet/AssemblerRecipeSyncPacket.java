@@ -1,6 +1,6 @@
 package com.hbm.packet;
 
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;

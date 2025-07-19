@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.ILaserable;
-import com.hbm.inventory.DFCRecipes;
+import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.inventory.container.ContainerCrateTungsten;
 import com.hbm.inventory.gui.GUICrateTungsten;
 import com.hbm.items.ModItems;

@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.FluidCombustionRecipes;
+import com.hbm.inventory.recipes.FluidCombustionRecipes;
 import com.hbm.inventory.container.ContainerMachineGasFlare;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.NBTControlPacket;

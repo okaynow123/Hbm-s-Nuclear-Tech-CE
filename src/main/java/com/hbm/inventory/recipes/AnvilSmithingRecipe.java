@@ -1,4 +1,4 @@
-package com.hbm.inventory;
+package com.hbm.inventory.recipes;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.RecipesCommon.AStack;

@@ -1,7 +1,8 @@
-package com.hbm.inventory;
+package com.hbm.inventory.recipes;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;

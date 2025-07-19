@@ -6,7 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.MultiblockHandlerXR;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAssembler;
 import com.hbm.inventory.gui.GUIMachineAssembler;

@@ -2,7 +2,7 @@ package com.hbm.items.machine;
 
 import com.github.bsideup.jabel.Desugar;
 import com.hbm.interfaces.IHasCustomModel;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;

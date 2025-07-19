@@ -12,7 +12,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.inventory.RefineryRecipes;
+import com.hbm.inventory.recipes.RefineryRecipes;
 import com.hbm.inventory.container.ContainerMachineRefinery;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;

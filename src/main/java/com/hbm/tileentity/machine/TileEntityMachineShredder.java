@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.Untested;
-import com.hbm.inventory.ShredderRecipes;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.container.ContainerMachineShredder;
 import com.hbm.inventory.gui.GUIMachineShredder;
 import com.hbm.items.machine.ItemBlades;

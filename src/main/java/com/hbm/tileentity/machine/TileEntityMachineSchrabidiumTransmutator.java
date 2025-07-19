@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.inventory.NuclearTransmutationRecipes;
+import com.hbm.inventory.recipes.NuclearTransmutationRecipes;
 import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
 import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
 import com.hbm.items.ModItems;

@@ -3,7 +3,7 @@ package com.hbm.handler.jei;
 import com.google.common.collect.Lists;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.jei.JeiRecipes.AssemblerRecipeWrapper;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import mezz.jei.api.recipe.IFocus;

@@ -2,10 +2,10 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.inventory.CentrifugeRecipes;
-import com.hbm.inventory.DFCRecipes;
+import com.hbm.inventory.recipes.CentrifugeRecipes;
+import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.inventory.FluidContainerRegistry;
-import com.hbm.inventory.ShredderRecipes;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;

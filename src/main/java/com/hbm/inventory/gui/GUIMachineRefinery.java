@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.RefineryRecipes;
+import com.hbm.inventory.recipes.RefineryRecipes;
 import com.hbm.inventory.container.ContainerMachineRefinery;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;

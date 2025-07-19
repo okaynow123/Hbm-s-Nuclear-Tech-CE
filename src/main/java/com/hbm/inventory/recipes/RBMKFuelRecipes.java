@@ -1,4 +1,4 @@
-package com.hbm.inventory;
+package com.hbm.inventory.recipes;
 
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKRod;

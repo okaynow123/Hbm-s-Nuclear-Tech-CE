@@ -4,7 +4,7 @@ import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineDiFurnace;
 import com.hbm.handler.pollution.PollutionHandler;
-import com.hbm.inventory.DiFurnaceRecipes;
+import com.hbm.inventory.recipes.DiFurnaceRecipes;
 import com.hbm.inventory.container.ContainerDiFurnace;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.recipes.BlastFurnaceRecipes;

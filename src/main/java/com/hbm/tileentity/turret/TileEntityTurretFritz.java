@@ -7,7 +7,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.FluidCombustionRecipes;
+import com.hbm.inventory.recipes.FluidCombustionRecipes;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;

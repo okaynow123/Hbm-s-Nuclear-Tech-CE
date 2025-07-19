@@ -1,6 +1,8 @@
-package com.hbm.inventory;
+package com.hbm.inventory.recipes;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemBedrockOre;

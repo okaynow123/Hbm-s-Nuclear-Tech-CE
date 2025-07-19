@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.AnvilRecipes;
-import com.hbm.inventory.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.AnvilRecipes.AnvilOutput;
+import com.hbm.inventory.recipes.AnvilRecipes;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilOutput;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;

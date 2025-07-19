@@ -1,6 +1,6 @@
 package com.hbm.render.item;
 
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

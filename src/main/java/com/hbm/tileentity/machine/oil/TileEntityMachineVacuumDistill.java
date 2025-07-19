@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.inventory.RefineryRecipes;
+import com.hbm.inventory.recipes.RefineryRecipes;
 import com.hbm.inventory.container.ContainerMachineVacuumDistill;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;

@@ -49,7 +49,7 @@ import com.hbm.inventory.*;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.recipes.SerializableRecipe;
+import com.hbm.inventory.recipes.*;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.lib.HBMSoundHandler;

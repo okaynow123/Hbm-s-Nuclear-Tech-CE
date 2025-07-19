@@ -1,6 +1,6 @@
 package com.hbm.items.special;
 
-import com.hbm.inventory.WasteDrumRecipes;
+import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.client.Minecraft;

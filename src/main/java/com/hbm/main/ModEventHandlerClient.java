@@ -15,7 +15,7 @@ import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
 import com.hbm.handler.*;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.*;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;

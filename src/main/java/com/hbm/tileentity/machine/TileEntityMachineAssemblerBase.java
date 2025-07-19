@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.ModItems;

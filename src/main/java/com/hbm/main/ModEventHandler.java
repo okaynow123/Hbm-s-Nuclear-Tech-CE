@@ -27,7 +27,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.IBomb;
-import com.hbm.inventory.AssemblerRecipes;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.ItemArmorMod;

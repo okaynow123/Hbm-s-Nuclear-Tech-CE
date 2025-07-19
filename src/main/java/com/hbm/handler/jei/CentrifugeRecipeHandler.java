@@ -1,6 +1,6 @@
 package com.hbm.handler.jei;
 
-import com.hbm.inventory.CentrifugeRecipes.CentrifugeRecipe;
+import com.hbm.inventory.recipes.CentrifugeRecipes.CentrifugeRecipe;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import mezz.jei.api.IGuiHelper;

@@ -1,8 +1,8 @@
 package com.hbm.packet;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.inventory.AnvilRecipes;
-import com.hbm.inventory.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.AnvilRecipes;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
 import com.hbm.inventory.container.ContainerAnvil;
 import com.hbm.main.AdvancementManager;
 import com.hbm.util.InventoryUtil;

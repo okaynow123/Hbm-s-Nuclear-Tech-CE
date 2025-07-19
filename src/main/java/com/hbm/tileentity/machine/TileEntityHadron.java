@@ -6,7 +6,7 @@ import com.hbm.blocks.machine.BlockHadronCoil;
 import com.hbm.blocks.machine.BlockHadronPlating;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.inventory.HadronRecipes;
+import com.hbm.inventory.recipes.HadronRecipes;
 import com.hbm.inventory.container.ContainerHadron;
 import com.hbm.inventory.gui.GUIHadron;
 import com.hbm.items.ModItems;
