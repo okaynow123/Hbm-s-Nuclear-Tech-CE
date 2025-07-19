@@ -29,64 +29,68 @@ import java.util.Objects;
 @JEIPlugin
 public class JEIConfig implements IModPlugin {
 
-    public static final String ASSEMBLY = "hbm.assembly";
-    public static final String CHEMPLANT = "hbm.chemplant";
-    public static final String MIXER = "hbm.mixer";
-    public static final String CYCLOTRON = "hbm.cyclotron";
-    public static final String PRESS = "hbm.press";
     public static final String ALLOY = "hbm.alloy";
+    public static final String ANVIL = "hbm.anvil";
+    public static final String ARC_WELDER = "hbm.arc_welder";
+    public static final String ASSEMBLY = "hbm.assembly";
     public static final String BOILER = "hbm.boiler";
+    public static final String BOOK = "hbm.book_of";
     public static final String BREEDER = "hbm.breeder";
     public static final String CENTRIFUGE = "hbm.centrifuge";
+    public static final String CHEMPLANT = "hbm.chemplant";
     public static final String CMB = "hbm.cmb_furnace";
     public static final String COKER = "hbm.coker";
-    public static final String GAS_CENT = "hbm.gas_centrifuge";
-    public static final String REFINERY = "hbm.refinery";
     public static final String CRACKING = "hbm.cracking";
-    public static final String FRACTIONING = "hbm.fracturing";
-    public static final String SHREDDER = "hbm.shredder";
-    public static final String FLUIDS = "hbm.fluids";
     public static final String CRYSTALLIZER = "hbm.crystallizer";
-    public static final String BOOK = "hbm.book_of";
+    public static final String CYCLOTRON = "hbm.cyclotron";
+    public static final String DFC = "hbm.dfc";
+    public static final String ELECTROLYSIS_FLUID = "hbm.electrolysis_fluid";
+    public static final String ELECTROLYSIS_METAL = "hbm.electrolysis_metal";
+    public static final String FLUIDS = "hbm.fluids";
+    public static final String FRACTIONING = "hbm.fracturing";
     public static final String FUSION_BYPRODUCT = "hbm.fusionbyproduct";
+    public static final String GAS_CENT = "hbm.gas_centrifuge";
     public static final String HADRON = "hbm.hadron";
     public static final String HYDROTREATING = "hbm.hydrotreating";
     public static final String LIQUEFACTION = "hbm.liquefaction";
-    public static final String REFORMING = "hbm.reforming";
-    public static final String SOLIDIFICATION = "hbm.solidification";
-    public static final String SILEX = "hbm.silex";
-    public static final String SILEX_RADIO = "hbm.silexradio";
-    public static final String SILEX_MICRO = "hbm.silexmicro";
-    public static final String SILEX_IR = "hbm.silexir";
-    public static final String SILEX_VISIBLE = "hbm.silexvisible";
-    public static final String SILEX_UV = "hbm.silexuv";
-    public static final String SILEX_XRAY = "hbm.silexray";
-    public static final String SILEX_GAMMA = "hbm.silexgamma";
-    public static final String SILEX_DIGAMMA = "hbm.silexdigamma";
-    public static final String WASTEDRUM = "hbm.waste_drum";
-    public static final String STORAGEDRUM = "hbm.storage_drum";
-    public static final String SMITHING = "hbm.smithing";
-    public static final String ANVIL = "hbm.anvil";
-    public static final String RBMKOUTGASSER = "hbm.rbmk_outgasser";
+    public static final String MIXER = "hbm.mixer";
+    public static final String PRESS = "hbm.press";
     public static final String RBMKFUEL = "hbm.rbmkfueluncrafting";
-    public static final String DFC = "hbm.dfc";
-    public static final String TRANSMUTATION = "hbm.transmutation";
-    public static final String SOLDERING_STATION = "hbm.soldering_station";
-    public static final String ARC_WELDER = "hbm.arc_welder";
+    public static final String RBMKOUTGASSER = "hbm.rbmk_outgasser";
+    public static final String REFINERY = "hbm.refinery";
+    public static final String REFORMING = "hbm.reforming";
     public static final String ROTARY_FURNACE = "hbm.rotary_furnace";
+    public static final String SHREDDER = "hbm.shredder";
+    public static final String SILEX = "hbm.silex";
+    public static final String SILEX_DIGAMMA = "hbm.silexdigamma";
+    public static final String SILEX_GAMMA = "hbm.silexgamma";
+    public static final String SILEX_IR = "hbm.silexir";
+    public static final String SILEX_MICRO = "hbm.silexmicro";
+    public static final String SILEX_RADIO = "hbm.silexradio";
+    public static final String SILEX_UV = "hbm.silexuv";
+    public static final String SILEX_VISIBLE = "hbm.silexvisible";
+    public static final String SILEX_XRAY = "hbm.silexray";
+    public static final String SMITHING = "hbm.smithing";
+    public static final String SOLDERING_STATION = "hbm.soldering_station";
+    public static final String SOLIDIFICATION = "hbm.solidification";
+    public static final String STORAGEDRUM = "hbm.storage_drum";
+    public static final String TRANSMUTATION = "hbm.transmutation";
+    public static final String WASTEDRUM = "hbm.waste_drum";
+    private ArcWelderRecipeHandler arcWelderRecipeHandler;
     private CokingRecipeHandler cokingHandler;
     private CrackingHandler crackingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
+    private ElectrolyserFluidHandler electrolyserFluidHandler;
+    private ElectrolyserMetalHandler electrolyserMetalHandler;
     private FractioningRecipeHandler fractioningHandler;
     private HydrotreatingHandler hydrotreatHandler;
     private LiquefactionHandler liquefactHandler;
     private MixerRecipeHandler mixerHandler;
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
-    private SolidificationHandler solidificationHandler;
-    private SolderingStationRecipeHandler solderingStationHandler;
-    private ArcWelderRecipeHandler arcWelderRecipeHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
+    private SolderingStationRecipeHandler solderingStationHandler;
+    private SolidificationHandler solidificationHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -127,6 +131,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_refinery), REFINERY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_catalytic_cracker), CRACKING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_fraction_tower), FRACTIONING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_electrolyser), ELECTROLYSIS_FLUID);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_electrolyser), ELECTROLYSIS_METAL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_hydrotreater), HYDROTREATING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_liquefactor), LIQUEFACTION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_catalytic_reformer), REFORMING);
@@ -180,6 +186,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(solderingStationHandler.getRecipes(), SOLDERING_STATION);
         registry.addRecipes(arcWelderRecipeHandler.getRecipes(), ARC_WELDER);
         registry.addRecipes(rotaryFurnaceRecipeHandler.getRecipes(), ROTARY_FURNACE);
+        registry.addRecipes(electrolyserFluidHandler.getRecipes(), ELECTROLYSIS_FLUID);
+        registry.addRecipes(electrolyserMetalHandler.getRecipes(), ELECTROLYSIS_METAL);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
@@ -228,6 +236,8 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUIMachineSchrabidiumTransmutator.class, 64, 56, 66, 31, TRANSMUTATION);
         registry.addRecipeClickArea(GUIMachineArcWelder.class, 72, 38, 32, 13, ARC_WELDER);
         registry.addRecipeClickArea(GUIMachineRotaryFurnace.class, 63, 31, 32, 9, ROTARY_FURNACE);
+        registry.addRecipeClickArea(GUIElectrolyserFluid.class, 62, 26, 12, 40, ELECTROLYSIS_FLUID);
+        registry.addRecipeClickArea(GUIElectrolyserMetal.class, 7, 46, 22, 25, ELECTROLYSIS_METAL);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
@@ -289,19 +299,21 @@ public class JEIConfig implements IModPlugin {
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),
+                arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),
                 crystallizerHandler = new CrystallizerRecipeHandler(help),
+                electrolyserFluidHandler = new ElectrolyserFluidHandler(help),
+                electrolyserMetalHandler = new ElectrolyserMetalHandler(help),
                 fractioningHandler = new FractioningRecipeHandler(help),
                 hydrotreatHandler = new HydrotreatingHandler(help),
                 liquefactHandler = new LiquefactionHandler(help),
                 mixerHandler = new MixerRecipeHandler(help),
                 outgasserHandler = new RBMKOutgasserRecipeHandler(help),
                 reformingHandler = new ReformingHandler(help),
-                solidificationHandler = new SolidificationHandler(help),
-                solderingStationHandler = new SolderingStationRecipeHandler(help),
-                arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
                 rotaryFurnaceRecipeHandler = new RotaryFurnaceRecipeHandler(help),
+                solderingStationHandler = new SolderingStationRecipeHandler(help),
+                solidificationHandler = new SolidificationHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),

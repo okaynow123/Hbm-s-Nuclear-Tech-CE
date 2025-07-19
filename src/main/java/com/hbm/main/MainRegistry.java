@@ -473,6 +473,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityMachineRotaryFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_rotary_furnace"));
         GameRegistry.registerTileEntity(TileEntitySawmill.class, new ResourceLocation(RefStrings.MODID, "tileentity_sawmill"));
         GameRegistry.registerTileEntity(TileEntityCrucible.class, new ResourceLocation(RefStrings.MODID, "tileentity_crucible"));
+        GameRegistry.registerTileEntity(TileEntityElectrolyser.class, new ResourceLocation(RefStrings.MODID, "tileentity_electrolyser"));
         GameRegistry.registerTileEntity(TileEntityFoundryChannel.class, new ResourceLocation(RefStrings.MODID, "tileentity_foundry_channel"));
         GameRegistry.registerTileEntity(TileEntityFoundryOutlet.class, new ResourceLocation(RefStrings.MODID, "tileentity_foundry_outlet"));
         GameRegistry.registerTileEntity(TileEntityFoundryMold.class, new ResourceLocation(RefStrings.MODID, "tileentity_foundry_mold"));

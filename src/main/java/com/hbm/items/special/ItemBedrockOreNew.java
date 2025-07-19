@@ -227,9 +227,9 @@ public class ItemBedrockOreNew extends Item {
         return null;
     }
 
-//    public static ItemStack extract(BedrockOreOutput o, double amount) {
-//        return new ItemStack(ModItems.bedrock_ore_fragment, Math.min((int) Math.ceil(o.amount * amount), 64), o.mat.id);
-//    }
+    public static ItemStack extract(BedrockOreOutput o, double amount) {
+        return new ItemStack(ModItems.bedrock_ore_fragment, Math.min((int) Math.ceil(o.amount * amount), 64), o.mat.id);
+    }
 
     public static final int none = 0xFFFFFF;
     public static final int roasted = 0xCFCFCF;

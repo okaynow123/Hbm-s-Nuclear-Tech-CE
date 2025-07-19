@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -25,7 +25,7 @@ public class ContainerMachineArcWelder extends Container {
         this.addSlotToContainer(new SlotItemHandler(welder.inventory, 1, 35, 36));
         this.addSlotToContainer(new SlotItemHandler(welder.inventory, 2, 53, 36));
         // Output
-        this.addSlotToContainer(new SlotMachineOutput(welder.inventory, 3, 107, 36));
+        this.addSlotToContainer(new SlotTakeOnly(welder.inventory, 3, 107, 36));
         //Battery
         this.addSlotToContainer(new SlotItemHandler(welder.inventory, 4, 152, 72));
         //Fluid ID

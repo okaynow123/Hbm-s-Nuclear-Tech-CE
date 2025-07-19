@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityMachineRefinery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,25 +22,25 @@ private TileEntityMachineRefinery testNuke;
 		//Canister Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 8, 99));
 		//Canister Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 2, 8, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 8, 119));
 		//Heavy Oil Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 86, 99));
 		//Heavy Oil Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 4, 86, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 86, 119));
 		//Naphtha Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 106, 99));
 		//Naphtha Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 6, 106, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 6, 106, 119));
 		//Light Oil Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 126, 99));
 		//Light Oil Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 8, 126, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 8, 126, 119));
 		//Petroleum Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 9, 146, 99));
 		//Petroleum Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 10, 146, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 10, 146, 119));
 		//Sulfur Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 11, 58, 119));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 11, 58, 119));
 		//Fluid ID
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 12, 186, 106));
 

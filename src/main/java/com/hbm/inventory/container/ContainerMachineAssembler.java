@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
@@ -41,7 +41,7 @@ public class ContainerMachineAssembler extends Container {
 			};
 		});
 		//Output
-		this.addSlotToContainer(new SlotMachineOutput(te.inventory, 5, 134, 90));
+		this.addSlotToContainer(new SlotTakeOnly(te.inventory, 5, 134, 90));
 		//Input
 		this.addSlotToContainer(new SlotAssemblerInput(te.inventory, 6, 8, 18));
 		this.addSlotToContainer(new SlotAssemblerInput(te.inventory, 7, 26, 18));

@@ -67,6 +67,10 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
             allSlots.add(items);
             return allSlots;
         }
+        if (o instanceof ItemStack) {
+            allSlots.add(Collections.singletonList(((ItemStack) o).copy()));
+            return allSlots;
+        }
         MainRegistry.logger.warn("JEIUniversalHandler: extractInputLists failed for type " + o.getClass());
         return Collections.emptyList();
     }

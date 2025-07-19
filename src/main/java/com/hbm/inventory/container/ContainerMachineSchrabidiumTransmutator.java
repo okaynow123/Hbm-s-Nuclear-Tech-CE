@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineSchrabidiumTransmutator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +19,7 @@ private TileEntityMachineSchrabidiumTransmutator nukeBoy;
 		nukeBoy = tedf;
 
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 44, 63));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 1, 134, 63));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 134, 63));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 26, 18));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 8, 108));
 		

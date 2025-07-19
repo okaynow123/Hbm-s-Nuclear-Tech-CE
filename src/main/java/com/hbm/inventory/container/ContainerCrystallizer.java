@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineCrystallizer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,9 +19,9 @@ public class ContainerCrystallizer extends Container {
 
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 62, 45));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 152, 72));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 2, 113, 45));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 113, 45));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 17, 18));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 4, 17, 72));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 17, 72));
 		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 80, 18));
 		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 6, 98, 18));
 

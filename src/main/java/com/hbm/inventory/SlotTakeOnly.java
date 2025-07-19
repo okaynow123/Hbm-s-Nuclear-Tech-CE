@@ -1,17 +1,19 @@
 package com.hbm.inventory;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotTakeOnly extends Slot {
+import javax.annotation.Nonnull;
 
-	public SlotTakeOnly(IInventory inventory, int i, int j, int k) {
-		super(inventory, i, j, k);
+public class SlotTakeOnly extends SlotItemHandler {
+	public SlotTakeOnly(IItemHandler inventory, int index, int xPosition, int yPosition) {
+		super(inventory, index, xPosition, yPosition);
 	}
-
+	
 	@Override
-	public boolean isItemValid(ItemStack stack) {
-		return false;
-	}
+	public boolean isItemValid(@Nonnull ItemStack stack)
+    {
+        return false;
+    }
 }

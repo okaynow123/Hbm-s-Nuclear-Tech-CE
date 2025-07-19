@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityAshpit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,7 +15,7 @@ public class ContainerAshpit extends Container {
     public ContainerAshpit(InventoryPlayer invPlayer, TileEntityAshpit ashpit) {
         this.ashpit = ashpit;
 
-        for(int i = 0; i < 5; i++) this.addSlotToContainer(new SlotMachineOutput(ashpit.inventory, i, 44 + i * 18, 27));
+        for(int i = 0; i < 5; i++) this.addSlotToContainer(new SlotTakeOnly(ashpit.inventory, i, 44 + i * 18, 27));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

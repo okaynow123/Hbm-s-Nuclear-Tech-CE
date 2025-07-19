@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.machine.TileEntityPWRController;
 
@@ -20,7 +20,7 @@ public class ContainerPWR extends Container {
         this.controller = controller;
 
         this.addSlotToContainer(new SlotItemHandler(controller.inventory, 0, 53, 5));
-        this.addSlotToContainer(new SlotMachineOutput(controller.inventory, 1, 89, 32));  // Output slot
+        this.addSlotToContainer(new SlotTakeOnly(controller.inventory, 1, 89, 32));  // Output slot
         this.addSlotToContainer(new SlotItemHandler(controller.inventory, 2, 8, 59));
 
         for(int i = 0; i < 3; i++) {

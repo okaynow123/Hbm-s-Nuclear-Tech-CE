@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.tileentity.machine.TileEntityMachineReactorBreeding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,7 @@ public class ContainerMachineReactorBreeding extends Container {
 		reactor = tedf;
 
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 35, 35));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 1, 125, 35));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 125, 35));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

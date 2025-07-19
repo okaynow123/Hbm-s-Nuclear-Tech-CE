@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineFluidTank;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,9 +20,9 @@ public class ContainerMachineFluidTank extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 17));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 8, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 53 - 18, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 3, 53 - 18, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 53 - 18, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 125, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 5, 125, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 5, 125, 53));
 		
 		for(int i = 0; i < 3; i++)
 		{

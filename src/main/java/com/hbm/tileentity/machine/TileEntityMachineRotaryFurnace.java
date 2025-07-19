@@ -40,6 +40,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -144,7 +145,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
       if (this.output != null) {
 
         int prev = this.output.amount;
-        Vec3 impact = Vec3.createVectorHelper(0, 0, 0);
+        Vec3d impact = new Vec3d(0, 0, 0);
         MaterialStack leftover =
             CrucibleUtil.pourSingleStack(
                 world,
@@ -166,7 +167,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
           data.setFloat("off", 0.625F);
           data.setFloat("base", 0.625F);
           data.setFloat(
-              "len", Math.max(1F, pos.getY() + 1 - (float) (Math.ceil(impact.yCoord) - 1.125)));
+              "len", Math.max(1F, pos.getY() + 1 - (float) (Math.ceil(impact.y) - 1.125)));
           PacketThreading.createAllAroundThreadedPacket(
               new AuxParticlePacketNT(
                   data,

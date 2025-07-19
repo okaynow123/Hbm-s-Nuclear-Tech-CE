@@ -37,6 +37,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -156,7 +157,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
             if(!this.wasteStack.isEmpty()) {
 
                 ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
-                Vec3 impact = Vec3.createVectorHelper(0, 0, 0);
+                Vec3d impact = new Vec3d(0, 0, 0);
                 Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY() + 0.25D, pos.getZ() + 0.5D + dir.offsetZ * 1.875D, 6, true, this.wasteStack, MaterialShapes.NUGGET.q(3), impact);
 
                 if(didPour != null) {
@@ -166,7 +167,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     data.setByte("dir", (byte) dir.ordinal());
                     data.setFloat("off", 0.625F);
                     data.setFloat("base", 0.625F);
-                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (Math.ceil(impact.yCoord) - 0.875)));
+                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (Math.ceil(impact.y) - 0.875)));
                     PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY(), pos.getZ() + 0.5D + dir.offsetZ * 1.875D), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
 
                 }
@@ -196,7 +197,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     }
                 }
 
-                Vec3 impact = Vec3.createVectorHelper(0, 0, 0);
+                Vec3d impact = new Vec3d(0, 0, 0);
                 Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY() + 0.25D, pos.getZ() + 0.5D + dir.offsetZ * 1.875D, 6, true, toCast, MaterialShapes.NUGGET.q(3), impact);
 
                 if(didPour != null) {
@@ -206,7 +207,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     data.setByte("dir", (byte) dir.ordinal());
                     data.setFloat("off", 0.625F);
                     data.setFloat("base", 0.625F);
-                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (impact.toBlockPos().getY() - 0.875)));
+                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (impact.y - 0.875)));
                     PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY(), pos.getZ() + 0.5D + dir.offsetZ * 1.875D), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
 
                 }

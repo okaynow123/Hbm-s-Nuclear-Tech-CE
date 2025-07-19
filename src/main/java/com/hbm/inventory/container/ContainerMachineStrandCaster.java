@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotNonRetarded;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
 import com.hbm.util.InventoryUtil;
@@ -26,7 +26,7 @@ public class ContainerMachineStrandCaster extends Container {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 2; j++) {
         this.addSlotToContainer(
-            new SlotMachineOutput(caster.inventory, j + i * 2 + 1, 125 + j * 18, 26 + i * 18));
+            new SlotTakeOnly(caster.inventory, j + i * 2 + 1, 125 + j * 18, 26 + i * 18));
       }
     }
 

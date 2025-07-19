@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineDiesel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,7 +18,7 @@ public class ContainerMachineDiesel extends Container {
 		diFurnace = tedf;
 		
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 44, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 1, 44, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 44, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 116, 53));
 		//this.addSlotToContainer(new Slot(tedf, 3, 8, 17));
 		//this.addSlotToContainer(new SlotMachineOutput(invPlayer.player, tedf, 4, 8, 53));

@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityMachineVacuumDistill;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,19 +27,19 @@ public class ContainerMachineVacuumDistill extends Container {
         //Heavy Oil Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 80, 90));
         //Heavy Oil Output
-        this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 2, 80, 108));
+        this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 80, 108));
         //Nahptha Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 98, 90));
         //Nahptha Output
-        this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 4, 98, 108));
+        this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 98, 108));
         //Light Oil Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 116, 90));
         //Light Oil Output
-        this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 6, 116, 108));
+        this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 6, 116, 108));
         //Petroleum Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 134, 90));
         //Petroleum Output
-        this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 8, 134, 108));
+        this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 8, 134, 108));
         //Fluid ID
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 9, 26, 108));
 

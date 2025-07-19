@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineExcavator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -27,7 +27,7 @@ public class ContainerMachineExcavator extends Container {
 		//Buffer: 5-13
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 3; j++) {
-				this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 5 + j + i * 3, 136 + j * 18, 5 + i * 18));
+				this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 5 + j + i * 3, 136 + j * 18, 5 + i * 18));
 			}
 		}
 		

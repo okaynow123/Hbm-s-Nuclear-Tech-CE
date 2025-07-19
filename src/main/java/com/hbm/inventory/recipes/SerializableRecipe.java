@@ -39,26 +39,28 @@ public abstract class SerializableRecipe {
      * INIT
      */
 
-    public static void registerAllHandlers() {
-        recipeHandlers.add(new AmmoPressRecipes());
-        recipeHandlers.add(new ArcWelderRecipes());
-        recipeHandlers.add(new BreederRecipes());
-        recipeHandlers.add(new ChemplantRecipes());
-        recipeHandlers.add(new CokerRecipes());
-        recipeHandlers.add(new CrackRecipes());
-        recipeHandlers.add(new CrucibleRecipes());
-        recipeHandlers.add(new CrystallizerRecipes());
-        recipeHandlers.add(new FractionRecipes());
-        recipeHandlers.add(new HydrotreatingRecipes());
-        recipeHandlers.add(new LiquefactionRecipes());
-        recipeHandlers.add(new MatDistribution());
-        recipeHandlers.add(new MixerRecipes());
-        recipeHandlers.add(new RBMKOutgasserRecipes());
-        recipeHandlers.add(new ReformingRecipes());
-        recipeHandlers.add(new RotaryFurnaceRecipes());
-        recipeHandlers.add(new SolderingRecipes());
-        recipeHandlers.add(new SolidificationRecipes());
-    }
+  public static void registerAllHandlers() {
+    recipeHandlers.add(new AmmoPressRecipes());
+    recipeHandlers.add(new ArcWelderRecipes());
+    recipeHandlers.add(new BreederRecipes());
+    recipeHandlers.add(new ChemplantRecipes());
+    recipeHandlers.add(new CokerRecipes());
+    recipeHandlers.add(new CrackRecipes());
+    recipeHandlers.add(new CrucibleRecipes());
+    recipeHandlers.add(new CrystallizerRecipes());
+    recipeHandlers.add(new ElectrolyserFluidRecipes());
+    recipeHandlers.add(new ElectrolyserMetalRecipes());
+    recipeHandlers.add(new FractionRecipes());
+    recipeHandlers.add(new HydrotreatingRecipes());
+    recipeHandlers.add(new LiquefactionRecipes());
+    recipeHandlers.add(new MatDistribution());
+    recipeHandlers.add(new MixerRecipes());
+    recipeHandlers.add(new RBMKOutgasserRecipes());
+    recipeHandlers.add(new ReformingRecipes());
+    recipeHandlers.add(new RotaryFurnaceRecipes());
+    recipeHandlers.add(new SolderingRecipes());
+    recipeHandlers.add(new SolidificationRecipes());
+  }
 
     public static void initialize() {
         File recDir = new File(MainRegistry.configDir.getAbsolutePath() + File.separatorChar + "hbmRecipes");

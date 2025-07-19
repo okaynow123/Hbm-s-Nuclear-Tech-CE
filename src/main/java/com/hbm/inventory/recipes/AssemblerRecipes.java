@@ -452,6 +452,16 @@ public class AssemblerRecipes {
 				new ComparableStack(ModItems.motor_desh, 2),
 				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BISMOID)
 		}, 200);
+		makeRecipe(new ComparableStack(ModBlocks.machine_electrolyser, 1), new AStack[] {
+				!exp ? new OreDictStack(STEEL.plateCast(), 8) : new OreDictStack(STEEL.heavyComp(), 2),
+				!exp ? new OreDictStack(CU.plate528(), 16) : new OreDictStack(CU.heavyComp(), 1),
+				new OreDictStack(RUBBER.ingot(), 8),
+				new ComparableStack(ModItems.ingot_firebrick, 16),
+				new ComparableStack(ModItems.tank_steel, 3),
+				new ComparableStack(ModItems.coil_copper, 16),
+				new ComparableStack(ModItems.circuit, 8, EnumCircuitType.BASIC)
+		}, 200);
+
 		makeRecipe(new ComparableStack(ModBlocks.machine_diesel, 1), new AStack[] { new ComparableStack(ModItems.hull_small_steel, 4), new ComparableStack(Blocks.PISTON, 4), new OreDictStack(STEEL.ingot(), 6), new OreDictStack(MINGRADE.ingot(), 2), new OreDictStack(CU.plate(), 4), new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_MINGRADE.id), }, 200);
 		//makeRecipe(new ComparableStack(ModBlocks.machine_industrial_generator, 1), new AStack[] {new ComparableStack(ModItems.generator_front, 1), new ComparableStack(ModItems.generator_steel, 3), new ComparableStack(ModItems.rotor_steel, 3), new OreDictStack(STEEL.ingot(), 6), new ComparableStack(ModItems.board_copper, 4), new ComparableStack(ModItems.wire_fine, 8, Mats.MAT_GOLD.id), new ComparableStack(ModBlocks.red_wire_coated, 2), new ComparableStack(ModItems.pedestal_steel, 2), new ComparableStack(ModItems.circuit_copper, 4), },500);
 		makeRecipe(new ComparableStack(ModBlocks.machine_rtg_grey, 1), new AStack[] { new ComparableStack(ModItems.rtg_unit, 3), new OreDictStack(STEEL.plate(), 4), new ComparableStack(ModItems.wire_fine, 4, Mats.MAT_MINGRADE.id), new OreDictStack(ANY_PLASTIC.ingot(), 3), }, 200);

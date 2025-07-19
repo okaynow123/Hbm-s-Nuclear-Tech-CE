@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityCoreAdvanced;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -31,26 +31,26 @@ public class ContainerCoreAdvanced extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 9, 8, 54));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 10, 8, 72));
 		//Outputs
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 11, 134, 54));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 12, 134, 72));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 11, 134, 54));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 12, 134, 72));
 		//Output Storage
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 13, 8, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 14, 26, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 15, 44, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 16, 62, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 17, 80, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 18, 98, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 19, 116, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 20, 134, 108));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 21, 152, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 13, 8, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 14, 26, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 15, 44, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 16, 62, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 17, 80, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 18, 98, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 19, 116, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 20, 134, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 21, 152, 108));
 		//Power Cell
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 22, 44, 72));
 		//More Inputs
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 23, 26, 54));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 24, 26, 72));
 		//More Outputs
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 25, 152, 54));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 26, 152, 72));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 25, 152, 54));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 26, 152, 72));
 		
 		for(int i = 0; i < 3; i++)
 		{

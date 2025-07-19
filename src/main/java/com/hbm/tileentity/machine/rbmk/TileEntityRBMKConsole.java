@@ -1,7 +1,9 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.gui.GUIRBMKConsole;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlManual.RBMKColor;
 import com.hbm.util.BobMathUtil;
@@ -12,8 +14,10 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -22,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -32,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-public class TileEntityRBMKConsole extends TileEntityMachineBase implements IControlReceiver, ITickable, SimpleComponent {
+public class TileEntityRBMKConsole extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, ITickable, SimpleComponent {
 	
 	private int targetX;
 	private int targetY;
@@ -613,6 +618,17 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		private ScreenType(int offset) {
 			this.offset = offset;
 		}
+	}
+
+	@Override
+	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return null;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return new GUIRBMKConsole(player.inventory, this);
 	}
 
 	// opencomputers interface 

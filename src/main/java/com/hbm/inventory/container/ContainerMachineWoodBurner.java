@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.machine.TileEntityMachineWoodBurner;
 
@@ -24,12 +24,12 @@ public class ContainerMachineWoodBurner extends Container {
 		//Fuel
 		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 0, 26, 18));
 		//Ashes
-		this.addSlotToContainer(new SlotMachineOutput(burner.inventory, 1, 26, 54));
+		this.addSlotToContainer(new SlotTakeOnly(burner.inventory, 1, 26, 54));
 		//Fluid ID
 		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 2, 98, 54));
 		//Fluid Container
 		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 3, 98, 18));
-		this.addSlotToContainer(new SlotMachineOutput(burner.inventory, 4, 98, 36));
+		this.addSlotToContainer(new SlotTakeOnly(burner.inventory, 4, 98, 36));
 		//Battery
 		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 5, 143, 54));
 		

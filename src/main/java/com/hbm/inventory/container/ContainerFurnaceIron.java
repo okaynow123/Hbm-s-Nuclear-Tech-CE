@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityFurnaceIron;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,7 +22,7 @@ public class ContainerFurnaceIron extends Container {
 		this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 1, 53, 53));
 		this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 2, 71, 53));
 		//output
-		this.addSlotToContainer(new SlotMachineOutput(furnace.inventory, 3, 125, 35));
+		this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 3, 125, 35));
 		//upgrade
 		this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 4, 17, 35));
 		

@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineAssemfac;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +40,7 @@ public class ContainerAssemfac extends Container {
 
         for(int i = 0; i < 8; i++) {
             this.addSlotToContainer(new SlotItemHandler(tile.inventory, 17 + i * 14, 106, 13 + i * 19 - (i % 2 == 1 ? 1 : 0)));
-            this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 18 + i * 14, 234, 13 + i * 16));
+            this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 18 + i * 14, 234, 13 + i * 16));
         }
 
         for(int i = 0; i < 3; i++) {

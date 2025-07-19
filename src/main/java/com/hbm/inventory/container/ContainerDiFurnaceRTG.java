@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityDiFurnaceRTG;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +19,7 @@ public class ContainerDiFurnaceRTG extends Container {
 		this.addSlotToContainer(new SlotItemHandler(teIn.inventory, 0, 80, 18));
 		this.addSlotToContainer(new SlotItemHandler(teIn.inventory, 1, 80, 54));
 		// Output
-		this.addSlotToContainer(new SlotMachineOutput(teIn.inventory, 2, 134, 36));
+		this.addSlotToContainer(new SlotTakeOnly(teIn.inventory, 2, 134, 36));
 		// RTG pellets
 		this.addSlotToContainer(new SlotItemHandler(teIn.inventory, 3, 22, 18));
 		this.addSlotToContainer(new SlotItemHandler(teIn.inventory, 4, 40, 18));

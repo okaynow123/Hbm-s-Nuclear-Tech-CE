@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -29,17 +29,17 @@ public class ContainerMachineCyclotron extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 4, 107, 36));
 		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 5, 107, 54));
 		//Output
-		this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 6, 143, 18));
-		this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 7, 143, 36));
-		this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 8, 143, 54));
+		this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 6, 143, 18));
+		this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 7, 143, 36));
+		this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 8, 143, 54));
 		//AMAT In
 		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 9, 143, 90));
 		//AMAT Out
-		this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 10, 143, 108));
+		this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 10, 143, 108));
 		//Coolant In
 		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 11, 62, 72));
 		//Coolant Out
-		this.addSlotToContainer(new SlotMachineOutput(tile.inventory, 12, 62, 90));
+		this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 12, 62, 90));
 		//Battery
 		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 13, 62, 108));
 		//Upgrades

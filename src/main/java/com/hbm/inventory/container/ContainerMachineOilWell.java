@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityOilDrillBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,11 +21,11 @@ public class ContainerMachineOilWell extends Container {
 		// Canister Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 80, 17));
 		// Canister Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 2, 80, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 80, 53));
 		// Gas Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 125, 17));
 		// Gas Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 4, 125, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 125, 53));
 		//Upgrades
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 152, 17));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 6, 152, 35));

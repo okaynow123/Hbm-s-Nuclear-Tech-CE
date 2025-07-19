@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityDiFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,7 +21,7 @@ public class ContainerDiFurnace extends Container {
 		//Fuel
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 8, 36));
 		//Output
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 3, 134, 36));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 134, 36));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

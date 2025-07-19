@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineTurbine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,15 +21,15 @@ private TileEntityMachineTurbine diFurnace;
 		//Drillgon200: don't need these
 		//Drillgon200: Actually we do need these, at least until I stop being lazy and make directional fluid pipes.
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 1, 8, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 8, 53));
 		//Input IO
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 44, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 3, 44, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 44, 53));
 		//Battery
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 98, 53));
 		//Output IO
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 152, 17));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 6, 152, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 6, 152, 53));
 		
 		for(int i = 0; i < 3; i++)
 		{

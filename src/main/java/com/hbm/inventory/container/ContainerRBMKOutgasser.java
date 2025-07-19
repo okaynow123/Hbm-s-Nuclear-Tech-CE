@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotMachineOutput;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKOutgasser;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -17,7 +17,7 @@ public class ContainerRBMKOutgasser extends Container {
 		rbmk = tedf;
 
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 48, 53));
-		this.addSlotToContainer(new SlotMachineOutput(tedf.inventory, 1, 112, 53));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 112, 53));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
