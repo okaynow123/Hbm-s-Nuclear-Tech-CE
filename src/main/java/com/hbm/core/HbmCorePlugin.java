@@ -8,7 +8,7 @@ import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.TransformerExclusions({"com.hbm.core"})
-@IFMLLoadingPlugin.SortingIndex(1492) // mlbv: this shit must be greater than 1000, after the srg transformer
+@IFMLLoadingPlugin.SortingIndex(2077) // mlbv: this shit must be greater than 1000, after the srg transformer
 public class HbmCorePlugin implements IFMLLoadingPlugin {
 
 	static final Logger coreLogger = LogManager.getLogger("HBM CoreMod");

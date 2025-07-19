@@ -2,6 +2,7 @@ package com.hbm.hazard;
 
 import com.github.bsideup.jabel.Desugar;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.hbm.config.RadiationConfig;
 import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.hazard.transformer.HazardTransformerBase;
 import com.hbm.hazard.type.HazardTypeBase;
@@ -72,6 +73,7 @@ public class HazardSystem {
             new ThreadFactoryBuilder().setNameFormat("HBM-Hazard-Scanner-%d").setDaemon(true).build());
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private static CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
+    private static long tickCounter = 0;
 
     public static void schedulePlayerUpdate(EntityPlayer player) {
         playersToUpdate.add(player.getUniqueID());
@@ -83,7 +85,8 @@ public class HazardSystem {
      */
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
-
+        tickCounter++;
+        if (tickCounter % RadiationConfig.hazardRate != 2) return;
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (server == null) return;
         for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
@@ -179,7 +182,7 @@ public class HazardSystem {
      * Entries that use mutex will prevent subsequent entries from being considered, shall they collide. The mutex system already assumes that
      * two keys are the same in priority, so the flipped order doesn't matter.
      */
-    public static List<HazardEntry> getHazardsFromStack(final ItemStack stack) {
+    private static List<HazardEntry> getHazardsFromStack(final ItemStack stack) {
 
         if (stack.isEmpty() || isItemBlacklisted(stack)) {
             return Collections.emptyList();
