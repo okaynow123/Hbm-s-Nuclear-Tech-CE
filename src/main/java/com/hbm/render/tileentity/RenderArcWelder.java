@@ -5,9 +5,13 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineArcWelder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class RenderArcWelder extends TileEntitySpecialRenderer<TileEntityMachineArcWelder>
@@ -54,16 +58,16 @@ public class RenderArcWelder extends TileEntitySpecialRenderer<TileEntityMachine
       GlStateManager.rotate(-90, 1F, 0F, 0F);
 
       if (arc_welder.display != null) {
-        // ItemStack stack = arc_welder.display.copy();
+        ItemStack stack = arc_welder.display.copy();
+        stack.setCount(1);
 
-        // EntityItem item = new EntityItem(null, 0.0D, 0.0D, 0.0D, stack);
-        // item.stackSize = 1;
-        // item.hoverStart = 0.0F;
+        EntityItem item = new EntityItem(getWorld(), 0.0D, 0.0D, 0.0D, stack);
+        item.hoverStart = 0.0F;
 
-        // RenderItem.renderInFrame = true;
         GlStateManager.scale(1.5, 1.5, 1.5);
-        // this.itemRenderer.doRender(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-        // RenderItem.renderInFrame = false;
+        Minecraft.getMinecraft()
+            .getRenderItem()
+            .renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
       }
       GlStateManager.popMatrix();
     }
