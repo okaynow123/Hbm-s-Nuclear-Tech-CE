@@ -587,9 +587,9 @@ public class JeiRecipes {
 	}
 
 	public static class JeiUniversalRecipe implements IRecipeWrapper {
-		private final List<List<ItemStack>> inputs;
-		private final ItemStack[] outputs;
-		private final ItemStack[] machines;
+		protected final List<List<ItemStack>> inputs;
+		protected final ItemStack[] outputs;
+		protected final ItemStack[] machines;
 
 		public JeiUniversalRecipe(List<List<ItemStack>> inputs, ItemStack[] outputs, ItemStack[] machine) {
 			this.inputs = inputs;
@@ -643,6 +643,29 @@ public class JeiRecipes {
 				int side = 8;
 				fontRenderer.drawString(momentum, side, 52, 0x404040);
 			}
+		}
+	}
+
+	public static class SolderingRecipe extends JeiUniversalRecipe {
+		private final int duration;
+		private final int consumption;
+		public SolderingRecipe(List<List<ItemStack>> inputs, ItemStack[] outputs, ItemStack[] machine, int duration, int consumption) {
+			super(inputs, outputs, machine);
+			this.duration = duration;
+			this.consumption = consumption;
+		}
+
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+			super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
+			// I honestly don't know why Bob decided to compare outputs here, we'll see later, I think..
+			FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+			String duration = String.format(Locale.US, "%,d", this.duration) + " ticks";
+			String consumption = String.format(Locale.US, "%,d", this.consumption) + " HE/t";
+			int side = 160;
+			fontRenderer.drawString(duration, side - fontRenderer.getStringWidth(duration), 43, 0x404040);
+			fontRenderer.drawString(consumption, side - fontRenderer.getStringWidth(consumption), 55, 0x404040);
+			return;
 		}
 	}
 	
