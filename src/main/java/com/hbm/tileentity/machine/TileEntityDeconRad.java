@@ -1,16 +1,19 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
+import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
+import java.util.Random;
 
 public class TileEntityDeconRad extends TileEntity implements ITickable {
 
@@ -50,6 +53,20 @@ public class TileEntityDeconRad extends TileEntity implements ITickable {
 					}
 				}
 			}
+		} else {
+
+			Random rand = world.rand;
+
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("type", "vanillaExt");
+			nbt.setString("mode", "townaura");
+			nbt.setDouble("posX", pos.getX() + 0.125 + rand.nextDouble() * 0.75);
+			nbt.setDouble("posY", pos.getY() + 1.1);
+			nbt.setDouble("posZ", pos.getZ() + 0.125 + rand.nextDouble() * 0.75);
+			nbt.setDouble("mX", 0.0);
+			nbt.setDouble("mY", 0.04);
+			nbt.setDouble("mZ", 0.0);
+			MainRegistry.proxy.effectNT(nbt);
 		}
 	}
 }
