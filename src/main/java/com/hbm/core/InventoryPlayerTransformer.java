@@ -38,9 +38,9 @@ public class InventoryPlayerTransformer implements IClassTransformer {
     );
 
     private static final List<ObfSafeName> SLOW_PATH_METHODS = Arrays.asList(
-            new ObfSafeName("addItemStackToInventory", "func_70441_a"),
-            new ObfSafeName("decrStackSize", "func_70298_a"),
-            new ObfSafeName("removeStackFromSlot", "func_70304_b"),
+//            new ObfSafeName("addItemStackToInventory", "func_70441_a"),
+//            new ObfSafeName("decrStackSize", "func_70298_a"),
+//            new ObfSafeName("removeStackFromSlot", "func_70304_b"),
             new ObfSafeName("dropAllItems", "func_70436_m"),
             new ObfSafeName("clear", "func_174888_l"),
             new ObfSafeName("readFromNBT", "func_70443_b")

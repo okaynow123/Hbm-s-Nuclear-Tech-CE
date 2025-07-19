@@ -121,7 +121,6 @@ import java.util.Map.Entry;
 
 public class ModEventHandler {
 
-    public static final int HAZARD_POLL_RATE = RadiationConfig.hazardRate;
     public static final ResourceLocation ENT_HBM_PROP_ID = new ResourceLocation(RefStrings.MODID, "HBMLIVINGPROPS");
     public static final ResourceLocation DATA_LOC = new ResourceLocation(RefStrings.MODID, "HBMDATA");
     private static final Set<String> hashes = new HashSet();
