@@ -9,10 +9,11 @@ import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.AuxParticlePacketNT;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -23,9 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IGUIProvider {
 
@@ -160,15 +158,15 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
         this.spawnBullet(conf, 5F);
         this.consumeAmmo(conf.ammo);
         this.world.playSound(
-            null, pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
+            null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 
         Vec3d pos = this.getTurretPos();
         Vec3d vec = new Vec3d(this.getBarrelLength(), 0, 0);
         vec = Vec3dUtil.rotateRoll(vec, (float) -this.rotationPitch);
         vec = vec.rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
 
-        Vec3 side = Vec3.createVectorHelper(0.125 * (shotSide ? 1 : -1), 0, 0);
-        side.rotateAroundY((float) -(this.rotationYaw));
+        Vec3d side = new Vec3d(0.125 * (shotSide ? 1 : -1), 0, 0);
+        side = side.rotateYaw((float) -(this.rotationYaw));
 
         NBTTagCompound data = new NBTTagCompound();
         data.setString("type", "vanillaExt");
@@ -177,7 +175,7 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
         data.setByte("count", (byte) 1);
         PacketThreading.createAllAroundThreadedPacket(
             new AuxParticlePacketNT(
-                data, pos.x + vec.x + side.xCoord, pos.y + vec.y, pos.z + vec.z + side.zCoord),
+                data, pos.x + vec.x + side.x, pos.y + vec.y, pos.z + vec.z + side.z),
             new NetworkRegistry.TargetPoint(
                 world.provider.getDimension(),
                 this.pos.getX(),

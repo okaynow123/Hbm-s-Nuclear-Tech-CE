@@ -10,7 +10,7 @@ import java.util.List;
 
 public final class HBMSoundHandler {
 
-    public static List<SoundEvent> ALL_SOUNDS = new ArrayList<SoundEvent>();
+    public static List<SoundEvent> ALL_SOUNDS = new ArrayList<>();
 
     public static SoundEvent assemblerOperate;
     public static SoundEvent fel;
