@@ -12,7 +12,7 @@ import com.hbm.handler.ToolAbility.SilkAbility;
 import com.hbm.handler.WeaponAbility;
 import com.hbm.items.ModItems;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PlayerInformPacketLegacy;
+import com.hbm.packet.toclient.PlayerInformPacketLegacy;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

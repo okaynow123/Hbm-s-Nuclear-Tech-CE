@@ -6,7 +6,7 @@ import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.LoopedEntitySoundPacket;
+import com.hbm.packet.toclient.LoopedEntitySoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.block.Block;

@@ -1,7 +1,7 @@
 package com.hbm.particle.helper;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

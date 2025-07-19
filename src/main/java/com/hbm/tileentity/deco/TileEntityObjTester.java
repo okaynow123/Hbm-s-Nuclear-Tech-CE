@@ -3,7 +3,7 @@ package com.hbm.tileentity.deco;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PacketSpecialDeath;
+import com.hbm.packet.toclient.PacketSpecialDeath;
 import com.hbm.particle.gluon.ParticleGluonFlare;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;

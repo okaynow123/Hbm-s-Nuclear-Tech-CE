@@ -2,7 +2,7 @@ package com.hbm.api.energymk2;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.Compat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

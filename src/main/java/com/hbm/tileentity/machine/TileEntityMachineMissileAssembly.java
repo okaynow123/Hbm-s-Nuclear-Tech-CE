@@ -10,7 +10,7 @@ import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.TEMissileMultipartPacket;
+import com.hbm.packet.toclient.TEMissileMultipartPacket;
 import com.hbm.tileentity.IGUIProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

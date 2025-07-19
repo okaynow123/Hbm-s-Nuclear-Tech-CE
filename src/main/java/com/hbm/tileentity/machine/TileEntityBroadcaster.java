@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.lib.ModDamageSource;
-import com.hbm.packet.LoopedSoundPacket;
+import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

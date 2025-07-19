@@ -7,7 +7,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.util.ITooltipFlag;

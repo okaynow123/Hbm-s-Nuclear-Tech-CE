@@ -10,7 +10,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.recipes.CrackRecipes;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.Tuple;
 import io.netty.buffer.ByteBuf;

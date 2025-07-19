@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
-import com.hbm.packet.NBTControlPacket;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterOilburner;
 import net.minecraft.client.Minecraft;

@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerMachineMiningLaser;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.AuxButtonPacket;
+import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityMachineMiningLaser;

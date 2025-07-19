@@ -6,7 +6,7 @@ import com.hbm.inventory.container.ContainerMachineRTG;
 import com.hbm.inventory.gui.GUIMachineRTG;
 import com.hbm.items.machine.ItemRTGPellet;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.AuxElectricityPacket;
+import com.hbm.packet.toclient.AuxElectricityPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;

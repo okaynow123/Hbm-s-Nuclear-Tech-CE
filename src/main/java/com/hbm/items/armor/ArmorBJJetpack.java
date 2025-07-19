@@ -5,7 +5,7 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.model.ModelArmorBJ;
 import com.hbm.util.I18nUtil;

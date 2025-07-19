@@ -3,7 +3,7 @@ package com.hbm.saveddata;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.RadiationSystemNT;
-import com.hbm.packet.AuxParticlePacket;
+import com.hbm.packet.toclient.AuxParticlePacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

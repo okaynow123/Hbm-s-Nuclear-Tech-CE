@@ -9,7 +9,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemCassette;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.ItemFolderPacket;
+import com.hbm.packet.toserver.ItemFolderPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

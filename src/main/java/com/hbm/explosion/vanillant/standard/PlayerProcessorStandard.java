@@ -2,7 +2,7 @@ package com.hbm.explosion.vanillant.standard;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.IPlayerProcessor;
-import com.hbm.packet.ExplosionKnockbackPacket;
+import com.hbm.packet.toclient.ExplosionKnockbackPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

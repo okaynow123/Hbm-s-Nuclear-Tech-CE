@@ -5,7 +5,7 @@ import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IControlReceiverFilter;

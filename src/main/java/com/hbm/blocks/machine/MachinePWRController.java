@@ -5,7 +5,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.BlockPWR.TileEntityBlockPWR;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.block.RotatableStateMapper;
 import com.hbm.tileentity.machine.TileEntityPWRController;

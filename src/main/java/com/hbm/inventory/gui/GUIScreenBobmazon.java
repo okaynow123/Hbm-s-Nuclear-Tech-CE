@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.lib.RefStrings;
 import com.hbm.main.AdvancementManager;
-import com.hbm.packet.ItemBobmazonPacket;
+import com.hbm.packet.toserver.ItemBobmazonPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.Minecraft;

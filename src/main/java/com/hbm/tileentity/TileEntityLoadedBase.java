@@ -2,7 +2,7 @@ package com.hbm.tileentity;
 
 import com.hbm.api.tile.ILoadedTile;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.sound.AudioWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;

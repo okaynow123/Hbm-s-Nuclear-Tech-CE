@@ -8,7 +8,7 @@ import com.hbm.inventory.gui.GUITurretSentry;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;

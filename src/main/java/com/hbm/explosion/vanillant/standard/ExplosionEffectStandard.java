@@ -2,7 +2,7 @@ package com.hbm.explosion.vanillant.standard;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.IExplosionSFX;
-import com.hbm.packet.ExplosionVanillaNewTechnologyCompressedAffectedBlockPositionDataForClientEffectsAndParticleHandlingPacket;
+import com.hbm.packet.toclient.ExplosionVanillaNewTechnologyCompressedAffectedBlockPositionDataForClientEffectsAndParticleHandlingPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;

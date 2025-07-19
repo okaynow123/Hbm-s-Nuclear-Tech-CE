@@ -6,7 +6,7 @@ import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PacketSpecialDeath;
+import com.hbm.packet.toclient.PacketSpecialDeath;
 import com.hbm.particle.bullet_hit.ParticleDecalFlow;
 import com.hbm.render.util.BakedModelUtil;
 import com.hbm.render.util.BakedModelUtil.DecalType;

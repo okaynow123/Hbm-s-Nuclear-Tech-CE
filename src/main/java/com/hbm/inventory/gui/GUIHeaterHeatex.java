@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerHeaterHeatex;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.NBTControlPacket;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterHeatex;
 import net.minecraft.client.Minecraft;

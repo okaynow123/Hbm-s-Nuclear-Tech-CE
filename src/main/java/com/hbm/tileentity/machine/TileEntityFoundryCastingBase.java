@@ -7,7 +7,7 @@ import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemMold.Mold;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ItemStackHandlerWrapper;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

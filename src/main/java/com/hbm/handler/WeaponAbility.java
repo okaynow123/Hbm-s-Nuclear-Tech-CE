@@ -6,7 +6,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
 import com.hbm.items.tool.IItemAbility;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;

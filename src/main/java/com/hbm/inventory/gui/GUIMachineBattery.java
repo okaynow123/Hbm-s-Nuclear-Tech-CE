@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.inventory.container.ContainerMachineBattery;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.AuxButtonPacket;
+import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityMachineBattery;
 import com.hbm.util.I18nUtil;

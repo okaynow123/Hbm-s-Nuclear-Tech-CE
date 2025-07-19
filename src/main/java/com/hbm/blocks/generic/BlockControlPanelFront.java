@@ -12,7 +12,7 @@
 //import com.hbm.items.ModItems;
 //import com.hbm.main.ClientProxy;
 //import com.hbm.main.MainRegistry;
-//import com.hbm.packet.NBTControlPacket;
+//import com.hbm.packet.toserver.NBTControlPacket;
 //import com.hbm.packet.PacketDispatcher;
 //import com.hbm.tileentity.machine.TileEntityControlPanel;
 //

@@ -5,7 +5,7 @@ import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PacketSpecialDeath;
+import com.hbm.packet.toclient.PacketSpecialDeath;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

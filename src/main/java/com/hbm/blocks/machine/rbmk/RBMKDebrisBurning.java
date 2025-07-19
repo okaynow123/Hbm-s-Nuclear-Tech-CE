@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;

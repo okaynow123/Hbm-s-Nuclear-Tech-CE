@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyConductorMK2;
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;

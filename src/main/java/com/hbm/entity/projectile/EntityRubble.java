@@ -3,7 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.ParticleBurstPacket;
+import com.hbm.packet.toclient.ParticleBurstPacket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;

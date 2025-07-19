@@ -1,6 +1,6 @@
 package com.hbm.inventory.control_panel;
 
-import com.hbm.packet.ControlPanelUpdatePacket.VarUpdate;
+import com.hbm.packet.toclient.ControlPanelUpdatePacket.VarUpdate;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

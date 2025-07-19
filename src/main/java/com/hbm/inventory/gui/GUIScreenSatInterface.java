@@ -6,7 +6,7 @@ import com.hbm.items.tool.ItemSatInterface;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.SatLaserPacket;
+import com.hbm.packet.toserver.SatLaserPacket;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.saveddata.satellites.Satellite.InterfaceActions;
 import com.hbm.saveddata.satellites.Satellite.Interfaces;

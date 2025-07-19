@@ -5,7 +5,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretMaxwell;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.EntityDamageUtil;
 import io.netty.buffer.ByteBuf;

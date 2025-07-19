@@ -22,7 +22,7 @@ import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.LoopedSoundPacket;
+import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;

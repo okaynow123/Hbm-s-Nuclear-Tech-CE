@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.EntityLivingBase;

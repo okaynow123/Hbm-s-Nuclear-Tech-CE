@@ -9,7 +9,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PacketSpecialDeath;
+import com.hbm.packet.toclient.PacketSpecialDeath;
 import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.particle.gluon.ParticleGluonFlare;
 import com.hbm.particle.gluon.ParticleGluonMuzzleSmoke;

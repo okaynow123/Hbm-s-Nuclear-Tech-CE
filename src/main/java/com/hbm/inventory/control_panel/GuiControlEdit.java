@@ -1,7 +1,7 @@
 package com.hbm.inventory.control_panel;
 
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.NBTControlPacket;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityControlPanel;
 import net.minecraft.client.Minecraft;

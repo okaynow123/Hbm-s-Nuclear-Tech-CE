@@ -6,7 +6,7 @@ import com.hbm.inventory.recipes.AmmoPressRecipes;
 import com.hbm.inventory.recipes.AmmoPressRecipes.AmmoPressRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.NBTControlPacket;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityMachineAmmoPress;
 import net.minecraft.client.Minecraft;

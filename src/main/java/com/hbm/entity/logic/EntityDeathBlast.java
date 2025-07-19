@@ -6,7 +6,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;

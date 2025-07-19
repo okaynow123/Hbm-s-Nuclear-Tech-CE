@@ -12,7 +12,7 @@ import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.LoopedSoundPacket;
+import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;

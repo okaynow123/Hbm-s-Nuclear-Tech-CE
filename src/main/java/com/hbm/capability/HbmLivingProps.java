@@ -1,15 +1,13 @@
 package com.hbm.capability;
 
-import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
-import com.hbm.config.RadiationConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PlayerInformPacketLegacy;
+import com.hbm.packet.toclient.PlayerInformPacketLegacy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;

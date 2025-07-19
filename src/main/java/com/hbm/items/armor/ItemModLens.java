@@ -5,7 +5,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ISatChip;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.saveddata.satellites.SatelliteScanner;

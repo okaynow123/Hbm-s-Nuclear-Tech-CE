@@ -3,6 +3,8 @@ package com.hbm.packet;
 import com.hbm.lib.RefStrings;
 
 import com.hbm.main.NetworkHandler;
+import com.hbm.packet.toclient.*;
+import com.hbm.packet.toserver.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,16 +22,12 @@ public class PacketDispatcher {
 		wrapper.registerMessage(SurveyPacket.Handler.class, SurveyPacket.class, i++, Side.CLIENT);
 		//Packet for rendering of rubble
 		wrapper.registerMessage(ParticleBurstPacket.Handler.class, ParticleBurstPacket.class, i++, Side.CLIENT);
-		//Packet for updating assembler progress
-		wrapper.registerMessage(TEAssemblerPacket.Handler.class, TEAssemblerPacket.class, i++, Side.CLIENT);
 		//Updates electricity data
 		wrapper.registerMessage(AuxElectricityPacket.Handler.class, AuxElectricityPacket.class, i++, Side.CLIENT);
 		//Sounds packets
 		wrapper.registerMessage(LoopedSoundPacket.Handler.class, LoopedSoundPacket.class, i++, Side.CLIENT);
 		//Particle packet
 		wrapper.registerMessage(AuxParticlePacket.Handler.class, AuxParticlePacket.class, i++, Side.CLIENT);
-		//Chemplant packet
-		wrapper.registerMessage(TEChemplantPacket.Handler.class, TEChemplantPacket.class, i++, Side.CLIENT);
 		//Assembler Recipe Sync Packet, so clients can see the right recipes
 		wrapper.registerMessage(AssemblerRecipeSyncPacket.Handler.class, AssemblerRecipeSyncPacket.class, i++, Side.CLIENT);
 		//Universal package for machine gauges and states
@@ -38,8 +36,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(AuxLongPacket.Handler.class, AuxLongPacket.class, i++, Side.CLIENT);
 		//Universal button packet
 		wrapper.registerMessage(AuxButtonPacket.Handler.class, AuxButtonPacket.class, i++, Side.SERVER);
-		//Fluid pipe type update for rendering
-		wrapper.registerMessage(TEFluidTypePacketTest.Handler.class, TEFluidTypePacketTest.class, i++, Side.CLIENT);
 		//Packet for updating the bomber flying sound, I think
 		wrapper.registerMessage(LoopedEntitySoundPacket.Handler.class, LoopedEntitySoundPacket.class, i++, Side.CLIENT);
 		//Packet for sending designator data to server
@@ -48,10 +44,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(EnumParticlePacket.Handler.class, EnumParticlePacket.class, i++, Side.CLIENT);
 		//Gun firing packet
 		wrapper.registerMessage(GunButtonPacket.Handler.class, GunButtonPacket.class, i++, Side.SERVER);
-		//Packet sent for every connected electricity pole, for wire rendering
-		wrapper.registerMessage(TEPylonSenderPacket.Handler.class, TEPylonSenderPacket.class, i++, Side.CLIENT);
-		//Resets connection list in client-sided pole rendering
-		wrapper.registerMessage(TEPylonDestructorPacket.Handler.class, TEPylonDestructorPacket.class, i++, Side.CLIENT);
 		//Sets railgun rotation so it updates on client
 		wrapper.registerMessage(RailgunRotationPacket.Handler.class, RailgunRotationPacket.class, i++, Side.CLIENT);
 		// <Insert good comment here>

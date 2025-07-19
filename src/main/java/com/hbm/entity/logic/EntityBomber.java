@@ -12,7 +12,7 @@ import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.LoopedEntitySoundPacket;
+import com.hbm.packet.toclient.LoopedEntitySoundPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;

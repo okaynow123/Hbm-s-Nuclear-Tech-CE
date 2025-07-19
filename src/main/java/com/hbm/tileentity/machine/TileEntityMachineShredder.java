@@ -9,7 +9,7 @@ import com.hbm.inventory.gui.GUIMachineShredder;
 import com.hbm.items.machine.ItemBlades;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.AuxElectricityPacket;
+import com.hbm.packet.toclient.AuxElectricityPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;

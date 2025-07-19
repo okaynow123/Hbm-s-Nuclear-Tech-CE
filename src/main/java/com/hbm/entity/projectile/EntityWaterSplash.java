@@ -1,6 +1,6 @@
 package com.hbm.entity.projectile;
 
-import com.hbm.packet.AuxParticlePacket;
+import com.hbm.packet.toclient.AuxParticlePacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;

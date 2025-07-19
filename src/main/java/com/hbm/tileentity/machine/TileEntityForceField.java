@@ -8,7 +8,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.TEFFPacket;
+import com.hbm.packet.toclient.TEFFPacket;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;

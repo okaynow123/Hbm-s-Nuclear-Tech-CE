@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.TileEntityTickingBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;

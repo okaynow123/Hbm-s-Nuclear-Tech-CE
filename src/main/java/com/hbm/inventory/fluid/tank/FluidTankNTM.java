@@ -7,7 +7,7 @@ import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.TEFluidPacket;
+import com.hbm.packet.toclient.TEFluidPacket;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

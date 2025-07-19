@@ -11,7 +11,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.ParticleBurstPacket;
+import com.hbm.packet.toclient.ParticleBurstPacket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

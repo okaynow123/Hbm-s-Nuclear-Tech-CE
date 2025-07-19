@@ -7,7 +7,7 @@ import com.hbm.entity.projectile.EntityOilSpill;
 import com.hbm.entity.projectile.EntityRubble;
 import com.hbm.entity.projectile.EntityShrapnel;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

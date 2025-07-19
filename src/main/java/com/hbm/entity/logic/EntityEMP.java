@@ -5,7 +5,7 @@ import cofh.redstoneflux.api.IEnergyProvider;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.ParticleBurstPacket;
+import com.hbm.packet.toclient.ParticleBurstPacket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;

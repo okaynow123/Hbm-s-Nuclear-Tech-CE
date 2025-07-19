@@ -4,7 +4,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemBedrockOreBase;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.PlayerInformPacketLegacy;
+import com.hbm.packet.toclient.PlayerInformPacketLegacy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;

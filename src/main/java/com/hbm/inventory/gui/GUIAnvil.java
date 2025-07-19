@@ -8,7 +8,7 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.container.ContainerAnvil;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.AnvilCraftPacket;
+import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.audio.PositionedSoundRecord;

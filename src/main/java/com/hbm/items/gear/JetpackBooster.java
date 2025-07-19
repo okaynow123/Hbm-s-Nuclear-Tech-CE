@@ -5,7 +5,7 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.model.ModelJetPack;

@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.blocks.BlockControlPanelType;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.control_panel.*;
-import com.hbm.packet.ControlPanelUpdatePacket;
+import com.hbm.packet.toclient.ControlPanelUpdatePacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import li.cil.oc.api.machine.Arguments;

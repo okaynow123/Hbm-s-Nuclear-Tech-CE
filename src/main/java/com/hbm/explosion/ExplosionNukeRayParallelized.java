@@ -5,7 +5,7 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.interfaces.IExplosionRay;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.SetSubChunkAirPacket;
+import com.hbm.packet.toclient.SetSubChunkAirPacket;
 import com.hbm.util.ConcurrentBitSet;
 import com.hbm.util.SubChunkKey;
 import com.hbm.util.SubChunkSnapshot;

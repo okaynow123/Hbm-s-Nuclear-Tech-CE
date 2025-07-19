@@ -3,7 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.ItemDesignatorPacket;
+import com.hbm.packet.toserver.ItemDesignatorPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

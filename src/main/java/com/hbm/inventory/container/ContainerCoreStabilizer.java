@@ -2,7 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.gui.GUICoreStabilizer;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.machine.TileEntityCoreStabilizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

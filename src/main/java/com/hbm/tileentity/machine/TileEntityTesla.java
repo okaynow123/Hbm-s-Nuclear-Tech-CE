@@ -13,7 +13,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.TETeslaPacket;
+import com.hbm.packet.toclient.TETeslaPacket;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.TileEntityMachineBase;
 import net.minecraft.entity.Entity;

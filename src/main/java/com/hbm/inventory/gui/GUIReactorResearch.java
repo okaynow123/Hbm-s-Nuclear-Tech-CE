@@ -4,7 +4,7 @@ import com.hbm.inventory.container.ContainerReactorResearch;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.modules.NumberDisplay;
-import com.hbm.packet.NBTControlPacket;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityReactorResearch;
 import net.minecraft.client.Minecraft;

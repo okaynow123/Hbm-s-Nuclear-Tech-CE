@@ -3,7 +3,7 @@ package com.hbm.inventory.gui;
 import com.hbm.inventory.container.ContainerFEL;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.AuxButtonPacket;
+import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityFEL;
 import net.minecraft.client.Minecraft;

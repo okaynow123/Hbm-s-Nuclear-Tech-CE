@@ -4,7 +4,7 @@ import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
-import com.hbm.packet.PermaSyncHandler;
+import com.hbm.packet.toclient.PermaSyncHandler;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import net.minecraft.block.Block;

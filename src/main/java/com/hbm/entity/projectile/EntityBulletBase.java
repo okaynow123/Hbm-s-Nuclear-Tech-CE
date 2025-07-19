@@ -21,7 +21,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.AuxParticlePacketNT;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.BobMathUtil;

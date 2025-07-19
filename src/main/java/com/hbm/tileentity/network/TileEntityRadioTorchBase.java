@@ -2,7 +2,7 @@ package com.hbm.tileentity.network;
 
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.packet.BufPacket;
+import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.util.BufferUtil;
 import io.netty.buffer.ByteBuf;
