@@ -64,8 +64,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
     private AudioWrapper audio;
 
     public TileEntityMachineAssembler() {
-
-        super(18);
+        super(18, false, true);
         inventory = new ItemStackHandler(18) {
             @Override
             protected void onContentsChanged(int slot) {
@@ -662,22 +661,4 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachineAssembler(player.inventory, this);
 	}
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(
-                    new NTMEnergyCapabilityWrapper(this)
-            );
-        }
-        return super.getCapability(capability, facing);
-    }
 }

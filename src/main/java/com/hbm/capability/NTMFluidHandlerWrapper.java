@@ -1,6 +1,10 @@
 package com.hbm.capability;
 
+import com.hbm.api.fluid.IFluidStandardReceiver;
+import com.hbm.api.fluid.IFluidStandardSender;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -9,15 +13,15 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class NTMFluidHandlerWrapper implements IFluidHandler {
-    protected final List<FluidTankNTM> inputTanks;
-    protected final List<FluidTankNTM> outputTanks;
+    private final List<FluidTankNTM> inputTanks;
+    private final List<FluidTankNTM> outputTanks;
     /**
      * Tanks that can be both filled and drained.
      */
-    protected final List<FluidTankNTM> allTanks;
+    private final List<FluidTankNTM> allTanks;
 
     public NTMFluidHandlerWrapper(@Nullable Collection<FluidTankNTM> fillableTanks, @Nullable Collection<FluidTankNTM> drainableTanks) {
-        this.inputTanks  = (fillableTanks  != null) ? new ArrayList<>(fillableTanks)  : new ArrayList<>();
+        this.inputTanks = (fillableTanks != null) ? new ArrayList<>(fillableTanks) : new ArrayList<>();
         this.outputTanks = (drainableTanks != null) ? new ArrayList<>(drainableTanks) : new ArrayList<>();
         Set<FluidTankNTM> uniqueTanks = new LinkedHashSet<>(this.inputTanks);
         uniqueTanks.addAll(this.outputTanks);
@@ -26,6 +30,21 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
 
     public NTMFluidHandlerWrapper(@Nullable FluidTankNTM[] fillableTanks, @Nullable FluidTankNTM[] drainableTanks) {
         this(fillableTanks == null ? null : Arrays.asList(fillableTanks), drainableTanks == null ? null : Arrays.asList(drainableTanks));
+    }
+
+    public static NTMFluidHandlerWrapper from(TileEntity user) {
+        FluidTankNTM[] fillable = null;
+        FluidTankNTM[] drainable = null;
+        if (user instanceof IFluidStandardTransceiver transceiver) {
+            fillable = transceiver.getReceivingTanks();
+            drainable = transceiver.getSendingTanks();
+        } else if (user instanceof IFluidStandardReceiver receiver) {
+            fillable = receiver.getReceivingTanks();
+        } else if (user instanceof IFluidStandardSender sender) {
+            drainable = sender.getSendingTanks();
+        } else
+            throw new IllegalArgumentException("Fluid user must implement IFluidStandardTransceiver, IFluidStandardReceiver or IFluidStandardSender");
+        return new NTMFluidHandlerWrapper(fillable, drainable);
     }
 
     /**

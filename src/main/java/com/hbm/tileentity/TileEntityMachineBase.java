@@ -1,6 +1,10 @@
 package com.hbm.tileentity;
 
+import com.hbm.api.energymk2.IEnergyHandlerMK2;
+import com.hbm.api.fluid.IFluidUser;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Atmosphere;
@@ -20,7 +24,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +35,8 @@ import org.jetbrains.annotations.NotNull;
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IBufPacketReceiver {
 
     public ItemStackHandler inventory;
-
-
+    private boolean enablefluidWrapper = false;
+    private boolean enableEnergyWrapper = false;
     private String customName;
 
     public TileEntityMachineBase(int scount) {
@@ -41,7 +47,19 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
         inventory = getNewInventory(scount, slotlimit);
     }
 
-    public ItemStackHandler getNewInventory(int scount, int slotlimit) {
+    public TileEntityMachineBase(int scount, boolean enableFluidWrapper, boolean enableEnergyWrapper){
+        this(scount, 64);
+        this.enablefluidWrapper = enableFluidWrapper;
+        this.enableEnergyWrapper = enableEnergyWrapper;
+    }
+
+    public TileEntityMachineBase(int scount, int slotlimit, boolean enableFluidWrapper, boolean enableEnergyWrapper){
+        this(scount, slotlimit);
+        this.enablefluidWrapper = enableFluidWrapper;
+        this.enableEnergyWrapper = enableEnergyWrapper;
+    }
+
+    protected ItemStackHandler getNewInventory(int scount, int slotlimit) {
         return new ItemStackHandler(scount) {
             @Override
             protected void onContentsChanged(int slot) {
@@ -58,7 +76,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     }
 
     // This is for cases like barrels - in 2.0.3 there are 6 slots instead of 4
-    public void resizeInventory(int newSlotCount) {
+    protected void resizeInventory(int newSlotCount) {
         ItemStackHandler newInventory = getNewInventory(newSlotCount, inventory.getSlotLimit(0));
         for (int i = 0; i < Math.min(inventory.getSlots(), newSlotCount); i++) {
             newInventory.setStackInSlot(i, inventory.getStackInSlot(i));
@@ -155,7 +173,11 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(NTMFluidHandlerWrapper.from(this));
+        } else if(capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) {
+            return CapabilityEnergy.ENERGY.cast(NTMEnergyCapabilityWrapper.from(this));
+        } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null)
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new ItemStackHandlerWrapper(inventory, getAccessibleSlotsFromSide(facing)) {
@@ -179,10 +201,13 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper
+                || capability == CapabilityEnergy.ENERGY && enableEnergyWrapper
+                || (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null)
+                || super.hasCapability(capability, facing);
     }
 
-    public void updateRedstoneConnection(DirPos pos) {
+    protected void updateRedstoneConnection(DirPos pos) {
         BlockPos blockPos = pos.getPos();
         IBlockState state1 = world.getBlockState(blockPos);
         Block block1 = state1.getBlock();
@@ -203,7 +228,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     }
 
     // TODO: Consume air from connected tanks if available
-    public boolean breatheAir(int amount) {
+    protected boolean breatheAir(int amount) {
         CBT_Atmosphere atmosphere = world.provider instanceof WorldProviderOrbit ? null : CelestialBody.getTrait(world, CBT_Atmosphere.class);
         if (atmosphere != null) {
             if (atmosphere.hasFluid(Fluids.AIR, 0.19) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09)) {
