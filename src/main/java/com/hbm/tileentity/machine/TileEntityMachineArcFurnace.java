@@ -42,8 +42,7 @@ public class TileEntityMachineArcFurnace extends TileEntityMachineBase implement
 	//3: 2 Rod
 	//4: 3 Rod
 	//5: b Battery
-	
-	private String customName;
+
 	
 	public TileEntityMachineArcFurnace() {
 		super(6);
@@ -98,10 +97,9 @@ public class TileEntityMachineArcFurnace extends TileEntityMachineBase implement
 	private boolean hasElectrodes() {
 		
 		if(!inventory.getStackInSlot(2).isEmpty() && !inventory.getStackInSlot(3).isEmpty() && !inventory.getStackInSlot(4).isEmpty()) {
-			if((inventory.getStackInSlot(2).getItem() == ModItems.arc_electrode || inventory.getStackInSlot(2).getItem() == ModItems.arc_electrode_desh) &&
-					(inventory.getStackInSlot(3).getItem() == ModItems.arc_electrode || inventory.getStackInSlot(3).getItem() == ModItems.arc_electrode_desh) &&
-					(inventory.getStackInSlot(4).getItem() == ModItems.arc_electrode || inventory.getStackInSlot(4).getItem() == ModItems.arc_electrode_desh))
-				return true;
+			return (inventory.getStackInSlot(2).getItem() == ModItems.arc_electrode) &&
+					(inventory.getStackInSlot(3).getItem() == ModItems.arc_electrode) &&
+					(inventory.getStackInSlot(4).getItem() == ModItems.arc_electrode);
 		}
 		
 		return false;
@@ -118,7 +116,7 @@ public class TileEntityMachineArcFurnace extends TileEntityMachineBase implement
 		}
         ItemStack itemStack = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(0));
         
-		if(itemStack == null || itemStack.isEmpty())
+		if(itemStack.isEmpty())
 		{
 			return false;
 		}
@@ -205,13 +203,8 @@ public class TileEntityMachineArcFurnace extends TileEntityMachineBase implement
 				dualCookTime = 0;
 			}
 			
-			boolean trigger = true;
-			
-			if(hasPower() && canProcess() && this.dualCookTime == 0)
-			{
-				trigger = false;
-			}
-			
+			boolean trigger = !hasPower() || !canProcess() || this.dualCookTime != 0;
+
 			if(trigger)
             {
                 flag1 = true;
@@ -276,11 +269,11 @@ public class TileEntityMachineArcFurnace extends TileEntityMachineBase implement
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if(slot == 2 || slot == 3 || slot == 4)
-			return stack.getItem() == ModItems.arc_electrode || stack.getItem() == ModItems.arc_electrode_desh;
+			return stack.getItem() == ModItems.arc_electrode;
 		if(slot == 5)
 			return Library.isItemBattery(stack);
 		if(slot == 0)
-			return (!Library.isItemBattery(stack) && !(stack.getItem() == ModItems.arc_electrode || stack.getItem() == ModItems.arc_electrode_desh));
+			return FurnaceRecipes.instance().getSmeltingResult(stack) != ItemStack.EMPTY;
 		return false;
 	}
 

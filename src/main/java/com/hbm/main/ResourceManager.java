@@ -231,6 +231,9 @@ public class ResourceManager {
 	//Arc Welder
 	public static final IModelCustom arc_welder = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/arc_welder.obj")).asVBO();
 
+	//Arc Furnace
+	public static final IModelCustom arc_furnace = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/arc_furnace.obj")).asVBO();
+
 	//Soldering Station
 	public static final IModelCustom soldering_station = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/soldering_station.obj")).asVBO();
 
@@ -872,6 +875,9 @@ public class ResourceManager {
 
 	//Soldering Station
 	public static final ResourceLocation soldering_station_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/soldering_station.png");
+
+	//Arc Furnace
+	public static final ResourceLocation arc_furnace_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/arc_furnace.png");
 
 	//Mixer
 	public static final ResourceLocation mixer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/mixer.png");

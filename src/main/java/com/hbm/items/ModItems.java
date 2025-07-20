@@ -296,10 +296,9 @@ public class ModItems {
 	public static final Item fuse = new ItemCustomLore("fuse").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);
 	public static final Item redcoil_capacitor = new ItemCapacitor(10, "redcoil_capacitor").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	public static final Item euphemium_capacitor = new ItemCustomLore("euphemium_capacitor").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-	public static final Item arc_electrode = new ItemCustomLore("arc_electrode").setMaxDamage(250).setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setFull3D();
-	public static final Item arc_electrode_burnt = new ItemBase("arc_electrode_burnt").setMaxStackSize(1).setFull3D();
-	public static final Item arc_electrode_desh = new ItemCustomLore("arc_electrode_desh").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setFull3D();
 	public static final Item overfuse = new ItemCustomLore("overfuse").setMaxStackSize(1).setFull3D();
+	public static final Item arc_electrode = new ItemArcElectrode("arc_electrode").setCreativeTab(MainRegistry.controlTab);
+	public static final Item arc_electrode_burnt = new ItemArcElectrodeBurnt("arc_electrode_burnt").setCreativeTab(MainRegistry.controlTab);
 	public static final Item piston_selenium = new ItemBase("piston_selenium").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
 	public static final Item piston_set = new ItemPistons("piston_set").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
 	public static final Item thermo_element = new ItemBase("thermo_element").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);

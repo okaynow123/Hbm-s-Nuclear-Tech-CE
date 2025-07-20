@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 //FIXME This may have gotten mangled in a merge
+
 import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
@@ -45,7 +46,9 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.inventory.*;
+import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.inventory.FluidContainerRegistry;
+import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
@@ -81,10 +84,6 @@ import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
@@ -116,6 +115,11 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
 @Spaghetti("Total cluserfuck")
@@ -414,6 +418,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityMachineTurbineGas.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_turbine_gas"));
         GameRegistry.registerTileEntity(TileEntityMachineWoodBurner.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_wood_burner"));
         GameRegistry.registerTileEntity(TileEntityMachineArcFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_arc_furnace"));
+        GameRegistry.registerTileEntity(TileEntityMachineArcFurnaceLarge.class, new ResourceLocation(RefStrings.MODID, "tileentity_arc_furnace_large"));
         GameRegistry.registerTileEntity(TileEntityMachineElectricFurnace.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_electric_furnace"));
         GameRegistry.registerTileEntity(TileEntityMachineSolderingStation.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_soldering_station"));
         GameRegistry.registerTileEntity(TileEntityMachineArcWelder.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_arc_welder"));

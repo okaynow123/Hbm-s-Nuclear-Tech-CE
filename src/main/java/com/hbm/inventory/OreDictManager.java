@@ -54,6 +54,7 @@ public class OreDictManager {
     public static final String KEY_LEAVES = "treeLeaves";
     public static final String KEY_SAPLING = "treeSapling";
     public static final String KEY_SAND = "sand";
+    public static final String KEY_COBBLESTONE = "cobblestone";
     public static final String KEY_GRAVEL = "gravel";
     public static final String KEY_BLACK = "dyeBlack";
     public static final String KEY_RED = "dyeRed";
@@ -783,6 +784,7 @@ public class OreDictManager {
 		}
 
         MaterialShapes.registerCompatShapes();
+        compensateMojangSpaghettiBullshit();
     }
 
     public static String getReflector() {
@@ -830,8 +832,33 @@ public class OreDictManager {
         recursionBrake = false;
 
         if (event.getName().startsWith("ingot") || event.getName().startsWith("ore") || event.getName().startsWith("plate") || event.getName().startsWith("block")) {
-            //arcSmeltable.add(new RecipesCommon.ComparableStack(event.getOre())); //TODO:arc furnace
+            arcSmeltable.add(new RecipesCommon.ComparableStack(event.getOre()));
         }
+    }
+
+    public static final HashSet<RecipesCommon.ComparableStack> arcSmeltable = new HashSet();
+
+    /** Vanilla item ore dict registration events never actually register in the ODM because vanilla items are registered so early that the ODM event handler doesn't exist yet. */
+    public static void compensateMojangSpaghettiBullshit() {
+
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.GOLD_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.IRON_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.LAPIS_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.DIAMOND_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.REDSTONE_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.EMERALD_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.QUARTZ_ORE));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.GOLD_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.IRON_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.LAPIS_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.DIAMOND_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.REDSTONE_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.EMERALD_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Blocks.QUARTZ_BLOCK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Items.IRON_INGOT));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Items.GOLD_INGOT));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Items.BRICK));
+        arcSmeltable.add(new RecipesCommon.ComparableStack(Items.NETHERBRICK));
     }
 
     public static class DictFrame {

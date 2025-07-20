@@ -84,6 +84,7 @@ public final class HBMSoundHandler {
     public static SoundEvent boiler_groan3;
     public static SoundEvent alarmGambit;
     public static SoundEvent pyroOperate;
+    public static SoundEvent electricHum;
     public static SoundEvent revolverShoot;
     public static SoundEvent heavyShoot;
     public static SoundEvent schrabidiumShoot;
@@ -420,6 +421,7 @@ public final class HBMSoundHandler {
         follyAquired = register("weapon.follyAquired");
         chopperDrop = register("entity.chopperDrop");
         pyroOperate = register("block.pyroOperate");
+        electricHum = register("block.electricHum");
         crateBreak = register("block.crateBreak");
         itemUnpack = register("item.unpack");
         centrifugeOperate = register("block.centrifugeOperate");

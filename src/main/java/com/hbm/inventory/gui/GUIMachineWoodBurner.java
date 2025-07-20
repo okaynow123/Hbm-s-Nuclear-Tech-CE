@@ -1,27 +1,25 @@
 package com.hbm.inventory.gui;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
-
 import com.hbm.inventory.container.ContainerMachineWoodBurner;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineWoodBurner;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class GUIMachineWoodBurner extends GuiInfoContainer {
 	
@@ -39,6 +37,7 @@ public class GUIMachineWoodBurner extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
+		super.renderHoveredToolTip(mouseX, mouseY);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 143, guiTop + 18, 16, 34, burner.power, burner.maxPower);
 
 		if(this.mc.player.inventory.getItemStack() == ItemStack.EMPTY) {
@@ -92,6 +91,7 @@ public class GUIMachineWoodBurner extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
+		super.drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

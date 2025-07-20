@@ -1,12 +1,20 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Objects;
 
 public class RenderCable extends TileEntitySpecialRenderer<TileEntityCableBaseNT> {
 	
@@ -20,12 +28,12 @@ public class RenderCable extends TileEntitySpecialRenderer<TileEntityCableBaseNT
 		GlStateManager.enableCull();
 		bindTexture(ResourceManager.cable_neo_tex);
 
-		boolean pX = Library.canConnect(te.getWorld(), te.getPos().add(1, 0, 0), Library.POS_X);
-		boolean nX = Library.canConnect(te.getWorld(), te.getPos().add(-1, 0, 0), Library.NEG_X);
-		boolean pY = Library.canConnect(te.getWorld(), te.getPos().add(0, 1, 0), Library.POS_Y);
-		boolean nY = Library.canConnect(te.getWorld(), te.getPos().add(0, -1, 0), Library.NEG_Y);
-		boolean pZ = Library.canConnect(te.getWorld(), te.getPos().add(0, 0, 1), Library.POS_Z);
-		boolean nZ = Library.canConnect(te.getWorld(), te.getPos().add(0, 0, -1), Library.NEG_Z);
+		boolean pX = canConnectToNeighbor(te, ForgeDirection.EAST);   // +X
+		boolean nX = canConnectToNeighbor(te, ForgeDirection.WEST);   // -X
+		boolean pY = canConnectToNeighbor(te, ForgeDirection.UP);     // +Y
+		boolean nY = canConnectToNeighbor(te, ForgeDirection.DOWN);   // -Y
+		boolean pZ = canConnectToNeighbor(te, ForgeDirection.SOUTH);  // +Z
+		boolean nZ = canConnectToNeighbor(te, ForgeDirection.NORTH);  // -Z
 
 		if(pX && nX && !pY && !nY && !pZ && !nZ)
 			ResourceManager.cable_neo.renderPart("CX");
@@ -46,12 +54,25 @@ public class RenderCable extends TileEntitySpecialRenderer<TileEntityCableBaseNT
 		GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
 		GL11.glPopMatrix();
 	}
-	
-	// Bob: Muehsam muss ich hier im BSH meine genialen Mods schreiben, obwohl ich die Zeit eigentlich doch besser nutzen koennte.
-	// Da mir das aber Spass macht, wird auch in Zukunft gutes Zeug von mir geben (und damit meine ich NICHT Drogen, etc.)
-	// Danke.
-	
-	// Drill: I didn't write this, but I'm gonna leave it there.
-	
-	// Alcater: Bob alle Achtung, ich ziehe meinen Hut vor Dir.
+
+	/**
+	 * Checks if it can connect to a HE or FE neighbor.
+	 */
+	private boolean canConnectToNeighbor(TileEntityCableBaseNT te, ForgeDirection dir) {
+		BlockPos neighborPos = te.getPos().offset(Objects.requireNonNull(dir.toEnumFacing()));
+		if (Library.canConnect(te.getWorld(), neighborPos, dir)) {
+			return true;
+		}
+
+		TileEntity neighbor = te.getWorld().getTileEntity(neighborPos);
+		if (neighbor != null && !neighbor.isInvalid()) {
+			EnumFacing facing = dir.getOpposite().toEnumFacing();
+			if (neighbor.hasCapability(CapabilityEnergy.ENERGY, facing)) {
+				IEnergyStorage storage = neighbor.getCapability(CapabilityEnergy.ENERGY, facing);
+				return storage != null && (storage.canReceive() || storage.canExtract());
+			}
+		}
+
+		return false;
+	}
 }

@@ -169,6 +169,25 @@ public class AssemblerRecipes {
 		makeRecipe(new ComparableStack(ModItems.thermo_unit_empty, 1), new AStack[] { new ComparableStack(ModItems.coil_copper_torus, 3), new OreDictStack(STEEL.ingot(), 3), new OreDictStack(TI.plate(), 6), new ComparableStack(ModItems.plate_polymer, 12), new OreDictStack(BR.ingot(), 2), }, 100);
 		makeRecipe(new ComparableStack(ModItems.levitation_unit, 1), new AStack[] { new ComparableStack(ModItems.coil_copper, 4), new ComparableStack(ModItems.coil_tungsten, 2), new OreDictStack(TI.plate(), 6), new OreDictStack(SA326.nugget(), 2), }, 100);
 		makeRecipe(new ComparableStack(ModItems.drill_titanium, 1), new AStack[] { new OreDictStack(STEEL.ingot(), 2), new OreDictStack(DURA.ingot(), 2), new OreDictStack(DURA.bolt(), 2), new OreDictStack(TI.plate(), 6), }, 100);
+
+		makeRecipe(new ComparableStack(ModBlocks.machine_pyrooven, 1), new AStack[] {
+				!exp ? new OreDictStack(STEEL.plateWelded(), 16) : new OreDictStack(STEEL.heavyComp(), 4),
+				new OreDictStack(ANY_HARDPLASTIC.ingot(), 16),
+				new ComparableStack(ModItems.ingot_cft, 4),
+				new OreDictStack(CU.pipe(), 12),
+				new ComparableStack(ModItems.motor_desh, 1),
+				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BISMOID)
+		}, 200);
+
+		makeRecipe(new ComparableStack(ModBlocks.machine_arc_furnace, 1), new AStack[] {
+				new OreDictStack(ANY_CONCRETE.any(), 12),
+				new OreDictStack(ANY_PLASTIC.ingot(), 8),
+				new ComparableStack(ModItems.ingot_firebrick, 16),
+				new OreDictStack(STEEL.plateCast(), 8),
+				new ComparableStack(ModBlocks.machine_transformer, 1),
+				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG.ordinal())
+		}, 200);
+
 		makeRecipe(new ComparableStack(ModBlocks.machine_excavator, 1), new AStack[] {
 				new ComparableStack(Blocks.STONEBRICK, 8),
 				new OreDictStack(STEEL.ingot(), 8),

@@ -17,10 +17,7 @@ import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemBattery;
-import com.hbm.items.machine.ItemBreedingRod;
-import com.hbm.items.machine.ItemFluidTank;
-import com.hbm.items.machine.ItemFuelRod;
+import com.hbm.items.machine.*;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
 import com.hbm.items.special.*;
 import com.hbm.items.tool.ItemBombCaller;
@@ -710,8 +707,13 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.factory_core_advanced, 1), new Object[] { "BLB", "SHS", "BLB", 'B', ItemBattery.getEmptyBattery(ModItems.battery_advanced), 'S', S.block(), 'L', PB.block(), 'H', Item.getItemFromBlock(ModBlocks.factory_advanced_hull) });
 		addRecipeAuto(new ItemStack(ModItems.factory_core_advanced, 1), new Object[] { "BSB", "LHL", "BSB", 'B', ItemBattery.getEmptyBattery(ModItems.battery_advanced), 'S', S.block(), 'L', PB.block(), 'H', Item.getItemFromBlock(ModBlocks.factory_advanced_hull) });
 
-		addRecipeAuto(new ItemStack(ModItems.arc_electrode, 1), new Object[] { "C", "T", "C", 'C', COAL.dust(), 'T', W.bolt() });
-		addRecipeAuto(new ItemStack(ModItems.arc_electrode_desh, 1), new Object[] { "C", "T", "C", 'C', DESH.dust(), 'T', ModItems.arc_electrode });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.GRAPHITE), new Object[] { "C", "T", "C", 'C', GRAPHITE.ingot(), 'T', STEEL.bolt() });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.GRAPHITE), new Object[] { "C", "T", "C", 'C', PETCOKE.gem(), 'T', ANY_TAR.any() });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.LANTHANIUM), new Object[] { "C", "T", "C", 'C', LA.ingot(), 'T', KEY_BRICK });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.DESH), new Object[] { "C", "T", "C", 'C', DESH.ingot(), 'T', TI.ingot() });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.DESH), new Object[] { "C", "T", "C", 'C', DESH.ingot(), 'T', W.ingot() });
+		addRecipeAuto(DictFrame.fromOne(ModItems.arc_electrode, ItemArcElectrode.EnumElectrodeType.SATURNITE), new Object[] { "C", "T", "C", 'C', BIGMT.ingot(), 'T', NB.ingot() });
+
 		addRecipeAuto(new ItemStack(ModItems.detonator, 1), new Object[] { "C", "S", 'S', STEEL.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), });
 		addShapelessAuto(new ItemStack(ModItems.detonator_multi, 1), new Object[] { ModItems.detonator, DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED) });
 		addShapelessAuto(new ItemStack(ModItems.detonator_laser, 1), new Object[] { ModItems.rangefinder, DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), RUBBER.ingot(), GOLD.wireDense() });
@@ -2933,6 +2935,13 @@ public class CraftingManager {
 		GameRegistry.addSmelting(ModItems.powder_niobium, new ItemStack(ModItems.ingot_niobium), 1.0F);
 		GameRegistry.addSmelting(ModItems.ball_resin, new ItemStack(ModItems.ingot_biorubber), 0.1F);
 
+		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.GRAPHITE), new ItemStack(ModItems.ingot_graphite), 3.0F);
+		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.LANTHANIUM), new ItemStack(ModItems.ingot_lanthanium), 3.0F);
+		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.DESH), new ItemStack(ModItems.ingot_desh), 3.0F);
+		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.SATURNITE), new ItemStack(ModItems.ingot_saturnite), 3.0F);
+
+		//GameRegistry.addSmelting(DictFrame.fromOne(ModBlocks.plant_flower, EnumFlowerType.TOBACCO), DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.TOBACCO), 0.1F);
+
 		GameRegistry.addSmelting(ModItems.powder_cobalt_tiny, new ItemStack(ModItems.nugget_cobalt), 0.1F);
 		GameRegistry.addSmelting(ModItems.powder_co60_tiny, new ItemStack(ModItems.nugget_co60), 0.1F);
 		GameRegistry.addSmelting(ModItems.powder_pb209_tiny, new ItemStack(ModItems.nugget_pb209), 0.1F);
@@ -2951,8 +2960,6 @@ public class CraftingManager {
 
 		GameRegistry.addSmelting(ModItems.combine_scrap, new ItemStack(ModItems.ingot_combine_steel), 1.0F);
 
-		GameRegistry.addSmelting(Items.BONE, new ItemStack(Items.SLIME_BALL, 3), 0.0F);
-		GameRegistry.addSmelting(new ItemStack(Items.DYE, 1, 15), new ItemStack(Items.SLIME_BALL, 1), 0.0F);
 		GameRegistry.addSmelting(new ItemStack(Blocks.GRAVEL, 1), new ItemStack(Blocks.COBBLESTONE, 1), 0.0F);
 		GameRegistry.addSmelting(new ItemStack(ModBlocks.gravel_obsidian), new ItemStack(Blocks.OBSIDIAN), 0.0F);
 

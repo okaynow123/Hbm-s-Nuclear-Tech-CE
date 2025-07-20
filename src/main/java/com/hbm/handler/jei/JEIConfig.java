@@ -31,6 +31,8 @@ public class JEIConfig implements IModPlugin {
 
     public static final String ALLOY = "hbm.alloy";
     public static final String ANVIL = "hbm.anvil";
+    public static final String ARC_FURNACE_FLUID = "hbm.arc_furnace_fluid";
+    public static final String ARC_FURNACE_SOLID = "hbm.arc_furnace_solid";
     public static final String ARC_WELDER = "hbm.arc_welder";
     public static final String ASSEMBLY = "hbm.assembly";
     public static final String BOILER = "hbm.boiler";
@@ -77,6 +79,8 @@ public class JEIConfig implements IModPlugin {
     public static final String STORAGEDRUM = "hbm.storage_drum";
     public static final String TRANSMUTATION = "hbm.transmutation";
     public static final String WASTEDRUM = "hbm.waste_drum";
+    private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
+    private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
     private CokingRecipeHandler cokingHandler;
     private CrackingHandler crackingHandler;
@@ -114,6 +118,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_coker), COKER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_assembler), ASSEMBLY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_assemfac), ASSEMBLY);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_FLUID);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_SOLID);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemplant), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemfac), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_cyclotron), CYCLOTRON);
@@ -178,6 +184,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getWasteDrumRecipes(), WASTEDRUM);
         registry.addRecipes(JeiRecipes.getStorageDrumRecipes(), STORAGEDRUM);
         registry.addRecipes(JeiRecipes.getRefineryRecipe(), REFINERY);
+        registry.addRecipes(arcFurnaceFluidHandler.getRecipes(), ARC_FURNACE_FLUID);
+        registry.addRecipes(arcFurnaceSolidHandler.getRecipes(), ARC_FURNACE_SOLID);
         registry.addRecipes(crackingHandler.getRecipes(), CRACKING);
         registry.addRecipes(fractioningHandler.getRecipes(), FRACTIONING);
         registry.addRecipes(hydrotreatHandler.getRecipes(), HYDROTREATING);
@@ -304,6 +312,8 @@ public class JEIConfig implements IModPlugin {
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),
+                arcFurnaceFluidHandler = new ArcFurnaceFluidHandler(help),
+                arcFurnaceSolidHandler = new ArcFurnaceSolidHandler(help),
                 arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),

@@ -2,18 +2,32 @@ package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.IEnergyConductorMK2;
 import com.hbm.api.energymk2.Nodespace;
+import com.hbm.api.energymk2.VirtualFEProvider;
+import com.hbm.api.energymk2.VirtualFEReceiver;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class TileEntityCableBaseNT extends TileEntity implements IBufPacketReceiver, ITickable, IEnergyConductorMK2 {
 	
 	protected Nodespace.PowerNode node;
+
+	private final Map<ForgeDirection, VirtualFEReceiver> feReceivers = new HashMap<>();
+	private final Map<ForgeDirection, VirtualFEProvider> feProviders = new HashMap<>();
 
 	@Override
 	public void update() {
@@ -29,6 +43,41 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 						this.node = this.createNode();
 						Nodespace.createNode(world, this.node);
 					}
+				}
+			}
+
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				BlockPos neighborPos = pos.offset(Objects.requireNonNull(dir.toEnumFacing()));
+				TileEntity te = world.getTileEntity(neighborPos);
+				boolean hasCap = false;
+
+				if (te != null && !te.isInvalid()) {
+					EnumFacing face = dir.getOpposite().toEnumFacing();
+					if (te.hasCapability(CapabilityEnergy.ENERGY, face)) {
+						IEnergyStorage cap = te.getCapability(CapabilityEnergy.ENERGY, face);
+						if (cap != null) {
+							hasCap = true;
+
+							if (cap.canReceive()) {
+								VirtualFEReceiver vrec = feReceivers.computeIfAbsent(dir, d -> new VirtualFEReceiver(world, neighborPos, face));
+								vrec.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir.getOpposite());
+							} else {
+								feReceivers.remove(dir);
+							}
+
+							if (cap.canExtract()) {
+								VirtualFEProvider vprov = feProviders.computeIfAbsent(dir, d -> new VirtualFEProvider(world, neighborPos, face));
+								vprov.tryProvide(world, pos.getX(), pos.getY(), pos.getZ(), dir.getOpposite());
+							} else {
+								feProviders.remove(dir);
+							}
+						}
+					}
+				}
+
+				if (!hasCap) {
+					feReceivers.remove(dir);
+					feProviders.remove(dir);
 				}
 			}
 		}
@@ -54,6 +103,9 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 			if(this.node != null) {
 				Nodespace.destroyNode(world, pos);
 			}
+
+			feReceivers.clear();
+			feProviders.clear();
 		}
 	}
 
@@ -75,5 +127,50 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 	@Override
 	public void deserialize(ByteBuf buf) {
 
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return CapabilityEnergy.ENERGY.cast(new InfiniteCableEnergyStorage(this));
+		}
+		return super.getCapability(capability, facing);
+	}
+	public static class InfiniteCableEnergyStorage implements IEnergyStorage {
+		private final TileEntityCableBaseNT cable;
+
+		public InfiniteCableEnergyStorage(TileEntityCableBaseNT cable) {
+			this.cable = cable;
+		}
+
+		@Override
+		public int receiveEnergy(int maxReceive, boolean simulate) {
+			return maxReceive;
+		}
+
+		@Override
+		public int extractEnergy(int maxExtract, boolean simulate) {
+			return maxExtract; // TODO
+		}
+
+		@Override
+		public int getEnergyStored() {
+			return 0;
+		}
+
+		@Override
+		public int getMaxEnergyStored() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
+		public boolean canExtract() {
+			return true;
+		}
+
+		@Override
+		public boolean canReceive() {
+			return true;
+		}
 	}
 }
