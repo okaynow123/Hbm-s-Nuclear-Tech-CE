@@ -39,16 +39,18 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     private boolean enableEnergyWrapper = false;
     private String customName;
 
+    @Deprecated
     public TileEntityMachineBase(int scount) {
         this(scount, 64);
     }
 
+    @Deprecated
     public TileEntityMachineBase(int scount, int slotlimit) {
         inventory = getNewInventory(scount, slotlimit);
     }
 
     public TileEntityMachineBase(int scount, boolean enableFluidWrapper, boolean enableEnergyWrapper){
-        this(scount, 64);
+        this(scount);
         this.enablefluidWrapper = enableFluidWrapper;
         this.enableEnergyWrapper = enableEnergyWrapper;
     }

@@ -3,8 +3,6 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCombustionEngine;
@@ -35,23 +33,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Optional.InterfaceList({
-  @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
+@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 })
 public class TileEntityMachineCombustionEngine extends TileEntityMachinePolluting
     implements ITickable,
@@ -79,7 +72,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   public int tenth = 0;
 
   public TileEntityMachineCombustionEngine() {
-    super(5, 50);
+    super(5, 50, true, true);
     this.tank = new FluidTankNTM(Fluids.DIESEL, 24_000);
   }
 
@@ -412,43 +405,43 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Override
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public String getComponentName() {
     return "ntm_combustion_engine";
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getFluid(Context context, Arguments args) {
     return new Object[] {tank.getFill(), tank.getMaxFill()};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getType(Context context, Arguments args) {
     return new Object[] {tank.getTankType().getName()};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getPower(Context context, Arguments args) {
     return new Object[] {power};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getThrottle(Context context, Arguments args) {
     return new Object[] {setting};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getState(Context context, Arguments args) {
     return new Object[] {isOn};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getEfficiency(Context context, Arguments args) {
     ItemPistons.EnumPistonType piston =
         EnumUtil.grabEnumSafely(
@@ -459,7 +452,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Callback(direct = true, limit = 4)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] setThrottle(Context context, Arguments args) {
     int throttleRequest = args.checkInteger(0);
     if ((throttleRequest < 0)
@@ -473,21 +466,21 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Callback(direct = true, limit = 4)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] start(Context context, Arguments args) {
     isOn = true;
     return new Object[] {};
   }
 
   @Callback(direct = true, limit = 4)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] stop(Context context, Arguments args) {
     isOn = false;
     return new Object[] {};
   }
 
   @Callback(direct = true)
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] getInfo(Context context, Arguments args) {
     ItemPistons.EnumPistonType piston =
         EnumUtil.grabEnumSafely(
@@ -500,7 +493,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Override
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public String[] methods() {
     return new String[] {
       "getFluid",
@@ -517,7 +510,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Override
-  @Optional.Method(modid = "OpenComputers")
+  @Optional.Method(modid = "opencomputers")
   public Object[] invoke(String method, Context context, Arguments args) throws Exception {
     return switch (method) {
       case ("getFluid") -> getFluid(context, args);
@@ -532,28 +525,5 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
       case ("getInfo") -> getInfo(context, args);
       default -> throw new NoSuchMethodException();
     };
-  }
-
-  @Override
-  public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-    if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-      return true;
-    }
-    return super.hasCapability(capability, facing);
-  }
-
-  @Override
-  public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-    if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-      return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-              new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-      );
-    }
-    if (capability == CapabilityEnergy.ENERGY) {
-      return CapabilityEnergy.ENERGY.cast(
-              new NTMEnergyCapabilityWrapper(this)
-      );
-    }
-    return super.getCapability(capability, facing);
   }
 }

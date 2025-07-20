@@ -23,11 +23,16 @@ public abstract class TileEntityMachinePolluting extends TileEntityMachineBase i
     public FluidTankNTM smoke_leaded;
     public FluidTankNTM smoke_poison;
 
-    public TileEntityMachinePolluting(int scount, int buffer) {
-        super(scount);
+    public TileEntityMachinePolluting(int scount, int buffer, boolean enableFluidWrapper, boolean enableEnergyWrapper){
+        super(scount, enableFluidWrapper, enableEnergyWrapper);
         smoke = new FluidTankNTM(Fluids.SMOKE, buffer);
         smoke_leaded = new FluidTankNTM(Fluids.SMOKE_LEADED, buffer);
         smoke_poison = new FluidTankNTM(Fluids.SMOKE_POISON, buffer);
+    }
+
+    @Deprecated
+    public TileEntityMachinePolluting(int scount, int buffer) {
+        this(scount, buffer, false, false);
     }
 
     public void pollute(PollutionHandler.PollutionType type, float amount) {
