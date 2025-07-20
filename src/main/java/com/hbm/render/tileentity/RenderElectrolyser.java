@@ -42,8 +42,6 @@ public class RenderElectrolyser extends TileEntitySpecialRenderer<TileEntityElec
     public Item getItemForRenderer() {
         return Item.getItemFromBlock(ModBlocks.machine_electrolyser);
     }
-    // Th3_Sl1ze: someone will need to fix this
-    // TODO
     @Override
     public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase( ) {

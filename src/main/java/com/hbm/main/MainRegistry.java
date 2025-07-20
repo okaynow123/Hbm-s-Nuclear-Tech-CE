@@ -577,6 +577,7 @@ public class MainRegistry {
         GameRegistry.registerTileEntity(TileEntityCondenser.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_condenser"));
         GameRegistry.registerTileEntity(TileEntityMachineLiquefactor.class, new ResourceLocation(RefStrings.MODID, "tileentity_liquefactor"));
         GameRegistry.registerTileEntity(TileEntityMachineSolidifier.class, new ResourceLocation(RefStrings.MODID, "tileentity_solidifier"));
+        GameRegistry.registerTileEntity(TileEntityMachinePyroOven.class, new ResourceLocation(RefStrings.MODID, "tileentity_pyrooven"));
         GameRegistry.registerTileEntity(TileEntityChungus.class, new ResourceLocation(RefStrings.MODID, "tileentity_chungus"));
         GameRegistry.registerTileEntity(TileEntitySpacer.class, new ResourceLocation(RefStrings.MODID, "tileentity_spacer"));
         GameRegistry.registerTileEntity(TileEntityMachineFractionTower.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_frac_tower"));

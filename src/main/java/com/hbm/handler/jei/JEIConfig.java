@@ -54,6 +54,7 @@ public class JEIConfig implements IModPlugin {
     public static final String HYDROTREATING = "hbm.hydrotreating";
     public static final String LIQUEFACTION = "hbm.liquefaction";
     public static final String MIXER = "hbm.mixer";
+    public static final String PYROLYSIS = "hbm.pyrolysis";
     public static final String PRESS = "hbm.press";
     public static final String RBMKFUEL = "hbm.rbmkfueluncrafting";
     public static final String RBMKOUTGASSER = "hbm.rbmk_outgasser";
@@ -86,6 +87,7 @@ public class JEIConfig implements IModPlugin {
     private HydrotreatingHandler hydrotreatHandler;
     private LiquefactionHandler liquefactHandler;
     private MixerRecipeHandler mixerHandler;
+    private PyroHandler pyroHandler;
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
@@ -144,6 +146,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_soldering_station), SOLDERING_STATION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_welder), ARC_WELDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rotary_furnace), ROTARY_FURNACE);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_pyrooven), PYROLYSIS);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
         registry.addRecipeCatalyst(new ItemStack(ModItems.book_of_), BOOK);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.iter), FUSION_BYPRODUCT);
@@ -188,6 +191,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(rotaryFurnaceRecipeHandler.getRecipes(), ROTARY_FURNACE);
         registry.addRecipes(electrolyserFluidHandler.getRecipes(), ELECTROLYSIS_FLUID);
         registry.addRecipes(electrolyserMetalHandler.getRecipes(), ELECTROLYSIS_METAL);
+        registry.addRecipes(pyroHandler.getRecipes(), PYROLYSIS);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
@@ -238,6 +242,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIMachineRotaryFurnace.class, 63, 31, 32, 9, ROTARY_FURNACE);
         registry.addRecipeClickArea(GUIElectrolyserFluid.class, 62, 26, 12, 40, ELECTROLYSIS_FLUID);
         registry.addRecipeClickArea(GUIElectrolyserMetal.class, 7, 46, 22, 25, ELECTROLYSIS_METAL);
+        registry.addRecipeClickArea(GUIPyroOven.class, 57, 48, 27, 11, PYROLYSIS);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
@@ -310,6 +315,7 @@ public class JEIConfig implements IModPlugin {
                 liquefactHandler = new LiquefactionHandler(help),
                 mixerHandler = new MixerRecipeHandler(help),
                 outgasserHandler = new RBMKOutgasserRecipeHandler(help),
+                pyroHandler = new PyroHandler(help),
                 reformingHandler = new ReformingHandler(help),
                 rotaryFurnaceRecipeHandler = new RotaryFurnaceRecipeHandler(help),
                 solderingStationHandler = new SolderingStationRecipeHandler(help),

@@ -9,10 +9,6 @@ import java.util.HashMap;
 
 public class LiquefactionHandler extends JEIUniversalHandler {
     public LiquefactionHandler(IGuiHelper helper) {
-        super(helper, JEIConfig.LIQUEFACTION, ModBlocks.machine_liquefactor.getTranslationKey(), new ItemStack[] { new ItemStack(ModBlocks.machine_liquefactor) }, wrap(LiquefactionRecipes.getRecipes()));
-    }
-
-    private static HashMap<Object, Object> wrap(HashMap<Object, ItemStack> map) {
-        return new HashMap<>(map);
+        super(helper, JEIConfig.LIQUEFACTION, ModBlocks.machine_liquefactor.getTranslationKey(), new ItemStack[] { new ItemStack(ModBlocks.machine_liquefactor) }, wrapRecipes5(LiquefactionRecipes.getRecipes()));
     }
 }

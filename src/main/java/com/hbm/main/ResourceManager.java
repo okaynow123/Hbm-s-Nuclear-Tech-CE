@@ -349,6 +349,7 @@ public class ResourceManager {
 	public static final IModelCustom liquefactor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/liquefactor.obj")).asVBO();
 	public static final IModelCustom solidifier = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/solidifier.obj")).asVBO();
 	public static final IModelCustom coker = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/coker.obj")).asVBO();
+	public static final IModelCustom pyrooven = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/pyrooven.obj")).asVBO();
 
 	//Flare Stack
 	public static final IModelCustom oilflare = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/flare_stack.obj")).asVBO();
@@ -755,6 +756,8 @@ public class ResourceManager {
 	public static final ResourceLocation liquefactor_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/liquefactor.png");
 	public static final ResourceLocation solidifier_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/solidifier.png");
 	public static final ResourceLocation coker_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/coker.png");
+
+	public static final ResourceLocation pyrooven_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/pyrooven.png");
 	
 	//Flare Stack
 	public static final ResourceLocation oilflare_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/flare_stack.png");

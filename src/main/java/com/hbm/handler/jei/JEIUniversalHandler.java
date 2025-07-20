@@ -293,4 +293,13 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
         };
 
     }
+
+    protected static HashMap<Object, Object> wrapRecipes1(HashMap<Object[], Object[]> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes2(HashMap<Object, Object[]> map) {
+        return new HashMap<>(map);
+    }
+    protected static HashMap<Object, Object> wrapRecipes3(HashMap<Object, Object[]> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes4(HashMap<Object, Object> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes5(HashMap<Object, ItemStack> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes6(HashMap<ItemStack, ItemStack[]> map) { return new HashMap<>(map); }
 }

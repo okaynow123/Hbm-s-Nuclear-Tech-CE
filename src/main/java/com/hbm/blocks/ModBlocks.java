@@ -1037,6 +1037,7 @@ public class ModBlocks {
 	public static final Block machine_catalytic_reformer = new MachineCatalyticReformer(Material.IRON, "machine_catalytic_reformer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_hydrotreater = new MachineHydrotreater(Material.IRON, "machine_hydrotreater").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_coker = new MachineCoker(Material.IRON, "machine_coker").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_pyrooven = new MachinePyroOven("machine_pyrooven").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 
 	public static final Block machine_electric_furnace_off = new MachineElectricFurnace(Material.IRON, false, "machine_electric_furnace_off").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

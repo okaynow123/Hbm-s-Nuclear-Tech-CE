@@ -10,10 +10,6 @@ import java.util.HashMap;
 public class CokingRecipeHandler extends JEIUniversalHandler {
 
     public CokingRecipeHandler(IGuiHelper helper) {
-        super(helper, JEIConfig.COKER, ModBlocks.machine_coker.getTranslationKey(), new ItemStack[]{new ItemStack(ModBlocks.machine_coker)}, wrap(CokerRecipes.getRecipes()));
-    }
-
-    private static HashMap<Object, Object> wrap(HashMap<ItemStack, ItemStack[]> map) {
-        return new HashMap<>(map);
+        super(helper, JEIConfig.COKER, ModBlocks.machine_coker.getTranslationKey(), new ItemStack[]{new ItemStack(ModBlocks.machine_coker)}, wrapRecipes6(CokerRecipes.getRecipes()));
     }
 }
