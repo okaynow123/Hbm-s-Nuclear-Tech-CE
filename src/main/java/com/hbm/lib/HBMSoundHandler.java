@@ -257,6 +257,7 @@ public final class HBMSoundHandler {
     public static SoundEvent groan;
     public static SoundEvent ufoBeam;
     public static SoundEvent ufoBlast;
+    public static SoundEvent iGeneratorOperate;
 
     public static SoundEvent transitionSealOpen;
     public static SoundEvent garage;
@@ -556,6 +557,7 @@ public final class HBMSoundHandler {
         groan = register("player.groan");
         ufoBeam = register("entity.ufoBeam");
         ufoBlast = register("entity.ufoBlast");
+        iGeneratorOperate = register("block.igeneratoroperate");
         transitionSealOpen = register("block.door.transitionseal");
         siloopen = register("block.door.siloopen");
         siloclose = register("block.door.siloclose");
