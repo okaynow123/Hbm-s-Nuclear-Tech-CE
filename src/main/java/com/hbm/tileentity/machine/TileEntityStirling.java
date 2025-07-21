@@ -49,6 +49,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
     AxisAlignedBB bb = null;
     private int warnCooldown = 0;
     private int overspeed = 0;
+    private int syncHeat = 0;
 
     @Override
     public void update() {
@@ -97,7 +98,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
                 this.overspeed = 0;
                 this.warnCooldown = 0;
             }
-
+            syncHeat = heat;
             networkPackNT(150);
 
             if (hasCog) {
@@ -151,7 +152,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
     @Override
     public void serialize(ByteBuf buf) {
         buf.writeLong(powerBuffer);
-        buf.writeInt( heat);
+        buf.writeInt(syncHeat);
         buf.writeBoolean(hasCog);
     }
 
@@ -186,7 +187,6 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-
         this.powerBuffer = nbt.getLong("powerBuffer");
         this.hasCog = nbt.getBoolean("hasCog");
         this.overspeed = nbt.getInteger("overspeed");
@@ -194,11 +194,10 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-
+        super.writeToNBT(nbt);
         nbt.setLong("powerBuffer", powerBuffer);
         nbt.setBoolean("hasCog", hasCog);
         nbt.setInteger("overspeed", overspeed);
-        super.writeToNBT(nbt);
         return nbt;
     }
 

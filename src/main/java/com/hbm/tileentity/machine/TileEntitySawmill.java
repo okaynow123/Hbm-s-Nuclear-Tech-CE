@@ -48,6 +48,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     public float spin;
     public float lastSpin;
+    private int syncHeat = 0;
 
     public TileEntitySawmill() {
         super(3);
@@ -146,7 +147,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
                 this.overspeed = 0;
                 this.warnCooldown = 0;
             }
-
+            syncHeat = heat;
             networkPackNT(150);
 
             this.heat = 0;
@@ -168,7 +169,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
-        buf.writeInt(heat);
+        buf.writeInt(syncHeat);
         buf.writeInt(progress);
         buf.writeBoolean(hasBlade);
 
@@ -199,9 +200,10 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
         nbt.setBoolean("hasBlade", hasBlade);
         nbt.setInteger("progress", progress);
-        return super.writeToNBT(nbt);
+        return nbt;
     }
 
     protected void tryPullHeat() {
