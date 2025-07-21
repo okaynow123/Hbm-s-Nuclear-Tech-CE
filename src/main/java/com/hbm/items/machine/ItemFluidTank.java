@@ -77,14 +77,7 @@ public class ItemFluidTank extends Item implements IHasCustomModel {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
-		String s = ("" + I18n.format(this.getTranslationKey() + ".name")).trim();
-		String s1 = ("" + I18n.format(Fluids.fromID(stack.getItemDamage()).getConditionalName())).trim();
-
-		if (s1 != null) {
-			s = s + " " + s1;
-		}
-
-		return s;
+        return I18n.format(this.getTranslationKey() + ".name", (I18n.format(Fluids.fromID(stack.getItemDamage()).getConditionalName())).trim()).trim();
 	}
 
 	@Override
