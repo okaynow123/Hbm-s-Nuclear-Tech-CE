@@ -3,6 +3,7 @@ package com.hbm.handler.jei;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidContainerRegistry;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
@@ -11,6 +12,7 @@ import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
@@ -354,7 +356,6 @@ public class JEIConfig implements IModPlugin {
                 new BookRecipeHandler(help));
     }
 
-
     private static final ISubtypeRegistry.ISubtypeInterpreter metadataFluidContainerInterpreter = stack -> {
         FluidType type = Fluids.fromID(stack.getMetadata());
         if (type != null && type != Fluids.NONE && FluidContainerRegistry.getFluidContainer(stack) != null) {
@@ -362,6 +363,16 @@ public class JEIConfig implements IModPlugin {
         }
         return "";
     };
+
+    private static final ISubtypeRegistry.ISubtypeInterpreter assemblyTemplateInterpreter = stack -> {
+        RecipesCommon.ComparableStack output = ItemAssemblyTemplate.getRecipeOutput(stack);
+        if (output != null && output.item != null) {
+            return output.item.getRegistryName().toString() + "@" + output.meta;
+        }
+        return "";
+    };
+
+    private static final ISubtypeRegistry.ISubtypeInterpreter metadataInterpreter = stack -> String.valueOf(stack.getMetadata());
 
 	@Override
 	public void registerSubtypes(@NotNull ISubtypeRegistry subtypeRegistry) {
@@ -372,7 +383,7 @@ public class JEIConfig implements IModPlugin {
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_barrel_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_lead_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_generic, metadataFluidContainerInterpreter);
-		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, (ItemStack stack) -> ModItems.missile_custom.getTranslationKey() + "w" +
+		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, stack -> ModItems.missile_custom.getTranslationKey() + "w" +
                 ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
                 ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, stack -> {
@@ -382,6 +393,9 @@ public class JEIConfig implements IModPlugin {
             }
             return "";
         });
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.assembly_template, assemblyTemplateInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.chemistry_template, metadataInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.crucible_template, metadataInterpreter);
 	}
 
     @Override
