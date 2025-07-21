@@ -3,6 +3,7 @@ package com.hbm.items.machine;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.items.ItemEnumMulti;
 import com.hbm.util.EnumUtil;
+import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import java.util.List;
 import net.minecraft.client.util.ITooltipFlag;
@@ -30,7 +31,7 @@ public class ItemPistons extends ItemEnumMulti {
       tooltip.add(
           ChatFormatting.YELLOW
               + "-"
-              + FT_Combustible.FuelGrade.values()[i].getGrade()
+              + I18nUtil.resolveKey(FT_Combustible.FuelGrade.values()[i].getGrade())
               + ": "
               + ChatFormatting.RED
               + (int) (type.eff[i] * 100)

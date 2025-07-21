@@ -3,7 +3,6 @@ package com.hbm.entity.mob;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntityTesla;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -32,11 +31,6 @@ public class EntityTeslaCrab extends EntityCyberCrab {
     	targets = TileEntityTesla.zap(world, posX, posY + 1, posZ, 3, this);
     	
         super.onLivingUpdate();
-    }
-
-    @Override
-	protected Item getDropItem(){
-        return ModItems.wire_fine;
     }
 
     protected void dropRareDrop(int p_70600_1_) {
