@@ -17,6 +17,10 @@ public class TileEntityRegistrar {
       String name = clazz.getSimpleName();
       String pathIn = getTileEntity(name);
 
+      if (java.lang.reflect.Modifier.isAbstract(clazz.getModifiers()) || clazz.isInterface()) {
+        continue;
+      }
+
       ResourceLocation resourceLocation = new ResourceLocation(RefStrings.MODID, pathIn);
       GameRegistry.registerTileEntity(clazz.asSubclass(TileEntity.class), resourceLocation);
     }
