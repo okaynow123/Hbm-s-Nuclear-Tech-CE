@@ -563,6 +563,7 @@ dependencies {
 
     compileOnlyApi 'org.jetbrains:annotations:24.1.0'
     annotationProcessor 'org.jetbrains:annotations:24.1.0'
+    implementation 'org.reflections:reflections:0.10.2'
     patchedMinecraft('net.minecraft:launchwrapper:1.17.2') {
         transitive = false
     }
