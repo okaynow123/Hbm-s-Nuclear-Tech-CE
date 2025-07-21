@@ -1,24 +1,33 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.api.energymk2.IEnergyConnectorBlock;
+import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ITooltipProvider;
-import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.lib.ForgeDirection;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
-// TODO: implement proper rotatable models, for now it can't be rotated properly as the model is just a pillar.. and I want it to be baked not .json-ified
-// you can copypaste facing shit from MachineCapacitor probably
-public class MachineCapacitorBus extends BlockBakeBase implements IEnergyConnectorBlock, ITooltipProvider {
+public class MachineCapacitorBus extends BlockBase implements IEnergyConnectorBlock, ITooltipProvider {
+    public static final PropertyDirection FACING = BlockDirectional.FACING;
 
 
     public MachineCapacitorBus(String s) {
-        super(Material.IRON, s, "capacitor_bus_out", "capacitor_bus_side");
+        super(Material.IRON, s);
     }
 
     @Override
@@ -31,6 +40,43 @@ public class MachineCapacitorBus extends BlockBakeBase implements IEnergyConnect
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
         this.addStandardInfo(tooltip);
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{FACING});
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        worldIn.setBlockState(pos, state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer)));
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
+        return this.getDefaultState().withProperty(FACING, enumfacing);
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+    }
+
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    {
+        return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+    }
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 
 }
