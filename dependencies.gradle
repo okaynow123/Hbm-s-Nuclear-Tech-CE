@@ -60,4 +60,5 @@ dependencies {
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:6740191")
     //runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6388731")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:configanytime-870276:5212709")
+    runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
 }
