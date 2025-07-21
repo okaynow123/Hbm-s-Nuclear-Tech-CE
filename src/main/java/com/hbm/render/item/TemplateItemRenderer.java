@@ -68,7 +68,7 @@ public class TemplateItemRenderer extends TileEntityItemStackRenderer {
         } else if (item == ModItems.chemistry_template) {
             return new ItemStack(ModItems.chemistry_icon, 1, originalStack.getMetadata());
         } else if (item == ModItems.crucible_template) {
-            if (originalStack.getMetadata() < CrucibleRecipes.indexMapping.size()) {
+            if (CrucibleRecipes.indexMapping.containsKey(originalStack.getMetadata())) {
                 return CrucibleRecipes.indexMapping.get(originalStack.getMetadata()).icon;
             }
         }

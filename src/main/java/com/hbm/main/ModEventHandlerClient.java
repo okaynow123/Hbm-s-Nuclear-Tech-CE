@@ -347,6 +347,10 @@ public class ModEventHandlerClient {
             for (int i : ChemplantRecipes.recipeNames.keySet()) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
+        } else if (item == ModItems.crucible_template) {
+            for (int i = 0; i < 32; i++) { // FIXME: figure out a better way of doing this
+                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            }
         } else if (item == ModItems.siren_track) {
             for (int i = 0; i < TrackType.values().length; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
