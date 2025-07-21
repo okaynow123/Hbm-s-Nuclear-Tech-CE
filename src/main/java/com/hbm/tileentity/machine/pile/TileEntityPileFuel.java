@@ -5,12 +5,14 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+@AutoRegisterTE
 public class TileEntityPileFuel extends TileEntityPileBase implements IPileNeutronReceiver {
 
 	public int heat;

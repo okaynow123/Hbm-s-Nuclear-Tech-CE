@@ -5,6 +5,7 @@ import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.entity.projectile.EntityRubble;
 import com.hbm.handler.BulletConfigSyncingUtil;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityTrappedBrick extends TileEntity implements ITickable {
 
 	AxisAlignedBB detector = null;

@@ -1,6 +1,7 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -45,7 +46,8 @@ public class WatzPump extends BlockDummyable {
 		IBlockState state = world.getBlockState(pos);
 		return side == EnumFacing.UP && getMetaFromState(state) == 1;
 	}
-	
+
+	@AutoRegisterTE
 	public static class TileEntityWatzPump extends TileEntity {
 		@Override @SideOnly(Side.CLIENT) public double getMaxRenderDistanceSquared() { return 65536.0D; }
 		AxisAlignedBB bb = null;

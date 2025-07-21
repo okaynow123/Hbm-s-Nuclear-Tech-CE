@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.recipes.NuclearTransmutationRecipes;
 import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
 import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power = 0;

@@ -6,6 +6,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.handler.MissileStruct;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerLaunchTable;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -56,6 +57,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityLaunchTable extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IBufPacketReceiver, IFluidStandardReceiver, SimpleComponent, IGUIProvider {
 
     public static final long maxPower = 100000;

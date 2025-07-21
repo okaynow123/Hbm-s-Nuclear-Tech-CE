@@ -5,6 +5,7 @@ import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
+@AutoRegisterTE
 public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IHeatSource, IEnergyReceiverMK2, ITickable {
 	
 	public long power;

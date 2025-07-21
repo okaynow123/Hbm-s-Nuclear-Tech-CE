@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.block.ICrucibleAcceptor;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityFoundryOutlet extends TileEntityFoundryBase {
 
 	public NTMMaterial filter = null;

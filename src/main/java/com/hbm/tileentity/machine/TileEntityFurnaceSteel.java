@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.tile.IHeatSource;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerFurnaceSteel;
 import com.hbm.inventory.gui.GUIFurnaceSteel;
 import com.hbm.lib.ForgeDirection;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGUIProvider, ITickable {
 
 	public int[] progress = new int[3];

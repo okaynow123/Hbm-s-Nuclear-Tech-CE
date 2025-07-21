@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineArcWelder;
@@ -55,6 +56,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineArcWelder extends TileEntityMachineBase
     implements IEnergyReceiverMK2,
         IFluidStandardReceiver,

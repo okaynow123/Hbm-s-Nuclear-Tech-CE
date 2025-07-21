@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerOreSlopper;
 import com.hbm.inventory.fluid.FluidType;
@@ -53,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineOreSlopper extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable {
 
     public long power;

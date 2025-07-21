@@ -2,6 +2,7 @@ package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.DirPos;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.lib.ForgeDirection;
@@ -10,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.tileentity.TileEntity;
 
+@AutoRegisterTE
 public class TileEntityPylonMedium extends TileEntityPylonBase {
 
 	@Override

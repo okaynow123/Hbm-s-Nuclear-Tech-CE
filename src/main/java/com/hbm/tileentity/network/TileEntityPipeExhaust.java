@@ -3,6 +3,7 @@ package com.hbm.tileentity.network;
 import com.hbm.api.fluid.IFluidConductor;
 import com.hbm.api.fluid.IPipeNet;
 import com.hbm.api.fluid.PipeNet;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
@@ -10,6 +11,7 @@ import com.hbm.util.Compat;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
+@AutoRegisterTE
 public class TileEntityPipeExhaust extends TileEntity implements IFluidConductor, ITickable {
 
     public IPipeNet[] nets = new IPipeNet[3];

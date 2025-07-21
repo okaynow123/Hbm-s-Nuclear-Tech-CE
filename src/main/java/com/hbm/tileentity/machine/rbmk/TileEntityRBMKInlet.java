@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.blocks.machine.rbmk.RBMKBase;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +17,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
+@AutoRegisterTE
 public class TileEntityRBMKInlet extends TileEntity implements IFluidHandler, ITickable {
 	
 	public FluidTank water;

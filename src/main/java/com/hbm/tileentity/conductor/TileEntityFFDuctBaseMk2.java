@@ -1,6 +1,7 @@
 package com.hbm.tileentity.conductor;
 
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFluidDuct;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -14,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.WorldServer;
 
+@AutoRegisterTE
 public class TileEntityFFDuctBaseMk2 extends TileEntity implements IFluidDuct, ITickable {
 
 	protected FluidType type = Fluids.NONE;

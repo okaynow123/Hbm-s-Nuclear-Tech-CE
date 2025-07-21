@@ -6,6 +6,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+@AutoRegisterTE
 public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidStandardTransceiver,
         IConfigurableMachine, IFluidCopiable {
 

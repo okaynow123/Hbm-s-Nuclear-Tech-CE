@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachinePress;
 import com.hbm.inventory.gui.GUIMachinePress;
 import com.hbm.inventory.recipes.PressRecipes;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachinePress extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	public int speed = 0;

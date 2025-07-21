@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerNukeBalefire;
 import com.hbm.inventory.gui.GUINukeBalefire;
 import com.hbm.items.ModItems;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	public boolean loaded;

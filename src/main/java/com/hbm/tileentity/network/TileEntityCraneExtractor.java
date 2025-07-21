@@ -4,6 +4,7 @@ import com.hbm.api.block.IConveyorBelt;
 import cofh.core.util.core.SideConfig;
 import cofh.core.util.core.SlotConfig;
 import com.hbm.entity.item.EntityMovingItem;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneExtractor;
 import com.hbm.inventory.gui.GUICraneExtractor;
@@ -33,6 +34,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
     public boolean isWhitelist = false;
     protected SideConfig sideConfig;

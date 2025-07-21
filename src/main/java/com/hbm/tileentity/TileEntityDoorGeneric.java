@@ -3,6 +3,7 @@ package com.hbm.tileentity;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.generic.BlockDoorGeneric;
 import com.hbm.handler.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
@@ -32,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@AutoRegisterTE
 public class TileEntityDoorGeneric extends TileEntityLockableBase implements ITickable, IAnimatedDoor, IControllable {
 
 	public DoorState state = DoorState.CLOSED;

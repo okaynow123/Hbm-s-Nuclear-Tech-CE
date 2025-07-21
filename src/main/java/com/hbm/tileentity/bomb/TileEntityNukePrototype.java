@@ -1,5 +1,6 @@
 package com.hbm.tileentity.bomb;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerNukePrototype;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUINukePrototype;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+@AutoRegisterTE
 public class TileEntityNukePrototype extends TileEntity implements IGUIProvider {
 
 	public ItemStackHandler inventory;

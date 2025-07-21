@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.Untested;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.container.ContainerMachineShredder;
@@ -30,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachineShredder extends TileEntityMachineBase implements ITickable, IGUIProvider, IEnergyReceiverMK2 {
 
 	public long power;

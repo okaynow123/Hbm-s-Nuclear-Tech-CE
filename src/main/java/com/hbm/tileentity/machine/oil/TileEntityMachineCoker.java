@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine.oil;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineCoker;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityMachineCoker extends TileEntityMachineBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable {
 
     public boolean wasOn;

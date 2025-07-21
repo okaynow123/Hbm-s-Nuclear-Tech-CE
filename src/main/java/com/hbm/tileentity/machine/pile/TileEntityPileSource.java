@@ -1,7 +1,9 @@
 package com.hbm.tileentity.machine.pile;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegisterTE;
 
+@AutoRegisterTE
 public class TileEntityPileSource extends TileEntityPileBase {
 
 	@Override

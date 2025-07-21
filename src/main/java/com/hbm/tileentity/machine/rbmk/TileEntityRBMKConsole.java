@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.rbmk;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.gui.GUIRBMKConsole;
 import com.hbm.lib.Library;
@@ -37,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityRBMKConsole extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, ITickable, SimpleComponent {
 	
 	private int targetX;

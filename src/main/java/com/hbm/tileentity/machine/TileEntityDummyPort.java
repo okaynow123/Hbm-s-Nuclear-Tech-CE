@@ -1,8 +1,10 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+@AutoRegisterTE
 public class TileEntityDummyPort extends TileEntityDummy {
 
 	@Override

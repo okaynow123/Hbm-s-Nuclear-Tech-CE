@@ -1,5 +1,6 @@
 package com.hbm.tileentity.bomb;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerNukeFleija;
 import com.hbm.inventory.gui.GUINukeFleija;
 import com.hbm.items.ModItems;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+@AutoRegisterTE
 public class TileEntityNukeFleija extends TileEntity implements IGUIProvider {
 
 	public ItemStackHandler inventory = new ItemStackHandler(11){

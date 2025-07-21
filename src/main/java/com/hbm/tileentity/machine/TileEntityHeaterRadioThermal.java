@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.tile.IHeatSource;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRadioThermal;
 import com.hbm.inventory.gui.GUIRadioThermal;
 import com.hbm.tileentity.IGUIProvider;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
+@AutoRegisterTE
 public class TileEntityHeaterRadioThermal extends TileEntityMachineBase implements IHeatSource, ITickable, IGUIProvider {
     
     public int heatGen;

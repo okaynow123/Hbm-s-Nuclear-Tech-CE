@@ -2,6 +2,7 @@ package com.hbm.tileentity.network;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.item.EntityMovingItem;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneGrabber;
 import com.hbm.inventory.gui.GUICraneGrabber;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
     public boolean isWhitelist = false;
     public ModulePatternMatcher matcher;

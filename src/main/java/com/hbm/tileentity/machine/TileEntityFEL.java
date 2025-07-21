@@ -5,6 +5,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineSILEX;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerFEL;
 import com.hbm.inventory.gui.GUIFEL;
 import com.hbm.items.machine.ItemFELCrystal;
@@ -51,6 +52,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityFEL extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 	
 	public long power;

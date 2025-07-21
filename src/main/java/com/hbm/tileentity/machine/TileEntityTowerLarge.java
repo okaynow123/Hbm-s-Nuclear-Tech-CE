@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.config.GeneralConfig;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
+@AutoRegisterTE
 public class TileEntityTowerLarge extends TileEntityCondenser {
 
 	//Configurable values

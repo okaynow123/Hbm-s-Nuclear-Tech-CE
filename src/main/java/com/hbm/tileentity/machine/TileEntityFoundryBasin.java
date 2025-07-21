@@ -1,11 +1,13 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@AutoRegisterTE
 public class TileEntityFoundryBasin extends TileEntityFoundryCastingBase implements IRenderFoundry {
 
 	public TileEntityFoundryBasin() {

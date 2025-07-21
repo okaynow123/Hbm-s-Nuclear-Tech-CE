@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMixer;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityMachineMixer extends TileEntityMachineBase implements ITickable, IGUIProvider, IFluidStandardTransceiver, IEnergyReceiverMK2, IFFtoNTMF {
 
     public static final long maxPower = 10_000;

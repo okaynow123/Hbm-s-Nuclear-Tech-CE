@@ -7,6 +7,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerMachinePlasmaHeater;
 import com.hbm.inventory.fluid.FluidType;
@@ -42,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IFFtoNTMF, IGUIProvider {
 
 	public long power;

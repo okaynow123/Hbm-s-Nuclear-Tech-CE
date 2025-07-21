@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineRtgFurnace;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRtgFurnace;
 import com.hbm.inventory.gui.GUIRtgFurnace;
 import com.hbm.items.machine.ItemRTGPellet;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityRtgFurnace extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	public int dualCookTime;

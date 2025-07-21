@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerChemfac;
 import com.hbm.inventory.fluid.Fluids;
@@ -15,6 +15,10 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nonnull;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -30,11 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+@AutoRegisterTE
 public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase implements IGUIProvider {
 	float rotSpeed;
 	public float rot;

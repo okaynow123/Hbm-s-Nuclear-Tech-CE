@@ -2,6 +2,7 @@ package com.hbm.tileentity.bomb;
 
 import com.hbm.entity.item.EntityFireworks;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +11,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
+@AutoRegisterTE
 public class TileEntityFireworks extends TileEntity implements ITickable {
 
 	public int color = 0xff0000;

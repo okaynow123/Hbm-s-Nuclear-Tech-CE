@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidStandardTransceiver {
 
     public FluidTankNTM[] tanks;

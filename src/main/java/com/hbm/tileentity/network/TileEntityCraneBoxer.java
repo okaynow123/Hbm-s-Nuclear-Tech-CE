@@ -2,6 +2,7 @@ package com.hbm.tileentity.network;
 
 import com.hbm.api.block.IConveyorBelt;
 import com.hbm.entity.item.EntityMovingPackage;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneBoxer;
 import com.hbm.inventory.gui.GUICraneBoxer;
@@ -28,6 +29,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
 
     public byte mode = 0;

@@ -6,6 +6,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -35,6 +36,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineHTR3 extends TileEntityMachineBase implements ITickable, IPropulsion, IFluidStandardReceiver {
 
 	public FluidTankNTM[] tanks;

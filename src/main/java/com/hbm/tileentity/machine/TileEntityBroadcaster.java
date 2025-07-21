@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.LoopedSoundPacket;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityBroadcaster extends TileEntity implements ITickable {
 
   @Override

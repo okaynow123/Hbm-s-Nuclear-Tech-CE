@@ -3,6 +3,7 @@ package com.hbm.tileentity.turret;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretSentry;
 import com.hbm.inventory.gui.GuiInfoContainer;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IGUIProvider {
 
   protected boolean didJustShootLeft = false;

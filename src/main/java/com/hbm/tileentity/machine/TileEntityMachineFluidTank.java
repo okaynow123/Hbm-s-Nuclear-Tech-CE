@@ -8,6 +8,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
@@ -52,6 +53,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+@AutoRegisterTE
 public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
 
 	public FluidTankNTM tankNew;

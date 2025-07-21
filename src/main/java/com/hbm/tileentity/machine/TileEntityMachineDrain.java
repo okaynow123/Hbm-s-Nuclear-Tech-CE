@@ -4,6 +4,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFluidStandardReceiver, IBufPacketReceiver, IFluidCopiable, ITickable {
 
     public FluidTankNTM tank;

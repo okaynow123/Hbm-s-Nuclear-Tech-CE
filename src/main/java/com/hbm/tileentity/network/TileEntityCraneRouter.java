@@ -1,5 +1,6 @@
 package com.hbm.tileentity.network;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneRouter;
 import com.hbm.inventory.gui.GUICraneRouter;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityCraneRouter extends TileEntityMachineBase implements IGUIProvider, IControlReceiver, ITickable {
     public ModulePatternMatcher[] patterns = new ModulePatternMatcher[6]; //why did i make six matchers???
     public int[] modes = new int[6];

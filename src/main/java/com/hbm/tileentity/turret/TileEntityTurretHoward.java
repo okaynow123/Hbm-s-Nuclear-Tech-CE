@@ -4,6 +4,7 @@ import com.hbm.config.WeaponConfig;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHoward;
 import com.hbm.lib.HBMSoundHandler;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IGUIProvider {
 	static List<Integer> configs = new ArrayList<>();
 

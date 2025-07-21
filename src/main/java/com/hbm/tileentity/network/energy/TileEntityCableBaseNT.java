@@ -5,6 +5,7 @@ import com.hbm.api.energymk2.Nodespace;
 import com.hbm.api.energymk2.VirtualFEProvider;
 import com.hbm.api.energymk2.VirtualFEReceiver;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@AutoRegisterTE
 public class TileEntityCableBaseNT extends TileEntity implements IBufPacketReceiver, ITickable, IEnergyConductorMK2 {
 	
 	protected Nodespace.PowerNode node;

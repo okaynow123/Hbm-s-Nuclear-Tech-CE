@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.recipes.GasCentrifugeRecipes;
 import com.hbm.inventory.container.ContainerMachineGasCent;
@@ -43,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityMachineGasCent extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFFtoNTMF {
 
 	public int progress;

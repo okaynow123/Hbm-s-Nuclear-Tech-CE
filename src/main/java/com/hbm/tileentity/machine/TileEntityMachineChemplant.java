@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineChemplant;
@@ -55,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AutoRegisterTE
 public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider, ITickable {
 
     public static final long maxPower = 100000;

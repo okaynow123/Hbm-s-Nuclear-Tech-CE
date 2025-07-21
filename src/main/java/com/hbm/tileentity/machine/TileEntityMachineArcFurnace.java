@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineArcFurnace;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineArcFurnace;
 import com.hbm.inventory.gui.GUIMachineArcFurnace;
 import com.hbm.items.ModItems;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachineArcFurnace extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public int dualCookTime;

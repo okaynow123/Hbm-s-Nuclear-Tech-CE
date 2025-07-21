@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineNukeFurnace;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerNukeFurnace;
 import com.hbm.inventory.gui.GUINukeFurnace;
@@ -23,6 +24,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 
+@AutoRegisterTE
 public class TileEntityNukeFurnace extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;

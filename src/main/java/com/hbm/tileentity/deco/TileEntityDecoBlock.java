@@ -1,11 +1,13 @@
 package com.hbm.tileentity.deco;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityDecoBlock extends TileEntity {
 
 	@Override

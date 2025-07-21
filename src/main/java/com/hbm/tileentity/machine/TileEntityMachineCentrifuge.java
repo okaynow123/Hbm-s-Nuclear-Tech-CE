@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.recipes.CentrifugeRecipes;
 import com.hbm.inventory.container.ContainerCentrifuge;
 import com.hbm.inventory.gui.GUIMachineCentrifuge;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 // I'll keep most of the thing intact because I'm too fucking lazy to rework basically EVERYTHING
+@AutoRegisterTE
 public class TileEntityMachineCentrifuge extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IConfigurableMachine, IGUIProvider {
 
 	public int progress;

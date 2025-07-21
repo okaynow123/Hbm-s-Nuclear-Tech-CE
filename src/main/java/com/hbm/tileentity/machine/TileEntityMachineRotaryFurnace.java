@@ -1,11 +1,12 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineRotaryFurnace;
 import com.hbm.inventory.fluid.Fluids;
@@ -24,12 +25,13 @@ import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.ModuleBurnTime;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.CrucibleUtil;
 import io.netty.buffer.ByteBuf;
+import java.io.IOException;
+import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -47,9 +49,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.util.Random;
-
+@AutoRegisterTE
 public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
     implements IFluidStandardTransceiver,
         IGUIProvider,

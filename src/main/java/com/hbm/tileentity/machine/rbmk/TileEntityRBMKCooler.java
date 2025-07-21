@@ -1,12 +1,14 @@
 package com.hbm.tileentity.machine.rbmk;
 
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.ITankPacketAcceptor;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,9 +25,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
-
+@AutoRegisterTE
 public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidHandler, ITankPacketAcceptor {
 
 	public FluidTank tank;

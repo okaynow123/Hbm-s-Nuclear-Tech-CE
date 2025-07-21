@@ -3,6 +3,7 @@ package com.hbm.tileentity.turret;
 import com.hbm.entity.projectile.EntityArtilleryShell;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretArty;
 import com.hbm.items.ModItems;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implements IGUIProvider {
 
     public short mode = 0;

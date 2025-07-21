@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineTurbofan;
@@ -49,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IFFtoNTMF {
 
 	public long power;

@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.blocks.machine.rbmk.RBMKControl;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerRBMKControl;
 import com.hbm.inventory.control_panel.ControlEvent;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@AutoRegisterTE
 public class TileEntityRBMKControlManual extends TileEntityRBMKControl implements IControlReceiver, IGUIProvider {
 
 	public RBMKColor color;

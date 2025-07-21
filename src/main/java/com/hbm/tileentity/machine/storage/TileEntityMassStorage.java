@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.storage;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
 import com.hbm.items.ModItems;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 // заметка №2 - тебе не надо втыкать IGuiProvider в класс, потому что TileEntityCrateBase и так его сжирает
+@AutoRegisterTE
 public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, IControlReceiverFilter, IGUIProvider {
 	
 	private int stack = 0;

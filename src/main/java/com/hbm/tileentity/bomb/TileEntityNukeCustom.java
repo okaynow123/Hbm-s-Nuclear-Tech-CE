@@ -2,6 +2,7 @@ package com.hbm.tileentity.bomb;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.BombConfig;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.container.ContainerNukeCustom;
@@ -27,6 +28,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 
+@AutoRegisterTE
 public class TileEntityNukeCustom extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;

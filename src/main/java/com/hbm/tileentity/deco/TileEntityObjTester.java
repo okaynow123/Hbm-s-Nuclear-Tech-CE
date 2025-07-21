@@ -1,5 +1,6 @@
 package com.hbm.tileentity.deco;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityObjTester extends TileEntity implements ITickable {
 
 	public int fireAge = -1;

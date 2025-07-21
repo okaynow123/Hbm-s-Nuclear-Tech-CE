@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.CompatHandler;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCombustionEngine;
 import com.hbm.inventory.fluid.FluidType;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 @Optional.InterfaceList({
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 })
+@AutoRegisterTE
 public class TileEntityMachineCombustionEngine extends TileEntityMachinePolluting
     implements ITickable,
         IEnergyProviderMK2,

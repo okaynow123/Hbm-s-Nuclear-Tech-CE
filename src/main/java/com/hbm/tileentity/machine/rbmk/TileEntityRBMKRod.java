@@ -5,6 +5,7 @@ import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.blocks.machine.rbmk.RBMKRod;
 import com.hbm.config.MobConfig;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRBMKRod;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
+@AutoRegisterTE
 public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IRBMKLoadable, IGUIProvider {
 	
 	//amount of "neutron energy" buffered for the next tick to use for the reaction

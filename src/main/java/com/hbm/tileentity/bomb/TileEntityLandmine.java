@@ -1,6 +1,7 @@
 package com.hbm.tileentity.bomb;
 
 import com.hbm.blocks.bomb.Landmine;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityLandmine extends TileEntity implements ITickable {
 
 	private boolean isPrimed = false;

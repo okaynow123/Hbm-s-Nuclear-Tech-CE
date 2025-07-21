@@ -1,6 +1,7 @@
 package com.hbm.tileentity.bomb;
 
 import com.hbm.api.item.IDesignatorItem;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerLaunchPadTier1;
 import com.hbm.inventory.gui.GUILaunchPadTier1;
 import com.hbm.lib.DirPos;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityLaunchPad extends TileEntityLaunchPadBase {
 
     public int clearingTimer = 0;

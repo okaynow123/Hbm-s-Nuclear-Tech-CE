@@ -1,11 +1,13 @@
 package com.hbm.tileentity.network;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityCraneSplitter extends TileEntity {
     private boolean position;
 

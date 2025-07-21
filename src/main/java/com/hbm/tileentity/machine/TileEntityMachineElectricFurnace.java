@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineElectricFurnace;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineElectricFurnace;
 import com.hbm.inventory.gui.GUIMachineElectricFurnace;
 import com.hbm.lib.ForgeDirection;
@@ -28,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachineElectricFurnace extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public int dualCookTime;

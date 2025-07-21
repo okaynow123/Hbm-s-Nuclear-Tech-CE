@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.mob.EntityTeslaCrab;
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -10,6 +11,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityCyberCrab extends TileEntity implements ITickable {
 
 	@Override

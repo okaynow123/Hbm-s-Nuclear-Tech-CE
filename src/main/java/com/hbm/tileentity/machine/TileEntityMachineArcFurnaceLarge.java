@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMachineArcFurnaceLarge;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IControlReceiver, IGUIProvider, IUpgradeInfoProvider {
 
     public long power;

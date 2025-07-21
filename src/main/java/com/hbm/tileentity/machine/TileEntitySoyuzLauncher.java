@@ -7,6 +7,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.missile.EntitySoyuz;
 import com.hbm.handler.MissileStruct;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerSoyuzLauncher;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -45,6 +46,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider {
 
 	public long power;
