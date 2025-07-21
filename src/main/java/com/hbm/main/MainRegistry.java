@@ -64,7 +64,6 @@ import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.tileentity.*;
-import com.hbm.tileentity.TileEntityRegistrar;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
 import com.hbm.tileentity.conductor.TileEntityFFFluidDuctMk2;
@@ -85,10 +84,6 @@ import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
@@ -120,6 +115,11 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
 @Spaghetti("Total cluserfuck")
@@ -243,6 +243,23 @@ public class MainRegistry {
         config.save();
     }
 
+    @EventHandler //Apparently this is "legacy", well I am not making my own protocol
+    public static void initIMC(FMLInterModComms.IMCEvent event) {
+
+        ImmutableList<FMLInterModComms.IMCMessage> inbox = event.getMessages();
+
+        for (FMLInterModComms.IMCMessage message : inbox) {
+            IMCHandler handler = IMCHandler.getHandler(message.key);
+
+            if (handler != null) {
+                MainRegistry.logger.info("Received IMC of type >" + message.key + "< from " + message.getSender() + "!");
+                handler.process(message);
+            } else {
+                MainRegistry.logger.error("Could not process unknown IMC type \"" + message.key + "\"");
+            }
+        }
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         CrashHelper.init();
@@ -261,7 +278,7 @@ public class MainRegistry {
         configDir = event.getModConfigurationDirectory();
         configHbmDir = new File(configDir.getAbsolutePath() + File.separatorChar + "hbmConfig");
 
-        if(!configHbmDir.exists()) configHbmDir.mkdir();
+        if (!configHbmDir.exists()) configHbmDir.mkdir();
 
         if (SharedMonsterAttributes.MAX_HEALTH.clampValue(Integer.MAX_VALUE) <= 2000) {
             ((RangedAttribute) SharedMonsterAttributes.MAX_HEALTH).maximumValue = Integer.MAX_VALUE;
@@ -342,10 +359,11 @@ public class MainRegistry {
         aMatFau.setRepairItem(new ItemStack(ModItems.plate_armor_fau));
         aMatDNS.setRepairItem(new ItemStack(ModItems.plate_armor_dnt));
 
-        TileEntityRegistrar.init();
+        //TileEntityRegistrar.init();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
         GameRegistry.registerTileEntity(TileEntityDummy.class, new ResourceLocation(RefStrings.MODID, "tileentity_dummy"));
+        GameRegistry.registerTileEntity(TileEntityMachineAssembler.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_assembler"));
         GameRegistry.registerTileEntity(TileEntityMachineAssemfac.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_assemfac"));
         GameRegistry.registerTileEntity(TileEntityMachineAutocrafter.class, new ResourceLocation(RefStrings.MODID, "tileentity_machine_autocrafter"));
         GameRegistry.registerTileEntity(TileEntityMachinePumpSteam.class, new ResourceLocation(RefStrings.MODID, "tileentity_steam_pump"));
@@ -827,23 +845,6 @@ public class MainRegistry {
         Fluids.initForgeFluidCompat();
         PacketThreading.init();
         IMCHandler.init();
-    }
-
-    @EventHandler //Apparently this is "legacy", well I am not making my own protocol
-    public static void initIMC(FMLInterModComms.IMCEvent event) {
-
-        ImmutableList<FMLInterModComms.IMCMessage> inbox = event.getMessages();
-
-        for(FMLInterModComms.IMCMessage message : inbox) {
-            IMCHandler handler = IMCHandler.getHandler(message.key);
-
-            if(handler != null) {
-                MainRegistry.logger.info("Received IMC of type >" + message.key + "< from " + message.getSender() + "!");
-                handler.process(message);
-            } else {
-                MainRegistry.logger.error("Could not process unknown IMC type \"" + message.key + "\"");
-            }
-        }
     }
 
     @EventHandler

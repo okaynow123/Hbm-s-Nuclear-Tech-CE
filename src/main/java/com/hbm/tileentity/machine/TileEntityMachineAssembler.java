@@ -5,7 +5,6 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.MultiblockHandlerXR;
-import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAssembler;
 import com.hbm.inventory.gui.GUIMachineAssembler;
@@ -46,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AutoRegisterTE
 public class TileEntityMachineAssembler extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
     public static final long maxPower = 2000000;
@@ -114,7 +112,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 
             //meta below 12 means that it's an old multiblock configuration
             if (this.getBlockMetadata() < 12) {
-                 int meta = switch (this.getBlockMetadata()) {
+                int meta = switch (this.getBlockMetadata()) {
                     case 2 -> 14;
                     case 4 -> 13;
                     case 3 -> 15;
@@ -636,27 +634,27 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
         return 65536.0D;
     }
 
-	@Override
-	public int countMufflers() {
+    @Override
+    public int countMufflers() {
 
-		int count = 0;
+        int count = 0;
 
-		for(int x = pos.getX() - 1; x <= pos.getX() + 1; x++)
-			for(int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++)
-				if(world.getBlockState(new BlockPos(x, pos.getY() - 1, z)).getBlock() == ModBlocks.muffler)
-					count++;
+        for (int x = pos.getX() - 1; x <= pos.getX() + 1; x++)
+            for (int z = pos.getZ() - 1; z <= pos.getZ() + 1; z++)
+                if (world.getBlockState(new BlockPos(x, pos.getY() - 1, z)).getBlock() == ModBlocks.muffler)
+                    count++;
 
-		return count;
-	}
+        return count;
+    }
 
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerMachineAssembler(player.inventory, this);
-	}
+    @Override
+    public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new ContainerMachineAssembler(player.inventory, this);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMachineAssembler(player.inventory, this);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new GUIMachineAssembler(player.inventory, this);
+    }
 }
