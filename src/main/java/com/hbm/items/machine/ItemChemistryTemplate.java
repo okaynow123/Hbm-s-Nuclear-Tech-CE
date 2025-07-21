@@ -71,8 +71,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
 		if(!(stack.getItem() instanceof ItemChemistryTemplate)) return;
@@ -126,11 +125,12 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 
 			list.add(ChatFormatting.BOLD + I18nUtil.resolveKey("info.template_in_p"));
 
+			Map<ComparableStack, Integer> workingItemCounts = availableCounts != null ? new HashMap<>(availableCounts) : null;
 			for(AStack ingredient : recipe.inputs) {
 				if (ingredient == null) continue;
 				String prefix = "§c";
-				if (availableCounts != null) {
-					ItemAssemblyTemplate.CheckResult result = checkAndConsume(ingredient, new HashMap<>(availableCounts));
+				if (workingItemCounts != null) {
+					ItemAssemblyTemplate.CheckResult result = checkAndConsume(ingredient, workingItemCounts);
 					prefix = result.color();
 				}
 				if(ingredient instanceof ComparableStack input)  {
@@ -146,15 +146,21 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 				}
 			}
 
+			int[] workingFluidLevels = null;
+			if (chemTanks != null) {
+				workingFluidLevels = new int[]{chemTanks[0].getFill(), chemTanks[1].getFill()};
+			}
+
 			for(int i = 0; i < 2; i++) {
 				if(recipe.inputFluids[i] != null) {
 					int p = recipe.inputFluids[i].pressure;
-					String prefix = "";
-					if (chemTanks != null) {
-						prefix = "§c";
-						if (chemTanks[i].getFill() >= recipe.inputFluids[i].fill) {
+					String prefix = "§c";
+					if (workingFluidLevels != null) {
+						int requiredFill = recipe.inputFluids[i].fill;
+						if (workingFluidLevels[i] >= requiredFill) {
 							prefix = "§a";
-						} else if (chemTanks[i].getFill() > 0) {
+							workingFluidLevels[i] -= requiredFill;
+						} else if (workingFluidLevels[i] > 0) {
 							prefix = "§6";
 						}
 					}

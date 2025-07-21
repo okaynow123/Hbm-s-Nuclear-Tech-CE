@@ -78,7 +78,7 @@ public class ItemAssemblyTemplate extends Item {
     /**
      * Reads the recipe output's data from the template's NBT tag.
      */
-    public static ComparableStack readType(ItemStack stack) {
+    private static ComparableStack readType(ItemStack stack) {
         if (!stack.hasTagCompound()) return null;
         NBTTagCompound nbt = stack.getTagCompound();
         if (!nbt.hasKey("id")) return null;
@@ -116,7 +116,7 @@ public class ItemAssemblyTemplate extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public static CheckResult checkAndConsume(AStack ingredient, Map<ComparableStack, Integer> availableCounts) {
+    static CheckResult checkAndConsume(AStack ingredient, Map<ComparableStack, Integer> availableCounts) {
         int required = ingredient.count();
         int totalAvailable = 0;
         List<ComparableStack> matchingKeys = new ArrayList<>();
@@ -175,7 +175,7 @@ public class ItemAssemblyTemplate extends Item {
         }
     }
 
-    public static void countItem(Map<ComparableStack, Integer> availableCounts, IItemHandler inventory, int slot) {
+    static void countItem(Map<ComparableStack, Integer> availableCounts, IItemHandler inventory, int slot) {
         ItemStack stackInSlot = inventory.getStackInSlot(slot);
         if (!stackInSlot.isEmpty()) {
             ItemStack keyStack = stackInSlot.copy();
@@ -239,11 +239,12 @@ public class ItemAssemblyTemplate extends Item {
         tooltip.add(TextFormatting.GREEN + " " + output.getCount() + "x " + output.getDisplayName());
         tooltip.add(TextFormatting.BOLD + I18nUtil.resolveKey("info.template_in_p"));
 
+        Map<ComparableStack, Integer> workingCounts = availableCounts != null ? new HashMap<>(availableCounts) : null;
         for (Object o : in) {
             String prefix = TextFormatting.RED.toString();
             if (o instanceof AStack ingredient) {
-                if (availableCounts != null) {
-                    CheckResult result = checkAndConsume(ingredient, new HashMap<>(availableCounts));
+                if (workingCounts != null) {
+                    CheckResult result = checkAndConsume(ingredient, workingCounts);
                     prefix = result.color();
                 }
                 if (ingredient instanceof ComparableStack input) {
@@ -266,6 +267,6 @@ public class ItemAssemblyTemplate extends Item {
     }
 
     @Desugar
-    public record CheckResult(String color, int available) {
+    record CheckResult(String color, int available) {
     }
 }
