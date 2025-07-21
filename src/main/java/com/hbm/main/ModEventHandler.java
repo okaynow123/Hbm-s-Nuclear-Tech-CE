@@ -1,7 +1,7 @@
 package com.hbm.main;
 
-import com.hbm.api.energymk2.Nodespace;
 import com.google.common.collect.Multimap;
+import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
@@ -27,7 +27,6 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.IBomb;
-import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
@@ -39,9 +38,12 @@ import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.lib.*;
-import com.hbm.packet.*;
-import com.hbm.packet.toclient.*;
 import com.hbm.packet.KeybindPacket;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.packet.toclient.PlayerInformPacket;
+import com.hbm.packet.toclient.SerializableRecipePacket;
+import com.hbm.packet.toclient.SurveyPacket;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
@@ -112,7 +114,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.registries.DataSerializerEntry;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -1050,7 +1051,6 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP player) {
-            PacketDispatcher.sendTo(new AssemblerRecipeSyncPacket(AssemblerRecipes.recipeList, AssemblerRecipes.hidden), player);
             JetpackHandler.playerLoggedIn(event);
             IHBMData props = HbmCapability.getData(event.player);
 
@@ -1104,11 +1104,6 @@ public class ModEventHandler {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLeaveServer(ClientDisconnectionFromServerEvent event) {
-        SerializableRecipe.clearReceivedRecipes();
     }
 
     @SubscribeEvent

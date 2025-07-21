@@ -21,12 +21,11 @@ import net.minecraft.util.ResourceLocation;
 import java.io.*;
 import java.util.*;
 
-import static com.hbm.main.MainRegistry.proxy;
-
 /**
  * 1:1 SerializableRecipe from 1.7 as of b7641dcd54c57702c8e95c7d925a1f515ff567ab
  */
 // TODO: I'll have to make most of current recipe handlers extend this
+// mlbv: on it
 public abstract class SerializableRecipe {
     public static final Gson gson = new Gson();
     public static List<SerializableRecipe> recipeHandlers = new ArrayList<>();
@@ -39,30 +38,31 @@ public abstract class SerializableRecipe {
      * INIT
      */
 
-  public static void registerAllHandlers() {
-    recipeHandlers.add(new AmmoPressRecipes());
-    recipeHandlers.add(new ArcFurnaceRecipes());
-    recipeHandlers.add(new ArcWelderRecipes());
-    recipeHandlers.add(new BreederRecipes());
-    recipeHandlers.add(new ChemplantRecipes());
-    recipeHandlers.add(new CokerRecipes());
-    recipeHandlers.add(new CrackRecipes());
-    recipeHandlers.add(new CrucibleRecipes());
-    recipeHandlers.add(new CrystallizerRecipes());
-    recipeHandlers.add(new ElectrolyserFluidRecipes());
-    recipeHandlers.add(new ElectrolyserMetalRecipes());
-    recipeHandlers.add(new FractionRecipes());
-    recipeHandlers.add(new HydrotreatingRecipes());
-    recipeHandlers.add(new LiquefactionRecipes());
-    recipeHandlers.add(new MatDistribution());
-    recipeHandlers.add(new MixerRecipes());
-    recipeHandlers.add(new PyroOvenRecipes());
-    recipeHandlers.add(new RBMKOutgasserRecipes());
-    recipeHandlers.add(new ReformingRecipes());
-    recipeHandlers.add(new RotaryFurnaceRecipes());
-    recipeHandlers.add(new SolderingRecipes());
-    recipeHandlers.add(new SolidificationRecipes());
-  }
+    public static void registerAllHandlers() {
+        recipeHandlers.add(new AssemblerRecipes());
+        recipeHandlers.add(new AmmoPressRecipes());
+        recipeHandlers.add(new ArcFurnaceRecipes());
+        recipeHandlers.add(new ArcWelderRecipes());
+        recipeHandlers.add(new BreederRecipes());
+        recipeHandlers.add(new ChemplantRecipes());
+        recipeHandlers.add(new CokerRecipes());
+        recipeHandlers.add(new CrackRecipes());
+        recipeHandlers.add(new CrucibleRecipes());
+        recipeHandlers.add(new CrystallizerRecipes());
+        recipeHandlers.add(new ElectrolyserFluidRecipes());
+        recipeHandlers.add(new ElectrolyserMetalRecipes());
+        recipeHandlers.add(new FractionRecipes());
+        recipeHandlers.add(new HydrotreatingRecipes());
+        recipeHandlers.add(new LiquefactionRecipes());
+        recipeHandlers.add(new MatDistribution());
+        recipeHandlers.add(new MixerRecipes());
+        recipeHandlers.add(new PyroOvenRecipes());
+        recipeHandlers.add(new RBMKOutgasserRecipes());
+        recipeHandlers.add(new ReformingRecipes());
+        recipeHandlers.add(new RotaryFurnaceRecipes());
+        recipeHandlers.add(new SolderingRecipes());
+        recipeHandlers.add(new SolidificationRecipes());
+    }
 
     public static void initialize() {
         File recDir = new File(MainRegistry.configDir.getAbsolutePath() + File.separatorChar + "hbmRecipes");
@@ -73,8 +73,9 @@ public abstract class SerializableRecipe {
             }
         }
 
-        File info = new File(recDir.getAbsolutePath() + File.separatorChar + "REMOVE UNDERSCORE TO ENABLE RECIPE LOADING - RECIPES WILL RESET TO " +
-                "DEFAULT OTHERWISE");
+        File info =
+                new File(recDir.getAbsolutePath() + File.separatorChar + "REMOVE UNDERSCORE TO ENABLE RECIPE LOADING - RECIPES WILL RESET TO " +
+                        "DEFAULT OTHERWISE");
         try {
             info.createNewFile();
         } catch (IOException ignored) {
@@ -131,7 +132,7 @@ public abstract class SerializableRecipe {
         boolean hasCleared = !recipeSyncHandlers.isEmpty();
         recipeSyncHandlers.clear();
 
-        if(hasCleared) initialize();
+        if (hasCleared) initialize();
     }
 
     /*
@@ -206,8 +207,7 @@ public abstract class SerializableRecipe {
             }
 
             if (recipeList.isEmpty())
-                throw new IllegalStateException("Error while writing recipes for " + this.getClass().getSimpleName() + ": Recipe list is either " +
-                        "empty or in an unsupported format!");
+                throw new IllegalStateException("Error while writing recipes for " + this.getClass().getSimpleName() + ": Recipe list is either " + "empty or in an unsupported format!");
 
             JsonWriter writer = new JsonWriter(new FileWriter(template));
             writer.setIndent("  "); // pretty formatting
@@ -236,14 +236,15 @@ public abstract class SerializableRecipe {
     private void readRecipeFile(File file) {
         try {
             readRecipeStream(new FileReader(file));
-        } catch (FileNotFoundException ignored) {}
+        } catch (FileNotFoundException ignored) {
+        }
     }
 
     private void readRecipeStream(Reader reader) {
         JsonObject json = gson.fromJson(reader, JsonObject.class);
         JsonArray recipes = json.get("recipes").getAsJsonArray();
-        for(JsonElement recipe : recipes) {
-            if(recipe != null) this.readRecipe(recipe);
+        for (JsonElement recipe : recipes) {
+            if (recipe != null) this.readRecipe(recipe);
         }
     }
 

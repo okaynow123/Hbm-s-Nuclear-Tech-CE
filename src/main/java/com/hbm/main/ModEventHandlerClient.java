@@ -15,13 +15,13 @@ import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
 import com.hbm.handler.*;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.*;
-import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIArmorTable;
 import com.hbm.inventory.recipes.ChemplantRecipes;
+import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
@@ -42,10 +42,10 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.toserver.GunButtonPacket;
 import com.hbm.packet.toserver.MeathookJumpPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.particle.ParticleBatchRenderer;
 import com.hbm.particle.ParticleDSmokeFX;
 import com.hbm.particle.ParticleFirstPerson;
@@ -77,9 +77,6 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.wiaj.GuiWorldInAJar;
 import com.hbm.wiaj.cannery.CanneryBase;
 import com.hbm.wiaj.cannery.Jars;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -134,12 +131,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.*;
 
 public class ModEventHandlerClient {
 
@@ -439,13 +439,9 @@ public class ModEventHandlerClient {
             ItemRedstoneSwordRender.INSTANCE.itemModel = model;
             evt.getModelRegistry().putObject(RedstoneSword.rsModel, new ItemRenderRedstoneSword());
         }
-        Object object2 = evt.getModelRegistry().getObject(ItemAssemblyTemplate.location);
-        if (object2 instanceof IBakedModel) {
-            IBakedModel model = (IBakedModel) object2;
-            AssemblyTemplateRender.INSTANCE.itemModel = model;
-            evt.getModelRegistry().putObject(ItemAssemblyTemplate.location, new AssemblyTemplateBakedModel());
-        }
-
+        wrapModel(evt, ItemAssemblyTemplate.location);
+        wrapModel(evt, ItemChemistryTemplate.location);
+        wrapModel(evt, ItemCrucibleTemplate.location);
         Object object3 = evt.getModelRegistry().getObject(GunB92.b92Model);
         if (object3 instanceof IBakedModel) {
             IBakedModel model = (IBakedModel) object3;
@@ -457,18 +453,6 @@ public class ModEventHandlerClient {
             IBakedModel model = (IBakedModel) object6;
             FluidCanisterRender.INSTANCE.itemModel = model;
             evt.getModelRegistry().putObject(ItemFluidCanister.fluidCanisterModel, new FluidCanisterBakedModel());
-        }
-        Object object7 = evt.getModelRegistry().getObject(ItemChemistryTemplate.chemModel);
-        if (object7 instanceof IBakedModel) {
-            IBakedModel model = (IBakedModel) object7;
-            ChemTemplateRender.INSTANCE.itemModel = model;
-            evt.getModelRegistry().putObject(ItemChemistryTemplate.chemModel, new ChemTemplateBakedModel());
-        }
-        Object object8 = evt.getModelRegistry().getObject(ItemCrucibleTemplate.location);
-        if (object8 instanceof IBakedModel) {
-            IBakedModel model = (IBakedModel) object8;
-            CrucibleTemplateRender.INSTANCE.itemModel = model;
-            evt.getModelRegistry().putObject(ItemCrucibleTemplate.location, new CrucibleTemplateBakedModel());
         }
 
         IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();
@@ -998,16 +982,10 @@ public class ModEventHandlerClient {
                     p.onUpdate();
                     if (!p.isAlive()) {
                         i.remove();
-                        continue;
                     }
                 }
             }
-            Iterator<EntityLivingBase> itr = specialDeathEffectEntities.iterator();
-            while (itr.hasNext()) {
-                Entity ent = itr.next();
-                if (ent.isDead)
-                    itr.remove();
-            }
+            specialDeathEffectEntities.removeIf(ent -> ent.isDead);
             EntityPlayer player = Minecraft.getMinecraft().player;
             if (player != null) {
                 boolean isHooked = player.getHeldItemMainhand().getItem() == ModItems.gun_supershotgun && ItemGunShotty.hasHookedEntity(player.world, player.getHeldItemMainhand());
@@ -1884,17 +1862,8 @@ public class ModEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void clientDisconnectFromServer(ClientDisconnectionFromServerEvent e) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && AssemblerRecipes.backupRecipeList != null) {
-            AssemblerRecipes.recipeList = AssemblerRecipes.backupRecipeList;
-            AssemblerRecipes.recipes = AssemblerRecipes.backupRecipes;
-            AssemblerRecipes.time = AssemblerRecipes.backupTime;
-            AssemblerRecipes.hidden = AssemblerRecipes.backupHidden;
-            AssemblerRecipes.backupRecipeList = null;
-            AssemblerRecipes.backupRecipes = null;
-            AssemblerRecipes.backupTime = null;
-            AssemblerRecipes.backupHidden = null;
-        }
+    public void onPlayerLeaveServer(ClientDisconnectionFromServerEvent event) {
+        SerializableRecipe.clearReceivedRecipes();
     }
 
     @SubscribeEvent
@@ -2047,6 +2016,14 @@ public class ModEventHandlerClient {
             buf.pos(0.5, -0.5 + o, p * 0.5).tex(1, 1).endVertex();
             tess.draw();
             GlStateManager.enableLighting();
+        }
+    }
+
+    private void wrapModel(ModelBakeEvent event, ModelResourceLocation location) {
+        IBakedModel existingModel = event.getModelRegistry().getObject(location);
+        if (existingModel != null && !(existingModel instanceof TemplateBakedModel)) {
+            TemplateBakedModel wrapper = new TemplateBakedModel(existingModel);
+            event.getModelRegistry().putObject(location, wrapper);
         }
     }
 }

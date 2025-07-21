@@ -38,7 +38,7 @@ import static com.hbm.items.machine.ItemAssemblyTemplate.countItem;
 
 public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 
-	public static final ModelResourceLocation chemModel = new ModelResourceLocation(RefStrings.MODID + ":chemistry_template", "inventory");
+	public static final ModelResourceLocation location = new ModelResourceLocation(RefStrings.MODID + ":chemistry_template", "inventory");
 	
 	public ItemChemistryTemplate(String s){
 		this.setTranslationKey(s);
@@ -171,6 +171,6 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 
 	@Override
 	public ModelResourceLocation getResourceLocation() {
-		return chemModel;
+		return location;
 	}
 }

@@ -1,7 +1,6 @@
 package com.hbm.packet;
 
 import com.hbm.lib.RefStrings;
-
 import com.hbm.main.NetworkHandler;
 import com.hbm.packet.toclient.*;
 import com.hbm.packet.toserver.*;
@@ -28,8 +27,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(LoopedSoundPacket.Handler.class, LoopedSoundPacket.class, i++, Side.CLIENT);
 		//Particle packet
 		wrapper.registerMessage(AuxParticlePacket.Handler.class, AuxParticlePacket.class, i++, Side.CLIENT);
-		//Assembler Recipe Sync Packet, so clients can see the right recipes
-		wrapper.registerMessage(AssemblerRecipeSyncPacket.Handler.class, AssemblerRecipeSyncPacket.class, i++, Side.CLIENT);
 		//Universal package for machine gauges and states
 		wrapper.registerMessage(AuxGaugePacket.Handler.class, AuxGaugePacket.class, i++, Side.CLIENT);
 		//Universal package for machine gauges and states but for longs

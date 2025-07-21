@@ -2,13 +2,13 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.inventory.recipes.CentrifugeRecipes;
-import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.inventory.FluidContainerRegistry;
-import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
+import com.hbm.inventory.recipes.CentrifugeRecipes;
+import com.hbm.inventory.recipes.DFCRecipes;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
@@ -102,7 +102,6 @@ public class JEIConfig implements IModPlugin {
     public void register(@NotNull IModRegistry registry) {
         if (!GeneralConfig.jei)
             return;
-        registry.addRecipeRegistryPlugin(new HbmJeiRegistryPlugin());
 
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_electric_furnace_off), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.furnace_iron), VanillaRecipeCategoryUid.SMELTING);
@@ -172,7 +171,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(Objects.requireNonNull(Blocks.CRAFTING_TABLE)), RBMKFUEL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), DFC);
 
-        // registry.addRecipes(ItemAssemblyTemplate.recipes, ASSEMBLY);
+        registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
         registry.addRecipes(JeiRecipes.getCyclotronRecipes(), CYCLOTRON);
         registry.addRecipes(JeiRecipes.getTransmutationRecipes(), TRANSMUTATION);

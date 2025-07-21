@@ -1008,13 +1008,13 @@ public class AnvilRecipes {
 				}
 		).setTier(2));
 	}
-	
-	public static void pullFromAssembler(ComparableStack result, int tier) {
-		
-		AStack[] ingredients = AssemblerRecipes.recipes.get(result);
-		
-		if(ingredients != null) {
-			constructionRecipes.add(new AnvilConstructionRecipe(ingredients, new AnvilOutput(result.toStack())).setTier(tier));
+
+	private static void pullFromAssembler(ComparableStack result, int tier) {
+		AssemblerRecipes.AssemblerRecipe assemblerRecipe = AssemblerRecipes.recipes.get(result);
+		if (assemblerRecipe != null) {
+			AStack[] ingredients = assemblerRecipe.ingredients;
+			AnvilConstructionRecipe anvilRecipe = new AnvilConstructionRecipe(ingredients, new AnvilOutput(result.toStack()));
+			AnvilRecipes.constructionRecipes.add(anvilRecipe.setTier(tier));
 		}
 	}
 	
@@ -1159,8 +1159,8 @@ public class AnvilRecipes {
 			this.chance = chance;
 		}
 	}
-	
-	public static enum OverlayType {
+
+	public enum OverlayType {
 		NONE,
 		CONSTRUCTION,
 		RECYCLING,

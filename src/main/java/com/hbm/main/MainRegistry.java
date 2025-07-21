@@ -301,7 +301,6 @@ public class MainRegistry {
         CellularDungeonFactory.init();
         Satellite.register();
         HTTPHandler.loadStats();
-        AssemblerRecipes.preInit(event.getModConfigurationDirectory());
         MultiblockBBHandler.init();
         ControlEvent.init();
         SiegeTier.registerTiers();
@@ -862,7 +861,6 @@ public class MainRegistry {
         DiFurnaceRecipes.registerFuels();
         CentrifugeRecipes.register();
         PressRecipes.registerOverrides();
-        AssemblerRecipes.loadRecipes();
         ExplosionNukeGeneric.loadSoliniumFromFile();
         CyclotronRecipes.register();
         HadronRecipes.register();
@@ -896,7 +894,6 @@ public class MainRegistry {
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.HEMATITE.ordinal()), 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
 
 //        NTMCraftTweaker.applyPostInitActions();
-        AssemblerRecipes.generateList();
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();
             ModForgeFluids.registerFluidColors();

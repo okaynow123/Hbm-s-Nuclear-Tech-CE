@@ -88,21 +88,12 @@ import com.hbm.tileentity.machine.oil.*;
 import com.hbm.tileentity.machine.rbmk.*;
 import com.hbm.tileentity.network.TileEntityCraneSplitter;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
-import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
-import com.hbm.tileentity.network.energy.TileEntityPylon;
-import com.hbm.tileentity.network.energy.TileEntityPylonLarge;
-import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
-import com.hbm.tileentity.network.energy.TileEntitySubstation;
+import com.hbm.tileentity.network.energy.*;
 import com.hbm.tileentity.turret.*;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.Vec3dUtil;
 import com.hbm.wiaj.cannery.Jars;
-import java.awt.*;
-import java.io.File;
-import java.nio.FloatBuffer;
-import java.util.*;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockStainedHardenedClay;
@@ -154,6 +145,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import paulscode.sound.SoundSystemConfig;
+
+import java.awt.*;
+import java.io.File;
+import java.nio.FloatBuffer;
+import java.util.*;
+import java.util.List;
 
 public class ClientProxy extends ServerProxy {
 
@@ -1888,10 +1885,10 @@ public class ClientProxy extends ServerProxy {
             SoundSystemConfig.setNumberNormalChannels(128);
         }
         OBJLoader.INSTANCE.addDomain(RefStrings.MODID);
-
         ModItems.redstone_sword.setTileEntityItemStackRenderer(ItemRedstoneSwordRender.INSTANCE);
-        ModItems.assembly_template.setTileEntityItemStackRenderer(AssemblyTemplateRender.INSTANCE);
-        ModItems.chemistry_template.setTileEntityItemStackRenderer(ChemTemplateRender.INSTANCE);
+        ModItems.assembly_template.setTileEntityItemStackRenderer(TemplateItemRenderer.INSTANCE);
+        ModItems.chemistry_template.setTileEntityItemStackRenderer(TemplateItemRenderer.INSTANCE);
+        ModItems.crucible_template.setTileEntityItemStackRenderer(TemplateItemRenderer.INSTANCE);
         ModItems.gun_b92.setTileEntityItemStackRenderer(ItemRenderGunAnim.INSTANCE);
         ModItems.fluid_tank_full.setTileEntityItemStackRenderer(new FluidTankRender());
         ModItems.fluid_barrel_full.setTileEntityItemStackRenderer(new FluidBarrelRender());

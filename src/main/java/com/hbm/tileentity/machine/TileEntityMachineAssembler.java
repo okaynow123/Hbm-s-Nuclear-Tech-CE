@@ -3,13 +3,12 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.MultiblockHandlerXR;
-import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAssembler;
 import com.hbm.inventory.gui.GUIMachineAssembler;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.lib.ForgeDirection;
@@ -27,14 +26,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -337,7 +333,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
         buf.writeInt(progress);
         buf.writeInt(maxProgress);
         buf.writeBoolean(isProgressing);
-        buf.writeInt(!inventory.getStackInSlot(4).isEmpty() ? ItemAssemblyTemplate.getRecipeIndex(inventory.getStackInSlot(4)) : -1);
+        buf.writeInt(!inventory.getStackInSlot(4).isEmpty() ? recipe : -1);
     }
 
     @Override

@@ -1,10 +1,6 @@
 package com.hbm.handler.jei;
 
-import com.hbm.inventory.*;
-import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.recipes.AnvilRecipes.AnvilOutput;
-import com.hbm.inventory.recipes.AnvilRecipes.OverlayType;
-import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
@@ -13,6 +9,10 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.recipes.*;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.AnvilRecipes.AnvilOutput;
+import com.hbm.inventory.recipes.AnvilRecipes.OverlayType;
+import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
@@ -37,6 +37,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class JeiRecipes {
 
@@ -60,6 +61,7 @@ public class JeiRecipes {
 	private static final Map<EnumWavelengths, List<SILEXRecipe>> waveSilexRecipes = new HashMap<>();
 	private static List<SmithingRecipe> smithingRecipes = null;
 	private static List<AnvilRecipe> anvilRecipes = null;
+	private static List<AssemblerRecipeWrapper> assemblerRecipes = null;
 	private static List<TransmutationRecipe> transmutationRecipes = null;
 	
 	private static List<ItemStack> batteries = null;
@@ -352,43 +354,16 @@ public class JeiRecipes {
 		}
 		
 	}
-	
-	public static class AssemblerRecipeWrapper implements IRecipeWrapper {
 
-		ItemStack output;
-		List<List<ItemStack>> inputs;
-		int time;
-		
-		public AssemblerRecipeWrapper(ItemStack output, AStack[] inputs, int time) {
-			this.output = output;
-			List<List<ItemStack>> list = new ArrayList<>(inputs.length);
-			for(AStack s : inputs)
-				list.add(s.getStackList());
-			this.inputs = list;
-			this.time = time;
+	static List<AssemblerRecipeWrapper> getAssemblerRecipes() {
+		if (assemblerRecipes != null) {
+			return assemblerRecipes;
 		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			List<List<ItemStack>> in = Library.copyItemStackListList(inputs);
-			while(in.size() < 12)
-				in.add(Arrays.asList(new ItemStack(ModItems.nothing)));
-			int index = -1;
-			for(int i = 0; i < AssemblerRecipes.recipeList.size(); i++){ // finding the template item
-				if(AssemblerRecipes.recipeList.get(i).isApplicable(output)){
-					index = i;
-					break;
-				}
-			}
-			if(index >= 0) // adding the template item
-				in.add(Arrays.asList(ItemAssemblyTemplate.getTemplate(index)));
-			else {
-				in.add(Arrays.asList(new ItemStack(ModItems.nothing)));
-			}
-			ingredients.setInputLists(VanillaTypes.ITEM, in);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
-		}
-		
+		assemblerRecipes = AssemblerRecipes.recipes.entrySet().stream()
+				.map(entry -> new AssemblerRecipeWrapper(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList());
+
+		return assemblerRecipes;
 	}
 	
 	public static class BookRecipe implements IRecipeWrapper {
@@ -1080,5 +1055,44 @@ public class JeiRecipes {
 			anvilRecipes.add(new AnvilRecipe(inputs, outputs, chances, r.tierLower, r.tierUpper, r.getOverlay()));
  		}
 		return anvilRecipes;
+	}
+
+	public static class AssemblerRecipeWrapper implements IRecipeWrapper {
+
+		private final ItemStack output;
+		private final List<List<ItemStack>> inputs;
+		private final int time;
+		private final ComparableStack outputComparable;
+
+		AssemblerRecipeWrapper(ComparableStack output, AssemblerRecipes.AssemblerRecipe recipe) {
+			this.outputComparable = output;
+			this.output = output.toStack();
+			this.time = recipe.time;
+
+			List<List<ItemStack>> list = new ArrayList<>(recipe.ingredients.length);
+			for (AStack s : recipe.ingredients) {
+				list.add(s.getStackList());
+			}
+			this.inputs = list;
+		}
+
+		@Override
+		public void getIngredients(IIngredients ingredients) {
+			List<List<ItemStack>> jeiInputs = Library.copyItemStackListList(inputs);
+			while (jeiInputs.size() < 12) {
+				jeiInputs.add(Collections.singletonList(new ItemStack(ModItems.nothing)));
+			}
+			ItemStack templateStack = ItemAssemblyTemplate.writeType(new ItemStack(ModItems.assembly_template), this.outputComparable);
+			jeiInputs.add(Collections.singletonList(templateStack));
+
+			ingredients.setInputLists(VanillaTypes.ITEM, jeiInputs);
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+		}
+
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+			String timeString = (time / 20.0) + "s";
+			minecraft.fontRenderer.drawString(timeString, 60, 48, 0x404040);
+		}
 	}
 }

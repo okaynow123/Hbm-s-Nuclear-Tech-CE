@@ -1,14 +1,13 @@
 package com.hbm.packet.toserver;
-
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.*;
 import com.hbm.lib.Library;
+import com.hbm.util.InventoryUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,153 +17,113 @@ import java.io.IOException;
 
 public class ItemFolderPacket implements IMessage {
 
-	ItemStack stack;
-	PacketBuffer buffer;
+	private ItemStack stack;
 
 	public ItemFolderPacket() {
 
 	}
 
 	public ItemFolderPacket(ItemStack stack) {
-		buffer = new PacketBuffer(Unpooled.buffer());
-		buffer.writeCompoundTag(stack.writeToNBT(new NBTTagCompound()));
+		this.stack = stack;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (buffer == null) {
-			buffer = new PacketBuffer(Unpooled.buffer());
-		}
-		buffer.writeBytes(buf);
+		PacketBuffer packetBuffer = new PacketBuffer(buf);
 		try {
-			stack = new ItemStack(buffer.readCompoundTag());
-		} catch(IOException e) {
+			this.stack = packetBuffer.readItemStack();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		if (buffer == null) {
-			buffer = new PacketBuffer(Unpooled.buffer());
-		}
-		buf.writeBytes(buffer);
+		PacketBuffer packetBuffer = new PacketBuffer(buf);
+		packetBuffer.writeItemStack(this.stack);
 	}
 
 	public static class Handler implements IMessageHandler<ItemFolderPacket, IMessage> {
 
 		@Override
 		public IMessage onMessage(ItemFolderPacket m, MessageContext ctx) {
-			
+
 			EntityPlayer p = ctx.getServerHandler().player;
-			if(m.stack == null)
-				return null;
+			ItemStack stack = m.stack;
 			p.getServer().addScheduledTask(() -> {
-				
-				if(p.getHeldItemMainhand().getItem() != ModItems.template_folder && p.getHeldItemOffhand().getItem() != ModItems.template_folder)
+
+				if (!(p.getHeldItemMainhand().getItem() instanceof ItemTemplateFolder) && !(p.getHeldItemOffhand().getItem() instanceof ItemTemplateFolder))
 					return;
-				
-				ItemStack stack = m.stack;
-				
+
 				if(p.capabilities.isCreativeMode) {
-					
 					p.inventory.addItemStackToInventory(stack.copy());
 					return;
 				}
 
-				if(stack.getItem() instanceof ItemForgeFluidIdentifier) {
-					if(Library.hasInventoryOreDict(p.inventory, "plateIron") && Library.hasInventoryItem(p.inventory, Items.DYE)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.plate_iron);
-						Library.consumeInventoryItem(p.inventory, Items.DYE);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() instanceof ItemAssemblyTemplate) {
-					if(Library.hasInventoryItem(p.inventory, Items.PAPER) && Library.hasInventoryItem(p.inventory, Items.DYE)) {
-						Library.consumeInventoryItem(p.inventory, Items.PAPER);
-						Library.consumeInventoryItem(p.inventory, Items.DYE);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() instanceof ItemChemistryTemplate) {
-					if(Library.hasInventoryItem(p.inventory, Items.PAPER) && Library.hasInventoryItem(p.inventory, Items.DYE)) {
-						Library.consumeInventoryItem(p.inventory, Items.PAPER);
-						Library.consumeInventoryItem(p.inventory, Items.DYE);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() instanceof ItemCrucibleTemplate) {
-					if(Library.hasInventoryItem(p.inventory, Items.PAPER) && Library.hasInventoryItem(p.inventory, Items.DYE)) {
-						Library.consumeInventoryItem(p.inventory, Items.PAPER);
-						Library.consumeInventoryItem(p.inventory, Items.DYE);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() instanceof ItemCassette) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.plate_polymer) && Library.hasInventoryOreDict(p.inventory, "plateSteel")) {
-						Library.consumeInventoryItem(p.inventory, ModItems.plate_polymer);
-						Library.consumeInventoryItem(p.inventory, ModItems.plate_steel);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() == ModItems.stamp_stone_plate || stack.getItem() == ModItems.stamp_stone_wire || stack.getItem() == ModItems.stamp_stone_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_stone_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_stone_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() == ModItems.stamp_iron_plate || stack.getItem() == ModItems.stamp_iron_wire || stack.getItem() == ModItems.stamp_iron_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_iron_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_iron_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() == ModItems.stamp_steel_plate || stack.getItem() == ModItems.stamp_steel_wire || stack.getItem() == ModItems.stamp_steel_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_steel_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_steel_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() == ModItems.stamp_titanium_plate || stack.getItem() == ModItems.stamp_titanium_wire || stack.getItem() == ModItems.stamp_titanium_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_titanium_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_titanium_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-				if(stack.getItem() == ModItems.stamp_obsidian_plate || stack.getItem() == ModItems.stamp_obsidian_wire || stack.getItem() == ModItems.stamp_obsidian_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_obsidian_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_obsidian_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
-				}
-//				if(stack.getItem() == ModItems.stamp_schrabidium_plate || stack.getItem() == ModItems.stamp_schrabidium_wire || stack.getItem() == ModItems.stamp_schrabidium_circuit) {
-//					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_schrabidium_flat)) {
-//						Library.consumeInventoryItem(p.inventory, ModItems.stamp_schrabidium_flat);
-//						if(!p.inventory.addItemStackToInventory(stack.copy()))
-//							p.dropItem(stack, true);
-//					}
-//				}
-				if(stack.getItem() == ModItems.stamp_desh_plate || stack.getItem() == ModItems.stamp_desh_wire || stack.getItem() == ModItems.stamp_desh_circuit) {
-					if(Library.hasInventoryItem(p.inventory, ModItems.stamp_desh_flat)) {
-						Library.consumeInventoryItem(p.inventory, ModItems.stamp_desh_flat);
-						if(!p.inventory.addItemStackToInventory(stack.copy()))
-							p.dropItem(stack, true);
-					}
+				Item item = stack.getItem();
+
+				if (item instanceof ItemForgeFluidIdentifier) {
+					tryMakeItem(p, stack, "plateIron", Items.DYE);
+				} else if (item instanceof ItemAssemblyTemplate || item instanceof ItemChemistryTemplate || item instanceof ItemCrucibleTemplate) {
+					tryMakeItem(p, stack, Items.PAPER, Items.DYE);
+				} else if (item instanceof ItemCassette) {
+					tryMakeItem(p, stack, ModItems.plate_polymer, "plateSteel");
+				} else if (item == ModItems.stamp_stone_plate || item == ModItems.stamp_stone_wire || item == ModItems.stamp_stone_circuit) {
+					tryConvert(p, ModItems.stamp_stone_flat, stack);
+				} else if (item == ModItems.stamp_iron_plate || item == ModItems.stamp_iron_wire || item == ModItems.stamp_iron_circuit) {
+					tryConvert(p, ModItems.stamp_iron_flat, stack);
+				} else if (item == ModItems.stamp_steel_plate || item == ModItems.stamp_steel_wire || item == ModItems.stamp_steel_circuit) {
+					tryConvert(p, ModItems.stamp_steel_flat, stack);
+				} else if (item == ModItems.stamp_titanium_plate || item == ModItems.stamp_titanium_wire || item == ModItems.stamp_titanium_circuit) {
+					tryConvert(p, ModItems.stamp_titanium_flat, stack);
+				} else if (item == ModItems.stamp_obsidian_plate || item == ModItems.stamp_obsidian_wire || item == ModItems.stamp_obsidian_circuit) {
+					tryConvert(p, ModItems.stamp_obsidian_flat, stack);
+				} else if (item == ModItems.stamp_desh_plate || item == ModItems.stamp_desh_wire || item == ModItems.stamp_desh_circuit) {
+					tryConvert(p, ModItems.stamp_desh_flat, stack);
 				}
 			});
 
-			
 			return null;
+		}
+
+		private void tryMakeItem(EntityPlayer player, ItemStack output, Object... ingredients) {
+
+			//check
+			for (Object o : ingredients) {
+
+				if (o instanceof Item) {
+					if (!Library.hasInventoryItem(player.inventory, (Item) o))
+						return;
+				}
+
+				if (o instanceof String) {
+					if (!InventoryUtil.hasOreDictMatches(player, (String) o, 1))
+						return;
+				}
+			}
+
+			//consume
+			for (Object o : ingredients) {
+
+				if (o instanceof Item) {
+					Library.consumeInventoryItem(player.inventory, (Item) o);
+				}
+
+				if (o instanceof String) {
+					InventoryUtil.consumeOreDictMatches(player, (String) o, 1);
+				}
+			}
+
+			if (!player.inventory.addItemStackToInventory(output))
+				player.dropItem(output, true);
+		}
+
+		private void tryConvert(EntityPlayer player, Item target, ItemStack result) {
+			if (Library.hasInventoryItem(player.inventory, target)) {
+				Library.consumeInventoryItem(player.inventory, target);
+				if (!player.inventory.addItemStackToInventory(result.copy()))
+					player.dropItem(result, true);
+			}
 		}
 	}
 }

@@ -1,17 +1,17 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.recipes.AssemblerRecipes;
-import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.recipes.ChemplantRecipes;
+import com.hbm.inventory.recipes.CrucibleRecipes;
+import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemCassette;
 import com.hbm.lib.RefStrings;
-import com.hbm.main.MainRegistry;
-import com.hbm.packet.toserver.ItemFolderPacket;
 import com.hbm.packet.PacketDispatcher;
-import net.minecraft.client.Minecraft;
+import com.hbm.packet.toserver.ItemFolderPacket;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -23,132 +23,143 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 public class GUIScreenTemplateFolder extends GuiScreen {
-	
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_planner.png");
-    protected int xSize = 176;
-    protected int ySize = 229;
-    protected int guiLeft;
-    protected int guiTop;
-    int currentPage = 0;
-    List<ItemStack> stacks = new ArrayList<ItemStack>();
-    List<FolderButton> buttons = new ArrayList<FolderButton>();
-    private final EntityPlayer player;
-	private final List<ItemStack> allStacks;
+
+	private static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_planner.png");
+	private static final ResourceLocation TEXTURE_JOURNAL = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_planner_journal.png");
+	private final boolean isJournal;
+	private final List<ItemStack> allStacks = new ArrayList<>();
+	private final List<ItemStack> stacks = new ArrayList<>();
+	private final List<FolderButton> buttons = new ArrayList<>();
+	protected int xSize = 176;
+	protected int ySize = 229;
+	protected int guiLeft;
+	protected int guiTop;
+	private int currentPage = 0;
 	private GuiTextField search;
+
+	public GUIScreenTemplateFolder(EntityPlayer player) {
+		ItemStack heldItem = player.getHeldItemMainhand();
+		if (heldItem.isEmpty()) {
+			heldItem = player.getHeldItemOffhand();
+		}
+
+		if (heldItem.isEmpty()) {
+			this.isJournal = false;
+			return;
+		}
+
+		this.isJournal = heldItem.getItem() != ModItems.template_folder;
+
+		if (!this.isJournal) {
+			// Stamps
+			for (Item i : PressRecipes.stamps_plate)
+				allStacks.add(new ItemStack(i));
+			for (Item i : PressRecipes.stamps_wire)
+				allStacks.add(new ItemStack(i));
+			for (Item i : PressRecipes.stamps_circuit)
+				allStacks.add(new ItemStack(i));
+			// Tracks
+			for (int i = 1; i < ItemCassette.TrackType.values().length; i++) {
+				allStacks.add(new ItemStack(ModItems.siren_track, 1, i));
+			}
+
+			// Fluid IDs
+			FluidType[] fluids = Fluids.getInNiceOrder();
+			for (FluidType fluid : fluids) {
+				if (fluid != null && !fluid.hasNoID()) {
+					allStacks.add(new ItemStack(ModItems.forge_fluid_identifier, 1, fluid.getID()));
+				}
+			}
+		}
+
+		Item heldFolderItem = heldItem.getItem();
+		AssemblerRecipes.recipes.forEach((compStack, recipe) -> {
+			if (recipe.folders.contains(heldFolderItem)) {
+				allStacks.add(ItemAssemblyTemplate.writeType(new ItemStack(ModItems.assembly_template), compStack));
+			}
+		});
+
+		if (!this.isJournal) {
+			// Chemistry Templates
+			ChemplantRecipes.recipes.forEach(recipe -> allStacks.add(new ItemStack(ModItems.chemistry_template, 1, recipe.getId())));
+
+			// Crucible Templates
+			CrucibleRecipes.recipes.forEach(recipe -> {
+				allStacks.add(new ItemStack(ModItems.crucible_template, 1, recipe.getId()));
+			});
+		}
+
+		search(null);
+	}
+
 	private void search(String sub) {
-
 		stacks.clear();
-
 		this.currentPage = 0;
 
-		if(sub == null || sub.isEmpty()) {
+		if (sub == null || sub.isEmpty()) {
 			stacks.addAll(allStacks);
 			updateButtons();
 			return;
 		}
 
-		sub = sub.toLowerCase();
+		sub = sub.toLowerCase(Locale.US);
 
 		outer:
-		for(ItemStack stack : allStacks) {
-			for(Object o : stack.getTooltip(MainRegistry.proxy.me(), ITooltipFlag.TooltipFlags.ADVANCED)) {
-				if(o instanceof String) {
-					String text = (String) o;
-					if(text.toLowerCase(Locale.US).contains(sub)) {
-						stacks.add(stack);
-						continue outer;
-					}
+		for (ItemStack stack : allStacks) {
+			for (String line : stack.getTooltip(this.mc.player, ITooltipFlag.TooltipFlags.NORMAL)) {
+				if (line.toLowerCase(Locale.US).contains(sub)) {
+					stacks.add(stack);
+					continue outer;
 				}
 			}
-			if(stack.getItem() == ModItems.forge_fluid_identifier) {
-				FluidType fluid = Fluids.fromID(stack.getItemDamage());
-				if(fluid.getLocalizedName().contains(sub)) {
+			if (stack.getItem() == ModItems.forge_fluid_identifier) {
+				FluidType fluid = Fluids.fromID(stack.getMetadata());
+				if (fluid != null && fluid.getLocalizedName().toLowerCase(Locale.US).contains(sub)) {
 					stacks.add(stack);
 				}
 			}
 		}
-
 		updateButtons();
 	}
 
-    public GUIScreenTemplateFolder(EntityPlayer player) {
-    	
-    	this.player = player;
-		this.allStacks = new ArrayList<>();
+	private int getPageCount() {
+		if (stacks.isEmpty()) return 0;
+		return (stacks.size() - 1) / 35;
+	}
 
-    	//Stamps
-		for(Item i : PressRecipes.stamps_plate)
-			allStacks.add(new ItemStack(i));
-		for(Item i : PressRecipes.stamps_wire)
-			allStacks.add(new ItemStack(i));
-		for(Item i : PressRecipes.stamps_circuit)
-			allStacks.add(new ItemStack(i));
-		//Tracks
-    	for(int i = 1; i < ItemCassette.TrackType.values().length; i++)
-			allStacks.add(new ItemStack(ModItems.siren_track, 1, i));
-    	//Assembly Templates
-    	//for(int i = 0; i < ItemAssemblyTemplate.recipes.size(); i++)
-    	//	stacks.add(new ItemStack(ModItems.assembly_template, 1, i));
-    	for (int i = 0; i < AssemblerRecipes.recipeList.size(); ++i) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("type", i);
-			ItemStack stack = new ItemStack(ModItems.assembly_template, 1, 0);
-			stack.setTagCompound(tag);
-			allStacks.add(stack);
-		}
-    	//Chemistry Templates
-		for(int i = 0; i < ChemplantRecipes.recipes.size(); i++) {
-			ChemplantRecipes.ChemRecipe chem = ChemplantRecipes.recipes.get(i);
-			allStacks.add(new ItemStack(ModItems.chemistry_template, 1, chem.getId()));
-		}
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		if (currentPage < 0) currentPage = 0;
+		if (currentPage > getPageCount()) currentPage = getPageCount();
+		this.search.updateCursorCounter();
+	}
 
-		// Fluid IDs
-		FluidType[] fluids = Fluids.getInNiceOrder();
-		for(int i = 1; i < fluids.length; i++) {
-			if(!fluids[i].hasNoID()) {
-				allStacks.add(new ItemStack(ModItems.forge_fluid_identifier, 1, fluids[i].getID()));
-			}
-		}
-		search(null);
-    }
-    
-    int getPageCount() {
-    	return (int)Math.ceil((stacks.size() - 1) / (5 * 7));
-    }
-    
-    public void updateScreen() {
-    	if(currentPage < 0)
-    		currentPage = 0;
-    	if(currentPage > getPageCount())
-    		currentPage = getPageCount();
-    }
-    
-    public void drawScreen(int mouseX, int mouseY, float f)
-    {
-        this.drawDefaultBackground();
-        this.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
-        GlStateManager.disableLighting();
-        this.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        GlStateManager.enableLighting();
-    }
-    
-    public void initGui()
-    {
-        super.initGui();
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.drawGuiContainerForegroundLayer(mouseX, mouseY);
+		this.search.drawTextBox();
+	}
 
-        updateButtons();
+	@Override
+	public void initGui() {
+		super.initGui();
+		this.guiLeft = (this.width - this.xSize) / 2;
+		this.guiTop = (this.height - this.ySize) / 2;
+		updateButtons();
 
 		Keyboard.enableRepeatEvents(true);
 		this.search = new GuiTextField(0, this.fontRenderer, guiLeft + 61, guiTop + 213, 48, 12);
@@ -156,161 +167,183 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 		this.search.setDisabledTextColour(0xffffff);
 		this.search.setEnableBackgroundDrawing(false);
 		this.search.setMaxStringLength(100);
-    }
-	
+	}
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
-    
-    protected void updateButtons() {
-        
-        if(!buttons.isEmpty())
-        	buttons.clear();
-        
-        for(int i = currentPage * 35; i < Math.min(currentPage * 35 + 35, stacks.size()); i++) {
-    		buttons.add(new FolderButton(guiLeft + 25 + (27 * (i % 5)), guiTop + 26 + (27 * (int)Math.floor((i / 5D))) - currentPage * 27 * 7, stacks.get(i)));
-        }
 
-        if(currentPage != 0)
-        	buttons.add(new FolderButton(guiLeft + 25 - 18, guiTop + 26 + (27 * 3), 1, "Previous"));
-        if(currentPage != getPageCount())
-        	buttons.add(new FolderButton(guiLeft + 25 + (27 * 4) + 18, guiTop + 26 + (27 * 3), 2, "Next"));
-    }
+	private void updateButtons() {
+		if (!buttons.isEmpty())
+			buttons.clear();
 
-    protected void mouseClicked(int i, int j, int k) {
+		for (int i = currentPage * 35; i < Math.min(currentPage * 35 + 35, stacks.size()); i++) {
+			buttons.add(new FolderButton(guiLeft + 25 + (27 * (i % 5)), guiTop + 26 + (27 * (int) Math.floor((i / 5D))) - currentPage * 27 * 7,
+					stacks.get(i)));
+		}
+
+		if (currentPage != 0)
+			buttons.add(new FolderButton(guiLeft + 25 - 18, guiTop + 26 + (27 * 3), 1, "Previous"));
+		if (currentPage != getPageCount())
+			buttons.add(new FolderButton(guiLeft + 25 + (27 * 4) + 18, guiTop + 26 + (27 * 3), 2, "Next"));
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		int scroll = Mouse.getEventDWheel();
+		if (scroll != 0) {
+			if (scroll > 0 && currentPage > 0) { // Scroll up
+				currentPage--;
+				updateButtons();
+			} else if (scroll < 0 && currentPage < getPageCount()) { // Scroll down
+				currentPage++;
+				updateButtons();
+			}
+		}
+	}
+
+	protected void mouseClicked(int i, int j, int k) {
 		if(i >= guiLeft + 45 && i < guiLeft + 117 && j >= guiTop + 211 && j < guiTop + 223) {
 			this.search.setFocused(true);
 		} else  {
 			this.search.setFocused(false);
 		}
 
-    	try {
-    		for(FolderButton b : buttons)
-    			if(b.isMouseOnButton(i, j))
-    				b.executeAction();
-    	} catch (Exception ex) {
-    		updateButtons();
-    	}
-    }
-	
+		try {
+			for (FolderButton b : buttons)
+				if (b.isMouseOnButton(i, j))
+					b.executeAction();
+		} catch (Exception ex) {
+			updateButtons();
+		}
+	}
+
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 
-		this.fontRenderer.drawString(I18n.format((currentPage + 1) + "/" + (getPageCount() + 1)), 
+		this.fontRenderer.drawString(I18n.format((currentPage + 1) + "/" + (getPageCount() + 1)),
 				guiLeft + this.xSize / 2 - this.fontRenderer.getStringWidth(I18n.format((currentPage + 1) + "/" + (getPageCount() + 1))) / 2, guiTop + 10, 4210752);
-		
+
 		for(FolderButton b : buttons)
 			if(b.isMouseOnButton(i, j))
 				b.drawString(i, j);
 	}
 
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+		this.mc.getTextureManager().bindTexture(isJournal ? TEXTURE_JOURNAL : TEXTURE);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		if(search.isFocused())
+		if (search.isFocused()) {
 			drawTexturedModalRect(guiLeft + 45, guiTop + 211, 176, 54, 72, 12);
+		}
 
-		for(FolderButton b : buttons)
-			b.drawButton(b.isMouseOnButton(i, j));
-		for(FolderButton b : buttons)
-			b.drawIcon(b.isMouseOnButton(i, j));
-
-		search.drawTextBox();
+		for (FolderButton b : buttons) {
+			b.drawButton(b.isMouseOnButton(mouseX, mouseY));
+			b.drawIcon(b.isMouseOnButton(mouseX, mouseY));
+		}
 	}
 
 	@Override
-    protected void keyTyped(char p_73869_1_, int p_73869_2_)
-    {
-		if (this.search.textboxKeyTyped(p_73869_1_, p_73869_2_)) {
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		if (this.search.textboxKeyTyped(typedChar, keyCode)) {
 			this.search(this.search.getText());
-			return;
+		} else {
+			super.keyTyped(typedChar, keyCode);
 		}
-
-		if(p_73869_2_ == 1 || p_73869_2_ == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-			this.mc.player.closeScreen();
-		}
-        
-    }
-	
-	class FolderButton {
-		
-		int xPos;
-		int yPos;
-		//0: regular, 1: prev, 2: next
-		int type;
-		String info;
-		ItemStack stack;
-		
-		public FolderButton(int x, int y, int t, String i) {
-			xPos = x;
-			yPos = y;
-			type = t;
-			info = i;
-		}
-		
-		public FolderButton(int x, int y, ItemStack stack) {
-			xPos = x;
-			yPos = y;
-			type = 0;
-			info = stack.getDisplayName();
-			this.stack = stack.copy();
-		}
-		
-		public void updateButton(int mouseX, int mouseY) {
-		}
-		
-		public boolean isMouseOnButton(int mouseX, int mouseY) {
-			return xPos <= mouseX && xPos + 18 > mouseX && yPos < mouseY && yPos + 18 >= mouseY;
-		}
-		
-		public void drawButton(boolean b) {
-			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-			drawTexturedModalRect(xPos, yPos, b ? 176 + 18 : 176, type == 1 ? 18 : (type == 2 ? 36 : 0), 18, 18);
-		}
-		
-		public void drawIcon(boolean b) {
-			try {
-		        RenderHelper.enableGUIStandardItemLighting();
-				if(stack != null) {
-					if(stack.getItem() == ModItems.assembly_template)
-						itemRender.renderItemAndEffectIntoGUI(player, AssemblerRecipes.getOutputFromTempate(stack), xPos + 1, yPos + 1);
-					else if(stack.getItem() == ModItems.chemistry_template)
-						itemRender.renderItemAndEffectIntoGUI(player, new ItemStack(ModItems.chemistry_icon, 1, stack.getItemDamage()), xPos + 1, yPos + 1);
-					else
-						itemRender.renderItemAndEffectIntoGUI(player, stack, xPos + 1, yPos + 1);
-				}
-				RenderHelper.disableStandardItemLighting();
-			} catch(Exception x) { }
-		}
-		
-		public void drawString(int x, int y) {
-			if(info == null || info.isEmpty())
-				return;
-
-			if(stack != null) {
-				GUIScreenTemplateFolder.this.renderToolTip(stack, x, y);
-			} else {
-				drawHoveringText(Arrays.asList(new String[] { info }), x, y);
-			}
-		}
-		
-		public void executeAction() {
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			if(type == 0) {
-				PacketDispatcher.wrapper.sendToServer(new ItemFolderPacket(stack.copy()));
-			} else if(type == 1) {
-				if(currentPage > 0)
-					currentPage--;
-				updateButtons();
-			} else if(type == 2) {
-				if(currentPage < getPageCount())
-					currentPage++;
-				updateButtons();
-			}
-		}
-		
 	}
 
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		Keyboard.enableRepeatEvents(false);
+	}
+
+
+	class FolderButton {
+		final int xPos;
+		final int yPos;
+		final int type; // 0: regular, 1: prev, 2: next
+		final String info;
+		final ItemStack stack;
+
+		FolderButton(int x, int y, int t, String i) {
+			this.xPos = x;
+			this.yPos = y;
+			this.type = t;
+			this.info = i;
+			this.stack = ItemStack.EMPTY;
+		}
+
+		FolderButton(int x, int y, ItemStack stack) {
+			this.xPos = x;
+			this.yPos = y;
+			this.type = 0;
+			this.info = stack.getDisplayName();
+			this.stack = stack.copy();
+		}
+
+		boolean isMouseOnButton(int mouseX, int mouseY) {
+			return mouseX >= this.xPos && mouseX < this.xPos + 18 && mouseY >= this.yPos && mouseY < this.yPos + 18;
+		}
+
+		void drawButton(boolean isHovering) {
+			mc.getTextureManager().bindTexture(isJournal ? TEXTURE_JOURNAL : TEXTURE);
+			int u = isHovering ? 176 + 18 : 176;
+			int v = 0;
+			if (type == 1) v = 18;
+			if (type == 2) v = 36;
+			drawTexturedModalRect(xPos, yPos, u, v, 18, 18);
+		}
+
+		void drawIcon(boolean isHovering) {
+			if (stack.isEmpty()) return;
+
+			ItemStack toRender = stack;
+			// Special rendering logic for templates
+			if (stack.getItem() == ModItems.assembly_template) {
+				toRender = AssemblerRecipes.getOutputFromTempate(stack);
+			} else if (stack.getItem() == ModItems.chemistry_template) {
+				toRender = new ItemStack(ModItems.chemistry_icon, 1, stack.getMetadata());
+			} else if (stack.getItem() == ModItems.crucible_template) {
+				toRender = CrucibleRecipes.indexMapping.get(stack.getMetadata()).icon;
+			}
+
+			if (toRender != null && !toRender.isEmpty()) {
+				RenderHelper.enableGUIStandardItemLighting();
+				itemRender.renderItemAndEffectIntoGUI(toRender, xPos + 1, yPos + 1);
+				RenderHelper.disableStandardItemLighting();
+			}
+		}
+
+		void drawString(int x, int y) {
+			if (stack.isEmpty()) {
+				if (info != null && !info.isEmpty()) {
+					drawHoveringText(info, x, y);
+				}
+			} else {
+				renderToolTip(stack, x, y);
+			}
+		}
+
+		void executeAction() {
+			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			switch (type) {
+				case 0 -> PacketDispatcher.wrapper.sendToServer(new ItemFolderPacket(stack.copy()));
+				case 1 -> {
+					if (currentPage > 0) {
+						currentPage--;
+						updateButtons();
+					}
+				}
+				case 2 -> {
+					if (currentPage < getPageCount()) {
+						currentPage++;
+						updateButtons();
+					}
+				}
+			}
+		}
+	}
 }
