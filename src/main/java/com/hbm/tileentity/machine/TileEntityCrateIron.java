@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerCrateIron;
 import com.hbm.inventory.gui.GUICrateIron;
 import com.hbm.items.ModItems;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+@AutoRegisterTE
 public class TileEntityCrateIron extends TileEntityLockableBase implements IGUIProvider {
 
 	public ItemStackHandler inventory;

@@ -9,6 +9,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.entity.projectile.EntityCog;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-
+@AutoRegisterTE
 public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyProviderMK2, IConfigurableMachine, ITickable {
 
     /* CONFIGURABLE CONSTANTS */

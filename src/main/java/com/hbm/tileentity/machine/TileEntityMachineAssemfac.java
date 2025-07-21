@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerAssemfac;
 import com.hbm.inventory.fluid.Fluids;
@@ -34,6 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+@AutoRegisterTE
 public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable {
 
     public AssemblerArm[] arms;

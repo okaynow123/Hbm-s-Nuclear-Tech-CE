@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.tile.IHeatSource;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerFirebox;
 import com.hbm.inventory.gui.GUIFirebox;
 import com.hbm.modules.ModuleBurnTime;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
+@AutoRegisterTE
 public class TileEntityHeaterOven extends TileEntityFireboxBase implements IConfigurableMachine {
     public static int baseHeat = 500;
 

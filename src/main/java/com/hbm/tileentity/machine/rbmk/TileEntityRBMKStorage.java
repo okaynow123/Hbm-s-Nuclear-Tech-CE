@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.rbmk;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRBMKStorage;
 import com.hbm.inventory.gui.GUIRBMKStorage;
 import com.hbm.tileentity.IGUIProvider;
@@ -12,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityRBMKStorage extends TileEntityRBMKSlottedBase implements IRBMKLoadable, IGUIProvider {
 
 

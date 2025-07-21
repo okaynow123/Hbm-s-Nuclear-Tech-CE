@@ -9,6 +9,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -51,6 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityChungus extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, SimpleComponent, IEnergyProviderMK2, CompatHandler.OCComponent, IFluidCopiable, IConfigurableMachine, IFFtoNTMF {
 
 	public long power;

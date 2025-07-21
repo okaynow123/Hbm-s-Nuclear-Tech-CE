@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerCoreInjector;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -33,6 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityCoreInjector extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent {
 
     public static final int range = 15;

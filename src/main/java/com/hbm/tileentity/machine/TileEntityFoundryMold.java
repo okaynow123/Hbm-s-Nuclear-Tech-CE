@@ -1,7 +1,9 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.material.NTMMaterial;
 
+@AutoRegisterTE
 public class TileEntityFoundryMold extends TileEntityFoundryCastingBase implements IRenderFoundry {
 
 	public TileEntityFoundryMold() {

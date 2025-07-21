@@ -10,6 +10,7 @@ import com.hbm.blocks.gas.BlockGasBase;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.BedrockOreRegistry;
@@ -67,6 +68,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineExcavator extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardReceiver, ITickable, IControlReceiver, IGUIProvider, IMiningDrill, IFFtoNTMF {
 
 	public static final long maxPower = 10_000_000;

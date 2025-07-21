@@ -6,6 +6,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.IPersistentInfoProvider;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -13,6 +14,9 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
@@ -35,12 +39,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MachineCapacitor extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
     public static final PropertyDirection FACING = BlockDirectional.FACING;
@@ -177,6 +176,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         player.addExhaustion(0.025F);
     }
 
+    @AutoRegisterTE
     public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable {
 
         public long power;

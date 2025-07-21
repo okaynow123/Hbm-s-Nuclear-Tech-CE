@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.SILEXRecipes;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
+@AutoRegisterTE
 public class TileEntitySILEX extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IFFtoNTMF, IGUIProvider {
 
 	public EnumWavelengths mode = EnumWavelengths.NULL;

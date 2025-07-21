@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineSiren;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
@@ -29,6 +30,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.Arrays;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineSiren extends TileEntity implements ITickable, IControllable, IGUIProvider {
 
 	public ItemStackHandler inventory;

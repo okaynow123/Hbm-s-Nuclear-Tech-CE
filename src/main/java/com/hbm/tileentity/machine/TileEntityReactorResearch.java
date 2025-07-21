@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.MobConfig;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerReactorResearch;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityReactorResearch extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, ITickable {
 
     @SideOnly(Side.CLIENT)

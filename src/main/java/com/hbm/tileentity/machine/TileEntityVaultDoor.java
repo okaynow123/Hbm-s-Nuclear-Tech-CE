@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.DummyBlockVault;
 import com.hbm.blocks.machine.VaultDoor;
 import com.hbm.handler.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityVaultDoor extends TileEntityLockableBase implements ITickable, IAnimatedDoor {
 
 	public DoorState state = DoorState.CLOSED;

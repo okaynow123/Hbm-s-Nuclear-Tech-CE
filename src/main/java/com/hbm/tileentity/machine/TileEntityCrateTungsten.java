@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.inventory.container.ContainerCrateTungsten;
@@ -36,6 +37,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Random;
 
+@AutoRegisterTE
 public class TileEntityCrateTungsten extends TileEntityLockableBase implements IBufPacketReceiver, ITickable, ILaserable, IGUIProvider {
 
 	public ItemStackHandler inventory;

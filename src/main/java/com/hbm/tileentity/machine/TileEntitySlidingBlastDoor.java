@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implements ITickable, IAnimatedDoor {
 
 	public DoorState state = DoorState.CLOSED;

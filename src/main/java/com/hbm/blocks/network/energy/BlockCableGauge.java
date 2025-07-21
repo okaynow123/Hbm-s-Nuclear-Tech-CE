@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.PowerNetMK2;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
@@ -119,6 +120,7 @@ public class BlockCableGauge extends BlockContainer implements ILookOverlay, ITo
 	}
 
 	@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+	@AutoRegisterTE
 	public static class TileEntityCableGauge extends TileEntityCableBaseNT implements SimpleComponent {
 
 		private long deltaTick = 10;

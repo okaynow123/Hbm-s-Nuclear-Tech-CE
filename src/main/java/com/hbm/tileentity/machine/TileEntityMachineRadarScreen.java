@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.entity.RadarEntry;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import io.netty.buffer.ByteBuf;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineRadarScreen extends TileEntity implements ITickable, IBufPacketReceiver {
 
     public List<RadarEntry> entries = new ArrayList();

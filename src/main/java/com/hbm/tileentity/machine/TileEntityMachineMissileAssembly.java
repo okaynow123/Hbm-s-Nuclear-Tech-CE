@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.handler.MissileStruct;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineMissileAssembly;
 import com.hbm.inventory.gui.GUIMachineMissileAssembly;
 import com.hbm.items.weapon.ItemCustomMissile;
@@ -30,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+@AutoRegisterTE
 public class TileEntityMachineMissileAssembly extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;

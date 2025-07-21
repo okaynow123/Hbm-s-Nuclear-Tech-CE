@@ -5,7 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.SolarSystem;
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineOilWell;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -14,6 +14,8 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.world.feature.OilSpot;
+import java.io.IOException;
+import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,10 +32,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-
-
+@AutoRegisterTE
 public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
 
     protected static int maxPower = 5_000_000;

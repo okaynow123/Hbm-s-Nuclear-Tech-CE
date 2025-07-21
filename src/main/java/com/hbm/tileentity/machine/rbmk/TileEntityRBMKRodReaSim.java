@@ -1,8 +1,10 @@
 package com.hbm.tileentity.machine.rbmk;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 
+@AutoRegisterTE
 public class TileEntityRBMKRodReaSim extends TileEntityRBMKRod {
 	
 	public TileEntityRBMKRodReaSim() {

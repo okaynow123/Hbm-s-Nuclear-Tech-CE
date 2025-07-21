@@ -9,6 +9,7 @@ import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.entity.missile.EntityRideableRocket.RocketState;
 import com.hbm.handler.RocketStruct;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.weapon.ItemCustomRocket;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+@AutoRegisterTE
 public class TileEntityOrbitalStation extends TileEntityMachineBase implements IFluidStandardReceiver, ITickable {
 
 	private OrbitalStation station;

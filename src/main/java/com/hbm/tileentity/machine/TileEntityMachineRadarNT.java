@@ -10,6 +10,7 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerMachineRadarNT;
 import com.hbm.inventory.gui.GUIMachineRadarNT;
@@ -66,6 +67,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityMachineRadarNT extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider, IConfigurableMachine, IControlReceiver, SimpleComponent, CompatHandler.OCComponent {
 
 	public boolean scanMissiles = true;

@@ -1,8 +1,10 @@
 package com.hbm.tileentity.network.energy;
 
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.render.amlfrom1710.Vec3;
 
+@AutoRegisterTE
 public class TileEntityPylonLarge extends TileEntityPylonBase {
 
 	@Override

@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.container.ContainerAshpit;
 import com.hbm.inventory.gui.GUIAshpit;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityAshpit extends TileEntityMachineBase implements ITickable, IGUIProvider, IConfigurableMachine {
 
     public int playersUsing = 0;

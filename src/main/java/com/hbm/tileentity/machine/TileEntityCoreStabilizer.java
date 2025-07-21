@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.CompatHandler;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerCoreStabilizer;
 import com.hbm.inventory.gui.GUICoreStabilizer;
 import com.hbm.items.ModItems;
@@ -35,6 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityCoreStabilizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, SimpleComponent, IGUIProvider, CompatHandler.OCComponent {
 
     public static final long maxPower = 2500000000L;

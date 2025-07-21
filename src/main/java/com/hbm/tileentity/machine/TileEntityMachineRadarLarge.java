@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
@@ -9,6 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.io.IOException;
 
+@AutoRegisterTE
 public class TileEntityMachineRadarLarge extends TileEntityMachineRadarNT {
 
     public static int radarLargeRange = 3_000;

@@ -4,6 +4,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockTallPlant.EnumTallFlower;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -41,6 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+@AutoRegisterTE
 public class TileEntityMachineAutosaw extends TileEntityLoadedBase
     implements IBufPacketReceiver, IFluidStandardReceiver, IFluidCopiable, ITickable {
 

@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.DummyBlockBlast;
 import com.hbm.handler.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.interfaces.IDoor;
 import com.hbm.inventory.control_panel.ControlEvent;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Arrays;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityBlastDoor extends TileEntityLockableBase implements ITickable, IControllable, IAnimatedDoor {
 
 	public IDoor.DoorState state = IDoor.DoorState.CLOSED;

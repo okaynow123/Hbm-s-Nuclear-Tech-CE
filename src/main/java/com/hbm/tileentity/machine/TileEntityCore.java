@@ -6,6 +6,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.forgefluid.FluidTypeHandler;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerCore;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -41,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@AutoRegisterTE
 public class TileEntityCore extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 

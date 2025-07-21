@@ -1,5 +1,6 @@
 package com.hbm.tileentity.network;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRadioTorchSender;
 import com.hbm.inventory.gui.GUIScreenRadioTorch;
 import com.hbm.tileentity.IGUIProvider;
@@ -10,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@AutoRegisterTE
 public class TileEntityRadioTorchSender extends TileEntityRadioTorchBase implements IGUIProvider {
 
 	@Override

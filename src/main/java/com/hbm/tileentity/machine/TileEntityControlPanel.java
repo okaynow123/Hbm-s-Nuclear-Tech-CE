@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockControlPanelType;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.packet.toclient.ControlPanelUpdatePacket;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+@AutoRegisterTE
 public class TileEntityControlPanel extends TileEntity implements ITickable, IControllable, IControlReceiver, SimpleComponent, IGUIProvider {
 
 	public ItemStackHandler inventory;

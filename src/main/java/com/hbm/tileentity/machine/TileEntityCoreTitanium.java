@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerCoreTitanium;
 import com.hbm.inventory.gui.GUICoreTitanium;
 import com.hbm.items.ModItems;
@@ -30,6 +31,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityCoreTitanium extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public int progress = 0;

@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.hazard.HazardSystem;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.recipes.StorageDrumRecipes;
 import com.hbm.inventory.container.ContainerStorageDrum;
 import com.hbm.inventory.fluid.Fluids;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityStorageDrum extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IGUIProvider {
 
 	public FluidTankNTM[] tanks;

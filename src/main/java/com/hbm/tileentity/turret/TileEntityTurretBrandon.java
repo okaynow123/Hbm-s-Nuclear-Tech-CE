@@ -1,7 +1,10 @@
 package com.hbm.tileentity.turret;
 
+import com.hbm.interfaces.AutoRegisterTE;
+
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityTurretBrandon extends TileEntityTurretBaseNT {
 	
 	@Override

@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxElectricityPacket;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2 {
 
 	public long power = 0;

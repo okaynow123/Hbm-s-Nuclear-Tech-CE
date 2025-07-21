@@ -7,6 +7,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
+@AutoRegisterTE
 public class TileEntityCondenser extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IConfigurableMachine, IFluidCopiable, IFFtoNTMF {
 
 	public int age = 0;

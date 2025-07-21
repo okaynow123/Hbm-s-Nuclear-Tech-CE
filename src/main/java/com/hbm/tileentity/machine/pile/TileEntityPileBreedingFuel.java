@@ -1,10 +1,11 @@
 package com.hbm.tileentity.machine.pile;
 
 import com.hbm.api.block.IPileNeutronReceiver;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.interfaces.AutoRegisterTE;
 import net.minecraft.nbt.NBTTagCompound;
 
+@AutoRegisterTE
 public class TileEntityPileBreedingFuel extends TileEntityPileBase implements IPileNeutronReceiver {
 
     public int neutrons;

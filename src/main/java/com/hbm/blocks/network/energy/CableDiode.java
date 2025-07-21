@@ -11,6 +11,7 @@ import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.packet.toclient.BufPacket;
@@ -162,6 +163,7 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 		return EnumBlockRenderType.MODEL;
 	}
 
+	@AutoRegisterTE
 	public static class TileEntityDiode extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
 
 		@Override

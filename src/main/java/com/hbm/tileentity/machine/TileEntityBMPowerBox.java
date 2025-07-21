@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
 import com.hbm.inventory.control_panel.IControllable;
@@ -13,6 +14,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityBMPowerBox extends TileEntity implements IControllable {
 	
 	public long ticksPlaced;

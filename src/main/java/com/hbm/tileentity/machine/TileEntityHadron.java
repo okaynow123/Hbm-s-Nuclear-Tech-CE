@@ -6,6 +6,7 @@ import com.hbm.blocks.machine.BlockHadronCoil;
 import com.hbm.blocks.machine.BlockHadronPlating;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.recipes.HadronRecipes;
 import com.hbm.inventory.container.ContainerHadron;
 import com.hbm.inventory.gui.GUIHadron;
@@ -46,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@AutoRegisterTE
 public class TileEntityHadron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;

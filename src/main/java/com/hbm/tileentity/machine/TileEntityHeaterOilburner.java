@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerOilburner;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@AutoRegisterTE
 public class TileEntityHeaterOilburner extends TileEntityMachineBase implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF {
     public boolean isOn = false;
 

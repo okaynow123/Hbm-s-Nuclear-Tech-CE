@@ -9,6 +9,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
@@ -58,6 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@AutoRegisterTE
 public class TileEntityMachineRefinery extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IOverpressurable, IPersistentNBT, IRepairable, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IFFtoNTMF {
 
     public static final int maxSulfur = 100;

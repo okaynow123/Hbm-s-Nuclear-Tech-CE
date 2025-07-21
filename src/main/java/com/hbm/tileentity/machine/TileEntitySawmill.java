@@ -4,6 +4,7 @@ import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.entity.projectile.EntitySawblade;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
@@ -36,6 +37,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntitySawmill extends TileEntityMachineBase implements ITickable {
 
     public int heat;

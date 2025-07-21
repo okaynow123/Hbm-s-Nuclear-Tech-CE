@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.Nodespace;
+import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import io.netty.buffer.ByteBuf;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+@AutoRegisterTE
 public class TileEntityMachineFENSU extends TileEntityMachineBattery {
 
 	public EnumDyeColor color = EnumDyeColor.LIGHT_BLUE;
