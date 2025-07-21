@@ -57,15 +57,16 @@ public class ChemplantRecipes extends SerializableRecipe {
 	}
 
 	public static void register(){
-		if(MachineConfig.chemplantKeepOilProcessing){
-			recipes.add(new ChemRecipe(0, "FP_HEAVYOIL", 50).inputFluids(new FluidStack(Fluids.HEAVYOIL, 1000)).outputFluids(new FluidStack(Fluids.BITUMEN, 300), new FluidStack(Fluids.SMEAR, 700)));
-
-			recipes.add(new ChemRecipe(10, "FP_SMEAR", 50).inputFluids(new FluidStack(Fluids.SMEAR, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 600), new FluidStack(Fluids.LUBRICANT, 400)));
-
-			recipes.add(new ChemRecipe(20, "FP_NAPHTHA", 50).inputFluids(new FluidStack(Fluids.NAPHTHA, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 400), new FluidStack(Fluids.DIESEL, 600)));
-
-			recipes.add(new ChemRecipe(30, "FP_LIGHTOIL", 50).inputFluids(new FluidStack(Fluids.LIGHTOIL, 1000)).outputFluids(new FluidStack(Fluids.DIESEL, 400), new FluidStack(Fluids.KEROSENE, 600)));
-		}
+		//No fuck off
+//		if(MachineConfig.chemplantKeepOilProcessing){
+//			recipes.add(new ChemRecipe(0, "FP_HEAVYOIL", 50).inputFluids(new FluidStack(Fluids.HEAVYOIL, 1000)).outputFluids(new FluidStack(Fluids.BITUMEN, 300), new FluidStack(Fluids.SMEAR, 700)));
+//
+//			recipes.add(new ChemRecipe(10, "FP_SMEAR", 50).inputFluids(new FluidStack(Fluids.SMEAR, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 600), new FluidStack(Fluids.LUBRICANT, 400)));
+//
+//			recipes.add(new ChemRecipe(20, "FP_NAPHTHA", 50).inputFluids(new FluidStack(Fluids.NAPHTHA, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 400), new FluidStack(Fluids.DIESEL, 600)));
+//
+//			recipes.add(new ChemRecipe(30, "FP_LIGHTOIL", 50).inputFluids(new FluidStack(Fluids.LIGHTOIL, 1000)).outputFluids(new FluidStack(Fluids.DIESEL, 400), new FluidStack(Fluids.KEROSENE, 600)));
+//		}
 
 		//6-30, formerly oil cracking, coal liquefaction and solidifciation
 		registerOtherOil();

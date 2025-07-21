@@ -8,6 +8,27 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class CommonConfig {
+	public static final String CATEGORY_GENERAL = "01_general";
+	public static final String CATEGORY_ORES = "02_ores";
+	public static final String CATEGORY_NUKES = "03_nukes";
+	public static final String CATEGORY_DUNGEONS = "04_dungeons";
+	public static final String CATEGORY_METEORS = "05_meteors";
+	public static final String CATEGORY_EXPLOSIONS = "06_explosions";
+	public static final String CATEGORY_MISSILE = "07_missile_machines";
+	public static final String CATEGORY_POTION = "08_potion_effects";
+	public static final String CATEGORY_MACHINES = "09_machines";
+	public static final String CATEGORY_DROPS = "10_dangerous_drops";
+	public static final String CATEGORY_TOOLS = "11_tools";
+	public static final String CATEGORY_MOBS = "12_mobs";
+	public static final String CATEGORY_RADIATION = "13_radiation";
+	public static final String CATEGORY_HAZARD = "14_hazard";
+	public static final String CATEGORY_STRUCTURES = "15_structures";
+	public static final String CATEGORY_POLLUTION = "16_pollution";
+	public static final String CATEGORY_BIOMES = "17_biomes";
+	public static final String CATEGORY_WEAPONS = "18_weapons";
+
+	public static final String CATEGORY_528 = "528";
+	public static final String CATEGORY_LBSM = "LESS BULLSHIT MODE";
 
 	public static boolean createConfigBool(Configuration config, String category, String name, String comment, boolean def) {
 	
