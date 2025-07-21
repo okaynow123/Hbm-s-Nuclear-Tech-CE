@@ -6,7 +6,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
@@ -23,12 +22,10 @@ public class TemplateItemRenderer extends TileEntityItemStackRenderer {
     private static void render(ItemStack stack, IBakedModel finalModel) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.5F, 0.5F, 0F);
-        RenderHelper.enableGUIStandardItemLighting();
 
         finalModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(finalModel, TransformType.GUI, false);
         Minecraft.getMinecraft().getRenderItem().renderItem(stack, finalModel);
 
-        RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
     }
 
