@@ -17,6 +17,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import com.hbm.util.ParticleUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -115,7 +116,9 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 				this.fluxSlow = 0;
 
 				if(this.heat > this.maxHeat()) {
-					this.meltdown();
+					if (RBMKDials.getMeltdownsDisabled(world))
+						ParticleUtil.spawnGasFlame(world, pos.getX() + 0.5, pos.getY() +RBMKDials.getColumnHeight(world) + 0.5, pos.getZ() + 0.5, 0, 0.2, 0);
+					else this.meltdown();
 					return;
 				}
 				
