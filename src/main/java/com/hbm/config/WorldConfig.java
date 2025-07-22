@@ -1,7 +1,8 @@
 package com.hbm.config;
 
-public class WorldConfig {
+import net.minecraftforge.common.config.Configuration;
 
+public class WorldConfig {
 	public static int uraniumSpawn = 6;
 	public static int thoriumSpawn = 7;
 	public static int titaniumSpawn = 8;
@@ -21,16 +22,16 @@ public class WorldConfig {
 	public static int oilcoalSpawn = 128;
 	public static int gassshaleSpawn = 5;
 	public static int gasbubbleSpawn = 4;
-	public static int explosivebubbleSpawn = 8;
+	public static int explosivebubbleSpawn = 0;
 	public static int cobaltSpawn = 2;
 	public static int dunaOilSpawn = 100;
 	public static int eveGasSpawn = 100;
 	public static int laytheOilSpawn = 100;
-	
+
 	public static int ironClusterSpawn = 4;
 	public static int titaniumClusterSpawn = 2;
 	public static int aluminiumClusterSpawn = 3;
-	
+
 	public static int netherUraniumuSpawn = 8;
 	public static int netherTungstenSpawn = 10;
 	public static int netherSulfurSpawn = 26;
@@ -40,7 +41,7 @@ public class WorldConfig {
 	public static int netherCobaltSpawn = 2;
 
 	public static int endTikiteSpawn = 8;
-	
+
 	public static int radioStructure = 500;
 	public static int antennaStructure = 750;
 	public static int atomStructure = 500;
@@ -66,7 +67,7 @@ public class WorldConfig {
 	public static int arcticStructure = 500;
 	public static int jungleStructure = 2000;
 	public static int pyramidStructure = 4000;
-	
+
 	public static int meteorStrikeChance = 20 * 60 * 180;
 	public static int meteorShowerChance = 20 * 60 * 5;
 	public static int meteorShowerDuration = 6000;
@@ -76,8 +77,8 @@ public class WorldConfig {
 			return 0;
 		return (int)e;
 	}
-	
-	public static void loadFromCompatibilityConfig() {
+
+	public static void loadFromConfig(Configuration config) {
 
 		uraniumSpawn = convertToInt(CompatibilityConfig.uraniumSpawn.get(0));
 		titaniumSpawn = convertToInt(CompatibilityConfig.titaniumSpawn.get(0));
@@ -100,11 +101,11 @@ public class WorldConfig {
 		gasbubbleSpawn = convertToInt(CompatibilityConfig.gasbubbleSpawn.get(0));
 		cinnabarSpawn = convertToInt(CompatibilityConfig.cinnabarSpawn.get(0));
 		cobaltSpawn = convertToInt(CompatibilityConfig.cobaltSpawn.get(0));
-		
+
 		ironClusterSpawn = convertToInt(CompatibilityConfig.ironClusterSpawn.get(0));
 		titaniumClusterSpawn = convertToInt(CompatibilityConfig.titaniumClusterSpawn.get(0));
 		aluminiumClusterSpawn = convertToInt(CompatibilityConfig.aluminiumClusterSpawn.get(0));
-		
+
 		netherUraniumuSpawn = convertToInt(CompatibilityConfig.netherUraniumSpawn.get(-1));
 		netherTungstenSpawn = convertToInt(CompatibilityConfig.netherTungstenSpawn.get(-1));
 		netherSulfurSpawn = convertToInt(CompatibilityConfig.netherSulfurSpawn.get(-1));
@@ -112,10 +113,10 @@ public class WorldConfig {
 		netherCoalSpawn = convertToInt(CompatibilityConfig.netherCoalSpawn.get(-1));
 		netherPlutoniumSpawn = convertToInt(CompatibilityConfig.netherPlutoniumSpawn.get(-1));
 		netherCobaltSpawn = convertToInt(CompatibilityConfig.netherCobaltSpawn.get(-1));
-		
+
 		endTikiteSpawn = convertToInt(CompatibilityConfig.endTixiteSpawn.get(1));
-		
-        
+
+
 		radioStructure = convertToInt(CompatibilityConfig.radioStructure.get(0));
 		antennaStructure = convertToInt(CompatibilityConfig.antennaStructure.get(0));
 		atomStructure = convertToInt(CompatibilityConfig.atomStructure.get(0));
@@ -138,7 +139,7 @@ public class WorldConfig {
 		vaultfreq = convertToInt(CompatibilityConfig.vaultfreq.get(0));
 		geyserWater = convertToInt(CompatibilityConfig.geyserWater.get(0));
 		geyserChlorine = convertToInt(CompatibilityConfig.geyserChlorine.get(0));
-		
+
 
 		geyserVapor = convertToInt(CompatibilityConfig.geyserVapor.get(0));
 		meteorStructure = convertToInt(CompatibilityConfig.meteorStructure.get(0));
@@ -146,12 +147,11 @@ public class WorldConfig {
 		arcticStructure = convertToInt(CompatibilityConfig.arcticStructure.get(0));
 		jungleStructure = convertToInt(CompatibilityConfig.jungleStructure.get(0));
 		pyramidStructure = convertToInt(CompatibilityConfig.pyramidStructure.get(0));
-		
+
 
 		meteorStrikeChance = convertToInt(CompatibilityConfig.meteorStrikeChance.get(0));
 		meteorShowerChance = convertToInt(CompatibilityConfig.meteorShowerChance.get(0));
 		meteorShowerDuration = convertToInt(CompatibilityConfig.meteorShowerDuration.get(0));
-		
-	}
 
+	}
 }

@@ -3,7 +3,6 @@ package com.hbm.entity.effect;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.config.WorldConfig;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.saveddata.AuxSavedData;
 import net.minecraft.block.Block;
@@ -52,7 +51,12 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 	public EntityFalloutRain(World world) {
 		super(world);
 		this.setSize(4, 20);
-		this.waterLevel = getInt(CompatibilityConfig.fillCraterWithWater.get(world.provider.getDimension()));
+		int result = 0;
+		Object e = CompatibilityConfig.fillCraterWithWater.get(world.provider.getDimension());
+		if(e != null) {
+			result = (int) e;
+		}
+		this.waterLevel = result;
 		if (this.waterLevel == 0) {
 			this.waterLevel = world.getSeaLevel();
 		} else if (this.waterLevel < 0 && this.waterLevel > -world.getSeaLevel()) {
@@ -60,10 +64,6 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 		}
 		this.spawnFire = BombConfig.spawnFire;
 		this.drainFinished = this.doFlood;
-	}
-
-	private static int getInt(Object e) {
-		return WorldConfig.convertToInt(e);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 			if (falloutTickNumber >= BombConfig.fChunkSpeed) {
 				if (!this.isDead) {
 					long start = System.currentTimeMillis();
-					final long timeBudget = BombConfig.falloutMS;
+					final long timeBudget = BombConfig.falloutDelay;
 					long deadline = start + timeBudget;
 					while (System.currentTimeMillis() < deadline && !stompingDone) {
 						stompAround();
@@ -350,7 +350,7 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 	}
 
 	private void drainTick() {
-		final long deadline = System.nanoTime() + BombConfig.falloutMS * 1_000_000L;
+		final long deadline = System.nanoTime() + BombConfig.falloutDelay * 1_000_000L;
 
 		if (orderedDrainChunks.isEmpty() && !drainMap.isEmpty()) {
 			orderedDrainChunks.addAll(drainMap.keySet());

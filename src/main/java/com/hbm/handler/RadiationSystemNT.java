@@ -273,6 +273,7 @@ public class RadiationSystemNT {
 
                         // effect for radiation
 
+                        //TODO: This DESTROYS performance, rewrite or remove
                         if (entity instanceof EntityPlayer player) {
                             if (player.capabilities.isCreativeMode || player.isSpectator()) {
                                 continue;
