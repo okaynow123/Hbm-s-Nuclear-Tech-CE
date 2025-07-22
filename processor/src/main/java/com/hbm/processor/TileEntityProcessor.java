@@ -78,11 +78,23 @@ public class TileEntityProcessor extends AbstractProcessor {
     private void generateRegistrarFile() throws IOException {
         //Configurables Generator
         ClassName listClass = ClassName.get("java.util", "ArrayList");
+        ClassName hashMapClass = ClassName.get("java.util", "HashMap");
+        ClassName stringClass =  ClassName.get("java.lang", "String");
         ClassName classClass = ClassName.get("java.lang", "Class");
         ClassName iface = ClassName.get("com.hbm.tileentity", "IConfigurableMachine");
-        TypeName wildcard = WildcardTypeName.subtypeOf(iface);
-        TypeName classOfWildcard = ParameterizedTypeName.get(classClass, wildcard);
-        TypeName arrayListOfClass = ParameterizedTypeName.get(listClass, classOfWildcard);
+        ClassName tileEntity = ClassName.get("net.minecraft.tileentity", "TileEntity");
+        TypeName wildcardConfig = WildcardTypeName.subtypeOf(iface);
+        TypeName wildcardTE = WildcardTypeName.subtypeOf(tileEntity);
+        TypeName classOfWildcardTE = ParameterizedTypeName.get(classClass, wildcardTE);
+        TypeName classOfWildcardConfigurable = ParameterizedTypeName.get(classClass, wildcardConfig);
+        TypeName arrayListOfClass = ParameterizedTypeName.get(listClass, classOfWildcardConfigurable);
+        TypeName hashMapOfClass = ParameterizedTypeName.get(hashMapClass, classOfWildcardTE, stringClass);
+
+        FieldSpec tileEntities = FieldSpec.builder(hashMapOfClass, "registryMap")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new $T<>()",hashMapClass)
+                .build();
+
         FieldSpec configurableList = FieldSpec.builder(arrayListOfClass, "configurable")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("new $T<>()", listClass)
@@ -93,7 +105,6 @@ public class TileEntityProcessor extends AbstractProcessor {
         ClassName resourceLocation = ClassName.get("net.minecraft.util", "ResourceLocation");
         ClassName refStrings = ClassName.get("com.hbm.lib", "RefStrings");
 
-        ClassName tileEntity = ClassName.get("net.minecraft.tileentity", "TileEntity");
 
         TypeName clazzType = ParameterizedTypeName.get(classClass, WildcardTypeName.subtypeOf(tileEntity));
 
@@ -105,11 +116,12 @@ public class TileEntityProcessor extends AbstractProcessor {
                 .returns(TypeName.VOID)
                 .addParameter(clazzParam)
                 .addParameter(nameParam)
-                .addStatement(
-                "$T.registerTileEntity($N, new $T($T.MODID, $N))",
-                gameRegistry, "clazz", resourceLocation, refStrings, "name")
+//                .addStatement(
+//                "$T.registerTileEntity($N, new $T($T.MODID, $N))",
+//                gameRegistry, "clazz", resourceLocation, refStrings, "name")
+                .addStatement("$N.put($N,$N)","registryMap", "clazz", "name")
                 .beginControlFlow("if ($T.class.isAssignableFrom($N))", iface, "clazz" )
-                .addStatement("$N.add(($T)$N)", "configurable", classOfWildcard, "clazz")
+                .addStatement("$N.add(($T)$N)", "configurable", classOfWildcardConfigurable, "clazz")
                 .endControlFlow()
                 .build();
 
@@ -128,6 +140,7 @@ public class TileEntityProcessor extends AbstractProcessor {
         }
         TypeSpec generatedRegistrar = TypeSpec.classBuilder("GeneratedTERegistrar")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addField(tileEntities)
                 .addField(configurableList)
                 .addMethod(registerAllMethod.build())
                 .addMethod(registerMethod)

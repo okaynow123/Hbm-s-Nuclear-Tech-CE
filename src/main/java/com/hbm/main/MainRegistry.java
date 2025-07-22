@@ -336,7 +336,6 @@ public class MainRegistry {
         aMatDNS.setRepairItem(new ItemStack(ModItems.plate_armor_dnt));
 
         TileEntityRegistrar.init();
-        MachineDynConfig.initialize();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 

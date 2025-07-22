@@ -40,7 +40,6 @@ public class MachineDynConfig {
         TileEntityRegistrar.configurable.forEach(x -> { try { dummies.add(x.newInstance()); } catch(Exception ex) {} }); // <- lambda comes with a hidden little try/catch block hidden inside, like a kinder surprise egg that is filled with shit
         File file = new File(dir.getAbsolutePath() + File.separatorChar + "hbmMachines.json");
 
-        //dummies.forEach(x -> x.initDefaults());
 
         //and now for the good part
         try { // <- useless overarching try/catch to make the reader shut up

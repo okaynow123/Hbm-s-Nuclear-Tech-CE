@@ -94,7 +94,6 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
         writer.name("I:groundDepth").value(groundDepth);
         writer.name("I:steamSpeed").value(steamSpeed);
         writer.name("I:electricSpeed").value(electricSpeed);
-        writer.endObject();
     }
     @Override
     public void update() {
