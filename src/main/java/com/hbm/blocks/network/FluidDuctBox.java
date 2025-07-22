@@ -1,22 +1,31 @@
 package com.hbm.blocks.network;
 
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.ModSoundTypes;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.render.model.DuctBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
+import com.hbm.util.ColorUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
@@ -49,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILookOverlay {
+public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILookOverlay {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 14);
     public static final IUnlistedProperty<Boolean> CONN_NORTH = new ConnectionProperty("north");
@@ -77,7 +86,14 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
     public static TextureAtlasSprite[][] iconJunction;
 
     public FluidDuctBox(String s) {
-        super(Material.IRON, s);
+        super(Material.IRON);
+        this.setTranslationKey(s);
+        this.setRegistryName(s);
+        this.setCreativeTab(MainRegistry.controlTab);
+        this.setSoundType(ModSoundTypes.pipe);
+        this.useNeighborBrightness = true;
+
+        ModBlocks.ALL_BLOCKS.add(this);
         IDynamicModels.INSTANCES.add(this);
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             iconStraight = new TextureAtlasSprite[3];
@@ -88,6 +104,11 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
             iconCurveBR = new TextureAtlasSprite[3];
             iconJunction = new TextureAtlasSprite[3][5];
         }
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileEntityPipeBaseNT();
     }
 
     @Override
@@ -373,5 +394,40 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         public String valueToString(Boolean value) {
             return value.toString();
         }
+    }
+
+    public static void registerColorHandler() {
+        IBlockColor ductColorHandler = new IBlockColor() {
+            @Override
+            public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
+                if (tintIndex != 0) {
+                    return 0xFFFFFF;
+                }
+
+                if (worldIn == null || pos == null) {
+                    return 0xFFFFFF;
+                }
+
+                TileEntity te = worldIn.getTileEntity(pos);
+                if (!(te instanceof TileEntityPipeBaseNT)) {
+                    return 0xFFFFFF;
+                }
+
+                TileEntityPipeBaseNT pipe = (TileEntityPipeBaseNT) te;
+                FluidType type = pipe.getType();
+
+                int meta = state.getBlock().getMetaFromState(state);
+                int color = type.getColor();
+
+                if (meta % 3 == 2) {
+                    color = ColorUtil.lightenColor(color, 0.25D);
+                } else return 0xFFFFFF;
+
+                return color;
+            }
+        };
+
+        BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
+        blockColors.registerBlockColorHandler(ductColorHandler, ModBlocks.fluid_duct_box);
     }
 }

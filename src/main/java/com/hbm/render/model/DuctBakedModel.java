@@ -6,14 +6,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.checkerframework.checker.units.qual.degrees;
 import org.lwjgl.util.vector.Vector3f;
 
-import javax.vecmath.Quat4f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +27,7 @@ public class DuctBakedModel implements IBakedModel {
     }
 
     public static TextureAtlasSprite getPipeIcon(int meta, int side, boolean pX, boolean nX, boolean pY, boolean nY, boolean pZ, boolean nZ, boolean isExhaust) {
-        int m = isExhaust ? 0 : (meta % 3);  // Для Exhaust всегда 0, для обычного — meta % 3 (как в оригинале, предполагая rectify(meta) = meta % 3)
+        int m = isExhaust ? 0 : (meta % 3);
         int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
         int count = Integer.bitCount(mask);
 

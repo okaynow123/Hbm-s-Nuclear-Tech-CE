@@ -11,6 +11,7 @@ import com.hbm.blocks.generic.TrappedBrick;
 import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.WatzPump;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
+import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.effect.*;
@@ -191,6 +192,7 @@ public class ClientProxy extends ServerProxy {
         ItemFFFluidDuct.registerColorHandlers();
         ItemGasCanister.registerColorHandler();
         ItemAutogen.registerColorHandlers();
+        FluidDuctBox.registerColorHandler();
     }
 
     @Override

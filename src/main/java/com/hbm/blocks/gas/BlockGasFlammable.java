@@ -4,6 +4,7 @@ import com.hbm.lib.ForgeDirection;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -35,44 +36,55 @@ public class BlockGasFlammable extends BlockGasBase {
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        super.updateTick(world, pos, state, rand);
-        if (!world.isRemote) {
-            if (!world.isChunkGeneratedAt(pos.getX() >> 4, pos.getZ() >> 4)) return;
-            MutableBlockPos posN = new BlockPos.MutableBlockPos();
-            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-                posN.setPos(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
-                if (!world.isBlockLoaded(posN)) return;
-                IBlockState b = world.getBlockState(posN);
+        if (world.isRemote) return;
+        if (!world.isChunkGeneratedAt(pos.getX() >> 4, pos.getZ() >> 4)) return;
+        MutableBlockPos posN = new BlockPos.MutableBlockPos();
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            posN.setPos(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
+            if (!world.isBlockLoaded(posN)) continue;
+            IBlockState b = world.getBlockState(posN);
 
-                if (isFireSource(b)) {
-                    combust(world, pos);
-                    return;
-                }
-            }
-
-            if (rand.nextInt(20) == 0 && world.isAirBlock(pos.down())) {
-                world.setBlockToAir(pos);
+            if (isFireSource(b)) {
+                combust(world, pos);
+                return;
             }
         }
+        if (rand.nextInt(20) == 0 && world.isAirBlock(pos.down())) {
+            world.setBlockToAir(pos);
+            return;
+        }
+
+        super.updateTick(world, pos, state, rand);
     }
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        MutableBlockPos posN = new BlockPos.MutableBlockPos();
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            posN.setPos(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
-            if (!world.isBlockLoaded(posN)) return;
-            IBlockState b = world.getBlockState(posN);
+        if (world.isRemote) return;
 
-            if (isFireSource(b)) {
-                world.scheduleUpdate(pos, this, 2);
-                return;
-            }
-        }
+        if (!world.isBlockLoaded(pos) || !world.isBlockLoaded(fromPos)) return;
+
+        IBlockState changedState = world.getBlockState(fromPos);
+        if (isFireSource(changedState)) combust(world, pos);
+    }
+
+    @Override
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if (!worldIn.isRemote && entityIn.isBurning()) this.combust(worldIn, pos);
     }
 
     protected void combust(World world, BlockPos p) {
-        world.setBlockState(p, Blocks.FIRE.getDefaultState());
+        world.setBlockState(p, Blocks.FIRE.getDefaultState(), 2);
+
+        MutableBlockPos posN = new BlockPos.MutableBlockPos();
+        for (EnumFacing dir : EnumFacing.VALUES) {
+            posN.setPos(p.getX() + dir.getXOffset(), p.getY() + dir.getYOffset(), p.getZ() + dir.getZOffset());
+            if (world.isBlockLoaded(posN)) {
+                IBlockState neighborState = world.getBlockState(posN);
+                if (neighborState.getBlock() instanceof BlockGasFlammable) {
+                    world.scheduleUpdate(posN, neighborState.getBlock(), 2);
+                }
+            }
+        }
     }
 
     public boolean isFireSource(IBlockState b) {
@@ -81,7 +93,7 @@ public class BlockGasFlammable extends BlockGasBase {
 
     @Override
     public boolean isFlammable(IBlockAccess world, BlockPos pos, EnumFacing face) {
-        return true;
+        return false;
     }
 
     @Override

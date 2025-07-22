@@ -62,7 +62,7 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
 		if (!(stack.getItem() instanceof ItemForgeFluidIdentifier))
 			return;
-		list.add(TextFormatting.YELLOW + I18nUtil.resolveKey("info.templatefolder"));
+		list.add(TextFormatting.YELLOW + I18nUtil.resolveKey("info.templatefolder", I18nUtil.resolveKey("item.template_folder.name")));
 		list.add("");
 		list.add(I18nUtil.resolveKey("desc.unfluidid"));
 		if (Fluids.fromID(stack.getItemDamage()).getLocalizedName() != null)
