@@ -22,7 +22,6 @@ public class Factory extends WorldGenerator
 {
 	Block Block1 = ModBlocks.steel_scaffold;
 	Block Block2 = ModBlocks.machine_difurnace_off;
-	Block Block3 = ModBlocks.factory_titanium_core;
 	Block Block4 = ModBlocks.steel_wall;
 	Block Block5 = ModBlocks.reinforced_light;
 	
@@ -811,7 +810,7 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 5), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 5), Block2.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 1, z + 5), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 7, y + 1, z + 5), Block3.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 7, y + 1, z + 5), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 1, z + 5), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 13, y + 1, z + 5), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.EAST), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 1, z + 5), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -840,7 +839,7 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 11), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 11), Block2.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 1, z + 11), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 7, y + 1, z + 11), Block3.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 7, y + 1, z + 11), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 1, z + 11), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 13, y + 1, z + 11), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.EAST), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 1, z + 11), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -868,7 +867,7 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 17), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 17), Block2.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 1, z + 17), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 7, y + 1, z + 17), Block3.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 7, y + 1, z + 17), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 1, z + 17), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 13, y + 1, z + 17), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.EAST), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 1, z + 17), Blocks.STONEBRICK.getDefaultState(), 3);
