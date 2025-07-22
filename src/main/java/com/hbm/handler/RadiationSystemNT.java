@@ -17,7 +17,6 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.saveddata.RadiationSavedData;
-import com.hbm.util.ContaminationUtil;
 import com.hbm.util.SubChunkKey;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -66,7 +65,6 @@ public class RadiationSystemNT {
     private static final Map<World, WorldRadiationData> worldMap = new ConcurrentHashMap<>();
     private static final ForkJoinPool pool = ForkJoinPool.commonPool();
     private static final ByteBuffer buf = ByteBuffer.allocate(524288);
-    private static final float minRadRate = 0.000005F;
     private static final float PRUNE_THRESHOLD = 0.1F;
     private static final float EXTRA_DECAY = 0.05F;
     /**
@@ -276,21 +274,6 @@ public class RadiationSystemNT {
                         // effect for radiation
 
                         if (entity instanceof EntityPlayer player) {
-                            if (RadiationConfig.neutronActivation) {
-                                double recievedRadiation =
-                                        ContaminationUtil.getNoNeutronPlayerRads(player) * 0.00004D - (0.00004D * RadiationConfig.neutronActivationThreshold); //20Rad/s threshold
-                                float neutronRads = ContaminationUtil.getPlayerNeutronRads(player);
-                                if (neutronRads > 0) {
-                                    ContaminationUtil.contaminate(player, ContaminationUtil.HazardType.NEUTRON,
-                                            ContaminationUtil.ContaminationType.CREATIVE, neutronRads * 0.05F);
-                                } else {
-                                    HbmLivingProps.setNeutron(entity, 0);
-                                }
-                                if (recievedRadiation > minRadRate) {
-                                    ContaminationUtil.neutronActivateInventory(player, (float) recievedRadiation, 1.0F);
-                                    player.inventoryContainer.detectAndSendChanges();
-                                }
-                            }
                             if (player.capabilities.isCreativeMode || player.isSpectator()) {
                                 continue;
                             }

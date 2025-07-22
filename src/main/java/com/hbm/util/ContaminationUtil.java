@@ -255,17 +255,6 @@ public class ContaminationUtil {
 		return (double)(HbmLivingProps.getRadBuf(entity)) * (double)(ContaminationUtil.calculateRadiationMod(entity));
 	}
 
-	public static float getPlayerNeutronRads(EntityPlayer player){
-		float radBuffer = 0F;
-		for(ItemStack slotI : player.inventory.mainInventory){
-			radBuffer = radBuffer + getNeutronRads(slotI);
-		}
-		for(ItemStack slotA : player.inventory.armorInventory){
-			radBuffer = radBuffer + getNeutronRads(slotA);
-		}
-		return radBuffer;
-	}
-
 	public static boolean isRadItem(ItemStack stack){
 		if(stack == null)
 			return false;
@@ -290,6 +279,8 @@ public class ContaminationUtil {
 	}
 
 	public static void addNeutronRadInfo(ItemStack stack, EntityPlayer player, List<String> list, ITooltipFlag flagIn){
+		if (HazardSystem.getRawRadsFromStack(stack) > 0) return;
+
 		float activationRads = getNeutronRads(stack);
 		if(activationRads > 0) {
 			list.add("§a[" + I18nUtil.resolveKey("trait.radioactive") + "]");
@@ -302,45 +293,50 @@ public class ContaminationUtil {
 		}
 	}
 
-	public static void neutronActivateInventory(EntityPlayer player, float rad, float decay){
-		for(int slotI = 0; slotI < player.inventory.getSizeInventory()-1; slotI++){
-			if(slotI != player.inventory.currentItem)
-				neutronActivateItem(player.inventory.getStackInSlot(slotI), rad, decay);
+	public static boolean neutronActivateInventory(EntityPlayer player, float rad, float decay) {
+		boolean changed = false;
+		for (int slotI = 0; slotI < player.inventory.mainInventory.size(); slotI++) {
+			if (slotI != player.inventory.currentItem) {
+				if (neutronActivateItem(player.inventory.getStackInSlot(slotI), rad, decay)) {
+					changed = true;
+				}
+			}
 		}
 		for(ItemStack slotA : player.inventory.armorInventory){
-			neutronActivateItem(slotA, rad, decay);
+			if (neutronActivateItem(slotA, rad, decay)) {
+				changed = true;
+			}
 		}
+		return changed;
 	}
 
-	public static void neutronActivateItem(ItemStack stack, float rad, float decay){
-		if(stack != null && !stack.isEmpty() && stack.getCount() == 1 && !isRadItem(stack)){
+	public static boolean neutronActivateItem(ItemStack stack, float rad, float decay) {
+		if (stack == null || stack.isEmpty() || stack.getCount() != 1 || isRadItem(stack)) return false;
+		float prevActivation = 0;
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NTM_NEUTRON_NBT_KEY)) {
+			prevActivation = stack.getTagCompound().getFloat(NTM_NEUTRON_NBT_KEY);
+		}
 
-			NBTTagCompound nbt;
-			if(stack.hasTagCompound()){
-				nbt = stack.getTagCompound();
-			} else{
-				nbt = new NBTTagCompound();
-			}
-			float prevActivation = 0;
-			if(nbt.hasKey(NTM_NEUTRON_NBT_KEY)){
-				prevActivation = nbt.getFloat(NTM_NEUTRON_NBT_KEY);
-			}
+		float newActivation = prevActivation * decay + (rad / stack.getCount());
 
-			if(prevActivation + rad == 0)
-				return;
-
-			float newActivation = prevActivation * decay + (rad / stack.getCount());
-			if(prevActivation * decay + rad < 0.0001F || (rad <= 0 && newActivation < 0.001F )){
+		if (newActivation < 0.0001F) {
+			if (prevActivation > 0) {
+				NBTTagCompound nbt = stack.getTagCompound();
 				nbt.removeTag(NTM_NEUTRON_NBT_KEY);
-			} else {
-				nbt.setFloat(NTM_NEUTRON_NBT_KEY, newActivation);
+				if (nbt.isEmpty()) {
+					stack.setTagCompound(null);
+				}
+				return true;
 			}
-			if(nbt.isEmpty()){
-				stack.setTagCompound(null);
-			} else {
+		} else {
+			if (Math.abs(newActivation - prevActivation) > 1e-6) {
+				NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
+				nbt.setFloat(NTM_NEUTRON_NBT_KEY, newActivation);
 				stack.setTagCompound(nbt);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public static boolean isContaminated(ItemStack stack){

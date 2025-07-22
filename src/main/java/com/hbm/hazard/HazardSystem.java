@@ -2,6 +2,7 @@ package com.hbm.hazard;
 
 import com.github.bsideup.jabel.Desugar;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.hazard.modifier.HazardModifier;
@@ -71,12 +72,18 @@ public class HazardSystem {
     private static final ConcurrentHashMap<ComparableStack, List<HazardEntry>> hazardCalculationCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<UUID, PlayerHazardData> playerHazardDataMap = new ConcurrentHashMap<>();
     private static final ExecutorService hazardScanExecutor = Executors.newFixedThreadPool(Math.max(1,
-            Runtime.getRuntime().availableProcessors() - 1),
+                    Runtime.getRuntime().availableProcessors() - 1),
             new ThreadFactoryBuilder().setNameFormat("HBM-Hazard-Scanner-%d").setDaemon(true).build());
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private static CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
     private static long tickCounter = 0;
+    private static final float minRadRate = 0.000005F;
 
+    /**
+     * Called when {@link com.hbm.events.InventoryChangedEvent} is posted and a radioactive item stack change were involved.
+     *
+     * @param player The player whose inventory has changed.
+     */
     public static void schedulePlayerUpdate(EntityPlayer player) {
         playersToUpdate.add(player.getUniqueID());
     }
@@ -113,14 +120,14 @@ public class HazardSystem {
 
             if (!playersForThisRun.isEmpty()) {
                 scanFuture = CompletableFuture.runAsync(() -> {
-                    Map<UUID, List<Consumer<EntityPlayer>>> results =
+                    Map<UUID, PlayerHazardData.HazardScanResult> results =
                             playersForThisRun.parallelStream().collect(Collectors.toConcurrentMap(EntityPlayer::getUniqueID,
-                                    PlayerHazardData::calculateApplicatorsForPlayer));
+                                    PlayerHazardData::calculateHazardScanForPlayer));
 
-                    server.addScheduledTask(() -> results.forEach((uuid, applicators) -> {
+                    server.addScheduledTask(() -> results.forEach((uuid, result) -> {
                         PlayerHazardData phd = playerHazardDataMap.get(uuid);
                         if (phd != null) {
-                            phd.setActiveHazardApplicators(applicators);
+                            phd.setScanResult(result);
                         }
                     }));
                 }, hazardScanExecutor);
@@ -321,29 +328,37 @@ public class HazardSystem {
 
     private static class PlayerHazardData {
         private final EntityPlayer player;
-        private List<Consumer<EntityPlayer>> activeHazardApplicators = Collections.emptyList();
+        private HazardScanResult activeScanResult = HazardScanResult.EMPTY;
 
         PlayerHazardData(EntityPlayer player) {
             this.player = player;
             schedulePlayerUpdate(player);
         }
 
-        static List<Consumer<EntityPlayer>> calculateApplicatorsForPlayer(EntityPlayer player) {
+        static HazardScanResult calculateHazardScanForPlayer(EntityPlayer player) {
             List<SlottedStack> inventorySnapshot = snapshotInventories(player);
-            return inventorySnapshot.stream().map(slottedStack -> {
+            List<Consumer<EntityPlayer>> applicators = new ArrayList<>();
+            float totalNeutronRads = 0f;
+
+            for (SlottedStack slottedStack : inventorySnapshot) {
                 List<HazardEntry> hazards = getHazardsFromStack(slottedStack.stack);
-                if (hazards.isEmpty()) return null;
-                return (Consumer<EntityPlayer>) p -> {
-                    ItemStack liveStack = slottedStack.handler.getStackInSlot(slottedStack.slot);
-                    if (!liveStack.isEmpty() && liveStack.getItem() == slottedStack.stack.getItem()) {
-                        applyHazards(liveStack, p);
-                        if (liveStack.getCount() <= 0 && slottedStack.handler instanceof PlayerMainInvWrapper) {
-                            IInventory inv = ((PlayerMainInvWrapper) slottedStack.handler).getInventoryPlayer();
-                            inv.setInventorySlotContents(slottedStack.slot, ItemStack.EMPTY);
+                if (!hazards.isEmpty()) {
+                    applicators.add(p -> {
+                        ItemStack liveStack = slottedStack.handler.getStackInSlot(slottedStack.slot);
+                        if (!liveStack.isEmpty() && liveStack.getItem() == slottedStack.stack.getItem()) {
+                            applyHazards(liveStack, p);
+                            if (liveStack.getCount() <= 0 && slottedStack.handler instanceof PlayerMainInvWrapper) {
+                                IInventory inv = ((PlayerMainInvWrapper) slottedStack.handler).getInventoryPlayer();
+                                inv.setInventorySlotContents(slottedStack.slot, ItemStack.EMPTY);
+                            }
                         }
-                    }
-                };
-            }).filter(Objects::nonNull).collect(Collectors.toList());
+                    });
+                }
+                if (RadiationConfig.neutronActivation && hazards.isEmpty()) {
+                    totalNeutronRads += ContaminationUtil.getNeutronRads(slottedStack.stack);
+                }
+            }
+            return new HazardScanResult(applicators, totalNeutronRads);
         }
 
         private static List<SlottedStack> snapshotInventories(EntityPlayer player) {
@@ -372,16 +387,41 @@ public class HazardSystem {
         }
 
         void applyActiveHazards() {
-            if (!activeHazardApplicators.isEmpty()) {
-                activeHazardApplicators.forEach(applier -> applier.accept(this.player));
-                if (this.player.inventoryContainer != null) {
-                    this.player.inventoryContainer.detectAndSendChanges();
+            if (!activeScanResult.applicators.isEmpty()) {
+                activeScanResult.applicators.forEach(applier -> applier.accept(this.player));
+            }
+            HbmLivingProps.setNeutron(player, 0);
+
+            // 1:1 moved from RadiationSystemNT, but now scales with RadiationConfig.hazardRate
+            if (RadiationConfig.neutronActivation) {
+                if (activeScanResult.totalNeutronRads > 0) {
+                    ContaminationUtil.contaminate(player, ContaminationUtil.HazardType.NEUTRON, ContaminationUtil.ContaminationType.CREATIVE,
+                            activeScanResult.totalNeutronRads * 0.05F * RadiationConfig.hazardRate);
                 }
+                if (!player.isCreative() && !player.isSpectator()) {
+                    double activationRate =
+                            ContaminationUtil.getNoNeutronPlayerRads(player) * 0.00004D - (0.00004D * RadiationConfig.neutronActivationThreshold);
+                    if (activationRate > minRadRate) {
+                        float totalActivationAmount = (float) activationRate * RadiationConfig.hazardRate;
+                        if (ContaminationUtil.neutronActivateInventory(player, totalActivationAmount, 1.0F)) {
+                            schedulePlayerUpdate(this.player);
+                        }
+                    }
+                }
+            }
+
+            if (this.player.inventoryContainer != null) {
+                this.player.inventoryContainer.detectAndSendChanges();
             }
         }
 
-        void setActiveHazardApplicators(List<Consumer<EntityPlayer>> applicators) {
-            this.activeHazardApplicators = applicators;
+        void setScanResult(HazardScanResult result) {
+            this.activeScanResult = result;
+        }
+
+        @Desugar
+        private record HazardScanResult(List<Consumer<EntityPlayer>> applicators, float totalNeutronRads) {
+            static final HazardScanResult EMPTY = new HazardScanResult(Collections.emptyList(), 0f);
         }
 
         @Desugar
