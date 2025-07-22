@@ -48,10 +48,10 @@ public class ContainerWatz extends Container {
 			
 			if(par2 <= watz.inventory.getSlots() - 1) {
 				if(!mergeItemStack(var5, watz.inventory.getSlots(), this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if(!mergeItemStack(var5, 0, watz.inventory.getSlots(), false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if(var5.getCount() == 0) {
