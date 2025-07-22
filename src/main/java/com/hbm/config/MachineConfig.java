@@ -8,6 +8,7 @@ public class MachineConfig {
     protected static boolean doRTGsDecay = true;
     protected static boolean disableMachines = false;
     //TODO: handle like on 1.7
+    //mlbv: 1.7 hardcodes it to 6kB
     public static int crateByteSize = 8;
     public static int rbmkJumpTemp = 1250;
 

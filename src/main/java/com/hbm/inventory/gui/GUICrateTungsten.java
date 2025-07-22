@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.config.MachineConfig;
 import com.hbm.inventory.container.ContainerCrateTungsten;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
 public class GUICrateTungsten extends GuiContainer {
@@ -44,7 +46,18 @@ public class GUICrateTungsten extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String title = I18n.format("container.crateTungsten");
-		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
+		float percent = Library.getNbtPercentage(this.diFurnace, MachineConfig.crateByteSize * 1000);
+		String color;
+		if (percent >= 85) {
+			color = TextFormatting.RED.toString();
+		} else if (percent >= 50) {
+			color = TextFormatting.GOLD.toString();
+		} else {
+			color = TextFormatting.GREEN.toString();
+		}
+		String weightString = String.format(" %s(%.1f%%)", color, percent);
+		String combinedTitle = title + weightString;
+		this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
 		String sparks = Library.getShortNumber(diFurnace.joules) + "SPK";
 		this.fontRenderer.drawString(sparks, this.xSize - 8 -this.fontRenderer.getStringWidth(sparks), this.ySize - 96 + 2, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);

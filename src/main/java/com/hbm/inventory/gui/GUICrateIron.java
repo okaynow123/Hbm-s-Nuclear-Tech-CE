@@ -1,6 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.config.MachineConfig;
 import com.hbm.inventory.container.ContainerCrateIron;
+import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrateIron;
 import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
@@ -9,6 +11,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
 public class GUICrateIron extends GuiContainer {
@@ -48,8 +51,18 @@ public class GUICrateIron extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
-		
-		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
+		float percent = Library.getNbtPercentage(this.diFurnace, MachineConfig.crateByteSize * 1000);
+		String color;
+		if (percent >= 85) {
+			color = TextFormatting.RED.toString();
+		} else if (percent >= 50) {
+			color = TextFormatting.GOLD.toString();
+		} else {
+			color = TextFormatting.GREEN.toString();
+		}
+		String weightString = String.format(" %s(%.1f%%)", color, percent);
+		String combinedTitle = name + weightString;
+		this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 

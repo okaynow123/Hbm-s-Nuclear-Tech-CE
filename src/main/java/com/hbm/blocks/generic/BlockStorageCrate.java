@@ -140,8 +140,7 @@ public class BlockStorageCrate extends BlockContainer {
 
 			if(!nbt.isEmpty()) {
 				drop.setTagCompound(nbt);
-
-				if(nbt.toString().length() > MachineConfig.crateByteSize * 1000) {
+				if(Library.getCompressedNbtSize(nbt) > MachineConfig.crateByteSize * 1000L) {
 					player.sendMessage(new TextComponentString("§cWarning: Container NBT exceeds "+MachineConfig.crateByteSize+"kB, contents will be ejected!"));
 					InventoryHelper.dropInventoryItems(world, pos, world.getTileEntity(pos));
 					InventoryHelper.spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(Item.getItemFromBlock(this)));
@@ -152,9 +151,9 @@ public class BlockStorageCrate extends BlockContainer {
 			InventoryHelper.spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
 		}
 
-		this.dropInv = false;
+		dropInv = false;
 		boolean flag = world.setBlockToAir(pos);
-		this.dropInv = true;
+		dropInv = true;
 
 		return flag;
 	}
@@ -166,7 +165,7 @@ public class BlockStorageCrate extends BlockContainer {
 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state){
-		if(this.dropInv){
+		if(dropInv){
 			InventoryHelper.dropInventoryItems(worldIn, pos, worldIn.getTileEntity(pos));
 		}
 		super.breakBlock(worldIn, pos, state);

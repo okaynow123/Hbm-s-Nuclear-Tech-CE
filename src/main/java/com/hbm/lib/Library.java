@@ -24,6 +24,8 @@ import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityProxyInventory;
 import com.hbm.util.BobMathUtil;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -63,6 +65,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
+
+import static net.minecraft.nbt.CompressedStreamTools.writeCompressed;
 
 @Spaghetti("this whole class")
 public class Library {
@@ -1205,4 +1209,24 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		}
 		return 0;
 	}
+
+    public static long getCompressedNbtSize(NBTTagCompound compound) {
+        try {
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+            writeCompressed(compound, bytearrayoutputstream);
+            return bytearrayoutputstream.size();
+        } catch (IOException ignored) {
+            return -1;
+        }
+    }
+
+    public static <T extends TileEntity> float getNbtPercentage(T te, float limitByteSize) {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound = te.writeToNBT(compound);
+        float percent = 0.0f;
+        if (limitByteSize > 0) {
+            percent = (float) Library.getCompressedNbtSize(compound) / limitByteSize;
+        }
+        return percent;
+    }
 }
