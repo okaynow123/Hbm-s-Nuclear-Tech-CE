@@ -3,7 +3,6 @@ package com.hbm.processor;
 import com.google.auto.service.AutoService;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.squareup.javapoet.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -19,9 +18,9 @@ import java.util.*;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("com.hbm.interfaces.AutoRegisterTE")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SuppressWarnings("unused")
 public class TileEntityProcessor extends AbstractProcessor {
     private final Map<String, String> tileEntitiesToRegister = new LinkedHashMap<>();
-    private final List<String> configurableTileEntites = new ArrayList<>();
     private Filer filer;
     private Messager messager;
     private Elements elementUtils;
@@ -79,7 +78,7 @@ public class TileEntityProcessor extends AbstractProcessor {
         //Configurables Generator
         ClassName listClass = ClassName.get("java.util", "ArrayList");
         ClassName hashMapClass = ClassName.get("java.util", "HashMap");
-        ClassName stringClass =  ClassName.get("java.lang", "String");
+        ClassName stringClass = ClassName.get("java.lang", "String");
         ClassName classClass = ClassName.get("java.lang", "Class");
         ClassName iface = ClassName.get("com.hbm.tileentity", "IConfigurableMachine");
         ClassName tileEntity = ClassName.get("net.minecraft.tileentity", "TileEntity");
@@ -92,18 +91,13 @@ public class TileEntityProcessor extends AbstractProcessor {
 
         FieldSpec tileEntities = FieldSpec.builder(hashMapOfClass, "registryMap")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("new $T<>()",hashMapClass)
+                .initializer("new $T<>()", hashMapClass)
                 .build();
 
         FieldSpec configurableList = FieldSpec.builder(arrayListOfClass, "configurable")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("new $T<>()", listClass)
                 .build();
-
-        //register Method
-        ClassName gameRegistry = ClassName.get("net.minecraftforge.fml.common.registry", "GameRegistry");
-        ClassName resourceLocation = ClassName.get("net.minecraft.util", "ResourceLocation");
-        ClassName refStrings = ClassName.get("com.hbm.lib", "RefStrings");
 
 
         TypeName clazzType = ParameterizedTypeName.get(classClass, WildcardTypeName.subtypeOf(tileEntity));
@@ -116,11 +110,8 @@ public class TileEntityProcessor extends AbstractProcessor {
                 .returns(TypeName.VOID)
                 .addParameter(clazzParam)
                 .addParameter(nameParam)
-//                .addStatement(
-//                "$T.registerTileEntity($N, new $T($T.MODID, $N))",
-//                gameRegistry, "clazz", resourceLocation, refStrings, "name")
-                .addStatement("$N.put($N,$N)","registryMap", "clazz", "name")
-                .beginControlFlow("if ($T.class.isAssignableFrom($N))", iface, "clazz" )
+                .addStatement("$N.put($N,$N)", "registryMap", "clazz", "name")
+                .beginControlFlow("if ($T.class.isAssignableFrom($N))", iface, "clazz")
                 .addStatement("$N.add(($T)$N)", "configurable", classOfWildcardConfigurable, "clazz")
                 .endControlFlow()
                 .build();
@@ -136,7 +127,7 @@ public class TileEntityProcessor extends AbstractProcessor {
             ClassName tileEntityClass = ClassName.bestGuess(classFqn);
             registerAllMethod.addStatement(
                     "register($T.class, $S)",
-                     tileEntityClass,  regId);
+                    tileEntityClass, regId);
         }
         TypeSpec generatedRegistrar = TypeSpec.classBuilder("GeneratedTERegistrar")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
