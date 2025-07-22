@@ -1,6 +1,6 @@
 package com.hbm.packet.toserver;
 
-import com.hbm.items.tool.ItemSatInterface;
+import com.hbm.items.ISatChip;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import io.netty.buffer.ByteBuf;
@@ -52,9 +52,9 @@ public class SatCoordPacket implements IMessage {
 			ctx.getServerHandler().player.getServer().addScheduledTask(() -> {
 				EntityPlayer p = ctx.getServerHandler().player;
 				
-				if(p.getHeldItemMainhand().getItem() instanceof ItemSatInterface) {
+				if(p.getHeldItemMainhand().getItem() instanceof ISatChip) {
 					
-					int freq = ItemSatInterface.getFreq(p.getHeldItemMainhand());
+					int freq = ISatChip.getFreqS(p.getHeldItemMainhand());
 					
 					if(freq == m.freq) {
 					    Satellite sat = SatelliteSavedData.getData(p.world).getSatFromFreq(m.freq);

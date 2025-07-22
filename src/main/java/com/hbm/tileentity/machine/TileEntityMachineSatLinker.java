@@ -4,7 +4,8 @@ import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerMachineSatLinker;
 import com.hbm.inventory.gui.GUIMachineSatLinker;
 import com.hbm.items.ISatChip;
-import com.hbm.items.machine.ItemSatChip;
+import com.hbm.items.machine.ItemSatellite;
+import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.IGUIProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,20 +82,15 @@ public class TileEntityMachineSatLinker extends TileEntity implements ITickable,
 	public void update() {
 		if(!world.isRemote)
 		{
-			if(inventory.getStackInSlot(0).getItem() instanceof ItemSatChip && inventory.getStackInSlot(1).getItem() instanceof ItemSatChip) {
-				ItemSatChip.setFreq(inventory.getStackInSlot(1), ItemSatChip.getFreq(inventory.getStackInSlot(0)));
-			}
-			if(inventory.getStackInSlot(0).getItem() instanceof ItemSatChip && inventory.getStackInSlot(1).getItem() instanceof ISatChip){
-				ISatChip.setFreqS(inventory.getStackInSlot(1), ItemSatChip.getFreq(inventory.getStackInSlot(0)));
-			}
-			if(inventory.getStackInSlot(0).getItem() instanceof ISatChip && inventory.getStackInSlot(1).getItem() instanceof ItemSatChip){
-				ItemSatChip.setFreq(inventory.getStackInSlot(1), ItemSatChip.getFreq(inventory.getStackInSlot(0)));
-			}
-			if(inventory.getStackInSlot(2).getItem() instanceof ItemSatChip) {
-				ItemSatChip.setFreq(inventory.getStackInSlot(2), world.rand.nextInt(100000));
+			if(inventory.getStackInSlot(0).getItem() instanceof ItemSatellite && inventory.getStackInSlot(1).getItem() instanceof ItemSatellite) {
+				ISatChip.setFreqS(inventory.getStackInSlot(1), ISatChip.getFreqS(inventory.getStackInSlot(0)));
 			}
 			if(inventory.getStackInSlot(2).getItem() instanceof ISatChip){
-				ISatChip.setFreqS(inventory.getStackInSlot(2), world.rand.nextInt(100000));
+				SatelliteSavedData satelliteData = SatelliteSavedData.getData(world);
+				int newId = world.rand.nextInt(100000);
+				if(!satelliteData.isFreqTaken(newId)) {
+					ISatChip.setFreqS(inventory.getStackInSlot(2), newId);
+				}
 			}
 		}
 	}

@@ -2,6 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.BedrockOreRegistry;
+import com.hbm.items.ISatChip;
 import com.hbm.items.tool.ItemSatInterface;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
@@ -59,7 +60,7 @@ public class GUIScreenSatInterface extends GuiScreen {
     			
     			int x = this.x - guiLeft + i - 8 - 100;
     			int z = this.z - guiTop + j - 8 - 100;
-    			PacketDispatcher.wrapper.sendToServer(new SatLaserPacket(x, z, ItemSatInterface.getFreq(player.getHeldItemMainhand())));
+    			PacketDispatcher.wrapper.sendToServer(new SatLaserPacket(x, z, ISatChip.getFreqS(player.getHeldItemMainhand())));
     		}
     	}
     }

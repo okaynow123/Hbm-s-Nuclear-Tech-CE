@@ -7,7 +7,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
-import com.hbm.render.util.MissilePart;
+import com.hbm.render.misc.MissilePart;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.Tuple.Pair;
 import com.mojang.realmsclient.gui.ChatFormatting;

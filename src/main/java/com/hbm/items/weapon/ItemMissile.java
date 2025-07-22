@@ -7,6 +7,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemLootCrate;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -295,6 +296,8 @@ public class ItemMissile extends Item {
             case CLOUD -> TextFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("warhead.cloud");
             case VOLCANO -> TextFormatting.DARK_RED + I18nUtil.resolveKey("warhead.volcano");
             case MIRV -> TextFormatting.DARK_PURPLE + I18nUtil.resolveKey("warhead.mirv");
+			case APOLLO -> (System.currentTimeMillis() % 1000 < 500 ? ChatFormatting.GOLD : ChatFormatting.RED) + I18nUtil.resolveKey("warhead.capsule");
+			case SATELLITE -> (System.currentTimeMillis() % 1000 < 500 ? ChatFormatting.GOLD : ChatFormatting.RED) + I18nUtil.resolveKey("warhead.satellite");
             default -> TextFormatting.BOLD + I18nUtil.resolveKey("desc.na");
         };
 	}

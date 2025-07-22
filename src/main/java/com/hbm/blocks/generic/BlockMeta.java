@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
@@ -180,6 +181,20 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(META, meta);
+    }
+    // this shit prevents models from registering un-fucking-existent meta variants
+    // like cap blocks which have 8 variants but SOMEHOW they register all 15
+    @Override
+    @SideOnly(Side.CLIENT)
+    public StateMapperBase getStateMapper(ResourceLocation loc) {
+        return new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                int meta = state.getValue(META);
+                if(meta < META_COUNT) return new ModelResourceLocation(loc, "meta=" + meta);
+                else return new ModelResourceLocation(loc, "meta=" + 0);
+            }
+        };
     }
 
 

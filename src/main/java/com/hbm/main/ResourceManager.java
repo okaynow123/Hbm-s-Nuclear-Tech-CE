@@ -156,6 +156,7 @@ public class ResourceManager {
 	public static IModelCustom soyuz_launcher_tower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/soyuz_launcher_tower.obj")).asVBO();
 	public static IModelCustom soyuz_launcher_support_base = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/soyuz_launcher_support_base.obj")).asVBO();
 	public static IModelCustom soyuz_launcher_support = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/soyuz_launcher_support.obj")).asVBO();
+	public static final IModelCustom soyuz_lander_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/module_lander.obj")).asVBO();
 	public static final IModelCustom drop_pod = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_drop_pod.obj")).asVBO();
 
 	//Boxcar
@@ -484,6 +485,8 @@ public class ResourceManager {
 	public static final IModelCustom mp_s_15_thin = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_15_thin.obj")).asVBO();
 	public static final IModelCustom mp_s_15_soyuz = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_15_soyuz.obj")).asVBO();
 	public static final IModelCustom mp_s_20 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_20.obj")).asVBO();
+	public static final IModelCustom rp_s_20_leggy = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_s_20_leggy.obj")).asVBO();
+	public static final IModelCustom rp_s_20_leggy_deployed = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_s_20_leggy_deployed.obj")).asVBO();
 
 	public static final IModelCustom mp_f_10_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_10_kerosene.obj")).asVBO();
 	public static final IModelCustom mp_f_10_long_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_10_long_kerosene.obj")).asVBO();
@@ -492,6 +495,11 @@ public class ResourceManager {
 	public static final IModelCustom mp_f_15_hydrogen = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_15_hydrogen.obj")).asVBO();
 	public static final IModelCustom mp_f_15_20_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_15_20_kerosene.obj")).asVBO();
 	public static final IModelCustom mp_f_20 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20.obj")).asVBO();
+	public static final IModelCustom mp_f_20_12_usa = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20_usa.obj")).asVBO();
+	public static final IModelCustom mp_f_20_6_usa = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20_6_usa.obj")).asVBO();
+	public static final IModelCustom mp_f_20_3_usa = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20_3_usa.obj")).asVBO();
+	public static final IModelCustom mp_f_20_1_usa = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20_1_usa.obj")).asVBO();
+	public static final IModelCustom mp_f_20_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_f_20_neo.obj")).asVBO();
 
 	public static final IModelCustom mp_w_10_he = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_10_he.obj")).asVBO();
 	public static final IModelCustom mp_w_10_incendiary = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_10_incendiary.obj")).asVBO();
@@ -1310,6 +1318,8 @@ public class ResourceManager {
 	public static final ResourceLocation soyuz_lander_rust_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/soyuz_lander_rust.png");
 	public static final ResourceLocation soyuz_chute_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/soyuz_chute.png");
 
+	public static final ResourceLocation module_lander_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_lander_space_elon.png");
+
 	public static final ResourceLocation soyuz_module_dome_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_dome.png");
 	public static final ResourceLocation soyuz_module_lander_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_lander.png");
 	public static final ResourceLocation soyuz_module_propulsion_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_propulsion.png");
@@ -1445,6 +1455,10 @@ public class ResourceManager {
 	public static final ResourceLocation mp_f_15_solid_snowy_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/contest/mp_f_15_solid_snowy.png");
 	public static final ResourceLocation mp_f_15_solid_panorama_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/mp_f_15_solid_panorama.png");
 	public static final ResourceLocation mp_f_15_solid_roses_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/mp_f_15_solid_roses.png");
+
+	public static final ResourceLocation mp_f_20_kerolox = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/mp_f_20_kerosene.png");
+
+	public static final ResourceLocation mp_f_20_kerolox_usa = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/mp_f_20_kerosene_usa.png");
 
 	public static final ResourceLocation mp_f_15_hydrogen_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/mp_f_15_hydrogen.png");
 	public static final ResourceLocation mp_f_15_hydrogen_cathedral_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/fuselages/contest/mp_f_15_hydrogen_cathedral.png");

@@ -2,6 +2,7 @@ package com.hbm.entity.mob;
 
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemZirnoxRodDepleted;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
@@ -13,7 +14,6 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -200,14 +200,20 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
 
     @Override
     public void fall(float distance, float damageMultiplier) {}
-    
+
     @Override
-    protected Item getDropItem() {
-    	return ModItems.rod_uranium_fuel_depleted;
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        int quantity = Math.max(0, this.rand.nextInt(3) + lootingModifier);
+        if (wasRecentlyHit) quantity++;
+        if (quantity > 0) {
+            ItemStack dropStack = new ItemStack(ModItems.rod_zirnox_depleted, quantity, ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal());
+            this.entityDropItem(dropStack, 0.0F);
+        }
     }
 
     @Override
     protected void dropLoot(boolean wasRecentlyHit, int looting, DamageSource source) {
+
         super.dropLoot(wasRecentlyHit, looting, source);
         if(looting > 0) {
                 this.dropItem(ModItems.nugget_polonium, looting);
@@ -220,14 +226,14 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
             int r = this.rand.nextInt(3);
             
             if(r == 0) {
-                this.dropItem(this.isWet() ? ModItems.waste_uranium_legacy : ModItems.rod_uranium_fuel_depleted, 1);
-                
+                if(this.isWet()) this.dropItem(ModItems.waste_uranium, 1);
+                else this.entityDropItem(new ItemStack(ModItems.rod_zirnox_depleted, 1, ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()), 0F);
             } else if(r == 1) {
-                this.dropItem(this.isWet() ? ModItems.waste_mox_legacy : ModItems.rod_mox_fuel_depleted, 1);
-                
-            } else if(r == 2) {
-                this.dropItem(this.isWet() ? ModItems.waste_plutonium_legacy : ModItems.rod_plutonium_fuel_depleted, 1);
-                
+                if(this.isWet()) this.dropItem(ModItems.waste_mox, 1);
+                else this.entityDropItem(new ItemStack(ModItems.rod_zirnox_depleted, 1, ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted.MOX_FUEL.ordinal()), 0F);
+            } else {
+                if(this.isWet()) this.dropItem(ModItems.waste_plutonium, 1);
+                else this.entityDropItem(new ItemStack(ModItems.rod_zirnox_depleted, 1, ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted.PLUTONIUM_FUEL.ordinal()), 0F);
             }
         }
     }
