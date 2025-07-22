@@ -1,5 +1,6 @@
 package com.hbm.lib;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -12,8 +13,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class NTMBlockContainer extends BlockContainer {
 
-  protected NTMBlockContainer(Material materialIn) {
+  protected NTMBlockContainer(Material materialIn, String name) {
     super(materialIn);
+    this.setTranslationKey(name);
+    this.setRegistryName(name);
+
+    ModBlocks.ALL_BLOCKS.add(this);
   }
 
   @Nullable

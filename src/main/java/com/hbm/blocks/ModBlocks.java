@@ -35,8 +35,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class ModBlocks {
 
-	//present gui id: 137
-	public static List<Block> ALL_BLOCKS = new ArrayList<Block>();
+	public static List<Block> ALL_BLOCKS = new ArrayList<>();
 
 	//public static final Block fatduck = new BlockBase(Material.IRON, "fatduck");
 
@@ -711,7 +710,6 @@ public class ModBlocks {
 	public static final Block turret_howard_damaged = new TurretHowardDamaged(Material.IRON, "turret_howard_damaged").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_maxwell = new TurretMaxwell(Material.IRON, "turret_maxwell").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_fritz = new TurretFritz(Material.IRON, "turret_fritz").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
-	public static final Block turret_brandon = new TurretBrandon(Material.IRON, "turret_brandon").setHardness(5.0F).setResistance(600.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_sentry = new TurretSentry(Material.IRON, "turret_sentry").setHardness(5.0F).setResistance(5.0F).setCreativeTab(MainRegistry.weaponTab);
 	public static final Block turret_sentry_damaged = new TurretSentryDamaged(Material.IRON, "turret_sentry_damaged").setHardness(5.0F).setResistance(5.0F).setCreativeTab(MainRegistry.weaponTab);
 	
@@ -1011,6 +1009,7 @@ public class ModBlocks {
 	public static final Block machine_schrabidium_transmutator = new MachineSchrabidiumTransmutator(Material.IRON, "machine_schrabidium_transmutator").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block machine_teleporter = new MachineTeleporter(Material.IRON, "machine_teleporter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block teleanchor = new MachineTeleanchor("teleanchor", "tele_anchor_top", "tele_anchor_side").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block field_disturber = new MachineFieldDisturber(Material.IRON, "field_disturber").setHardness(5.0F).setResistance(200.0F).setCreativeTab(MainRegistry.machineTab);
 

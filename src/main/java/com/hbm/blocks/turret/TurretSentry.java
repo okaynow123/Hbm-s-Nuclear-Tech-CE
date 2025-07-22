@@ -1,6 +1,5 @@
 package com.hbm.blocks.turret;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.NTMBlockContainer;
 import com.hbm.tileentity.turret.TileEntityTurretSentry;
@@ -22,11 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class TurretSentry extends NTMBlockContainer {
 
   public TurretSentry(Material material, String name) {
-    super(material);
-    this.setTranslationKey(name);
-    this.setRegistryName(name);
-
-    ModBlocks.ALL_BLOCKS.add(this);
+    super(material, name);
   }
 
   @Override

@@ -1,10 +1,11 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ILookOverlay;
-import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.NTMBlockContainer;
 import com.hbm.tileentity.machine.TileEntityMachineTeleporter;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.BlockContainer;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -12,18 +13,12 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+public class MachineTeleporter extends NTMBlockContainer implements ILookOverlay {
 
-public class MachineTeleporter extends BlockContainer implements ILookOverlay {
-
-	public MachineTeleporter(Material materialIn, String s) {
-		super(materialIn);
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
-		
-		ModBlocks.ALL_BLOCKS.add(this);
+	public MachineTeleporter(Material materialIn, String name) {
+		super(materialIn, name);
 	}
 
 	@Override
@@ -36,13 +31,11 @@ public class MachineTeleporter extends BlockContainer implements ILookOverlay {
 		
 		TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 		
-		if(!(tile instanceof TileEntityMachineTeleporter)) return;
+		if(!(tile instanceof TileEntityMachineTeleporter tele)) return;
+
+        List<String> text = new ArrayList<>();
 		
-		TileEntityMachineTeleporter tele = (TileEntityMachineTeleporter) tile;
-		
-		List<String> text = new ArrayList();
-		
-		text.add((tele.power >= tele.consumption ? "§a" : "§c") + String.format("%,d", tele.power) + " / " + String.format("%,d", tele.maxPower));
+		text.add((tele.power >= TileEntityMachineTeleporter.consumption ? "§a" : "§c") + String.format("%,d", tele.power) + " / " + String.format("%,d", tele.maxPower));
 		if(tele.target == null) {
 			text.add("§cNo destination set!");
 		} else {
@@ -53,7 +46,7 @@ public class MachineTeleporter extends BlockContainer implements ILookOverlay {
 	}
 	
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
+	public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) {
 		return EnumBlockRenderType.MODEL;
 	}
 }
