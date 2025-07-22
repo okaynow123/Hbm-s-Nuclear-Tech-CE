@@ -44,8 +44,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 	private int targetX;
 	private int targetY;
 	private int targetZ;
-
-	protected static int lookbackLength = 40;
+	private static final int lookbackLength = 40;
 	
 	//made this one-dimensional because it's a lot easier to serialize
 	public RBMKColumn[] columns = new RBMKColumn[15 * 15];
@@ -77,7 +76,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 				prepareScreenInfo();
 				prepareGraphInfo();
 			}
-			sendNetworkPackNT();
+			networkPackNT(50);
 		}
 	}
 	
@@ -89,11 +88,9 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 				TileEntity te = world.getTileEntity(new BlockPos(targetX + i, targetY, targetZ + j));
 				int index = (i + 7) + (j + 7) * 15;
 				
-				if(te instanceof TileEntityRBMKBase) {
-					
-					TileEntityRBMKBase rbmk = (TileEntityRBMKBase)te;
-					
-					columns[index] = new RBMKColumn(rbmk.getConsoleType(), rbmk.getNBTForConsole());
+				if(te instanceof TileEntityRBMKBase rbmk) {
+
+                    columns[index] = new RBMKColumn(rbmk.getConsoleType(), rbmk.getNBTForConsole());
 					columns[index].data.setDouble("heat", rbmk.heat);
 					columns[index].data.setDouble("maxHeat", rbmk.maxHeat());
 					columns[index].data.setDouble("realSimWater", rbmk.water);
@@ -112,20 +109,18 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		setupScreensAndGraph();
 		prepareScreenInfo();
 		prepareGraphInfo();
-		sendNetworkPackNT();
+		networkPackNT(50);
 	}
 
-	public void setupScreensAndGraph(){
-		List<Integer> fuelRods = new ArrayList(); 
-		List<Integer> controlRods = new ArrayList();
+	private void setupScreensAndGraph(){
+		List<Integer> fuelRods = new ArrayList<>();
+		List<Integer> controlRods = new ArrayList<>();
 		for(int i = 0; i < columns.length; i++){
 			if(columns[i] != null){
-				switch(columns[i].type){
-				case FUEL:
-				case FUEL_SIM: fuelRods.add(i); break;
-				case CONTROL:
-				case CONTROL_AUTO: controlRods.add(i); break;
-				}
+                switch (columns[i].type) {
+                    case FUEL, FUEL_SIM -> fuelRods.add(i);
+                    case CONTROL, CONTROL_AUTO -> controlRods.add(i);
+                }
 			}
 		}
 		Integer[] fuelIndices = fuelRods.toArray(new Integer[fuelRods.size()]);
@@ -260,22 +255,19 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			
 			double result = value / (double) count;
 			String text = ((int)(result * 10)) / 10D + "";
-			
-			switch(screen.type) {
-			case COL_TEMP: text = "rbmk.screen.temp=" + text + "°C"; break;
-			case FUEL_DEPLETION: text = "rbmk.screen.depletion=" + text + "%"; break;
-			case FUEL_POISON: text = "rbmk.screen.xenon=" + text + "%"; break;
-			case FUEL_TEMP: text = "rbmk.screen.core=" + text + "°C"; break;
-			case FLUX: text = "rbmk.screen.flux=" + text ; break;
-			case ROD_EXTRACTION: text = "rbmk.screen.rod=" + text + "%"; break;
-			}
+
+            text = switch (screen.type) {
+                case COL_TEMP -> "rbmk.screen.temp=" + text + "°C";
+                case FUEL_DEPLETION -> "rbmk.screen.depletion=" + text + "%";
+                case FUEL_POISON -> "rbmk.screen.xenon=" + text + "%";
+                case FUEL_TEMP -> "rbmk.screen.core=" + text + "°C";
+                case FLUX -> "rbmk.screen.flux=" + text;
+                case ROD_EXTRACTION -> "rbmk.screen.rod=" + text + "%";
+                default -> text;
+            };
 			
 			screen.display = text;
 		}
-	}
-
-	private void sendNetworkPackNT() {
-		networkPackNT(50);
 	}
 
 	@Override
@@ -300,7 +292,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
                     BufferUtil.writeString(buf, screen.display);
                 }
             }
-		}
+		} else buf.writeBoolean(false);
 
         for (RBMKScreen screen : this.screens) {
             buf.writeByte((byte) screen.type.ordinal());
@@ -360,9 +352,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 					
 					TileEntity te = world.getTileEntity(new BlockPos(targetX + x, targetY, targetZ + z));
 					
-					if(te instanceof TileEntityRBMKControlManual) {
-						TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-						rod.startingLevel = rod.level;
+					if(te instanceof TileEntityRBMKControlManual rod) {
+                        rod.startingLevel = rod.level;
 						rod.setTarget(MathHelper.clamp(data.getDouble("level"), 0, 1));
 						te.markDirty();
 					}
@@ -374,20 +365,18 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			int slot = data.getByte("toggle");
 			if(slot == 99){
 				int next = this.graph.type.ordinal() + 1;
-				ScreenType type = ScreenType.values()[next % ScreenType.values().length];
-				this.graph.type = type;
+                this.graph.type = ScreenType.values()[next % ScreenType.values().length];
 				this.graph.dataBuffer = new int[lookbackLength];
 				Arrays.fill(this.graph.dataBuffer, 0);
 			} else {
 				int next = this.screens[slot].type.ordinal() + 1;
-				ScreenType type = ScreenType.values()[next % ScreenType.values().length];
-				this.screens[slot].type = type;
+                this.screens[slot].type = ScreenType.values()[next % ScreenType.values().length];
 			}
 		}
 		
 		if(data.hasKey("id")) {
 			int slot = data.getByte("id");
-			List<Integer> list = new ArrayList();
+			List<Integer> list = new ArrayList<>();
 			
 			for(int i = 0; i < 15 * 15; i++) {
 				if(data.getBoolean("s" + i)) {
@@ -465,7 +454,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			this.type = type;
 		}
 		
-		public RBMKColumn(ColumnType type, NBTTagCompound data) {
+		RBMKColumn(ColumnType type, NBTTagCompound data) {
 			this.type = type;
 			
 			if(data != null) {
@@ -550,7 +539,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		}
 	}
 	
-	public static enum ColumnType {
+	public enum ColumnType {
 		BLANK(0),
 		FUEL(10),
 		FUEL_SIM(90),
@@ -566,35 +555,35 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		COOLER(120),
 		HEATEX(130);
 		
-		public int offset;
+		public final int offset;
 		
-		private ColumnType(int offset) {
+		ColumnType(int offset) {
 			this.offset = offset;
 		}
 	}
 
-	public class RBMKScreen {
+	public static class RBMKScreen {
 		public ScreenType type = ScreenType.NONE;
 		public Integer[] columns = new Integer[0];
 		public String display = null;
 		
-		public RBMKScreen() { }
-		public RBMKScreen(ScreenType type, Integer[] columns, String display) {
+		RBMKScreen() { }
+		RBMKScreen(ScreenType type, Integer[] columns, String display) {
 			this.type = type;
 			this.columns = columns;
 			this.display = display;
 		}
 	}
 
-	public class RBMKGraph {
+	public static class RBMKGraph {
 		public ScreenType type = ScreenType.NONE;
 		public Integer[] columns = new Integer[0];
 		public int[] dataBuffer = new int[lookbackLength];
 		
-		public RBMKGraph() {
+		RBMKGraph() {
 			Arrays.fill(this.dataBuffer, 0); 
 		}
-		public RBMKGraph(ScreenType type, Integer[] columns) {
+		RBMKGraph(ScreenType type, Integer[] columns) {
 			this.type = type;
 			this.columns = columns;
 			Arrays.fill(this.dataBuffer, 0); 
@@ -606,7 +595,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		}
 	}
 	
-	public static enum ScreenType {
+	public enum ScreenType {
 		NONE(0 * 18),
 		COL_TEMP(1 * 18),
 		FUEL_TEMP(5 * 18),
@@ -615,9 +604,9 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		FUEL_DEPLETION(3 * 18),
 		FUEL_POISON(4 * 18);
 		
-		public int offset;
+		public final int offset;
 		
-		private ScreenType(int offset) {
+		ScreenType(int offset) {
 			this.offset = offset;
 		}
 	}
@@ -650,10 +639,9 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		int i = (y + 7) * 15 + (x + 7);
 
 		TileEntity te = world.getTileEntity(new BlockPos(targetX + x, targetY, targetZ + y));
-		if (te instanceof TileEntityRBMKBase) {
-			TileEntityRBMKBase column = (TileEntityRBMKBase) te;
+		if (te instanceof TileEntityRBMKBase column) {
 
-			NBTTagCompound column_data = columns[i].data;
+            NBTTagCompound column_data = columns[i].data;
 			LinkedHashMap<String, Object> data_table = new LinkedHashMap<>();
 			data_table.put("type", column.getConsoleType().name());
 			data_table.put("hullTemp", column_data.getDouble("heat"));
@@ -668,33 +656,28 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			data_table.put("coreTemp", column_data.getDouble("c_coreHeat"));
 			data_table.put("coreMaxTemp", column_data.getDouble("c_maxHeat"));
 
-			if(te instanceof TileEntityRBMKRod){
-				TileEntityRBMKRod fuelChannel = (TileEntityRBMKRod)te;
-				data_table.put("fluxSlow", fuelChannel.fluxSlow);
+			if(te instanceof TileEntityRBMKRod fuelChannel){
+                data_table.put("fluxSlow", fuelChannel.fluxSlow);
 				data_table.put("fluxFast", fuelChannel.fluxFast);
 			}
 
-			if(te instanceof TileEntityRBMKBoiler){
-				TileEntityRBMKBoiler boiler = (TileEntityRBMKBoiler)te;
-				data_table.put("water", boiler.feedOld.getFluidAmount());
+			if(te instanceof TileEntityRBMKBoiler boiler){
+                data_table.put("water", boiler.feedOld.getFluidAmount());
 				data_table.put("steam", boiler.steamOld.getFluidAmount());
 			}
 
-			if(te instanceof TileEntityRBMKOutgasser){
-				TileEntityRBMKOutgasser irradiationChannel = (TileEntityRBMKOutgasser)te;
-				data_table.put("fluxProgress", irradiationChannel.progress);
+			if(te instanceof TileEntityRBMKOutgasser irradiationChannel){
+                data_table.put("fluxProgress", irradiationChannel.progress);
 				data_table.put("requiredFlux", irradiationChannel.duration);
 			}
 
-			if(te instanceof TileEntityRBMKCooler){
-				TileEntityRBMKCooler coolingChannel = (TileEntityRBMKCooler)te;
-				data_table.put("degreesCooledPerTick", coolingChannel.lastCooled);
+			if(te instanceof TileEntityRBMKCooler coolingChannel){
+                data_table.put("degreesCooledPerTick", coolingChannel.lastCooled);
 				data_table.put("cryogel", coolingChannel.tank.getFluidAmount());
 			}
 
-			if(te instanceof TileEntityRBMKHeater){
-				TileEntityRBMKHeater heaterChannel = (TileEntityRBMKHeater)te;
-				data_table.put("coolant", heaterChannel.feed.getFill());
+			if(te instanceof TileEntityRBMKHeater heaterChannel){
+                data_table.put("coolant", heaterChannel.feed.getFill());
 				data_table.put("hotcoolant", heaterChannel.steam.getFill());
 			}
 
@@ -726,9 +709,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			for(int j = -7; j <= 7; j++) {
 				TileEntity te = world.getTileEntity(new BlockPos(targetX + i, targetY, targetZ + j));
 	
-				if (te instanceof TileEntityRBMKControlManual) {
-					TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-					rod.startingLevel = rod.level;
+				if (te instanceof TileEntityRBMKControlManual rod) {
+                    rod.startingLevel = rod.level;
 					new_level = Math.min(1, Math.max(0, new_level));
 
 					rod.setTarget(new_level);
@@ -752,9 +734,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 
 		TileEntity te = world.getTileEntity(new BlockPos(targetX + x, targetY, targetZ + y));
 		
-		if (te instanceof TileEntityRBMKControlManual) {
-			TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-			rod.startingLevel = rod.level;
+		if (te instanceof TileEntityRBMKControlManual rod) {
+            rod.startingLevel = rod.level;
 			new_level = Math.min(1, Math.max(0, new_level));
 
 			rod.setTarget(new_level);
@@ -775,9 +756,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 				for(int j = -7; j <= 7; j++) {
 					TileEntity te = world.getTileEntity(new BlockPos(targetX + i, targetY, targetZ + j));
 
-					if (te instanceof TileEntityRBMKControlManual) {
-						TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-						if(rod.isSameColor(color)){
+					if (te instanceof TileEntityRBMKControlManual rod) {
+                        if(rod.isSameColor(color)){
 							rod.startingLevel = rod.level;
 							new_level = Math.min(1, Math.max(0, new_level));
 
@@ -805,9 +785,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 		if(new_color >= 0 && new_color <=4){
 			TileEntity te = world.getTileEntity(new BlockPos(targetX + x, targetY, targetZ + y));
 
-			if (te instanceof TileEntityRBMKControlManual) {
-				TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-				rod.setColor(new_color);
+			if (te instanceof TileEntityRBMKControlManual rod) {
+                rod.setColor(new_color);
 				te.markDirty();
 				return new Object[] {"Rod at "+(x+7)+","+(7-y)+" set to color "+new_color};
 			}
@@ -824,9 +803,8 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
 			for(int j = -7; j <= 7; j++) {
 				TileEntity te = world.getTileEntity(new BlockPos(targetX + i, targetY, targetZ + j));
 		
-				if (te instanceof TileEntityRBMKControlManual) {
-					TileEntityRBMKControlManual rod = (TileEntityRBMKControlManual) te;
-					rod.startingLevel = rod.level;
+				if (te instanceof TileEntityRBMKControlManual rod) {
+                    rod.startingLevel = rod.level;
 					rod.setTarget(0);
 					te.markDirty();
 					hasRods = true;

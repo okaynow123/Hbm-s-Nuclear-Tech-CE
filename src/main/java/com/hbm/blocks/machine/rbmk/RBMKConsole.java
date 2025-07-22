@@ -114,13 +114,11 @@ public class RBMKConsole extends BlockDummyable implements ITooltipProvider {
 					Vec3d vec = new Vec3d(1.375, 0, 0.75);
 					int angle = 0;
 
-					switch (entity.getBlockMetadata() - offset) {
-						case 2: angle = 90; break;
-						case 3: angle = 270; break;
-						case 4: angle = 180; break;
-						case 5:
-                            break;
-					}
+                    switch (entity.getBlockMetadata() - offset) {
+                        case 2 -> angle = 90;
+                        case 3 -> angle = 270;
+                        case 4 -> angle = 180;
+                    }
 
 					vec = vec.rotateYaw((float) Math.toRadians(angle));
 
