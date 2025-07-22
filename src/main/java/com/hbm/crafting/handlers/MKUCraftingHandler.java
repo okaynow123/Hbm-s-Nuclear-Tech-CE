@@ -41,8 +41,11 @@ public class MKUCraftingHandler extends net.minecraftforge.registries.IForgeRegi
 
     @Override
     public boolean matches(@NotNull InventoryCrafting inventory, @NotNull World world) {
-        if(!world.getWorldInfo().isInitialized() || lastSeed == world.getSeed() && MKURecipe != null)
+        try {
+            if (!world.getWorldInfo().isInitialized() || lastSeed == world.getSeed() && MKURecipe != null) return false;
+        } catch (NullPointerException ignored) {
             return false;
+        }
 
         if (MKURecipe == null || world.getSeed() != lastSeed)
             generateRecipe(world);
