@@ -197,7 +197,9 @@ public class MainRegistry {
     public static void reloadConfig() {
         Configuration config = new Configuration(new File(proxy.getDataDir().getPath() + "/config/hbm/hbm.cfg"));
         config.load();
+
         GeneralConfig.loadFromConfig(config);
+        WorldConfig.loadFromConfig(config);
         MachineConfig.loadFromConfig(config);
         BombConfig.loadFromConfig(config);
         RadiationConfig.loadFromConfig(config);
@@ -206,10 +208,9 @@ public class MainRegistry {
         WeaponConfig.loadFromConfig(config);
         MobConfig.loadFromConfig(config);
         SpaceConfig.loadFromConfig(config);
-        config.save();
         reloadCompatConfig();
-        WorldConfig.loadFromCompatibilityConfig();
         BedrockOreJsonConfig.init();
+        config.save();
     }
 
     public static void reloadCompatConfig() {

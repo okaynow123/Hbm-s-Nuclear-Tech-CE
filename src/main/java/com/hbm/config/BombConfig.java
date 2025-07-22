@@ -8,14 +8,14 @@ public class BombConfig {
 	public static int gadgetRadius = 150;
 	public static int boyRadius = 120;
 	public static int manRadius = 175;
-	public static int tsarRadius = 500;
 	public static int mikeRadius = 250;
+	public static int tsarRadius = 500;
 	public static int prototypeRadius = 150;
 	public static int fleijaRadius = 50;
 	public static int soliniumRadius = 150;
 	public static int n2Radius = 200;
 	public static int missileRadius = 100;
-	public static int mirvRadius = 70;
+	public static int mirvRadius = 100;
 	public static int fatmanRadius = 35;
 	public static int nukaRadius = 25;
 	public static int aSchrabRadius = 20;
@@ -31,11 +31,11 @@ public class BombConfig {
 	public static int maxCustomSolRadius = 1000;
 	public static int maxCustomEuphLvl = 20;
 	
-	public static int mk5 = 40;
+	public static int mk5 = 50;
 	public static int blastSpeed = 1024;
 	public static int falloutRange = 100;
 	public static int fChunkSpeed = 5;
-	public static int falloutMS = 40;
+	public static int falloutDelay = 4;
 	public static boolean spawnFire = false;
 	public static int limitExplosionLifespan = 0;
 	public static boolean disableNuclear = false;
@@ -46,7 +46,7 @@ public class BombConfig {
 
 	
 	public static void loadFromConfig(Configuration config) {
-		final String CATEGORY_NUKES = "03_nukes";
+		final String CATEGORY_NUKES = CommonConfig.CATEGORY_NUKES;
 		Property propGadget = config.get(CATEGORY_NUKES, "3.00_gadgetRadius", 150);
 		propGadget.setComment("Radius of the Gadget");
 		gadgetRadius = propGadget.getInt();
@@ -153,7 +153,7 @@ public class BombConfig {
 		// new explosion speed
 		Property falloutMSProp = config.get(CATEGORY_NUKE, "6.05_falloutTime", 30);
 		falloutMSProp.setComment("Maximum amount of milliseconds per tick allocated for fallout chunk processing");
-		falloutMS = falloutMSProp.getInt();
+		falloutDelay = falloutMSProp.getInt();
 		Property spawnFireP = config.get(CATEGORY_NUKE, "6.06_falloutFireSpawn", false);
 		spawnFireP.setComment("Whether to spawn fire after the nuke. Is off to increase TPS");
 		spawnFire = spawnFireP.getBoolean();

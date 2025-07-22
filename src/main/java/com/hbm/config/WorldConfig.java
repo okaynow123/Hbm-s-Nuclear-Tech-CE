@@ -120,6 +120,7 @@ public class WorldConfig {
 	public static float craterBiomeOuterRad = 0.5F;
 	public static float craterBiomeWaterMult = 5F;
 
+
 	public static void loadFromConfig(Configuration config) {
 
 		final String CATEGORY_OREGEN = CommonConfig.CATEGORY_ORES;
