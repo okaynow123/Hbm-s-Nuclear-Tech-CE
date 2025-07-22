@@ -199,7 +199,6 @@ public class MainRegistry {
         config.load();
 
         GeneralConfig.loadFromConfig(config);
-        WorldConfig.loadFromConfig(config);
         MachineConfig.loadFromConfig(config);
         BombConfig.loadFromConfig(config);
         RadiationConfig.loadFromConfig(config);
@@ -337,6 +336,7 @@ public class MainRegistry {
         aMatDNS.setRepairItem(new ItemStack(ModItems.plate_armor_dnt));
 
         TileEntityRegistrar.init();
+        MachineDynConfig.initialize();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 

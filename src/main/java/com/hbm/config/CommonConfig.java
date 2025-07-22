@@ -62,6 +62,12 @@ public class CommonConfig {
 		return configDictionary;
 	}
 
+	public static int[] createConfigIntList(Configuration config, String category, String name, String comment, int[] def){
+		Property prop = config.get(category, name, def);
+		prop.setComment(comment);
+		return prop.getIntList();
+	}
+
 	public static HashSet createConfigHashSet(Configuration config, String category, String name, String comment, String valueType, String[] defaultValues) {
 		HashSet<Object> configSet = new HashSet<>();
 		Property prop = config.get(category, name, defaultValues);
