@@ -518,23 +518,16 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.egg_balefire_shard, 4), new Object[] { ModItems.rod_quad_balefire });
 		addShapelessAuto(new ItemStack(ModItems.egg_balefire_shard, 4), new Object[] { ModItems.rod_quad_balefire_blazing });
 
-		//TO REMOVE
-		addShapelessAuto(new ItemStack(ModItems.waste_uranium_hot, 1), new Object[] { ModItems.rod_uranium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_uranium_hot, 2), new Object[] { ModItems.rod_dual_uranium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_uranium_hot, 4), new Object[] { ModItems.rod_quad_uranium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_thorium_hot, 1), new Object[] { ModItems.rod_thorium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_thorium_hot, 2), new Object[] { ModItems.rod_dual_thorium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_thorium_hot, 4), new Object[] { ModItems.rod_quad_thorium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_plutonium_hot, 1), new Object[] { ModItems.rod_plutonium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_plutonium_hot, 2), new Object[] { ModItems.rod_dual_plutonium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_plutonium_hot, 4), new Object[] { ModItems.rod_quad_plutonium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_mox_hot, 1), new Object[] { ModItems.rod_mox_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_mox_hot, 2), new Object[] { ModItems.rod_dual_mox_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_mox_hot, 4), new Object[] { ModItems.rod_quad_mox_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_schrabidium_hot, 1), new Object[] { ModItems.rod_schrabidium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_schrabidium_hot, 2), new Object[] { ModItems.rod_dual_schrabidium_fuel_depleted });
-		addShapelessAuto(new ItemStack(ModItems.waste_schrabidium_hot, 4), new Object[] { ModItems.rod_quad_schrabidium_fuel_depleted });
-		//TO REMOVE
+		addShapelessAuto(new ItemStack(ModItems.waste_natural_uranium, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.NATURAL_URANIUM_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_uranium, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_thorium, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.THORIUM_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_mox, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.MOX_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_plutonium, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.PLUTONIUM_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_u233, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U233_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_u235, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.U235_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_schrabidium, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.LES_FUEL.ordinal()) });
+		addShapelessAuto(new ItemStack(ModItems.waste_zfb_mox, 2, 1), new Object[] { new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.ZFB_MOX_FUEL.ordinal()) });
+
 
 		addRecipeAuto(new ItemStack(ModItems.rod_zirnox_empty, 4), new Object[]{ "Z Z", "ZBZ", "Z Z", 'Z', ZR.nugget(), 'B', BE.ingot() });
 		addZIRNOXRod(U, EnumZirnoxType.NATURAL_URANIUM_FUEL);
@@ -959,10 +952,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.gun_flechette, 1), new Object[] { "PPM", "TIS", "G  ", 'P', STEEL.plate(), 'M', ModItems.mechanism_rifle_2, 'T', ModItems.hull_small_steel, 'I', STEEL.ingot(), 'S', ANY_PLASTIC.ingot(), 'G', ModItems.mechanism_launcher_1 });
 		addRecipeAuto(new ItemStack(ModItems.gun_uboinik, 1), new Object[] { "IIM", "SPW", 'P', STEEL.plate(), 'I', STEEL.ingot(), 'W', KEY_PLANKS, 'S', Items.STICK, 'M', ModItems.mechanism_revolver_2 });
 		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456, 1), new Object[] { "PBB", "ACC", "PRY", 'P', STEEL.plate(), 'R', ModItems.redcoil_capacitor, 'A', ModItems.coil_advanced_alloy, 'B', ModItems.battery_generic, 'C', ModItems.coil_advanced_torus, 'Y', ModItems.mechanism_special });
-		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 64), new Object[] { "SSS", "SRS", "SSS", 'S', STEEL.plate(), 'R', ModItems.rod_quad_uranium_fuel_depleted });
-		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 32), new Object[] { " S ", "SRS", " S ", 'S', STEEL.plate(), 'R', ModItems.rod_dual_uranium_fuel_depleted });
-		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { " S ", " R ", " S ", 'S', STEEL.plate(), 'R', ModItems.rod_uranium_fuel_depleted });
-		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { "SRS", 'S', STEEL.plate(), 'R', ModItems.rod_uranium_fuel_depleted });
+		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { " S ", " R ", " S ", 'S', STEEL.plate(), 'R', new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()) });
+		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { "SRS", 'S', STEEL.plate(), 'R', new ItemStack(ModItems.rod_zirnox_depleted, 1, EnumZirnoxTypeDepleted.URANIUM_FUEL.ordinal()) });
 		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { " S ", " R ", " S ", 'S', STEEL.plate(), 'R', U238.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.gun_xvl1456_ammo, 16), new Object[] { "SRS", 'S', STEEL.plate(), 'R', U238.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.gun_osipr, 1), new Object[] { "CCT", "WWI", "MCC", 'C', CMB.plate(), 'T', W.ingot(), 'W', MAGTUNG.wireFine(), 'I', ModItems.mechanism_rifle_2, 'M', ModItems.coil_magnetized_tungsten });
@@ -2370,8 +2361,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.upgrade_ejector_3, 1), new Object[] { " C ", "PUP", " C ", 'C', ModItems.plate_saturnite, 'P', ModItems.motor, 'U', new ItemStack(ModItems.upgrade_ejector_2) });
 
 		addRecipeAuto(new ItemStack(ModItems.part_generic, 4, EnumPartType.PISTON_PNEUMATIC.ordinal()), new Object[] { " I ", "CPC", " I ", 'I', IRON.ingot(), 'C', CU.ingot(), 'P', IRON.plate() });
-		addRecipeAuto(new ItemStack(ModItems.piston_hydraulic, 4), new Object[] { " I ", "CPC", " I ", 'I', STEEL.ingot(), 'C', TI.ingot(), 'P', new ItemStack(ModItems.canister_generic, 1, Fluids.LUBRICANT.getID()) });
-		addRecipeAuto(new ItemStack(ModItems.piston_electro, 4), new Object[] { " I ", "CPC", " I ", 'I', ANY_RESISTANTALLOY.ingot(), 'C', ANY_PLASTIC.ingot(), 'P', ModItems.motor });
+		addRecipeAuto(new ItemStack(ModItems.part_generic, 4, EnumPartType.PISTON_HYDRAULIC.ordinal()), new Object[] { " I ", "CPC", " I ", 'I', STEEL.ingot(), 'C', TI.ingot(), 'P', new ItemStack(ModItems.canister_generic, 1, Fluids.LUBRICANT.getID()) });
+		addRecipeAuto(new ItemStack(ModItems.part_generic, 4, EnumPartType.PISTON_ELECTRIC.ordinal()), new Object[] { " I ", "CPC", " I ", 'I', ANY_RESISTANTALLOY.ingot(), 'C', ANY_PLASTIC.ingot(), 'P', ModItems.motor });
 
 		addRecipeAuto(new ItemStack(ModItems.charge_railgun), new Object[] { "PDP", "DDD", "PDP", 'P', STEEL.plate(), 'D', ItemFluidTank.getFullTank(Fluids.DEUTERIUM) });
 

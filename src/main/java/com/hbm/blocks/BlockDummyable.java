@@ -1,7 +1,9 @@
 package com.hbm.blocks;
 
+import com.google.common.collect.ImmutableMap;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.interfaces.ICopiable;
+import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
@@ -13,6 +15,12 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,12 +31,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class BlockDummyable extends BlockContainer implements ICustomBlockHighlight, ICopiable {
+public abstract class BlockDummyable extends BlockContainer implements ICustomBlockHighlight, ICopiable, IDynamicModels {
 
 	//Drillgon200: I'm far to lazy to figure out what all the meta values should be translated to in properties
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
@@ -49,6 +62,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		this.setTickRandomly(true);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
+		IDynamicModels.INSTANCES.add(this);
 	}
 	
 	/// BLOCK METADATA ///
@@ -478,6 +492,63 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		if (tile instanceof ICopiable)
 			return ((ICopiable) tile).infoForDisplay(world, x, y, z);
 		return null;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void bakeModel(ModelBakeEvent event) {
+		try {
+			IModel blockBaseModel = ModelLoaderRegistry.getModel(new ResourceLocation("block/cube_all"));
+			ImmutableMap<String, String> blockTextures = ImmutableMap.of("all", "hbm:blocks/block_steel");
+			IModel blockRetextured = blockBaseModel.retexture(blockTextures);
+			IBakedModel blockBaked = blockRetextured.bake(
+					ModelRotation.X0_Y0,
+					DefaultVertexFormats.BLOCK,
+					ModelLoader.defaultTextureGetter()
+			);
+			ModelResourceLocation worldLocation = new ModelResourceLocation(getRegistryName(), "normal");
+			event.getModelRegistry().putObject(worldLocation, blockBaked);
+			IModel itemBaseModel = ModelLoaderRegistry.getModel(new ResourceLocation("item/generated"));
+			ImmutableMap<String, String> itemTextures = ImmutableMap.of("layer0", "hbm:blocks/" + getRegistryName().getPath());
+			IModel itemRetextured = itemBaseModel.retexture(itemTextures);
+			IBakedModel itemBaked = itemRetextured.bake(
+					ModelRotation.X0_Y0,
+					DefaultVertexFormats.ITEM,
+					ModelLoader.defaultTextureGetter()
+			);
+			ModelResourceLocation inventoryLocation = new ModelResourceLocation(getRegistryName(), "inventory");
+			event.getModelRegistry().putObject(inventoryLocation, itemBaked);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Block getBlock() {
+		return this;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModel() {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerSprite(TextureMap map) {
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public StateMapperBase getStateMapper(ResourceLocation loc) {
+		return new StateMapperBase() {
+			@Override
+			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+				return new ModelResourceLocation(loc, "normal");
+			}
+		};
 	}
 
 }

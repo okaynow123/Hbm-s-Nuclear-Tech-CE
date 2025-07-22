@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.inventory.gui.GUIScreenSatCoord;
 import com.hbm.inventory.gui.GUIScreenSatInterface;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemSatChip;
+import com.hbm.items.machine.ItemSatellite;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.SatPanelPacket;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemSatInterface extends ItemSatChip implements IGUIProvider {
+public class ItemSatInterface extends ItemSatellite implements IGUIProvider {
 
 	@SideOnly(Side.CLIENT)
 	public static Satellite currentSat;

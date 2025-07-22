@@ -16,7 +16,6 @@ public class BlockCap extends BlockEnumMeta {
 
     public BlockCap(String registryName) {
         super(Material.IRON, SoundType.METAL, registryName, BlockEnums.EnumBlockCapType.class, true, true);
-
     }
 
     @Override

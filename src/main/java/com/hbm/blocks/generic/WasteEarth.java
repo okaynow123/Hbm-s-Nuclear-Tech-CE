@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class WasteEarth extends Block {
 
-    public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
+    public static final PropertyInteger META = PropertyInteger.create("meta", 0, 6);
 
     public WasteEarth(Material materialIn, boolean tick, String s) {
         super(materialIn);

@@ -243,10 +243,6 @@ public class ModEventHandlerClient {
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
-
-
-
-
         int i = 0;
         ResourceLocation[] list = new ResourceLocation[EnumCell.values().length];
         for (EnumCell e : EnumCell.values()) {
@@ -401,6 +397,7 @@ public class ModEventHandlerClient {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof IHasCustomModel) {
             ModelLoader.setCustomModelResourceLocation(item, meta, ((IHasCustomModel) item).getResourceLocation());
+        } else if (item instanceof IDynamicModels) { // we are literally registering them manually, why do it twice?..
         } else {
             ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
