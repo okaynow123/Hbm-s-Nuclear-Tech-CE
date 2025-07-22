@@ -113,11 +113,23 @@ public class TileEntityCoreStabilizer extends TileEntityMachineBase implements I
     }
 
     @Override
-    public void deserialize(ByteBuf buf) {
-        power = buf.readLong();
-        watts = buf.readInt();
-        isOn = buf.readBoolean();
+    public void serialize(ByteBuf buf) {
+        super.serialize(buf);
+
+        buf.writeLong(power);
+        buf.writeInt(watts);
+        buf.writeInt(beam);
     }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+
+        this.power = buf.readLong();
+        this.watts = buf.readInt();
+        this.beam = buf.readInt();
+    }
+
 
     @Override
     public String getName() {
@@ -144,7 +156,7 @@ public class TileEntityCoreStabilizer extends TileEntityMachineBase implements I
 
     @Override
     public long getMaxPower() {
-        return maxPower;
+        return this.maxPower;
     }
 
     @Override
@@ -157,6 +169,12 @@ public class TileEntityCoreStabilizer extends TileEntityMachineBase implements I
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
     }
+
+    @Override
+    public boolean canConnect(ForgeDirection dir) {
+        return dir != ForgeDirection.UNKNOWN;
+    }
+
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
