@@ -2,7 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.machine.TileEntityMachineTurbineGas;
 
 import com.hbm.api.energymk2.IBatteryItem;
@@ -40,7 +40,7 @@ public class ContainerMachineTurbineGas extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) { //shit for shift clicking that works and idk how
 		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) this.inventorySlots.get(index);
+		Slot slot = this.inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()) {
 			ItemStack originalStack = slot.getStack();
@@ -56,9 +56,9 @@ public class ContainerMachineTurbineGas extends Container {
 				if(!this.mergeItemStack(originalStack, 0, 1, true))
 					return ItemStack.EMPTY;
 				
-			} else if(originalStack.getItem() instanceof ItemForgeFluidIdentifier) {
-				
-				FluidType type = ItemForgeFluidIdentifier.getType(originalStack);
+			} else if(originalStack.getItem() instanceof IItemFluidIdentifier identifier) {
+
+				FluidType type = identifier.getType(player.world, turbinegas.getPos().getX(), turbinegas.getPos().getY(), turbinegas.getPos().getZ(), originalStack);
 				if (type != Fluids.GAS && type != Fluids.PETROLEUM && type != Fluids.LPG ) //doesn't let you yeet random identifiers in the identifier slot
 					return ItemStack.EMPTY;
 

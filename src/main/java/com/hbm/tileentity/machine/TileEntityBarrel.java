@@ -13,7 +13,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.inventory.gui.GUIBarrel;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IFluidCopiable;
@@ -441,7 +441,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        if (i == 0 && stack.getItem() instanceof ItemForgeFluidIdentifier) {
+        if (i == 0 && stack.getItem() instanceof IItemFluidIdentifier) {
             return true;
         }
         return i == 2;

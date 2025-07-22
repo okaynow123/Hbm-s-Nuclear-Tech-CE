@@ -87,9 +87,8 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 	public static void spreadType(World worldIn, BlockPos pos, FluidType hand, FluidType pipe, int x){
 		if(x > 0){
 			TileEntity te = worldIn.getTileEntity(pos);
-			if(te != null && te instanceof TileEntityPipeBaseNT){
-				TileEntityPipeBaseNT duct = (TileEntityPipeBaseNT) te;
-				if(duct.getType() == pipe){
+			if(te instanceof TileEntityPipeBaseNT duct){
+                if(duct.getType() == pipe){
 					duct.setType(hand);
 					duct.markDirty();
 					spreadType(worldIn, pos.add(1, 0, 0), hand, pipe, x-1);
@@ -106,16 +105,12 @@ public class ItemForgeFluidIdentifier extends Item implements IItemFluidIdentifi
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		TileEntityPipeBaseNT duct = null;
-		if(te != null && te instanceof TileEntityPipeBaseNT){
-			duct = (TileEntityPipeBaseNT) te;
-		}
-		if(duct != null){
+		if(te instanceof TileEntityPipeBaseNT duct){
 			if(player.isSneaking()){
 				if(Fluids.NONE != duct.getType()){
 					spreadType(worldIn, pos, Fluids.NONE, duct.getType(), 256);
 				}
-			}else{
+			} else {
 				if(getType(worldIn, pos.getX(), pos.getY(), pos.getZ(), player.getHeldItem(hand)) != duct.getType()){
 					spreadType(worldIn, pos, getType(worldIn, pos.getX(), pos.getY(), pos.getZ(),player.getHeldItem(hand)), duct.getType(), 256);
 				}

@@ -9,6 +9,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacketLegacy;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,9 +23,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -35,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static com.hbm.items.machine.ItemForgeFluidIdentifier.spreadType;
 
 public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IItemControlReceiver, IGUIProvider {
 
@@ -47,7 +49,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     }
 
     @Override
-    public @NotNull ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @NotNull EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote && !player.isSneaking()) {
@@ -80,7 +82,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(@NotNull ItemStack stack, World worldIn, List<String> tooltip, @NotNull ITooltipFlag flagIn) {
         tooltip.add(I18nUtil.resolveKey(getTranslationKey() + ".info"));
         tooltip.add("   " + getType(stack, true).getLocalizedName());
         tooltip.add(I18nUtil.resolveKey(getTranslationKey() + ".info2"));
@@ -88,7 +90,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack stack) {
+    public @NotNull ItemStack getContainerItem(ItemStack stack) {
         return stack.copy();
     }
 
@@ -103,7 +105,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, net.minecraft.world.IBlockAccess world, BlockPos pos, EntityPlayer player) {
+    public boolean doesSneakBypassUse(@NotNull ItemStack stack, net.minecraft.world.@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull EntityPlayer player) {
         return true;
     }
 
@@ -121,7 +123,7 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
     @SideOnly(Side.CLIENT)
     public static class ItemFluidIdentifierColor implements IItemColor {
         @Override
-        public int colorMultiplier(ItemStack stack, int tintIndex) {
+        public int colorMultiplier(@NotNull ItemStack stack, int tintIndex) {
             if (tintIndex == 0) {
                 return 0xFFFFFF;
             } else {
@@ -145,6 +147,21 @@ public class ItemFluidIDMulti extends Item implements IItemFluidIdentifier, IIte
 
         int type = stack.getTagCompound().getInteger("fluid" + (primary ? 1 : 2));
         return Fluids.fromID(type);
+    }
+
+    @Override
+    public @NotNull EnumActionResult onItemUse(@NotNull EntityPlayer player, World worldIn, @NotNull BlockPos pos, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof TileEntityPipeBaseNT duct){
+            FluidType handType = getType(worldIn, pos.getX(), pos.getY(), pos.getZ(), player.getHeldItem(hand));
+            if(handType != duct.getType()){
+                if (player.isSneaking())
+                    spreadType(worldIn, pos, handType, duct.getType(), 256);
+                else duct.setType(handType);
+            }
+            return EnumActionResult.SUCCESS;
+        }
+        return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
 
     @Override

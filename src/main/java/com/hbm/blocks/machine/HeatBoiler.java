@@ -70,18 +70,17 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
 
         if(!world.isRemote && !player.isSneaking()) {
 
-            if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof ItemForgeFluidIdentifier) {
+            if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof IItemFluidIdentifier identifier) {
                 int[] pos = this.findCore(world, pos1.getX(), pos1.getY(), pos1.getZ());
                 if(pos == null)
                     return false;
 
                 TileEntity te = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
 
-                if(!(te instanceof TileEntityHeatBoiler))
+                if(!(te instanceof TileEntityHeatBoiler boiler))
                     return false;
 
-                TileEntityHeatBoiler boiler = (TileEntityHeatBoiler) te;
-                FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
+                FluidType type = identifier.getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
                 boiler.tanksNew[0].setTankType(type);
                 boiler.markDirty();
                 player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getConditionalName()));
