@@ -33,7 +33,11 @@ public class HazardEntry {
 	}
 	
 	public void applyHazard(final ItemStack stack, final EntityLivingBase entity) {
-		type.onUpdate(entity, HazardModifier.evalAllModifiers(stack, entity, baseLevel, mods), stack);
+		// mlbv: I hate this, but I have to do it here
+		// apparently I introduced a double-counting bug in HazardSystem earlier(c8721b7e), but when I fix it, all the hazards halved,
+		// so I must have introduced the halving bug simultaneously with the double-counting bug, but I couldn't find it
+		// perhaps it's introduced along with the async hazard system, idk, but currently I just don't know if there's any other way to fix it
+		type.onUpdate(entity, HazardModifier.evalAllModifiers(stack, entity, baseLevel * 2, mods), stack);
 	}
 	
 	public HazardTypeBase getType() {

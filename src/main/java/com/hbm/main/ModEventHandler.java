@@ -749,14 +749,9 @@ public class ModEventHandler {
             return;
         }
 
-        if (event.getType() == InventoryChangedEvent.EventType.COMPLEX) {
-            HazardSystem.schedulePlayerUpdate(player);
-        } else {
-            ItemStack oldStack = event.getOldStack();
-            ItemStack newStack = event.getNewStack();
-            if (HazardSystem.isStackHazardous(oldStack) || HazardSystem.isStackHazardous(newStack)) {
-                HazardSystem.schedulePlayerUpdate(player);
-            }
+        switch (event.getType()) {
+            case COMPLEX -> HazardSystem.schedulePlayerUpdate(player);
+            case DELTA -> HazardSystem.onInventoryDelta(player, event.getSlotIndex(), event.getOldStack(), event.getNewStack());
         }
     }
 
