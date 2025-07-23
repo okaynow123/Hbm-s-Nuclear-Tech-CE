@@ -17,7 +17,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerMachineArcFurnaceLarge extends Container {
 
-    private TileEntityMachineArcFurnaceLarge furnace;
+    private final TileEntityMachineArcFurnaceLarge furnace;
 
     public ContainerMachineArcFurnaceLarge(InventoryPlayer playerInv, TileEntityMachineArcFurnaceLarge tile) {
         furnace = tile;
@@ -29,7 +29,7 @@ public class ContainerMachineArcFurnaceLarge extends Container {
         //Upgrade
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 4, 152, 108));
         //Inputs
-        for(int i = 0; i < 4; i++) for(int j = 0; j < 5; j++) this.addSlotToContainer(new SlotArcFurnace(tile.inventory, 5 + j + i * 5, 44 + j * 18, 54 + i * 18));
+        for(int i = 0; i < 4; i++) for(int j = 0; j < 5; j++) this.addSlotToContainer(new SlotArcFurnace(tile, tile.inventory, 5 + j + i * 5, 44 + j * 18, 54 + i * 18));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
@@ -84,16 +84,17 @@ public class ContainerMachineArcFurnaceLarge extends Container {
     }
 
     public static class SlotArcFurnace extends SlotNonRetarded {
+        TileEntityMachineArcFurnaceLarge furnace;
 
-        public SlotArcFurnace(IItemHandler inventory, int id, int x, int y) {
+        SlotArcFurnace(TileEntityMachineArcFurnaceLarge furnace, IItemHandler inventory, int id, int x, int y) {
             super(inventory, id, x, y);
+            this.furnace = furnace;
         }
 
         @Override
         public boolean isItemValid(ItemStack stack) {
-            TileEntityMachineArcFurnaceLarge furnace = (TileEntityMachineArcFurnaceLarge) this.inventory;
             if(furnace.liquidMode) return true;
-            ArcFurnaceRecipes.ArcFurnaceRecipe recipe = ArcFurnaceRecipes.getOutput(stack, furnace.liquidMode);
+            ArcFurnaceRecipes.ArcFurnaceRecipe recipe = ArcFurnaceRecipes.getOutput(stack, false);
             if(recipe != null && recipe.solidOutput != null) {
                 return recipe.solidOutput.getCount() * stack.getCount() <= recipe.solidOutput.getMaxStackSize() && stack.getCount() <= furnace.getMaxInputSize();
             }
@@ -101,8 +102,7 @@ public class ContainerMachineArcFurnaceLarge extends Container {
         }
 
         @Override
-        public int getSlotStackLimit() {
-            TileEntityMachineArcFurnaceLarge furnace = (TileEntityMachineArcFurnaceLarge) this.inventory;
+        public int getSlotStackLimit() {;
             return this.getHasStack() ? furnace.getMaxInputSize() : 1;
         }
     }
