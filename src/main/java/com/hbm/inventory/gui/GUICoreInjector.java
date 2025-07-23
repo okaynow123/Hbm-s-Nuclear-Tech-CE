@@ -54,8 +54,8 @@ public class GUICoreInjector extends GuiInfoContainer {
 
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        injector.tanks[0].renderTank(guiLeft + 35, guiTop + 97, this.zLevel, 16, 52);
-        injector.tanks[1].renderTank(guiLeft + 125, guiTop + 97, this.zLevel, 16, 52);
+        injector.tanks[0].renderTank(guiLeft + 35, guiTop + 69, this.zLevel, 16, 52);
+        injector.tanks[1].renderTank(guiLeft + 125, guiTop + 69, this.zLevel, 16, 52);
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     }
