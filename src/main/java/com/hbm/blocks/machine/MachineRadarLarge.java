@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class MachineRadarLarge extends BlockDummyable {
 
@@ -25,24 +26,21 @@ public class MachineRadarLarge extends BlockDummyable {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(@NotNull World world, int meta) {
         if(meta >= 12) return new TileEntityMachineRadarLarge();
         if(meta >= 6) return new TileEntityProxyCombo(false, true, false);
         return null;
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-        if(pos.getY() < TileEntityMachineRadarNT.radarAltitude) {
-            if(world.isRemote)
-                player.sendMessage(new TextComponentTranslation("chat.radar.tolow"));
-            return true;
-        }
-
+    public boolean onBlockActivated(@NotNull World world, BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(world.isRemote && !player.isSneaking()) {
             int[] pos1 = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
             if(pos1 == null) return false;
+            if(pos1[1] < TileEntityMachineRadarNT.radarAltitude) {
+                player.sendMessage(new TextComponentTranslation("chat.radar.tolow"));
+                return true;
+            }
             FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos1[0], pos1[1], pos1[2]);
             return true;
         } else return !player.isSneaking();
@@ -70,18 +68,17 @@ public class MachineRadarLarge extends BlockDummyable {
     }
 
     @Override
-    public boolean canProvidePower(IBlockState state) {
+    public boolean canProvidePower(@NotNull IBlockState state) {
         return true;
     }
 
     @Override
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+    public int getWeakPower(@NotNull IBlockState blockState, IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
         int meta = blockAccess.getBlockState(pos).getBlock().getMetaFromState(blockState);
         if(meta >= 6) {
             ForgeDirection dir = ForgeDirection.getOrientation(side.ordinal());
             TileEntity tile = blockAccess.getTileEntity(pos.add(dir.offsetX, dir.offsetY, dir.offsetZ));
-            if(tile instanceof TileEntityMachineRadarNT) {
-                TileEntityMachineRadarNT entity = (TileEntityMachineRadarNT) tile;
+            if(tile instanceof TileEntityMachineRadarNT entity) {
                 return entity.getRedPower();
             }
         }
@@ -89,7 +86,7 @@ public class MachineRadarLarge extends BlockDummyable {
     }
 
     @Override
-    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+    public int getStrongPower(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
         return getWeakPower(blockState, blockAccess, pos, side);
     }
 }
