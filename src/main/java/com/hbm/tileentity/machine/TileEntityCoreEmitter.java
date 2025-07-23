@@ -129,13 +129,13 @@ public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITic
 
 							if(state.getMaterial().isLiquid()) {
 								world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
-								world.setBlockToAir(pos);
+								world.setBlockToAir(affectedPos);
 								break;
 							}
 
 							@SuppressWarnings("deprecation")
 							float hardness = block.getExplosionResistance(null);
-							if(hardness < 10000 && world.rand.nextDouble() < (out * 0.00000001F)/hardness) {
+							if(hardness < 6000 && world.rand.nextInt(20) == 0)  {
 								world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
 								world.destroyBlock(affectedPos, false);
 							}

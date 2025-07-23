@@ -204,7 +204,7 @@ public class PressRecipes {
 			if(outputItem != null)
 				return outputItem;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public static List<Item> stamps_flat = new ArrayList<Item>() {
