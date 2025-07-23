@@ -29,7 +29,7 @@ public class GUICore extends GuiInfoContainer {
         super.drawScreen(mouseX, mouseY, f);
 
         core.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 7, 16, 80);
-        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 53 , guiTop + 7, 16, 80);
+        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152 , guiTop + 7, 16, 80);
 
         String[] heat = new String[]{"Heat Saturation: " + core.heat + "%"};
         String[] field = new String[]{"Restriction Field: " + core.field + "%"};
@@ -49,7 +49,10 @@ public class GUICore extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GlStateManager.pushMatrix();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.colorMask(true, true, true, false);
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -62,7 +65,11 @@ public class GUICore extends GuiInfoContainer {
         core.tanks[0].renderTank(guiLeft + 8, guiTop + 88, this.zLevel, 16, 80);
         core.tanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 80);
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        GlStateManager.colorMask(true, true, true, true);
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }
 }
