@@ -1,76 +1,16 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.config.MachineConfig;
 import com.hbm.inventory.container.ContainerCrateDesh;
-import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrateDesh;
-import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
 
-public class GUICrateDesh extends GuiContainer {
-	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_desh.png");
-	private TileEntityCrateDesh diFurnace;
+public class GUICrateDesh extends GUICrateBase<TileEntityCrateDesh, ContainerCrateDesh> {
 
-	public GUICrateDesh(InventoryPlayer invPlayer, TileEntityCrateDesh tedf) {
-		super(new ContainerCrateDesh(invPlayer, tedf));
-		diFurnace = tedf;
-		
-		this.xSize = 248;
-		this.ySize = 256;
-	}
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		super.renderHoveredToolTip(mouseX, mouseY);
-	}
+    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_desh.png");
 
-	public void initGui() {
-		super.initGui();
-		if (mc.player != null) {
-			TileEntityCrateBase.openInventory(mc.player);
-		}
-	}
-
-	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
-		if (mc.player != null) {
-			TileEntityCrateBase.closeInventory(mc.player);
-		}
-	}
-	
-	@Override
-	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
-		float percent = Library.getNbtPercentage(this.diFurnace, MachineConfig.crateByteSize * 1000);
-		String color;
-		if (percent >= 85) {
-			color = TextFormatting.RED.toString();
-		} else if (percent >= 50) {
-			color = TextFormatting.GOLD.toString();
-		} else {
-			color = TextFormatting.GREEN.toString();
-		}
-		String weightString = String.format(" %s(%.1f%%)", color, percent);
-		String combinedTitle = name + weightString;
-		this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6, 0x3F1515);
-		this.fontRenderer.drawString(I18n.format("container.inventory"), 44, this.ySize - 96 + 2, 0x3F1515);
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-	}
+    public GUICrateDesh(InventoryPlayer invPlayer, TileEntityCrateDesh tedf) {
+        super(tedf, new ContainerCrateDesh(invPlayer, tedf), 248, 256, texture);
+    }
 }

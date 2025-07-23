@@ -1,84 +1,47 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.config.MachineConfig;
 import com.hbm.inventory.container.ContainerCrateTungsten;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrateTungsten;
-import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
-public class GUICrateTungsten extends GuiContainer {
+public class GUICrateTungsten extends GUICrateBase<TileEntityCrateTungsten, ContainerCrateTungsten> {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_tungsten.png");
-	private static ResourceLocation texture_hot = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_tungsten_hot.png");
-	private TileEntityCrateTungsten diFurnace;
-	
-	public GUICrateTungsten(InventoryPlayer invPlayer, TileEntityCrateTungsten tedf) {
-		super(new ContainerCrateTungsten(invPlayer, tedf));
-		diFurnace = tedf;
-		
-		this.xSize = 176;
-		this.ySize = 168;
-	}
+    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_tungsten.png");
+    private static final ResourceLocation texture_hot = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crate_tungsten_hot.png");
 
-	public void initGui() {
-		super.initGui();
-		if (mc.player != null) {
-			TileEntityCrateBase.openInventory(mc.player);
-		}
-	}
+    public GUICrateTungsten(InventoryPlayer invPlayer, TileEntityCrateTungsten tedf) {
+        super(tedf, new ContainerCrateTungsten(invPlayer, tedf), 176, 168, texture);
+    }
 
-	@Override
-	public void onGuiClosed() {
-		super.onGuiClosed();
-		if (mc.player != null) {
-			TileEntityCrateBase.closeInventory(mc.player);
-		}
-	}
-	
-	@Override
-	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String title = I18n.format("container.crateTungsten");
-		float percent = Library.getNbtPercentage(this.diFurnace, MachineConfig.crateByteSize * 1000);
-		String color;
-		if (percent >= 85) {
-			color = TextFormatting.RED.toString();
-		} else if (percent >= 50) {
-			color = TextFormatting.GOLD.toString();
-		} else {
-			color = TextFormatting.GREEN.toString();
-		}
-		String weightString = String.format(" %s(%.1f%%)", color, percent);
-		String combinedTitle = title + weightString;
-		this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
-		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
-		String sparks = Library.getShortNumber(diFurnace.joules) + "SPK";
-		this.fontRenderer.drawString(sparks, this.xSize - 8 -this.fontRenderer.getStringWidth(sparks), this.ySize - 96 + 2, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
-	}
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		super.renderHoveredToolTip(mouseX, mouseY);
-	}
-	
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
-		if(diFurnace.heatTimer == 0)
-			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		else
-			Minecraft.getMinecraft().getTextureManager().bindTexture(texture_hot);
-		
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-	}
+    @Override
+    protected void drawGuiContainerForegroundLayer(int i, int j) {
+        String title = I18n.format("container.crateTungsten");
+        float percent = this.diFurnace.cachedFillPercentage;
+        String combinedTitle = combineTitle(title, percent);
+        this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6,
+				diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
+        this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
+        String sparks = Library.getShortNumber(diFurnace.joules) + "SPK";
+        this.fontRenderer.drawString(sparks, this.xSize - 8 - this.fontRenderer.getStringWidth(sparks), this.ySize - 96 + 2,
+				diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+        super.drawDefaultBackground();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        if (diFurnace.heatTimer == 0)
+            Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        else
+            Minecraft.getMinecraft().getTextureManager().bindTexture(texture_hot);
+
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+    }
 }
