@@ -125,7 +125,7 @@ public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITic
 						if(te instanceof TileEntityCore) { out = ((TileEntityCore)te).burn(out); continue; }
 
 
-						if(!world.isAirBlock(pos)) {
+						if(!world.isAirBlock(affectedPos)) {
 
 							if(state.getMaterial().isLiquid()) {
 								world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
