@@ -28,8 +28,8 @@ public class GUICore extends GuiInfoContainer {
     public void drawScreen(int mouseX, int mouseY, float f) {
         super.drawScreen(mouseX, mouseY, f);
 
-        core.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 17, 16, 52);
-        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 17, 16, 52);
+        core.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 88, 16, 80);
+        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88, 16, 80);
 
         String[] heat = new String[]{"Heat Saturation: " + core.heat + "%"};
         String[] field = new String[]{"Restriction Field: " + core.field + "%"};
@@ -66,7 +66,6 @@ public class GUICore extends GuiInfoContainer {
         if (core.hasCore())
             drawTexturedModalRect(guiLeft + 70, guiTop + 29, 220, 0, 36, 36);
 
-        core.tanks[0].renderTank(guiLeft + 26, guiTop + 69, this.zLevel, 16, 52);
-        core.tanks[1].renderTank(guiLeft + 134, guiTop + 69, this.zLevel, 16, 52);
-    }
+        core.tanks[0].renderTank(guiLeft + 8, guiTop + 88, this.zLevel, 16, 80);
+        core.tanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 80);}
 }
