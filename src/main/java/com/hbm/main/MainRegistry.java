@@ -562,8 +562,6 @@ public class MainRegistry {
         CraftingManager.addBedrockOreSmelting();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();
-        DiFurnaceRecipes.registerRecipes();
-        DiFurnaceRecipes.registerFuels();
         CentrifugeRecipes.register();
         PressRecipes.registerOverrides();
         ExplosionNukeGeneric.loadSoliniumFromFile();

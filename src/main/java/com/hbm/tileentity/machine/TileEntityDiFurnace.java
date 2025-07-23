@@ -5,21 +5,16 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineDiFurnace;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.AutoRegisterTE;
-import com.hbm.inventory.recipes.DiFurnaceRecipes;
 import com.hbm.inventory.container.ContainerDiFurnace;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.gui.GUIDiFurnace;
 import com.hbm.inventory.recipes.BlastFurnaceRecipes;
-import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
-import com.hbm.inventory.gui.GUIDiFurnace;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -33,13 +28,13 @@ import org.jetbrains.annotations.NotNull;
 public class TileEntityDiFurnace extends TileEntityMachinePolluting implements ITickable, IFluidStandardSender, IGUIProvider {
 
 
-    public static final int maxFuel = 12800;
-    public static final int processingSpeed = 400;
+    private static final int maxFuel = 12800;
+    private static final int processingSpeed = 400;
     private static final int[] slots_io = new int[]{0, 1, 2, 3};
     public int progress;
 
 
-//	private static final int[] slots_top = new int[] {0, 1};
+    //	private static final int[] slots_top = new int[] {0, 1};
 //	private static final int[] slots_bottom = new int[] {3};
 //	private static final int[] slots_side = new int[] {2};
     public int fuel;
@@ -49,7 +44,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     public byte sideLower = 1;
 
     public TileEntityDiFurnace() {
-        super(4, 50);
+        super(4, 50, true, false);
     }
 
     @Override
@@ -63,30 +58,6 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
         this.sideFuel = modes[0];
         this.sideUpper = modes[1];
         this.sideLower = modes[2];
-    }
-
-    //TODO: replace this terribleness
-    private static int getItemPower(ItemStack stack) {
-        if (stack == null) {
-            return 0;
-        } else {
-            Item item = stack.getItem();
-
-            if (item == Items.COAL) return 200;
-            if (item == Item.getItemFromBlock(Blocks.COAL_BLOCK)) return 2000;
-            if (item == Item.getItemFromBlock(ModBlocks.block_coke)) return 4000;
-            if (item == Items.LAVA_BUCKET) return 12800;
-            if (item == Items.BLAZE_ROD) return 1000;
-            if (item == Items.BLAZE_POWDER) return 300;
-            if (item == ModItems.lignite) return 150;
-            if (item == ModItems.powder_lignite) return 150;
-            if (item == ModItems.powder_coal) return 200;
-            if (item == ModItems.briquette) return 200;
-            if (item == ModItems.coke) return 400;
-            if (item == ModItems.solid_fuel) return 400;
-
-            return 0;
-        }
     }
 
     @NotNull
@@ -115,13 +86,13 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
             boolean markDirty = false;
 
-            if (this.hasItemPower(this.getFuelStack()) && this.fuel <= (TileEntityDiFurnace.maxFuel - TileEntityDiFurnace.getItemPower(this.getFuelStack()))) {
-                this.fuel += getItemPower(this.getFuelStack());
+            if (this.hasItemPower(this.getFuelStack()) && this.fuel <= (TileEntityDiFurnace.maxFuel - BlastFurnaceRecipes.getItemPower(this.getFuelStack()))) {
+                this.fuel += BlastFurnaceRecipes.getItemPower(this.getFuelStack());
                 if (!this.getFuelStack().isEmpty()) {
                     markDirty = true;
                     this.getFuelStack().shrink(1);
                     if (this.getFuelStack().isEmpty()) {
-                        inventory.setStackInSlot(2,this.getFuelStack().getItem().getContainerItem(this.getFuelStack()));
+                        inventory.setStackInSlot(2, this.getFuelStack().getItem().getContainerItem(this.getFuelStack()));
                     }
                 }
             }
@@ -142,17 +113,14 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
                     fuel = 0;
                 }
 
-                if (world.getTotalWorldTime() % 20 == 0) this.pollute(PollutionHandler.PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND * (extension ? 3 : 1));
+                if (world.getTotalWorldTime() % 20 == 0)
+                    this.pollute(PollutionHandler.PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND * (extension ? 3 : 1));
 
             } else {
                 progress = 0;
             }
 
-            boolean trigger = true;
-
-            if (canProcess() && this.progress == 0) {
-                trigger = false;
-            }
+            boolean trigger = !canProcess() || this.progress != 0;
 
             if (trigger) {
                 markDirty = true;
@@ -167,8 +135,8 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
         }
     }
 
-    public boolean hasItemPower(ItemStack itemStack) {
-        return DiFurnaceRecipes.getItemPower(itemStack) > 0;
+    private boolean hasItemPower(ItemStack itemStack) {
+        return BlastFurnaceRecipes.getItemPower(itemStack) > 0;
     }
 
     @Override
@@ -179,24 +147,20 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     @Override
     public int[] getAccessibleSlotsFromSide(EnumFacing e) {
         int i = e.ordinal();
-        return i == 0 ? new int[]{3} : (i == 1 ? new int[]{0,1} : new int[]{2});
+        return i == 0 ? new int[]{3} : (i == 1 ? new int[]{0, 1} : new int[]{2});
     }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        if (i == 3)
-            return false;
-        if (i == 2)
-            return hasItemPower(stack);
+        if (i == 3) return false;
+        if (i == 2) return hasItemPower(stack);
         return true;
     }
 
     @Override
     public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
-        if (slot == 0 && isItemValidForSlot(slot, itemStack))
-            return inventory.getStackInSlot(1).getItem() != itemStack.getItem();
-        if (slot == 1 && isItemValidForSlot(slot, itemStack))
-            return inventory.getStackInSlot(0).getItem() != itemStack.getItem();
+        if (slot == 0 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(1).getItem() != itemStack.getItem();
+        if (slot == 1 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(0).getItem() != itemStack.getItem();
         return isItemValidForSlot(slot, itemStack);
     }
 
@@ -241,7 +205,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
     private void processItem() {
         if (canProcess()) {
-            ItemStack itemStack = DiFurnaceRecipes.getFurnaceProcessingResult(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
+            ItemStack itemStack = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
 
             if (inventory.getStackInSlot(3).isEmpty()) {
                 inventory.setStackInSlot(3, itemStack.copy());
@@ -274,10 +238,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     public void serialize(ByteBuf buf) {
         buf.writeShort(this.progress);
         buf.writeShort(this.fuel);
-        buf.writeBytes(new byte[]{
-                this.sideFuel,
-                this.sideUpper,
-                this.sideLower});
+        buf.writeBytes(new byte[]{this.sideFuel, this.sideUpper, this.sideLower});
     }
 
     @Override
@@ -311,8 +272,8 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     public FluidTankNTM[] getSendingTanks() {
         return this.getSmokeTanks();
     }
-   private ItemStack getFuelStack() {
-        return inventory.getStackInSlot(2);
-   }
 
+    private ItemStack getFuelStack() {
+        return inventory.getStackInSlot(2);
+    }
 }

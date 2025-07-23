@@ -142,11 +142,8 @@ public class JeiRecipes {
 		private final List<List<ItemStack>> inputs;
 		private final ItemStack output;
 		
-		public AlloyFurnaceRecipe(AStack input1, AStack input2, ItemStack output) {
-			List<List<ItemStack>> list = new ArrayList<>(2);
-			list.add(input1.getStackList());
-			list.add(input2.getStackList());
-			this.inputs = list;
+		public AlloyFurnaceRecipe(List<ItemStack>[] list, ItemStack output) {
+			this.inputs = Arrays.asList(list);
 			this.output = output; 
 		}
 		
@@ -729,8 +726,8 @@ public class JeiRecipes {
 			return alloyFurnaceRecipes;
 		alloyFurnaceRecipes = new ArrayList<>();
 
-		for(Map.Entry<Pair<AStack, AStack>, ItemStack> pairEntry : DiFurnaceRecipes.diRecipes.entrySet()){
-			alloyFurnaceRecipes.add(new AlloyFurnaceRecipe(pairEntry.getKey().getKey(), pairEntry.getKey().getValue(), pairEntry.getValue()));
+		for(Entry<List<ItemStack>[], ItemStack> pairEntry : BlastFurnaceRecipes.getRecepiesforJEI().entrySet()){
+			alloyFurnaceRecipes.add(new AlloyFurnaceRecipe(pairEntry.getKey(), pairEntry.getValue()));
 		}
 		return alloyFurnaceRecipes;
 	}
@@ -749,7 +746,7 @@ public class JeiRecipes {
 	public static List<ItemStack> getAlloyFuels() {
 		if(alloyFuels != null)
 			return alloyFuels;
-		alloyFuels = DiFurnaceRecipes.getAlloyFuels();
+		alloyFuels = BlastFurnaceRecipes.getAlloyFuels();
 		return alloyFuels;
 	}
 

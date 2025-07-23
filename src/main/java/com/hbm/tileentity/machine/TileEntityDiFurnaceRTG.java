@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineDiFurnaceRTG;
 import com.hbm.interfaces.AutoRegisterTE;
-import com.hbm.inventory.recipes.DiFurnaceRecipes;
+import com.hbm.inventory.recipes.BlastFurnaceRecipes;
 import com.hbm.inventory.container.ContainerDiFurnaceRTG;
 import com.hbm.inventory.gui.GUIDiFurnaceRTG;
 import com.hbm.tileentity.IGUIProvider;
@@ -147,17 +147,9 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
 	}
 	
 	public boolean canProcess() {
-		if(inventory.getStackInSlot(0) == null || inventory.getStackInSlot(1) == null)
-		{
-			return false;
-		}
-		ItemStack itemStack = DiFurnaceRecipes.getFurnaceProcessingResult(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
-		if(itemStack == null)
-		{	
-			return false;
-		}
-		
-		if(inventory.getStackInSlot(2) == ItemStack.EMPTY)
+		ItemStack itemStack = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
+
+        if(inventory.getStackInSlot(2) == ItemStack.EMPTY)
 		{
 			return true;
 		}
@@ -174,7 +166,7 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
 	
 	private void processItem() {
 		if(canProcess()) {
-			ItemStack itemStack = DiFurnaceRecipes.getFurnaceProcessingResult(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
+			ItemStack itemStack = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
 			
 			if(inventory.getStackInSlot(2).isEmpty())
 			{
