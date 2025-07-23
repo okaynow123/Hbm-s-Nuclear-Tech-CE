@@ -712,7 +712,7 @@ public class JeiRecipes {
 
 		pressRecipes = new ArrayList<>();
 		
-		for(Map.Entry<Pair<PressRecipes.StampType, AStack>, ItemStack> entry : PressRecipes.pressRecipes.entrySet()){
+		for(Entry<Pair<PressRecipes.StampType, ? extends AStack>, ItemStack> entry : PressRecipes.pressRecipes.entrySet()){
 
 			pressRecipes.add(new PressRecipe(PressRecipes.getStampList(entry.getKey().getKey()), entry.getKey().getValue().getStackList(), entry.getValue()));
 		}

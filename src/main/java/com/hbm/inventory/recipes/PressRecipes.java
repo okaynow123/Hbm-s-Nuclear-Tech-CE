@@ -14,6 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,7 +48,7 @@ public class PressRecipes {
 		PRINTING8
 	}
 
-	public static LinkedHashMap<Pair<StampType, AStack>, ItemStack> pressRecipes = new LinkedHashMap<>();
+	public static LinkedHashMap<Pair<StampType, ? extends AStack>, ItemStack> pressRecipes = new LinkedHashMap<>();
 
 	public static void addRecipe(StampType stamp, AStack input, ItemStack output){
 		if(!input.getStackList().isEmpty())
@@ -115,8 +116,8 @@ public class PressRecipes {
 		addRecipe(StampType.C50, new ComparableStack(ModItems.assembly_actionexpress), new ItemStack(ModItems.ammo_50ae));
 	}
 
-
-	public static StampType getStampType(Item stamp){
+	@NotNull
+    private static StampType getStampType(@NotNull Item stamp){
 		if (stamps_flat.contains(stamp)) {
 			return StampType.FLAT;
 		}
@@ -145,7 +146,7 @@ public class PressRecipes {
 	}
 
 	public static List<ItemStack> toStack(List<Item> iList){
-		List<ItemStack> i_stamps = new ArrayList<ItemStack>();
+		List<ItemStack> i_stamps = new ArrayList<>();
 		for(Item i : iList){
 			i_stamps.add(new ItemStack(i));
 		}
@@ -180,19 +181,17 @@ public class PressRecipes {
 		return new ArrayList<>();
 	}
 	
-	
-	public static ItemStack getPressResult(ItemStack input, ItemStack stamp) {
-		if (input == null || stamp == null)
-			return null;
-
+	@NotNull
+	public static ItemStack getPressResult(@NotNull ItemStack input, @NotNull ItemStack stamp) {
 		StampType pType = getStampType(stamp.getItem());
-		if(pType == StampType.NONE) return null;
+		if(pType == StampType.NONE) return ItemStack.EMPTY;
 
 		return getPressOutput(pType, input);
 	}
 
-	public static ItemStack getPressOutput(StampType pType, ItemStack input){
-		ItemStack outputItem = pressRecipes.get(new Pair(pType, new ComparableStack(input.getItem(), 1, input.getItemDamage())));
+	@NotNull
+    private static ItemStack getPressOutput(StampType pType, @NotNull ItemStack input){
+		ItemStack outputItem = pressRecipes.get(new Pair<>(pType, new ComparableStack(input.getItem(), 1, input.getItemDamage())));
 		if(outputItem != null)
 			return outputItem;
 
@@ -200,82 +199,82 @@ public class PressRecipes {
 		for(int id : ids) {
 
 			OreDictStack oreStack = new OreDictStack(OreDictionary.getOreName(id));
-			outputItem = pressRecipes.get(new Pair(pType, oreStack));
+			outputItem = pressRecipes.get(new Pair<>(pType, oreStack));
 			if(outputItem != null)
 				return outputItem;
 		}
 		return ItemStack.EMPTY;
 	}
 
-	public static List<Item> stamps_flat = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_stone_flat);
-			add(ModItems.stamp_iron_flat);
-			add(ModItems.stamp_steel_flat);
-			add(ModItems.stamp_titanium_flat);
-			add(ModItems.stamp_obsidian_flat);
-			add(ModItems.stamp_desh_flat);
-		}
-	};
+	private static final List<Item> stamps_flat = new ArrayList<>() {
+        {
+            add(ModItems.stamp_stone_flat);
+            add(ModItems.stamp_iron_flat);
+            add(ModItems.stamp_steel_flat);
+            add(ModItems.stamp_titanium_flat);
+            add(ModItems.stamp_obsidian_flat);
+            add(ModItems.stamp_desh_flat);
+        }
+    };
 
-	public static List<Item> stamps_plate = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_stone_plate);
-			add(ModItems.stamp_iron_plate);
-			add(ModItems.stamp_steel_plate);
-			add(ModItems.stamp_titanium_plate);
-			add(ModItems.stamp_obsidian_plate);
-			add(ModItems.stamp_desh_plate);
-		}
-	};
+	public static List<Item> stamps_plate = new ArrayList<>() {
+        {
+            add(ModItems.stamp_stone_plate);
+            add(ModItems.stamp_iron_plate);
+            add(ModItems.stamp_steel_plate);
+            add(ModItems.stamp_titanium_plate);
+            add(ModItems.stamp_obsidian_plate);
+            add(ModItems.stamp_desh_plate);
+        }
+    };
 
-	public static List<Item> stamps_wire = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_stone_wire);
-			add(ModItems.stamp_iron_wire);
-			add(ModItems.stamp_steel_wire);
-			add(ModItems.stamp_titanium_wire);
-			add(ModItems.stamp_obsidian_wire);
-			add(ModItems.stamp_desh_wire);
-		}
-	};
+	public static List<Item> stamps_wire = new ArrayList<>() {
+        {
+            add(ModItems.stamp_stone_wire);
+            add(ModItems.stamp_iron_wire);
+            add(ModItems.stamp_steel_wire);
+            add(ModItems.stamp_titanium_wire);
+            add(ModItems.stamp_obsidian_wire);
+            add(ModItems.stamp_desh_wire);
+        }
+    };
 
-	public static List<Item> stamps_circuit = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_stone_circuit);
-			add(ModItems.stamp_iron_circuit);
-			add(ModItems.stamp_steel_circuit);
-			add(ModItems.stamp_titanium_circuit);
-			add(ModItems.stamp_obsidian_circuit);
-			add(ModItems.stamp_desh_circuit);
-		}
-	};
+	public static List<Item> stamps_circuit = new ArrayList<>() {
+        {
+            add(ModItems.stamp_stone_circuit);
+            add(ModItems.stamp_iron_circuit);
+            add(ModItems.stamp_steel_circuit);
+            add(ModItems.stamp_titanium_circuit);
+            add(ModItems.stamp_obsidian_circuit);
+            add(ModItems.stamp_desh_circuit);
+        }
+    };
 
-	public static List<Item> stamps_357 = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_357);
-			add(ModItems.stamp_desh_357);
-		}
-	};
+	private static final List<Item> stamps_357 = new ArrayList<>() {
+        {
+            add(ModItems.stamp_357);
+            add(ModItems.stamp_desh_357);
+        }
+    };
 
-	public static List<Item> stamps_44 = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_44);
-			add(ModItems.stamp_desh_44);
-		}
-	};
+	private static final List<Item> stamps_44 = new ArrayList<>() {
+        {
+            add(ModItems.stamp_44);
+            add(ModItems.stamp_desh_44);
+        }
+    };
 
-	public static List<Item> stamps_9 = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_9);
-			add(ModItems.stamp_desh_9);
-		}
-	};
+	private static final List<Item> stamps_9 = new ArrayList<>() {
+        {
+            add(ModItems.stamp_9);
+            add(ModItems.stamp_desh_9);
+        }
+    };
 
-	public static List<Item> stamps_50 = new ArrayList<Item>() {
-		{
-			add(ModItems.stamp_50);
-			add(ModItems.stamp_desh_50);
-		}
-	};
+	private static final List<Item> stamps_50 = new ArrayList<>() {
+        {
+            add(ModItems.stamp_50);
+            add(ModItems.stamp_desh_50);
+        }
+    };
 }
