@@ -133,7 +133,7 @@ public class GUISoyuzLauncher extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 49, guiTop + 59, 212, 0, 6, 8);
 		else
 			drawTexturedModalRect(guiLeft + 49, guiTop + 59, 218, 0, 6, 8);
-		launcher.tanks[0].renderTank(guiLeft + 8, guiTop + 36, zLevel, 16, 52);
-		launcher.tanks[1].renderTank(guiLeft + 26, guiTop + 36, zLevel, 16, 52);
+		launcher.tanks[0].renderTank(guiLeft + 8, guiTop + 88, zLevel, 16, 52);
+		launcher.tanks[1].renderTank(guiLeft + 26, guiTop + 88, zLevel, 16, 52);
 	}
 }
