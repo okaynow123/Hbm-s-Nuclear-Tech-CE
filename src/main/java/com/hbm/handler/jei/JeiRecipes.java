@@ -1092,7 +1092,7 @@ public class JeiRecipes {
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			String timeString = (time / 20.0) + "s";
-			minecraft.fontRenderer.drawString(timeString, 60, 48, 0x404040);
+			minecraft.fontRenderer.drawString(timeString, 112, 38, 0x404040);
 		}
 	}
 }
