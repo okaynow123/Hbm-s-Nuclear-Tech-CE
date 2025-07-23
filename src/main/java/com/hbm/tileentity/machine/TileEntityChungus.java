@@ -235,21 +235,25 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 		if (!world.isRemote)
 			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
 	}
-	
+
+
 	@Override
 	public void serialize(ByteBuf buf) {
-		buf.writeLong(power);
-		buf.writeInt(tanks[0].getTankType().getID());
-		buf.writeInt(turnTimer);
+		buf.writeLong(this.power);
+		buf.writeInt(this.turnTimer);
+		this.tanks[0].serialize(buf);
+		this.tanks[1].serialize(buf);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
 		this.power = buf.readLong();
 		this.turnTimer = buf.readInt();
-		this.tanks[0].setTankType(Fluids.fromID(buf.readInt()));
+		this.tanks[0].deserialize(buf);
+		this.tanks[1].deserialize(buf);
 	}
-	
+
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
