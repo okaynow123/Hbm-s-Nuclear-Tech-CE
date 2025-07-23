@@ -28,5 +28,3 @@ blowdryerSetup {
 }
 
 rootProject.name = rootProject.projectDir.getName()
-
-include 'processor'

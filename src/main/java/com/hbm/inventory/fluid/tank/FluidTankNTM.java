@@ -12,6 +12,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
@@ -282,7 +283,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         bufferbuilder.pos(minX, minY, z).tex(minU, minV).endVertex();
         tessellator.draw();
 
-        GL11.glColor3d(1D, 1D, 1D);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_BLEND);
     }
 

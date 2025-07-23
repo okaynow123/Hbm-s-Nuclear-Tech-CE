@@ -28,8 +28,8 @@ public class GUICore extends GuiInfoContainer {
     public void drawScreen(int mouseX, int mouseY, float f) {
         super.drawScreen(mouseX, mouseY, f);
 
-        core.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 88, 16, 80);
-        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 88, 16, 80);
+        core.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 7, 16, 80);
+        core.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 53 , guiTop + 7, 16, 80);
 
         String[] heat = new String[]{"Heat Saturation: " + core.heat + "%"};
         String[] field = new String[]{"Restriction Field: " + core.field + "%"};
@@ -48,24 +48,21 @@ public class GUICore extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-        super.drawDefaultBackground();
+        GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-        int i = core.getHeatScaled(70);
-        if (i > 70)
-            i = 70;
-        drawTexturedModalRect(guiLeft + 53, guiTop + 98, 0, 204, i, 4);
-
-        int j = core.getFieldScaled(70);
-        if (j > 70)
-            j = 70;
-        drawTexturedModalRect(guiLeft + 53, guiTop + 102, 0, 208, j, 4);
-
+        int heat = Math.min(core.getHeatScaled(70), 70);
+        drawTexturedModalRect(guiLeft + 53, guiTop + 98, 0, 204, heat, 4);
+        int field = Math.min(core.getFieldScaled(70), 70);
+        drawTexturedModalRect(guiLeft + 53, guiTop + 102, 0, 208, field, 4);
         if (core.hasCore())
             drawTexturedModalRect(guiLeft + 70, guiTop + 29, 220, 0, 36, 36);
-
         core.tanks[0].renderTank(guiLeft + 8, guiTop + 88, this.zLevel, 16, 80);
-        core.tanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 80);}
+        core.tanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 80);
+
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.popMatrix();
+    }
 }
