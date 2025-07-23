@@ -43,6 +43,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new AmmoPressRecipes());
         recipeHandlers.add(new ArcFurnaceRecipes());
         recipeHandlers.add(new ArcWelderRecipes());
+        recipeHandlers.add(new BlastFurnaceRecipes());
         recipeHandlers.add(new BreederRecipes());
         recipeHandlers.add(new ChemplantRecipes());
         recipeHandlers.add(new CokerRecipes());
