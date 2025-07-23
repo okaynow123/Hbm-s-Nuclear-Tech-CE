@@ -330,7 +330,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
   public void serialize(ByteBuf buf) {
     super.serialize(buf);
     buf.writeShort(this.mode.ordinal());
-    buf.writeInt(this.typeLoaded);
+    buf.writeShort(this.typeLoaded);
     buf.writeInt(this.ammo);
     buf.writeFloat(this.crane);
   }
@@ -348,7 +348,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
   public void readFromNBT(NBTTagCompound nbt) {
     super.readFromNBT(nbt);
     this.mode = FiringMode.values()[nbt.getShort("mode")];
-    this.typeLoaded = nbt.getShort("type");
+    this.typeLoaded = nbt.getInteger("type");
     this.ammo = nbt.getInteger("ammo");
   }
 

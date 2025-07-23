@@ -126,7 +126,7 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 	@Override
 	public void updateFiringTick(){
 		timer++;
-		
+		this.shot = false;
 		if(timer % 5 == 0) {
 			
 			BulletConfiguration conf = this.getFirstConfigLoaded();
@@ -135,9 +135,8 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 				this.target.attackEntityFrom(ModDamageSource.electricity, 30F + world.rand.nextInt(11));
 				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.tauShoot, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
-
+				this.shot = true;
 				networkPackNT(250);
-				
 				Vec3 pos = new Vec3(this.getTurretPos());
 				Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);
 				vec.rotateAroundZ((float) -this.rotationPitch);
@@ -151,17 +150,25 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 		}
 	}
 
+	private boolean shot = false;
+
 	@Override
 	public void serialize(ByteBuf buf) {
-		super.serialize(buf);
-		buf.writeBoolean(true);
+		if (this.shot)
+			buf.writeBoolean(true);
+		else {
+			buf.writeBoolean(false);
+			super.serialize(buf);
+		}
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
-		super.deserialize(buf);
-		if(buf.readBoolean())
-			beam = 3;
+		boolean shot = buf.readBoolean();
+		if(shot)
+			this.beam = 3;
+		else
+			super.deserialize(buf);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +53,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         if(ammoStacks != null)
             return ammoStacks;
 
-        ammoStacks = new ArrayList();
+        ammoStacks = new ArrayList<>();
 
         NonNullList<ItemStack> list = NonNullList.create();
         ModItems.ammo_arty.getSubItems(MainRegistry.weaponTab, list);
@@ -93,12 +94,12 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
 
     @Override
     public double getDecetorRange() {
-        return this.mode == this.MODE_CANNON ? 250D : 3000D;
+        return this.mode == MODE_CANNON ? 250D : 3000D;
     }
 
     @Override
     public double getDecetorGrace() {
-        return this.mode == this.MODE_CANNON ? 32D : 250D;
+        return this.mode == MODE_CANNON ? 32D : 250D;
     }
 
     @Override
@@ -128,16 +129,15 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
 
     @Override
     public boolean doLOSCheck() {
-        return this.mode == this.MODE_CANNON;
+        return this.mode == MODE_CANNON;
     }
 
     @Override
-    protected void alignTurret() { //FIXME: pitch is too high, thing keeps overshooting
+    protected void alignTurret() {
         Vec3d pos = this.getTurretPos();
-        Vec3d barrel = new Vec3d(this.getBarrelLength(), 0, 0)
-                .rotatePitch((float) -this.rotationPitch)
-                .rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
-
+        Vec3d barrel = new Vec3d(this.getBarrelLength(), 0, 0);
+        Vec3dUtil.rotateRoll(barrel, (float) this.rotationPitch);
+        barrel.rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
         /*
          * This is done to compensate for the barrel length, as this small deviation has a huge impact in both modes at longer ranges.
          * The consequence of this is that using the >before< angle of the barrel as an approximation can lead to problems at closer range,
@@ -212,13 +212,10 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         if(type.getItemDamage() == 8 && type.hasTagCompound()) {
             assert type.getTagCompound() != null;
             NBTTagCompound cargo = type.getTagCompound().getCompoundTag("cargo");
-
-            if(cargo != null) {
-                proj.setCargo(new ItemStack(cargo));
-            }
+            proj.setCargo(new ItemStack(cargo));
         }
 
-        if(this.mode != this.MODE_CANNON)
+        if(this.mode != MODE_CANNON)
             proj.setWhistle(true);
 
         world.spawnEntity(proj);
@@ -257,7 +254,10 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         }
 
         if(!world.isRemote) {
-            if(this.mode == this.MODE_MANUAL) {
+            // mlbv: this is NOT how 1.7 deals with it, but I had to put it here to make the retraction work
+            // I frankly don't know why
+            this.didJustShoot = false;
+            if(this.mode == MODE_MANUAL) {
                 if(!this.targetQueue.isEmpty()) {
                     this.tPos = this.targetQueue.get(0);
                 }
@@ -274,7 +274,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
                 this.stattrak++;
             }
 
-            if(target != null && this.mode != this.MODE_MANUAL) {
+            if(target != null && this.mode != MODE_MANUAL) {
                 if(!this.entityInLOS(this.target)) {
                     this.target = null;
                 }
@@ -283,7 +283,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
             if(target != null) {
                 this.tPos = this.getEntityPos(target);
             } else {
-                if(this.mode != this.MODE_MANUAL) {
+                if(this.mode != MODE_MANUAL) {
                     this.tPos = null;
                 }
             }
@@ -313,7 +313,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
                 if(searchTimer <= 0) {
                     searchTimer = this.getDecetorInterval();
 
-                    if(this.target == null && this.mode != this.MODE_MANUAL)
+                    if(this.target == null && this.mode != MODE_MANUAL)
                         this.seekNewTarget();
                 }
             } else {
@@ -327,8 +327,6 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
             this.power = Library.chargeTEFromItems(inventory, 10, this.power, this.getMaxPower());
 
             networkPackNT(250);
-
-            this.didJustShoot = false;
 
             if(casingDelay > 0) {
                 casingDelay--;
@@ -419,16 +417,14 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
         buf.writeShort(mode);
-        if(didJustShoot)
-            buf.writeBoolean(didJustShoot);
+        buf.writeBoolean(didJustShoot);
     }
 
     @Override
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
         this.mode = buf.readShort();
-        if(buf.readBoolean())
-            this.retracting = true;
+        this.retracting = buf.readBoolean();
     }
 
     @Override

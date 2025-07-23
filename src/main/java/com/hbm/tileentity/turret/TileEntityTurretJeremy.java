@@ -2,6 +2,7 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerTurretBase;
@@ -10,11 +11,13 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.Vec3dUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +29,7 @@ import java.util.List;
 @AutoRegisterTE
 public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IGUIProvider {
 
-	static List<Integer> configs = new ArrayList<>();
+	private static List<Integer> configs = new ArrayList<>();
 
 	static {
 		configs.add(BulletConfigSyncingUtil.SHELL_NORMAL);
@@ -113,6 +116,33 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.xCoord + vec.xCoord, pos.yCoord + vec.yCoord, pos.zCoord + vec.zCoord), new TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 50));
 			}
 		}
+	}
+
+	// FIXME: CasingEjector seems to be broken so this doesn't work for now
+	@Override
+	protected Vec3d getCasingSpawnPos() {
+		Vec3d pos = this.getTurretPos();
+		Vec3d vec = new Vec3d(-2, 0, 0);
+		Vec3dUtil.rotateRoll(vec, (float) -this.rotationPitch);
+		vec.rotateYaw((float) -(this.rotationYaw + Math.PI * 0.5));
+		return pos.add(vec);
+	}
+
+	protected static CasingEjector ejector = new CasingEjector().setAngleRange(0.01F, 0.01F).setMotion(0, 0, -0.2);
+
+	@Override
+	protected CasingEjector getEjector() {
+		return ejector;
+	}
+
+	@Override
+	public boolean usesCasings() {
+		return true;
+	}
+
+	@Override
+	public int casingDelay() {
+		return 22;
 	}
 
 	@Override
