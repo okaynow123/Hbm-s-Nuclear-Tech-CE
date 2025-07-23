@@ -48,11 +48,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
         this.field.setMaxStringLength(3);
         this.field.setText(String.valueOf(emitter.watts));
 	}
-	
-	public void syncTextField(int watts){
-		this.field.setText(String.valueOf(watts));
-	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
@@ -125,7 +121,7 @@ public class GUICoreEmitter extends GuiInfoContainer {
 		
         this.field.drawTextBox();
 
-		emitter.tank.renderTank(guiLeft, guiTop, zLevel, 16, 52);
+		emitter.tank.renderTank(guiLeft+13, guiTop+73, zLevel, 16, 52);
 	}
 	
     protected void keyTyped(char p_73869_1_, int p_73869_2_) throws IOException

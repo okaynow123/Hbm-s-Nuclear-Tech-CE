@@ -221,7 +221,7 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if(bb == null) bb = new AxisAlignedBB(pos.getX() - 10, pos.getY(), pos.getZ() - 10, pos.getX() + 11, pos.getY() + 7, pos.getZ() + 11);
+		if(bb == null) bb = new AxisAlignedBB(pos.getX() - 15, pos.getY(), pos.getZ() - 15, pos.getX() + 15, pos.getY() + 7, pos.getZ() + 15);
 		return bb;
 	}
 	
