@@ -25,6 +25,7 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.BufferUtil;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -252,13 +253,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 
 	@Override
 	public void serialize(ByteBuf buf) {
-		buf.writeBoolean(this.tPos != null);
-		if(this.tPos != null) {
-			buf.writeDouble(this.tPos.x);
-			buf.writeDouble(this.tPos.y);
-			buf.writeDouble(this.tPos.z);
-		}
-
+		BufferUtil.writeVec3(buf, this.tPos);
 		buf.writeDouble(this.rotationPitch);
 		buf.writeDouble(this.rotationYaw);
 		buf.writeLong(this.power);
@@ -272,13 +267,8 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 
 	@Override
 	public void deserialize(ByteBuf buf) {
-		if(buf.readBoolean()) {
-			this.tPos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		} else {
-			this.tPos = null;
-		}
-
 		this.turnProgress = 2;
+		this.tPos = BufferUtil.readVec3(buf);
 		this.syncRotationPitch = buf.readDouble();
 		this.syncRotationYaw = buf.readDouble();
 		this.power = buf.readLong();
@@ -288,6 +278,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		this.targetMobs = buf.readBoolean();
 		this.targetMachines = buf.readBoolean();
 		this.stattrak = buf.readInt();
+
 	}
 	
 	@Override

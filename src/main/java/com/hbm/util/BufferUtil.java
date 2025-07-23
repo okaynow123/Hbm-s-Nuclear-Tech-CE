@@ -1,6 +1,7 @@
 package com.hbm.util;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.Vec3d;
 
 import java.nio.charset.Charset;
 
@@ -53,6 +54,32 @@ public class BufferUtil {
         }
 
         return array;
+    }
+
+    /**
+     * Writes a vector to a buffer.
+     */
+    public static void writeVec3(ByteBuf buf, Vec3d vector) {
+        buf.writeBoolean(vector != null);
+        if(vector == null) return;
+        buf.writeDouble(vector.x);
+        buf.writeDouble(vector.y);
+        buf.writeDouble(vector.z);
+    }
+
+    /**
+     * Reads a vector from a buffer.
+     */
+    public static Vec3d readVec3(ByteBuf buf) {
+        boolean vectorExists = buf.readBoolean();
+        if(!vectorExists) {
+            return null;
+        }
+        double x = buf.readDouble();
+        double y = buf.readDouble();
+        double z = buf.readDouble();
+
+        return new Vec3d(x, y, z);
     }
 
 }
