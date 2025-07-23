@@ -44,8 +44,6 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
     public long power;
     public long joules;
-    //Because it get cleared after the te updates, it needs to be saved here for the container
-    public long syncJoules;
     public FluidTankNTM tank;
 
     public TileEntityCoreReceiver() {
@@ -57,25 +55,25 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
     public void update() {
         if (!world.isRemote) {
 
-            if ((Long.MAX_VALUE - power) / 5000L < joules)
-                power = Long.MAX_VALUE;
-            else
-                power += joules * 5000L;
+            this.subscribeToAllAround(tank.getTankType(), this);
+
+            power = joules * 5000;
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
                 this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 
             if (joules > 0) {
 
-                if (tank.getFluidAmount() >= 20) {
-                    tank.drain(20, true);
+                if (tank.getFill() >= 20) {
+                    tank.setFill(tank.getFill() - 20);
                 } else {
-                    world.setBlockState(pos, Blocks.FLOWING_LAVA.getDefaultState());
+                    world.setBlockState(pos, Blocks.LAVA.getDefaultState());
                     return;
                 }
             }
 
             this.networkPackNT(50);
+
 
             joules = 0;
         }
@@ -88,10 +86,10 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
 
     @Override
-    public void addEnergy(World world, BlockPos pos, long energy,  EnumFacing dir) {
+    public void addEnergy(World world, BlockPos pos, long energy, EnumFacing dir) {
         // only accept lasers from the front
         if (dir.getOpposite().ordinal() == this.getBlockMetadata()) {
-                joules += energy;
+            joules += energy;
         } else {
             world.destroyBlock(pos, false);
             world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2.5F, true);

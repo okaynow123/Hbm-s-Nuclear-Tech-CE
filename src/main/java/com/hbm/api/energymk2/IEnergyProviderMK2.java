@@ -47,10 +47,10 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
      * If it's a receiver or has {@link CapabilityEnergy#ENERGY} and can receive FE, transfers energy to the receiver.
      *
      * @param world The game world in which the operation takes place.
-     * @param x The x-coordinate of the current tile entity.
-     * @param y The y-coordinate of the current tile entity.
-     * @param z The z-coordinate of the current tile entity.
-     * @param dir The direction from this provider to the neighboring tile entity.
+     * @param x     The x-coordinate of the current tile entity.
+     * @param y     The y-coordinate of the current tile entity.
+     * @param z     The z-coordinate of the current tile entity.
+     * @param dir   The direction from this provider to the neighboring tile entity.
      */
     default void tryProvide(World world, int x, int y, int z, ForgeDirection dir) {
         boolean red = false;
@@ -131,5 +131,9 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
             data.setDouble("mZ", dir.offsetZ * (red ? 0.025 : 0.1));
             PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY, posZ), new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 25));
         }
+    }
+
+    default void tryProvide(World world, BlockPos pos, ForgeDirection dir) {
+        tryProvide(world, pos.getX(), pos.getY(), pos.getZ(), dir);
     }
 }
