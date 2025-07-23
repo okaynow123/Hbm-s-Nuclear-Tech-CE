@@ -50,13 +50,15 @@ public class TileEntityMachineFENSU extends TileEntityMachineBattery {
 	}
 
 	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeByte(this.color.getMetadata());
+	}
+
+	@Override
 	public void deserialize(ByteBuf buf) {
-		this.power = buf.readLong();
-		this.delta = buf.readLong();
-		this.redLow = buf.readShort();
-		this.redHigh = buf.readShort();
+		super.deserialize(buf);
 		this.color = EnumDyeColor.byMetadata(buf.readByte());
-		this.priority = ConnectionPriority.values()[buf.readByte()];
 	}
 
 	@Override
