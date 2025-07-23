@@ -181,12 +181,12 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
     @Override
     public FluidTankNTM[] getReceivingTanks() {
-        return new FluidTankNTM[0];
+        return new FluidTankNTM[]{tank};
     }
 
     @Override
     public FluidTankNTM[] getAllTanks() {
-        return new FluidTankNTM[0];
+        return new FluidTankNTM[]{tank};
     }
 
     // do some opencomputer stuff
