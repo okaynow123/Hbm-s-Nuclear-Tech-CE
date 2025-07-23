@@ -22,6 +22,7 @@ import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
 import com.hbm.items.special.*;
 import com.hbm.items.tool.ItemBombCaller;
 import com.hbm.items.tool.ItemBombCaller.EnumCallerType;
+import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.GunB92Cell;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.Library;
@@ -1260,11 +1261,11 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.stealth_boy, 1), new Object[] { " B", "LI", "LC", 'B', Item.getItemFromBlock(Blocks.STONE_BUTTON), 'L', Items.LEATHER, 'I', STEEL.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) });
 
 		addRecipeAuto(new ItemStack(ModBlocks.sat_dock, 1), new Object[] { "SSS", "PCP", 'S', STEEL.ingot(), 'P', ANY_PLASTIC.ingot(), 'C', ModBlocks.crate_iron });
-		addRecipeAuto(new ItemStack(ModBlocks.book_guide, 1), new Object[] { "IBI", "LBL", "IBI", 'B', Items.BOOK, 'I', new ItemStack(Items.DYE, 1, 0), 'L', new ItemStack(Items.DYE, 1, 4) });
+		addRecipeAuto(new ItemStack(ModBlocks.book_guide, 1, ItemGuideBook.BookType.TEST.ordinal()), new Object[] { "IBI", "LBL", "IBI", 'B', Items.BOOK, 'I', new ItemStack(Items.DYE, 1, 0), 'L', new ItemStack(Items.DYE, 1, 4) });
 
-		addRecipeAuto(new ItemStack(ModItems.book_guide, 1, 1), new Object[] { "G", "B", "C", 'B', Items.BOOK, 'G', ModItems.rbmk_lid_glass, 'C', ModItems.rbmk_lid });
-		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, 2), new Object[] { Items.BOOK, ModItems.powder_meteorite });
-		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, 3), new Object[] { Items.BOOK, ModItems.fuse });
+		addRecipeAuto(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.RBMK.ordinal()), new Object[] { "G", "B", "C", 'B', Items.BOOK, 'G', ModItems.rbmk_lid_glass, 'C', ModItems.rbmk_lid });
+		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.MSWORD.ordinal()), new Object[] { Items.BOOK, ModItems.powder_meteorite });
+		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()), new Object[] { Items.BOOK, Items.IRON_INGOT });
 		// TODO: Update this when gem_alexandrite is added
 		addRecipeAuto(new ItemStack(ModBlocks.field_disturber), new Object[] { "ICI", "CAC", "ICI", 'I', STAR.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID), 'A', Items.DIAMOND });
 
