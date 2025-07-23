@@ -15,6 +15,7 @@ import com.hbm.util.Tuple;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.CheckForNull;
 import java.io.IOException;
@@ -88,7 +89,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         blastFurnaceRecipes.add(new Tuple.Triplet<Object, Object, ItemStack>(in1, in2, out));
     }
 
-    @CheckForNull
+    @NotNull
     public static ItemStack getOutput(ItemStack in1, ItemStack in2) {
         for(Tuple.Triplet<Object, Object, ItemStack> recipe : blastFurnaceRecipes) {
             RecipesCommon.AStack[] recipeItem1 = getRecipeStacks(recipe.getX());
@@ -98,7 +99,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
                 return recipe.getZ().copy();
             }
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     private static boolean doStacksMatch(RecipesCommon.AStack[] recipe, ItemStack in) {
