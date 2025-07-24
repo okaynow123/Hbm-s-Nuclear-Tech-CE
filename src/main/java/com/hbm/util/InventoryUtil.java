@@ -289,7 +289,7 @@ public class InventoryUtil {
 			
 			ItemStack stack = player.inventory.mainInventory.get(i);
 			
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				
 				int[] ids = OreDictionary.getOreIDs(stack);
 				
@@ -311,7 +311,7 @@ public class InventoryUtil {
 			
 			ItemStack stack = player.inventory.mainInventory.get(i);
 			
-			if(stack != null) {
+			if(!stack.isEmpty()) {
 				
 				int[] ids = OreDictionary.getOreIDs(stack);
 				
@@ -348,9 +348,8 @@ public class InventoryUtil {
 			return stacks;
 		}
 
-		if(o instanceof ItemStack[]) {
-			ItemStack[] ingredients = (ItemStack[]) o;
-			ItemStack[][] stacks = new ItemStack[ingredients.length][1];
+		if(o instanceof ItemStack[] ingredients) {
+            ItemStack[][] stacks = new ItemStack[ingredients.length][1];
 			for(int i = 0; i < ingredients.length; i++) {
 				stacks[i][0] = ingredients[i];
 			}
@@ -361,17 +360,15 @@ public class InventoryUtil {
 			return (ItemStack[][]) o;
 		}
 
-		if(o instanceof AStack) {
-			AStack astack = (AStack) o;
-			ItemStack[] ext = astack.extractForJEI().toArray(new ItemStack[0]);
+		if(o instanceof AStack astack) {
+            ItemStack[] ext = astack.extractForJEI().toArray(new ItemStack[0]);
 			ItemStack[][] stacks = new ItemStack[1][0];
 			stacks[0] = ext; //untested, do java arrays allow that? the capacity set is 0 after all
 			return stacks;
 		}
 
-		if(o instanceof AStack[]) {
-			AStack[] ingredients = (AStack[]) o;
-			ItemStack[][] stacks = new ItemStack[ingredients.length][0];
+		if(o instanceof AStack[] ingredients) {
+            ItemStack[][] stacks = new ItemStack[ingredients.length][0];
 
 			for(int i = 0; i < ingredients.length; i++) {
 				stacks[i] = ingredients[i].extractForJEI().toArray(new ItemStack[0]);
@@ -381,9 +378,8 @@ public class InventoryUtil {
 		}
 
 		/* in emergency situations with mixed types where AStacks coexist with NBT dependent ItemStacks, such as for fluid icons */
-		if(o instanceof Object[]) {
-			Object[] ingredients = (Object[]) o;
-			ItemStack[][] stacks = new ItemStack[ingredients.length][0];
+		if(o instanceof Object[] ingredients) {
+            ItemStack[][] stacks = new ItemStack[ingredients.length][0];
 
 			for(int i = 0; i < ingredients.length; i++) {
 				Object ingredient = ingredients[i];
