@@ -30,6 +30,7 @@ import com.hbm.entity.projectile.*;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.machine.ItemFFFluidDuct;
@@ -187,12 +188,15 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void init(FMLInitializationEvent evt) {
+        //TODO: Move to IDynamicModels
         ItemDepletedFuel.registerColorHandlers();
         ItemBedrockOreNew.registerColorHandlers();
         ItemFFFluidDuct.registerColorHandlers();
         ItemGasCanister.registerColorHandler();
         ItemAutogen.registerColorHandlers();
         FluidDuctBox.registerColorHandler();
+
+        IDynamicModels.registerColorHandlers();
     }
 
     @Override

@@ -263,8 +263,8 @@ public class ModEventHandlerClient {
                 ModelLoader.setCustomModelResourceLocation(ModItems.forge_fluid_identifier, order[i].getID(),
                         ItemForgeFluidIdentifier.identifierModel);
                 if (order[i].getContainer(Fluids.CD_Canister.class) != null) {
-                    ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
-                            FluidCanisterRender.INSTANCE.setModelLocation(ItemCanister.getStackFromFluid(order[i])));
+//                    ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
+//                            FluidCanisterRender.INSTANCE.setModelLocation(ItemCanister.getStackFromFluid(order[i])));
                 }
 
                 ModelLoader.setCustomModelResourceLocation(ModItems.ff_fluid_duct, order[i].getID(), ItemFFFluidDuct.ductLoc);
@@ -449,12 +449,14 @@ public class ModEventHandlerClient {
             ItemRenderGunAnim.INSTANCE.b92ItemModel = model;
             evt.getModelRegistry().putObject(GunB92.b92Model, new B92BakedModel());
         }
-        Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCanister.fluidCanisterModel);
+        /*
+Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCanister.fluidCanisterModel);
         if (object6 instanceof IBakedModel) {
             IBakedModel model = (IBakedModel) object6;
             FluidCanisterRender.INSTANCE.itemModel = model;
             evt.getModelRegistry().putObject(ItemCanister.fluidCanisterModel, new FluidCanisterBakedModel());
         }
+*/
 
         IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();
         swapModelsNoGui(ModItems.gun_revolver_nightmare, reg);

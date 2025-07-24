@@ -53,6 +53,7 @@ public class ItemDepletedFuel extends ItemNuclearWaste {
     }
 
     @SideOnly(Side.CLIENT)
+    @Deprecated //Should be moved to IDynamicModels Implementation
     public static void registerColorHandlers() {
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
         IItemColor handler = new ColorHandler();
@@ -67,6 +68,7 @@ public class ItemDepletedFuel extends ItemNuclearWaste {
             WasteDrumRecipes.addRecipe(ItemStackUtil.comparableStackFrom(waste, 1, 1), new ItemStack(waste, 1, 0));
         }
     }
+
 
     private static class ColorHandler implements IItemColor {
         @Override
