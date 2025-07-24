@@ -8,10 +8,12 @@ import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityMachineMiningLaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -75,6 +77,8 @@ public class GUIMachineMiningLaser extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		NTMRenderHelper.resetColor();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -91,5 +95,6 @@ public class GUIMachineMiningLaser extends GuiInfoContainer {
 		this.drawInfoPanel(guiLeft + 87, guiTop + 31, 8, 8, 8);
 
 		laser.tankNew.renderTank(guiLeft + 35, guiTop + 124, this.zLevel, 7, 52);
+		GL11.glPopAttrib();
 	}
 }

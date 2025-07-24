@@ -63,6 +63,8 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 		GlStateManager.disableDepth();
 		GlStateManager.colorMask(true, true, true, false);
 		super.drawDefaultBackground();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawModalRectWithCustomSizedTexture(guiLeft, guiTop, 0, 0, xSize, ySize, 350, 256);
@@ -138,5 +140,6 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 		GlStateManager.enableDepth();
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
+		GL11.glPopAttrib();
 	}
 }

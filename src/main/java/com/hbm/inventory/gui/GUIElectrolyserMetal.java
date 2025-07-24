@@ -10,6 +10,7 @@ import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -78,6 +79,8 @@ public class GUIElectrolyserMetal extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         super.drawDefaultBackground();
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -104,9 +107,10 @@ public class GUIElectrolyserMetal extends GuiInfoContainer {
         if(electrolyser.power >= electrolyser.usageOre)
             drawTexturedModalRect(guiLeft + 190, guiTop + 4, 226, 25, 9, 12);
 
-        int o = electrolyser.progressOre * 26 / electrolyser.processOreTime;
+        int o = electrolyser.processOreTime > 0 ? electrolyser.progressOre * 26 / electrolyser.processOreTime : 0;
         drawTexturedModalRect(guiLeft + 7, guiTop + 71 - o, 226, 25 - o, 22, o);
 
         electrolyser.tanks[3].renderTank(guiLeft + 36, guiTop + 70, this.zLevel, 16, 52);
+        GL11.glPopAttrib();
     }
 }
