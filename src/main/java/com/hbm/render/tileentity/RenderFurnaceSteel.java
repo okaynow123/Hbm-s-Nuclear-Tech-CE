@@ -52,6 +52,7 @@ public class RenderFurnaceSteel extends TileEntitySpecialRenderer<TileEntityFurn
         if (tileEntity.wasOn) {
             GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
+            GlStateManager.disableLighting();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
             float col = (float) Math.sin(System.currentTimeMillis() * 0.001);
@@ -62,7 +63,7 @@ public class RenderFurnaceSteel extends TileEntitySpecialRenderer<TileEntityFurn
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buffer = tess.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
             int light = 240; // max brightness
             for (int i = 0; i < 4; i++) {
@@ -70,25 +71,22 @@ public class RenderFurnaceSteel extends TileEntitySpecialRenderer<TileEntityFurn
 
                 buffer.pos(xOffset, 1, -1)
                         .color(r, g, b, a)
-                        .lightmap(light, light)
                         .endVertex();
                 buffer.pos(xOffset, 1, 1)
                         .color(r, g, b, a)
-                        .lightmap(light, light)
                         .endVertex();
                 buffer.pos(xOffset, 0.5, 1)
                         .color(r, g, b, a)
-                        .lightmap(light, light)
                         .endVertex();
                 buffer.pos(xOffset, 0.5, -1)
                         .color(r, g, b, a)
-                        .lightmap(light, light)
                         .endVertex();
             }
 
             tess.draw();
 
             GlStateManager.disableBlend();
+            GlStateManager.enableLighting();
             GlStateManager.enableTexture2D();
         }
         GL11.glPopMatrix();
