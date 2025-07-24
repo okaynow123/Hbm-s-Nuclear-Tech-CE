@@ -96,11 +96,6 @@ public class AuxGaugePacket implements IMessage {
 
                         if (m.id == 0)
                             furn.dualCookTime = m.value;
-                    } else if (te instanceof TileEntityMachineArcFurnace) {
-                        TileEntityMachineArcFurnace furn = (TileEntityMachineArcFurnace) te;
-
-                        if (m.id == 0)
-                            furn.dualCookTime = m.value;
                     } else if (te instanceof TileEntityCompactLauncher) {
                         TileEntityCompactLauncher launcher = (TileEntityCompactLauncher) te;
 

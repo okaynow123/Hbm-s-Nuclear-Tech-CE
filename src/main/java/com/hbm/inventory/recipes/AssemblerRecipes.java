@@ -867,14 +867,6 @@ public class AssemblerRecipes extends SerializableRecipe {
 //				new OreDictStack(NB.ingot(), 16),
 //				new OreDictStack(DURA.pipe(), 4)
 //		}, 200);
-		makeRecipe(new ComparableStack(ModBlocks.machine_arc_furnace_off, 1), new AStack[] {
-				new OreDictStack(ANY_CONCRETE.any(), 12),
-				new OreDictStack(ANY_PLASTIC.ingot(), 8),
-				new ComparableStack(ModItems.ingot_firebrick, 16),
-				new OreDictStack(STEEL.plateCast(), 8),
-				new ComparableStack(ModBlocks.machine_transformer, 1),
-				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG.ordinal())
-		}, 200);
 		makeRecipe(new ComparableStack(ModBlocks.machine_large_turbine, 1), new AStack[] {
 				!exp ? new OreDictStack(STEEL.plate528(), 12) : new OreDictStack(STEEL.heavyComp(), 1),
 				new OreDictStack(RUBBER.ingot(), 4),
