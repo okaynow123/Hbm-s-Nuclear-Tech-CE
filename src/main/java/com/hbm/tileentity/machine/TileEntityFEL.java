@@ -3,8 +3,6 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.machine.MachineSILEX;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerFEL;
 import com.hbm.inventory.gui.GUIFEL;
@@ -37,14 +35,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -62,11 +57,11 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 	public boolean isOn;
 	public boolean missingValidSilex = true	;
 	public int distance;
-	public List<EntityLivingBase> entities = new ArrayList();
+	public List<EntityLivingBase> entities = new ArrayList<>();
 	
 	
 	public TileEntityFEL() {
-		super(2);
+		super(2, false, true);
 	}
 
 	@Override
@@ -85,10 +80,9 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 			
 			if(this.isOn && !(inventory.getStackInSlot(1).getCount() == 0)) {
 				
-				if(inventory.getStackInSlot(1).getItem() instanceof ItemFELCrystal) {
-					
-					ItemFELCrystal crystal = (ItemFELCrystal) inventory.getStackInSlot(1).getItem();
-					this.mode = crystal.wavelength;
+				if(inventory.getStackInSlot(1).getItem() instanceof ItemFELCrystal crystal) {
+
+                    this.mode = crystal.wavelength;
 					
 				} else { this.mode = EnumWavelengths.NULL; }
 				
@@ -101,8 +95,9 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 			double zCoord = pos.getZ();
 			if(this.isOn &&  this.mode != EnumWavelengths.NULL) {
 				if(this.power < powerReq * Math.pow(4, mode.ordinal())){
+					this.mode = EnumWavelengths.NULL;
 					this.power = 0;
-				}else{
+				} else {
 					int distance = this.distance-1;
 					double blx = Math.min(xCoord, xCoord + (double)dir.offsetX * distance) + 0.2;
 					double bux = Math.max(xCoord, xCoord + (double)dir.offsetX * distance) + 0.8;
@@ -114,25 +109,32 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 					List<EntityLivingBase> list = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(blx, bly, blz, bux, buy, buz));
 					
 					for(EntityLivingBase entity : list) {
-						switch(this.mode) {
-						case RADIO: break;
-						case MICRO: entity.setFire(2); break;
-						case IR: entity.setFire(4); break;
-						case VISIBLE: entity.addPotionEffect(new PotionEffect(Potion.getPotionById(15), 60 * 60 * 65536, 0)); break;
-						case UV: entity.setFire(10); ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 0.025F); break;
-						case XRAY: ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1F); break;
-						case GAMMA: 
-							ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1000);
-							if(Math.random() < 0.01){
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionById(3), 1800, 4, false, false));
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionById(5), 1800, 6, false, false));
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 1800, 6, false, false));
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionById(11), 1800, 6, false, false));
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionById(21), 1800, 4, false, false));
-							}
-							break;
-						case DRX: ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 21000); ContaminationUtil.applyDigammaData(entity, 0.1F); break;
-						}
+                        switch (this.mode) {
+                            case RADIO -> {
+                            }
+                            case MICRO -> entity.setFire(2);
+                            case IR -> entity.setFire(4);
+                            case VISIBLE -> entity.addPotionEffect(new PotionEffect(Potion.getPotionById(15), 60 * 60 * 65536, 0));
+                            case UV -> {
+                                entity.setFire(10);
+                                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 0.025F);
+                            }
+                            case XRAY -> ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1F);
+                            case GAMMA -> {
+                                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 1000);
+                                if (Math.random() < 0.01) {
+                                    entity.addPotionEffect(new PotionEffect(Potion.getPotionById(3), 1800, 4, false, false));
+                                    entity.addPotionEffect(new PotionEffect(Potion.getPotionById(5), 1800, 6, false, false));
+                                    entity.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 1800, 6, false, false));
+                                    entity.addPotionEffect(new PotionEffect(Potion.getPotionById(11), 1800, 6, false, false));
+                                    entity.addPotionEffect(new PotionEffect(Potion.getPotionById(21), 1800, 4, false, false));
+                                }
+                            }
+                            case DRX -> {
+                                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, 21000);
+                                ContaminationUtil.applyDigammaData(entity, 0.1F);
+                            }
+                        }
 					}
 					
 					this.power -= powerReq * ((mode.ordinal() == 0) ? 0 : Math.pow(4, mode.ordinal()));
@@ -154,18 +156,15 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 							BlockPos silex_pos = new BlockPos(x + dir.offsetX, yCoord, z + dir.offsetZ);
 							TileEntity te = world.getTileEntity(silex_pos);
 						
-							if(te instanceof TileEntitySILEX) {
-								TileEntitySILEX silex = (TileEntitySILEX) te;
-								int meta = silex.getBlockMetadata() - BlockDummyable.offset;
-								if(rotationIsValid(meta, this.getBlockMetadata() - BlockDummyable.offset) && i >= 5 && silexSpacing == false	) {
+							if(te instanceof TileEntitySILEX silex) {
+                                int meta = silex.getBlockMetadata() - BlockDummyable.offset;
+								if(rotationIsValid(meta, this.getBlockMetadata() - BlockDummyable.offset) && i >= 5 && !silexSpacing) {
 									if(silex.mode != this.mode) {
 										silex.mode = this.mode;
 										this.missingValidSilex = false;
 										silexSpacing = true;
-										continue;
-									} 
+                                    }
 								} else {
-									MachineSILEX silexBlock = (MachineSILEX)silex.getBlockType();
 									world.setBlockToAir(silex_pos);
 									world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(Item.getItemFromBlock(ModBlocks.machine_silex))));
 								} 
@@ -175,86 +174,82 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 							this.distance = i;
 							float hardness = b.getBlock().getExplosionResistance(null);
 							boolean blocked = false;
-							switch(this.mode) {
-								case RADIO: blocked = true;break;
-								case MICRO:
-									if(b.getMaterial().isLiquid()){
-										world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-										world.setBlockToAir(new BlockPos(x, y, z));
-									} else if(b.getMaterial() == Material.GLASS || b.getMaterial().isOpaque())
-										blocked = true;
-									break;
-								case IR:
-									if(b.getMaterial().isOpaque() || b.getMaterial() == Material.GLASS)
-										blocked = true;
-									break;
-								case VISIBLE:
-									if(b.getMaterial().isOpaque()){
-										if(hardness < 10 && world.rand.nextInt(40) == 0){
-											world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-											world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
-										}else{
-											blocked = true;
-										}
-									}
-									break;
-								case UV: 
-									if(b.getMaterial().isOpaque()){
-										if(hardness < 100 && world.rand.nextInt(20) == 0){
-											world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-											world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
-										}else{
-											blocked = true;
-										}
-									}
-									break;
-								case XRAY: 
-									if(b.getMaterial().isOpaque()){
-										if(hardness < 1000 && world.rand.nextInt(10) == 0){
-											world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-											world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
-										}else{
-											blocked = true;
-										}
-									}
-									break;
-								case GAMMA: 
-									if(b.getMaterial().isOpaque()){
-										if(hardness < 3000 && world.rand.nextInt(5) == 0){
-											world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-											world.setBlockState(new BlockPos(x, y, z), ModBlocks.balefire.getDefaultState());
-										}else{
-											blocked = true;
-										}
-									}
-									break;
-								case DRX: 
-									world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,  1.0F, 1.0F);
-									world.setBlockState(new BlockPos(x, y, z), ((MainRegistry.polaroidID == 11) ? ModBlocks.digamma_matter : ModBlocks.fire_digamma).getDefaultState());
-									world.setBlockState(new BlockPos(x, y-1, z), ModBlocks.ash_digamma.getDefaultState());
-									break;
-							}
+                            switch (this.mode) {
+                                case RADIO -> blocked = true;
+                                case MICRO -> {
+                                    if (b.getMaterial().isLiquid()) {
+                                        world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                        world.setBlockToAir(new BlockPos(x, y, z));
+                                    } else if (b.getMaterial() == Material.GLASS || b.getMaterial().isOpaque())
+                                        blocked = true;
+                                }
+                                case IR -> {
+                                    if (b.getMaterial().isOpaque() || b.getMaterial() == Material.GLASS)
+                                        blocked = true;
+                                }
+                                case VISIBLE -> {
+                                    if (b.getMaterial().isOpaque()) {
+                                        if (hardness < 10 && world.rand.nextInt(40) == 0) {
+                                            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                            world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+                                        } else {
+                                            blocked = true;
+                                        }
+                                    }
+                                }
+                                case UV -> {
+                                    if (b.getMaterial().isOpaque()) {
+                                        if (hardness < 100 && world.rand.nextInt(20) == 0) {
+                                            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                            world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+                                        } else {
+                                            blocked = true;
+                                        }
+                                    }
+                                }
+                                case XRAY -> {
+                                    if (b.getMaterial().isOpaque()) {
+                                        if (hardness < 1000 && world.rand.nextInt(10) == 0) {
+                                            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                            world.setBlockState(new BlockPos(x, y, z), Blocks.FIRE.getDefaultState());
+                                        } else {
+                                            blocked = true;
+                                        }
+                                    }
+                                }
+                                case GAMMA -> {
+                                    if (b.getMaterial().isOpaque()) {
+                                        if (hardness < 3000 && world.rand.nextInt(5) == 0) {
+                                            world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                            world.setBlockState(new BlockPos(x, y, z), ModBlocks.balefire.getDefaultState());
+                                        } else {
+                                            blocked = true;
+                                        }
+                                    }
+                                }
+                                case DRX -> {
+                                    world.playSound(null, x + 0.5, y + 0.5, z + 0.5, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                                    world.setBlockState(new BlockPos(x, y, z), ((MainRegistry.polaroidID == 11) ? ModBlocks.digamma_matter : ModBlocks.fire_digamma).getDefaultState());
+                                    world.setBlockState(new BlockPos(x, y - 1, z), ModBlocks.ash_digamma.getDefaultState());
+                                }
+                            }
 							if(blocked)
 								break;
 						}
 					}
+					PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
 				}
 			}
 
-			PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
 			networkPackNT(250);
 		}
 	}
 	
-	public boolean rotationIsValid(int silexMeta, int felMeta) {
+	private boolean rotationIsValid(int silexMeta, int felMeta) {
 		ForgeDirection silexDir = ForgeDirection.getOrientation(silexMeta);
 		ForgeDirection felDir = ForgeDirection.getOrientation(felMeta);
-		if(silexDir == felDir || silexDir == felDir.getOpposite()) {
-			return true;
-		}
-		 
-		return false;
-	}
+        return silexDir == felDir || silexDir == felDir.getOpposite();
+    }
 	
 	@Override
 	public void serialize(ByteBuf buf) {
@@ -270,8 +265,8 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		this.power = buf.readLong();
 		this.mode = EnumWavelengths.valueOf(BufferUtil.readString(buf));
 		this.isOn = buf.readBoolean();
-		this.distance = buf.readInt();
 		this.missingValidSilex = buf.readBoolean();
+		this.distance = buf.readInt();
 	}
 
 	@Override
@@ -335,23 +330,6 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		return maxPower;
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
-	}
 	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerFEL(player.inventory, this);

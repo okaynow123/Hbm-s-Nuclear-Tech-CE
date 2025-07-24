@@ -6,8 +6,6 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.recipes.CentrifugeRecipes;
@@ -48,10 +46,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -60,7 +55,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @AutoRegisterTE
@@ -80,14 +74,13 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	public int lastTargetY;
 	public int lastTargetZ;
 	public boolean beam;
-	boolean lock = false;
-	double breakProgress;
+	private double breakProgress;
 	private final UpgradeManager manager;
 	private static boolean converted = false;
-	double clientBreakProgress = 0;
+	private double clientBreakProgress = 0;
 
 	public TileEntityMachineMiningLaser() {
-		super(0);
+		super(0, true, true);
 		//slot 0: battery
 		//slots 1 - 8: upgrades
 		//slots 9 - 29: output
@@ -154,7 +147,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 						- (TileEntityMachineMiningLaser.consumption * Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.POWER), 12) / 16)
 						+ (TileEntityMachineMiningLaser.consumption * Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.SPEED), 12) / 16);
 
-				if(doesScream()){
+				if(hasUpgrade(ModItems.upgrade_screm)){
 					cycles *= 4;
 					speed *= 4;
 					consumption *= 20;
@@ -194,7 +187,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 						}
 					}
 				}
-				if(doesScream()) {
+				if(beam && hasUpgrade(ModItems.upgrade_screm)) {
 					world.playSound(null, targetX + 0.5, targetY + 0.5, targetZ + 0.5, HBMSoundHandler.screm, SoundCategory.BLOCKS, 20.0F, 1.0F);
 				}
 			} else {
@@ -207,7 +200,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			this.tryFillContainer(pos.getX(), pos.getY(), pos.getZ() + 2);
 			this.tryFillContainer(pos.getX(), pos.getY(), pos.getZ() - 2);
 
-			PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
+			if (beam) PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
 			networkPackNT(250);
 		}
 	}
@@ -265,7 +258,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		if(!(h instanceof IItemHandlerModifiable inv))
 			return;
 
-        for(int i = 9; i <= 29; i++) {
+		for(int i = 9; i <= 29; i++) {
 
 			if(!inventory.getStackInSlot(i).isEmpty()) {
 				int prev = inventory.getStackInSlot(i).getCount();
@@ -291,7 +284,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		ItemStack stack = new ItemStack(b, 1, b.getMetaFromState(state));
 
 		if(!stack.isEmpty()) {
-			if(hasCrystallizer()) {
+			if(hasUpgrade(ModItems.upgrade_crystallizer)) {
 
 				CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(stack, Fluids.PEROXIDE);
 				if(result == null) result = CrystallizerRecipes.getOutput(stack, Fluids.SULFURIC_ACID);
@@ -300,7 +293,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					normal = false;
 				}
 
-			} else if(hasCentrifuge()) {
+			} else if(hasUpgrade(ModItems.upgrade_centrifuge)) {
 
 				ItemStack[] result = CentrifugeRecipes.getOutput(stack);
 				if(result != null) {
@@ -313,7 +306,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					}
 				}
 
-			} else if(hasShredder()) {
+			} else if(hasUpgrade(ModItems.upgrade_shredder)) {
 
 				ItemStack result = ShredderRecipes.getShredderResult(stack);
 				if(!result.isEmpty() && result.getItem() != ModItems.scrap) {
@@ -321,7 +314,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					normal = false;
 				}
 
-			} else if(hasSmelter()) {
+			} else if(hasUpgrade(ModItems.upgrade_smelter)) {
 
 				ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
 				if(!result.isEmpty()) {
@@ -359,7 +352,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 		int rangeHor = 3;
 		int rangeVer = 1;
-		boolean nullifier = hasNullifier();
+		boolean nullifier = hasUpgrade(ModItems.upgrade_nullifier);
 
 		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(
 				targetX + 0.5 - rangeHor,
@@ -368,7 +361,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 				targetX + 0.5 + rangeHor,
 				targetY + 0.5 + rangeVer,
 				targetZ + 0.5 + rangeHor
-				));
+		));
 
 		for(EntityItem item : items) {
 
@@ -404,14 +397,14 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 				targetX + 0.5 + 1,
 				targetY + 0.5 + 1,
 				targetZ + 0.5 + 1
-				));
+		));
 
 		for(EntityLivingBase mob : mobs) {
 			mob.setFire(5);
 		}
 	}
 
-	public double getBreakSpeed(int speed) {
+	private double getBreakSpeed(int speed) {
 
 		float hardness = world.getBlockState(new BlockPos(targetX, targetY, targetZ)).getBlockHardness(world, new BlockPos(targetX, targetY, targetZ)) * 15 / speed;
 		if(hardness == 0)
@@ -454,8 +447,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		if(b instanceof BlockGasBase) return false;
 		float hardness = block.getBlockHardness(world, new BlockPos(x, y, z));
 		if(hardness < 0 || hardness > 3_500_000) return false;
-        return !block.getMaterial().isLiquid();
-    }
+		return !block.getMaterial().isLiquid();
+	}
 
 	public int getRange() {
 
@@ -477,87 +470,13 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		return Math.min(range, 25);
 	}
 
-	public boolean hasNullifier() {
-
+	private boolean hasUpgrade(Item item) {
 		for(int i = 1; i < 9; i++) {
-
 			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_nullifier)
+				if(inventory.getStackInSlot(i).getItem().equals(item))
 					return true;
 			}
 		}
-
-		return false;
-	}
-
-	public boolean hasSmelter() {
-
-		for(int i = 1; i < 9; i++) {
-
-			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_smelter)
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasShredder() {
-
-		for(int i = 1; i < 9; i++) {
-
-			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_shredder)
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasCentrifuge() {
-
-		for(int i = 1; i < 9; i++) {
-
-			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_centrifuge)
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasCrystallizer() {
-
-		for(int i = 1; i < 9; i++) {
-
-			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_crystallizer)
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean doesScream() {
-
-		for(int i = 1; i < 9; i++) {
-
-			if(!inventory.getStackInSlot(i).isEmpty()) {
-
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_screm)
-					return true;
-			}
-		}
-
 		return false;
 	}
 
@@ -586,7 +505,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		return (int) (breakProgress * i);
 	}
 
-    @Override
+	@Override
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
 		return i >= 9 && i <= 29;
 	}
@@ -655,29 +574,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public FluidTankNTM[] getAllTanks() {
 		return new FluidTankNTM[] {tankNew};
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(null, this.getSendingTanks())
-			);
-		}
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 
 	@Override
