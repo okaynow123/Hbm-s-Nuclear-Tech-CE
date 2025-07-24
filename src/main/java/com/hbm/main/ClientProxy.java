@@ -1219,6 +1219,19 @@ public class ClientProxy extends ServerProxy {
                     }
                 }
             }
+            case "splash" -> {
+                if(particleSetting == 0 || (particleSetting == 1 && rand.nextBoolean())) {
+                    ParticleLiquidSplash fx = new ParticleLiquidSplash(world, x, y, z);
+
+                    if(data.hasKey("color")) {
+                        Color color = new Color(data.getInteger("color"));
+                        float f = 1F - rand.nextFloat() * 0.2F;
+                        fx.setRBGColorF(color.getRed() / 255F * f, color.getGreen() / 255F * f, color.getBlue() / 255F * f);
+                    }
+
+                    Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+                }
+            }
             case "radiation" -> {
                 for (int i = 0; i < data.getInteger("count"); i++) {
 

@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 
 public class ParticleCoolingTower extends Particle {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/particle/particle_base.png");
     private float baseScale = 1.0F;
     private float maxScale = 1.0F;
     private float lift = 0.3F;
