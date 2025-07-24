@@ -124,7 +124,7 @@ public class BlockMassStorage extends BlockContainer implements ILookOverlay, IT
 				drop.setTagCompound(nbt);
 			}
 
-			InventoryHelper.spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), drop);
 		}
 
 		dropInv = false;
