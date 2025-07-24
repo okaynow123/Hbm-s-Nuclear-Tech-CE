@@ -261,7 +261,7 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 
 	public void updateRedstonePower(int x, int y, int z) {
 		BlockPos pos = new BlockPos(x, y, z);
-		boolean powered = world.getStrongPower(pos) > 0;
+		boolean powered = world.isBlockPowered(pos);
 		boolean contained = activatedBlocks.contains(pos);
 		if(!contained && powered){
 			activatedBlocks.add(pos);

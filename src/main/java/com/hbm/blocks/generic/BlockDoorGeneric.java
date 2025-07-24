@@ -44,6 +44,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 		this.isRadResistant = isRadResistant;
 	}
 
+	@Override
 	public boolean isSealed(World world, BlockPos blockPos, EnumFacing direction){
 		if (world != null) {
 			int[] corePos = findCore(world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -109,7 +110,6 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 		return type.isLadder(open);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState){
 		AxisAlignedBB box = state.getCollisionBoundingBox(worldIn, pos);
