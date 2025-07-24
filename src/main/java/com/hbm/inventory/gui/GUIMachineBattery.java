@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GUIMachineBattery extends GuiInfoContainer {
@@ -51,19 +52,18 @@ public class GUIMachineBattery extends GuiInfoContainer {
 		String[] info = new String[] { Library.getShortNumber(battery.power)+"HE/"+Library.getShortNumber(battery.getMaxPower())+"HE", deltaText};
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 71, guiTop + 69 - 52, 34, 52, mouseX, mouseY, info);
 
-		String lang = null;
-		switch(battery.priority) {
-			case LOW: lang = "low"; break;
-			case NORMAL: lang = "normal"; break;
-			case HIGH: lang = "high"; break;
-		}
+		String lang = switch (battery.priority) {
+            case LOW -> "low";
+            case NORMAL -> "normal";
+            case HIGH -> "high";
+            default -> null;
+        };
 
-		List<String> priority = new ArrayList();
+        List<String> priority = new ArrayList<>();
 		priority.add(I18nUtil.resolveKey("battery.priority." + lang));
 		priority.add(I18nUtil.resolveKey("battery.priority.recommended"));
 		String[] desc = I18nUtil.resolveKeyArray("battery.priority." + lang + ".desc");
-		for(String s : desc) 
-			priority.add(s);
+        Collections.addAll(priority, desc);
 		
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 151, guiTop + 16, 16, 16, mouseX, mouseY, priority.toArray(new String[priority.size()]));
 
@@ -123,7 +123,7 @@ public class GUIMachineBattery extends GuiInfoContainer {
 		int j = battery.redHigh;
 		drawTexturedModalRect(guiLeft + 151, guiTop + 34, 176, 52 + j * 18, 18, 18);
 
-		drawTexturedModalRect(guiLeft + 152, guiTop + 17, 194, 52 + battery.priority.ordinal() * 16, 16, 16);
+		drawTexturedModalRect(guiLeft + 152, guiTop + 17, 194, 52 + (battery.priority.ordinal() - 1) * 16, 16, 16);
 
 		this.drawInfoPanel(guiLeft - 16, guiTop + 36, 16, 16, 2);
 		
