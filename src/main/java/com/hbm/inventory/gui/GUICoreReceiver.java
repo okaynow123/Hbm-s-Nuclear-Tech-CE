@@ -29,7 +29,7 @@ public class GUICoreReceiver extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		receiver.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 17, 16, 52);
+		receiver.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 17, guiTop + 17, 16, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 
