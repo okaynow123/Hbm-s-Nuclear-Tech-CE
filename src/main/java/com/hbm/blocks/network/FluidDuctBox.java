@@ -317,10 +317,6 @@ public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILoo
         }
     }
 
-    @Override
-    public Block getBlock() {
-        return this;
-    }
 
     @SideOnly(Side.CLIENT)
     @Override

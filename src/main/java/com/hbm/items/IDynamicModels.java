@@ -1,8 +1,11 @@
 package com.hbm.items;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -40,28 +43,51 @@ public interface IDynamicModels {
 
     public static void registerCustomStateMappers() {
         for (IDynamicModels model : INSTANCES) {
-            if (model.getBlock() == null) continue;
-            StateMapperBase mapper = model.getStateMapper(model.getBlock().getRegistryName());
+            if (model.getSelf() == null || !(model.getSelf() instanceof Block block)) continue;
+            StateMapperBase mapper = model.getStateMapper(block.getRegistryName());
             if (mapper != null)
                 ModelLoader.setCustomStateMapper(
-                        model.getBlock(),
+                        block,
                         mapper
                 );
         }
 
     }
 
+    static void registerColorHandlers() {
+        for (IDynamicModels model : INSTANCES) {
+            IItemColor colorHandler = model.getColorHandler();
+            Object self = model.getSelf();
+
+            if (colorHandler == null || !(self instanceof Item item)) continue;
+
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, item);
+        }
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    default IItemColor getColorHandler() {
+        return null;
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    default StateMapperBase getStateMapper(ResourceLocation loc) {
+        return null;
+    }
+
+
     void bakeModel(ModelBakeEvent event);
 
-    Block getBlock();
+    default Object getSelf() {
+        return this;
+    }
+
 
     void registerModel();
 
     @SideOnly(Side.CLIENT)
     void registerSprite(TextureMap map);
 
-    @SideOnly(Side.CLIENT)
-    default StateMapperBase getStateMapper(ResourceLocation loc) {
-        return null;
-    }
 }

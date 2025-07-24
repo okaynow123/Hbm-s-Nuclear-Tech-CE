@@ -83,11 +83,6 @@ public class BlockBakeBase extends BlockBase implements IDynamicModels {
     }
 
     @Override
-    public Block getBlock() {
-        return this;
-    }
-
-    @Override
     public void registerModel() {
             ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this),0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
     }

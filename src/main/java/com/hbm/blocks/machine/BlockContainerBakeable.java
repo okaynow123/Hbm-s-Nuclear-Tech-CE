@@ -79,7 +79,4 @@ public abstract class BlockContainerBakeable extends BlockContainer implements I
         blockFrame.registerBlockTextures(map);
     }
 
-    public Block getBlock() {
-        return this;
-    }
 }

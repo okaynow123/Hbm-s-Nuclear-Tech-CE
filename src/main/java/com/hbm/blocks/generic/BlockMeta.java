@@ -134,10 +134,6 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         }
     }
 
-    @Override
-    public Block getBlock() {
-        return this;
-    }
 
     protected boolean getShowMetaInCreative(){
         return showMetaInCreative;

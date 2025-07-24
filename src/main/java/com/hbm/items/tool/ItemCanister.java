@@ -2,33 +2,37 @@ package com.hbm.items.tool;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemFluidCanister extends Item {
+public class ItemCanister extends Item implements IDynamicModels {
 
 	public static final ModelResourceLocation fluidCanisterModel = new ModelResourceLocation(RefStrings.MODID + ":canister_empty", "inventory");
 	public int cap;
 	
 	
-	public ItemFluidCanister(String s, int cap){
+	public ItemCanister(String s, int cap){
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
-		this.setMaxStackSize(1);
 		this.setMaxDamage(0);
 		this.cap = cap;
-		
 		ModItems.ALL_ITEMS.add(this);
+		IDynamicModels.INSTANCES.add(this);
 	}
 	
 	@Override
@@ -60,5 +64,30 @@ public class ItemFluidCanister extends Item {
 
 	public static ItemStack getStackFromFluid(FluidType f){
 		return new ItemStack(ModItems.canister_generic, 1, f.getID());
+	}
+
+	@Override
+	public void bakeModel(ModelBakeEvent event) {
+
+	}
+
+
+	@Override
+	public void registerModel() {
+
+	}
+
+	@Override
+	public void registerSprite(TextureMap map) {
+
+	}
+
+
+	private static class ColorHandler implements IItemColor {
+		@Override
+		public int colorMultiplier(ItemStack stack, int tintIndex) {
+			return stack.getMetadata() > 0 ? 0xFFBFA5 : 0xFFFFFF;
+		}
+
 	}
 }

@@ -34,7 +34,7 @@ import com.hbm.items.machine.*;
 import com.hbm.items.machine.ItemCassette.TrackType;
 import com.hbm.items.special.*;
 import com.hbm.items.special.weapon.GunB92;
-import com.hbm.items.tool.ItemFluidCanister;
+import com.hbm.items.tool.ItemCanister;
 import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.*;
@@ -264,7 +264,7 @@ public class ModEventHandlerClient {
                         ItemForgeFluidIdentifier.identifierModel);
                 if (order[i].getContainer(Fluids.CD_Canister.class) != null) {
                     ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
-                            FluidCanisterRender.INSTANCE.setModelLocation(ItemFluidCanister.getStackFromFluid(order[i])));
+                            FluidCanisterRender.INSTANCE.setModelLocation(ItemCanister.getStackFromFluid(order[i])));
                 }
 
                 ModelLoader.setCustomModelResourceLocation(ModItems.ff_fluid_duct, order[i].getID(), ItemFFFluidDuct.ductLoc);
@@ -281,7 +281,7 @@ public class ModEventHandlerClient {
                         ItemFluidIcon.fluidIconModel);
             }
         }
-        ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemFluidCanister.fluidCanisterModel);
+        ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
 
         for (Item item : ModItems.ALL_ITEMS) {
             try {
@@ -449,11 +449,11 @@ public class ModEventHandlerClient {
             ItemRenderGunAnim.INSTANCE.b92ItemModel = model;
             evt.getModelRegistry().putObject(GunB92.b92Model, new B92BakedModel());
         }
-        Object object6 = evt.getModelRegistry().getObject(ItemFluidCanister.fluidCanisterModel);
+        Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCanister.fluidCanisterModel);
         if (object6 instanceof IBakedModel) {
             IBakedModel model = (IBakedModel) object6;
             FluidCanisterRender.INSTANCE.itemModel = model;
-            evt.getModelRegistry().putObject(ItemFluidCanister.fluidCanisterModel, new FluidCanisterBakedModel());
+            evt.getModelRegistry().putObject(ItemCanister.fluidCanisterModel, new FluidCanisterBakedModel());
         }
 
         IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();

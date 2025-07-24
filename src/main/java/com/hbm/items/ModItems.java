@@ -422,8 +422,8 @@ public class ModItems {
 	public static final Item upgrade_stack_3 = new ItemMachineUpgrade("upgrade_stack_3", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 	
 	//Fluid handling items
-	public static final Item canister_empty = new ItemCustomLore("canister_empty").setCreativeTab(MainRegistry.controlTab);
-	public static final Item canister_generic = new ItemFluidCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
+	public static final Item canister_empty = new ItemBakedBase("canister_empty").setCreativeTab(MainRegistry.controlTab);
+	public static final Item canister_generic = new ItemCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
 	public static final Item canister_napalm = new ItemCustomLore("canister_napalm").setCreativeTab(MainRegistry.controlTab);
 
 	public static final Item gas_empty = new ItemBase("gas_empty").setCreativeTab(MainRegistry.controlTab);

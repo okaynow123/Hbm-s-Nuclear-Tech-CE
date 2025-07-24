@@ -524,10 +524,6 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		}
 	}
 
-	@Override
-	public Block getBlock() {
-		return this;
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

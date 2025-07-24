@@ -100,10 +100,6 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
         }
     }
 
-    @Override
-    public Block getBlock() {
-        return null;
-    }
 
     /**
      * Returns null when the wrong enum is passed. Only really used for recipes anyway so it's good.

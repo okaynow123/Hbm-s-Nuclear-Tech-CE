@@ -51,10 +51,6 @@ public class ItemBakedBase extends ItemBase implements IDynamicModels {
         }
     }
 
-    @Override
-    public Block getBlock() {
-        return null;
-    }
 
     @Override
     public void registerModel() {
