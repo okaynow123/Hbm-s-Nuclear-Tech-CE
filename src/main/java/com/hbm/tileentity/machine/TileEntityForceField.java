@@ -49,7 +49,7 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 	public int blink = 0;
 	public float radius = 16;
 	public boolean isOn = false;
-	public int color = 0x00C6FF;
+	public int color = 0x0000FF;
 	public final int baseCon = 1000;
 	public final int radCon = 500;
 	public final int shCon = 250;

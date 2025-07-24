@@ -635,7 +635,7 @@ public class ResourceManager {
 	public static final ResourceLocation jshotgun_lmap = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/jade_shotgun_lmap.png");
 	
 	//Forcefield
-	public static final IModelCustom forcefield_top = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/forcefield_top.obj")).asVBO();
+	public static final IModelCustom forcefield_top = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/forcefield_top.obj")).asVBO();
 
 	//Shimmer Sledge
 	public static final IModelCustom shimmer_sledge = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/shimmer_sledge.obj")).asVBO();
@@ -974,8 +974,8 @@ public class ResourceManager {
 	public static final ResourceLocation radar_screen_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/radar_screen.png");
 	
 	//Forcefield
-	public static final ResourceLocation forcefield_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/forcefield_base.png");
-	public static final ResourceLocation forcefield_top_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/forcefield_top.png");
+	public static final ResourceLocation forcefield_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/forcefield_base.png");
+	public static final ResourceLocation forcefield_top_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/forcefield_top.png");
 
 	//Bombs
 	public static final ResourceLocation bomb_solinium_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/ufp.png");

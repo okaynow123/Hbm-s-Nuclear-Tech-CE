@@ -23,7 +23,7 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
 
   @Override
   public void render(
-      TileEntityForceField te,
+      TileEntityForceField ff,
       double x,
       double y,
       double z,
@@ -35,14 +35,10 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
     GL11.glRotatef(180, 0F, 1F, 0F);
-    bindTexture(ResourceManager.radar_base_tex);
-    ResourceManager.radar.renderPart("Base");
-
-    TileEntityForceField ff = (TileEntityForceField) te;
+    bindTexture(ResourceManager.forcefield_base_tex);
+    ResourceManager.radar_body.renderAll();
 
     GL11.glTranslated(0, 0.5D, 0);
-
-    // double rot = (System.currentTimeMillis() / 10D) % 360;
 
     int segments = (int) (16 + ff.radius * 0.125);
 
@@ -77,7 +73,7 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
       }
 
       public void renderCommon() {
-        bindTexture(ResourceManager.radar_body_tex);
+        bindTexture(ResourceManager.forcefield_base_tex);
         ResourceManager.radar_body.renderAll();
         GlStateManager.translate(0, 1D, 0);
         bindTexture(ResourceManager.forcefield_top_tex);
