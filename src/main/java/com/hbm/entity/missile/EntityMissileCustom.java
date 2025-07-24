@@ -220,10 +220,11 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 				this.world.playEvent(2002, new BlockPos((int) Math.round(this.posX), (int) Math.round(this.posY), (int) Math.round(this.posZ)), 0);
 				ExplosionChaos.spawnChlorine(world, posX - motionX, posY - motionY, posZ - motionZ, 750, 2.5, 2);
 				break;
-			/*case TURBINE:
+			case TURBINE:
 				ExplosionLarge.explode(world, posX, posY, posZ, 10, true, false, true);
+				/*
 				int count = (int) strength;
-				Vec3 vec = Vec3.createVectorHelper(0.5, 0, 0);
+				Vec3d vec = new Vec3d(0.5, 0, 0);
 
 				for(int i = 0; i < count; i++) {
 					EntityBulletBaseNT blade = new EntityBulletBaseNT(world, BulletConfigSyncingUtil.TURBINE);
@@ -232,9 +233,9 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 					blade.motionZ = vec.zCoord;
 					world.spawnEntityInWorld(blade);
 					vec.rotateAroundY((float) (Math.PI * 2F / (float) count));
-				}
+				}*/ // TODO: can do this shit only after ammo/gun rework
 
-				break;*/
+				break;
 			default:
 				break;
 

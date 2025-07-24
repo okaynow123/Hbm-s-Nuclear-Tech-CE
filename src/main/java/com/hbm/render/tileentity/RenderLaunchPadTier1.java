@@ -162,7 +162,7 @@ public class RenderLaunchPadTier1 extends TileEntitySpecialRenderer<TileEntityLa
     // Special
     else if (missileItem == ModItems.missile_anti_ballistic) {
       bindTexture(ResourceManager.missileAA_tex);
-      ResourceManager.missileAB.renderAll();
+      ResourceManager.missileABM.renderAll();
     } else if (missileItem == ModItems.missile_carrier) {
       GL11.glScalef(2F, 2F, 2F);
       bindTexture(ResourceManager.missileCarrier_tex);

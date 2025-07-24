@@ -7,7 +7,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemLootCrate;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class ItemMissile extends Item {
 		this.setRegistryName(s);
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MainRegistry.missileTab);
-		
+
 		ModItems.ALL_ITEMS.add(this);
 	}
 	
@@ -110,6 +109,7 @@ public class ItemMissile extends Item {
 		TAINT,
 		CLOUD,
 		VOLCANO,
+		TURBINE,
 		MIRV,
 		APOLLO,
 		SATELLITE,
@@ -233,14 +233,13 @@ public class ItemMissile extends Item {
                     if (attributes[0] != WarheadType.APOLLO && attributes[0] != WarheadType.SATELLITE)
                         list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.strength") + " " + TextFormatting.RED + (Float) attributes[1]);
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.weight") + " " + TextFormatting.GRAY + (Float) attributes[2] + "t");
-                    list.add(TextFormatting.BOLD + "Mass: " + TextFormatting.GRAY + mass + "kg");
                 }
                 case FUSELAGE -> {
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.topsize") + " " + TextFormatting.GRAY + getSize(top));
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.botsize") + " " + TextFormatting.GRAY + getSize(bottom));
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.fueltype") + " " + TextFormatting.GRAY + getFuel((FuelType) attributes[0]));
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.fuelamnt") + " " + TextFormatting.GRAY + (Float) attributes[1] + "l");
-                    list.add(TextFormatting.BOLD + "Mass: " + TextFormatting.GRAY + mass + "kg");
+                    list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.mass", mass));
                 }
                 case FINS -> {
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.size") + " " + TextFormatting.GRAY + getSize(top));
@@ -251,7 +250,6 @@ public class ItemMissile extends Item {
                     list.add(TextFormatting.BOLD + I18nUtil.resolveKey("desc.fuelamnt") + " " + TextFormatting.GRAY + getFuel((FuelType) attributes[0]));
                     list.add(TextFormatting.BOLD + "Thrust: " + TextFormatting.GRAY + (Integer) attributes[3] + "N");
                     list.add(TextFormatting.BOLD + "ISP: " + TextFormatting.GRAY + (Integer) attributes[4] + "s");
-                    list.add(TextFormatting.BOLD + "Mass: " + TextFormatting.GRAY + mass + "kg");
                 }
             }
 		} catch(Exception ex) {
@@ -294,10 +292,11 @@ public class ItemMissile extends Item {
             case SCHRAB -> TextFormatting.AQUA + I18nUtil.resolveKey("warhead.schrab");
             case TAINT -> TextFormatting.DARK_PURPLE + I18nUtil.resolveKey("warhead.taint");
             case CLOUD -> TextFormatting.LIGHT_PURPLE + I18nUtil.resolveKey("warhead.cloud");
+			case TURBINE -> (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.RED : TextFormatting.LIGHT_PURPLE) + I18nUtil.resolveKey("warhead.turbine");
             case VOLCANO -> TextFormatting.DARK_RED + I18nUtil.resolveKey("warhead.volcano");
             case MIRV -> TextFormatting.DARK_PURPLE + I18nUtil.resolveKey("warhead.mirv");
-			case APOLLO -> (System.currentTimeMillis() % 1000 < 500 ? ChatFormatting.GOLD : ChatFormatting.RED) + I18nUtil.resolveKey("warhead.capsule");
-			case SATELLITE -> (System.currentTimeMillis() % 1000 < 500 ? ChatFormatting.GOLD : ChatFormatting.RED) + I18nUtil.resolveKey("warhead.satellite");
+			case APOLLO -> (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.GOLD : TextFormatting.RED) + I18nUtil.resolveKey("warhead.capsule");
+			case SATELLITE -> (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.GOLD : TextFormatting.RED) + I18nUtil.resolveKey("warhead.satellite");
             default -> TextFormatting.BOLD + I18nUtil.resolveKey("desc.na");
         };
 	}

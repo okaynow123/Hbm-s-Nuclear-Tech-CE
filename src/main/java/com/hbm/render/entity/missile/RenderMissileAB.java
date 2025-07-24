@@ -33,7 +33,7 @@ public class RenderMissileAB extends Render<EntityMissileAntiBallistic> {
         
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.missileAA_tex);
-        ResourceManager.missileAB.renderAll();
+        ResourceManager.missileABM.renderAll();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GL11.glPopAttrib();
 		GL11.glPopMatrix();
