@@ -2,7 +2,7 @@ package com.hbm.blocks.machine.pile;
 
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockFuel;
+import com.hbm.blocks.generic.BlockFlammable;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.items.ModItems;
 import com.hbm.packet.PacketDispatcher;
@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class BlockGraphite extends BlockFuel implements IToolable {
+public class BlockGraphite extends BlockFlammable implements IToolable {
 
 	public BlockGraphite(Material mat, String s, int en, int flam) {
 		super(mat, s, en, flam, SoundType.METAL, (short) 1);

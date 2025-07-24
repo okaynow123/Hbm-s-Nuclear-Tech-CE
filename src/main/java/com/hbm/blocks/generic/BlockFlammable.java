@@ -11,18 +11,18 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public class BlockFuel extends BlockMeta {
+public class BlockFlammable extends BlockMeta {
 
 	public int encouragement;
 	public int flammability;
 	
-	public BlockFuel(Material m, String s, int en, int flam){
+	public BlockFlammable(Material m, String s, int en, int flam){
 		super(m, s);
 		this.encouragement = en;
 		this.flammability = flam;
 	}
 
-	public BlockFuel(Material m, String s, int en, int flam, SoundType type, short metaCount){
+	public BlockFlammable(Material m, String s, int en, int flam, SoundType type, short metaCount){
 		super(m, type, s, metaCount);
 		this.encouragement = en;
 		this.flammability = flam;

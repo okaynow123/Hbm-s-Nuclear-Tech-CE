@@ -234,7 +234,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
         if (tanks[0].getFluid() == null || tanks[1].getFluid() == null)
             return false;
 
-        if (FluidTypeHandler.getDFCEfficiency(tanks[0].getFluid().getFluid()) <= 0 || FluidTypeHandler.getDFCEfficiency(tanks[1].getFluid().getFluid()) <= 0)
+        if(getFuelEfficiency(tanks[0].getTankType()) <= 0 || getFuelEfficiency(tanks[1].getTankType()) <= 0)
             return false;
 
         return true;

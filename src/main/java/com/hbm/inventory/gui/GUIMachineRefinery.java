@@ -8,6 +8,7 @@ import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.oil.TileEntityMachineRefinery;
 import com.hbm.util.Tuple;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -42,6 +43,8 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 186, guiTop + 18, 16, 52, refinery.power, refinery.maxPower);
 		super.renderHoveredToolTip(mouseX, mouseY);
+
+
 	}
 	
 	@Override
@@ -54,6 +57,11 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.colorMask(true, true, true, false);
 		super.drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -124,5 +132,11 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 		refinery.tanks[2].renderTank(guiLeft + 106, guiTop + 95, this.zLevel, 16, 52);
 		refinery.tanks[3].renderTank(guiLeft + 126, guiTop + 95, this.zLevel, 16, 52);
 		refinery.tanks[4].renderTank(guiLeft + 146, guiTop + 95, this.zLevel, 16, 52);
+
+		GlStateManager.colorMask(true, true, true, true);
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 	}
 }

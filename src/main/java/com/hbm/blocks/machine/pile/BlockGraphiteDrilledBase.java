@@ -3,7 +3,7 @@ package com.hbm.blocks.machine.pile;
 import com.hbm.api.block.IInsertable;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockFuel;
+import com.hbm.blocks.generic.BlockFlammable;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.Fluids;
@@ -38,13 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockGraphiteDrilledBase extends BlockFuel implements IToolable, IInsertable {
+public class BlockGraphiteDrilledBase extends BlockFlammable implements IToolable, IInsertable {
 
 	protected String sideTexture;
 	protected String aluminumTexture;
 
 	public BlockGraphiteDrilledBase(String s) {
-		super(ModBlocks.block_graphite.getDefaultState().getMaterial(), s, ((BlockFuel) ModBlocks.block_graphite).encouragement, ((BlockFuel) ModBlocks.block_graphite).flammability);
+		super(ModBlocks.block_graphite.getDefaultState().getMaterial(), s, ((BlockFlammable) ModBlocks.block_graphite).encouragement, ((BlockFlammable) ModBlocks.block_graphite).flammability);
 		sideTexture = s;
 		aluminumTexture = s + "_aluminum";
 		this.setCreativeTab(null);
