@@ -315,7 +315,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 			this.tankNew.readFromNBT(nbt, "tankNew");
 		}
 		this.currentFill = nbt.getInteger("fill");
-		this.mode = EnumWavelengths.valueOf(nbt.getString("mode"));
+		this.mode = nbt.hasKey("mode") ? EnumWavelengths.valueOf(nbt.getString("mode")) : EnumWavelengths.NULL;
 		
 		if(this.currentFill > 0) {
 			this.current = new ComparableStack(Item.getItemById(nbt.getInteger("item")), 1, nbt.getInteger("meta"));

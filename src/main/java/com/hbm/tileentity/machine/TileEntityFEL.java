@@ -286,7 +286,7 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		super.readFromNBT(nbt);
 		
 		this.power = nbt.getLong("power");
-		this.mode = EnumWavelengths.valueOf(nbt.getString("mode"));
+		this.mode = nbt.hasKey("mode") ? EnumWavelengths.valueOf(nbt.getString("mode")) : EnumWavelengths.NULL;
 		this.isOn = nbt.getBoolean("isOn");
 		this.missingValidSilex = nbt.getBoolean("valid");
 		this.distance = nbt.getInteger("distance");
@@ -297,7 +297,7 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		super.writeToNBT(nbt);
 		
 		nbt.setLong("power", this.power);
-		nbt.setString("mode", this.mode.name());
+		nbt.setString("mode", this.mode.toString());
 		nbt.setBoolean("isOn", this.isOn);
 		nbt.setBoolean("valid", this.missingValidSilex);
 		nbt.setInteger("distance", this.distance);
