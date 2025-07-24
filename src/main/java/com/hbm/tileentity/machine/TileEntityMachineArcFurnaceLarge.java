@@ -306,7 +306,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
             if(!liquidMode && recipe.solidOutput != null) {
                 int amount = inventory.getStackInSlot(i).getCount();
                 inventory.setStackInSlot(i, recipe.solidOutput.copy());
-                inventory.getStackInSlot(i).grow(inventory.getStackInSlot(i).getCount() * amount);
+                inventory.getStackInSlot(i).setCount(inventory.getStackInSlot(i).getCount() * amount);
             }
 
             if(liquidMode && recipe.fluidOutput != null) {
