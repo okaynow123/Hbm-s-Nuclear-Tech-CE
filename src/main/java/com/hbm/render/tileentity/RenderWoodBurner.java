@@ -63,12 +63,12 @@ public class RenderWoodBurner extends TileEntitySpecialRenderer<TileEntityMachin
   public ItemRenderBase getRenderer(Item item) {
     return new ItemRenderBase() {
       public void renderInventory() {
-        GlStateManager.translate(-1, -1, 0);
+        GlStateManager.translate(0, -4.1, 0); //Slight offset to get that 1 pixel perfect
         GlStateManager.scale(3.5, 3.5, 3.5);
       }
 
       public void renderCommon() {
-        GlStateManager.rotate(-180, 0, 1, 0);
+        GlStateManager.rotate(90, 0, 1, 0);
         GlStateManager.scale(1, 1, 1);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.wood_burner_tex);

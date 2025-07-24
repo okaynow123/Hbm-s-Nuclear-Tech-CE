@@ -64,17 +64,18 @@ public class RenderTurbineGas extends TileEntitySpecialRenderer<TileEntityMachin
   public ItemRenderBase getRenderer(Item item) {
     return new ItemRenderBase() {
       public void renderInventory() {
-        GlStateManager.translate(-1, -1, 0);
-        GlStateManager.scale(2, 2, 2);
+        GlStateManager.translate(-0.7, -1, 1.5);//small X change to fit in slot`
+        GlStateManager.scale(2.5, 2.5, 2.5);
       }
 
       public void renderCommon() {
-        GlStateManager.rotate(-180, 0, 1, 0);
-        GlStateManager.scale(1, 1, 1);
+        GlStateManager.disableCull();
+        GlStateManager.scale(0.75, 0.75, 0.75);
+        GlStateManager.rotate(90, 0, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.turbine_gas_tex);
         ResourceManager.turbine_gas.renderAll();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GL11.glShadeModel(GL11.GL_FLAT);
       }
     };
   }
