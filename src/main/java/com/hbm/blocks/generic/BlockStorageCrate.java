@@ -122,30 +122,26 @@ public class BlockStorageCrate extends BlockContainer {
 					stack.writeToNBT(slot);
 					nbt.setTag("slot" + i, slot);
 				}
-			}
+				if(rads > 0){
+					nbt.setFloat("cRads", rads);
+				}
+				if(te instanceof TileEntityLockableBase lockable) {
 
-			if(rads > 0){
-				nbt.setFloat("cRads", rads);
-			}
-
-			if(te instanceof TileEntityLockableBase) {
-				TileEntityLockableBase lockable = (TileEntityLockableBase) te;
-
-				if(lockable.isLocked()) {
-					nbt.setInteger("lock", lockable.getPins());
-					nbt.setDouble("lockMod", lockable.getMod());
+                    if(lockable.isLocked()) {
+						nbt.setInteger("lock", lockable.getPins());
+						nbt.setDouble("lockMod", lockable.getMod());
+					}
 				}
 			}
 
-
 			if(!nbt.isEmpty()) {
-				drop.setTagCompound(nbt);
-				if(Library.getCompressedNbtSize(nbt) > MachineConfig.crateByteSize * 1000L) {
-					player.sendMessage(new TextComponentString("§cWarning: Container NBT exceeds "+MachineConfig.crateByteSize+"kB, contents will be ejected!"));
+				if(Library.getCompressedNbtSize(nbt) > MachineConfig.crateByteSize) {
+					player.sendMessage(new TextComponentString("§cWarning: Container NBT exceeds " + MachineConfig.crateByteSize / 1024 + "KiB, contents will be ejected!"));
 					InventoryHelper.dropInventoryItems(world, pos, world.getTileEntity(pos));
 					InventoryHelper.spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(Item.getItemFromBlock(this)));
 					return world.setBlockToAir(pos);
 				}
+				drop.setTagCompound(nbt);
 			}
 
 			InventoryHelper.spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);

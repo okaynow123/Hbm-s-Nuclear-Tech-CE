@@ -1,7 +1,6 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.config.MachineConfig;
-import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityCrateBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -11,10 +10,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> extends GuiContainer {
 
     protected final T diFurnace;
     private final ResourceLocation texture;
+    private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
 
     GUICrateBase(T tileentity, C container, int xSize, int ySize, ResourceLocation texture) {
         super(container);
@@ -41,8 +44,17 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
     public void updateScreen() {
         super.updateScreen();
         if (this.diFurnace.inventoryContentsChanged) {
-            float percentageRatio = Library.getNbtPercentage(this.diFurnace, MachineConfig.crateByteSize * 1000);
-            this.diFurnace.cachedFillPercentage = percentageRatio * 100.0F;
+            if (!this.isCheckScheduled.compareAndSet(false, true)) {
+                return;
+            }
+            CompletableFuture.runAsync(() -> {
+                try {
+                    long size = diFurnace.getSize();
+                    this.diFurnace.cachedFillPercentage = (float) size / MachineConfig.crateByteSize * 100F;
+                } finally {
+                    this.isCheckScheduled.set(false);
+                }
+            });
             this.diFurnace.inventoryContentsChanged = false;
         }
     }

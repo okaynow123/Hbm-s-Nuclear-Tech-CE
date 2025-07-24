@@ -1,8 +1,12 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.config.MachineConfig;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.InventoryHelper;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,8 +20,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider {
 
+    private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
     public ItemStackHandler inventory;
     @SideOnly(Side.CLIENT)
     public boolean inventoryContentsChanged = true;
@@ -25,6 +33,8 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
     public float cachedFillPercentage = 0.0F;
     protected String customName;
     protected String name;
+    private volatile boolean inventoryTooLarge = false;
+    private long lastCheckTime = 0;
 
     public TileEntityCrateBase(int scount, String name) {
         inventory = new ItemStackHandler(scount) {
@@ -45,6 +55,65 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
 
     public static void closeInventory(EntityPlayer player) {
         player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+    }
+
+    /**
+     * A retarded check to prevent giant nbt
+     */
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (world != null && !world.isRemote) {
+            if (inventoryTooLarge) {
+                InventoryHelper.dropInventoryItems(world, pos, this);
+                inventoryTooLarge = false;
+                return;
+            }
+
+            long now = System.currentTimeMillis();
+            if (now - this.lastCheckTime < 1000) {
+                return;
+            }
+            if (!this.isCheckScheduled.compareAndSet(false, true)) {
+                return;
+            }
+            this.lastCheckTime = now;
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    long size = getSize();
+                    if (size > MachineConfig.crateByteSize * 2L) {
+                        inventoryTooLarge = true;
+                    }
+                } finally {
+                    this.isCheckScheduled.set(false);
+                }
+            });
+        }
+    }
+
+    public long getSize() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        float rads = 0;
+        for(int i = 0; i < inventory.getSlots(); i++) {
+
+            ItemStack stack = inventory.getStackInSlot(i);
+            if(stack.isEmpty())
+                continue;
+
+            rads += HazardSystem.getTotalRadsFromStack(stack) * stack.getCount();
+            NBTTagCompound slot = new NBTTagCompound();
+            stack.writeToNBT(slot);
+            nbt.setTag("slot" + i, slot);
+        }
+        if(rads > 0){
+            nbt.setFloat("cRads", rads);
+        }
+        if(this.isLocked()) {
+            nbt.setInteger("lock", this.getPins());
+            nbt.setDouble("lockMod", this.getMod());
+        }
+        return Library.getCompressedNbtSize(nbt);
     }
 
     @Override

@@ -1220,7 +1220,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         }
     }
 
-    public static <T extends TileEntity> float getNbtPercentage(T te, float limitByteSize) {
+    public static <T extends TileEntity> float getTENbtPercentage(T te, float limitByteSize) {
         NBTTagCompound compound = new NBTTagCompound();
         compound = te.writeToNBT(compound);
         float percent = 0.0f;
