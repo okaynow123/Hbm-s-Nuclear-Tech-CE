@@ -7,6 +7,7 @@ import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineChemplant;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,9 +21,9 @@ public class GUIMachineChemplant extends GuiInfoContainer {
 	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_chemplant.png");
 	private final TileEntityMachineChemplant chemplant;
 	
-	public GUIMachineChemplant(InventoryPlayer invPlayer, TileEntityMachineChemplant tedf) {
-		super(new ContainerMachineChemplant(invPlayer, tedf));
-		chemplant = tedf;
+	public GUIMachineChemplant(InventoryPlayer invPlayer, TileEntityMachineChemplant tile) {
+		super(new ContainerMachineChemplant(invPlayer, tile));
+		chemplant = tile;
 		
 		this.xSize = 176;
 		this.ySize = 222;
@@ -52,15 +53,14 @@ public class GUIMachineChemplant extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
-		String name = this.chemplant.hasCustomInventoryName() ? this.chemplant.getInventoryName() : I18n.format(this.chemplant.getInventoryName());
-		
-		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		this.drawDefaultBackground();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -88,6 +88,7 @@ public class GUIMachineChemplant extends GuiInfoContainer {
 		chemplant.tanksNew[1].renderTank(guiLeft + 26, guiTop + 52, this.zLevel, 16, 34);
 		chemplant.tanksNew[2].renderTank(guiLeft + 134, guiTop + 52, this.zLevel, 16, 34);
 		chemplant.tanksNew[3].renderTank(guiLeft + 152, guiTop + 52, this.zLevel, 16, 34);
+		GL11.glPopAttrib();
 	}
 
 	public ItemStackHandler getInventory() {

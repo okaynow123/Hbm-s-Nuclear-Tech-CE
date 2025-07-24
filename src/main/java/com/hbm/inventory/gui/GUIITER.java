@@ -7,6 +7,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityITER;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -66,6 +67,8 @@ public class GUIITER extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -90,6 +93,6 @@ public class GUIITER extends GuiInfoContainer {
 		}
 
 		iter.plasmaNew.renderTank(guiLeft + 71, guiTop + 88, this.zLevel, 34, 34);
-		
+		GL11.glPopAttrib();
 	}
 }

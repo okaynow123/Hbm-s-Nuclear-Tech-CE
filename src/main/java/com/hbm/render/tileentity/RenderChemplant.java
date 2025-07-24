@@ -47,8 +47,9 @@ public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachine
 
     GL11.glTranslated(-0.5D, 0.0D, 0.5D);
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.chemplant_body_tex);
+
+    GL11.glShadeModel(GL11.GL_SMOOTH);
     ResourceManager.chemplant_body.renderAll();
     GL11.glShadeModel(GL11.GL_FLAT);
 
@@ -79,6 +80,8 @@ public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachine
         break;
     }
 
+    GL11.glTranslated(-0.5D, 0.0D, 0.5D);
+
     bindTexture(ResourceManager.chemplant_spinner_tex);
 
     int rotation = (int) (System.currentTimeMillis() % (360 * 5)) / 5;
@@ -86,19 +89,21 @@ public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachine
     GL11.glPushMatrix();
     GL11.glTranslated(-0.625, 0, 0.625);
 
-    if (chem.tanksNew[0].getTankType() != null && chem.isProgressing)
+    if (chem.tanksNew[0].getTankType() != Fluids.NONE && chem.isProgressing)
       GL11.glRotatef(-rotation, 0F, 1F, 0F);
-    else GL11.glRotatef(-45, 0F, 1F, 0F);
+    else
+      GL11.glRotatef(-45, 0F, 1F, 0F);
 
     ResourceManager.chemplant_spinner.renderAll();
     GL11.glPopMatrix();
 
     GL11.glPushMatrix();
-    GL11.glTranslated(-0.625, 0, 0.625);
+    GL11.glTranslated(0.625, 0, 0.625);
 
-    if (chem.tanksNew[1].getTankType() != null && chem.isProgressing)
+    if (chem.tanksNew[1].getTankType() != Fluids.NONE && chem.isProgressing)
       GL11.glRotatef(rotation, 0F, 1F, 0F);
-    else GL11.glRotatef(45, 0F, 1F, 0F);
+    else
+      GL11.glRotatef(45, 0F, 1F, 0F);
 
     ResourceManager.chemplant_spinner.renderAll();
     GL11.glPopMatrix();

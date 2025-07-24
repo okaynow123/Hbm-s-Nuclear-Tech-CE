@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ITooltipProvider {
 
-	public default void addStandardInfo(List<String> list) {
+	default void addStandardInfo(List<String> list) {
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			for(String s : I18nUtil.resolveKeyArray(((Block)this).getTranslationKey() + ".desc")) list.add(TextFormatting.YELLOW + s);

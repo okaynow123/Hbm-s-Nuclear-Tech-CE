@@ -11,18 +11,18 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerLiquefactor extends Container {
 
-    private TileEntityMachineLiquefactor liquefactor;
+    private final TileEntityMachineLiquefactor liquefactor;
 
-    public ContainerLiquefactor(InventoryPlayer playerInv, TileEntityMachineLiquefactor tedf) {
-        liquefactor = tedf;
+    public ContainerLiquefactor(InventoryPlayer playerInv, TileEntityMachineLiquefactor tile) {
+        liquefactor = tile;
 
         //Input
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 35, 54));
+        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 35, 54));
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 134, 72));
+        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 134, 72));
         //Upgrades
-        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 2, 98, 36));
-        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 3, 98, 54));
+        this.addSlotToContainer(new SlotUpgrade(tile.inventory, 2, 98, 36));
+        this.addSlotToContainer(new SlotUpgrade(tile.inventory, 3, 98, 54));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

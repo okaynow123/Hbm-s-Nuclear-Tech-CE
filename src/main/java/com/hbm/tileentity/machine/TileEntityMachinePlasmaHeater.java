@@ -60,7 +60,7 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	private static boolean converted = false;
 	
 	public TileEntityMachinePlasmaHeater() {
-		super(1);
+		super(5);
 		tanksNew = new FluidTankNTM[2];
 		tanksNew[0] = new FluidTankNTM(Fluids.DEUTERIUM, 16000, 0);
 		tanksNew[1] = new FluidTankNTM(Fluids.TRITIUM, 16000, 1);

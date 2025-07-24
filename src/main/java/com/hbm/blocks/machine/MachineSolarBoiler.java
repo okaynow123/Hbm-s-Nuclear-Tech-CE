@@ -80,7 +80,7 @@ public class MachineSolarBoiler extends BlockDummyable implements ITooltipProvid
         if(heater.tanks[0].getTankType() != Fluids.NONE)
 			text.add("§a-> §r" + heater.tanks[0].getTankType().getLocalizedName() + ": " + heater.tanks[0].getFill() + "/" + heater.tanks[0].getMaxFill() + "mB");
 		if(heater.tanks[1].getTankType() != Fluids.NONE)
-			text.add("§c<- §r" + heater.tanks[0].getTankType().getLocalizedName() + ": " + heater.tanks[1].getFill() + "/" + heater.tanks[1].getMaxFill() + "mB");
+			text.add("§c<- §r" + heater.tanks[1].getTankType().getLocalizedName() + ": " + heater.tanks[1].getFill() + "/" + heater.tanks[1].getMaxFill() + "mB");
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 }

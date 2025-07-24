@@ -2,8 +2,6 @@ package com.hbm.tileentity.machine.oil;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardSender;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidSource;
@@ -21,25 +19,19 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 @AutoRegisterTE
 public class TileEntityMachineLiquefactor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidSource, IFluidStandardSender, IGUIProvider, ITickable {
@@ -49,8 +41,7 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     public static final int usageBase = 500;
     public int usage;
     public int progress;
-    public static final int processTimeBase = 200;
-    public boolean needsUpdate = false;
+    public static final int processTimeBase = 100;
     public int processTime;
 
     public FluidTankNTM tank;
@@ -58,8 +49,8 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     private final UpgradeManager upgradeManager = new UpgradeManager();
 
     public TileEntityMachineLiquefactor() {
-        super(4);
-        tank = new FluidTankNTM(Fluids.NONE, 24000, 0);
+        super(4, true, true);
+        tank = new FluidTankNTM(Fluids.NONE, 24000);
     }
 
     @Override
@@ -174,6 +165,7 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
         buf.writeInt(this.progress);
         buf.writeInt(this.usage);
         buf.writeInt(this.processTime);
+        tank.serialize(buf);
     }
 
     @Override
@@ -183,6 +175,7 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
         this.progress = buf.readInt();
         this.usage = buf.readInt();
         this.processTime = buf.readInt();
+        tank.deserialize(buf);
     }
 
     @Override
@@ -301,7 +294,6 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
         return new FluidTankNTM[] { tank };
     }
 
-
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new ContainerLiquefactor(player.inventory, this);
@@ -311,28 +303,5 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUILiquefactor(player.inventory, this);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(null, this.getSendingTanks())
-            );
-        }
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(
-                    new NTMEnergyCapabilityWrapper(this)
-            );
-        }
-        return super.getCapability(capability, facing);
     }
 }

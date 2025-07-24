@@ -10,6 +10,7 @@ import com.hbm.tileentity.machine.TileEntityReactorResearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -120,6 +121,8 @@ public class GUIReactorResearch extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         this.drawDefaultBackground();
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
@@ -153,6 +156,7 @@ public class GUIReactorResearch extends GuiInfoContainer {
 
         this.drawInfoPanel(guiLeft - 14, guiTop + 23, 16, 16, 3);
         this.drawInfoPanel(guiLeft - 14, guiTop + 61, 16, 16, 2);
+        GL11.glPopAttrib();
 
     }
 
