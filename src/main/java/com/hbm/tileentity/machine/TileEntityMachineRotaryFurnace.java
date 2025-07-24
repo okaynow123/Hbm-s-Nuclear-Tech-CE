@@ -83,7 +83,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
           .setBalefireHeatMod(10);
 
   public TileEntityMachineRotaryFurnace() {
-    super(5, 50);
+    super(5, 50, true, false);
     tanks = new FluidTankNTM[3];
     tanks[0] = new FluidTankNTM(Fluids.NONE, 16_000);
     tanks[1] = new FluidTankNTM(Fluids.STEAM, 12_000);

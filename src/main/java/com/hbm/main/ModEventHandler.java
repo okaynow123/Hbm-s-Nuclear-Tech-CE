@@ -102,6 +102,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -1270,4 +1271,51 @@ public class ModEventHandler {
         doesArrayContain(recipes, recipe);
     }
 
+    /**
+     * see com.hbm.handler.FuelHandler at 1.7
+     */
+    @SubscribeEvent
+    public void onGetFurnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
+        ItemStack fuel = event.getItemStack();
+        int single = 200;
+        boolean changed = true;
+        if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
+        else if (fuel.getItem().equals(ModItems.solid_fuel_presto)) event.setBurnTime(single * 40);
+        else if (fuel.getItem().equals(ModItems.solid_fuel_presto_triplet)) event.setBurnTime(single * 200);
+//        if(fuel.getItem().equals(ModItems.solid_fuel_bf))					return single * 160;
+//        if(fuel.getItem().equals(ModItems.solid_fuel_presto_bf))			return single * 400;
+//        if(fuel.getItem().equals(ModItems.solid_fuel_presto_triplet_bf))	return single * 2000;
+        else if (fuel.getItem().equals(ModItems.rocket_fuel)) event.setBurnTime(single * 32);
+
+        else if (fuel.getItem() == ModItems.biomass) event.setBurnTime(single * 2);
+        else if (fuel.getItem() == ModItems.biomass_compressed) event.setBurnTime(single * 4);
+        else if (fuel.getItem() == ModItems.powder_coal) event.setBurnTime(single * 8);
+        else if (fuel.getItem() == ModItems.scrap) event.setBurnTime(single / 4);
+        else if (fuel.getItem() == ModItems.dust) event.setBurnTime(single / 8);
+        else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.block_scrap)) event.setBurnTime(single * 2);
+        else if (fuel.getItem() == ModItems.powder_fire) event.setBurnTime(6400);
+        else if (fuel.getItem() == ModItems.lignite) event.setBurnTime(1200);
+        else if (fuel.getItem() == ModItems.powder_lignite) event.setBurnTime(1200);
+        else if (fuel.getItem() == ModItems.coke) event.setBurnTime(single * 16);
+        else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.block_coke)) event.setBurnTime(single * 160);
+        else if (fuel.getItem() == ModItems.book_guide) event.setBurnTime(single);
+        else if (fuel.getItem() == ModItems.coal_infernal) event.setBurnTime(4800);
+        else if (fuel.getItem() == ModItems.crystal_coal) event.setBurnTime(6400);
+        else if (fuel.getItem() == ModItems.powder_sawdust) event.setBurnTime(single / 2);
+        else if (fuel.getItem() == ModItems.briquette) {
+            int meta = fuel.getItemDamage();
+            switch (meta) {
+                case 0 -> event.setBurnTime(single * 10);
+                case 1 -> event.setBurnTime(single * 8);
+                case 2 -> event.setBurnTime(single * 2);
+            }
+        } else if (fuel.getItem() == ModItems.powder_ash) {
+            int meta = fuel.getItemDamage();
+            switch (meta) {
+                case 0, 2, 4 -> event.setBurnTime(single / 2);
+                case 1, 3 -> event.setBurnTime(single);
+            }
+        } else changed = false;
+        event.setCanceled(changed);
+    }
 }

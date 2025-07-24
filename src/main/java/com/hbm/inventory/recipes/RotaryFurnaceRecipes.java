@@ -149,7 +149,7 @@ public class RotaryFurnaceRecipes extends SerializableRecipe {
 
       for (ItemStack inputStack : inputs) {
 
-        if (inputStack != null) {
+        if (!inputStack.isEmpty()) {
 
           boolean hasMatch = false;
 
