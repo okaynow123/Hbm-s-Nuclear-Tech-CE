@@ -116,11 +116,6 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 		this.actualCharge = buf.readLong();
 	}
 
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
-
 	@Override
 	public long getPower() {
 		return 0;

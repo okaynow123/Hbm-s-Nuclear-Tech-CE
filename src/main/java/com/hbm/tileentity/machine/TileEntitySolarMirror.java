@@ -89,11 +89,6 @@ public class TileEntitySolarMirror extends TileEntityTickingBase {
 		tZ = buf.readInt();
 		isOn = buf.readBoolean();
 	}
-
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
 	
 	public void setTarget(int x, int y, int z) {
 		tX = x;

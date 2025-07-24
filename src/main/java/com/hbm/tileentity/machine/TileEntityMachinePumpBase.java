@@ -177,11 +177,6 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
         water.deserialize(buf);
     }
 
-    public void networkPackNT(int range) {
-        if (!world.isRemote)
-            PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-    }
-
     protected abstract boolean canOperate();
     protected abstract void operate();
 

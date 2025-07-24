@@ -89,11 +89,6 @@ public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase impl
 			tanks[i].deserialize(buf);
 	}
 
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
-
 	private void updateConnections() {
 
 		for(DirPos pos : getConPos()) {

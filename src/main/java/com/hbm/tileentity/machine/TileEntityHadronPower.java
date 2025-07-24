@@ -46,11 +46,6 @@ public class TileEntityHadronPower extends TileEntityTickingBase implements IEne
 		this.power = buf.readLong();
 	}
 
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
-	
 	@Override
 	public void setPower(long i) {
 		power = i;

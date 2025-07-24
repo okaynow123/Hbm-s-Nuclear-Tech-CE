@@ -141,11 +141,6 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 		this.waterTimer = buf.readByte();
 	}
 
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
-
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);

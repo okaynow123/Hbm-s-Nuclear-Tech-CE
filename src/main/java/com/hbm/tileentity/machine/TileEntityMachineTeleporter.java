@@ -116,11 +116,6 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 		this.target = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		this.linked = buf.readBoolean();
 	}
-
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
 	
 	public void teleport(Entity entity) {
 
