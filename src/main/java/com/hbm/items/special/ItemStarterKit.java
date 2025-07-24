@@ -410,9 +410,7 @@ public class ItemStarterKit extends Item {
 			player.inventory.addItemStackToInventory(new ItemStack(ModItems.rod_quad, 4, ItemBreedingRod.BreedingRodType.URANIUM.ordinal()));
 			player.inventory.addItemStackToInventory(new ItemStack(ModItems.rod_quad, 4, ItemBreedingRod.BreedingRodType.LEAD.ordinal()));
 			player.inventory.addItemStackToInventory(new ItemStack(ModItems.rod_quad, 2, ItemBreedingRod.BreedingRodType.NP237.ordinal()));
-			player.inventory.addItemStackToInventory(new ItemStack(ModItems.rod_quad_neptunium, 1));
-			player.inventory.addItemStackToInventory(new ItemStack(ModItems.rod_quad_neptunium, 1));
-			
+
 			giveHaz(world, player, 2);
 		}
 		if(this == ModItems.hazmat_kit)

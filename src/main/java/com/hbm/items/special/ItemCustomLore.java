@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
+@Spaghetti("WHAT THE ABSOLUTE SHIT IS THIS")
 public class ItemCustomLore extends Item {
 
 	EnumRarity rarity;
@@ -288,10 +290,10 @@ public class ItemCustomLore extends Item {
 			list.add("It's properties are still unknown,");
 			list.add("DEAL WITH IT carefully.");
 		}
-		if(this == ModItems.rod_quad_euphemium) {
-			list.add("A quad fuel rod which contains a");
-			list.add("very small ammount of a strange new element.");
-		}
+//		if(this == ModItems.rod_quad_euphemium) {
+//			list.add("A quad fuel rod which contains a");
+//			list.add("very small ammount of a strange new element.");
+//		}
 		if(this == ModItems.pellet_rtg_polonium)
 		{
 			if(MainRegistry.polaroidID == 11)
@@ -437,9 +439,9 @@ public class ItemCustomLore extends Item {
 			
 			this == ModItems.bathwater_mk3 || 
 			this == ModItems.plate_euphemium ||  
-			this == ModItems.rod_euphemium ||  
-			this == ModItems.rod_quad_euphemium || 
-			this == ModItems.rod_daffergon || 
+//			this == ModItems.rod_euphemium ||
+//			this == ModItems.rod_quad_euphemium ||
+//			this == ModItems.rod_daffergon ||
 			this == ModItems.watch || 
 			this == ModItems.undefined) {
 			return EnumRarity.EPIC;
@@ -479,8 +481,8 @@ public class ItemCustomLore extends Item {
 			this == ModItems.crystal_schrabidium ||
     		this == ModItems.crystal_schraranium ||
     		this == ModItems.crystal_trixite ||
-    		ItemCell.hasFluid(stack, Fluids.SAS3) ||
-    		this == ModItems.rod_unobtainium) {
+    		ItemCell.hasFluid(stack, Fluids.SAS3)
+    		) {
 			return EnumRarity.RARE;
 		}
 
