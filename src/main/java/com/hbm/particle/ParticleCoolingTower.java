@@ -1,11 +1,9 @@
 package com.hbm.particle;
 
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ModEventHandlerClient;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -85,18 +83,12 @@ public class ParticleCoolingTower extends Particle {
 
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-        float f = (float) this.particleTextureIndexX / 16.0F;
-        float f1 = f + 0.0624375F;
-        float f2 = (float) this.particleTextureIndexY / 16.0F;
-        float f3 = f2 + 0.0624375F;
+        if(particleAge == 0)return;
         float f4 = this.particleScale;
-
-        if (this.particleTexture != null) {
-            f = this.particleTexture.getMinU();
-            f1 = this.particleTexture.getMaxU();
-            f2 = this.particleTexture.getMinV();
-            f3 = this.particleTexture.getMaxV();
-        }
+        float f = this.particleTexture.getMinU();
+        float f1 = this.particleTexture.getMaxU();
+        float f2 = this.particleTexture.getMinV();
+        float f3 = this.particleTexture.getMaxV();
 
         float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX);
         float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
