@@ -40,8 +40,8 @@ public class GUILeadBox extends GuiContainer {
             name = inventory.box.getDisplayName();
         }
 
-        this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 4, -1);
-        this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("container.inventory"), 8, this.ySize - 96 + 2, -1);
+        this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 4, 4210752);
+        this.fontRenderer.drawString(net.minecraft.client.resources.I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override
