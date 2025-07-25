@@ -49,6 +49,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
 
     public int field;
     public int heat;
+    public int prevHeat;
     public int color;
     public FluidTankNTM[] tanks;
     public boolean meltdownTick = false;
@@ -153,6 +154,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
             if (heat > 0)
                 radiation();
 
+            prevHeat = heat;
             networkPackNT(250);
 
             heat = 0;
@@ -177,7 +179,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
         tanks[0].serialize(buf);
         tanks[1].serialize(buf);
         buf.writeInt(field);
-        buf.writeInt(heat);
+        buf.writeInt(prevHeat);
         buf.writeInt(color);
         buf.writeBoolean(meltdownTick);
     }
