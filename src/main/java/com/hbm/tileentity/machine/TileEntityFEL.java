@@ -137,7 +137,7 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
                         }
 					}
 					
-					this.power -= powerReq * ((mode.ordinal() == 0) ? 0 : Math.pow(4, mode.ordinal()));
+					this.power -= (long) (powerReq * ((mode.ordinal() == 0) ? 0 : Math.pow(4, mode.ordinal())));
 					for(int i = 3; i < range; i++) {
 					
 						double x = xCoord + dir.offsetX * i;
