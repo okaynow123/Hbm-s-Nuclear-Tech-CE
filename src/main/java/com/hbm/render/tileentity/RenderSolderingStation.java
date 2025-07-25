@@ -51,25 +51,19 @@ public class RenderSolderingStation
     bindTexture(ResourceManager.soldering_station_tex);
     ResourceManager.soldering_station.renderAll();
 
-    if (soldering_station.display != null) {
+    if (!soldering_station.display.isEmpty() ) {
       GlStateManager.pushMatrix();
       GlStateManager.translate(0.0625D * 2.5D, 1.125D, 0D);
       GlStateManager.enableLighting();
       GlStateManager.rotate(90, 0F, 1F, 0F);
       GlStateManager.rotate(-90, 1F, 0F, 0F);
 
-      if (soldering_station.display != null) {
         ItemStack stack = soldering_station.display.copy();
-        stack.setCount(1);
-
-        EntityItem item = new EntityItem(getWorld(), 0.0D, 0.0D, 0.0D, stack);
-        item.hoverStart = 0.0F;
-
-        GlStateManager.scale(1.5, 1.5, 1.5);
+        GlStateManager.scale(0.8,0.8, 0.8);
+        GlStateManager.translate(-0.2, +0.2, 0);
         Minecraft.getMinecraft()
             .getRenderItem()
             .renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
-      }
       GlStateManager.popMatrix();
     }
 

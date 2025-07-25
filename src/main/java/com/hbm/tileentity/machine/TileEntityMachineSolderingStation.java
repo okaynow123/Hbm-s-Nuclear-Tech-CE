@@ -74,7 +74,7 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
   public int processTime = 1;
 
   public FluidTankNTM tank;
-  public ItemStack display;
+  public ItemStack display = ItemStack.EMPTY;
 
   private final UpgradeManager upgradeManager;
 
@@ -379,7 +379,7 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
       int id = buf.readInt();
       this.display = new ItemStack(Item.getItemById(id), 1, buf.readInt());
     } else {
-      this.display = null;
+      this.display = ItemStack.EMPTY;
     }
 
     this.tank.deserialize(buf);

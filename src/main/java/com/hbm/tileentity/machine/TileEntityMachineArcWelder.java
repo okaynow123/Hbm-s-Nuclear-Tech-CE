@@ -72,7 +72,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   public int processTime = 1;
 
   public FluidTankNTM tank;
-  public ItemStack display;
+  public ItemStack display = ItemStack.EMPTY;
 
   private final UpgradeManager upgradeManager;
 
@@ -252,7 +252,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
 
     if (buf.readBoolean()) {
       this.display = new ItemStack(Item.getItemById(buf.readInt()), 1, buf.readInt());
-    } else this.display = null;
+    } else this.display = ItemStack.EMPTY;
   }
 
   public boolean canProcess(ArcWelderRecipe recipe) {
