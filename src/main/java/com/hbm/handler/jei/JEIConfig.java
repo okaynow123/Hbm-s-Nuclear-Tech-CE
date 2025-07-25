@@ -81,6 +81,7 @@ public class JEIConfig implements IModPlugin {
     public static final String STORAGEDRUM = "hbm.storage_drum";
     public static final String TRANSMUTATION = "hbm.transmutation";
     public static final String WASTEDRUM = "hbm.waste_drum";
+    static final String ORE_SLOPPER = "hbm.ore_slopper";
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
@@ -99,6 +100,7 @@ public class JEIConfig implements IModPlugin {
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
     private SolderingStationRecipeHandler solderingStationHandler;
     private SolidificationHandler solidificationHandler;
+    private OreSlopperHandler oreSlopperHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -171,6 +173,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_outgasser), RBMKOUTGASSER);
         registry.addRecipeCatalyst(new ItemStack(Objects.requireNonNull(Blocks.CRAFTING_TABLE)), RBMKFUEL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), DFC);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_ore_slopper), ORE_SLOPPER);
 
         registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
@@ -221,6 +224,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getAnvilRecipes(), ANVIL);
         registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
+        registry.addRecipes(oreSlopperHandler.getRecipes(), ORE_SLOPPER);
 
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
@@ -329,6 +333,7 @@ public class JEIConfig implements IModPlugin {
                 rotaryFurnaceRecipeHandler = new RotaryFurnaceRecipeHandler(help),
                 solderingStationHandler = new SolderingStationRecipeHandler(help),
                 solidificationHandler = new SolidificationHandler(help),
+                oreSlopperHandler = new OreSlopperHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
