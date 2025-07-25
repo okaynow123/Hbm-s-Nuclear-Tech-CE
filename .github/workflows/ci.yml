@@ -24,22 +24,21 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle project-local state
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'buildscript.properties') }}
+          path: .gradle
+          key: ${{ runner.os }}-gradle-project-${{ github.ref }}-${{ hashFiles('**/*.gradle*', '**/gradle.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-project-${{ github.ref }}-
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
