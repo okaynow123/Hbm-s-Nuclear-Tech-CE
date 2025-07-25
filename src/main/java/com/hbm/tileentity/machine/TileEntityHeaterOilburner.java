@@ -10,12 +10,12 @@ import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
+import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIOilburner;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.IGUIProvider;
-import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,9 +27,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,41 +36,23 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @AutoRegisterTE
-public class TileEntityHeaterOilburner extends TileEntityMachineBase implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF {
+public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF {
+
+    public static final int maxHeatEnergy = 100_000;
     public boolean isOn = false;
-
-    public FluidTankNTM tankNew;
-    public FluidTank tank;
-    public Fluid fluidType;
-
-    private int cacheHeat = 0;
-
+    public FluidTankNTM tank;
     public int setting = 1;
-
-    public int heatEnergy = 0;
-
-    public static final int maxHeatEnergy = 1_000_000;
-    public FluidTankNTM smoke;
-    public FluidTankNTM smoke_leaded;
-    public FluidTankNTM smoke_poison;
-    public int buffer;
-    private static boolean converted = false;
+    public int heatEnergy;
+    AxisAlignedBB bb = null;
 
     public TileEntityHeaterOilburner() {
-        super(3);
+        super(3, 1000);
+        tank = new FluidTankNTM(Fluids.HEATINGOIL, 16000);
 
-        tankNew = new FluidTankNTM(Fluids.HEATINGOIL, 16000);
-        tank = new FluidTank(16000);
-        fluidType = Fluids.GAS.getFF();;
-        smoke = new FluidTankNTM(Fluids.SMOKE, buffer);
-        smoke_leaded = new FluidTankNTM(Fluids.SMOKE_LEADED, buffer);
-        smoke_poison = new FluidTankNTM(Fluids.SMOKE_POISON, buffer);
-
-        converted = true;
     }
 
     public DirPos[] getConPos() {
-        return new DirPos[] {
+        return new DirPos[]{
                 new DirPos(pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X),
                 new DirPos(pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X),
                 new DirPos(pos.getX(), pos.getY(), pos.getZ() + 2, Library.POS_Z),
@@ -83,52 +63,55 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void update() {
 
-        if(!world.isRemote) {
-            if(!converted){
-                convertAndSetFluid(fluidType, tank, tankNew);
-                converted = true;
-            }
-            tankNew.loadTank(0, 1, inventory);
-            tankNew.setType(2, inventory);
+        if (!world.isRemote) {
 
-            for(DirPos pos : this.getConPos()) {
-                this.trySubscribe(tankNew.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            tank.loadTank(0, 1, inventory);
+            tank.setType(2, inventory);
+
+            for (DirPos pos : this.getConPos()) {
+                this.trySubscribe(tank.getTankType(), world, pos.getPos() , pos.getDir());
+                this.sendSmoke(pos.getPos(), pos.getDir());
             }
 
             boolean shouldCool = true;
 
-            if(this.isOn && this.heatEnergy < maxHeatEnergy) {
+            if (this.isOn && this.heatEnergy < maxHeatEnergy) {
 
-                if(tankNew.getTankType().hasTrait(FT_Flammable.class)) {
-                    FT_Flammable type = tankNew.getTankType().getTrait(FT_Flammable.class);
+                if (tank.getTankType().hasTrait(FT_Flammable.class)) {
+                    FT_Flammable type = tank.getTankType().getTrait(FT_Flammable.class);
 
                     int burnRate = setting;
-                    int toBurn = Math.min(burnRate, tankNew.getFill());
+                    int toBurn = Math.min(burnRate, tank.getFill());
 
-                    tankNew.setFill(tankNew.getFill() - toBurn);
+                    tank.setFill(tank.getFill() - toBurn);
 
-                    int heat = (int)(type.getHeatEnergy() / 1000);
+                    int heat = (int) (type.getHeatEnergy() / 1000);
 
                     this.heatEnergy += heat * toBurn;
+
+                    if (world.getTotalWorldTime() % 5 == 0 && toBurn > 0) {
+                        super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, toBurn * 5);
+                    }
 
                     shouldCool = false;
                 }
             }
 
-            if(this.heatEnergy >= maxHeatEnergy)
+            if (this.heatEnergy >= maxHeatEnergy)
                 shouldCool = false;
 
-            if(shouldCool)
+            if (shouldCool)
                 this.heatEnergy = Math.max(this.heatEnergy - Math.max(this.heatEnergy / 1000, 1), 0);
 
             this.networkPackNT(25);
         }
+
     }
 
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
-        tankNew.serialize(buf);
+        tank.serialize(buf);
 
         buf.writeBoolean(isOn);
         buf.writeInt(heatEnergy);
@@ -138,7 +121,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
-        tankNew.deserialize(buf);
+        tank.deserialize(buf);
 
         isOn = buf.readBoolean();
         heatEnergy = buf.readInt();
@@ -153,13 +136,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        if(!converted){
-            tank.readFromNBT(nbt);
-            if(nbt.hasKey("fluidType")) fluidType = FluidRegistry.getFluid(nbt.getString("fluidType"));
-        } else{
-            tankNew.readFromNBT(nbt, "tank");
-            if(nbt.hasKey("fluidType")) nbt.removeTag("fluidType");
-        }
+        tank.readFromNBT(nbt, "tank");
         isOn = nbt.getBoolean("isOn");
         heatEnergy = nbt.getInteger("heatEnergy");
         setting = nbt.getByte("setting");
@@ -167,12 +144,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        if(!converted){
-            tank.writeToNBT(nbt);
-            if(fluidType != null) {
-                nbt.setString("fluidType", fluidType.getName());
-            }
-        } else tankNew.writeToNBT(nbt, "tank");
+        tank.writeToNBT(nbt, "tank");
         nbt.setBoolean("isOn", isOn);
         nbt.setInteger("heatEnergy", heatEnergy);
         nbt.setByte("setting", (byte) this.setting);
@@ -182,7 +154,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     public void toggleSettingUp() {
         setting++;
 
-        if(setting > 100) {
+        if (setting > 100) {
             setting = 1;
         }
     }
@@ -190,14 +162,14 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
     public void toggleSettingDown() {
         setting--;
 
-        if(setting < 1) {
+        if (setting < 1) {
             setting = 100;
         }
     }
 
     @Override
-    public FluidTankNTM[] getReceivingTanks()  {
-        return new FluidTankNTM[] {tankNew};
+    public FluidTankNTM[] getReceivingTanks() {
+        return new FluidTankNTM[]{tank};
     }
 
     @Override
@@ -205,17 +177,10 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
         return new ContainerOilburner(player.inventory, this);
     }
 
-    @SideOnly(Side.CLIENT)
-    private ResourceLocation texture;
-
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if(texture == null) {
-            texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_oilburner.png");
-        }
-
-        return new GUIOilburner(player.inventory, this, texture);
+        return new GUIOilburner(player.inventory, this);
     }
 
     @Override
@@ -235,18 +200,16 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
 
     @Override
     public void receiveControl(NBTTagCompound data) {
-        if(data.hasKey("toggle")) {
+        if (data.hasKey("toggle")) {
             this.isOn = !this.isOn;
         }
 
         this.markDirty();
     }
 
-    AxisAlignedBB bb = null;
-
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if(bb == null) {
+        if (bb == null) {
             bb = new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2);
         }
 
@@ -261,12 +224,12 @@ public class TileEntityHeaterOilburner extends TileEntityMachineBase implements 
 
     @Override
     public FluidTankNTM[] getAllTanks() {
-        return new FluidTankNTM[] {tankNew};
+        return new FluidTankNTM[]{tank};
     }
 
     @Override
     public FluidTankNTM[] getSendingTanks() {
-        return new FluidTankNTM[] {smoke, smoke_leaded, smoke_poison};
+        return new FluidTankNTM[]{smoke, smoke_leaded, smoke_poison};
     }
 
 

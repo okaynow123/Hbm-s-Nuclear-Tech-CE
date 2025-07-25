@@ -25,17 +25,15 @@ public class RenderOilburner extends TileEntitySpecialRenderer<TileEntityHeaterO
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
-
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.heater_oilburner_tex);
     ResourceManager.heater_oilburner.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
-
-    GL11.glPopMatrix();
+    GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.popMatrix();
   }
 
   @Override
@@ -47,13 +45,11 @@ public class RenderOilburner extends TileEntitySpecialRenderer<TileEntityHeaterO
   public ItemRenderBase getRenderer(Item item) {
     return new ItemRenderBase() {
       public void renderInventory() {
-        GlStateManager.translate(0, -1, 0);
-        GlStateManager.scale(1.9, 1.9, 1.9);
+        GlStateManager.translate(0, -1.5, 0);
+        GlStateManager.scale(3.25, 3.25, 3.25);
       }
 
       public void renderCommon() {
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.scale(1.9, 1.9, 1.9);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.heater_oilburner_tex);
         ResourceManager.heater_oilburner.renderAll();

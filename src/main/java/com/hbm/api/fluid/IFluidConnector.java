@@ -77,6 +77,8 @@ public interface IFluidConnector extends ILoadedTile {
         }
     }
 
+    public default void trySubscribe(FluidType type, World world, BlockPos pos, ForgeDirection dir){trySubscribe(type, world, pos.getX(), pos.getY(), pos.getZ(), dir);}
+
     public default void tryUnsubscribe(FluidType type, World world, int x, int y, int z) {
 
         TileEntity te = world.getTileEntity(new BlockPos(x, y, z));

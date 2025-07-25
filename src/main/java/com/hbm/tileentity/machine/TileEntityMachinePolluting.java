@@ -12,6 +12,7 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -74,6 +75,7 @@ public abstract class TileEntityMachinePolluting extends TileEntityMachineBase i
         }
     }
 
+    public void sendSmoke(BlockPos pos, ForgeDirection dir) {sendSmoke(pos.getX(), pos.getY(), pos.getZ(), dir);}
     public void sendSmoke(int x, int y, int z, ForgeDirection dir) {
         if(this.smoke.getFill() > 0) this.sendFluid(smoke, world, x, y, z, dir);
         if(this.smoke_leaded.getFill() > 0) this.sendFluid(smoke_leaded, world, x, y, z, dir);

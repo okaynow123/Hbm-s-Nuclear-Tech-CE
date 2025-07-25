@@ -2,6 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
+import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterOilburner;
@@ -18,15 +19,14 @@ import java.io.IOException;
 import java.util.Locale;
 
 public class GUIOilburner extends GuiInfoContainer {
-    private final ResourceLocation texture;
 
+    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_oilburner.png");
     private TileEntityHeaterOilburner heater;
 
-    public GUIOilburner(InventoryPlayer player, TileEntityHeaterOilburner heater, ResourceLocation texture) {
+    public GUIOilburner(InventoryPlayer player, TileEntityHeaterOilburner heater) {
         super(new ContainerOilburner(player, heater));
 
         this.heater = heater;
-        this.texture = texture;
 
         this.xSize = 176;
         this.ySize = 203;
@@ -38,11 +38,11 @@ public class GUIOilburner extends GuiInfoContainer {
 
         this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 116, guiTop + 17, 16, 52, mouseX, mouseY, new String[]{String.format("%,d", Math.min(heater.heatEnergy, TileEntityHeaterOilburner.maxHeatEnergy)) + " / " + String.format("%,d", TileEntityHeaterOilburner.maxHeatEnergy) + " TU"});
 
-        if(heater.tankNew.getTankType().hasTrait(FT_Flammable.class)) {
-            this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 34, 18, 18, mouseX, mouseY, new String[] { heater.setting + " mB/t", String.format(Locale.US, "%,d", (int)(heater.tankNew.getTankType().getTrait(FT_Flammable.class).getHeatEnergy() / 1000) * heater.setting) + " TU/t" });
+        if(heater.tank.getTankType().hasTrait(FT_Flammable.class)) {
+            this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 79, guiTop + 34, 18, 18, mouseX, mouseY, new String[] { heater.setting + " mB/t", String.format(Locale.US, "%,d", (int)(heater.tank.getTankType().getTrait(FT_Flammable.class).getHeatEnergy() / 1000) * heater.setting) + " TU/t" });
         }
 
-        super.renderHoveredToolTip(mouseX, mouseY);
+        heater.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 44, guiTop + 17, 16, 52);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class GUIOilburner extends GuiInfoContainer {
         if (heater.isOn) {
             drawTexturedModalRect(guiLeft + 70, guiTop + 54, 210, 0, 35, 14);
 
-            if(heater.tankNew.getFill() > 0 && heater.tankNew.getTankType().hasTrait(FT_Flammable.class)) {
+            if(heater.tank.getFill() > 0 && heater.tank.getTankType().hasTrait(FT_Flammable.class)) {
                 drawTexturedModalRect(guiLeft + 79, guiTop + 34, 176, 0, 18, 18);
             }
         }
 
-        heater.tankNew.renderTank(guiLeft + 44, guiTop + 69, this.zLevel, 16, 52);
+        heater.tank.renderTank(guiLeft + 44, guiTop + 69, this.zLevel, 16, 52);
     }
 }

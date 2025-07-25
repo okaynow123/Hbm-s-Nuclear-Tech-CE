@@ -6,8 +6,11 @@ import com.hbm.tileentity.machine.TileEntityHeaterOven;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class GUIFirebox extends GuiInfoContainer {
 	
@@ -26,6 +29,22 @@ public class GUIFirebox extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float interp) {
 		super.drawScreen(mouseX, mouseY, interp);
+		if (this.mc.player.inventory.getItemStack().isEmpty()) {
+
+			for (int i = 0; i < 2; ++i) {
+				Slot slot = this.inventorySlots.inventorySlots.get(i);
+
+				if (this.isMouseOverSlot(slot, mouseX, mouseY) && !slot.getHasStack()) {
+
+					List<String> bonuses = this.firebox.getModule().getDesc();
+
+					if (!bonuses.isEmpty()) {
+						this.drawHoveringText(bonuses, mouseX, mouseY, this.fontRenderer);
+					}
+				}
+			}
+		}
+
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 80, guiTop + 27, 71, 7, mouseX, mouseY, new String[] { String.format("%,d", firebox.heatEnergy) + " / " + String.format("%,d", firebox.getMaxHeat()) + "TU" });
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 80, guiTop + 36, 71, 7, mouseX, mouseY, new String[] { firebox.burnHeat + "TU/t", (firebox.burnTime / 20) + "s" });

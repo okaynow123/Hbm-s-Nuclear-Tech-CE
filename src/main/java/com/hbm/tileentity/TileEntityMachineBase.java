@@ -32,7 +32,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
-public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IBufPacketReceiver {
+public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
 
     public ItemStackHandler inventory;
     private boolean enablefluidWrapper = false;
