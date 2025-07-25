@@ -3,7 +3,6 @@ package com.hbm.render.misc;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
@@ -11,6 +10,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -32,137 +32,136 @@ public class BeamPronter {
 		SOLID,
 		LINE
 	}
-	
+
 	public static void prontBeam(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float spinRadius, int layers, float thickness) {
 
-		GL11.glPushMatrix();
-		
+		GlStateManager.pushMatrix();
+
 		float sYaw = (float)(Math.atan2(skeleton.xCoord, skeleton.zCoord) * 180F / Math.PI);
-        float sqrt = MathHelper.sqrt(skeleton.xCoord * skeleton.xCoord + skeleton.zCoord * skeleton.zCoord);
+		float sqrt = MathHelper.sqrt(skeleton.xCoord * skeleton.xCoord + skeleton.zCoord * skeleton.zCoord);
 		float sPitch = (float)(Math.atan2(skeleton.yCoord, (double)sqrt) * 180F / Math.PI);
 
-		GL11.glRotatef(180, 0, 1F, 0);
-		GL11.glRotatef(sYaw, 0, 1F, 0);
-		GL11.glRotatef(sPitch - 90, 1F, 0, 0);
-		
-		GL11.glPushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableLighting();
-        GlStateManager.depthMask(true);
 
-        
-		if(beam == EnumBeamType.SOLID) {
+		GlStateManager.rotate(180, 0, 1F, 0);
+		GlStateManager.rotate(sYaw, 0, 1F, 0);
+		GlStateManager.rotate(sPitch - 90, 1F, 0, 0);
+
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableLighting();
+		GlStateManager.depthMask(true);
+
+		if (beam == EnumBeamType.SOLID) {
 			GlStateManager.depthMask(false);
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 			GlStateManager.disableCull();
 		}
-        
-		Tessellator tessellator = Tessellator.instance;
-		
-		if(beam == EnumBeamType.LINE) {
-			net.minecraft.client.renderer.Tessellator.getInstance().getBuffer().begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-		} else if (beam == EnumBeamType.SOLID){
-			net.minecraft.client.renderer.Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+
+		if (beam == EnumBeamType.LINE) {
+			buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+		} else if (beam == EnumBeamType.SOLID) {
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		}
-		
-		Vec3 unit = Vec3.createVectorHelper(0, 1, 0);
+
+		Vec3d unit = new Vec3d(0, 1, 0);
 		Random rand = new Random(start);
 		double length = skeleton.length();
 		double segLength = length / segments;
-		double lastX = 0;
-		double lastY = 0;
-		double lastZ = 0;
-		
-		for(int i = 0; i <= segments; i++) {
+		double lastX = 0, lastY = 0, lastZ = 0;
 
-			double pX = unit.xCoord * segLength * i;
-			double pY = unit.yCoord * segLength * i;
-			double pZ = unit.zCoord * segLength * i;
-			
-			if(wave != EnumWaveType.STRAIGHT) {
-				Vec3 spinner = Vec3.createVectorHelper(spinRadius, 0, 0);
-				if(wave == EnumWaveType.SPIRAL) {
-					spinner.rotateAroundY((float)Math.PI * (float)start / 180F);
-					spinner.rotateAroundY((float)Math.PI * 45F / 180F * i);
-				} else if(wave == EnumWaveType.RANDOM) {
-					spinner.rotateAroundY((float)Math.PI * 2 * rand.nextFloat());
+		for (int i = 0; i <= segments; i++) {
+			double pX = unit.x * segLength * i;
+			double pY = unit.y * segLength * i;
+			double pZ = unit.z * segLength * i;
+
+			if (wave != EnumWaveType.STRAIGHT) {
+				Vec3d spinner = new Vec3d(spinRadius, 0, 0);
+				if (wave == EnumWaveType.SPIRAL) {
+					float angle1 = (float) Math.PI * start / 180F;
+					float angle2 = (float) Math.PI * 45F / 180F * i;
+					spinner = spinner.rotateYaw(angle1).rotateYaw(angle2);
+				} else if (wave == EnumWaveType.RANDOM) {
+					spinner = spinner.rotateYaw((float) (Math.PI * 2 * rand.nextFloat()));
 				}
-				pX += spinner.xCoord;
-				pY += spinner.yCoord;
-				pZ += spinner.zCoord;
+				pX += spinner.x;
+				pY += spinner.y;
+				pZ += spinner.z;
 			}
-			
-			if(beam == EnumBeamType.LINE && i > 0) {
-	            tessellator.setColorOpaque_I(outerColor);
-	            tessellator.addVertex(pX, pY, pZ);
-	            tessellator.addVertex(lastX, lastY, lastZ);
-			}
-			
-			if(beam == EnumBeamType.SOLID && i > 0) {
-				
-				float radius = thickness / (float)layers;
 
-				for(int j = 1; j <= layers; j++) {
-					int color = 0;
-					if(layers == 1) {
+			if (beam == EnumBeamType.LINE && i > 0) {
+				int color = outerColor;
+				buffer.pos(pX, pY, pZ).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, 255).endVertex();
+				buffer.pos(lastX, lastY, lastZ).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, 255).endVertex();
+			}
+
+			if (beam == EnumBeamType.SOLID && i > 0) {
+				float radius = thickness / layers;
+
+				for (int j = 1; j <= layers; j++) {
+					int color;
+					if (layers == 1) {
 						color = outerColor;
 					} else {
-						float inter = (float)(j - 1) / (float)(layers - 1);
+						float inter = (float)(j - 1) / (layers - 1);
 						color = BobMathUtil.interpolateColor(innerColor, outerColor, inter);
 					}
-					tessellator.setColorOpaque_I(color);
-					
-					tessellator.addVertex(lastX + (radius * j), lastY, lastZ + (radius * j));
-					tessellator.addVertex(lastX + (radius * j), lastY, lastZ - (radius * j));
-					tessellator.addVertex(pX + (radius * j), pY, pZ - (radius * j));
-					tessellator.addVertex(pX + (radius * j), pY, pZ + (radius * j));
-					
-					tessellator.addVertex(lastX - (radius * j), lastY, lastZ + (radius * j));
-					tessellator.addVertex(lastX - (radius * j), lastY, lastZ - (radius * j));
-					tessellator.addVertex(pX - (radius * j), pY, pZ - (radius * j));
-					tessellator.addVertex(pX - (radius * j), pY, pZ + (radius * j));
-					
-					tessellator.addVertex(lastX + (radius * j), lastY, lastZ + (radius * j));
-					tessellator.addVertex(lastX - (radius * j), lastY, lastZ + (radius * j));
-					tessellator.addVertex(pX - (radius * j), pY, pZ + (radius * j));
-					tessellator.addVertex(pX + (radius * j), pY, pZ + (radius * j));
-					
-					tessellator.addVertex(lastX + (radius * j), lastY, lastZ - (radius * j));
-					tessellator.addVertex(lastX - (radius * j), lastY, lastZ - (radius * j));
-					tessellator.addVertex(pX - (radius * j), pY, pZ - (radius * j));
-					tessellator.addVertex(pX + (radius * j), pY, pZ - (radius * j));
+
+					int r = (color >> 16) & 0xFF;
+					int g = (color >> 8) & 0xFF;
+					int b = color & 0xFF;
+
+					float radJ = radius * j;
+
+					buffer.pos(lastX + radJ, lastY, lastZ + radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(lastX + radJ, lastY, lastZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX + radJ, pY, pZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX + radJ, pY, pZ + radJ).color(r, g, b, 255).endVertex();
+
+					buffer.pos(lastX - radJ, lastY, lastZ + radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(lastX - radJ, lastY, lastZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX - radJ, pY, pZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX - radJ, pY, pZ + radJ).color(r, g, b, 255).endVertex();
+
+					buffer.pos(lastX + radJ, lastY, lastZ + radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(lastX - radJ, lastY, lastZ + radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX - radJ, pY, pZ + radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX + radJ, pY, pZ + radJ).color(r, g, b, 255).endVertex();
+
+					buffer.pos(lastX + radJ, lastY, lastZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(lastX - radJ, lastY, lastZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX - radJ, pY, pZ - radJ).color(r, g, b, 255).endVertex();
+					buffer.pos(pX + radJ, pY, pZ - radJ).color(r, g, b, 255).endVertex();
 				}
 			}
-			
+
 			lastX = pX;
 			lastY = pY;
 			lastZ = pZ;
 		}
-		
-		if(beam == EnumBeamType.LINE) {
-			tessellator.setColorOpaque_I(innerColor);
-            tessellator.addVertex(0, 0, 0);
-            tessellator.addVertex(0, skeleton.length(), 0);
+
+		if (beam == EnumBeamType.LINE) {
+			int color = innerColor;
+			buffer.pos(0, 0, 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, 255).endVertex();
+			buffer.pos(0, skeleton.length(), 0).color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, 255).endVertex();
 		}
 
-		
-		
 		tessellator.draw();
-		
-		if(beam == EnumBeamType.SOLID) {
+
+		if (beam == EnumBeamType.SOLID) {
 			GlStateManager.disableBlend();
 			GlStateManager.enableCull();
 			GlStateManager.depthMask(true);
 		}
-		
-        GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
 
-		GL11.glPopMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.popMatrix();
 	}
-	
+
+
 	//Drillgon200: Yeah, I don't know what to do about fluid colors so I'm just going butcher it and try my best to use the middle pixel of the icon
 	//Alcater: I figured out a way to extract the fluid colors from the texture and save them in a HashMap at loadup. This function wont be needed anymore.
 	//public static void prontBeamWithIcon(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, TextureAtlasSprite icon, int innerColor, int start, int segments, float spinRadius, int layers, float thickness) {
