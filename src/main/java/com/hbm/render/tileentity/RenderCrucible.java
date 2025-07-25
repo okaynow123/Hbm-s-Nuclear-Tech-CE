@@ -21,6 +21,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible>
@@ -53,12 +55,15 @@ public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible
     ITileActorRenderer.bindTexture(ResourceManager.crucible_tex);
     ResourceManager.crucible_heat.renderAll();
 
-    if (!crucible.recipeStack.isEmpty() || !crucible.wasteStack.isEmpty()) {
+    List<Mats.MaterialStack> recipeStackCopy = new ArrayList<>(crucible.recipeStack);
+    List<Mats.MaterialStack> wasteStackCopy = new ArrayList<>(crucible.wasteStack);
+
+    if (!recipeStackCopy.isEmpty() || !wasteStackCopy.isEmpty()) {
       int totalCap = TileEntityCrucible.recipeZCapacity + TileEntityCrucible.wasteZCapacity;
       int totalMass = 0;
 
-      for (Mats.MaterialStack stack : crucible.recipeStack) totalMass += stack.amount;
-      for (Mats.MaterialStack stack : crucible.wasteStack) totalMass += stack.amount;
+      for (Mats.MaterialStack stack : recipeStackCopy) totalMass += stack.amount;
+      for (Mats.MaterialStack stack : wasteStackCopy) totalMass += stack.amount;
 
       double level = ((double) totalMass / (double) totalCap) * 0.875D;
 
