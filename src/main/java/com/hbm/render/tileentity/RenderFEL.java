@@ -68,6 +68,8 @@ public class RenderFEL extends TileEntitySpecialRenderer<TileEntityFEL>
                 && fel.mode != EnumWavelengths.NULL
                 && length > 0) {
 
+            GlStateManager.depthMask(true);
+            GlStateManager.enableDepth();
             BeamPronter.prontBeam(
                     Vec3.createVectorHelper(0, 0, -length - 1),
                     EnumWaveType.STRAIGHT,
@@ -81,6 +83,7 @@ public class RenderFEL extends TileEntitySpecialRenderer<TileEntityFEL>
                     0.0625F);
         }
 
+        GlStateManager.enableCull();
         GlStateManager.popMatrix();
     }
 

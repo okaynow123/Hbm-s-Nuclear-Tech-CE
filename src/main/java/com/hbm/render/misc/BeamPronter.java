@@ -236,9 +236,7 @@ public class BeamPronter {
 		ResourceManager.gluon_beam.uniform1f("beam_length", len);
 		
 		buf.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX);
-		//GL20.glUniform1f(GL20.glGetUniformLocation(ResourceManager.gluon_beam.getShaderId(), "subdivXAmount"), 1/(float)SUBDIVISIONS_PER_BLOCK);
-		//GL20.glUniform1f(GL20.glGetUniformLocation(ResourceManager.gluon_beam.getShaderId(), "subdivUAmount"), 1/(float)(subdivisions+1));
-		
+
 		Vec3d vec = new Vec3d(billboardPos.x, billboardPos.y, billboardPos.z).crossProduct(new Vec3d(1, 0, 0)).normalize();
 		for(int i = 0; i <= subdivisions; i ++){
 			float iN = ((float)i/(float)subdivisions);
