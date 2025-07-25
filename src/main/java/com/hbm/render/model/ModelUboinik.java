@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelUboinik extends ModelBase {
 
@@ -219,9 +219,9 @@ public class ModelUboinik extends ModelBase {
 		ConnectorFront.render(f5);
 		ConnectorBack.render(f5);
 		Grip.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Coil.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		FrontBase.render(f5);
 		FrontTip.render(f5);
 		DrumCenter.render(f5);
@@ -249,13 +249,13 @@ public class ModelUboinik extends ModelBase {
 		ChamberBack.render(f5);
 		ChamberBackConnector.render(f5);
 		ChamberTop.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Chamber.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Stock.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		TriggerFrame.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Trigger.render(f5);
 		Handle.render(f5);
 		StockBottom.render(f5);

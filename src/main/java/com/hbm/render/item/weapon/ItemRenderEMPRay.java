@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderEMPRay extends TEISRBase {
 
@@ -35,10 +35,10 @@ public class ItemRenderEMPRay extends TEISRBase {
 		}
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(0, 0, -0.2);
+			GlStateManager.translate(0, 0, -0.2);
 		case FIRST_PERSON_RIGHT_HAND:
 			GL11.glScaled(0.25, 0.25, 0.25);
-			GL11.glTranslated(2.0, 2.0, 2.5);
+			GlStateManager.translate(2.0, 2.0, 2.5);
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
 				GL11.glRotated(0, 0, 1, 0);
 				GL11.glRotated(-40, 0, 0, 1);
@@ -59,10 +59,10 @@ public class ItemRenderEMPRay extends TEISRBase {
 		case GROUND:
 			GL11.glScaled(0.5, 0.5, 0.5);
 			if(type == TransformType.THIRD_PERSON_LEFT_HAND)
-				GL11.glTranslated(0.4, 0, 0);
+				GlStateManager.translate(0.4, 0, 0);
 			if(type == TransformType.GROUND)
-				GL11.glTranslated(0.05, 0, 0);
-			GL11.glTranslated(0.8, 1.1, 0.5);
+				GlStateManager.translate(0.05, 0, 0);
+			GlStateManager.translate(0.8, 1.1, 0.5);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 			emp.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, f);

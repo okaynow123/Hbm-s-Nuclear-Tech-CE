@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderZOMG extends TEISRBase {
 
@@ -21,16 +21,16 @@ public class ItemRenderZOMG extends TEISRBase {
 	
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.enableCull();
 		Minecraft.getMinecraft().renderEngine.bindTexture(zomg_rl);
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(-0.5, 0, -0.5);
+			GlStateManager.translate(-0.5, 0, -0.5);
 			GL11.glScaled(1.4, 1.4, 1.4);
 		case FIRST_PERSON_RIGHT_HAND:
 			GL11.glScaled(0.75, 0.75, 0.75);
-			GL11.glTranslated(0.4, 0.3, 0.6);
+			GlStateManager.translate(0.4, 0.3, 0.6);
 			GL11.glRotated(180, 1, 0, 0);
 			GL11.glRotated(30, 0, 0, 1);
 			if(type == TransformType.FIRST_PERSON_LEFT_HAND){
@@ -44,7 +44,7 @@ public class ItemRenderZOMG extends TEISRBase {
 		case HEAD:
 		case GROUND:
 		case FIXED:
-			GL11.glTranslated(-0.2, 0, 0);
+			GlStateManager.translate(-0.2, 0, 0);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(180, 0, 0, 1);
 			GL11.glScaled(1.5, 1.5, 1.5);
@@ -53,6 +53,6 @@ public class ItemRenderZOMG extends TEISRBase {
 		default:
 			break;
 		}
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 	}
 }

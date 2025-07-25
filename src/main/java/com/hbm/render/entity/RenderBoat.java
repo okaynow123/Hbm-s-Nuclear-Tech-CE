@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBoat extends Render<EntityDuchessGambit> implements IItemRendererProvider {
 
@@ -32,19 +32,19 @@ public class RenderBoat extends Render<EntityDuchessGambit> implements IItemRend
       double z,
       float entityYaw,
       float partialTicks) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-    GL11.glTranslatef((float) x, (float) y, (float) z);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.translate((float) x, (float) y, (float) z);
+    GlStateManager.enableCull();
     GlStateManager.enableLighting();
 
-    GL11.glTranslatef(0, 0, -1.0F);
+    GlStateManager.translate(0, 0, -1.0F);
 
     bindTexture(ResourceManager.duchessgambit_tex);
     ResourceManager.duchessgambit.renderAll();
 
     GL11.glPopAttrib();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

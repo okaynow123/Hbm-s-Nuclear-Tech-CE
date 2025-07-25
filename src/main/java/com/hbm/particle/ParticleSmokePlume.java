@@ -75,9 +75,9 @@ public class ParticleSmokePlume extends Particle {
 	/*public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
 		this.theRenderEngine.bindTexture(texture);
 		
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
 		GL11.glDepthMask(false);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		RenderHelper.disableStandardItemLighting();
@@ -106,8 +106,8 @@ public class ParticleSmokePlume extends Particle {
 			p_70539_1_.draw();
 		}
 		
-		GL11.glPolygonOffset(0.0F, 0.0F);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		GlStateManager.polygonOffset(0.0F, 0.0F);
+		GlStateManager.enableLighting();
 	}*/
 	
 	@Override

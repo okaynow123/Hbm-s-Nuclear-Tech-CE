@@ -17,7 +17,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class GUIElectrolyserMetal extends GuiInfoContainer {
         super.drawDefaultBackground();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -99,7 +99,7 @@ public class GUIElectrolyserMetal extends GuiInfoContainer {
             drawTexturedModalRect(guiLeft + 96, guiTop + 60 - p, 210, 131 - p, 34, p);
         }
 
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         int p = (int) (electrolyser.power * 89 / electrolyser.maxPower);
         drawTexturedModalRect(guiLeft + 186, guiTop + 107 - p, 210, 89 - p, 16, p);

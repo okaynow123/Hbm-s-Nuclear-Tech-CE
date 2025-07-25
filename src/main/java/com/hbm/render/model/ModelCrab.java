@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelCrab extends ModelBase {
 	int textureX = 64;
@@ -132,13 +132,13 @@ public class ModelCrab extends ModelBase {
 	}
 
 	public void renderAll(float f5) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef(0, 1.5F, 0);
-		GL11.glRotatef(-90, 0, 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1.5F, 0);
+		GlStateManager.rotate(-90, 0, 1, 0);
 		for (int i = 0; i < 20; i++) {
 			modelcrabModel[i].render(f5);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

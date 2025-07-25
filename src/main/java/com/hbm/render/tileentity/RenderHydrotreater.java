@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.oil.TileEntityMachineHydrotreater;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderHydrotreater extends TileEntitySpecialRenderer<TileEntityMachineHydrotreater>
     implements IItemRendererProvider {
@@ -22,17 +22,17 @@ public class RenderHydrotreater extends TileEntitySpecialRenderer<TileEntityMach
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.hydrotreater_tex);
     ResourceManager.hydrotreater.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

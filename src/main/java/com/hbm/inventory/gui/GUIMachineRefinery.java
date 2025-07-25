@@ -14,7 +14,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 
@@ -65,7 +65,7 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 		super.drawDefaultBackground();
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawModalRectWithCustomSizedTexture(guiLeft, guiTop, 0, 0, xSize, ySize, 350, 256);
 
@@ -82,10 +82,10 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 			int targetHeight = inputOil.getFill() * 101 / inputOil.getMaxFill();
 			Color color = new Color(inputOil.getTankType().getColor());
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
+			GlStateManager.enableBlend();
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
 			drawModalRectWithCustomSizedTexture(guiLeft + 33, guiTop + 130 - targetHeight, 226, 101 - targetHeight, 16, targetHeight, 350, 256);
-			GL11.glDisable(GL11.GL_BLEND);
+			GlStateManager.disableBlend();
 		}
 
 		// fucking kgjhgdfjgdhjfg
@@ -106,27 +106,27 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 			// Heavy Oil Products
 			Color color = new Color(recipe.getV().type.getColor());
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
+			GlStateManager.enableBlend();
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
 			drawModalRectWithCustomSizedTexture(guiLeft + 52, guiTop + 63, 247, 1, 33, 48, 350, 256);
 
 			// Naphtha Oil Products
 			color = new Color(recipe.getW().type.getColor());
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
 			drawModalRectWithCustomSizedTexture(guiLeft + 52, guiTop + 32, 247, 50, 66, 52, 350, 256);
 
 			// Light Oil Products
 			color = new Color(recipe.getX().type.getColor());
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
 			drawModalRectWithCustomSizedTexture(guiLeft + 52, guiTop + 24, 247, 145, 86, 35, 350, 256);
 
 			// Gaseous Products
 			color = new Color(recipe.getY().type.getColor());
-			GL11.glColor4f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
+			GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1F);
 			drawModalRectWithCustomSizedTexture(guiLeft + 36, guiTop + 16, 211, 119, 122, 25, 350, 256);
 
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.disableBlend();
+			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
 		// output tanks

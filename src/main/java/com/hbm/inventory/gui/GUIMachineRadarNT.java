@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -118,7 +118,7 @@ public class GUIMachineRadarNT extends GuiScreen {
     }
 
     private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         drawTexturedModalRect(guiLeft - 14, guiTop + 84, 224, 0, 14, 66);
@@ -150,7 +150,7 @@ public class GUIMachineRadarNT extends GuiScreen {
         if(radar.showMap) {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GlStateManager.disableTexture2D();
             buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
             for (int i = 0; i < 40_000; i++) {
                 int iX = i % 200;
@@ -165,7 +165,7 @@ public class GUIMachineRadarNT extends GuiScreen {
                 }
             }
             tess.draw();
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GlStateManager.enableTexture2D();
         }
 
         Vec3 tr = Vec3.createVectorHelper(100, 0, 0);
@@ -176,10 +176,10 @@ public class GUIMachineRadarNT extends GuiScreen {
         tl.rotateAroundZ(rot + 0.25F);
         bl.rotateAroundZ(rot);
 
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
         buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
@@ -188,10 +188,10 @@ public class GUIMachineRadarNT extends GuiScreen {
         buf.pos(guiLeft + 108 + tl.xCoord, guiTop + 117 + tl.yCoord, this.zLevel).color(0, 255, 0, 0).endVertex();
         buf.pos(guiLeft + 108 + bl.xCoord, guiTop + 117 + bl.yCoord, this.zLevel).color(0, 255, 0, 0).endVertex();
         tess.draw();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glShadeModel(GL11.GL_FLAT);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
 
         if(!radar.entries.isEmpty()) {
             for(RadarEntry m : radar.entries) {

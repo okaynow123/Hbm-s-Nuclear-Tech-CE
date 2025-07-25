@@ -15,7 +15,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ArmorHEV extends ArmorFSBPowered {
 
@@ -72,7 +72,7 @@ public class ArmorHEV extends ArmorFSBPowered {
         	lastResult = in;
         }
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.enableBlend();
 		GlStateManager.disableDepth();
@@ -164,7 +164,7 @@ public class ArmorHEV extends ArmorFSBPowered {
 
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
     }

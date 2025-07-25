@@ -10,7 +10,7 @@ import com.hbm.tileentity.machine.TileEntityChungus;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderChungus extends TileEntitySpecialRenderer<TileEntityChungus>
     implements IItemRendererProvider {
@@ -29,37 +29,37 @@ public class RenderChungus extends TileEntitySpecialRenderer<TileEntityChungus>
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
 
-    GL11.glRotatef(90, 0F, 1F, 0F);
+    GlStateManager.rotate(90, 0F, 1F, 0F);
 
     switch (turbine.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glTranslated(0, 0, -3);
+    GlStateManager.translate(0, 0, -3);
 
     bindTexture(ResourceManager.chungus_tex);
 
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     ResourceManager.chungus.renderPart("Body");
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 0, 4.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 0, 4.5);
     int rot = 0;
     FluidType type = turbine.tanks[0].getTankType();
     if (type == Fluids.HOTSTEAM) {
@@ -69,21 +69,21 @@ public class RenderChungus extends TileEntitySpecialRenderer<TileEntityChungus>
     } else if (type == Fluids.ULTRAHOTSTEAM) {
       rot = 3;
     }
-    GL11.glRotatef(15 - rot * 10, 1, 0, 0);
-    GL11.glTranslated(0, 0, -4.5);
+    GlStateManager.rotate(15 - rot * 10, 1, 0, 0);
+    GlStateManager.translate(0, 0, -4.5);
     ResourceManager.chungus.renderPart("Lever");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glTranslated(0, 2.5, 0);
-    GL11.glRotatef(
+    GlStateManager.translate(0, 2.5, 0);
+    GlStateManager.rotate(
         turbine.lastRotor + (turbine.rotor - turbine.lastRotor) * partialTicks, 0, 0, -1);
-    GL11.glTranslated(0, -2.5, 0);
+    GlStateManager.translate(0, -2.5, 0);
 
     ResourceManager.chungus.renderPart("Blades");
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

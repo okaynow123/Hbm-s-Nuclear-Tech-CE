@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelCryolator extends ModelBase {
 
@@ -344,9 +344,9 @@ public class ModelCryolator extends ModelBase {
 		Barrel1.render(f5);
 		Barrel2.render(f5);
 		BarrelBack.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		BarrelNozzle.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		TankF1.render(f5);
 		TankF2.render(f5);
 		TankF3.render(f5);
@@ -356,25 +356,25 @@ public class ModelCryolator extends ModelBase {
 		Drum1.render(f5);
 		Drum2.render(f5);
 		BodyBACK.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		PipeLPlate.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		BodyBottom.render(f5);
 		Handle.render(f5);
 		Trigger.render(f5);
 		CoolingBlock.render(f5);
 		BodyCenter.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		PipeRPlate.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		StockTop.render(f5);
 		StockFront.render(f5);
 		StockBack.render(f5);
 		StockBottom.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		PipeLPlateB.render(f5);
 		PipeRPlateB.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		StockConnector.render(f5);
 		PipeTL.render(f5);
 		PipeBL.render(f5);

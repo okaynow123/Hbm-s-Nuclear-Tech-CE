@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -90,7 +90,7 @@ public class ParticleHaze extends Particle {
 			double dZ = rand.nextGaussian() * 2.5D;
 			double size = (rand.nextDouble() * 0.25 + 0.75) * particleScale;
 
-			GL11.glTranslatef((float) dX, (float) dY, (float) dZ);
+			GlStateManager.translate((float) dX, (float) dY, (float) dZ);
 
 			float pX = (float) ((this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks - interpPosX) + rand.nextGaussian() * 0.5);
 			float pY = (float) ((this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY) + rand.nextGaussian() * 0.5);
@@ -103,7 +103,7 @@ public class ParticleHaze extends Particle {
 			buf.pos((double) (pX + rotationX * size - rotationXY * size), (double) (pY - rotationZ * size), (double) (pZ + rotationYZ * size - rotationXZ * size)).tex(0, 1).endVertex();
 			tes.draw();
 
-			GL11.glTranslatef((float) -dX, (float) -dY, (float) -dZ);
+			GlStateManager.translate((float) -dX, (float) -dY, (float) -dZ);
 		}
 
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);

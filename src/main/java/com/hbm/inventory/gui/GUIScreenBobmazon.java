@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -245,13 +245,13 @@ public class GUIScreenBobmazon extends GuiScreen {
 				if(!offer.isEmpty())
 					count = " x" + offer.getCount();
 
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				
 				float scale = 0.65F;
-				GL11.glScalef(scale, scale, scale);
+				GlStateManager.scale(scale, scale, scale);
 				gui.fontRenderer.drawString(I18n.format(offer.getDisplayName()) + count, (int)((x + 20) / scale), (int)((y - 12) / scale), 4210752);
 				
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				
 				String price = cost + " Cap";
 				if(cost != 1)
@@ -259,15 +259,15 @@ public class GUIScreenBobmazon extends GuiScreen {
 
 				gui.fontRenderer.drawString(price, x + 62, y - 3, 4210752);
 				
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 					
-					GL11.glScalef(0.5F, 0.5F, 0.5F);
+					GlStateManager.scale(0.5F, 0.5F, 0.5F);
 					
 					if(!author.isEmpty())
 						gui.fontRenderer.drawString("- " + author, (x + 20) * 2, (y + 18) * 2, 0x222222);
 					gui.fontRenderer.drawString(comment, (x + 20) * 2, (y + 8) * 2, 0x222222);
 					
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				
 		        GlStateManager.disableLighting();
 				if(offer != null) {

@@ -429,7 +429,7 @@ public class NTMRenderHelper {
 	private static void clearFLShadowBuffer(){
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, shadowFbo);
 		GlStateManager.clearDepth(1);
-		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 		Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(true);
 	}
 	
@@ -533,9 +533,9 @@ public class NTMRenderHelper {
 		GlStateManager.clearColor(0, 0, 0, 1);
 		if(!useFullPost){
 			GlStateManager.clearDepth(1);
-			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
+			GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT);
 		} else {
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+			GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
 		}
 		Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(true);
 	}
@@ -553,10 +553,10 @@ public class NTMRenderHelper {
     	GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, deferredFbo);
     	GL30.glBlitFramebuffer(0, 0, NTMRenderHelper.width, NTMRenderHelper.height, 0, 0, NTMRenderHelper.width, NTMRenderHelper.height, GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
 		
-    	GL11.glPushMatrix();
-    	//GL11.glTranslated(0, Minecraft.getMinecraft().getRenderViewEntity().getEyeHeight(), 0);
+    	GlStateManager.pushMatrix();
+    	//GlStateManager.translate(0, Minecraft.getMinecraft().getRenderViewEntity().getEyeHeight(), 0);
     	GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
-    	GL11.glPopMatrix();
+    	GlStateManager.popMatrix();
 		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER2);
 		Matrix4f view = new Matrix4f();
 		Matrix4f proj = new Matrix4f();
@@ -644,7 +644,7 @@ public class NTMRenderHelper {
         double entPosZ = renderView.lastTickPosZ + (renderView.posZ - renderView.lastTickPosZ)*partialTicks;
         Vec3d playerPos = new Vec3d(entPosX, entPosY, entPosZ);
         
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
 		GlStateManager.glLineWidth(4);
         RenderGlobal.drawSelectionBoundingBox(box.offset(-entPosX, -entPosY, -entPosZ), 1, 1, 1, 1);
@@ -654,7 +654,7 @@ public class NTMRenderHelper {
         GL11.glVertex3d(end.x - entPosX, end.y - entPosY, end.z - entPosZ);
         GL11.glEnd();
         GlStateManager.enableTexture2D();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         
 		bindBlockTexture();
 		GlStateManager.resetColor();
@@ -670,11 +670,11 @@ public class NTMRenderHelper {
         clearFLShadowBuffer();
         bindFLShadowBuffer();
         
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
+        GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
+        GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
         //Multiply by 2 because the FOV should be the diameter. Why is height multiplied by sqrt2? I honestly have no idea, but it doesn't work
         //correctly if I use height directly, and minecraft also multiplies by sqrt2, so I am, too.
         Project.gluPerspective(degrees*2, 1, 0.05F, (float) height*MathHelper.SQRT_2);
@@ -684,7 +684,7 @@ public class NTMRenderHelper {
         GL11.glRotated(-angles.y+270, 1, 0, 0);
         GL11.glRotated(-angles.x+180, 0, 1, 0);
        
-        GL11.glTranslated(-(start.x-entPosX), -(start.y-entPosY), -(start.z-entPosZ));
+        GlStateManager.translate(-(start.x-entPosX), -(start.y-entPosY), -(start.z-entPosZ));
         GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER);
         GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER2);
         float[] projecion = new float[16];
@@ -706,9 +706,9 @@ public class NTMRenderHelper {
         }
         
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         //FloatBuffer pixels = GLAllocation.createDirectFloatBuffer(512*512);
 		//GL11.glReadPixels(0, 0, 512, 512, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, pixels);
 		//System.out.println(pixels.get(5) + " " + pixels.get(6));
@@ -770,17 +770,17 @@ public class NTMRenderHelper {
 		
 		GlStateManager.enableCull();
 		//renderConeMesh(pos, vec, height, radius, 8);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		renderFullscreenTriangle();
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
 		HbmShaderManager2.releaseShader();
 		GlStateManager.depthMask(true);
@@ -803,9 +803,9 @@ public class NTMRenderHelper {
 			vertices[(i+1)*3+2] = (float) vertex.z;
 		}
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		Vec3d angles = BobMathUtil.getEulerAngles(normal);
-		GL11.glTranslated(start.x, start.y, start.z);
+		GlStateManager.translate(start.x, start.y, start.z);
 		GL11.glRotated(angles.x+180, 0, 1, 0);
 		GL11.glRotated(angles.y+180, 1, 0, 0);
         
@@ -829,7 +829,7 @@ public class NTMRenderHelper {
         }
         tes.draw();
         
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static void enableBlockVBOs(){
@@ -867,9 +867,9 @@ public class NTMRenderHelper {
 	
 	public static void renderChunks(Collection<RenderChunk> toRender, double posX, double posY, double posZ){
 		for(RenderChunk chunk : toRender){
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			BlockPos chunkPos = chunk.getPosition();
-			GL11.glTranslated(chunkPos.getX() - posX, chunkPos.getY() - posY, chunkPos.getZ() - posZ);
+			GlStateManager.translate(chunkPos.getX() - posX, chunkPos.getY() - posY, chunkPos.getZ() - posZ);
 			chunk.multModelviewMatrix();
 			for(int i = 0; i < 3; i ++){
 				if(chunk.getCompiledChunk().isLayerEmpty(BlockRenderLayer.values()[i]) || chunk.getVertexBufferByLayer(i) == null)
@@ -890,7 +890,7 @@ public class NTMRenderHelper {
 	            	Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 	            }
 			}
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 	

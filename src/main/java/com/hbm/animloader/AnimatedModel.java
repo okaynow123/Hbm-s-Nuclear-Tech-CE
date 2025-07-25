@@ -3,7 +3,7 @@ package com.hbm.animloader;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class AnimatedModel {
 	}
 
 	protected void renderWithIndex(float inter, int firstIndex, int nextIndex, float diffN, IAnimatedModelCallback c) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		boolean hidden = false;
 		if(hasTransform) {
 			Transform[] transforms = controller.activeAnim.anim.objectTransforms.get(name);
@@ -111,7 +111,7 @@ public class AnimatedModel {
 		for(AnimatedModel m : children) {
 			m.renderWithIndex(inter, firstIndex, nextIndex, diffN, c);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void render() {
@@ -119,7 +119,7 @@ public class AnimatedModel {
 	}
 	
 	public void render(IAnimatedModelCallback c) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		if(hasTransform) {
 			auxGLMatrix.put(transform);
 			auxGLMatrix.rewind();
@@ -136,7 +136,7 @@ public class AnimatedModel {
 		for(AnimatedModel m : children) {
 			m.render(c);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private static float fract(float number) {

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSmallReactor extends TileEntitySpecialRenderer<TileEntityReactorResearch>
         implements IItemRendererProvider {
@@ -23,22 +23,22 @@ public class RenderSmallReactor extends TileEntitySpecialRenderer<TileEntityReac
             float partialTicks,
             int destroyStage,
             float alpha) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
         GlStateManager.enableLighting();
         GlStateManager.disableCull();
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
 
         bindTexture(ResourceManager.reactor_small_base_tex);
         ResourceManager.reactor_small_base.renderAll();
 
         double level = (reactor.lastLevel + (reactor.level - reactor.lastLevel) * partialTicks);
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(0.0D, level, 0.0D);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.0D, level, 0.0D);
         bindTexture(ResourceManager.reactor_small_rods_tex);
         ResourceManager.reactor_small_rods.renderAll();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
         if (reactor.totalFlux > 10 && reactor.isSubmerged()) {
             GlStateManager.disableTexture2D();
@@ -99,7 +99,7 @@ public class RenderSmallReactor extends TileEntitySpecialRenderer<TileEntityReac
 
         GlStateManager.enableCull();
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelBFLauncher extends ModelBase {
 
@@ -201,20 +201,20 @@ public class ModelBFLauncher extends ModelBase {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		Shape1.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Shape2.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Shape3.render(f5);
 		Shape4.render(f5);
 		Shape5.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Shape6.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Shape7.render(f5);
 		Shape8.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Shape9.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Shape10.render(f5);
 		Shape11.render(f5);
 		Shape12.render(f5);

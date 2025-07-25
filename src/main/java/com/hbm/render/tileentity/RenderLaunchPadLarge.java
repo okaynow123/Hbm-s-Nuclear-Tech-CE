@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.function.Consumer;
 
@@ -28,23 +28,23 @@ public class RenderLaunchPadLarge extends TileEntitySpecialRenderer<TileEntityLa
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
     switch (pad.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
@@ -100,34 +100,34 @@ public class RenderLaunchPadLarge extends TileEntitySpecialRenderer<TileEntityLa
       float erectorAngle = pad.prevErector + (pad.erector - pad.prevErector) * partialTicks;
       float erectorLift = pad.prevLift + (pad.lift - pad.prevLift) * partialTicks;
 
-      GL11.glPushMatrix();
-      GL11.glShadeModel(GL11.GL_SMOOTH);
+      GlStateManager.pushMatrix();
+      GlStateManager.shadeModel(GL11.GL_SMOOTH);
       ResourceManager.missile_erector.renderPart(parts[0]);
       if (pad.toRender != null && pad.erected) ResourceManager.missile_erector.renderPart(parts[3]);
-      GL11.glTranslated(0, offset[1], -offset[0]);
-      GL11.glRotatef(-erectorAngle, 1, 0, 0);
-      GL11.glTranslated(0, -offset[1], offset[0]);
+      GlStateManager.translate(0, offset[1], -offset[0]);
+      GlStateManager.rotate(-erectorAngle, 1, 0, 0);
+      GlStateManager.translate(0, -offset[1], offset[0]);
       ResourceManager.missile_erector.renderPart(parts[2]);
-      GL11.glTranslatef(0, erectorLift, 0);
+      GlStateManager.translate(0, erectorLift, 0);
       ResourceManager.missile_erector.renderPart(parts[1]);
-      GL11.glShadeModel(GL11.GL_FLAT);
+      GlStateManager.shadeModel(GL11.GL_FLAT);
 
       if (pad.erected) {
-        GL11.glPopMatrix();
-        GL11.glPushMatrix();
+        GlStateManager.popMatrix();
+        GlStateManager.pushMatrix();
       }
 
       if (pad.toRender != null && (pad.erected || pad.readyToLoad)) {
-        GL11.glTranslated(0, 2, 0);
+        GlStateManager.translate(0, 2, 0);
         Consumer<TextureManager> renderer =
             ItemRenderMissileGeneric.renderers.get(
                 new ComparableStack(pad.toRender).makeSingular());
         if (renderer != null) renderer.accept(this.rendererDispatcher.renderEngine);
       }
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

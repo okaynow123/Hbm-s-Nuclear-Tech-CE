@@ -16,7 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -76,11 +76,11 @@ public class GUIWatz extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		float col = MathHelper.clamp(1 - (float) Math.log(watz.heat / 100_000D + 1) * 0.4F, 0F, 1F);
-		GL11.glColor4f(1.0F, col, col, 1.0F);
+		GlStateManager.color(1.0F, col, col, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 131, 122);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		drawTexturedModalRect(guiLeft + 131, guiTop, 131, 0, 36, 122);
 		drawTexturedModalRect(guiLeft, guiTop + 130, 0, 130, xSize, 99);

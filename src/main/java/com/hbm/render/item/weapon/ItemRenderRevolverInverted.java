@@ -5,7 +5,7 @@ import com.hbm.render.item.TEISRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderRevolverInverted extends TEISRBase {
 	
@@ -15,7 +15,7 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 	@Override
 	public void renderByItem(ItemStack item) {
 		if(type == null) return;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		double s0 = 1.5D;
 		double s1 = 1.5D;
@@ -24,7 +24,7 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 		
 		case FIRST_PERSON_LEFT_HAND:
 
-			GL11.glTranslated(1, 0.5, 0.3);
+			GlStateManager.translate(1, 0.5, 0.3);
 			GL11.glScaled(s0, s0, s0);
 			GL11.glRotated(100, 0, -1, 0);
 			GL11.glRotated(25, 1, 0, 0);
@@ -34,7 +34,7 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 
 		case FIRST_PERSON_RIGHT_HAND:
 			
-			GL11.glTranslated(0, 0.5, 0.3);
+			GlStateManager.translate(0, 0.5, 0.3);
 			GL11.glScaled(s0, s0, s0);
 			GL11.glRotated(100, 0, 1, 0);
 			GL11.glRotated(25, 1, 0, 0);
@@ -45,7 +45,7 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 		case THIRD_PERSON_RIGHT_HAND:
 
 			GL11.glRotated(5, 1, 0, 0);
-			GL11.glTranslated(0.5, 0.1, -0.25);
+			GlStateManager.translate(0.5, 0.1, -0.25);
 			GL11.glScaled(s1, s1, s1);
 			GL11.glRotated(180, 0, 1, 0);
 			break;
@@ -61,7 +61,7 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 		case GUI:
 
 			GlStateManager.enableLighting();
-			GL11.glTranslated(0.5, 0.5, 0);
+			GlStateManager.translate(0.5, 0.5, 0);
 			GL11.glRotated(-45, 0, 0, 1);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(180, 0, 1, 0);
@@ -78,6 +78,6 @@ public class ItemRenderRevolverInverted extends TEISRBase {
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.ff_iron);
 		ResourceManager.ff_python.renderPart("Hammer");
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

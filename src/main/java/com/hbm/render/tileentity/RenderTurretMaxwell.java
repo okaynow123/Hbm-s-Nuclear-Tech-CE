@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwell>
     implements IItemRendererProvider {
@@ -33,8 +33,8 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
       float alpha) {
     Vec3d pos = turret.byHorizontalIndexOffset();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + pos.x, y, z + pos.z);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + pos.x, y, z + pos.z);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -57,9 +57,9 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
     bindTexture(ResourceManager.turret_carriage_ciws_tex);
     ResourceManager.turret_howard.renderPart("Carriage");
 
-    GL11.glTranslated(0, 1.5, 0);
+    GlStateManager.translate(0, 1.5, 0);
     GL11.glRotated(pitch, 0, 0, 1);
-    GL11.glTranslated(0, -1.5, 0);
+    GlStateManager.translate(0, -1.5, 0);
     bindTexture(ResourceManager.turret_maxwell_tex);
     ResourceManager.turret_maxwell.renderPart("Microwave");
 
@@ -68,10 +68,10 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
       double offset = 1;
       double length = turret.lastDist - turret.getBarrelLength() + offset + 0.2;
 
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       GlStateManager.color(1, 1, 1, 1);
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-      GL11.glTranslated(turret.getBarrelLength() - offset, 2D, 0);
+      GlStateManager.translate(turret.getBarrelLength() - offset, 2D, 0);
 
       long worldTime = turret.getWorld().getTotalWorldTime();
       // for(int i = 0; i < 8; i++)
@@ -91,7 +91,7 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
           0.125F,
           2,
           0.0625F);
-      GL11.glTranslated(offset, 0, 0);
+      GlStateManager.translate(offset, 0, 0);
       BeamPronter.prontBeam(
           Vec3.createVectorHelper(length - offset, 0, 0),
           EnumWaveType.STRAIGHT,
@@ -103,11 +103,11 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
           0,
           3,
           0.0625F * 5F);
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

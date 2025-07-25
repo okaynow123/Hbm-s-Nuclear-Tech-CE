@@ -23,7 +23,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -57,8 +57,8 @@ public class ParticleBulletImpact extends ParticleLayerBase {
 			vertices[3] = new Vec3d(-0.5, 0, 0.5);
 			vbo = BakedModelUtil.generateDecalMesh(worldIn, normal.scale(-1), scale, (float)posX, (float)posY, (float)posZ, DecalType.VBO);
 		} else {
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
 			GL11.glRotated(yaw, 0, 1, 0);
 		    GL11.glRotated(pitch, 1, 0, 0);
 		    GL11.glRotated(roll, 0, 1, 0);
@@ -66,7 +66,7 @@ public class ParticleBulletImpact extends ParticleLayerBase {
 		    Matrix4f mat = new Matrix4f();
 		    mat.load(ClientProxy.AUX_GL_BUFFER);
 		    ClientProxy.AUX_GL_BUFFER.rewind();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			Vector4f out = new Vector4f();
 			Matrix4f.transform(mat, new Vector4f(-0.5F, 0, -0.5F, 1), out);
 			vertices[0] = new Vec3d(out.x, out.y, out.z);
@@ -131,14 +131,14 @@ public class ParticleBulletImpact extends ParticleLayerBase {
         
         float scale = particleScale;
         if(GeneralConfig.bulletHoleNormalMapping){
-        	GL11.glPushMatrix();
-        	GL11.glTranslated(f5, f6, f7);
+        	GlStateManager.pushMatrix();
+        	GlStateManager.translate(f5, f6, f7);
         	GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, vbo[0]);
         	BakedModelUtil.enableBlockShaderVBOs();
         	GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vbo[1]);
         	BakedModelUtil.disableBlockShaderVBOs();
         	//GL11.glCallList(vbo[0]);
-        	GL11.glPopMatrix();
+        	GlStateManager.popMatrix();
         } else {
         	scale *= 2;
         	buffer.pos(vertices[0].x*scale+f5, vertices[0].y*scale+f6, vertices[0].z*scale+f7).tex(0, 0).color(particleRed, particleGreen, particleBlue, particleAlpha).lightmap(j, k).endVertex();

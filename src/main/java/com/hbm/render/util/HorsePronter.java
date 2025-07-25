@@ -5,7 +5,7 @@ import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class HorsePronter {
 
@@ -88,8 +88,8 @@ public class HorsePronter {
 
     public static void pront() {
 
-        GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_CULL_FACE);
+        GlStateManager.pushMatrix();
+        GlStateManager.disableCull();
         doTransforms(id_body);
 
         horse.renderPart("Body");
@@ -111,24 +111,24 @@ public class HorsePronter {
             horse.renderPart("RightWing");
         }
 
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glPopMatrix();
+        GlStateManager.enableCull();
+        GlStateManager.popMatrix();
     }
 
     private static void doTransforms(int id) {
         Vec3 rotation = pose[id];
         Vec3 offset = offsets[id];
-        GL11.glTranslated(offset.xCoord, offset.yCoord, offset.zCoord);
+        GlStateManager.translate(offset.xCoord, offset.yCoord, offset.zCoord);
         GL11.glRotated(rotation.xCoord, 0, 1, 0);
         GL11.glRotated(rotation.yCoord, 1, 0, 0);
         GL11.glRotated(rotation.zCoord, 0, 0, 1); //TODO: check pitch and roll axis
-        GL11.glTranslated(-offset.xCoord, -offset.yCoord, -offset.zCoord);
+        GlStateManager.translate(-offset.xCoord, -offset.yCoord, -offset.zCoord);
     }
 
     private static void renderWithTransform(int id, String... parts) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         doTransforms(id);
         for(String part : parts) horse.renderPart(part);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

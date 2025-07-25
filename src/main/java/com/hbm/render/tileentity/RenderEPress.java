@@ -16,7 +16,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPress>
     implements IItemRendererProvider {
@@ -35,23 +35,23 @@ public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPr
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     switch (tileentity.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
     }
 
@@ -59,70 +59,70 @@ public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPr
 
     ResourceManager.epress_body.renderAll();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     renderTileEntityAt2(tileentity, x, y, z, partialTicks);
   }
 
   public void renderTileEntityAt2(TileEntity tileentity, double x, double y, double z, float f) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y + 1 + 1 - 0.125, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y + 1 + 1 - 0.125, z + 0.5D);
     GlStateManager.enableLighting();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     switch (tileentity.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
     }
 
     TileEntityMachineEPress press = (TileEntityMachineEPress) tileentity;
     float f1 = press.progress * (1 - 0.125F) / TileEntityMachineEPress.maxProgress;
-    GL11.glTranslated(0, -f1, 0);
+    GlStateManager.translate(0, -f1, 0);
 
     this.bindTexture(ResourceManager.epress_head_tex);
 
     ResourceManager.epress_head.renderAll();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     renderTileEntityAt3(tileentity, x, y, z, f);
   }
 
   public void renderTileEntityAt3(TileEntity tileentity, double x, double y, double z, float f) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y + 1, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y + 1, z + 0.5);
     GlStateManager.enableLighting();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     switch (tileentity.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glRotatef(90, 0F, 1F, 0F);
-    GL11.glRotatef(-90, 1F, 0F, 0F);
-    GL11.glTranslatef(1.0F, 1.0F - 0.0625F * 165 / 100, 0.0F);
-    GL11.glTranslatef(-1, -1.15F, 0);
+    GlStateManager.rotate(90, 0F, 1F, 0F);
+    GlStateManager.rotate(-90, 1F, 0F, 0F);
+    GlStateManager.translate(1.0F, 1.0F - 0.0625F * 165 / 100, 0.0F);
+    GlStateManager.translate(-1, -1.15F, 0);
 
     TileEntityMachineEPress press = (TileEntityMachineEPress) tileentity;
     ItemStack stack = press.syncStack.copy();
@@ -134,13 +134,13 @@ public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPr
               .getItemModelWithOverrides(stack, tileentity.getWorld(), null);
       model = ForgeHooksClient.handleCameraTransforms(model, TransformType.FIXED, false);
       Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-      GL11.glTranslatef(0.0F, 0.125F, 0.0F);
-      GL11.glRotatef(180, 0F, 1F, 0F);
-      GL11.glScalef(0.5F, 0.5F, 0.5F);
+      GlStateManager.translate(0.0F, 0.125F, 0.0F);
+      GlStateManager.rotate(180, 0F, 1F, 0F);
+      GlStateManager.scale(0.5F, 0.5F, 0.5F);
       Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

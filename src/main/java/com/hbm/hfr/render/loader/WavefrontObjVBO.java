@@ -4,7 +4,7 @@ import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.TextureCoordinate;
 import com.hbm.render.amlfrom1710.Vertex;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.FloatBuffer;

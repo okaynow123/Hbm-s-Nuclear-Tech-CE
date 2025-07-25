@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderFolly extends TEISRBase {
 
@@ -25,20 +25,20 @@ public class ItemRenderFolly extends TEISRBase {
 		switch (type) {
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			if (type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glTranslated(0.5, 1.3, 1.6);
+				GlStateManager.translate(0.5, 1.3, 1.6);
 				GL11.glRotated(-00, 0, 1, 0);
 				GL11.glRotated(-25, 0, 0, 1);
 				GL11.glRotated(180, 1, 0, 0);
 			} else {
-				GL11.glTranslated(1.5, 1.3, 1.4);
+				GlStateManager.translate(1.5, 1.3, 1.4);
 				GL11.glRotated(180, 1, 0, 0);
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(25, 0, 0, 1);
 			}
 
-			GL11.glTranslatef(0.6F, 0.0F, 0.0F);
+			GlStateManager.translate(0.6F, 0.0F, 0.0F);
 
 			int state = GunFolly.getState(itemStackIn);
 			int time = GunFolly.getTimer(itemStackIn);
@@ -49,7 +49,7 @@ public class ItemRenderFolly extends TEISRBase {
 		case GROUND:
 		case FIXED:
 		case HEAD:
-			GL11.glTranslated(0.5, 0.5, 0.3);
+			GlStateManager.translate(0.5, 0.5, 0.3);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 

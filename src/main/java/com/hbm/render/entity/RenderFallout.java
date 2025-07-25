@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -60,10 +60,10 @@ public class RenderFallout extends Render<EntityFalloutRain> {
     
     @Override
     public void doRender(EntityFalloutRain entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         //Drillgon200: It doesn't work when I use GLStateManager...
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         NTMRenderHelper.resetColor();
         
         GlStateManager.disableLighting();
@@ -85,7 +85,7 @@ public class RenderFallout extends Render<EntityFalloutRain> {
             lastTime = time;
         }
         GlStateManager.enableCull();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
    
     protected void renderRainSnow(float partialTick) {
@@ -140,7 +140,7 @@ public class RenderFallout extends Render<EntityFalloutRain> {
                 b0 = 10;
             }
  
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             NTMRenderHelper.resetColor();
             for (int l = i3 - b0; l <= i3 + b0; ++l) {
                 for (int i1 = k2 - b0; i1 <= k2 + b0; ++i1) {

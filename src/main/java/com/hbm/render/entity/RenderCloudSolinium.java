@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCloudSolinium extends Render<EntityCloudSolinium> {
 
@@ -30,18 +30,18 @@ public class RenderCloudSolinium extends Render<EntityCloudSolinium> {
 	
 	@Override
 	public void doRender(EntityCloudSolinium cloud, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-        GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
+        GlStateManager.disableLighting();
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         
-        GL11.glScalef(cloud.age, cloud.age, cloud.age);
+        GlStateManager.scale(cloud.age, cloud.age, cloud.age);
         
         bindTexture(blastTexture);
         blastModel.renderAll();
         GlStateManager.enableCull();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -26,11 +26,11 @@ public class RenderRubble extends Render<EntityRubble> {
 	
 	@Override
 	public void doRender(EntityRubble rocket, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-		GL11.glScalef(1.0F, 1.0F, 1.0F);
-		GL11.glRotatef(180, 1, 0, 0);
-		GL11.glRotatef((rocket.ticksExisted % 360) * 10, 1, 1, 1);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
+		GlStateManager.scale(1.0F, 1.0F, 1.0F);
+		GlStateManager.rotate(180, 1, 0, 0);
+		GlStateManager.rotate((rocket.ticksExisted % 360) * 10, 1, 1, 1);
 
 		try {
 			int block = rocket.getDataManager().get(EntityRubble.BLOCKID);
@@ -61,7 +61,7 @@ public class RenderRubble extends Render<EntityRubble> {
 			mine.renderAll(0.0625F);
 		} catch(Exception ex) { }
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

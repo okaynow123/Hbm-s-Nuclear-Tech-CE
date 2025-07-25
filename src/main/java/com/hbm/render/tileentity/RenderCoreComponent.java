@@ -14,7 +14,7 @@ import com.hbm.tileentity.machine.TileEntityCoreReceiver;
 import com.hbm.tileentity.machine.TileEntityCoreStabilizer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMachineBase> {
 
@@ -25,31 +25,31 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
 	
 	@Override
 	public void render(TileEntityMachineBase tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y, z + 0.5);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5, y, z + 0.5);
         GlStateManager.enableLighting();
         GlStateManager.disableCull();
         
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         
 		switch(tileEntity.getBlockMetadata()) {
 		case 0:
-	        GL11.glTranslated(0.0D, 0.5D, -0.5D);
-			GL11.glRotatef(90, 1F, 0F, 0F); break;
+	        GlStateManager.translate(0.0D, 0.5D, -0.5D);
+			GlStateManager.rotate(90, 1F, 0F, 0F); break;
 		case 1:
-	        GL11.glTranslated(0.0D, 0.5D, 0.5D);
-			GL11.glRotatef(90, -1F, 0F, 0F); break;
+	        GlStateManager.translate(0.0D, 0.5D, 0.5D);
+			GlStateManager.rotate(90, -1F, 0F, 0F); break;
 		case 2:
-			GL11.glRotatef(90, 0F, 1F, 0F); break;
+			GlStateManager.rotate(90, 0F, 1F, 0F); break;
 		case 4:
-			GL11.glRotatef(180, 0F, 1F, 0F); break;
+			GlStateManager.rotate(180, 0F, 1F, 0F); break;
 		case 3:
-			GL11.glRotatef(270, 0F, 1F, 0F); break;
+			GlStateManager.rotate(270, 0F, 1F, 0F); break;
 		case 5:
-			GL11.glRotatef(0, 0F, 1F, 0F); break;
+			GlStateManager.rotate(0, 0F, 1F, 0F); break;
 		}
 		
-        GL11.glTranslated(0.0D, 0D, 0.0D);
+        GlStateManager.translate(0.0D, 0D, 0.0D);
 
         if(tileEntity instanceof TileEntityCoreEmitter) {
 	        bindTexture(ResourceManager.dfc_emitter_tex);
@@ -72,7 +72,7 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
 	    }
 	    
         if(tileEntity instanceof TileEntityCoreStabilizer) {
-	        GL11.glTranslated(0, 0.5, 0);
+	        GlStateManager.translate(0, 0.5, 0);
 	        int range = ((TileEntityCoreStabilizer)tileEntity).beam;
 
 	        if(range > 0) {
@@ -83,7 +83,7 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
         }
 
         if(tileEntity instanceof TileEntityCoreEmitter) {
-	        GL11.glTranslated(0, 0.5, 0);
+	        GlStateManager.translate(0, 0.5, 0);
 	        int range = ((TileEntityCoreEmitter)tileEntity).beam;
 	        
 	        if(range > 0) {
@@ -95,7 +95,7 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
         }
 
         if(tileEntity instanceof TileEntityCoreInjector) {      
-	        GL11.glTranslated(0, 0.5, 0);
+	        GlStateManager.translate(0, 0.5, 0);
 	        TileEntityCoreInjector injector = (TileEntityCoreInjector)tileEntity;
 	        int range = injector.beam;
 	        
@@ -109,6 +109,6 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
         }
         
         GlStateManager.enableLighting();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 }

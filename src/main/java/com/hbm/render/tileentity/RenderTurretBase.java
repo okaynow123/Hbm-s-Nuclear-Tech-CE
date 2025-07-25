@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class RenderTurretBase<T extends TileEntityTurretBaseNT> extends TileEntitySpecialRenderer<T> {
 
@@ -44,11 +44,11 @@ public abstract class RenderTurretBase<T extends TileEntityTurretBaseNT> extends
         if ((power && Library.canConnect(world, new BlockPos(x, y, z), dir)) ||
                 (fluid && Library.canConnectFluid(world, new BlockPos(x, y, z), dir, type))) {
 
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             GL11.glRotated(rot, 0, 1, 0);
-            GL11.glTranslated(ox, 0, oz);
+            GlStateManager.translate(ox, 0, oz);
             ResourceManager.turret_chekhov.renderPart("Connectors");
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 }

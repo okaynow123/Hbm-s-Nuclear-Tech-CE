@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +68,10 @@ public class ItemList {
 		tes.draw();
 		GlStateManager.disableBlend();
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(posX, posY, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(posX, posY, 0);
 		GL11.glScaled(0.4, 0.4, 1);
-		GL11.glTranslated(-posX, -posY, 0);
+		GlStateManager.translate(-posX, -posY, 0);
 		float y = posY + 7;
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		for(String s : itemNames){
@@ -82,7 +82,7 @@ public class ItemList {
 			font.drawString(s, posX+2, y, textColor, false);
 			y += 15;
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public boolean mouseClicked(float x, float y){

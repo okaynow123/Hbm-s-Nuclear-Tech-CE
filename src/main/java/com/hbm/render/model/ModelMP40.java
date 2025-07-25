@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelMP40 extends ModelBase {
 
@@ -125,9 +125,9 @@ public class ModelMP40 extends ModelBase {
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		Body.render(f5);
 		Barrel.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Scope.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		ClipPivot.render(f5);
 		ClipPivotBack.render(f5);
 		Clip.render(f5);
@@ -136,9 +136,9 @@ public class ModelMP40 extends ModelBase {
 		BodyStockBottom.render(f5);
 		BodyBack.render(f5);
 		Handle.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		TriggerFrame.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Trigger.render(f5);
 		Bar.render(f5);
 		BarFront.render(f5);

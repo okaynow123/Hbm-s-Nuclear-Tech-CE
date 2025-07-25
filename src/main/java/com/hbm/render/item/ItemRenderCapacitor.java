@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderCapacitor extends ItemRenderBase {
 
@@ -21,7 +21,7 @@ public class ItemRenderCapacitor extends ItemRenderBase {
 
     @Override
     public void renderByItem(ItemStack itemStackIn) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GlStateManager.enableCull();
         switch(type){
             case FIRST_PERSON_LEFT_HAND:
@@ -45,14 +45,14 @@ public class ItemRenderCapacitor extends ItemRenderBase {
                 GL11.glRotated(30, 1, 0, 0);
                 GL11.glRotated(45+180, 0, 1, 0);
                 GL11.glScaled(0.062, 0.062, 0.062);
-                GL11.glTranslated(0, 12, -11.3);
+                GlStateManager.translate(0, 12, -11.3);
                 renderInventory(itemStackIn);
                 break;
             case NONE:
                 break;
         }
         renderCommon(itemStackIn);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void renderNonInv(ItemStack stack) { renderNonInv(); }

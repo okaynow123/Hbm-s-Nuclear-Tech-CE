@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ParticleHbmSpark extends Particle {
 		if(steps.size() < 2)
 			return;
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
@@ -91,7 +91,7 @@ public class ParticleHbmSpark extends Particle {
 
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

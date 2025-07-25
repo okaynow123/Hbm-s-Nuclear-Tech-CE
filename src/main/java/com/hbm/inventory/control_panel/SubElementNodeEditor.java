@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 
 import java.util.*;
@@ -258,27 +258,27 @@ public class SubElementNodeEditor extends SubElement {
 		GL11.glScissor(minX, minY, maxX-minX, maxY-minY);
 		
 		////GlStateManager.matrixMode(GL11.GL_TEXTURE);
-		//GL11.glPushMatrix();
+		//GlStateManager.pushMatrix();
 		gui.mc.getTextureManager().bindTexture(grid);
 		float x = gridX/gui.getXSize();
 		float y = -gridY/gui.getYSize();
 		//float scalePointX = x + gui.mouseX/gui.getXSize();
 		//float scalePointY = y + gui.mouseY/gui.getYSize();
-		//GL11.glTranslated(scalePointX, scalePointY, 0);
+		//GlStateManager.translate(scalePointX, scalePointY, 0);
 		//GL11.glScaled(gridScale, gridScale, 0);
-		//GL11.glTranslated(-scalePointX, -scalePointY, 0);
+		//GlStateManager.translate(-scalePointX, -scalePointY, 0);
 		NTMRenderHelper.drawGuiRectColor(gui.getGuiLeft(), gui.getGuiTop(), x, y, gui.getXSize(), gui.getYSize(), gridScale+x, gridScale+y, 0.2F, 0.2F, 0.2F, 1);
-		//GL11.glPopMatrix();
+		//GlStateManager.popMatrix();
 		//GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		float spX = gui.getGuiLeft();
 		float spY = gui.getGuiTop();
-		GL11.glTranslated(spX, spY, 0);	
+		GlStateManager.translate(spX, spY, 0);
 		GL11.glScaled(1/gridScale, 1/gridScale, 1/gridScale);
-		GL11.glTranslated(-spX, -spY, 0);
-		GL11.glTranslated(-gridX, gridY, 0);
+		GlStateManager.translate(-spX, -spY, 0);
+		GlStateManager.translate(-gridX, gridY, 0);
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		Matrix4f mat = new Matrix4f();
 		mat.load(ClientProxy.AUX_GL_BUFFER);
@@ -287,7 +287,7 @@ public class SubElementNodeEditor extends SubElement {
 		float gridMX = (gui.mouseX-gui.getGuiLeft())*gridScale + gui.getGuiLeft() + gridX;
 		float gridMY = (gui.mouseY-gui.getGuiTop())*gridScale + gui.getGuiTop() - gridY;
 		currentSystem.render(gridMX, gridMY);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		if(addMenu != null){
 			addMenu.render(gui.mouseX, gui.mouseY);
 		}

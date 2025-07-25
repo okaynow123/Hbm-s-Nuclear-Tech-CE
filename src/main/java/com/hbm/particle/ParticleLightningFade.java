@@ -16,7 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleLightningFade extends Particle {
 
@@ -50,7 +50,7 @@ public class ParticleLightningFade extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableCull();
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
@@ -62,7 +62,7 @@ public class ParticleLightningFade extends Particle {
         interpPosY = entPosY;
         interpPosZ = entPosZ;
         
-        GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
+        GlStateManager.translate(-interpPosX, -interpPosY, -interpPosZ);
         
         ResourceManager.lightning.use();
         ResourceManager.lightning.uniform4f("duck", 1F, 1F, 1F, 1F);
@@ -89,6 +89,6 @@ public class ParticleLightningFade extends Particle {
         HbmShaderManager2.releaseShader();
         GlStateManager.depthMask(true);
         GlStateManager.enableAlpha();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 }

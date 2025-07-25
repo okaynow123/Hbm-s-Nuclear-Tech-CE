@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderMIRVLauncher extends TEISRBase {
 
@@ -21,14 +21,14 @@ public class ItemRenderMIRVLauncher extends TEISRBase {
 	
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.enableCull();
 		Minecraft.getMinecraft().renderEngine.bindTexture(mirv_rl);
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(0.0, 0, -0.2);
+			GlStateManager.translate(0.0, 0, -0.2);
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glTranslated(0, -0.2, 0.2);
+			GlStateManager.translate(0, -0.2, 0.2);
 			GL11.glRotated(180, 1, 0, 0);
 			GL11.glRotated(40, 0, 0, 1);
 			if(type == TransformType.FIRST_PERSON_LEFT_HAND){
@@ -42,7 +42,7 @@ public class ItemRenderMIRVLauncher extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(-0.1, -0.1, 0.6);
+			GlStateManager.translate(-0.1, -0.1, 0.6);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(180, 0, 0, 1);
 			GL11.glScaled(1.5, 1.5, 1.5);
@@ -51,6 +51,6 @@ public class ItemRenderMIRVLauncher extends TEISRBase {
 		default:
 			break;
 		}
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 	}
 }

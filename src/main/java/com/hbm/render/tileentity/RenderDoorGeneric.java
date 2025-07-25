@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.DoubleBuffer;
 
@@ -53,21 +53,21 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
     }
     DoorDecl door = te.doorType;
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
 
     switch (te.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(0 + 90, 0F, 1F, 0F);
+        GlStateManager.rotate(0 + 90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(90 + 90, 0F, 1F, 0F);
+        GlStateManager.rotate(90 + 90, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(180 + 90, 0F, 1F, 0F);
+        GlStateManager.rotate(180 + 90, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(270 + 90, 0F, 1F, 0F);
+        GlStateManager.rotate(270 + 90, 0F, 1F, 0F);
         break;
     }
     door.doOffsetTransform();
@@ -110,19 +110,19 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
               * 0.02F;
       for (Pair<String, Integer> p : model.nameToCallList) {
         if (!door.doesRender(p.getLeft(), false)) continue;
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         bindTexture(door.getTextureForPart(p.getLeft()));
         doPartTransform(door, p.getLeft(), openTicks, false);
         GL11.glCallList(p.getRight());
         for (String name : door.getChildren(p.getLeft())) {
           if (!door.doesRender(name, true)) continue;
-          GL11.glPushMatrix();
+          GlStateManager.pushMatrix();
           bindTexture(door.getTextureForPart(name));
           doPartTransform(door, name, openTicks, true);
           model.renderPart(name);
-          GL11.glPopMatrix();
+          GlStateManager.popMatrix();
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
       }
     }
 
@@ -132,18 +132,18 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 
     GlStateManager.disableBlend();
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   public void doPartTransform(DoorDecl door, String name, float openTicks, boolean child) {
     door.getTranslation(name, openTicks, child, tran);
     door.getOrigin(name, orig);
     door.getRotation(name, openTicks, rot);
-    GL11.glTranslated(orig[0], orig[1], orig[2]);
+    GlStateManager.translate(orig[0], orig[1], orig[2]);
     if (rot[0] != 0) GL11.glRotated(rot[0], 1, 0, 0);
     if (rot[1] != 0) GL11.glRotated(rot[1], 0, 1, 0);
     if (rot[2] != 0) GL11.glRotated(rot[2], 0, 0, 1);
-    GL11.glTranslated(-orig[0] + tran[0], -orig[1] + tran[1], -orig[2] + tran[2]);
+    GlStateManager.translate(-orig[0] + tran[0], -orig[1] + tran[1], -orig[2] + tran[2]);
   }
 
   @Override

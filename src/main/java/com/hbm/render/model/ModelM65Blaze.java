@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelM65Blaze extends ModelBiped {
 	// fields
@@ -120,13 +120,13 @@ public class ModelM65Blaze extends ModelBiped {
 	@Override
 	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		double d = 1D / 16D * 18D;
-		//GL11.glTranslated(0, 1/16D, 0);
+		//GlStateManager.translate(0, 1/16D, 0);
 		GL11.glScaled(d, d, d);
 		GL11.glScaled(1.01D, 1.01D, 1.01D);
 		this.mask.render(par7);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

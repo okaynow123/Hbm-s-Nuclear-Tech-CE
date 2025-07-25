@@ -9,7 +9,7 @@ import com.hbm.util.BobMathUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRotaryFurnace extends TileEntitySpecialRenderer<TileEntityMachineRotaryFurnace> implements IItemRendererProvider {
 

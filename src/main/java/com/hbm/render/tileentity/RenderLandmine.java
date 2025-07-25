@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.Biome;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine>
     implements IItemRendererProvider {
@@ -23,18 +23,18 @@ public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
 
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     Block block = te.getWorld().getBlockState(te.getPos()).getBlock();
 
     if (block == ModBlocks.mine_ap) {
       GL11.glScaled(0.375D, 0.375D, 0.375D);
-      GL11.glTranslated(0, -0.0625 * 3.5, 0);
+      GlStateManager.translate(0, -0.0625 * 3.5, 0);
       Biome biome = te.getWorld().getBiome(te.getPos());
       if (te.getWorld().getHeight(te.getPos()).getY() > te.getPos().getY() + 2)
         bindTexture(ResourceManager.mine_ap_stone_tex);
@@ -45,11 +45,11 @@ public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine
       ResourceManager.mine_ap.renderAll();
     }
     if (block == ModBlocks.mine_he) {
-      GL11.glRotatef(-90, 0F, 1F, 0F);
-      GL11.glShadeModel(GL11.GL_SMOOTH);
+      GlStateManager.rotate(-90, 0F, 1F, 0F);
+      GlStateManager.shadeModel(GL11.GL_SMOOTH);
       bindTexture(ResourceManager.mine_marelet_tex);
       ResourceManager.mine_marelet.renderAll();
-      GL11.glShadeModel(GL11.GL_FLAT);
+      GlStateManager.shadeModel(GL11.GL_FLAT);
     }
     if (block == ModBlocks.mine_shrap) {
       bindTexture(ResourceManager.mine_shrap_tex);
@@ -62,7 +62,7 @@ public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine
     }
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +84,8 @@ public class ParticleLightningStrip extends Particle {
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		if(points.size() >= 2){
 			if(doTransform){
-				GL11.glPushMatrix();
-				GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(-interpPosX, -interpPosY, -interpPosZ);
 			}
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
@@ -130,7 +130,7 @@ public class ParticleLightningStrip extends Particle {
 			HbmShaderManager2.releaseShader();
 			GlStateManager.disableBlend();
 			if(doTransform){
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 		}
 	}

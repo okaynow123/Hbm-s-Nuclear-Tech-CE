@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,8 +76,8 @@ public class ParticleJetpackTrail extends Particle {
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		if(points.size() < 2)
 			return;
-		GL11.glPushMatrix();
-		GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-interpPosX, -interpPosY, -interpPosZ);
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		GlStateManager.depthMask(false);
@@ -98,7 +98,7 @@ public class ParticleJetpackTrail extends Particle {
 		GlStateManager.depthMask(true);
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

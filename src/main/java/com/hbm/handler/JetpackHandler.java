@@ -53,7 +53,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -403,10 +403,10 @@ public class JetpackHandler {
 		if(info == null)
 			return;
 		if(info.useCompactHUD){
-			//GL11.glPushMatrix();
+			//GlStateManager.pushMatrix();
 			float maxHeight = 0.78125F;
 			float maxHeightPixels = 50*maxHeight;
-			//GL11.glTranslated(0, -res.getScaledHeight()+maxHeightPixels, 0);
+			//GlStateManager.translate(0, -res.getScaledHeight()+maxHeightPixels, 0);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.jetpack_hud_small);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
@@ -422,24 +422,24 @@ public class JetpackHandler {
 			//Thrust
 			float thrust = info.prevThrust+(info.thrust-info.prevThrust)*MainRegistry.proxy.partialTicks();
 			float thrustDegrees = MathHelper.clamp(thrust*100-27, -27, 200);
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float rX = oX*50 + 40.5F*50/256F;
 			float rY = res.getScaledHeight()-(maxHeightPixels-maxHeightPixels*oY) + 14.5F*maxHeightPixels/256F;
-			GL11.glTranslated(rX+(117/256F)*50, rY+(76/256F)*maxHeightPixels, 0);
+			GlStateManager.translate(rX+(117/256F)*50, rY+(76/256F)*maxHeightPixels, 0);
 			GL11.glRotated(thrustDegrees, 0, 0, 1);
-			GL11.glTranslated(-rX, -rY, 0);
+			GlStateManager.translate(-rX, -rY, 0);
 			NTMRenderHelper.drawGuiRect(oX*50, res.getScaledHeight()-(maxHeightPixels-maxHeightPixels*oY), oX, oY, width*50, height*50, oX+width, oY+height);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			//Fuel
 			FluidTankNTM tank = getTank(p);
 			float fuelDegrees = ((float)tank.getFluidAmount()/tank.getCapacity());
 			fuelDegrees = fuelDegrees * 227 - 27;
-			GL11.glPushMatrix();
-			GL11.glTranslated(rX, rY+(76/256F)*maxHeightPixels, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(rX, rY+(76/256F)*maxHeightPixels, 0);
 			GL11.glRotated(fuelDegrees, 0, 0, 1);
-			GL11.glTranslated(-rX, -rY, 0);
+			GlStateManager.translate(-rX, -rY, 0);
 			NTMRenderHelper.drawGuiRect(oX*50, res.getScaledHeight()-(maxHeightPixels-maxHeightPixels*oY), oX, oY, width*50, height*50, oX+width, oY+height);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.jetpack_hud_small_text);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -468,7 +468,7 @@ public class JetpackHandler {
 				yPosition = -6;
 			}
 			NTMRenderHelper.drawGuiRect(0, res.getScaledHeight()-25-(yOffset-yOffset*25)-yPosition, 0, yOffset, 50, 25*yHeight, 1, yOffset+yHeight);
-			//GL11.glPopMatrix();
+			//GlStateManager.popMatrix();
 		} else {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.jetpack_hud_large);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -511,24 +511,24 @@ public class JetpackHandler {
 			//Thrust
 			float thrust = info.prevThrust+(info.thrust-info.prevThrust)*MainRegistry.proxy.partialTicks();
 			float thrustDegrees = MathHelper.clamp(thrust*100-27, -27, 200);
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float rX = oX*80 + 61.5F*80/512F;
 			float rY = res.getScaledHeight()-(80-oY*80) + 11.5F*80/512F;
-			GL11.glTranslated(rX, rY, 0);
+			GlStateManager.translate(rX, rY, 0);
 			GL11.glRotated(thrustDegrees, 0, 0, 1);
-			GL11.glTranslated(-rX, -rY, 0);
+			GlStateManager.translate(-rX, -rY, 0);
 			NTMRenderHelper.drawGuiRect(oX*80, res.getScaledHeight()-(80-oY*80), 0.5F+oX*0.5F, oY, width*80, height*80, 0.5F+(width+oX)*0.5F, oY+height);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			//Fuel
 			FluidTankNTM tank = getTank(p);
 			float fuelDegrees = ((float)tank.getFluidAmount()/tank.getCapacity());
 			fuelDegrees = fuelDegrees * 227 - 27;
-			GL11.glPushMatrix();
-			GL11.glTranslated(rX+80*179/512F, rY, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(rX+80*179/512F, rY, 0);
 			GL11.glRotated(fuelDegrees, 0, 0, 1);
-			GL11.glTranslated(-rX, -rY, 0);
+			GlStateManager.translate(-rX, -rY, 0);
 			NTMRenderHelper.drawGuiRect(oX*80, res.getScaledHeight()-(80-oY*80), 0.5F+oX*0.5F, oY, width*80, height*80, 0.5F+(width+oX)*0.5F, oY+height);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			//GlStateManager.disableBlend();
 			if(tank.getFluid() != null){
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -542,7 +542,7 @@ public class JetpackHandler {
 	public static void preRenderPlayer(EntityPlayer player){
 		if(!hasJetpack(player) || !jetpackActive(player))
 			return;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		float partialTicks = MainRegistry.proxy.partialTicks();
 		double playerPosX = player.prevPosX + (player.posX-player.prevPosX)*partialTicks;
@@ -552,7 +552,7 @@ public class JetpackHandler {
 		double offsetY = playerPosY-TileEntityRendererDispatcher.staticPlayerY;
 		double offsetZ = playerPosZ-TileEntityRendererDispatcher.staticPlayerZ;
 		
-		GL11.glTranslated(offsetX, offsetY, offsetZ);
+		GlStateManager.translate(offsetX, offsetY, offsetZ);
 		
 		JetpackInfo j = get(player);
 		if(isHovering(player)){
@@ -590,7 +590,7 @@ public class JetpackHandler {
 			GlStateManager.rotate(-(180.0F - renderYaw), 0.0F, 1.0F, 0.0F);
             player.ticksElytraFlying = j.jetpackFlyTime;
         }
-		GL11.glTranslated(-offsetX, -offsetY, -offsetZ);
+		GlStateManager.translate(-offsetX, -offsetY, -offsetZ);
 	}
 	
 	protected static float interpolateRotation(float prevYawOffset, float yawOffset, float partialTicks){
@@ -628,7 +628,7 @@ public class JetpackHandler {
 			}
 			player.ticksElytraFlying = 0;
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -751,7 +751,7 @@ public class JetpackHandler {
 	@SideOnly(Side.CLIENT)
 	public static void handleCameraTransform(EntityViewRenderEvent.CameraSetup e){
 		if(JetpackHandler.jetpackActive(Minecraft.getMinecraft().player) && !JetpackHandler.isHovering(Minecraft.getMinecraft().player) && Minecraft.getMinecraft().gameSettings.thirdPersonView > 0 && !Minecraft.getMinecraft().player.onGround){
-			GL11.glTranslated(0, -1.22, 0);
+			GlStateManager.translate(0, -1.22, 0);
 		}
 	}
 	
@@ -840,17 +840,17 @@ public class JetpackHandler {
 		public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 			if(!hasJetpack(player))
 				return;
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GlStateManager.enableCull();
-			GL11.glTranslated(0, 0.9, 1.25);
+			GlStateManager.translate(0, 0.9, 1.25);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glRotated(180, 0, 0, 1);
 			GL11.glScaled(0.25, 0.25, 0.25);
 			//That looks more or less correct I think.
 			if(player.isSneaking()){
-				GL11.glTranslated(0, 5.4, 1);
+				GlStateManager.translate(0, 5.4, 1);
 				GL11.glRotated(Math.toDegrees(0.5), 1, 0, 0);
-				GL11.glTranslated(0, -4, 0);
+				GlStateManager.translate(0, -4, 0);
 			}
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 	        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.jetpack_tex);
@@ -869,7 +869,7 @@ public class JetpackHandler {
 			ClientProxy.AUX_GL_BUFFER.get(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
 			ClientProxy.deferredRenderers.add(() -> {
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				ClientProxy.AUX_GL_BUFFER.put(matrix);
 				ClientProxy.AUX_GL_BUFFER.rewind();
 				GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
@@ -906,10 +906,10 @@ public class JetpackHandler {
 					GlStateManager.enableAlpha();
 					GlStateManager.disableBlend();
 				}
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			});
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		@Override

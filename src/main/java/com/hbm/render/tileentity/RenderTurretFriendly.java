@@ -7,7 +7,7 @@ import com.hbm.tileentity.turret.TileEntityTurretFriendly;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurretFriendly extends RenderTurretBase<TileEntityTurretFriendly>
     implements IItemRendererProvider {
@@ -23,8 +23,8 @@ public class RenderTurretFriendly extends RenderTurretBase<TileEntityTurretFrien
       float alpha) {
     Vec3d pos = turret.byHorizontalIndexOffset();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + pos.x, y, z + pos.z);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + pos.x, y, z + pos.z);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -47,22 +47,22 @@ public class RenderTurretFriendly extends RenderTurretBase<TileEntityTurretFrien
     bindTexture(ResourceManager.turret_carriage_friendly_tex);
     ResourceManager.turret_chekhov.renderPart("Carriage");
 
-    GL11.glTranslated(0, 1.5, 0);
+    GlStateManager.translate(0, 1.5, 0);
     GL11.glRotated(pitch, 0, 0, 1);
-    GL11.glTranslated(0, -1.5, 0);
+    GlStateManager.translate(0, -1.5, 0);
     bindTexture(ResourceManager.turret_chekhov_tex);
     ResourceManager.turret_chekhov.renderPart("Body");
 
     float rot = turret.lastSpin + (turret.spin - turret.lastSpin) * partialTicks;
 
-    GL11.glTranslated(0, 1.5, 0);
+    GlStateManager.translate(0, 1.5, 0);
     GL11.glRotated(rot, -1, 0, 0);
-    GL11.glTranslated(0, -1.5, 0);
+    GlStateManager.translate(0, -1.5, 0);
     bindTexture(ResourceManager.turret_chekhov_barrels_tex);
     ResourceManager.turret_chekhov.renderPart("Barrels");
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

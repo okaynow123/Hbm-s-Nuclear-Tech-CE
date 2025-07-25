@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBeam2 extends Render<EntityLaserBeam> {
 
@@ -31,15 +31,15 @@ public class RenderBeam2 extends Render<EntityLaserBeam> {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GlStateManager.translate((float) x, (float) y, (float) z);
 
-		GL11.glRotatef(entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-entity.rotationPitch, 1.0F, 0.0F, 0.0F);
 
 		boolean red = true;
 		boolean green = true;
@@ -73,7 +73,7 @@ public class RenderBeam2 extends Render<EntityLaserBeam> {
 		tessellator.draw();
 		GlStateManager.disableBlend();
 		GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

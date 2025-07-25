@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.oil.TileEntityMachineCoker;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCoker extends TileEntitySpecialRenderer<TileEntityMachineCoker>
     implements IItemRendererProvider {
@@ -21,18 +21,18 @@ public class RenderCoker extends TileEntitySpecialRenderer<TileEntityMachineCoke
       float interp,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
 
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.disableCull();
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.coker_tex);
     ResourceManager.coker.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.enableCull();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

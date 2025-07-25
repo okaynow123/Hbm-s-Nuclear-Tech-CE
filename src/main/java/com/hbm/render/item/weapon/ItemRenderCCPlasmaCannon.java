@@ -10,13 +10,13 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderCCPlasmaCannon extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.cc_plasma_cannon_tex);
 		GlStateManager.enableCull();
@@ -30,31 +30,31 @@ public class ItemRenderCCPlasmaCannon extends TEISRBase {
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
 				GL11.glRotated(178, 0, 1, 0);
 				GL11.glRotated(27+recoil[1]*2F, 0, 0, 1);
-				GL11.glTranslated(4, -0.2, 0);
+				GlStateManager.translate(4, -0.2, 0);
 				GL11.glRotated(7, 0, 0, 1);
 				GL11.glRotated(180, 0, 1, 0);
 			} else {
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(140+recoil[1]*2F, 0, 0, 1);
-				GL11.glTranslated(4, 1, 1);
+				GlStateManager.translate(4, 1, 1);
 				GL11.glRotated(7, 0, 0, 1);
 				GL11.glRotated(170, 0, 1, 0);
 				GL11.glRotated(180, 1, 0, 0);
 			}
 			
-			GL11.glTranslated(-recoil[2]*0.15F, 0, 0);
+			GlStateManager.translate(-recoil[2]*0.15F, 0, 0);
 			break;
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0, -0.1, -0.8);
+			GlStateManager.translate(0, -0.1, -0.8);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glScaled(0.3, 0.3, 0.3);
 			break;
 		case GUI:
-			GL11.glTranslated(-0.175, 0.2, 0);
+			GlStateManager.translate(-0.175, 0.2, 0);
 			GL11.glScaled(0.1, 0.1, 0.1);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glRotated(45, 0, 0, 1);

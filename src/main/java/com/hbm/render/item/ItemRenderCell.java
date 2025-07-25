@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.items.special.ItemCell.getFluidType;
 
@@ -21,10 +21,10 @@ public class ItemRenderCell extends TEISRBase {
         }
         NTMRenderHelper.bindBlockTexture();
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(0.5, 0.5, 0.5);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.5, 0.5, 0.5);
         Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         super.renderByItem(stack);
     }
 }

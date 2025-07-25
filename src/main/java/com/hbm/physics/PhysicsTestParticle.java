@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class PhysicsTestParticle extends Particle {
 
@@ -47,7 +47,7 @@ public class PhysicsTestParticle extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		double entPosX = entityIn.lastTickPosX + (entityIn.posX - entityIn.lastTickPosX)*partialTicks;
         double entPosY = entityIn.lastTickPosY + (entityIn.posY - entityIn.lastTickPosY)*partialTicks;
         double entPosZ = entityIn.lastTickPosZ + (entityIn.posZ - entityIn.lastTickPosZ)*partialTicks;
@@ -55,7 +55,7 @@ public class PhysicsTestParticle extends Particle {
         interpPosX = entPosX;
         interpPosY = entPosY;
         interpPosZ = entPosZ;
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         if(collided)
         	partialTicks = 1;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -64,9 +64,9 @@ public class PhysicsTestParticle extends Particle {
 		GlStateManager.glLineWidth(4);
 		RenderGlobal.drawSelectionBoundingBox(body.boundingBox.offset(-interpPosX, -interpPosY, -interpPosZ), 0, 1, 0, 1);
 		GlStateManager.enableTexture2D();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         body.renderDebugInfo(new Vec3(interpPosX, interpPosY, interpPosZ), partialTicks);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 }

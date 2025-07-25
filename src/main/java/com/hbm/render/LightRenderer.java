@@ -25,7 +25,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.Project;
 import org.lwjgl.util.vector.Matrix4f;
@@ -170,18 +170,18 @@ public class LightRenderer {
 				GlStateManager.enableCull();
 				NTMRenderHelper.renderConeMesh(l.start.subtract(playerPos), vec, (float) l.height, (float)l.radius*1.1F, 12);
 			} else {
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				GlStateManager.matrixMode(GL11.GL_PROJECTION);
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 				GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 				NTMRenderHelper.renderFullscreenTriangle();
 				GlStateManager.matrixMode(GL11.GL_PROJECTION);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 			
 			//Render volume
@@ -203,24 +203,24 @@ public class LightRenderer {
 			float rad = light.radius + 0.1F;
 			if(playerPos.add(ActiveRenderInfo.getCameraPosition()).squareDistanceTo(light.pos) > rad*rad){
 				Vec3d diff = light.pos.subtract(playerPos);
-				GL11.glPushMatrix();
-				GL11.glTranslated(diff.x, diff.y, diff.z);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(diff.x, diff.y, diff.z);
 				GL11.glScaled(light.radius, light.radius, light.radius);
 				ResourceManager.sphere_uv.renderAll();
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			} else {
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				GlStateManager.matrixMode(GL11.GL_PROJECTION);
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 				GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 				NTMRenderHelper.renderFullscreenTriangle();
 				GlStateManager.matrixMode(GL11.GL_PROJECTION);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 			GlStateManager.disableBlend();
 		}
@@ -301,17 +301,17 @@ public class LightRenderer {
 		if(playerPos.add(ActiveRenderInfo.getCameraPosition()).subtract(light.start).normalize().dotProduct(vec) < Math.cos(Math.toRadians(light.degrees+10))){
 			NTMRenderHelper.renderConeMesh(light.start.subtract(playerPos), vec, height, (float)light.radius*1.1F, 12);
 		} else {
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
 			GlStateManager.matrixMode(GL11.GL_PROJECTION);
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
 			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 			NTMRenderHelper.renderFullscreenTriangle();
 			GlStateManager.matrixMode(GL11.GL_PROJECTION);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		
 		HbmShaderManager2.releaseShader();
@@ -398,24 +398,24 @@ public class LightRenderer {
 	}
 	
 	private static void renderShadowForLight(Vec3d entPos, DirectionalLight l, float partialTicks) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
+		GlStateManager.matrixMode(GL11.GL_PROJECTION);
+		GlStateManager.pushMatrix();
 		l.projectionMatrix.store(ClientProxy.AUX_GL_BUFFER);
 		ClientProxy.AUX_GL_BUFFER.rewind();
 		GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
 		
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPushMatrix();
+		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+		GlStateManager.pushMatrix();
 		l.viewMatrix.store(ClientProxy.AUX_GL_BUFFER);
 		ClientProxy.AUX_GL_BUFFER.rewind();
 		GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
 		
 		renderObjects(entPos, l.chunksToRender, l.entsToRender, l.tilesToRender, ResourceManager.flashlight_depth, partialTicks);
 		
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPopMatrix();
+		GlStateManager.matrixMode(GL11.GL_PROJECTION);
+		GlStateManager.popMatrix();
+		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+		GlStateManager.popMatrix();
 	}
 	
 	private static void sendPostShaderUniforms(DirectionalLight light, Vec3d entityPos, Shader shader){
@@ -494,7 +494,7 @@ public class LightRenderer {
 	private static void clearShadowBuffer(){
 		GLCompat.bindFramebuffer(GLCompat.GL_FRAMEBUFFER, shadowFbo);
 		GlStateManager.clearDepth(1);
-		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	private static void recreateBuffers() {
@@ -612,9 +612,9 @@ public class LightRenderer {
 			height = startToEnd.length();
 			radius = height * Math.tan(radians);
 			
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
+			GlStateManager.matrixMode(GL11.GL_PROJECTION);
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
 			//Multiply by 2 because the FOV should be the diameter. Why is height multiplied by sqrt2? I honestly have no idea, but it doesn't work
 			//correctly if I use height directly, and minecraft also multiplies by sqrt2, so I am, too.
 			Project.gluPerspective(degrees * 2, 1, 0.05F, (float) height * MathHelper.SQRT_2);
@@ -622,19 +622,19 @@ public class LightRenderer {
 			projectionMatrix = new Matrix4f();
 			projectionMatrix.load(ClientProxy.AUX_GL_BUFFER);
 			ClientProxy.AUX_GL_BUFFER.rewind();
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GlStateManager.popMatrix();
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		}
 		
 		public void setupViewProjectionMatrix(Vec3d entPos){
-			GL11.glPushMatrix();
-			GL11.glLoadIdentity();
+			GlStateManager.pushMatrix();
+			GlStateManager.loadIdentity();
 			Vec3d startToEnd = end.subtract(start);
 			Vec3d angles = BobMathUtil.getEulerAngles(startToEnd.normalize());
 			
 		    GL11.glRotated(-angles.y+270, 1, 0, 0);
 		    GL11.glRotated(-angles.x+180, 0, 1, 0);
-		    GL11.glTranslated(-(start.x-entPos.x), -(start.y-entPos.y), -(start.z-entPos.z));
+		    GlStateManager.translate(-(start.x-entPos.x), -(start.y-entPos.y), -(start.z-entPos.z));
 		    
 		    viewMatrix = new Matrix4f();
 		    GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
@@ -643,7 +643,7 @@ public class LightRenderer {
 			
 			viewProjectionMatrix = new Matrix4f();
 			Matrix4f.mul(projectionMatrix, viewMatrix, viewProjectionMatrix);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		@Override

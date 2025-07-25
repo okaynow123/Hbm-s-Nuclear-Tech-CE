@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelMIRV extends ModelBase {
 
@@ -46,9 +46,9 @@ public class ModelMIRV extends ModelBase {
 		Shape9.render(f5);
 		Shape10.render(f5);
 		Shape11.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Shape12.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 	}
 
 	@Override
@@ -58,9 +58,9 @@ public class ModelMIRV extends ModelBase {
 		Shape9.render(f5);
 		Shape10.render(f5);
 		Shape11.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Shape12.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

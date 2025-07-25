@@ -4,7 +4,7 @@ import com.hbm.render.GLCompat;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;

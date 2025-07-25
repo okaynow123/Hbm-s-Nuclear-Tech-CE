@@ -13,7 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderUFO extends Render<EntityUFO> {
 
@@ -26,26 +26,26 @@ public class RenderUFO extends Render<EntityUFO> {
 	@Override
 	public void doRender(EntityUFO ufo, double x, double y, double z, float entityYaw, float partialTicks){
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y + 1, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y + 1, z);
 		
 		if(!ufo.isEntityAlive()) {
 			float tilt = ufo.deathTime + 30 + partialTicks;
-			GL11.glRotatef(tilt, 1, 0, 1);
+			GlStateManager.rotate(tilt, 1, 0, 1);
 		}
 		
 		double scale = 2D;
 		
 		this.bindTexture(getEntityTexture(ufo));
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		double rot = (ufo.ticksExisted + partialTicks) * 5 % 360D;
 		GL11.glRotated(rot, 0, 1, 0);
 		GL11.glScaled(scale, scale, scale);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		ResourceManager.ufo.renderAll();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		if(ufo.getBeam()) {
 			int ix = (int)Math.floor(ufo.posX);
@@ -69,7 +69,7 @@ public class RenderUFO extends Render<EntityUFO> {
 			}
 		}
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

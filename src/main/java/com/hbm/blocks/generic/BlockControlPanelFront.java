@@ -38,7 +38,7 @@
 //import net.minecraft.world.World;
 //import net.minecraftforge.fml.relauncher.Side;
 //import net.minecraftforge.fml.relauncher.SideOnly;
-//import org.lwjgl.opengl.GL11;
+//import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 //
 //import javax.annotation.Nonnull;
 //import javax.annotation.Nullable;
@@ -152,15 +152,15 @@
 //        Control ctrl = control.panel.getSelectedControl(player.getPositionEyes(partialTicks), player.getLook(partialTicks));
 //
 //        if (ctrl != null) {
-//            GL11.glPushMatrix();
-//            GL11.glTranslated(x, y, z);
+//            GlStateManager.pushMatrix();
+//            GlStateManager.translate(x, y, z);
 //            control.panel.transform.store(ClientProxy.AUX_GL_BUFFER);
 //            ClientProxy.AUX_GL_BUFFER.rewind();
 //            GL11.glMultMatrix(ClientProxy.AUX_GL_BUFFER);
 //            if (ctrl.getBoundingBox() != null)
 //                // offset to bury bottom lines
 //                RenderGlobal.drawSelectionBoundingBox(ctrl.getBoundingBox().offset(0, -.01F, 0), 0, 0, 0, 0.4F);
-//            GL11.glPopMatrix();
+//            GlStateManager.popMatrix();
 //            return true;
 //        }
 //        return false;

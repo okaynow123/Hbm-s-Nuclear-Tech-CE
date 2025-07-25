@@ -9,13 +9,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderWeaponThompson extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		GlStateManager.enableCull();
 		GlStateManager.enableRescaleNormal();
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.thompson_tex);
@@ -23,16 +23,16 @@ public class ItemRenderWeaponThompson extends TEISRBase {
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
-				//GL11.glTranslated(0, -0.8, 0.5);
+				//GlStateManager.translate(0, -0.8, 0.5);
 				//GL11.glRotated(80, 0, 1, 0);
 				//GL11.glRotated(20, 1, 0, 0);
 				double[] recoil = HbmAnimations.getRelevantTransformation("RECOIL", type == TransformType.FIRST_PERSON_LEFT_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
 				
-				GL11.glTranslated(0+recoil[1]*0.2F, -0.4-recoil[1]*0.1F, 0.4);
+				GlStateManager.translate(0+recoil[1]*0.2F, -0.4-recoil[1]*0.1F, 0.4);
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(23, 0, 0, 1);
 			} else {
-				GL11.glTranslated(0, -0.8, 0.5);
+				GlStateManager.translate(0, -0.8, 0.5);
 				GL11.glRotated(-80, 0, 1, 0);
 				GL11.glRotated(20, 1, 0, 0);
 			}
@@ -43,12 +43,12 @@ public class ItemRenderWeaponThompson extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0, -1.35, 0.05);
+			GlStateManager.translate(0, -1.35, 0.05);
 			GL11.glScaled(0.3, 0.3, 0.3);
 			break;
 		case GUI:
 			RenderHelper.enableGUIStandardItemLighting();
-			GL11.glTranslated(-0.25, -0.25, 0);
+			GlStateManager.translate(-0.25, -0.25, 0);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(40, 1, 0, 0);
 			GL11.glScaled(0.12, 0.12, 0.12);

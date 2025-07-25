@@ -7,7 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,12 +163,12 @@ public abstract class Node {
 			otherElements.get(i).render(mX, mY);
 
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		GL11.glPushMatrix();
-		GL11.glTranslated(posX, posY, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(posX, posY, 0);
 		GL11.glScaled(0.5, 0.5, 0.5);
-		GL11.glTranslated(-posX, -posY, 0);
+		GlStateManager.translate(-posX, -posY, 0);
 		font.drawString(getDisplayName(), posX+4, posY+3, 0xFF2F2F2F, false);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public void drawConnections(float mX, float mY){

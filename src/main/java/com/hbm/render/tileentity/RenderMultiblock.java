@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.render.util.SmallBlockPronter.renderSimpleBlockAt;
 
@@ -23,9 +23,9 @@ public class RenderMultiblock extends TileEntitySpecialRenderer<TileEntityMultib
 	
 	@Override
 	public void render(TileEntityMultiblock te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
-		GL11.glTranslated(x, y, z);
+		GlStateManager.translate(x, y, z);
 
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
@@ -52,7 +52,7 @@ public class RenderMultiblock extends TileEntitySpecialRenderer<TileEntityMultib
 		GlStateManager.enableLighting();
 		GlStateManager.enableAlpha();
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private void renderCompactLauncher() {

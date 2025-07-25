@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSawmill extends TileEntitySpecialRenderer<TileEntitySawmill>
     implements IItemRendererProvider {
@@ -22,23 +22,23 @@ public class RenderSawmill extends TileEntitySpecialRenderer<TileEntitySawmill>
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
     switch (sawmill.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
@@ -46,34 +46,34 @@ public class RenderSawmill extends TileEntitySpecialRenderer<TileEntitySawmill>
     bindTexture(ResourceManager.sawmill_tex);
     renderCommon(rot, sawmill.hasBlade);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   public static void renderCommon(float rot, boolean hasBlade) {
     ResourceManager.sawmill.renderPart("Main");
 
     if (hasBlade) {
-      GL11.glPushMatrix();
-      GL11.glTranslated(0, 1.375, 0);
-      GL11.glRotatef(-rot * 2, 0, 0, 1);
-      GL11.glTranslated(0, -1.375, 0);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0, 1.375, 0);
+      GlStateManager.rotate(-rot * 2, 0, 0, 1);
+      GlStateManager.translate(0, -1.375, 0);
       ResourceManager.sawmill.renderPart("Blade");
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0.5625, 1.375, 0);
-    GL11.glRotatef(rot, 0, 0, 1);
-    GL11.glTranslated(-0.5625, -1.375, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0.5625, 1.375, 0);
+    GlStateManager.rotate(rot, 0, 0, 1);
+    GlStateManager.translate(-0.5625, -1.375, 0);
     ResourceManager.sawmill.renderPart("GearLeft");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(-0.5625, 1.375, 0);
-    GL11.glRotatef(-rot, 0, 0, 1);
-    GL11.glTranslated(0.5625, -1.375, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(-0.5625, 1.375, 0);
+    GlStateManager.rotate(-rot, 0, 0, 1);
+    GlStateManager.translate(0.5625, -1.375, 0);
     ResourceManager.sawmill.renderPart("GearRight");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

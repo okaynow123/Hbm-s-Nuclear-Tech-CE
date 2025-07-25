@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticlePlasmaBlast extends Particle {
 
@@ -49,7 +49,7 @@ public class ParticlePlasmaBlast extends Particle {
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
@@ -64,7 +64,7 @@ public class ParticlePlasmaBlast extends Particle {
 		float pY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
 		float pZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
 
-		GL11.glTranslatef(pX, pY, pZ);
+		GlStateManager.translate(pX, pY, pZ);
 		GL11.glRotated(this.rotationYaw, 0, 1, 0);
 		GL11.glRotated(this.rotationPitch, 1, 0, 0);
 			
@@ -83,7 +83,7 @@ public class ParticlePlasmaBlast extends Particle {
 		GlStateManager.enableCull();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.enableLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

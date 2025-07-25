@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleRBMKFlame extends Particle {
 
@@ -33,7 +33,7 @@ public class ParticleRBMKFlame extends Particle {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(getTexture());
 		NTMRenderHelper.resetParticleInterpPos(entityIn, partialTicks);
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
@@ -78,8 +78,8 @@ public class ParticleRBMKFlame extends Particle {
 		float pY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks - interpPosY);
 		float pZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double) partialTicks - interpPosZ);
 		
-		GL11.glTranslatef(pX + rotationX, pY + rotationZ, pZ + rotationYZ);
-		GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.translate(pX + rotationX, pY + rotationZ, pZ + rotationYZ);
+		GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
 
 		buf.pos((double) (-this.particleScale - 1), (double) (-this.particleScale * 2), (double) (0)).tex(uMax, vMax).endVertex();
 		buf.pos((double) (-this.particleScale - 1), (double) (this.particleScale * 2), (double) 0).tex(uMax, vMin).endVertex();
@@ -93,7 +93,7 @@ public class ParticleRBMKFlame extends Particle {
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	protected ResourceLocation getTexture() {

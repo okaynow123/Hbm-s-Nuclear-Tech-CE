@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.render.util.SmallBlockPronter.renderSimpleBlockAt;
 
@@ -22,9 +22,9 @@ public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityIT
 
 	@Override
 	public void render(TileEntityITERStruct te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glTranslatef((float)x-1, (float)y-1, (float)z);
+		GlStateManager.translate((float)x-1, (float)y-1, (float)z);
 
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
@@ -77,6 +77,6 @@ public class RenderITERMultiblock extends TileEntitySpecialRenderer<TileEntityIT
 		GlStateManager.depthMask(true);
 
 		GlStateManager.enableLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -48,28 +48,28 @@ public  class  RenderFlare <E extends Entity> extends Render<E> {
         }
 
         Random random = new Random(432L);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_CULL_FACE);
+        GlStateManager.disableTexture2D();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GlStateManager.disableAlpha();
+        GlStateManager.enableCull();
         GL11.glDepthMask(false);
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
-        //GL11.glTranslatef(0.0F, -1.0F, -2.0F);
+        //GlStateManager.translate(0.0F, -1.0F, -2.0F);
 
-        GL11.glTranslated(x, y, z);
+        GlStateManager.translate(x, y, z);
         
         //for (int i = 0; (float)i < (f1 + f1 * f1) / 2.0F * 60.0F; ++i)
         for(int i = 0; i < count; i++)
         {
-            GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F + f1 * 90.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F + f1 * 90.0F, 0.0F, 0.0F, 1.0F);
             buf.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
             float f3 = random.nextFloat() * 20.0F + 5.0F + f2 * 10.0F;
             float f4 = random.nextFloat() * 2.0F + 1.0F + f2 * 2.0F;
@@ -80,20 +80,20 @@ public  class  RenderFlare <E extends Entity> extends Render<E> {
             buf.pos(0.866D * f4, f3, -0.5F * f4).color(0.53725490196F, 0.54509803921F, 0.27843137254F, 0.0F).endVertex();
             buf.pos(0.0D, f3, 1.0F * f4).color(0.53725490196F, 0.54509803921F, 0.27843137254F, 0.0F).endVertex();
             buf.pos(-0.866D * f4, f3, -0.5F * f4).color(0.53725490196F, 0.54509803921F, 0.27843137254F, 0.0F).endVertex();
-    		GL11.glScalef(0.99F, 0.99F, 0.99F);
+    		GlStateManager.scale(0.99F, 0.99F, 0.99F);
     		tessellator.draw();
         }
         
         
         GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         GL11.glDepthMask(true);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GlStateManager.disableCull();
+        GlStateManager.disableBlend();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableAlpha();
         RenderHelper.enableStandardItemLighting();
 	}
 	

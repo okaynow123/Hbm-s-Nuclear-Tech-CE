@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -68,7 +68,7 @@ public class DialSquare extends Control {
         model.tessellatePart(tes, "base");
         tes.draw();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
             Matrix4f rot_mat = new Matrix4f().rotate((float) -MathHelper.clamp((value*((Math.PI/2)/100F)), 0, Math.PI/2), new Vector3f(0, 1, 0));
             Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX+.77F, 0, posY+.77F)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
             ClientProxy.AUX_GL_BUFFER.rewind();
@@ -77,13 +77,13 @@ public class DialSquare extends Control {
             tes.setColorRGBA_F(1, 1, 1, 1);
             model.tessellatePart(tes, "dial");
             tes.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
             GlStateManager.translate(posX, .07F, posY);
-            GL11.glScalef(.023F, .023F, .023F);
+            GlStateManager.scale(.023F, .023F, .023F);
             GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-            GL11.glRotatef(90, 1, 0, 0);
+            GlStateManager.rotate(90, 1, 0, 0);
 
             FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 
@@ -97,7 +97,7 @@ public class DialSquare extends Control {
 
             font.drawSplitString(label, -8, -5, 50, 0x303030);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

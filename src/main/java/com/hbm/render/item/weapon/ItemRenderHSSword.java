@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderHSSword extends TEISRBase {
 
@@ -25,7 +25,7 @@ public class ItemRenderHSSword extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 			EnumHand hand = type == TransformType.FIRST_PERSON_RIGHT_HAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 			GL11.glScaled(5, 5, 5);
-			GL11.glTranslated(0.3, -1.45, 0.55);
+			GlStateManager.translate(0.3, -1.45, 0.55);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(-20, 1, 0, 0);
 			GL11.glRotated(5, 0, 0, 1);
@@ -50,11 +50,11 @@ public class ItemRenderHSSword extends TEISRBase {
 					ItemSwordCutter.prevAngle = angle;
 				}
 				if(!flag){
-					GL11.glTranslated(0.3F, -0.1F, 0);
-					GL11.glTranslated(-oX, -oY, -oZ);
+					GlStateManager.translate(0.3F, -0.1F, 0);
+					GlStateManager.translate(-oX, -oY, -oZ);
 					GL11.glRotated(-angle, 0, 0, 1);
-					GL11.glTranslated(oX, oY, oZ);
-					GL11.glTranslated(0F, -0.2F, 0F);
+					GlStateManager.translate(oX, oY, oZ);
+					GlStateManager.translate(0F, -0.2F, 0F);
 					GL11.glRotated(10, 0, 1, 0);
 				}
 				GL11.glRotated(swing_rot[0], 1, 0, 0);
@@ -85,7 +85,7 @@ public class ItemRenderHSSword extends TEISRBase {
 			GL11.glRotated(10, 0, 0, 1);
 			GL11.glRotated(10, 0, 1, 0);
 			GL11.glRotated(10, 1, 0, 0);
-			GL11.glTranslated(-1.1, -3.8, 3.2);
+			GlStateManager.translate(-1.1, -3.8, 3.2);
 			GL11.glScaled(3, 3, 3);
 			GL11.glRotated(180, 0, 1, 0);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.hs_sword_tex);
@@ -96,7 +96,7 @@ public class ItemRenderHSSword extends TEISRBase {
 			});
 			break;
 		case GUI:
-			GL11.glTranslated(-1.15, 0, 0);
+			GlStateManager.translate(-1.15, 0, 0);
 			GL11.glRotated(-135+90, 0, 0, 1);
 			GL11.glRotated(90, 0, 1, 0);
 			double scale = 0.9D;

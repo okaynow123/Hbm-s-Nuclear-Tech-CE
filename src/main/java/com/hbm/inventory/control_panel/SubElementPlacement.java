@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class SubElementPlacement extends SubElement {
@@ -155,14 +155,14 @@ public class SubElementPlacement extends SubElement {
 		NTMRenderHelper.drawGuiRect(pos2[0]-(1/(gridScale*15)), pos1[1], 0, 0, 1/(gridScale*15), pos2[1]-pos1[1], 0.015625F, vScale+0.015625F);
 		GlStateManager.enableTexture2D();
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		float spX = gui.getGuiLeft();
 		float spY = gui.getGuiTop();
-		GL11.glTranslated(spX, spY, 0);	
+		GlStateManager.translate(spX, spY, 0);
 		GL11.glScaled(1/gridScale, 1/gridScale, 1/gridScale);
-		GL11.glTranslated(-spX, -spY, 0);
-		GL11.glTranslated(-gridX, gridY, 0);
+		GlStateManager.translate(-spX, -spY, 0);
+		GlStateManager.translate(-gridX, gridY, 0);
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		Matrix4f mat = new Matrix4f();
 		mat.load(ClientProxy.AUX_GL_BUFFER);
@@ -171,7 +171,7 @@ public class SubElementPlacement extends SubElement {
 		float gridMY = (gui.mouseY-gui.getGuiTop())*gridScale + gui.getGuiTop() - gridY;
 		renderItems(gridMX, gridMY);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
 		if (selectedControl != null) {
@@ -236,12 +236,12 @@ public class SubElementPlacement extends SubElement {
 			int b = (int) (label.getConfigs().get("colorB").getNumber()*255);
 			int rgb2 = (r << 16) | (g << 8) | b;
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(c.posX, c.posY, 0);
-			GL11.glScalef(scale, scale, scale);
-			GL11.glTranslated(-c.posX, -c.posY, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(c.posX, c.posY, 0);
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.translate(-c.posX, -c.posY, 0);
 			gui.getFontRenderer().drawString(text, c.posX, c.posY, rgb2, false);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		else if (c instanceof DisplayText) {
 			DisplayText thing = (DisplayText) c;
@@ -262,12 +262,12 @@ public class SubElementPlacement extends SubElement {
 			EnumDyeColor dyeColor = thing.getVar("color").getEnum(EnumDyeColor.class);
 			int color = dyeColor.getColorValue();
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(c.posX, c.posY, 0);
-			GL11.glScalef(scale, scale, scale);
-			GL11.glTranslated(-c.posX, -c.posY, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(c.posX, c.posY, 0);
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.translate(-c.posX, -c.posY, 0);
 			gui.getFontRenderer().drawString(text, c.posX, c.posY, color, false);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		else if (c instanceof DialLarge) {
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);

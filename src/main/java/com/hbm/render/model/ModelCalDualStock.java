@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelCalDualStock extends ModelBase {
 
@@ -196,8 +196,8 @@ public class ModelCalDualStock extends ModelBase {
 	}
 
 	public void renderAll(float f5) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(1D/16D * 2, 0, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(1D/16D * 2, 0, 0);
 		Shape8.render(f5);
 		Shape9.render(f5);
 		Shape10.render(f5);
@@ -220,7 +220,7 @@ public class ModelCalDualStock extends ModelBase {
 		Shape5.render(f5);
 		Shape6.render(f5);
 		Shape7.render(f5);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

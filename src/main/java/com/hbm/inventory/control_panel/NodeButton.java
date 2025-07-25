@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class NodeButton extends NodeElement {
 
@@ -26,12 +26,12 @@ public class NodeButton extends NodeElement {
         Tessellator.getInstance().draw();
 
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0);
         GL11.glScaled(0.35, 0.35, 0.35);
-        GL11.glTranslated(-x, -y, 0);
+        GlStateManager.translate(-x, -y, 0);
         font.drawString(name, x+43-font.getStringWidth(name)/2F, y+5, 0xFF5F5F5F, false);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

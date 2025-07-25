@@ -13,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix3f;
@@ -435,7 +435,7 @@ public class RigidBody {
 	}
 	
 	public void renderDebugInfo(Vec3 offset, float partialTicks){
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		BufferBuilder buf = Tessellator.getInstance().getBuffer();
 		GlStateManager.disableDepth();
 		for(Contact c : contacts.contacts){
@@ -463,6 +463,6 @@ public class RigidBody {
 		for(Collider c : colliders){
 			c.debugRender();
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

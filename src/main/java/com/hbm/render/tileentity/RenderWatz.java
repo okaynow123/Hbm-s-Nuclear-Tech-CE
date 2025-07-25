@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityWatz;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderWatz extends TileEntitySpecialRenderer<TileEntityWatz>
     implements IItemRendererProvider {
@@ -22,19 +22,19 @@ public class RenderWatz extends TileEntitySpecialRenderer<TileEntityWatz>
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
 
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glEnable(GL11.GL_LIGHTING);
+    GlStateManager.disableCull();
+    GlStateManager.enableLighting();
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.watz_tex);
     ResourceManager.watz.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

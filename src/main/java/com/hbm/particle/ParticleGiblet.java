@@ -14,7 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleGiblet extends Particle {
 
@@ -60,7 +60,7 @@ public class ParticleGiblet extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buff, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
@@ -80,7 +80,7 @@ public class ParticleGiblet extends Particle {
 		buf.pos((double) (f11 + rotationX * f10 + rotationXY * f10), (double) (f12 + rotationZ * f10), (double) (f13 + rotationYZ * f10 + rotationXZ * f10)).tex((double) 1, (double) 1).endVertex();
 		buf.pos((double) (f11 + rotationX * f10 - rotationXY * f10), (double) (f12 - rotationZ * f10), (double) (f13 + rotationYZ * f10 - rotationXZ * f10)).tex((double) 1, (double) 0).endVertex();
 		tes.draw();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

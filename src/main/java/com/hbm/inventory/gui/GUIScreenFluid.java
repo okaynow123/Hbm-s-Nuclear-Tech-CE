@@ -17,7 +17,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -117,7 +117,7 @@ public class GUIScreenFluid extends GuiScreen {
 
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         super.drawDefaultBackground();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -133,7 +133,7 @@ public class GUIScreenFluid extends GuiScreen {
             Color color = new Color(type.getColor());
             GL11.glColor3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             drawTexturedModalRect(guiLeft + 12 + k * 18, guiTop + 31, 12 + k * 18, 56, 8, 14);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             if(type == this.primary && type == this.secondary) {
                 drawTexturedModalRect(guiLeft + 7 + k * 18, guiTop + 29, 176, 36, 18, 18);

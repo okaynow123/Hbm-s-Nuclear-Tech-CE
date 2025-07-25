@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMiniNuke extends Render<EntityMiniNuke> {
 
@@ -24,14 +24,14 @@ public class RenderMiniNuke extends Render<EntityMiniNuke> {
 	
 	@Override
 	public void doRender(EntityMiniNuke entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
-        GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks + 180, 0.0F, 0.0F, 1.0F);
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks + 180, 0.0F, 0.0F, 1.0F);
+        GlStateManager.scale(1.5F, 1.5F, 1.5F);
 		bindTexture(nuke_rl);
 		miniNuke.renderAll(0.0625F);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

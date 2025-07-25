@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class SoyuzPronter {
 
@@ -104,7 +104,7 @@ public class SoyuzPronter {
 	public static void prontMain(int type) {
 		SoyuzSkin skin = SoyuzSkin.values()[type];
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		TextureManager tex = Minecraft.getMinecraft().getTextureManager();
@@ -141,14 +141,14 @@ public class SoyuzPronter {
 		
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static void prontBoosters(int type) {
 		
 		SoyuzSkin skin = SoyuzSkin.values()[type];
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		TextureManager tex = Minecraft.getMinecraft().getTextureManager();
@@ -173,12 +173,12 @@ public class SoyuzPronter {
 		
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static void prontCapsule() {
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.enableCull();
@@ -196,7 +196,7 @@ public class SoyuzPronter {
 
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 	}
 

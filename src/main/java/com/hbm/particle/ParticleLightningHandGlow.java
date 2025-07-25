@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleLightningHandGlow extends Particle {
 
@@ -52,7 +52,7 @@ public class ParticleLightningHandGlow extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
@@ -61,7 +61,7 @@ public class ParticleLightningHandGlow extends Particle {
 		float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
 	    float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
 	    float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
-	    GL11.glTranslated(f5, f6, f7);
+	    GlStateManager.translate(f5, f6, f7);
 	    
 	    
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
@@ -95,7 +95,7 @@ public class ParticleLightningHandGlow extends Particle {
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
 		GlStateManager.enableDepth();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 }

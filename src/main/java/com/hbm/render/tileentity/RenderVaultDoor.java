@@ -8,7 +8,7 @@ import com.hbm.tileentity.machine.TileEntityVaultDoor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderVaultDoor extends TileEntitySpecialRenderer<TileEntityVaultDoor>
     implements IItemRendererProvider {
@@ -27,35 +27,35 @@ public class RenderVaultDoor extends TileEntitySpecialRenderer<TileEntityVaultDo
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     switch (te.getBlockMetadata()) {
       case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
     }
 
     bindTexture(ResourceManager.vault_frame_tex);
     ResourceManager.vault_frame.renderAll();
-    GL11.glTranslated(-1.0D, 0.0D, 0.0D);
+    GlStateManager.translate(-1.0D, 0.0D, 0.0D);
     bindTexture(ResourceManager.universal);
     ResourceManager.vault_teeth.renderAll();
-    GL11.glTranslated(1.0D, 0.0D, 0.0D);
+    GlStateManager.translate(1.0D, 0.0D, 0.0D);
 
-    GL11.glTranslated(0.0D, -2.5D, 0.0D);
+    GlStateManager.translate(0.0D, -2.5D, 0.0D);
 
     double[] timer;
 
@@ -66,11 +66,11 @@ public class RenderVaultDoor extends TileEntitySpecialRenderer<TileEntityVaultDo
     else
       timer = getAnimationFromSysTime(te.sysTime + (2000 + 800 * 5) - System.currentTimeMillis());
 
-    GL11.glTranslated(-timer[0], 0, timer[1]);
+    GlStateManager.translate(-timer[0], 0, timer[1]);
 
-    GL11.glTranslated(0.0D, 5D, 0.0D);
+    GlStateManager.translate(0.0D, 5D, 0.0D);
     GL11.glRotated(timer[2], 1, 0, 0);
-    GL11.glTranslated(0.0D, -2.5D, 0.0D);
+    GlStateManager.translate(0.0D, -2.5D, 0.0D);
 
     switch ((int) (te.type / 8F)) {
       case 0:
@@ -123,7 +123,7 @@ public class RenderVaultDoor extends TileEntitySpecialRenderer<TileEntityVaultDo
     ResourceManager.vault_label.renderAll();
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

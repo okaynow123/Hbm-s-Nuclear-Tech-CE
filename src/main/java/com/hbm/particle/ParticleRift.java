@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleRift extends Particle {
 
@@ -69,21 +69,21 @@ public class ParticleRift extends Particle {
 		tess.addVertexWithUV((double)(pX + x * scale - tx * scale), (double)(pY - y * scale), (double)(pZ + z * scale - tz * scale), 0, 1);
 		tess.draw();*/
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(pX, pY, pZ);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(pX, pY, pZ);
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableCull();
-		GL11.glScalef(scale, scale, scale);
+		GlStateManager.scale(scale, scale, scale);
 		ResourceManager.sphere_uv.renderAll();
-		GL11.glScalef(1.02F, 1.02F, 1.02F);
+		GlStateManager.scale(1.02F, 1.02F, 1.02F);
 		ResourceManager.sphere_uv.renderAll();
-		GL11.glScalef(1.05F, 1.05F, 1.05F);
+		GlStateManager.scale(1.05F, 1.05F, 1.05F);
 		ResourceManager.sphere_uv.renderAll();
-		GL11.glScalef(1.02F, 1.02F, 1.02F);
+		GlStateManager.scale(1.02F, 1.02F, 1.02F);
 		ResourceManager.sphere_uv.renderAll();
-		GL11.glScalef(1.05F, 1.05F, 1.05F);
+		GlStateManager.scale(1.05F, 1.05F, 1.05F);
 		ResourceManager.sphere_uv.renderAll();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		GlStateManager.enableTexture2D();
 		GlStateManager.doPolygonOffset(0, 0);

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSoyuzCapsule extends Render<EntitySoyuzCapsule>
     implements IItemRendererProvider {
@@ -33,18 +33,18 @@ public class RenderSoyuzCapsule extends Render<EntitySoyuzCapsule>
       double z,
       float entityYaw,
       float partialTicks) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslated(x, y, z);
+    GlStateManager.translate(x, y, z);
 
     double time = (entity.world.getTotalWorldTime());
     double sine = Math.sin(time * 0.05) * 5;
     double sin3 = Math.sin(time * 0.05 + Math.PI * 0.5) * 5;
     int height = 7;
-    GL11.glTranslated(0.0F, height, 0.0F);
+    GlStateManager.translate(0.0F, height, 0.0F);
     GL11.glRotated(sine, 0, 0, 1);
     GL11.glRotated(sin3, 1, 0, 0);
-    GL11.glTranslated(0.0F, -height, 0.0F);
+    GlStateManager.translate(0.0F, -height, 0.0F);
 
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -54,7 +54,7 @@ public class RenderSoyuzCapsule extends Render<EntitySoyuzCapsule>
     ResourceManager.soyuz_lander.renderPart("Chute");
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -7,7 +7,7 @@ import com.hbm.tileentity.turret.TileEntityTurretHoward;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurretHoward extends RenderTurretBase<TileEntityTurretHoward>
     implements IItemRendererProvider {
@@ -23,8 +23,8 @@ public class RenderTurretHoward extends RenderTurretBase<TileEntityTurretHoward>
       float alpha) {
     Vec3d pos = turret.byHorizontalIndexOffset();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + pos.x, y, z + pos.z);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + pos.x, y, z + pos.z);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -47,9 +47,9 @@ public class RenderTurretHoward extends RenderTurretBase<TileEntityTurretHoward>
     bindTexture(ResourceManager.turret_carriage_ciws_tex);
     ResourceManager.turret_howard.renderPart("Carriage");
 
-    GL11.glTranslated(0, 2.25, 0);
+    GlStateManager.translate(0, 2.25, 0);
     GL11.glRotated(pitch, 0, 0, 1);
-    GL11.glTranslated(0, -2.25, 0);
+    GlStateManager.translate(0, -2.25, 0);
     bindTexture(ResourceManager.turret_howard_tex);
     ResourceManager.turret_howard.renderPart("Body");
 
@@ -57,22 +57,22 @@ public class RenderTurretHoward extends RenderTurretBase<TileEntityTurretHoward>
 
     bindTexture(ResourceManager.turret_howard_barrels_tex);
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 2.5, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 2.5, 0);
     GL11.glRotated(rot, -1, 0, 0);
-    GL11.glTranslated(0, -2.5, 0);
+    GlStateManager.translate(0, -2.5, 0);
     ResourceManager.turret_howard.renderPart("BarrelsTop");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 2, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 2, 0);
     GL11.glRotated(rot, 1, 0, 0);
-    GL11.glTranslated(0, -2, 0);
+    GlStateManager.translate(0, -2, 0);
     ResourceManager.turret_howard.renderPart("BarrelsBottom");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

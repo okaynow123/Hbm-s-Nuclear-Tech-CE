@@ -10,7 +10,7 @@ import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEntitySpecialRenderer<T> {
 
@@ -18,7 +18,7 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 	public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		if(te.getBlockType() == ModBlocks.fluid_duct_solid || te.getBlockType() instanceof FluidDuctBox)
 			return;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -47,7 +47,7 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 
 		int mask = 0 + (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
 
-		GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+		GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
 
 		bindTexture(ResourceManager.pipe_neo_tex);
 
@@ -87,7 +87,7 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 		}
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		GlStateManager.color(1, 1, 1, 1);
-		GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
-		GL11.glPopMatrix();
+		GlStateManager.translate(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+		GlStateManager.popMatrix();
 	}
 }

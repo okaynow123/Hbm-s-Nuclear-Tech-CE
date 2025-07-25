@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.DoubleBuffer;
 
@@ -30,23 +30,23 @@ public class RenderSlidingBlastDoor extends TileEntitySpecialRenderer<TileEntity
 	
 	@Override
 	public void render(TileEntitySlidingBlastDoor te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-        GL11.glTranslated(x+0.5, y, z+0.5);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate(x+0.5, y, z+0.5);
         
         GL11.glEnable(GL11.GL_CLIP_PLANE0);
         GL11.glEnable(GL11.GL_CLIP_PLANE1);
         GlStateManager.enableCull();
-        GL11.glEnable(GL11.GL_CULL_FACE);
+        GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		switch(te.getBlockMetadata() - BlockDummyable.offset) {
-		case 2: GL11.glRotatef(0, 0F, 1F, 0F); break;
-		case 4: GL11.glRotatef(90, 0F, 1F, 0F); break;
-		case 3: GL11.glRotatef(180, 0F, 1F, 0F); break;
-		case 5: GL11.glRotatef(270, 0F, 1F, 0F); break;
+		case 2: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+		case 4: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+		case 3: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+		case 5: GlStateManager.rotate(270, 0F, 1F, 0F); break;
 		}
 		
 		if(buf == null){
@@ -54,16 +54,16 @@ public class RenderSlidingBlastDoor extends TileEntitySpecialRenderer<TileEntity
 		}
 		buf.put(new double[]{1, 0, 0, 0});
 		buf.rewind();
-		GL11.glPushMatrix();
-		GL11.glTranslated(-3.50001, 0, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-3.50001, 0, 0);
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buf);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		buf.put(new double[]{-1, 0, 0, 0});
 		buf.rewind();
-		GL11.glPushMatrix();
-		GL11.glTranslated(3.50001, 0, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(3.50001, 0, 0);
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, buf);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
         
         long time = System.currentTimeMillis();
         long startTime = te.state.isMovingState() ? te.sysTime : time;
@@ -93,6 +93,6 @@ public class RenderSlidingBlastDoor extends TileEntitySpecialRenderer<TileEntity
         GL11.glDisable(GL11.GL_CLIP_PLANE1);
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 }

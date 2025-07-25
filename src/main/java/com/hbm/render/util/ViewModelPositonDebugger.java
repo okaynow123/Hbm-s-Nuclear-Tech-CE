@@ -9,7 +9,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,7 +81,7 @@ public class ViewModelPositonDebugger {
         applyCustomOffset(offset);
     }
     public void apply(TransformType type) {
-        GL11.glRotatef(-90f,0,1,0);
+        GlStateManager.rotate(-90f,0,1,0);
         switch(type) {
             case FIRST_PERSON_LEFT_HAND: render(TransformType.FIRST_PERSON_RIGHT_HAND); break;
             case THIRD_PERSON_LEFT_HAND: render(TransformType.THIRD_PERSON_RIGHT_HAND); break;

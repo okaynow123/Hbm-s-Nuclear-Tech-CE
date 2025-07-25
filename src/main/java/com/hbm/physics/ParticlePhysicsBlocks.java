@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 
@@ -94,7 +94,7 @@ public class ParticlePhysicsBlocks extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		double entPosX = entityIn.lastTickPosX + (entityIn.posX - entityIn.lastTickPosX)*partialTicks;
         double entPosY = entityIn.lastTickPosY + (entityIn.posY - entityIn.lastTickPosY)*partialTicks;
         double entPosZ = entityIn.lastTickPosZ + (entityIn.posZ - entityIn.lastTickPosZ)*partialTicks;
@@ -102,14 +102,14 @@ public class ParticlePhysicsBlocks extends Particle {
         interpPosX = entPosX;
         interpPosY = entPosY;
         interpPosZ = entPosZ;
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
         
         GlStateManager.disableTexture2D();
 		GlStateManager.glLineWidth(4);
 		//RenderGlobal.drawSelectionBoundingBox(body.boundingBox.offset(-interpPosX, -interpPosY, -interpPosZ), 0, 1, 0, 1);
 		GlStateManager.enableTexture2D();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         for(Contact c : body.contacts.contacts){
 			if(c != null && false){
 				Tessellator tes = Tessellator.getInstance();
@@ -134,7 +134,7 @@ public class ParticlePhysicsBlocks extends Particle {
 		}
         
 		body.doGlTransform(new Vec3(interpPosX, interpPosY, interpPosZ), partialTicks);
-		GL11.glTranslated(-createPos.getX(), -createPos.getY(), -createPos.getZ());
+		GlStateManager.translate(-createPos.getX(), -createPos.getY(), -createPos.getZ());
 		
 		GlStateManager.disableTexture2D();
 		GlStateManager.glLineWidth(4);
@@ -148,6 +148,6 @@ public class ParticlePhysicsBlocks extends Particle {
 		GL11.glCallList(callListId);
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

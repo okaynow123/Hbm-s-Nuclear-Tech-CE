@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityStorageDrum;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderStorageDrum extends TileEntitySpecialRenderer<TileEntityStorageDrum>
     implements IItemRendererProvider {
@@ -21,15 +21,15 @@ public class RenderStorageDrum extends TileEntitySpecialRenderer<TileEntityStora
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
 
     bindTexture(ResourceManager.waste_drum_tex);
     ResourceManager.waste_drum.renderAll();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

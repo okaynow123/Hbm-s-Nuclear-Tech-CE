@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderGunEgon extends TEISRBase {
 
@@ -32,14 +32,14 @@ public class ItemRenderGunEgon extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 			GL11.glScaled(0.5, 0.4, 0.5);
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
-				GL11.glTranslated(-2, -0.5, 3);
+				GlStateManager.translate(-2, -0.5, 3);
 				//GL11.glRotated(7, 0, 0, 1);
 				GL11.glRotated(90, 1, 0, 0);
 				GL11.glRotated(-90, 0, 0, 1);
 			} else {
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(140, 0, 0, 1);
-				GL11.glTranslated(4, 1, 1);
+				GlStateManager.translate(4, 1, 1);
 				GL11.glRotated(170, 0, 1, 0);
 				GL11.glRotated(180, 1, 0, 0);
 			}
@@ -47,11 +47,11 @@ public class ItemRenderGunEgon extends TEISRBase {
 			float fade = entity instanceof EntityPlayer ? ItemGunEgon.getFirstPersonAnimFade((EntityPlayer) entity) : 0;
 			float[] offset = getOffset(time);
 			float[] jitter = getJitter(time);
-			GL11.glTranslated(offset[0]*fade-jitter[1]*fade*0.1F, offset[1]*fade*fade-jitter[0]*fade*0.05F, 0);
+			GlStateManager.translate(offset[0]*fade-jitter[1]*fade*0.1F, offset[1]*fade*fade-jitter[0]*fade*0.05F, 0);
 			GL11.glRotated(jitter[0]*fade, 1, 0, 0);
 			GL11.glRotated(jitter[1]*fade, 0, 1, 0);
 			float rec = -MathHelper.sin(Math.min(fade*1.5F, 1));
-			GL11.glTranslated(0, 0, rec*1.5F);
+			GlStateManager.translate(0, 0, rec*1.5F);
 			GL11.glRotated(7*rec, 1, 0, 0);
 			break;
 		case THIRD_PERSON_LEFT_HAND:
@@ -59,12 +59,12 @@ public class ItemRenderGunEgon extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0.5, 0.55, 0.7);
+			GlStateManager.translate(0.5, 0.55, 0.7);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glScaled(0.125, 0.125, 0.125);
 			break;
 		case GUI:
-			GL11.glTranslated(0.4, 0, 0.5);
+			GlStateManager.translate(0.4, 0, 0.5);
 			GL11.glScaled(0.15, 0.15, 0.15);
 			GL11.glRotated(45, 0, 1, 0);
 			GL11.glRotated(45, 1, 0, 0);

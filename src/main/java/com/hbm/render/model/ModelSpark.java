@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.FloatBuffer;
 
@@ -169,9 +169,9 @@ public class ModelSpark extends ModelBase {
 			// HbmShaderManager.testBuf2 = buf2;
 
 			HbmShaderManager.gaussRenderers.add(() -> {
-				GL11.glMatrixMode(GL11.GL_PROJECTION);
+				GlStateManager.matrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadMatrix(buf2);
-				GL11.glMatrixMode(GL11.GL_MODELVIEW);
+				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadMatrix(buf1);
 
 				Minecraft.getMinecraft().renderEngine.bindTexture(ItemRenderOverkill.sparkLoc);
@@ -209,9 +209,9 @@ public class ModelSpark extends ModelBase {
 			//Stupid hack because minecraft doesn't have an event for rendering the hand.
 			if(this.renderingInFirstPerson)
 				HbmShaderManager.renderGauss();
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GlStateManager.matrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadMatrix(buf2);
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadMatrix(buf1);
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(ItemRenderOverkill.sparkLoc);

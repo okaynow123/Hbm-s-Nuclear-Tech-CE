@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderExcavator extends TileEntitySpecialRenderer<TileEntityMachineExcavator>
     implements IItemRendererProvider {
@@ -34,27 +34,27 @@ public class RenderExcavator extends TileEntitySpecialRenderer<TileEntityMachine
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
 
     switch (drill.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glTranslated(0, -3, 0);
+    GlStateManager.translate(0, -3, 0);
 
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.excavator_tex);
@@ -63,37 +63,37 @@ public class RenderExcavator extends TileEntitySpecialRenderer<TileEntityMachine
     float crusher =
         drill.prevCrusherRotation
             + (drill.crusherRotation - drill.prevCrusherRotation) * partialTicks;
-    GL11.glPushMatrix();
-    GL11.glTranslatef(0.0F, 2.0F, 2.8125F);
-    GL11.glRotatef(-crusher, 1, 0, 0);
-    GL11.glTranslatef(0.0F, -2.0F, -2.8125F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0.0F, 2.0F, 2.8125F);
+    GlStateManager.rotate(-crusher, 1, 0, 0);
+    GlStateManager.translate(0.0F, -2.0F, -2.8125F);
     ResourceManager.excavator.renderPart("Crusher1");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslatef(0.0F, 2.0F, 2.1875F);
-    GL11.glRotatef(crusher, 1, 0, 0);
-    GL11.glTranslatef(0.0F, -2.0F, -2.1875F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0.0F, 2.0F, 2.1875F);
+    GlStateManager.rotate(crusher, 1, 0, 0);
+    GlStateManager.translate(0.0F, -2.0F, -2.1875F);
     ResourceManager.excavator.renderPart("Crusher2");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glRotatef(
+    GlStateManager.pushMatrix();
+    GlStateManager.rotate(
         drill.prevDrillRotation + (drill.drillRotation - drill.prevDrillRotation) * partialTicks,
         0F,
         -1F,
         0F);
     float ext =
         drill.prevDrillExtension + (drill.drillExtension - drill.prevDrillExtension) * partialTicks;
-    GL11.glTranslatef(0.0F, -ext, 0.0F);
+    GlStateManager.translate(0.0F, -ext, 0.0F);
     ResourceManager.excavator.renderPart("Drillbit");
 
     while (ext >= -1.5) {
       ResourceManager.excavator.renderPart("Shaft");
-      GL11.glTranslated(0.0D, 2.0D, 0.0D);
+      GlStateManager.translate(0.0D, 2.0D, 0.0D);
       ext -= 2;
     }
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
@@ -155,7 +155,7 @@ public class RenderExcavator extends TileEntitySpecialRenderer<TileEntityMachine
       NTMRenderHelper.draw();
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

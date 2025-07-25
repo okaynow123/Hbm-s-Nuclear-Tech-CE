@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBobmazon extends Render<EntityBobmazon> {
 
@@ -19,18 +19,18 @@ public class RenderBobmazon extends Render<EntityBobmazon> {
 	
 	@Override
 	public void doRender(EntityBobmazon entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
         //GL11.glRotated(180, 0, 0, 1);
         GlStateManager.disableCull();
         
         bindTexture(ResourceManager.bobmazon_tex);
-        GL11.glRotatef(180, 1, 0, 0);
+        GlStateManager.rotate(180, 1, 0, 0);
         
         ResourceManager.minerRocket.renderAll();
         
         GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

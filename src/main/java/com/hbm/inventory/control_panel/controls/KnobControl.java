@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -71,7 +71,7 @@ public class KnobControl extends Control {
         model.tessellatePart(tes, "base");
         tes.draw();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
             Matrix4f rot_mat = new Matrix4f().rotate((float) -(value*((2*Math.PI)/11F)), new Vector3f(0, 1, 0));
             Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, -.04F, posY)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
             ClientProxy.AUX_GL_BUFFER.rewind();
@@ -80,13 +80,13 @@ public class KnobControl extends Control {
             tes.setColorRGBA_F(1, 1, 1, 1);
             model.tessellatePart(tes, "knob");
             tes.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
             GlStateManager.translate(posX, .07F, posY);
-            GL11.glScalef(.028F, .028F, .028F);
+            GlStateManager.scale(.028F, .028F, .028F);
             GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-            GL11.glRotatef(90, 1, 0, 0);
+            GlStateManager.rotate(90, 1, 0, 0);
 
             FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 
@@ -97,7 +97,7 @@ public class KnobControl extends Control {
                 double y = r * Math.sin(angle-Math.PI/2);
                 font.drawString(Integer.toString(i), (float) (((i==10)?-6.5 : -2.5F)+x), (float) (-3F+y), 0x282828, false);
             }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

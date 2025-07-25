@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderQuasar extends RenderBlackHole {
 
@@ -25,14 +25,14 @@ public class RenderQuasar extends RenderBlackHole {
 	public void doRender(EntityBlackHole entity, double x, double y, double z, float entityYaw, float partialTicks){
 		if(!ClientProxy.renderingConstant)
 			return;
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y, (float) z);
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 
 		float size = entity.getDataManager().get(EntityBlackHole.SIZE);
 
-		GL11.glScalef(size, size, size);
+		GlStateManager.scale(size, size, size);
 
 		bindTexture(hole);
 		blastModel.renderAll();
@@ -43,7 +43,7 @@ public class RenderQuasar extends RenderBlackHole {
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

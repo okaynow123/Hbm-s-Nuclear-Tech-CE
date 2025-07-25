@@ -65,7 +65,7 @@ public class ParticleGluonMuzzleSmoke extends ParticleFirstPerson {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		//GL11.glPushMatrix();
+		//GlStateManager.pushMatrix();
 		float timeScale = (this.particleAge+partialTicks)/(float)this.particleMaxAge;
 		this.workingAlpha = MathHelper.clamp(1-BobMathUtil.remap((float)MathHelper.clamp(timeScale, 0, 1), 0.6F, 1F, 0.6F, 1F), 0, 1)*particleAlpha;
 		workingAlpha *= MathHelper.clamp(BobMathUtil.remap((float)MathHelper.clamp(timeScale, 0, 0.2), 0F, 0.2F, 0F, 1F), 0, 1);
@@ -75,8 +75,8 @@ public class ParticleGluonMuzzleSmoke extends ParticleFirstPerson {
         float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
-        //GL11.glTranslated(f5, f6, f7);
-        //GL11.glScalef(f4, f4, f4);
+        //GlStateManager.translate(f5, f6, f7);
+        //GlStateManager.scale(f4, f4, f4);
         Vec3[] vecs = new Vec3[]{new Vec3(0.5, 0.5, 0), new Vec3(-0.5, 0.5, 0), new Vec3(-0.5, -0.5, 0), new Vec3(0.5, -0.5, 0)};
         for(int i = 0; i < vecs.length; i ++){
         	vecs[i] = vecs[i].mult(f4);
@@ -96,7 +96,7 @@ public class ParticleGluonMuzzleSmoke extends ParticleFirstPerson {
              a-=1;
         }
 	
-      //  GL11.glPopMatrix();
+      //  GlStateManager.popMatrix();
 	}
 	
 	@Override

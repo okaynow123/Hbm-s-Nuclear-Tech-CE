@@ -12,7 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlock> {
 
@@ -37,9 +37,9 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlo
 
 	@Override
 	public void render(TileEntityDecoBlock te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glRotatef(180, 0F, 0F, 1F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
 
 		Block block = te.getWorld().getBlockState(te.getPos()).getBlock();
 
@@ -48,16 +48,16 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlo
 			this.bindTexture(texture1);
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 			this.model1.renderModel(0.0625F);
@@ -65,32 +65,32 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlo
 			this.bindTexture(texture2);
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 			this.model2.renderModel(0.0625F);
 		} else if(block == ModBlocks.boxcar) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			switch(te.getBlockMetadata()) {
-			case 4: GL11.glRotatef(0, 0F, 1F, 0F); break;
-			case 2: GL11.glRotatef(270, 0F, 1F, 0F); break;
-			case 5: GL11.glRotatef(180, 0F, 1F, 0F); break;
-			case 3: GL11.glRotatef(90, 0F, 1F, 0F); break;
+			case 4: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+			case 2: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+			case 5: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+			case 3: GlStateManager.rotate(90, 0F, 1F, 0F); break;
 			default:
-				GL11.glRotatef(180, 0F, 0F, 1F);
+				GlStateManager.rotate(180, 0F, 0F, 1F);
 				GL11.glRotated(90, 1, 0, 0);
-				GL11.glTranslatef(0, -1.5F, 0);
+				GlStateManager.translate(0, -1.5F, 0);
 				break;
 			}
 			GlStateManager.enableCull();
@@ -104,168 +104,168 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlo
 			this.bindTexture(texture3);
 			this.model3.renderModel(0.0625F);
 		} else if(block == ModBlocks.boat) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, 0, -1.5F);
-			GL11.glTranslatef(0, 0.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, 0, -1.5F);
+			GlStateManager.translate(0, 0.5F, 0);
 
 			GlStateManager.enableCull();
 			bindTexture(ResourceManager.duchessgambit_tex);
 			ResourceManager.duchessgambit.renderAll();
 		} else if(block == ModBlocks.sat_radar) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_base_tex);
 			ResourceManager.sat_base.renderAll();
 			bindTexture(ResourceManager.sat_radar_tex);
 			ResourceManager.sat_radar.renderAll();
 		} else if(block == ModBlocks.sat_resonator) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_base_tex);
 			ResourceManager.sat_base.renderAll();
 			bindTexture(ResourceManager.sat_resonator_tex);
 			ResourceManager.sat_resonator.renderAll();
 		} else if(block == ModBlocks.sat_scanner) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_base_tex);
 			ResourceManager.sat_base.renderAll();
 			bindTexture(ResourceManager.sat_scanner_tex);
 			ResourceManager.sat_scanner.renderAll();
 		} else if(block == ModBlocks.sat_mapper) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_base_tex);
 			ResourceManager.sat_base.renderAll();
 			bindTexture(ResourceManager.sat_mapper_tex);
 			ResourceManager.sat_mapper.renderAll();
 		} else if(block == ModBlocks.sat_laser) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_base_tex);
 			ResourceManager.sat_base.renderAll();
 			bindTexture(ResourceManager.sat_laser_tex);
 			ResourceManager.sat_laser.renderAll();
 		} else if(block == ModBlocks.sat_foeq) {
-			GL11.glRotatef(180, 0F, 0F, 1F);
-			GL11.glTranslatef(0, -1.5F, 0);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
+			GlStateManager.translate(0, -1.5F, 0);
 
 			GL11.glRotated(90, 0, 1, 0);
 
 			switch(te.getBlockMetadata()) {
 			case 4:
-				GL11.glRotatef(90, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				break;
 			case 2:
-				GL11.glRotatef(180, 0F, 1F, 0F);
+				GlStateManager.rotate(180, 0F, 1F, 0F);
 				break;
 			case 5:
-				GL11.glRotatef(270, 0F, 1F, 0F);
+				GlStateManager.rotate(270, 0F, 1F, 0F);
 				break;
 			case 3:
-				GL11.glRotatef(0, 0F, 1F, 0F);
+				GlStateManager.rotate(0, 0F, 1F, 0F);
 				break;
 			}
 
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.enableCull();
 			bindTexture(ResourceManager.sat_foeq_tex);
 			ResourceManager.sat_foeq.renderAll();
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

@@ -5,7 +5,7 @@ import com.hbm.render.misc.MissileMultipart;
 import com.hbm.render.misc.MissilePronter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderMissile extends TEISRBase {
 
@@ -14,8 +14,8 @@ public class ItemRenderMissile extends TEISRBase {
 		MissileMultipart missile = MissileMultipart.loadFromStruct(ItemCustomMissile.getStruct(item));
 		if(missile == null)
 			return;
-		GL11.glPushMatrix();
-		//GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.pushMatrix();
+		//GlStateManager.translate(0.5, 0.5, 0.5);
 		switch(type) {
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
@@ -27,7 +27,7 @@ public class ItemRenderMissile extends TEISRBase {
 			
 			double s = 0.2;
 			GL11.glScaled(s, s, s);
-			GL11.glTranslated(2, 0, 0);
+			GlStateManager.translate(2, 0, 0);
 			
 			MissilePronter.prontMissile(missile, Minecraft.getMinecraft().renderEngine);
 			
@@ -43,8 +43,8 @@ public class ItemRenderMissile extends TEISRBase {
 			double size = 20;
 			double scale = size / height;
 			
-			GL11.glTranslated(height / 2 * scale, 0, 0);
-			GL11.glTranslated(-9.2, 0.2, 0);
+			GlStateManager.translate(height / 2 * scale, 0, 0);
+			GlStateManager.translate(-9.2, 0.2, 0);
 			//System.out.println(scale/14.285714285714285);
 			GL11.glRotated(45, 0, 0, 1);
 			GL11.glRotated(45, 1, 0, 0);
@@ -59,17 +59,17 @@ public class ItemRenderMissile extends TEISRBase {
 			//GL11.glScaled(-scale, -scale, -scale);
 			
 			/*if(part.type.name().equals(PartType.FINS.name())) {
-				GL11.glTranslated(0, 0, 0);
+				GlStateManager.translate(0, 0, 0);
 				//GL11.glRotated(-45, 1, 0, 0);
 			}*/
 
-			GL11.glRotatef(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
+			GlStateManager.rotate(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
 			MissilePronter.prontMissile(missile, Minecraft.getMinecraft().renderEngine);
 			
 			break;
 		default: break;
 		}
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

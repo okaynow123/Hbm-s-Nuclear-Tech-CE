@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderGunAnim2 extends TEISRBase {
 
@@ -50,15 +50,15 @@ public class ItemRenderGunAnim2 extends TEISRBase {
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			
 			if (type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glTranslated(-0.2, 1.1, 0.4);
+				GlStateManager.translate(-0.2, 1.1, 0.4);
 				GL11.glRotated(-00, 0, 1, 0);
 				GL11.glRotated(-25, 0, 0, 1);
 				GL11.glRotated(180, 1, 0, 0);
 			} else {
-				GL11.glTranslated(1.8, 1.1, 0.8);
+				GlStateManager.translate(1.8, 1.1, 0.8);
 				GL11.glRotated(180, 1, 0, 0);
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(25, 0, 0, 1);
@@ -67,13 +67,13 @@ public class ItemRenderGunAnim2 extends TEISRBase {
 			if(item.getItem() == ModItems.gun_lever_action || item.getItem() == ModItems.gun_lever_action_dark) {
 
 				double[] recoil = HbmAnimations.getRelevantTransformation("LEVER_RECOIL", type == TransformType.FIRST_PERSON_LEFT_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-				GL11.glTranslated(recoil[0], recoil[1] * 4, recoil[2]);
+				GlStateManager.translate(recoil[0], recoil[1] * 4, recoil[2]);
 				
-				GL11.glTranslatef(-1.5F, 0, 0);
+				GlStateManager.translate(-1.5F, 0, 0);
 				double[] rotation = HbmAnimations.getRelevantTransformation("LEVER_ROTATE", type == TransformType.FIRST_PERSON_LEFT_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
 				GL11.glRotated(rotation[2], 0.0, 0.0, 1.0);
 				lever = (float) Math.toRadians(rotation[2] * 2);
-				GL11.glTranslatef(1.5F, 0, 0);
+				GlStateManager.translate(1.5F, 0, 0);
 			}
 			
 			if(item.getItem() == ModItems.gun_lever_action || item.getItem() == ModItems.gun_lever_action_dark)
@@ -88,8 +88,8 @@ public class ItemRenderGunAnim2 extends TEISRBase {
 		case GROUND:
 		case FIXED:
 		case HEAD:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			GL11.glTranslated(1.0, 1, 1);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.translate(1.0, 1, 1);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 			if(item.getItem() == ModItems.gun_lever_action)

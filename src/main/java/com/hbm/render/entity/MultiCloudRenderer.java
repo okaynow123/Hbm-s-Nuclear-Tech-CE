@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -40,14 +40,14 @@ public class MultiCloudRenderer extends Render<EntityModFX> {
 	public void doRender(EntityModFX fx, double x, double y, double z, float entityYaw, float partialTicks) {
 		this.bindEntityTexture(fx);
 		if (tex != null) {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.disableLighting();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-			GL11.glTranslatef((float) x, (float) y, (float) z);
+			GlStateManager.translate((float) x, (float) y, (float) z);
 			GlStateManager.enableRescaleNormal();
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			GL11.glScalef(7.5F, 7.5F, 7.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(7.5F, 7.5F, 7.5F);
 			
 			////
 			Random randy = new Random(fx.hashCode());
@@ -65,22 +65,22 @@ public class MultiCloudRenderer extends Render<EntityModFX> {
 				double dZ = (rand.nextGaussian() - 1D) * 0.15D;
 				double size = rand.nextDouble() * 0.5D + 0.25D;
 				
-				GL11.glTranslatef((float) dX, (float) dY, (float) dZ);
+				GlStateManager.translate((float) dX, (float) dY, (float) dZ);
 				GL11.glScaled(size, size, size);
 
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				Tessellator tessellator = Tessellator.getInstance();
 				this.render(tessellator, tex);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 
 				GL11.glScaled(1/size, 1/size, 1/size);
-				GL11.glTranslatef((float) -dX, (float) -dY, (float) -dZ);
+				GlStateManager.translate((float) -dX, (float) -dY, (float) -dZ);
 			}
 			
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -132,8 +132,8 @@ public class MultiCloudRenderer extends Render<EntityModFX> {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
-		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buf.pos(0.0F - f5, 0.0F - f6, 0.0D).tex(f, f3).endVertex();
 		buf.pos(f4 - f5, 0.0F - f6, 0.0D).tex(f1, f3).endVertex();

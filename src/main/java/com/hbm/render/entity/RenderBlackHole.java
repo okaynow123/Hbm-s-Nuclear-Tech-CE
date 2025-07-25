@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -45,14 +45,14 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 	public void doRender(EntityBlackHole entity, double x, double y, double z, float entityYaw, float partialTicks){
 		if(!ClientProxy.renderingConstant)
 			return;
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float)x, (float)y, (float)z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float)x, (float)y, (float)z);
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 
 		float size = entity.getDataManager().get(EntityBlackHole.SIZE);
 
-		GL11.glScalef(size, size, size);
+		GlStateManager.scale(size, size, size);
 
 		bindTexture(hole);
 		blastModel.renderAll();
@@ -72,7 +72,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected ResourceLocation discTex(){
@@ -85,9 +85,9 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		bindTexture(discTex());
 
-		GL11.glPushMatrix();
-		GL11.glRotatef(entity.getEntityId() % 90 - 45, 1, 0, 0);
-		GL11.glRotatef(entity.getEntityId() % 360, 0, 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(entity.getEntityId() % 90 - 45, 1, 0, 0);
+		GlStateManager.rotate(entity.getEntityId() % 360, 0, 1, 0);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
@@ -105,8 +105,8 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		float[] color = {0, 0, 0, 0};
 		for(int k = 0; k < steps(); k++) {
 
-			GL11.glPushMatrix();
-			GL11.glRotatef((entity.ticksExisted + interp % 360) * -((float)Math.pow(k + 1, 1.25)), 0, 1, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.rotate((entity.ticksExisted + interp % 360) * -((float)Math.pow(k + 1, 1.25)), 0, 1, 0);
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			double s = 3 - k * 0.175D;
 
@@ -146,7 +146,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
 			}
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -154,7 +154,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected int steps(){
@@ -201,10 +201,10 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		bindTexture(swirl);
 
-		GL11.glPushMatrix();
-		GL11.glRotatef(entity.getEntityId() % 90 - 45, 1, 0, 0);
-		GL11.glRotatef(entity.getEntityId() % 360, 0, 1, 0);
-		GL11.glRotatef((entity.ticksExisted + interp % 360) * -5, 0, 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(entity.getEntityId() % 90 - 45, 1, 0, 0);
+		GlStateManager.rotate(entity.getEntityId() % 360, 0, 1, 0);
+		GlStateManager.rotate((entity.ticksExisted + interp % 360) * -5, 0, 1, 0);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
@@ -311,7 +311,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected void renderJets(EntityBlackHole entity, float interp){
@@ -319,9 +319,9 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
 
-		GL11.glPushMatrix();
-		GL11.glRotatef(entity.getEntityId() % 90 - 45, 1, 0, 0);
-		GL11.glRotatef(entity.getEntityId() % 360, 0, 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(entity.getEntityId() % 90 - 45, 1, 0, 0);
+		GlStateManager.rotate(entity.getEntityId() % 360, 0, 1, 0);
 
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
@@ -351,13 +351,13 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected void renderFlare(EntityBlackHole entity){
 
-		GL11.glPushMatrix();
-		GL11.glScalef(0.2F, 0.2F, 0.2F);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.2F, 0.2F, 0.2F);
 
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
@@ -384,12 +384,12 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		float[] color = {0, 0, 0, 0};
 		for(int i = 0; i < count; i++) {
-			GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F + f1 * 90.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F + f1 * 90.0F, 0.0F, 0.0F, 1.0F);
 			buf.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
 			float f3 = random.nextFloat() * 20.0F + 5.0F + f2 * 10.0F;
 			float f4 = random.nextFloat() * 2.0F + 1.0F + f2 * 2.0F;
@@ -411,7 +411,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableAlpha();
 		RenderHelper.enableStandardItemLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected void setColorFull(EntityBlackHole e, float[] color){

@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.oil.TileEntityMachineGasFlare;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderGasFlare extends TileEntitySpecialRenderer<TileEntityMachineGasFlare>
     implements IItemRendererProvider {
@@ -26,17 +26,17 @@ public class RenderGasFlare extends TileEntitySpecialRenderer<TileEntityMachineG
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     bindTexture(ResourceManager.oilflare_tex);
     ResourceManager.oilflare.renderAll();
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

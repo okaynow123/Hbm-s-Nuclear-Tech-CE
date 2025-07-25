@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderGrenade extends Render<Entity> {
 
@@ -21,12 +21,12 @@ public class RenderGrenade extends Render<Entity> {
 
 	@Override
 	public void doRender(Entity grenade, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-        GL11.glTranslatef((float)x, (float)y + 0.125F, (float)z);
-        GL11.glRotatef(grenade.prevRotationYaw + (grenade.rotationYaw - grenade.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(grenade.prevRotationPitch + (grenade.rotationPitch - grenade.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate((float)x, (float)y + 0.125F, (float)z);
+        GlStateManager.rotate(grenade.prevRotationYaw + (grenade.rotationYaw - grenade.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(grenade.prevRotationPitch + (grenade.rotationPitch - grenade.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
 
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         GL11.glScaled(0.125, 0.125, 0.125);
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
@@ -34,16 +34,16 @@ public class RenderGrenade extends Render<Entity> {
         bindTexture(getEntityTexture(grenade));
 
         if(grenade instanceof EntityGrenadeMk2) {
-	        GL11.glRotatef(90, 0F, 1F, 0F);
+	        GlStateManager.rotate(90, 0F, 1F, 0F);
 			ResourceManager.grenade_frag.renderAll();
         }
         if(grenade instanceof EntityGrenadeASchrab) {
-	        GL11.glRotatef(90, 0F, 1F, 0F);
+	        GlStateManager.rotate(90, 0F, 1F, 0F);
 			ResourceManager.grenade_aschrab.renderAll();
         }
         GlStateManager.shadeModel(GL11.GL_FLAT);
         
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

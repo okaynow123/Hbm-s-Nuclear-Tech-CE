@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
@@ -60,8 +60,8 @@ public class ActorBasicPanel implements ISpecialActor {
         if (!lines.isEmpty()) {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
 
             int height = 0;
             int longestline = 0;
@@ -150,7 +150,7 @@ public class ActorBasicPanel implements ISpecialActor {
                         itemRender.renderItemAndEffectIntoGUI(stack, minX + indent, minY);
                         itemRender.renderItemOverlayIntoGUI(font, stack, minX + indent, minY, null);
                         RenderHelper.disableStandardItemLighting();
-                        GL11.glDisable(GL11.GL_DEPTH_TEST);
+                        GlStateManager.disableDepth();
                         indent += 18;
                     }
                 }
@@ -163,8 +163,8 @@ public class ActorBasicPanel implements ISpecialActor {
             }
 
             itemRender.zLevel = 0.0F;
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
             RenderHelper.enableStandardItemLighting();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }

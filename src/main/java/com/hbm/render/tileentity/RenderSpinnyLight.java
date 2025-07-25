@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinnyLight>
     implements IItemRendererProvider {
@@ -49,8 +49,8 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
     boolean powered = (te.getBlockMetadata() & 8) > 0;
     float time =
         powered ? (te.getWorld().getTotalWorldTime() - te.timeAdded) % 10000 + partialTicks : 0;
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
     switch (te.getBlockMetadata() & 7) {
       case 0:
         GL11.glRotated(180, 1, 0, 0);
@@ -73,16 +73,16 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
         GL11.glRotated(90, 1, 0, 0);
         break;
     }
-    GL11.glTranslated(0, -0.5, 0);
-    GL11.glPushMatrix();
+    GlStateManager.translate(0, -0.5, 0);
+    GlStateManager.pushMatrix();
     GL11.glRotated((time * 7) % 360, 0, 1, 0);
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.spinny_light_tex);
     if (powered) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
     ResourceManager.spinny_light.renderPart("light");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     ResourceManager.spinny_light.renderPart("base");
     GlStateManager.enableBlend();
     GlStateManager.blendFunc(
@@ -93,10 +93,10 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
     }
     GlStateManager.color(color[0], color[1], color[2], 0.61F);
     ResourceManager.spinny_light.renderPart("dome");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     if (powered) {
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       GL11.glRotated((time * 7) % 360, 0, 1, 0);
       GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
       GlStateManager.disableTexture2D();
@@ -113,10 +113,10 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
       GlStateManager.enableTexture2D();
       GlStateManager.disableBlend();
       GlStateManager.shadeModel(GL11.GL_FLAT);
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

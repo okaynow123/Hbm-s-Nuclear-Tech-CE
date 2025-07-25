@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderFluidTank extends TileEntitySpecialRenderer<TileEntityMachineFluidTank>
     implements IItemRendererProvider {
@@ -28,20 +28,20 @@ public class RenderFluidTank extends TileEntitySpecialRenderer<TileEntityMachine
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glDisable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.disableCull();
 
     switch (tank.getBlockMetadata() - 10) {
-      case 2 -> GL11.glRotatef(180, 0F, 1F, 0F);
-      case 4 -> GL11.glRotatef(270, 0F, 1F, 0F);
-      case 3 -> GL11.glRotatef(0, 0F, 1F, 0F);
-      case 5 -> GL11.glRotatef(90, 0F, 1F, 0F);
+      case 2 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+      case 4 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+      case 3 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+      case 5 -> GlStateManager.rotate(90, 0F, 1F, 0F);
     }
     FluidType type = tank.tankNew.getTankType();
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.tank_tex);
 
     ResourceManager.fluidtank.renderPart("Frame");
@@ -50,26 +50,26 @@ public class RenderFluidTank extends TileEntitySpecialRenderer<TileEntityMachine
     ResourceManager.fluidtank.renderPart("Tank");
 
     GL11.glColor3d(1D, 1D, 1D);
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
     if (type != null && type != Fluids.NONE) {
 
       RenderHelper.disableStandardItemLighting();
-      GL11.glPushMatrix();
-      GL11.glTranslated(-0.25, 0.5, -1.501);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(-0.25, 0.5, -1.501);
       GL11.glRotated(90, 0, 1, 0);
-      GL11.glScalef(1.0F, 0.375F, 0.375F);
+      GlStateManager.scale(1.0F, 0.375F, 0.375F);
       DiamondPronter.pront(type.poison, type.flammability, type.reactivity, type.symbol);
-      GL11.glPopMatrix();
-      GL11.glPushMatrix();
-      GL11.glTranslated(0.25, 0.5, 1.501);
+      GlStateManager.popMatrix();
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0.25, 0.5, 1.501);
       GL11.glRotated(-90, 0, 1, 0);
-      GL11.glScalef(1.0F, 0.375F, 0.375F);
+      GlStateManager.scale(1.0F, 0.375F, 0.375F);
       DiamondPronter.pront(type.poison, type.flammability, type.reactivity, type.symbol);
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
     RenderHelper.enableStandardItemLighting();
   }
 

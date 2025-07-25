@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLaser extends Render<EntityLaser> {
 
@@ -25,7 +25,7 @@ public class RenderLaser extends Render<EntityLaser> {
 
 	@Override
 	public void doRender(EntityLaser laser, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		EntityPlayer player = laser.world.getPlayerEntityByName(laser.getDataManager().get(EntityLaser.PLAYER_NAME));
 		
@@ -33,9 +33,9 @@ public class RenderLaser extends Render<EntityLaser> {
 
 			
 			
-			//GL11.glTranslated(x - dX, y - dY, z - dZ);
+			//GlStateManager.translate(x - dX, y - dY, z - dZ);
 			
-			GL11.glTranslated(x, y, z);
+			GlStateManager.translate(x, y, z);
 			
 			RayTraceResult pos = Library.rayTrace(player, 100, 1);
 			
@@ -47,7 +47,7 @@ public class RenderLaser extends Render<EntityLaser> {
 	        BeamPronter.prontBeam(skeleton, EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0xff3000, 0xff3000, init, 1, 0F, 4, 0.05F);
 		}
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

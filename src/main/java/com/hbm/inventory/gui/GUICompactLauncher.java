@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class GUICompactLauncher extends GuiInfoContainer {
 
@@ -57,7 +57,7 @@ public class GUICompactLauncher extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
@@ -95,7 +95,7 @@ public class GUICompactLauncher extends GuiInfoContainer {
 		launcher.tanks[1].renderTank(guiLeft + 134, guiTop + 70, this.zLevel, 16, 34);
 		
 		/// DRAW MISSILE START
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		MissileMultipart missile;
 		
@@ -106,21 +106,21 @@ public class GUICompactLauncher extends GuiInfoContainer {
 
 			missile = MissileMultipart.loadFromStruct(ItemCustomMissile.getStruct(custom));
 		
-			GL11.glTranslatef(guiLeft + 88, guiTop + 115, 100);
+			GlStateManager.translate(guiLeft + 88, guiTop + 115, 100);
 			
 			double size = 5 * 18;
 			double scale = size / Math.max(missile.getHeight(), 6);
 
-			GL11.glRotatef(90, 0, 1, 0);
-			GL11.glTranslated(missile.getHeight() / 2D * scale, 0, 0);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.translate(missile.getHeight() / 2D * scale, 0, 0);
 			GL11.glScaled(scale, scale, scale);
 			
-			GL11.glScalef(-1, -1, -1);
+			GlStateManager.scale(-1, -1, -1);
 			
 			MissilePronter.prontMissile(missile, Minecraft.getMinecraft().getTextureManager());
 		}
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		/// DRAW MISSILE END
 	}
 }

@@ -23,7 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 
@@ -241,20 +241,20 @@ public class CannerySILEX extends CanneryBase {
 			int mode = data.getInteger("mode");
 			int length = data.getInteger("length");
 			
-			GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-			GL11.glEnable(GL11.GL_LIGHTING);
+			GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+			GlStateManager.enableLighting();
 			
 			switch(rotation) {
-			case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
-			case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
-			case 2: GL11.glRotatef(180, 0F, 1F, 0F); break;
-			case 4: GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 3: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+			case 5: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+			case 2: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+			case 4: GlStateManager.rotate(270, 0F, 1F, 0F); break;
 			}
 
 			ITileActorRenderer.bindTexture(ResourceManager.fel_tex);
 			ResourceManager.fel.renderAll();
 			
-			GL11.glTranslated(0, 1.5, -1.5);
+			GlStateManager.translate(0, 1.5, -1.5);
 			if(mode > 0 && mode < 6) {
 				EnumWavelengths wave = EnumWavelengths.values()[mode];
 				int color = wave.guiColor;
@@ -279,21 +279,21 @@ public class CannerySILEX extends CanneryBase {
 			double z = data.getDouble("z");
 			int rotation = data.getInteger("rotation");
 			
-			GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
-			GL11.glEnable(GL11.GL_CULL_FACE);
+			GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+			GlStateManager.enableLighting();
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			GlStateManager.enableCull();
 			
 			switch(rotation) {
-			case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
-			case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
-			case 2: GL11.glRotatef(180, 0F, 1F, 0F); break;
-			case 4: GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 3: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+			case 5: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+			case 2: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+			case 4: GlStateManager.rotate(270, 0F, 1F, 0F); break;
 			}
 
 			ITileActorRenderer.bindTexture(ResourceManager.silex_tex);
 			ResourceManager.silex.renderAll();
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 
 		@Override

@@ -8,7 +8,7 @@ import com.hbm.tileentity.network.energy.TileEntitySubstation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSubstation extends TileEntitySpecialRenderer<TileEntitySubstation>
     implements IItemRendererProvider {
@@ -22,25 +22,25 @@ public class RenderSubstation extends TileEntitySpecialRenderer<TileEntitySubsta
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
     switch (sub.getBlockMetadata() - BlockDummyable.offset) {
       case 4:
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 2:
       case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
     }
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.substation_tex);
     ResourceManager.substation.renderAll();
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     RenderPylon.renderPowerLines(sub, x, y, z);
   }

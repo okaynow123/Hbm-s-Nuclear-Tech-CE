@@ -7,7 +7,7 @@ import com.hbm.tileentity.turret.TileEntityTurretJeremy;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurretJeremy extends RenderTurretBase<TileEntityTurretJeremy>
     implements IItemRendererProvider {
@@ -23,8 +23,8 @@ public class RenderTurretJeremy extends RenderTurretBase<TileEntityTurretJeremy>
       float alpha) {
     Vec3d pos = turret.byHorizontalIndexOffset();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + pos.x, y, z + pos.z);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + pos.x, y, z + pos.z);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -47,14 +47,14 @@ public class RenderTurretJeremy extends RenderTurretBase<TileEntityTurretJeremy>
     bindTexture(ResourceManager.turret_carriage_tex);
     ResourceManager.turret_chekhov.renderPart("Carriage");
 
-    GL11.glTranslated(0, 1.5, 0);
+    GlStateManager.translate(0, 1.5, 0);
     GL11.glRotated(pitch, 0, 0, 1);
-    GL11.glTranslated(0, -1.5, 0);
+    GlStateManager.translate(0, -1.5, 0);
     bindTexture(ResourceManager.turret_jeremy_tex);
     ResourceManager.turret_jeremy.renderPart("Gun");
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

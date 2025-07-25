@@ -19,7 +19,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,12 +117,12 @@ public class GUIScreenGuide extends GuiScreen {
 
                 String cover = coverLines[i];
 
-                GL11.glPushMatrix();
-                GL11.glScalef(scale, scale, 1F);
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(scale, scale, 1F);
                 this.fontRenderer.drawString(cover,
 						(int) ((guiLeft + ((this.xSize / 2F) - (this.fontRenderer.getStringWidth(cover) / 2F * scale))) / scale),
 						(int) ((guiTop + 50 + i * 10 * scale) / scale), 0xfece00);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
 
             return;
@@ -165,8 +165,8 @@ public class GUIScreenGuide extends GuiScreen {
 
                     float titleScale = getOverrideScale(page.titleScale, page.title + ".scale");
 
-                    GL11.glPushMatrix();
-                    GL11.glScalef(1F / scale, 1F / scale, 1F);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(1F / scale, 1F / scale, 1F);
 
                     float topOffset;
 
@@ -181,7 +181,7 @@ public class GUIScreenGuide extends GuiScreen {
 								(int) ((guiTop + 30 + topOffset) * scale + (12 * l)), 4210752);
                     }
 
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
 
                 if (page.title != null) {
@@ -189,12 +189,12 @@ public class GUIScreenGuide extends GuiScreen {
                     float tScale = getOverrideScale(page.titleScale, page.title + ".scale");
                     String titleLoc = I18nUtil.resolveKey(page.title);
 
-                    GL11.glPushMatrix();
-                    GL11.glScalef(1F / tScale, 1F / tScale, 1F);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(1F / tScale, 1F / tScale, 1F);
                     this.fontRenderer.drawString(titleLoc,
 							(int) ((guiLeft + 20 + i * sideOffset + ((100 / 2F) - (this.fontRenderer.getStringWidth(titleLoc) / 2F / tScale))) * tScale), (int) ((guiTop + 20) * tScale), page.titleColor);
 
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
 
                 for (GuideImage img : page.images) {

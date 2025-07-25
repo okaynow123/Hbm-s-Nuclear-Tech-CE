@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityMachinePress;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Collections;
 
@@ -41,7 +41,7 @@ public class GUIMachinePress extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		this.mc.getTextureManager().bindTexture(TEXTURE);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if (this.press.burnTime > 0) {
 			this.drawTexturedModalRect(guiLeft + 27, guiTop + 36, 176, 0, 14, 14);

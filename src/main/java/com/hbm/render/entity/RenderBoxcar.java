@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBoxcar extends Render<EntityBoxcar> implements IItemRendererProvider {
 
@@ -27,13 +27,13 @@ public class RenderBoxcar extends Render<EntityBoxcar> implements IItemRendererP
   @Override
   public void doRender(
       EntityBoxcar entity, double x, double y, double z, float entityYaw, float partialTicks) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-    GL11.glTranslatef((float) x, (float) y, (float) z);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.translate((float) x, (float) y, (float) z);
+    GlStateManager.enableCull();
     GlStateManager.enableLighting();
 
-    GL11.glTranslatef(0, 0, -1.5F);
+    GlStateManager.translate(0, 0, -1.5F);
     GL11.glRotated(180, 0, 0, 1);
     GL11.glRotated(90, 1, 0, 0);
 
@@ -41,7 +41,7 @@ public class RenderBoxcar extends Render<EntityBoxcar> implements IItemRendererP
     ResourceManager.boxcar.renderAll();
 
     GL11.glPopAttrib();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderPumpjack extends TileEntitySpecialRenderer<TileEntityMachinePumpjack>
     implements IItemRendererProvider {
@@ -57,50 +57,50 @@ public class RenderPumpjack extends TileEntitySpecialRenderer<TileEntityMachineP
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
-    GL11.glEnable(GL11.GL_LIGHTING);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
+    GlStateManager.enableLighting();
 
     switch (pj.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
     }
 
     float rotation = (pj.prevRot + (pj.rot - pj.prevRot) * f);
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
     bindTexture(ResourceManager.pumpjack_tex);
     ResourceManager.pumpjack.renderPart("Base");
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 1.5, -5.5);
-    GL11.glRotatef(rotation - 90, 1, 0, 0);
-    GL11.glTranslated(0, -1.5, 5.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 1.5, -5.5);
+    GlStateManager.rotate(rotation - 90, 1, 0, 0);
+    GlStateManager.translate(0, -1.5, 5.5);
     ResourceManager.pumpjack.renderPart("Rotor");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 3.5, -3.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 3.5, -3.5);
     GL11.glRotated(Math.toDegrees(Math.sin(Math.toRadians(rotation))) * 0.25, 1, 0, 0);
-    GL11.glTranslated(0, -3.5, 3.5);
+    GlStateManager.translate(0, -3.5, 3.5);
     ResourceManager.pumpjack.renderPart("Head");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, -Math.sin(Math.toRadians(rotation)), 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, -Math.sin(Math.toRadians(rotation)), 0);
     ResourceManager.pumpjack.renderPart("Carriage");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     Vec3 backPos = Vec3.createVectorHelper(0, 0, -2);
     backPos.rotateAroundX(-(float) Math.sin(Math.toRadians(rotation)) * 0.25F);
@@ -188,7 +188,7 @@ public class RenderPumpjack extends TileEntitySpecialRenderer<TileEntityMachineP
     GlStateManager.enableLighting();
     GlStateManager.enableTexture2D();
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -12,7 +12,7 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class AnvilRecipeHandler implements IRecipeCategory<AnvilRecipe> {
 
@@ -55,7 +55,7 @@ public class AnvilRecipeHandler implements IRecipeCategory<AnvilRecipe> {
 				minecraft.fontRenderer.drawString(I18nUtil.resolveKey("desc.mintier", currentDrawHack.tierLower), 74, 40, 0x40404040);
 				minecraft.fontRenderer.drawString(I18nUtil.resolveKey("desc.maxtier", currentDrawHack.tierUpper), 73, 50, 0x40404040);
 			}
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GL11.glScaled(0.5, 0.5, 1);
 			switch(currentDrawHack.overlay){
 			case CONSTRUCTION:
@@ -71,7 +71,7 @@ public class AnvilRecipeHandler implements IRecipeCategory<AnvilRecipe> {
 				minecraft.fontRenderer.drawString(I18nUtil.resolveKey("jei.conversion"), 85*2, 82*2, 0x40404040);
 				break;
 			}
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 	

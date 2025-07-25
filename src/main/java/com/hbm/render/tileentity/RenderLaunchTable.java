@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunchTable>
     implements IItemRendererProvider {
@@ -34,23 +34,23 @@ public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunc
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
     GlStateManager.enableCull();
 
     switch (launcher.getWorld().getBlockState(launcher.getPos()).getValue(BlockHorizontal.FACING)) {
       case NORTH:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case SOUTH:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case EAST:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case WEST:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       default:
         break;
@@ -68,7 +68,7 @@ public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunc
       ResourceManager.launch_table_large_pad.renderAll();
     }
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
     if (launcher.load != null) {
       MissileMultipart mp = MissileMultipart.loadFromStruct(launcher.load);
@@ -89,9 +89,9 @@ public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunc
       baseM = ResourceManager.launch_table_small_scaffold_base;
       connectorM = ResourceManager.launch_table_small_scaffold_connector;
       emptyM = ResourceManager.launch_table_small_scaffold_empty;
-      GL11.glTranslatef(0F, 0F, -1F);
+      GlStateManager.translate(0F, 0F, -1F);
     }
-    GL11.glTranslatef(0F, 1F, 3.5F);
+    GlStateManager.translate(0F, 1F, 3.5F);
     for (int i = 0; i < launcher.height + 1; i++) {
 
       if (i < height) {
@@ -113,14 +113,14 @@ public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunc
         }
       }
 
-      GL11.glTranslatef(0F, 1F, 0F);
+      GlStateManager.translate(0F, 1F, 0F);
     }
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glTranslatef(0F, 2.0625F, 0F);
+    GlStateManager.translate(0F, 2.0625F, 0F);
 
     /// DRAW MISSILE START
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
     if (launcher.load != null
         && launcher.load.fuselage != null
@@ -130,10 +130,10 @@ public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunc
           MissileMultipart.loadFromStruct(launcher.load),
           Minecraft.getMinecraft().getTextureManager());
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
     /// DRAW MISSILE END
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

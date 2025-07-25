@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderNuclearCreeper extends RenderLiving<EntityNuclearCreeper> {
     private static final ResourceLocation creeperTextures = new ResourceLocation(RefStrings.MODID + ":" + "textures/entity/creeper.png");
@@ -35,7 +35,7 @@ public class RenderNuclearCreeper extends RenderLiving<EntityNuclearCreeper> {
         f1 *= f1;
         float f3 = (1.0F + f1 * 0.4F) * f2;
         float f4 = (1.0F + f1 * 0.1F) / f2;
-        GL11.glScalef(f3, f4, f3);
+        GlStateManager.scale(f3, f4, f3);
 	}
 	
 	

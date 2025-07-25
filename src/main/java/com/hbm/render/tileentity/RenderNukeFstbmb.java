@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderNukeFstbmb extends TileEntitySpecialRenderer<TileEntityNukeBalefire>
     implements IItemRendererProvider {
@@ -31,22 +31,22 @@ public class RenderNukeFstbmb extends TileEntitySpecialRenderer<TileEntityNukeBa
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
     switch (bf.getBlockMetadata()) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
@@ -70,19 +70,19 @@ public class RenderNukeFstbmb extends TileEntitySpecialRenderer<TileEntityNukeBa
 
       FontRenderer font = Minecraft.getMinecraft().fontRenderer;
       float f3 = 0.04F;
-      GL11.glTranslatef(0.815F, 0.9275F, 0.5F);
-      GL11.glScalef(f3, -f3, f3);
+      GlStateManager.translate(0.815F, 0.9275F, 0.5F);
+      GlStateManager.scale(f3, -f3, f3);
       GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
-      GL11.glRotatef(90, 0, 1, 0);
+      GlStateManager.rotate(90, 0, 1, 0);
       GlStateManager.depthMask(false);
-      GL11.glTranslatef(0, 1, 0);
+      GlStateManager.translate(0, 1, 0);
       font.drawString(bf.getMinutes() + ":" + bf.getSeconds(), 0, 0, 0xff0000);
       GlStateManager.depthMask(true);
     }
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

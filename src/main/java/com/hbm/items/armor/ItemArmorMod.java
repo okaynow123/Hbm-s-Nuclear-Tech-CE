@@ -18,7 +18,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class ItemArmorMod extends ItemCustomLore {
 		float mx = (float)(me.prevPosX + (me.posX - me.prevPosX) * interp);
 		float my = (float)(me.prevPosY + (me.posY - me.prevPosY) * interp);
 		float mz = (float)(me.prevPosZ + (me.posZ - me.prevPosZ) * interp);
-		GL11.glTranslatef(mx-px, my-py, pz-mz);
+		GlStateManager.translate(mx-px, my-py, pz-mz);
 	}
 
 	public void copyRot(ModelBiped model, ModelBiped body){

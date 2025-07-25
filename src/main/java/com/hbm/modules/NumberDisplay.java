@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nonnegative;
 import java.math.BigDecimal;
@@ -315,9 +315,9 @@ public class NumberDisplay {
         final BufferBuilder buffer = tess.getBuffer();
         final float z = gui.getGuiTop();
 
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         buffer.pos(renX, renY + height, z).color(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, 255).endVertex();
@@ -327,8 +327,8 @@ public class NumberDisplay {
 
         tess.draw();
 
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
     }
 
     public void setNumber(Number num)

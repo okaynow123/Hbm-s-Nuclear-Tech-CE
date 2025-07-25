@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleLetter extends Particle {
 
@@ -30,7 +30,7 @@ public class ParticleLetter extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
@@ -47,10 +47,10 @@ public class ParticleLetter extends Particle {
 	    float pY = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
 	    float pZ = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
 
-	    GL11.glTranslatef(pX, pY, pZ);
-	    GL11.glRotatef(-mc.player.rotationYaw, 0.0F, 1.0F, 0.0F);
-	    GL11.glRotatef(mc.player.rotationPitch, 1.0F, 0.0F, 0.0F);
-	    GL11.glScalef(-1.0F, -1.0F, 1.0F);
+	    GlStateManager.translate(pX, pY, pZ);
+	    GlStateManager.rotate(-mc.player.rotationYaw, 0.0F, 1.0F, 0.0F);
+	    GlStateManager.rotate(mc.player.rotationPitch, 1.0F, 0.0F, 0.0F);
+	    GlStateManager.scale(-1.0F, -1.0F, 1.0F);
 
 	    float time = (this.particleAge + partialTicks) * 4F / this.particleMaxAge;
 
@@ -79,6 +79,6 @@ public class ParticleLetter extends Particle {
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.enableLighting();
 
-	    GL11.glPopMatrix();
+	    GlStateManager.popMatrix();
 	}
 }

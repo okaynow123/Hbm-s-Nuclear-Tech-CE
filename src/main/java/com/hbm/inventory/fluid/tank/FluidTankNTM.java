@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -233,7 +233,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
     public void renderTank(int x, int y, double z, int width, int height, int orientation) {
 
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
 
         int color = type.getTint();
         double r = ((color & 0xff0000) >> 16) / 255D;
@@ -284,7 +284,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         tessellator.draw();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
     }
 
     public void renderTankInfo(@NotNull GuiInfoContainer gui, int mouseX, int mouseY, int x, int y, int width, int height) {

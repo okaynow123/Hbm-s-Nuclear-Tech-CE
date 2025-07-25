@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLiquefactor extends TileEntitySpecialRenderer<TileEntityMachineLiquefactor>
     implements IItemRendererProvider {
@@ -23,17 +23,17 @@ public class RenderLiquefactor extends TileEntitySpecialRenderer<TileEntityMachi
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glDisable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.disableCull();
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.liquefactor_tex);
     ResourceManager.liquefactor.renderPart("Main");
 
-    GL11.glDisable(GL11.GL_LIGHTING);
-    GL11.glDisable(GL11.GL_TEXTURE_2D);
+    GlStateManager.disableLighting();
+    GlStateManager.disableTexture2D();
 
     if (te.tank.getFill() > 0) {
       int color = te.tank.getTankType().getColor();
@@ -43,32 +43,32 @@ public class RenderLiquefactor extends TileEntitySpecialRenderer<TileEntityMachi
           (byte) ((color & 0x0000FF) >> 0));
 
       double height = (double) te.tank.getFill() / (double) te.tank.getMaxFill();
-      GL11.glPushMatrix();
-      GL11.glTranslated(0, 1, 0);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0, 1, 0);
       GL11.glScaled(1, height, 1);
-      GL11.glTranslated(0, -1, 0);
+      GlStateManager.translate(0, -1, 0);
       ResourceManager.liquefactor.renderPart("Fluid");
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glEnable(GL11.GL_BLEND);
-    GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+    GlStateManager.enableBlend();
+    GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
     OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-    GL11.glColor4f(0.75F, 1.0F, 1.0F, 0.15F);
+    GlStateManager.color(0.75F, 1.0F, 1.0F, 0.15F);
     GL11.glDepthMask(false);
 
     ResourceManager.liquefactor.renderPart("Glass");
 
     GL11.glDepthMask(true);
-    GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-    GL11.glDisable(GL11.GL_BLEND);
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
-    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+    GlStateManager.disableBlend();
+    GlStateManager.enableTexture2D();
+    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-    GL11.glShadeModel(GL11.GL_FLAT);
-    GL11.glEnable(GL11.GL_CULL_FACE);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glPopMatrix();
+    GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.enableCull();
+    GlStateManager.enableLighting();
+    GlStateManager.popMatrix();
   }
 
   @Override

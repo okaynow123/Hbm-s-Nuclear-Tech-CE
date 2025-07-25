@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
@@ -129,9 +129,9 @@ public class GuiWorldInAJar extends GuiScreen {
     private void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 
         for (Entry<Integer, ISpecialActor> actor : this.jarScript.actors.entrySet()) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             actor.getValue().drawForegroundComponent(this.width, this.height, this.jarScript.ticksElapsed, this.jarScript.interp);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LMENU)) {
@@ -142,7 +142,7 @@ public class GuiWorldInAJar extends GuiScreen {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(guiUtil);
         RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GlStateManager.disableDepth();
 
         int playButton = this.jarScript.isPaused() ? 64 : 40;
 
@@ -165,7 +165,7 @@ public class GuiWorldInAJar extends GuiScreen {
         else
             this.drawTexturedModalRect(width / 2 - 12 + 36, height - 36, 112, 48, 24, 24);
 
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GlStateManager.enableDepth();
         this.drawTexturedModalRect(15, 15, 136, 48, 24, 24);
         RenderHelper.enableGUIStandardItemLighting();
         itemRender.renderItemAndEffectIntoGUI(this.icon, 19, 19);
@@ -180,7 +180,7 @@ public class GuiWorldInAJar extends GuiScreen {
             CanneryBase also = seeAlso[i];
 
             Minecraft.getMinecraft().getTextureManager().bindTexture(guiUtil);
-            GL11.glDisable(GL11.GL_LIGHTING);
+            GlStateManager.disableLighting();
             this.drawTexturedModalRect(15, 15 + 36 * (i + 1), 136, 72, 24, 24);
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemAndEffectIntoGUI(also.getIcon(), 19, 19 + 36 * (i + 1));
@@ -195,11 +195,11 @@ public class GuiWorldInAJar extends GuiScreen {
 
     private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         setupRotation();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
@@ -218,31 +218,31 @@ public class GuiWorldInAJar extends GuiScreen {
         }
 
         Tessellator.getInstance().draw();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glPopMatrix();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
 
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         setupRotation();
         RenderHelper.enableStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
         for (Entry<Integer, ISpecialActor> actor : this.jarScript.actors.entrySet()) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             actor.getValue().drawBackgroundComponent(this.jarScript.world, this.jarScript.ticksElapsed, this.jarScript.interp);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void setupRotation() {
 
         double scale = -10;
 
-        GL11.glTranslated(width / 2, height / 2, 400);
+        GlStateManager.translate(width / 2, height / 2, 400);
         GL11.glScaled(scale, scale, scale);
         GL11.glScaled(1, 1, 0.5); //incredible flattening power
 
@@ -251,8 +251,8 @@ public class GuiWorldInAJar extends GuiScreen {
 
         GL11.glRotated(jarScript.pitch(), 1, 0, 0);
         GL11.glRotated(jarScript.yaw(), 0, 1, 0);
-        GL11.glTranslated(jarScript.world.sizeX / -2D, -jarScript.world.sizeY / 2D, jarScript.world.sizeZ / -2D);
-        GL11.glTranslated(jarScript.offsetX(), jarScript.offsetY(), jarScript.offsetZ());
+        GlStateManager.translate(jarScript.world.sizeX / -2D, -jarScript.world.sizeY / 2D, jarScript.world.sizeZ / -2D);
+        GlStateManager.translate(jarScript.offsetX(), jarScript.offsetY(), jarScript.offsetZ());
     }
 
     @Override
@@ -268,8 +268,8 @@ public class GuiWorldInAJar extends GuiScreen {
         if (!lines.isEmpty()) {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
 
             int height = 0;
             int longestline = 0;
@@ -359,7 +359,7 @@ public class GuiWorldInAJar extends GuiScreen {
                         itemRender.renderItemAndEffectIntoGUI(stack, minX + indent, minY);
                         itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack, minX + indent, minY, null);
                         RenderHelper.disableStandardItemLighting();
-                        GL11.glDisable(GL11.GL_DEPTH_TEST);
+                        GlStateManager.disableDepth();
                         indent += 18;
                     }
                 }
@@ -373,8 +373,8 @@ public class GuiWorldInAJar extends GuiScreen {
 
             this.zLevel = 0.0F;
             itemRender.zLevel = 0.0F;
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
             RenderHelper.enableStandardItemLighting();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }

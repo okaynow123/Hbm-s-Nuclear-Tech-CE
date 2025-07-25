@@ -4,7 +4,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.ModelRendererObj;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelBackTesla extends ModelArmorBase {
 
@@ -18,13 +18,13 @@ public class ModelBackTesla extends ModelArmorBase {
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
 		this.body.rotateAngleY += (float)Math.toRadians(par5);
 
-		GL11.glPushMatrix();
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.pushMatrix();
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.mod_tesla);
 		body.render(par7);
 		
-		GL11.glShadeModel(GL11.GL_FLAT);
-		GL11.glPopMatrix();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
+		GlStateManager.popMatrix();
 	}
 }

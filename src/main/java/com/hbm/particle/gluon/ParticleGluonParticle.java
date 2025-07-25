@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.FloatBuffer;
 
@@ -46,7 +46,7 @@ public class ParticleGluonParticle extends Particle {
 	}
 	
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ, FloatBuffer mat) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		float timeScale = (this.particleAge+partialTicks)/(float)this.particleMaxAge;
 		float shrink = MathHelper.clamp(1-BobMathUtil.remap((float)MathHelper.clamp(timeScale, 0, 1), 0.6F, 1F, 0.6F, 1F), 0, 1);
 		this.workingAlpha = shrink*particleAlpha*0.9F;
@@ -57,7 +57,7 @@ public class ParticleGluonParticle extends Particle {
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
         
-        GL11.glTranslated(f5, f6, f7);
+        GlStateManager.translate(f5, f6, f7);
         GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER2);
 		ClientProxy.AUX_GL_BUFFER2.rewind();
 		float[] trans = new float[3];
@@ -77,7 +77,7 @@ public class ParticleGluonParticle extends Particle {
         buffer.pos(avec3d[2].x, avec3d[2].y, avec3d[2].z).tex(0, 0).color(this.particleRed, this.particleGreen, this.particleBlue, this.workingAlpha).lightmap(240, 240).endVertex();
         buffer.pos(avec3d[3].x, avec3d[3].y, avec3d[3].z).tex(0, 1).color(this.particleRed, this.particleGreen, this.particleBlue, this.workingAlpha).lightmap(240, 240).endVertex();
         Tessellator.getInstance().draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 	
 }

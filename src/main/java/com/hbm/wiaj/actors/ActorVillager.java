@@ -5,7 +5,7 @@ import com.hbm.wiaj.WorldInAJar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ActorVillager implements ISpecialActor {
 	
@@ -27,7 +27,7 @@ public class ActorVillager implements ISpecialActor {
 		double y = data.getDouble("y");
 		double z = data.getDouble("z");
 		double yaw = data.getDouble("yaw");
-		GL11.glTranslated(x, y, z);
+		GlStateManager.translate(x, y, z);
 		GL11.glRotated(yaw, 0, 1, 0);
 		Minecraft.getMinecraft().getRenderManager().renderEntity(villager, 0D, 0D, 0D, 0F, interp, false);
 	}

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntityForceField>
     implements IItemRendererProvider {
@@ -30,15 +30,15 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
     bindTexture(ResourceManager.forcefield_base_tex);
     ResourceManager.radar_body.renderAll();
 
-    GL11.glTranslated(0, 0.5D, 0);
+    GlStateManager.translate(0, 0.5D, 0);
 
     int segments = (int) (16 + ff.radius * 0.125);
 
@@ -51,12 +51,12 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
       GL11.glRotated(-rot, 0F, 1F, 0F);
     }
 
-    GL11.glTranslated(0, 0.5, 0);
+    GlStateManager.translate(0, 0.5, 0);
     ResourceManager.forcefield_top.renderAll();
-    GL11.glTranslated(0, -0.5, 0);
+    GlStateManager.translate(0, -0.5, 0);
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override
@@ -88,7 +88,7 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
     float g = (hex >> 8 & 255) / 255F;
     float b = (hex & 255) / 255F;
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GlStateManager.disableTexture2D();
     GlStateManager.disableLighting();
 
@@ -100,7 +100,7 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
 
     for (int k = 0; k < s; k++) {
       buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-      GL11.glRotatef(sRot, 0F, 1F, 0F);
+      GlStateManager.rotate(sRot, 0F, 1F, 0F);
 
       Vec3 vec = Vec3.createVectorHelper(0, rad, 0);
 
@@ -115,6 +115,6 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
 
     GlStateManager.enableLighting();
     GlStateManager.enableTexture2D();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 }

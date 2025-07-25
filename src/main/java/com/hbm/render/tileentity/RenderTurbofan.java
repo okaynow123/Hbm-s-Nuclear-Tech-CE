@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityMachineTurbofan;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurbofan extends TileEntitySpecialRenderer<TileEntityMachineTurbofan>
     implements IItemRendererProvider {
@@ -21,34 +21,34 @@ public class RenderTurbofan extends TileEntitySpecialRenderer<TileEntityMachineT
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.disableCull();
     switch (turbo.getBlockMetadata() - 10) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
     float spin = turbo.lastSpin + (turbo.spin - turbo.lastSpin) * partialTicks;
     GlStateManager.disableLighting();
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.turbofan_tex);
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 1.5, 0);
-    GL11.glRotatef(spin, 0F, 0F, -1F);
-    GL11.glTranslated(0, -1.5, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 1.5, 0);
+    GlStateManager.rotate(spin, 0F, 0F, -1F);
+    GlStateManager.translate(0, -1.5, 0);
     ResourceManager.turbofan.renderPart("Blades");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     GlStateManager.enableLighting();
     ResourceManager.turbofan.renderPart("Body");
@@ -56,10 +56,10 @@ public class RenderTurbofan extends TileEntitySpecialRenderer<TileEntityMachineT
     else bindTexture(ResourceManager.turbofan_afterburner_tex);
 
     ResourceManager.turbofan.renderPart("Afterburner");
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

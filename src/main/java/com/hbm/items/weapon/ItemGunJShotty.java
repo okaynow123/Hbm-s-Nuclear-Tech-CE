@@ -38,7 +38,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Vector4f;
 
 public class ItemGunJShotty extends ItemGunBase {
@@ -135,7 +135,7 @@ public class ItemGunJShotty extends ItemGunBase {
 			float x = res.getScaledWidth()/2;
 			float y = res.getScaledHeight()/2;
 
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.shotgun_crosshair);
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -146,7 +146,7 @@ public class ItemGunJShotty extends ItemGunBase {
 		        GlStateManager.color(1, 1, 1, 1);
 		        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 		        GlStateManager.disableBlend();
-	        GL11.glPopMatrix();
+	        GlStateManager.popMatrix();
 			Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 		}
 	}

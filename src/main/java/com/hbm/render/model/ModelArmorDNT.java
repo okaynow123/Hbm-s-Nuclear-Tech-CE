@@ -5,7 +5,7 @@ import com.hbm.render.loader.ModelRendererObj;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelArmorDNT extends ModelArmorBase {
 	
@@ -27,18 +27,18 @@ public class ModelArmorDNT extends ModelArmorBase {
 		
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		if(this.isChild) {
-			GL11.glScalef(0.75F, 0.75F, 0.75F);
-			GL11.glTranslatef(0.0F, 16.0F * par7, 0.0F);
+			GlStateManager.scale(0.75F, 0.75F, 0.75F);
+			GlStateManager.translate(0.0F, 16.0F * par7, 0.0F);
 		}
 		if(type == 3) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.dnt_helmet);
 			head.render(par7*1.001F);
 		}
 		if(this.isChild) {
-			GL11.glScalef(0.75F, 0.75F, 0.75F);
+			GlStateManager.scale(0.75F, 0.75F, 0.75F);
 		}
 		if(type == 2) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.dnt_chest);
@@ -59,6 +59,6 @@ public class ModelArmorDNT extends ModelArmorBase {
 		}
 		
 		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

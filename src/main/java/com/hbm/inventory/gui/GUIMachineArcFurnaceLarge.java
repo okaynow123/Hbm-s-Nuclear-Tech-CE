@@ -17,7 +17,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
         super.drawDefaultBackground();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -99,7 +99,7 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
         int lastHeight = 0;
         int lastQuant = 0;
 
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
         for(Mats.MaterialStack sta : stack) {
 
@@ -112,10 +112,10 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
             Color color = new Color(hex);
             GL11.glColor3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 208, 70 - targetHeight, 16, targetHeight - lastHeight);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glColor4f(1F, 1F, 1F, 0.3F);
+            GlStateManager.enableBlend();
+            GlStateManager.color(1F, 1F, 1F, 0.3F);
             drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 208, 70 - targetHeight, 16, targetHeight - lastHeight);
-            GL11.glDisable(GL11.GL_BLEND);
+            GlStateManager.disableBlend();
 
             lastQuant += sta.amount;
             lastHeight = targetHeight;

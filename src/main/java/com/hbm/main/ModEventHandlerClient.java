@@ -134,7 +134,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.glu.Project;
 
 import java.nio.FloatBuffer;
@@ -1042,8 +1042,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
     @SubscribeEvent
     public void onArmorRenderEvent(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
-        GL11.glPushMatrix();
-        GL11.glTranslated(0, player.isSneaking() ? 1.1 : 1.4, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, player.isSneaking() ? 1.1 : 1.4, 0);
         GL11.glRotated(180, 0, 0, 1);
 
         for (int i = 0; i < 4; i++) {
@@ -1065,7 +1065,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 ((ItemArmorMod) armor.getItem()).modRender(event, armor);
             }
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @SubscribeEvent
@@ -1147,7 +1147,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             double sqrt = MathHelper.sqrt(tester.x * tester.x + tester.z * tester.z);
             double pitch = Math.toDegrees(Math.atan2(tester.y, sqrt));
 
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             GlStateManager.translate(ssgChainPos.x, ssgChainPos.y, ssgChainPos.z);
             GL11.glRotated(yaw + 90, 0, 1, 0);
             GL11.glRotated(-pitch + 90, 0, 0, 1);
@@ -1179,7 +1179,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
 
             tessellator.draw();
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
 
         int dist = 300;
@@ -1190,8 +1190,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         Vec3d vec = new Vec3d(x - d3, y - d4, z - d5);
 
         if (vec.length() < dist) {
-            GL11.glPushMatrix();
-            GL11.glTranslated(vec.x, vec.y, vec.z);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(vec.x, vec.y, vec.z);
 
 
             net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
@@ -1203,7 +1203,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             GL11.glRotated(sine, 0, 0, 1);
             GL11.glRotated(sin3, 1, 0, 0);
 
-            GL11.glTranslated(0, -3, 0);
+            GlStateManager.translate(0, -3, 0);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 6500F, 30F);
             SoyuzPronter.prontCapsule();
 
@@ -1211,36 +1211,36 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
             String msg = HTTPHandler.capsule;
 
-            GL11.glTranslated(0, 3.75, 0);
+            GlStateManager.translate(0, 3.75, 0);
             GL11.glRotated(180, 1, 0, 0);
 
             float rot = 0F;
 
             //looks dumb but we'll use this technology for the cyclotron
             for (char c : msg.toCharArray()) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
 
-                GL11.glRotatef(rot, 0, 1, 0);
+                GlStateManager.rotate(rot, 0, 1, 0);
 
                 float width = Minecraft.getMinecraft().fontRenderer.getStringWidth(msg);
                 float scale = 5 / width;
 
                 rot -= Minecraft.getMinecraft().fontRenderer.getCharWidth(c) * scale * 50;
 
-                GL11.glTranslated(2, 0, 0);
+                GlStateManager.translate(2, 0, 0);
 
-                GL11.glRotatef(-90, 0, 1, 0);
+                GlStateManager.rotate(-90, 0, 1, 0);
 
-                GL11.glScalef(scale, scale, scale);
+                GlStateManager.scale(scale, scale, scale);
                 GlStateManager.disableCull();
                 Minecraft.getMinecraft().fontRenderer.drawString(String.valueOf(c), 0, 0, 0xff00ff);
                 GlStateManager.enableCull();
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
 
             net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
 
         boolean hudOn = HbmCapability.getData(Minecraft.getMinecraft().player).getEnableHUD();
@@ -1271,13 +1271,13 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 					ItemSwordCutter.x *= lenRcp;
 					ItemSwordCutter.y *= lenRcp;
 					double angle = Math.atan2(ItemSwordCutter.y, ItemSwordCutter.x);
-					GL11.glPushMatrix();
-					GL11.glTranslated(0, player.getEyeHeight(), 0);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(0, player.getEyeHeight(), 0);
 					GL11.glRotated(-player.rotationYaw-90, 0, 1, 0);
 					GL11.glRotated(-player.rotationPitch, 0, 0, 1);
-					GL11.glTranslated(-0.3, 0, 0);
+					GlStateManager.translate(-0.3, 0, 0);
 					GL11.glRotated(Math.toDegrees(angle), 1, 0, 0);
-					GL11.glTranslated(0, 0.2, 0);
+					GlStateManager.translate(0, 0.2, 0);
 					GlStateManager.disableCull();
 					GlStateManager.disableTexture2D();
 					GlStateManager.enableBlend();
@@ -1296,7 +1296,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 					Vec3d[] positions = BobMathUtil.worldFromLocal(new Vector4f(0, 0, -2, 1), new Vector4f(3, 0, -2, 1), new Vector4f(3, 0, 2, 1));
 					Vec3d norm = positions[1].subtract(positions[0]).crossProduct(positions[2].subtract(positions[0])).normalize();
 					ItemSwordCutter.plane = new Vec3d[]{positions[0], norm};
-					GL11.glPopMatrix();
+					GlStateManager.popMatrix();
 					GlStateManager.disableTexture2D();
 					GlStateManager.color(1F, 0F, 0F, 1F);
 					buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
@@ -1313,8 +1313,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                         Vec3d norm = ItemSwordCutter.startPos.crossProduct(player.getLook(partialTicks));
                         GlStateManager.disableTexture2D();
                         GlStateManager.color(0, 0, 0, 1);
-                        GL11.glPushMatrix();
-                        GL11.glLoadIdentity();
+                        GlStateManager.pushMatrix();
+                        GlStateManager.loadIdentity();
 
                         GL11.glRotated(player.rotationPitch, 1, 0, 0);
                         GL11.glRotated(player.rotationYaw + 180, 0, 1, 0);
@@ -1323,7 +1323,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                         buf.pos(pos1.x, pos1.y, pos1.z).endVertex();
                         buf.pos(pos2.x, pos2.y, pos2.z).endVertex();
                         tes.draw();
-                        GL11.glPopMatrix();
+                        GlStateManager.popMatrix();
                         GlStateManager.color(1, 1, 1, 1);
                         GlStateManager.enableTexture2D();
                         if (norm.lengthSquared() > 0.001F) {
@@ -1343,10 +1343,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 			Vec3d c1 = new Vec3d(rot.m00, rot.m01, rot.m02);
 			Vec3d c2 = new Vec3d(rot.m10, rot.m11, rot.m12);
 			Vec3d c3 = new Vec3d(rot.m20, rot.m21, rot.m22);
-			GL11.glPushMatrix();
-			GL11.glTranslated(0, player.getEyeHeight(), 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, player.getEyeHeight(), 0);
 			Vec3d look = player.getLook(partialTicks).scale(2);
-			GL11.glTranslated(look.x, look.y, look.z);
+			GlStateManager.translate(look.x, look.y, look.z);
 			GlStateManager.disableTexture2D();
 			buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 			buf.pos(0, 0, 0).endVertex();
@@ -1357,11 +1357,11 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 			buf.pos(c3.x, c3.y, c3.z).endVertex();
 			tes.draw();
 			GlStateManager.enableTexture2D();
-			GL11.glPopMatrix();*/
+			GlStateManager.popMatrix();*/
 
             //GLUON GUN//
             if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon && ItemGunEgon.activeTicks > 0 && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 float[] angles = ItemGunEgon.getBeamDirectionOffset(player.world.getTotalWorldTime() + partialTicks);
                 Vec3d look = Library.changeByAngle(player.getLook(partialTicks), angles[0], angles[1]);
                 RayTraceResult r = Library.rayTraceIncludeEntitiesCustomDirection(player, look, 50, partialTicks);
@@ -1379,9 +1379,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 start = start.rotateYaw((float) Math.toRadians(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks)));
 
                 start = start.add(0, player.getEyeHeight(), 0);
-                GL11.glTranslated(start.x, start.y, start.z);
+                GlStateManager.translate(start.x, start.y, start.z);
                 BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos).subtract(start.subtract(0, player.getEyeHeight(), 0)))), 0.4F);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
 
             }
         }
@@ -1546,8 +1546,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             buffer.pos(width - buff, height - buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
             tess.draw();
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+            GlStateManager.enableTexture2D();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
             GL11.glDepthMask(true);
             return;
         }
@@ -1655,7 +1655,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             double mult = (ModEventHandlerClient.shakeTimestamp + ModEventHandlerClient.shakeDuration - System.currentTimeMillis()) / (double) ModEventHandlerClient.shakeDuration * 2;
             double horizontal = MathHelper.clamp(Math.sin(System.currentTimeMillis() * 0.02), -0.7, 0.7) * 15;
             double vertical = MathHelper.clamp(Math.sin(System.currentTimeMillis() * 0.01 + 2), -0.7, 0.7) * 3;
-            GL11.glTranslated(horizontal * mult, vertical * mult, 0);
+            GlStateManager.translate(horizontal * mult, vertical * mult, 0);
         }
     }
 
@@ -1732,7 +1732,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         boolean firing = player == Minecraft.getMinecraft().player ? ItemGunEgon.m1 && Library.countInventoryItem(player.inventory, ItemGunEgon.getBeltType(player, player.getHeldItemMainhand(), true)) >= 2 : ItemGunEgon.getIsFiring(player.getHeldItemMainhand());
         EgonBackpackRenderer.showBackpack = false;
         if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon && firing) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             float partialTicks = event.getPartialRenderTick();
             float[] angles = ItemGunEgon.getBeamDirectionOffset(player.world.getTotalWorldTime() + partialTicks);
             Vec3d look = Library.changeByAngle(player.getLook(partialTicks), angles[0], angles[1]);
@@ -1748,9 +1748,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             start = start.rotateYaw((float) Math.toRadians(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks)));
 
             Vec3d diff = player.getPositionEyes(partialTicks).subtract(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
-            GL11.glTranslated(start.x + diff.x, start.y + diff.y, start.z + diff.z);
+            GlStateManager.translate(start.x + diff.x, start.y + diff.y, start.z + diff.z);
             BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos))), 0.4F);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

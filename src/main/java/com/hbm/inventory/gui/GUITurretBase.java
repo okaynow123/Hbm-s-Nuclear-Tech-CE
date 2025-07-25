@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -260,7 +260,7 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int mX, int mY) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getTexture());
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 

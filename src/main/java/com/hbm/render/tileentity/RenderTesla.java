@@ -11,7 +11,7 @@ import com.hbm.tileentity.machine.TileEntityTesla;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTesla extends TileEntitySpecialRenderer<TileEntityTesla>
     implements IItemRendererProvider {
@@ -30,10 +30,10 @@ public class RenderTesla extends TileEntitySpecialRenderer<TileEntityTesla>
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     bindTexture(ResourceManager.tesla_tex);
     ResourceManager.tesla.renderAll();
@@ -43,7 +43,7 @@ public class RenderTesla extends TileEntitySpecialRenderer<TileEntityTesla>
     double sy = tesla.getPos().getY() + TileEntityTesla.offset;
     double sz = tesla.getPos().getZ() + 0.5D;
 
-    GL11.glTranslated(0.0D, TileEntityTesla.offset, 0.0D);
+    GlStateManager.translate(0.0D, TileEntityTesla.offset, 0.0D);
     for (double[] target : tesla.targets) {
 
       double length =
@@ -65,7 +65,7 @@ public class RenderTesla extends TileEntitySpecialRenderer<TileEntityTesla>
           0.03125F);
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

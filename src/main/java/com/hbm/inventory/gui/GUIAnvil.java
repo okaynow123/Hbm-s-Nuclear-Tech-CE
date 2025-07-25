@@ -27,7 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -299,7 +299,7 @@ public class GUIAnvil extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float inter, int mX, int mY) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(texture);
 		
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
@@ -343,7 +343,7 @@ public class GUIAnvil extends GuiContainer {
 			
 			int ind = i - index * 2;
 			
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.color(1, 1, 1, 1);
 			RenderHelper.enableGUIStandardItemLighting();
 			GlStateManager.disableLighting();

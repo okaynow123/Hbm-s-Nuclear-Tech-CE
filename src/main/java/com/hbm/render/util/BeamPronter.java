@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -21,25 +21,25 @@ public class BeamPronter {
 
     public static void prontBeam(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float size, int layers, float thickness) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glDepthMask(depthMask);
 
         float sYaw = (float) (Math.atan2(skeleton.xCoord, skeleton.zCoord) * 180F / Math.PI);
         float sqrt = MathHelper.sqrt(skeleton.xCoord * skeleton.xCoord + skeleton.zCoord * skeleton.zCoord);
         float sPitch = (float) (Math.atan2(skeleton.yCoord, sqrt) * 180F / Math.PI);
 
-        GL11.glRotatef(180, 0, 1F, 0);
-        GL11.glRotatef(sYaw, 0, 1F, 0);
-        GL11.glRotatef(sPitch - 90, 1F, 0, 0);
+        GlStateManager.rotate(180, 0, 1F, 0);
+        GlStateManager.rotate(sYaw, 0, 1F, 0);
+        GlStateManager.rotate(sPitch - 90, 1F, 0, 0);
 
-        GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableLighting();
 
         if (beam == EnumBeamType.SOLID) {
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+            GlStateManager.disableCull();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         }
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -136,15 +136,15 @@ public class BeamPronter {
         }
 
         if (beam == EnumBeamType.SOLID) {
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GlStateManager.disableBlend();
+            GlStateManager.enableTexture2D();
         }
 
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPopMatrix();
+        GlStateManager.enableLighting();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
         GL11.glDepthMask(true);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
     }
 

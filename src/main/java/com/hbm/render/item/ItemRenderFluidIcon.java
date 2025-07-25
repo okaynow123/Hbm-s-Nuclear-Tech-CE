@@ -5,7 +5,7 @@ import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderFluidIcon extends TEISRBase {
 
@@ -18,15 +18,15 @@ public class ItemRenderFluidIcon extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack stack) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
 		if(stack.getItem() instanceof ItemFluidIcon){
 			int color = ItemFluidIcon.getFluidType(stack).getColor();
 			if(actualIcon == null){
 				actualIcon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("hbm:items/fluid_icon");
 			}
-			GL11.glTranslated(-0.5, -0.5, -HALF_A_PIXEL);
+			GlStateManager.translate(-0.5, -0.5, -HALF_A_PIXEL);
 			NTMRenderHelper.setColor(color);
 			NTMRenderHelper.startDrawingTexturedQuads();
 			NTMRenderHelper.drawFullTexture(actualIcon, 0, 0, 1, 1, -0.01, false);
@@ -34,7 +34,7 @@ public class ItemRenderFluidIcon extends TEISRBase {
 			NTMRenderHelper.draw();
 			NTMRenderHelper.resetColor();
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		super.renderByItem(stack);
 	}
 }

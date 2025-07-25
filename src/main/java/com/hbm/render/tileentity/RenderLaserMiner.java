@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachineMiningLaser>
     implements IItemRendererProvider {
@@ -31,8 +31,8 @@ public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachin
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y - 1, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y - 1, z + 0.5);
 
     double tx = x;
     double ty = 0;
@@ -67,31 +67,31 @@ public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachin
     ResourceManager.mining_laser.renderPart("Base");
 
     // GlStateManager.shadeModel(GL11.GL_SMOOTH);
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GL11.glRotated(yaw, 0, 1, 0);
     bindTexture(ResourceManager.mining_laser_pivot_tex);
     ResourceManager.mining_laser.renderPart("Pivot");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GL11.glRotated(yaw, 0, 1, 0);
-    GL11.glTranslated(0, -1, 0);
+    GlStateManager.translate(0, -1, 0);
     GL11.glRotated(pitch + 90, -1, 0, 0);
-    GL11.glTranslated(0, 1, 0);
+    GlStateManager.translate(0, 1, 0);
     bindTexture(ResourceManager.mining_laser_laser_tex);
     ResourceManager.mining_laser.renderPart("Laser");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
     // GlStateManager.shadeModel(GL11.GL_FLAT);
 
     if (laser.beam) {
       length = vec.length();
-      GL11.glTranslated(nVec.xCoord, nVec.yCoord - 1, nVec.zCoord);
+      GlStateManager.translate(nVec.xCoord, nVec.yCoord - 1, nVec.zCoord);
       int range = (int) Math.ceil(length * 0.5);
       BeamPronter.prontBeam(
           vec, EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0xa00000, 0xFFFFFF, 0, 1, 0, 3, 0.09F);
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

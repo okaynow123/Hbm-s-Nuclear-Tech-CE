@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,8 +42,8 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		float flashDuration = scale * flashBaseDuration;
 		float flareDuration = scale * flareBaseDuration;
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 
 		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
 		if(fog)
@@ -67,7 +67,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		if(fog)
 			GL11.glEnable(GL11.GL_FOG);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private Comparator cloudSorter = new Comparator() {
@@ -86,12 +86,12 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
 	private void cloudletWrapper(EntityNukeTorex cloud, float partialTicks) {
 
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		// To prevent particles cutting off before fully fading out
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+		GlStateManager.disableAlpha();
 		GL11.glDepthMask(false);
 		RenderHelper.disableStandardItemLighting();
 		
@@ -112,20 +112,20 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		tess.draw();
 
 		GL11.glDepthMask(true);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableAlpha();
 		RenderHelper.enableStandardItemLighting();
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 	}
 	
 	private void flareWrapper(EntityNukeTorex cloud, float partialTicks, float flareDuration) {
 
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+		GlStateManager.disableAlpha();
 		GL11.glDepthMask(false);
 		RenderHelper.disableStandardItemLighting();
 			
@@ -150,11 +150,11 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		tess.draw();
 
 		GL11.glDepthMask(true);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableAlpha();
 		RenderHelper.enableStandardItemLighting();
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 	}
 
 	private void tessellateCloudlet(BufferBuilder buf, double posX, double posY, double posZ, Cloudlet cloud, float partialTicks) {
@@ -205,7 +205,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
         if(cloud.ticksExisted < flashDuration) {
 
-    		GL11.glPushMatrix();
+    		GlStateManager.pushMatrix();
     		//Function [0, 1] that determines the scale and intensity (inverse!) of the flash
         	double intensity = (cloud.ticksExisted + interp) / flashDuration;
         	GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
@@ -216,14 +216,14 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
         	renderFlash(50F * (float)flashDuration/(float)flashBaseDuration, intensity, cloud.coreHeight);
             GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
-    		GL11.glPopMatrix();
+    		GlStateManager.popMatrix();
         }
 	}
 
 	private void renderFlash(float scale, double intensity, double height) {
 
-    	GL11.glScalef(0.2F, 0.2F, 0.2F);
-    	GL11.glTranslated(0, height * 4, 0);
+    	GlStateManager.scale(0.2F, 0.2F, 0.2F);
+    	GlStateManager.translate(0, height * 4, 0);
 
     	double inverse = 1.0D - intensity;
 
@@ -241,15 +241,15 @@ public class RenderTorex extends Render<EntityNukeTorex> {
         GlStateManager.depthMask(false);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 		
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
         for(int i = 0; i < 300; i++) {
 
-            GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
 
             float vert1 = (random.nextFloat() * 20.0F + 5.0F + 1 * 10.0F) * (float)(intensity * scale);
             float vert2 = (random.nextFloat() * 2.0F + 1.0F + 1 * 2.0F) * (float)(intensity * scale);
@@ -263,7 +263,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
             tessellator.draw();
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
         GlStateManager.depthMask(true);
         GlStateManager.disableCull();

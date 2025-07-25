@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -27,8 +27,8 @@ public class RenderSpear extends Render<EntitySpear> {
 	
 	@Override
 	public void doRender(EntitySpear entity, double x, double y, double z, float entityYaw, float partialTicks){
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y + 15, (float) z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y + 15, (float) z);
 		GlStateManager.enableLighting();
 		GlStateManager.enableCull();
 		
@@ -66,12 +66,12 @@ public class RenderSpear extends Render<EntitySpear> {
 		
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void renderFlash(double intensity) {
 
-		GL11.glScalef(0.2F, 0.2F, 0.2F);
+		GlStateManager.scale(0.2F, 0.2F, 0.2F);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
@@ -86,17 +86,17 @@ public class RenderSpear extends Render<EntitySpear> {
 		GlStateManager.enableCull();
 		GlStateManager.depthMask(false);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		float scale = 25;
 
 		for(int i = 0; i < 64; i++) {
 
-			GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate(random.nextFloat() * 360.0F, 0.0F, 1.0F, 0.0F);
 
 			float vert1 = (random.nextFloat() * 20.0F + 5.0F + 1 * 10.0F) * (float) (intensity * intensity * scale);
 			float vert2 = (random.nextFloat() * 2.0F + 1.0F + 1 * 2.0F) * (float) (intensity * intensity * scale);
@@ -110,7 +110,7 @@ public class RenderSpear extends Render<EntitySpear> {
 			tessellator.draw();
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		GlStateManager.depthMask(true);
 		GlStateManager.disableCull();

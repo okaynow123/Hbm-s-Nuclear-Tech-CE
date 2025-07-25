@@ -17,7 +17,7 @@ import com.hbm.wiaj.actors.ITileActorRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class CanneryCentrifuge extends CanneryBase {
 
@@ -139,22 +139,22 @@ public class CanneryCentrifuge extends CanneryBase {
 			double z = data.getDouble("z");
 			int rotation = data.getInteger("rotation");
 			
-			GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+			GlStateManager.enableLighting();
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			
 			switch(rotation) {
-			case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
-			case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
-			case 2: GL11.glRotatef(180, 0F, 1F, 0F); break;
-			case 4: GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 3: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+			case 5: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+			case 2: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+			case 4: GlStateManager.rotate(270, 0F, 1F, 0F); break;
 			}
 			
 			ITileActorRenderer.bindTexture(ResourceManager.centrifuge_gas_tex);
 			ResourceManager.centrifuge_gas.renderPart("Centrifuge");
 			ResourceManager.centrifuge_gas.renderPart("Flag");
 			
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 
 		@Override

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderBoltgun extends TEISRBase {
 
@@ -40,12 +40,12 @@ public class ItemRenderBoltgun extends TEISRBase {
     @Override
     public void renderByItem(ItemStack itemStackIn) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
         EntityPlayer player = Minecraft.getMinecraft().player;
 
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.enableCull();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.boltgun_tex);
 
 
@@ -57,12 +57,12 @@ public class ItemRenderBoltgun extends TEISRBase {
                 offsets.apply(type);
                 offsets.applyCustomOffset(corrections);
 
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 double[] anim = HbmAnimations.getRelevantTransformation("RECOIL", type == TransformType.FIRST_PERSON_LEFT_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-                GL11.glTranslated(0, 0, -anim[0]);
+                GlStateManager.translate(0, 0, -anim[0]);
                 if (anim[0] != 0) player.isSwingInProgress = false;
                 ResourceManager.boltgun.renderPart("Barrel");
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
 
                 break;
             default:
@@ -74,8 +74,8 @@ public class ItemRenderBoltgun extends TEISRBase {
         if (type != type.FIRST_PERSON_RIGHT_HAND && type != type.FIRST_PERSON_LEFT_HAND) {
             ResourceManager.boltgun.renderPart("Barrel");
         }
-        GL11.glShadeModel(GL11.GL_FLAT);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

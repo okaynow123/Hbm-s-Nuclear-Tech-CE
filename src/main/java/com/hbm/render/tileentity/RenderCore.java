@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -37,19 +37,19 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
 
     public void renderStandby(TileEntityCore core, double x, double y, double z) {
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
         GlStateManager.disableLighting();
         GlStateManager.enableCull();
         GlStateManager.disableTexture2D();
 
-        GL11.glScalef(0.25F, 0.25F, 0.25F);
+        GlStateManager.scale(0.25F, 0.25F, 0.25F);
         GlStateManager.color(0.1F, 0.1F, 0.1F);
         ResourceManager.sphere_uv.renderAll();
 
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
-        GL11.glScalef(1.25F, 1.25F, 1.25F);
+        GlStateManager.scale(1.25F, 1.25F, 1.25F);
         GlStateManager.color(0.1F, 0.2F, 0.4F);
         ResourceManager.sphere_uv.renderAll();
         GlStateManager.disableBlend();
@@ -65,7 +65,7 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
             }
         }
         GlStateManager.color(1F, 1F, 1F);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void renderOrb(TileEntityCore core, double x, double y, double z) {

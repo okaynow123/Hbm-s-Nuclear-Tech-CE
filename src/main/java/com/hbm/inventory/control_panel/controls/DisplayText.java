@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 import java.util.Map;
@@ -87,10 +87,10 @@ public class DisplayText extends Control {
         GlStateManager.pushMatrix();
         GlStateManager.translate(posX, 0, posY);
 
-        GL11.glTranslated(0, .03F, 0);
-        GL11.glScalef(s, -s, s);
+        GlStateManager.translate(0, .03F, 0);
+        GlStateManager.scale(s, -s, s);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-        GL11.glRotatef(90, 1, 0, 0);
+        GlStateManager.rotate(90, 1, 0, 0);
 
         if (isLit) {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -106,9 +106,9 @@ public class DisplayText extends Control {
 
         GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
-        GL11.glRotatef(90, 1, 0, 0);
-        GL11.glTranslated(0, 0, -.01F);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(90, 1, 0, 0);
+        GlStateManager.translate(0, 0, -.01F);
 
         GlStateManager.disableTexture2D();
         Tessellator tes = Tessellator.getInstance();
@@ -129,7 +129,7 @@ public class DisplayText extends Control {
         buf.pos(box[2]+d, box[1]-d, 0).tex(1, 0).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
         tes.draw();
         GlStateManager.enableTexture2D();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRainbow extends Render<EntityRainbow> {
 
@@ -29,16 +29,16 @@ public class RenderRainbow extends Render<EntityRainbow> {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableCull();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.translate((float) x, (float) y, (float) z);
 
-		GL11.glRotatef(rocket.rotationYaw, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-rocket.rotationPitch, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(rocket.rotationYaw, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-rocket.rotationPitch, 1.0F, 0.0F, 0.0F);
 
 		boolean red = false;
 		boolean green = false;
@@ -75,10 +75,10 @@ public class RenderRainbow extends Render<EntityRainbow> {
 			buf.pos(0 + o, 0 + o, 0 + distance).color(red ? 1 : color, green ? 1 : color, blue ? 1 : color, 1f).endVertex();
 		}
 		tessellator.draw();
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableBlend();
+		GlStateManager.enableTexture2D();
 		GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.util.HashMap;
@@ -76,21 +76,21 @@ public class GasRenderer extends Render<EntityGasFX> {
 		TextureAtlasSprite iicon = textures.get(renderItem);
 
 		if (iicon != null) {
-			GL11.glPushMatrix();
-			GL11.glTranslated(x, y, z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x, y, z);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GlStateManager.disableLighting();
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			GL11.glScalef(7.5F, 7.5F, 7.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(7.5F, 7.5F, 7.5F);
 			//
-			GL11.glScalef(0.25F, 0.25F, 0.25F);
+			GlStateManager.scale(0.25F, 0.25F, 0.25F);
 			//
 			this.bindEntityTexture(fx);
 
 			this.func_77026_a(iicon);
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GlStateManager.enableLighting();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -107,8 +107,8 @@ public class GasRenderer extends Render<EntityGasFX> {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
-		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		NTMRenderHelper.startDrawingTexturedQuads();
 		NTMRenderHelper.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, f, f3);
 		NTMRenderHelper.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, f1, f3);

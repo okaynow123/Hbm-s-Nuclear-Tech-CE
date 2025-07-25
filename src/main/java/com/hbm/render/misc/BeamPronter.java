@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -169,7 +169,7 @@ public class BeamPronter {
 	
 	public static void gluonBeam(Vec3d pos1, Vec3d pos2, float size){
 		//long l = System.nanoTime();
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
@@ -181,7 +181,7 @@ public class BeamPronter {
 		Vec3d diff = pos1.subtract(pos2);
 		float len = (float) diff.length();
 		Vec3d angles = BobMathUtil.getEulerAngles(diff);
-		GL11.glTranslated(pos1.x, pos1.y, pos1.z);
+		GlStateManager.translate(pos1.x, pos1.y, pos1.z);
 		
 		GL11.glRotated(angles.x+90, 0, 1, 0);
 		GL11.glRotated(-angles.y, 0, 0, 1);
@@ -254,6 +254,6 @@ public class BeamPronter {
 		}
 		GlStateManager.disableBlend();
 		GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

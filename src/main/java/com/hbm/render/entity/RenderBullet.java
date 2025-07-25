@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -25,16 +25,16 @@ public class RenderBullet extends Render<EntityBullet> {
 
 	@Override
 	public void doRender(EntityBullet rocket, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
-		GL11.glRotatef(rocket.prevRotationYaw + (rocket.rotationYaw - rocket.prevRotationYaw) * partialTicks - 90.0F,
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y, (float) z);
+		GlStateManager.rotate(rocket.prevRotationYaw + (rocket.rotationYaw - rocket.prevRotationYaw) * partialTicks - 90.0F,
 				0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(rocket.prevRotationPitch + (rocket.rotationPitch - rocket.prevRotationPitch) * partialTicks + 180,
+		GlStateManager.rotate(rocket.prevRotationPitch + (rocket.rotationPitch - rocket.prevRotationPitch) * partialTicks + 180,
 				0.0F, 0.0F, 1.0F);
-		GL11.glScalef(1.5F, 1.5F, 1.5F);
+		GlStateManager.scale(1.5F, 1.5F, 1.5F);
 		
 
-		GL11.glRotatef(new Random(rocket.getEntityId()).nextInt(360),
+		GlStateManager.rotate(new Random(rocket.getEntityId()).nextInt(360),
 				1.0F, 0.0F, 0.0F);
 
 		if (rocket instanceof EntityBullet && rocket.getIsChopper()) {
@@ -49,7 +49,7 @@ public class RenderBullet extends Render<EntityBullet> {
 		//renderFlechette();
 		//renderDart();
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

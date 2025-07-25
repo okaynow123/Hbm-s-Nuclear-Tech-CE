@@ -29,7 +29,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Vector4f;
 
 import java.nio.DoubleBuffer;
@@ -53,7 +53,7 @@ public class ItemRenderCrucible extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 			EnumHand hand = type == TransformType.FIRST_PERSON_RIGHT_HAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 			GL11.glScaled(5, 5, 5);
-			GL11.glTranslated(0.2, -1.5, 0.5);
+			GlStateManager.translate(0.2, -1.5, 0.5);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(-20, 1, 0, 0);
 			GL11.glRotated(5, 0, 0, 1);
@@ -80,11 +80,11 @@ public class ItemRenderCrucible extends TEISRBase {
 					ItemSwordCutter.prevAngle = angle;
 				}
 				if(!flag){
-					GL11.glTranslated(0.3F, -0.1F, 0);
-					GL11.glTranslated(-oX, -oY, -oZ);
+					GlStateManager.translate(0.3F, -0.1F, 0);
+					GlStateManager.translate(-oX, -oY, -oZ);
 					GL11.glRotated(-angle, 0, 0, 1);
-					GL11.glTranslated(oX, oY, oZ);
-					GL11.glTranslated(0F, -0.2F, 0F);
+					GlStateManager.translate(oX, oY, oZ);
+					GlStateManager.translate(0F, -0.2F, 0F);
 					GL11.glRotated(10, 0, 1, 0);
 				}
 				GL11.glRotated(swing_rot[0], 1, 0, 0);
@@ -96,12 +96,12 @@ public class ItemRenderCrucible extends TEISRBase {
 				return;
 			}
 			if(depleted){
-				GL11.glTranslated(-0.1, -0.25, 0.1);
+				GlStateManager.translate(-0.1, -0.25, 0.1);
 				w.startTime = System.currentTimeMillis()-400;
 			}
 			double[] sRot = HbmAnimations.getRelevantTransformation("SWING_ROT", hand);
 			double[] sTrans = HbmAnimations.getRelevantTransformation("SWING_TRANS", hand);
-			GL11.glTranslated(sTrans[0], sTrans[1], sTrans[2]);
+			GlStateManager.translate(sTrans[0], sTrans[1], sTrans[2]);
 			GL11.glRotated(sRot[0], 1, 0, 0);
 			GL11.glRotated(sRot[2], 0, 0, 1);
 			GL11.glRotated(sRot[1], 0, 1, 0);
@@ -220,7 +220,7 @@ public class ItemRenderCrucible extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0.5, -0.3, 0.5);
+			GlStateManager.translate(0.5, -0.3, 0.5);
 			GL11.glScaled(0.4, 0.4, 0.4);
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.crucible_hilt);
 			ResourceManager.crucible.renderPart("Hilt");
@@ -228,22 +228,22 @@ public class ItemRenderCrucible extends TEISRBase {
 			ResourceManager.crucible.renderPart("GuardLeft");
 			ResourceManager.crucible.renderPart("GuardRight");
 
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 
-			GL11.glDisable(GL11.GL_LIGHTING);
+			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-			GL11.glTranslated(0.005, 0, 0);
+			GlStateManager.translate(0.005, 0, 0);
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.crucible_blade);
 			ResourceManager.crucible.renderPart("Blade");
-			GL11.glEnable(GL11.GL_LIGHTING);
+			GlStateManager.enableLighting();
 
 			GL11.glPopAttrib();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			break;
 		case GUI:
-			GL11.glTranslated(0.15, 0.15, 0);
+			GlStateManager.translate(0.15, 0.15, 0);
 			GL11.glRotated(-135+90, 0, 0, 1);
 			GL11.glRotated(90, 0, 1, 0);
 			double scale = 0.09D;
@@ -254,7 +254,7 @@ public class ItemRenderCrucible extends TEISRBase {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.crucible_guard);
 			ResourceManager.crucible.renderPart("GuardLeft");
 			ResourceManager.crucible.renderPart("GuardRight");
-			GL11.glTranslated(0.005, 0, 0);
+			GlStateManager.translate(0.005, 0, 0);
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.crucible_blade);
 			ResourceManager.crucible.renderPart("Blade");
 			break;

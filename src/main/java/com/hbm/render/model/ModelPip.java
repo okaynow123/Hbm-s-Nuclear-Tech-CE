@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelPip extends ModelBase {
 
@@ -196,12 +196,12 @@ public ModelRenderer pipModel[];
 	{
 	    super.render(entity, f, f1, f2, f3, f4, f5);
 	    setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		for(int i = 0; i < 39; i++)
 		{
 			pipModel[i].render(f5);
 		}
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCloudTom extends Render<EntityCloudTom> {
 
@@ -30,8 +30,8 @@ public class RenderCloudTom extends Render<EntityCloudTom> {
 		if (!ClientProxy.renderingConstant)
 			return;
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
@@ -58,7 +58,7 @@ public class RenderCloudTom extends Render<EntityCloudTom> {
 		GlStateManager.loadIdentity();
 
 		float movement = -(Minecraft.getMinecraft().player.ticksExisted + partialTicks) * 0.005F * 10;
-		GL11.glTranslatef(0, movement, 0);
+		GlStateManager.translate(0, movement, 0);
 
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
@@ -99,7 +99,7 @@ public class RenderCloudTom extends Render<EntityCloudTom> {
 		GlStateManager.enableCull();
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 

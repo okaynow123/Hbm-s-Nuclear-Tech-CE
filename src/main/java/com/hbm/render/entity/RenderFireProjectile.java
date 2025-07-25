@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderFireProjectile extends Render<EntityFire> {
 
@@ -85,20 +85,20 @@ public class RenderFireProjectile extends Render<EntityFire> {
 
         if (iicon != null)
         {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
-            GL11.glTranslatef((float)x, (float)y, (float)z);
+            GlStateManager.translate((float)x, (float)y, (float)z);
             GlStateManager.enableRescaleNormal();
-            GL11.glScalef(0.5F, 0.5F, 0.5F);
-            GL11.glScalef(7.5F, 7.5F, 7.5F);
-            GL11.glTranslatef(0.0F, -0.25F, 0.0F);
+            GlStateManager.scale(0.5F, 0.5F, 0.5F);
+            GlStateManager.scale(7.5F, 7.5F, 7.5F);
+            GlStateManager.translate(0.0F, -0.25F, 0.0F);
             this.bindEntityTexture(fx);
             Tessellator tessellator = Tessellator.getInstance();
 
             this.func_77026_a(tessellator, iicon);
             GlStateManager.disableRescaleNormal();
             GlStateManager.enableLighting();
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
 	}
 	
@@ -111,8 +111,8 @@ public class RenderFireProjectile extends Render<EntityFire> {
         float f4 = 1.0F;
         float f5 = 0.5F;
         float f6 = 0.25F;
-        GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
         NTMRenderHelper.startDrawingTexturedQuads(tes);
         //Drillgon200: I hope this setNormal isn't needed for anything
         //p_77026_1_.setNormal(0.0F, 1.0F, 0.0F);

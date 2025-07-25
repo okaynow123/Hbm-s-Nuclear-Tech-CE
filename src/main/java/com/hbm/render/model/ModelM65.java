@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelM65 extends ModelBiped {
 	// fields
@@ -133,9 +133,9 @@ public class ModelM65 extends ModelBiped {
 		
 		if(this.isChild) {
 			float f6 = 2.0F;
-			GL11.glPushMatrix();
-			GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-			GL11.glTranslatef(0.0F, 16.0F * par7, 0.0F);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
+			GlStateManager.translate(0.0F, 16.0F * par7, 0.0F);
 			double d = 1D / 16D * 18D;
 			GL11.glScaled(d, d, d);
 			GL11.glScaled(1.01D, 1.01D, 1.01D);
@@ -144,9 +144,9 @@ public class ModelM65 extends ModelBiped {
 			if(!(entity instanceof EntityLivingBase) || ArmorUtil.getGasMaskFilterRecursively(((EntityLivingBase)entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD)) != null)
 				this.filter.render(par7);
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		} else {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			double d = 1D / 16D * 18D;
 			GL11.glScaled(d, d, d);
 			GL11.glScaled(1.01D, 1.01D, 1.01D);
@@ -155,7 +155,7 @@ public class ModelM65 extends ModelBiped {
 			if(!(entity instanceof EntityLivingBase) || ArmorUtil.getGasMaskFilterRecursively(((EntityLivingBase)entity).getItemStackFromSlot(EntityEquipmentSlot.HEAD)) != null)
 				this.filter.render(par7);
 			
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 

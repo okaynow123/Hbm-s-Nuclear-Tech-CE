@@ -49,7 +49,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements ITickable, IControllable {
 
@@ -316,7 +316,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			te.getDiagData(flush);
 			Set<String> keys = flush.getKeySet();
 			
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			
 			int pX = resolution.getScaledWidth() / 2 + 8;
 			int pZ = resolution.getScaledHeight() / 2;
@@ -350,7 +350,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 
 			GlStateManager.disableBlend();
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 		}
 	}

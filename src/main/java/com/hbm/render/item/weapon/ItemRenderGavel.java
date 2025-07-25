@@ -6,13 +6,13 @@ import com.hbm.render.item.TEISRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderGavel extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack item) {
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		
 		if(item.getItem() == ModItems.wood_gavel)
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.gavel_wood);
@@ -26,7 +26,7 @@ public class ItemRenderGavel extends TEISRBase {
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glTranslated(-0.6, 0, 0);
+			GlStateManager.translate(-0.6, 0, 0);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(45, 1, 0, 0);
 			if(item.getItem() == ModItems.mese_gavel)
@@ -39,7 +39,7 @@ public class ItemRenderGavel extends TEISRBase {
 		case GROUND:
 			if(item.getItem() == ModItems.mese_gavel) {
 				GL11.glScaled(2, 2, 2);
-				GL11.glTranslated(0, 0.25, 0);
+				GlStateManager.translate(0, 0.25, 0);
 			}
 			break;
 		case GUI:

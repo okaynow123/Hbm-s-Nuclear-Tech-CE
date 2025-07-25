@@ -21,7 +21,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -154,7 +154,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         super.drawDefaultBackground();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize); //the main thing
 
@@ -259,7 +259,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         double vMin = ((64D - 64D * temp / maxTemp) / 256D);
         double vMax = (64D / 256D);
 
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
@@ -273,7 +273,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         bufferbuilder.pos(xPos, yPos + 64 - (64D * temp / maxTemp), 0.0D).tex(uMin, vMin).endVertex();
         tessellator.draw();
 
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
     }
 
     private void drawRPMGauge(int position) {
@@ -288,7 +288,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         double vMin = 0D;
         double vMax = 1D;
 
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.enableBlend();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(gauge_tex); //long boi
 
@@ -302,7 +302,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         bufferbuilder.pos(xPos, yPos, 0.0D).tex(uMin, vMin).endVertex();
         tessellator.draw();
 
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
     }
 
     @Override

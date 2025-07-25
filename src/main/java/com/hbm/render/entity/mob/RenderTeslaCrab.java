@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTeslaCrab extends RenderLiving<EntityTeslaCrab> {
 
@@ -26,8 +26,8 @@ public class RenderTeslaCrab extends RenderLiving<EntityTeslaCrab> {
 
 	@Override
 	public void doRender(EntityTeslaCrab entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y + 1, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y + 1, z);
 
 		double sx = entity.posX;
 		double sy = entity.posY + 1;
@@ -40,7 +40,7 @@ public class RenderTeslaCrab extends RenderLiving<EntityTeslaCrab> {
 			BeamPronter.prontBeam(Vec3.createVectorHelper(target[0] - sx, target[1] - sy, target[2] - sz), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x0051C4, 0x606060, (int) (entity.world.getTotalWorldTime() % 1000 + 1), (int) (length * 5), 0.125F, 2, 0.03125F);
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 

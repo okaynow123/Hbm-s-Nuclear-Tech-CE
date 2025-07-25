@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRocketCustom extends Render<EntityRideableRocket> {
 
@@ -23,18 +23,18 @@ public class RenderRocketCustom extends Render<EntityRideableRocket> {
     public void doRender(EntityRideableRocket entity, double x, double y, double z, float f, float interp) {
         RocketStruct rocket = entity.getRocket();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         {
 
-            GL11.glTranslated(x, y, z);
-            GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * interp - 90.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * interp, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * interp - 90.0F, 0.0F, -1.0F, 0.0F);
+            GlStateManager.translate(x, y, z);
+            GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * interp - 90.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * interp, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * interp - 90.0F, 0.0F, -1.0F, 0.0F);
 
             MissilePronter.prontRocket(rocket, entity, Minecraft.getMinecraft().getTextureManager(), true, interp);
 
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
     @Override
     protected ResourceLocation getEntityTexture(EntityRideableRocket entity) {

@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKConsole>
@@ -37,29 +37,29 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
 
     GlStateManager.enableCull();
     GlStateManager.enableLighting();
 
     switch (te.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glTranslated(0.5, 0, 0);
+    GlStateManager.translate(0.5, 0, 0);
 
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.rbmk_console_tex);
@@ -73,7 +73,7 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
     BufferBuilder buf = tess.getBuffer();
     buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-    GL11.glDisable(GL11.GL_TEXTURE_2D);
+    GlStateManager.disableTexture2D();
 
     for (int i = 0; i < console.columns.length; i++) {
 
@@ -109,10 +109,10 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
     }
 
     tess.draw();
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
+    GlStateManager.enableTexture2D();
 
     FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-    GL11.glTranslatef(-0.42F, 3.5F, 1.75F);
+    GlStateManager.translate(-0.42F, 3.5F, 1.75F);
     GlStateManager.depthMask(false);
     GL11.glEnable(GL12.GL_RESCALE_NORMAL);
     GlStateManager.color(1, 1, 1, 1);
@@ -120,11 +120,11 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
 
     for (int i = 0; i < console.screens.length; i++) {
 
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
 
-      if (i % 2 == 1) GL11.glTranslatef(0, 0, 1.75F * -2);
+      if (i % 2 == 1) GlStateManager.translate(0, 0, 1.75F * -2);
 
-      GL11.glTranslatef(0, -0.75F * (i / 2), 0);
+      GlStateManager.translate(0, -0.75F * (i / 2), 0);
 
       RBMKScreen screen = console.screens[i];
       String text = screen.display;
@@ -141,20 +141,20 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
         int height = font.FONT_HEIGHT;
 
         float f3 = Math.min(0.03F, 0.8F / Math.max(width, 1));
-        GL11.glScalef(f3, -f3, f3);
+        GlStateManager.scale(f3, -f3, f3);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-        GL11.glRotatef(90, 0, 1, 0);
+        GlStateManager.rotate(90, 0, 1, 0);
 
         font.drawString(text, -width / 2, -height / 2, 0x00ff00);
       }
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
     GlStateManager.depthMask(true);
     GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     ///
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

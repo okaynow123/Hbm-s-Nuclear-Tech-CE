@@ -20,7 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,8 +36,8 @@ public class DisintegrationParticleHandler {
 	@SuppressWarnings({ "deprecation" })
 	public static <T extends EntityLivingBase> void spawnGluonDisintegrateParticles(T e, RenderLivingBase<T> render, float partialTicks) {
 		ModelBase model = render.getMainModel();
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		GlStateManager.disableCull();
 		GlStateManager.enableRescaleNormal();
 		//So basically we're just going to copy vanialla methods so the 
@@ -115,7 +115,7 @@ public class DisintegrationParticleHandler {
 
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static void spawnLightningDisintegrateParticles(Entity e, Vec3 hitPos) {
@@ -128,8 +128,8 @@ public class DisintegrationParticleHandler {
 	@SuppressWarnings({ "deprecation" })
 	public static <T extends EntityLivingBase> void spawnLightningDisintegrateParticles(T e, RenderLivingBase<T> render, Vec3 hitPos, float partialTicks) {
 		ModelBase model = render.getMainModel();
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		GlStateManager.disableCull();
 		GlStateManager.enableRescaleNormal();
 		//So basically we're just going to copy vanialla methods so the 
@@ -208,29 +208,29 @@ public class DisintegrationParticleHandler {
 
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public static void spawnParticles(World world, EntityLivingBase ent, double x, double y, double z, float scale, ModelRenderer render, ResourceLocation tex) {
 		if(render.isHidden || !render.showModel)
 			return;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		doTransforms(render, scale);
 		if(render.childModels != null)
 			for(ModelRenderer renderer : render.childModels) {
 				spawnParticles(world, ent, x, y, z, scale, renderer, tex);
 			}
 		for(ModelBox cube : render.cubeList) {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float cubeMidX = (cube.posX1 + (cube.posX2-cube.posX1)*0.5F)*scale;
 			float cubeMidY = (cube.posY1 + (cube.posY2-cube.posY1)*0.5F)*scale;
 			float cubeMidZ = (cube.posZ1 + (cube.posZ2-cube.posZ1)*0.5F)*scale;
-			GL11.glTranslated(cubeMidX, cubeMidY, cubeMidZ);
+			GlStateManager.translate(cubeMidX, cubeMidY, cubeMidZ);
 			GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 			float[] matrix = new float[16];
 			ClientProxy.AUX_GL_BUFFER.get(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			
 			double pX = x + matrix[12];
 			double pY = y + matrix[13];
@@ -245,29 +245,29 @@ public class DisintegrationParticleHandler {
 			Minecraft.getMinecraft().effectRenderer.addEffect(p);
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static int spawnLightningParticles(World world, EntityLivingBase ent, double x, double y, double z, float scale, ModelRenderer render, ResourceLocation tex, Vec3 hitPos, int trailCount) {
 		if(render.isHidden || !render.showModel)
 			return trailCount;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		doTransforms(render, scale);
 		if(render.childModels != null)
 			for(ModelRenderer renderer : render.childModels) {
 				trailCount = spawnLightningParticles(world, ent, x, y, z, scale, renderer, tex, hitPos, trailCount);
 			}
 		for(ModelBox cube : render.cubeList) {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			float cubeMidX = (cube.posX1 + (cube.posX2-cube.posX1)*0.5F)*scale;
 			float cubeMidY = (cube.posY1 + (cube.posY2-cube.posY1)*0.5F)*scale;
 			float cubeMidZ = (cube.posZ1 + (cube.posZ2-cube.posZ1)*0.5F)*scale;
-			GL11.glTranslated(cubeMidX, cubeMidY, cubeMidZ);
+			GlStateManager.translate(cubeMidX, cubeMidY, cubeMidZ);
 			GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 			float[] matrix = new float[16];
 			ClientProxy.AUX_GL_BUFFER.get(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			
 			double pX = x + matrix[12];
 			double pY = y + matrix[13];
@@ -284,7 +284,7 @@ public class DisintegrationParticleHandler {
 			Minecraft.getMinecraft().effectRenderer.addEffect(p);
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		return trailCount;
 	}
 

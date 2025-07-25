@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
 
@@ -33,9 +33,9 @@ public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
 		
 		if(victim != null) {
 
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			
-            GL11.glTranslated(x, y + 1.25, z);
+            GlStateManager.translate(x, y + 1.25, z);
             
 	        double sx = entity.posX;
 	        double sy = entity.posY + 1.25;
@@ -51,7 +51,7 @@ public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
 	    	double length = Math.sqrt(Math.pow(tX - sx, 2) + Math.pow(tY - sy, 2) + Math.pow(tZ - sz, 2));
 	        BeamPronter.prontBeam(Vec3.createVectorHelper(tX - sx, tY - sy, tZ - sz), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x004000, 0x004000, (int) (entity.world.getTotalWorldTime() % 1000 + 1), (int) (length * 5), 0.125F, 2, 0.03125F);
 			
-	        GL11.glPopMatrix();
+	        GlStateManager.popMatrix();
 		}
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}

@@ -9,7 +9,7 @@ import com.hbm.tileentity.bomb.TileEntityRailgun;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRailgun extends TileEntitySpecialRenderer<TileEntityRailgun>
     implements IItemRendererProvider {
@@ -23,11 +23,11 @@ public class RenderRailgun extends TileEntitySpecialRenderer<TileEntityRailgun>
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
     bindTexture(ResourceManager.railgun_base_tex);
     ResourceManager.railgun_base.renderAll();
@@ -65,7 +65,7 @@ public class RenderRailgun extends TileEntitySpecialRenderer<TileEntityRailgun>
       double fX = vec.xCoord;
       double fY = 1 + vec.yCoord;
       double fZ = vec.zCoord;
-      GL11.glRotatef(180, 0F, 1F, 0F);
+      GlStateManager.rotate(180, 0F, 1F, 0F);
       for (int i = 0; i < count; i++)
         RenderSparks.renderSpark(
             (int) System.currentTimeMillis() / 100 + i * 10000,
@@ -88,22 +88,22 @@ public class RenderRailgun extends TileEntitySpecialRenderer<TileEntityRailgun>
             6,
             0x0088FF,
             0xDFDFFF);
-      GL11.glRotatef(180, 0F, 1F, 0F);
+      GlStateManager.rotate(180, 0F, 1F, 0F);
     }
 
-    GL11.glRotatef(yaw, 0, 1, 0);
+    GlStateManager.rotate(yaw, 0, 1, 0);
     bindTexture(ResourceManager.railgun_rotor_tex);
     ResourceManager.railgun_rotor.renderAll();
 
-    GL11.glTranslatef(0, 1F, 0);
-    GL11.glRotatef(pitch, 0, 0, 1);
-    GL11.glTranslatef(0, -1F, 0);
+    GlStateManager.translate(0, 1F, 0);
+    GlStateManager.rotate(pitch, 0, 0, 1);
+    GlStateManager.translate(0, -1F, 0);
     bindTexture(ResourceManager.railgun_main_tex);
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     ResourceManager.railgun_main.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

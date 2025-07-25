@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
@@ -242,8 +242,8 @@ public class ActorFancyPanel implements ISpecialActor {
 		
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
 		
 		this.drawRect(posX - 5, posY - 5, posX + width + 5, posY + height + 5, colorFrame);
 		
@@ -300,8 +300,8 @@ public class ActorFancyPanel implements ISpecialActor {
 		}
 
 		itemRender.zLevel = 0.0F;
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}
@@ -332,7 +332,7 @@ public class ActorFancyPanel implements ISpecialActor {
 			itemRender.renderItemOverlayIntoGUI(this.font, stack, x, y - 8, null);
 			RenderHelper.disableStandardItemLighting();
 			GL11.glColor3f(1F, 1F, 1F);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableDepth();
 		} //TODO: scaled stacks
 	}
 
@@ -357,10 +357,10 @@ public class ActorFancyPanel implements ISpecialActor {
 		float g2 = (float) (color2 >> 8 & 255) / 255.0F;
 		float b2 = (float) (color2 & 255) / 255.0F;
 		
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.disableAlpha();
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		
 		Tessellator tessellator = Tessellator.getInstance();
@@ -372,10 +372,10 @@ public class ActorFancyPanel implements ISpecialActor {
 		bufferBuilder.pos(maxX, maxY, zLevel).color(r2, g2, b2, a2).endVertex();
 		tessellator.draw();
 		
-		GL11.glShadeModel(GL11.GL_FLAT);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableTexture2D();
 	}
 
 	public void drawTexturedModalRect(int posX, int posY, int u, int v, int sizeX, int sizeY) {

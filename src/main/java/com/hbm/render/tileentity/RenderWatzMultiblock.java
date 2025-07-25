@@ -5,7 +5,7 @@ import com.hbm.tileentity.machine.TileEntityWatzStruct;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.render.util.SmallBlockPronter.*;
 
@@ -26,8 +26,8 @@ public class RenderWatzMultiblock extends TileEntitySpecialRenderer<TileEntityWa
 
     @Override
     public void render(TileEntityWatzStruct te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
 
         startDrawing();
         NTMRenderHelper.bindBlockTexture();
@@ -75,7 +75,7 @@ public class RenderWatzMultiblock extends TileEntitySpecialRenderer<TileEntityWa
         GlStateManager.enableLighting();
 
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
 

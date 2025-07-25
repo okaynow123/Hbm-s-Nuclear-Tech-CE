@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderRevolverNightmare extends TEISRBase {
 
@@ -36,11 +36,11 @@ public class ItemRenderRevolverNightmare extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 			
 			if (type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glTranslated(-0.2, 0.2, 0.2);
+				GlStateManager.translate(-0.2, 0.2, 0.2);
 				GL11.glRotated(-25, 0, 0, 1);
 				GL11.glRotated(180, 1, 0, 0);
 			} else {
-				GL11.glTranslated(1.2, 0.2, 0.0);
+				GlStateManager.translate(1.2, 0.2, 0.0);
 				GL11.glRotated(180, 1, 0, 0);
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(25, 0, 0, 1);
@@ -53,7 +53,7 @@ public class ItemRenderRevolverNightmare extends TEISRBase {
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
 		case GROUND:
-			GL11.glTranslated(0.45, 0.25, 0.5);
+			GlStateManager.translate(0.45, 0.25, 0.5);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 			if(stack.getItem() == ModItems.gun_revolver_nightmare)

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolarMirror> implements IItemRendererProvider {
 
@@ -23,8 +23,8 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
 	
 	@Override
 	public void render(TileEntitySolarMirror te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
         GlStateManager.enableLighting();
         GlStateManager.disableCull();
         
@@ -33,7 +33,7 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
         bindTexture(ResourceManager.solar_mirror_tex);
         ResourceManager.solar_mirror.renderPart("Base");
 
-        GL11.glTranslated(0, 1, 0);
+        GlStateManager.translate(0, 1, 0);
 
     	int dx = mirror.tX - mirror.getPos().getX();
     	int dy = mirror.tY - mirror.getPos().getY();
@@ -50,7 +50,7 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
         	GL11.glRotated(pitch, 0, 0, 1);
         }
 
-        GL11.glTranslated(0, -1, 0);
+        GlStateManager.translate(0, -1, 0);
         ResourceManager.solar_mirror.renderPart("Mirror");
 
         if(mirror.isOn) {
@@ -99,7 +99,7 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
 	        GlStateManager.enableTexture2D();
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 
 	@Override

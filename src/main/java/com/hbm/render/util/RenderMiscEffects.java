@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMiscEffects {
 
@@ -16,7 +16,7 @@ public class RenderMiscEffects {
 
 	public static void renderClassicGlint(World world, float interpol, IModelCustom model, String part, float colorMod, float r, float g, float b, float speed, float scale) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
     	float offset = Minecraft.getMinecraft().player.ticksExisted + interpol;
         GlStateManager.enableBlend();
         float color = colorMod;
@@ -37,9 +37,9 @@ public class RenderMiscEffects {
 
             float movement = offset * (0.001F + (float)k * 0.003F) * speed;
 
-            GL11.glScalef(scale, scale, scale);
-            GL11.glRotatef(30.0F - (float)k * 60.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glTranslatef(0.0F, movement, 0.0F);
+            GlStateManager.scale(scale, scale, scale);
+            GlStateManager.rotate(30.0F - (float)k * 60.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(0.0F, movement, 0.0F);
 
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
@@ -57,7 +57,7 @@ public class RenderMiscEffects {
         GlStateManager.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
 	public static void renderClassicGlint(World world, float interpol, IModelCustom model, String part, float r, float g, float b, float speed, float scale) {

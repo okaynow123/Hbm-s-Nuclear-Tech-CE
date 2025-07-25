@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -103,7 +103,7 @@ public class ParticleGluonBurnTrail extends Particle {
 	@Override
 	public void renderParticle(BufferBuilder buf, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 		NTMRenderHelper.resetParticleInterpPos(entityIn, partialTicks);
-		//GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
+		//GlStateManager.translate(-interpPosX, -interpPosY, -interpPosZ);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.gluon_burn);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();

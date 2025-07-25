@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelDefabricator extends ModelBase {
 
@@ -206,10 +206,10 @@ public class ModelDefabricator extends ModelBase {
 		for(int i = 0; i < 40; i++)
 		{
 			if(i == 20)
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableCull();
 			modeldefabricatorModel[i].render(f5);
 			if(i == 20)
-				GL11.glEnable(GL11.GL_CULL_FACE);
+				GlStateManager.enableCull();
 		}
 	}
 

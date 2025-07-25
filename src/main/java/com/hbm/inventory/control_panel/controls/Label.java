@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 import java.util.Map;
@@ -94,10 +94,10 @@ public class Label extends Control {
         height = font.FONT_HEIGHT;
 
         float s = scale/500F;
-        GL11.glScalef(s, -s, s);
+        GlStateManager.scale(s, -s, s);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-        GL11.glRotatef(90, 1, 0, 0);
-        GL11.glTranslated(0, 0, .1F);
+        GlStateManager.rotate(90, 1, 0, 0);
+        GlStateManager.translate(0, 0, .1F);
 
         int r = (int) (color[0]*255);
         int g = (int) (color[1]*255);

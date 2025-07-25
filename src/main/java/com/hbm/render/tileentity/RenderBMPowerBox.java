@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowerBox>
     implements IItemRendererProvider {
@@ -22,8 +22,8 @@ public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowe
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
     switch (te.getBlockMetadata() >> 1) {
       case 2:
         GL11.glRotated(90, 0, 1, 0);
@@ -37,14 +37,14 @@ public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowe
       case 5:
         break;
     }
-    GL11.glTranslated(-0.5, 0, 0);
+    GlStateManager.translate(-0.5, 0, 0);
     bindTexture(ResourceManager.bm_box_lever_tex);
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     ResourceManager.bm_box_lever.renderPart("box");
     float rx = 0.077964F;
     float ry = 0.456887F;
     float rz = 0.104706F;
-    GL11.glTranslated(rx, ry, rz);
+    GlStateManager.translate(rx, ry, rz);
     float time =
         (float)
             MathHelper.clamp(
@@ -52,10 +52,10 @@ public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowe
                 0,
                 1);
     GL11.glRotated((te.getBlockMetadata() & 1) == 1 ? time * 180 : (1 - time) * 180, 0, 0, 1);
-    GL11.glTranslated(-rx, -ry, -rz);
+    GlStateManager.translate(-rx, -ry, -rz);
     ResourceManager.bm_box_lever.renderPart("lever");
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.util.HashMap;
@@ -78,16 +78,16 @@ public class GasFlameRenderer extends Render<EntityGasFlameFX> {
 		TextureAtlasSprite icon = textures.get(renderItem);
 
 		if (icon != null) {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 			GlStateManager.disableLighting();
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glTranslatef((float) x, (float) y, (float) z);
+			GlStateManager.disableLighting();
+			GlStateManager.translate((float) x, (float) y, (float) z);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			GL11.glScalef(7.5F, 7.5F, 7.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(7.5F, 7.5F, 7.5F);
 			//
-			GL11.glScalef(0.35F, 0.35F, 0.35F);
+			GlStateManager.scale(0.35F, 0.35F, 0.35F);
 			//
 			this.bindEntityTexture(fx);
 			Tessellator tessellator = Tessellator.getInstance();
@@ -95,7 +95,7 @@ public class GasFlameRenderer extends Render<EntityGasFlameFX> {
 			this.func_77026_a(tessellator, icon);
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glPopAttrib();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 	
@@ -107,8 +107,8 @@ public class GasFlameRenderer extends Render<EntityGasFlameFX> {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
-		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		NTMRenderHelper.startDrawingTexturedQuads(tes);
 		//RenderHelper.setNormal(0.0F, 1.0F, 0.0F);
 		NTMRenderHelper.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, f, f3);

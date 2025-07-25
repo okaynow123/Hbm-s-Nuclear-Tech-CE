@@ -4,7 +4,7 @@ import com.hbm.render.misc.SoyuzLauncherPronter;
 import com.hbm.render.misc.SoyuzPronter;
 import com.hbm.tileentity.machine.TileEntitySoyuzLauncher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSoyuzLauncher extends TileEntitySpecialRenderer<TileEntitySoyuzLauncher> {
 
@@ -15,8 +15,8 @@ public class RenderSoyuzLauncher extends TileEntitySpecialRenderer<TileEntitySoy
 	
 	@Override
 	public void render(TileEntitySoyuzLauncher te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y-4, (float) z + 0.5F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x + 0.5F, (float) y-4, (float) z + 0.5F);
 		
 		TileEntitySoyuzLauncher launcher = (TileEntitySoyuzLauncher)te;
 		
@@ -36,10 +36,10 @@ public class RenderSoyuzLauncher extends TileEntitySpecialRenderer<TileEntitySoy
 		SoyuzLauncherPronter.prontLauncher(rot);
 		
 		if(launcher.rocketType >= 0) {
-			GL11.glTranslatef(0.0F, 5.0F, 0.0F);
+			GlStateManager.translate(0.0F, 5.0F, 0.0F);
 			SoyuzPronter.prontSoyuz(launcher.rocketType);
 		}
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

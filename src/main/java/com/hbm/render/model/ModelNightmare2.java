@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelNightmare2 extends ModelBase {
 
@@ -227,7 +227,7 @@ public class ModelNightmare2 extends ModelBase {
 			Bullet5.render(f5);
 		if(ammo > 5)
 			Bullet6.render(f5);
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
 
@@ -241,7 +241,7 @@ public class ModelNightmare2 extends ModelBase {
         
         GlStateManager.enableLighting();
         GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

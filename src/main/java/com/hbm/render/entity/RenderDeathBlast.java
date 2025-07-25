@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderDeathBlast extends Render<EntityDeathBlast> {
 
@@ -32,15 +32,15 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 	public void doRender(EntityDeathBlast entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		if(!ClientProxy.renderingConstant)
 			return;
-		GL11.glPushMatrix();
-    	GL11.glTranslatef((float)x, (float)y, (float)z);
+		GlStateManager.pushMatrix();
+    	GlStateManager.translate((float)x, (float)y, (float)z);
     	GlStateManager.disableLighting();
     	GlStateManager.enableCull();
     	GlStateManager.disableTexture2D();
     	GlStateManager.shadeModel(GL11.GL_SMOOTH);
     	GlStateManager.depthMask(false);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 	        GlStateManager.enableBlend();
 	        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 	        
@@ -70,7 +70,7 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 	        }
 	        
 	        tessellator.draw();
-	    GL11.glPopMatrix();
+	    GlStateManager.popMatrix();
         
 	    GlStateManager.depthMask(true);
 	    GlStateManager.disableCull();
@@ -78,14 +78,14 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 	    GlStateManager.enableTexture2D();
 	    GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         
         renderOrb(entity, x, y, z, entityYaw, partialTicks);
 	}
 	
 	public void renderOrb(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
-		GL11.glPushMatrix();
-        GL11.glTranslatef((float)x, (float)y, (float)z);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate((float)x, (float)y, (float)z);
         GlStateManager.disableLighting();
         GlStateManager.enableCull();
         GlStateManager.disableTexture2D();
@@ -120,7 +120,7 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
         GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
         GlStateManager.color(1, 1, 1, 1);
         
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 	
 	@Override

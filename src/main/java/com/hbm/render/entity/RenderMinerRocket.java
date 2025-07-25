@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMinerRocket extends Render<EntityMinerRocket> {
 
@@ -19,8 +19,8 @@ public class RenderMinerRocket extends Render<EntityMinerRocket> {
 	
 	@Override
 	public void doRender(EntityMinerRocket entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
         //GL11.glRotated(180, 0, 0, 1);
         GlStateManager.disableCull();
         
@@ -33,7 +33,7 @@ public class RenderMinerRocket extends Render<EntityMinerRocket> {
         ResourceManager.minerRocket.renderAll();
         
         GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

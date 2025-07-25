@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderDemonLamp extends TileEntitySpecialRenderer<TileEntityDemonLamp>
     implements IItemRendererProvider {
@@ -41,8 +41,8 @@ public class RenderDemonLamp extends TileEntitySpecialRenderer<TileEntityDemonLa
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
 
@@ -101,7 +101,7 @@ public class RenderDemonLamp extends TileEntitySpecialRenderer<TileEntityDemonLa
     GlStateManager.shadeModel(GL11.GL_FLAT);
     GlStateManager.depthMask(true);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

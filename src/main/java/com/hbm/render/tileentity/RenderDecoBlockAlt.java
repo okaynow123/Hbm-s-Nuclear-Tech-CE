@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderDecoBlockAlt extends TileEntitySpecialRenderer<TileEntityDecoBlockAlt> {
 
@@ -37,21 +37,21 @@ public class RenderDecoBlockAlt extends TileEntitySpecialRenderer<TileEntityDeco
 
 	@Override
 	public void render(TileEntityDecoBlockAlt te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glRotatef(180, 0F, 0F, 1F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
 		switch(te.getBlockMetadata()) {
 		case 4:
-			GL11.glRotatef(90, 0F, 1F, 0F);
+			GlStateManager.rotate(90, 0F, 1F, 0F);
 			break;
 		case 2:
-			GL11.glRotatef(180, 0F, 1F, 0F);
+			GlStateManager.rotate(180, 0F, 1F, 0F);
 			break;
 		case 5:
-			GL11.glRotatef(270, 0F, 1F, 0F);
+			GlStateManager.rotate(270, 0F, 1F, 0F);
 			break;
 		case 3:
-			GL11.glRotatef(0, 0F, 1F, 0F);
+			GlStateManager.rotate(0, 0F, 1F, 0F);
 			break;
 		}
 
@@ -61,11 +61,11 @@ public class RenderDecoBlockAlt extends TileEntitySpecialRenderer<TileEntityDeco
 		this.model.renderModel(0.0625F);
 		float g = 0.0625F;
 		float q = g * 2 + 0.0625F / 3;
-		GL11.glTranslatef(0.0F, -2 * g, q);
-		GL11.glRotatef(180, 0F, 0F, 1F);
+		GlStateManager.translate(0.0F, -2 * g, q);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
 		if(b == ModBlocks.statue_elb_w || b == ModBlocks.statue_elb_f) {
-			GL11.glPushMatrix();
-			GL11.glTranslated(0, 0.11, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0.11, 0);
 			GL11.glScaled(0.5, 0.5, 0.5);
 			ItemStack stack = new ItemStack(ModItems.watch);
 			IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
@@ -73,17 +73,17 @@ public class RenderDecoBlockAlt extends TileEntitySpecialRenderer<TileEntityDeco
 			NTMRenderHelper.bindBlockTexture();
 
 			Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
-		GL11.glTranslatef(0.0F, 2 * g, -q);
-		GL11.glRotatef(180, 0F, 0F, 1F);
-		GL11.glRotatef(90, 0F, 1F, 0F);
-		GL11.glScalef(0.5F, 0.5F, 0.5F);
-		GL11.glTranslatef(-g * 20, g * 4, g * 11);
-		GL11.glRotatef(-20, 0F, 0F, 1F);
+		GlStateManager.translate(0.0F, 2 * g, -q);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
+		GlStateManager.rotate(90, 0F, 1F, 0F);
+		GlStateManager.scale(0.5F, 0.5F, 0.5F);
+		GlStateManager.translate(-g * 20, g * 4, g * 11);
+		GlStateManager.rotate(-20, 0F, 0F, 1F);
 		this.bindTexture(gunTexture);
 		if(b == ModBlocks.statue_elb_g || b == ModBlocks.statue_elb_f)
 			this.gun.renderModel(0.0625F);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

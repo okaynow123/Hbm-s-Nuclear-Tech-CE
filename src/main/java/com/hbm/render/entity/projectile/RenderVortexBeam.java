@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderVortexBeam extends Render<EntityBeamBase> {
 
@@ -24,13 +24,13 @@ public class RenderVortexBeam extends Render<EntityBeamBase> {
 	
 	@Override
 	public void doRender(EntityBeamBase laser, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		EntityPlayer player = laser.world.getPlayerEntityByName(laser.getDataManager().get(EntityBeamBase.PLAYER_NAME));
 
 		if(player != null) {
 
-			GL11.glTranslated(x, y, z);
+			GlStateManager.translate(x, y, z);
 
 			RayTraceResult pos = Library.rayTrace(player, 100, 1);
 
@@ -41,7 +41,7 @@ public class RenderVortexBeam extends Render<EntityBeamBase> {
 	        BeamPronter.prontBeam(skeleton, EnumWaveType.RANDOM, EnumBeamType.LINE, 0x8080ff, 0x8080ff, init, (int)skeleton.length() * 3 + 1, 0.01F, 1, 0.01F);
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

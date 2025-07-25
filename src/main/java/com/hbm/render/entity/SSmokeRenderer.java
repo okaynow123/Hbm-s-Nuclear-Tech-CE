@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 public class SSmokeRenderer extends Render<EntitySSmokeFX> {
@@ -80,20 +80,20 @@ public class SSmokeRenderer extends Render<EntitySSmokeFX> {
 			TextureAtlasSprite tex = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(item, 1, meta), null, null).getParticleTexture();
 
 			if (tex != null) {
-				GL11.glPushMatrix();
-				GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
+				GlStateManager.pushMatrix();
+				GlStateManager.translate((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 				GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-				GL11.glScalef(0.5F, 0.5F, 0.5F);
-				GL11.glScalef(7.5F, 7.5F, 7.5F);
+				GlStateManager.scale(0.5F, 0.5F, 0.5F);
+				GlStateManager.scale(7.5F, 7.5F, 7.5F);
 				//
-				GL11.glScalef(0.25F, 0.25F, 0.25F);
+				GlStateManager.scale(0.25F, 0.25F, 0.25F);
 				//
 				this.bindEntityTexture(fx);
 				Tessellator tessellator = Tessellator.getInstance();
 
 				this.func_77026_a(tessellator, tex);
 				GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 		
 	}
@@ -117,8 +117,8 @@ public class SSmokeRenderer extends Render<EntitySSmokeFX> {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
-		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buf.pos(0.0F - f5, 0.0F - f6, 0.0D).tex(f, f3).endVertex();
 		buf.pos(f4 - f5, 0.0F - f6, 0.0D).tex(f1, f3).endVertex();

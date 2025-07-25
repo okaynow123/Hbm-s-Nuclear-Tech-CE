@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelFolly extends ModelBase {
 
@@ -266,9 +266,9 @@ public class ModelFolly extends ModelBase {
 		SPointer.render(f5);
 
 		if (state == 3 && timer > -1) {
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			GL11.glPushAttrib(GL11.GL_ALPHA_BITS);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			
@@ -295,9 +295,9 @@ public class ModelFolly extends ModelBase {
 			tessellator.draw();
 
 			GlStateManager.enableLighting();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.enableTexture2D();
 			GL11.glPopAttrib();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 

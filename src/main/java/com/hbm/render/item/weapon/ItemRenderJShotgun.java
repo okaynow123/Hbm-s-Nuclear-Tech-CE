@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Vector4f;
 
 public class ItemRenderJShotgun extends TEISRBase {
@@ -33,7 +33,7 @@ public class ItemRenderJShotgun extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack stack) {
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		int mag = ItemGunBase.getMag(stack);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.jshotgun_tex);
 		
@@ -57,9 +57,9 @@ public class ItemRenderJShotgun extends TEISRBase {
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND) {
 				GL11.glRotated(270 + recoil[0] * 10, 0, 0, 1);
 				GL11.glRotated(95, 0, 1, 0);
-				GL11.glTranslated(0.2, -1.9, -1);
+				GlStateManager.translate(0.2, -1.9, -1);
 			}
-			GL11.glTranslated(0, 0, -recoil[0] * 1.25F);
+			GlStateManager.translate(0, 0, -recoil[0] * 1.25F);
 			if(reload != null) {
 				ResourceManager.jshotgun.controller.setAnim(reload);
 				//ResourceManager.arm_rig.controller.setAnim(reload);
@@ -141,11 +141,11 @@ public class ItemRenderJShotgun extends TEISRBase {
 		case FIXED:
 		case GROUND:
 			GL11.glScaled(0.75, 0.75, 0.75);
-			GL11.glTranslated(-0.5, -1.5, 0.8);
+			GlStateManager.translate(-0.5, -1.5, 0.8);
 			GL11.glRotated(180, 0, 1, 0);
 			break;
 		case GUI:
-			GL11.glTranslated(-0.75, 0, -0.2);
+			GlStateManager.translate(-0.75, 0, -0.2);
 			GL11.glScaled(0.45, 0.45, 0.45);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glRotated(45, 0, 0, 1);

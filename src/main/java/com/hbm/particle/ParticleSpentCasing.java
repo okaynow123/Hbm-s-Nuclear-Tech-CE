@@ -21,7 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import java.awt.*;
@@ -156,11 +156,11 @@ public class ParticleSpentCasing extends Particle {
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float interp, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         RenderHelper.enableStandardItemLighting();
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glDepthMask(true);
 
@@ -187,14 +187,14 @@ public class ParticleSpentCasing extends Particle {
         double dY = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double)interp;
         double dZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double)interp;
 
-        GL11.glTranslated(pX - dX, pY - dY - this.height / 4 + config.getScaleY() * 0.01, pZ - dZ);
+        GlStateManager.translate(pX - dX, pY - dY - this.height / 4 + config.getScaleY() * 0.01, pZ - dZ);
 
-        GL11.glScalef(dScale, dScale, dScale);
+        GlStateManager.scale(dScale, dScale, dScale);
 
-        GL11.glRotatef(180 - momentumYaw, 0, 1, 0);
-        GL11.glRotatef(-momentumPitch, 1, 0, 0);
+        GlStateManager.rotate(180 - momentumYaw, 0, 1, 0);
+        GlStateManager.rotate(-momentumPitch, 1, 0, 0);
 
-        GL11.glScalef(config.getScaleX(), config.getScaleY(), config.getScaleZ());
+        GlStateManager.scale(config.getScaleX(), config.getScaleY(), config.getScaleZ());
 
         int index = 0;
         for(String name : config.getType().partNames) {
@@ -207,12 +207,12 @@ public class ParticleSpentCasing extends Particle {
 
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(pX - dX, pY - dY - this.height / 4, pZ - dZ);
-        //GL11.glScalef(dScale, dScale, dScale);
-        //GL11.glScalef(config.getScaleX(), config.getScaleY(), config.getScaleZ());
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(pX - dX, pY - dY - this.height / 4, pZ - dZ);
+        //GlStateManager.scale(dScale, dScale, dScale);
+        //GlStateManager.scale(config.getScaleX(), config.getScaleY(), config.getScaleZ());
 
         if(!smokeNodes.isEmpty()) {
             Tessellator tessellator = Tessellator.getInstance();
@@ -258,19 +258,19 @@ public class ParticleSpentCasing extends Particle {
                 bufferbuilder.pos(pastLoc.xCoord, pastLoc.yCoord, pastLoc.zCoord).color(1F, 1F, 1F, pastAlpha).endVertex();
             }
 
-            GL11.glAlphaFunc(GL11.GL_GREATER, 0F);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableCull();
             tessellator.draw();
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.1F);
+            GlStateManager.enableCull();
+            GlStateManager.enableTexture2D();
+            GlStateManager.disableBlend();
+            GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
         }
 
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glPopMatrix();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
 
         RenderHelper.disableStandardItemLighting();
 

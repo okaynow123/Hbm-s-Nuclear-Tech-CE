@@ -8,33 +8,33 @@ import com.hbm.tileentity.machine.TileEntityElectrolyser;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderElectrolyser extends TileEntitySpecialRenderer<TileEntityElectrolyser> implements IItemRendererProvider{
     @Override
     public void render(TileEntityElectrolyser te, double x, double y, double z, float interp, int destroyStage, float alpha) {
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 
         switch(te.getBlockMetadata() - BlockDummyable.offset) {
-            case 4: GL11.glRotatef(90, 0F, 1F, 0F); break;
-            case 3: GL11.glRotatef(180, 0F, 1F, 0F); break;
-            case 5: GL11.glRotatef(270, 0F, 1F, 0F); break;
-            case 2: GL11.glRotatef(0, 0F, 1F, 0F); break;
+            case 4: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+            case 3: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+            case 5: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+            case 2: GlStateManager.rotate(0, 0F, 1F, 0F); break;
         }
 
         GL11.glRotated(180, 0, 1, 0);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.enableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         bindTexture(ResourceManager.electrolyser_tex);
         ResourceManager.electrolyser.renderAll();
 
-        GL11.glShadeModel(GL11.GL_FLAT);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
     }
 
@@ -46,7 +46,7 @@ public class RenderElectrolyser extends TileEntitySpecialRenderer<TileEntityElec
     public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase( ) {
             public void renderInventory() {
-                GL11.glTranslated(-1, -1, 0);
+                GlStateManager.translate(-1, -1, 0);
                 GL11.glScaled(2.5, 2.5, 2.5);
             }
             public void renderCommon() {

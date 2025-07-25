@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachineCyclotron>
     implements IItemRendererProvider {
@@ -25,33 +25,33 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 
     switch (cyc.getBlockMetadata()) {
       case 14:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 12:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 15:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 13:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
     }
 
     GlStateManager.enableLighting();
-    GL11.glEnable(GL11.GL_LIGHTING);
+    GlStateManager.enableLighting();
     GlStateManager.disableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
     bindTexture(ResourceManager.cyclotron_tex);
     ResourceManager.cyclotron.renderPart("Body");
 
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
     boolean plugged = true;
 
@@ -86,7 +86,7 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
 
     if (plugged) {
 
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       RenderHelper.enableStandardItemLighting();
       GL11.glRotated(System.currentTimeMillis() * 0.025 % 360, 0, 1, 0);
 
@@ -97,7 +97,7 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
 
       String msg = "plures necat crapula quam gladius";
 
-      GL11.glTranslated(0, 2, 0);
+      GlStateManager.translate(0, 2, 0);
       GL11.glRotated(180, 1, 0, 0);
 
       float rot = 0F;
@@ -105,31 +105,31 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
       // looks dumb but we'll use this technology for the cyclotron
       for (char c : msg.toCharArray()) {
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
-        GL11.glRotatef(rot, 0, 1, 0);
+        GlStateManager.rotate(rot, 0, 1, 0);
 
         rot -= Minecraft.getMinecraft().fontRenderer.getCharWidth(c) * 2F;
 
-        GL11.glTranslated(2.75, 0, 0);
+        GlStateManager.translate(2.75, 0, 0);
 
-        GL11.glRotatef(-90, 0, 1, 0);
+        GlStateManager.rotate(-90, 0, 1, 0);
 
         float scale = 0.1F;
-        GL11.glScalef(scale, scale, scale);
+        GlStateManager.scale(scale, scale, scale);
         GlStateManager.disableCull();
         Minecraft.getMinecraft()
             .standardGalacticFontRenderer
             .drawString(String.valueOf(c), 0, 0, 0x600060);
         GlStateManager.enableCull();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
       }
 
       GlStateManager.enableLighting();
       GlStateManager.disableBlend();
       GlStateManager.enableTexture2D();
 
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
 
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       RenderHelper.enableStandardItemLighting();
@@ -137,7 +137,7 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

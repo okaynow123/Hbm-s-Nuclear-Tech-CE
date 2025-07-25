@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 
@@ -36,19 +36,19 @@ public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 
 	@Override
 	public void render(TileEntityPylon pyl, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F - ((1F / 16F) * 14F), (float) z + 0.5F);
-			GL11.glRotatef(180, 0F, 0F, 1F);
+		GlStateManager.pushMatrix();
+			GlStateManager.translate((float) x + 0.5F, (float) y + 1.5F - ((1F / 16F) * 14F), (float) z + 0.5F);
+			GlStateManager.rotate(180, 0F, 0F, 1F);
 			bindTexture(texture);
 			this.pylon.renderAll(0.0625F);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		this.renderPowerLines(pyl, x, y, z);
 	}
 
 	public static void renderPowerLines(TileEntityPylonBase pyl, double x, double y, double z) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y, (float) z);
 		for (int i = 0; i < pyl.connected.size(); i++) {
 
 			int[] otherPylon = pyl.connected.get(i);
@@ -77,7 +77,7 @@ public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 				}
 			}
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public static void drawLine(Vec3 firstPylonMountPos, Vec3 secoundPylonMountPos, float girth, double hang) {
@@ -98,9 +98,9 @@ public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 	}
 
 	public static void drawLineSegment(double x, double y, double z, double a, double b, double c, float girth) {
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
 		buf.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_COLOR);
@@ -125,7 +125,7 @@ public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 		buf.pos(a, b, c - girth).color(cableColorR, cableColorG, cableColorB, 1.0F).endVertex();
 		tessellator.draw();
 		GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableCull();
 	}
 }

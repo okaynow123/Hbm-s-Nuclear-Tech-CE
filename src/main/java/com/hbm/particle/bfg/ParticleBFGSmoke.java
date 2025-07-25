@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleBFGSmoke extends Particle {
 	
@@ -58,7 +58,7 @@ public class ParticleBFGSmoke extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		double d0 = this.prevPosX + (this.posX - this.prevPosX) * (double) partialTicks;
 		double d1 = this.prevPosY + (this.posY - this.prevPosY) * (double) partialTicks;
@@ -68,7 +68,7 @@ public class ParticleBFGSmoke extends Particle {
 		double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
 		double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
 
-		GL11.glTranslated(d0 - d3, d1 - d4, d2 - d5);
+		GlStateManager.translate(d0 - d3, d1 - d4, d2 - d5);
 		
 		GlStateManager.disableCull();
         GlStateManager.enableBlend();
@@ -112,6 +112,6 @@ public class ParticleBFGSmoke extends Particle {
         GlStateManager.enableAlpha();
         GlStateManager.depthMask(true);
         
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 }

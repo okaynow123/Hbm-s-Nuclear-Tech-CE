@@ -7,7 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -65,25 +65,25 @@ public class NodeDropdown extends NodeElement {
 		list.render(mX, mY);
 		
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
 		GL11.glScaled(0.35, 0.35, 0.35);
-		GL11.glTranslated(-x, -y, 0);
+		GlStateManager.translate(-x, -y, 0);
 		String s = nameGetter.get();
 		font.drawString(s, x+43-font.getStringWidth(s)/2, y+5, 0xFF5F5F5F, false);
-		GL11.glPopMatrix();
-		GL11.glPushMatrix();
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
 		float width = font.getCharWidth('^');
 		float height = font.FONT_HEIGHT;
 		x = x+27.5F;
 		y = y+2.5F;
-		GL11.glTranslated(x+width*0.4F, y+height*0.2F, 0);
+		GlStateManager.translate(x+width*0.4F, y+height*0.2F, 0);
 		GL11.glScaled(0.5, 0.5, 0.5);
 		if(list.isClosed)
 			GL11.glRotated(180, 0, 0, 1);
-		GL11.glTranslated(-x-width*0.4F, -y-height*0.2F, 0);
+		GlStateManager.translate(-x-width*0.4F, -y-height*0.2F, 0);
 		font.drawString("^", x, y, 0xFF5F5F5F, false);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

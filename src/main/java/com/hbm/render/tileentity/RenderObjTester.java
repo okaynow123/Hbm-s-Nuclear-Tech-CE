@@ -32,7 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -56,11 +56,11 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
     GlStateManager.disableLighting();
-    /*GL11.glPushMatrix();
-          GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    /*GlStateManager.pushMatrix();
+          GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 
           //Drillgon200: Aha! I finally started using bob's tester block!
           Quaternion identity = new Quaternion();
@@ -90,10 +90,10 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
 
           //System.out.println(q);
 
-          GL11.glPopMatrix();*/
+          GlStateManager.popMatrix();*/
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 8, 0);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 8, 0);
     Vec3d player = new Vec3d(x + 0.5, y + 8, z + 0.5);
     GlStateManager.disableCull();
     GlStateManager.enableBlend();
@@ -130,10 +130,10 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
     GlStateManager.enableCull();
     GlStateManager.disableBlend();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glRotatef(-90, 0, 1, 0);
-    GL11.glTranslated(0, 3, 0);
+    GlStateManager.rotate(-90, 0, 1, 0);
+    GlStateManager.translate(0, 3, 0);
     // Drillgon200: The thing is dead.
     bindTexture(ResourceManager.bobkotium_tex);
     ResourceManager.nikonium.renderAll();
@@ -148,7 +148,7 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
      HbmShaderManager2.releaseShader();
      Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);*/
 
-    GL11.glTranslated(0, 4, 0);
+    GlStateManager.translate(0, 4, 0);
     EntityCreeper creep = new EntityCreeper(Minecraft.getMinecraft().world);
     creep.setPosition(te.getPos().getX() + 0.5F, te.getPos().getY() + 7, te.getPos().getZ() + 0.5F);
     Minecraft.getMinecraft()
@@ -162,7 +162,7 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
         0.5F,
         () -> {
           for (Pair<Matrix4f, ModelRenderer> p : boxes) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             BufferBuilder buf = Tessellator.getInstance().getBuffer();
             buf.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX);
             for (ModelBox b : p.getRight().cubeList) {
@@ -172,12 +172,12 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
               // dat[2].tessellate(buf, true);
             }
             Tessellator.getInstance().draw();
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
           }
         });
     GlStateManager.enableDepth();
-    GL11.glTranslated(0, -7, 0);
-    GL11.glRotatef(90, 0, 1, 0);
+    GlStateManager.translate(0, -7, 0);
+    GlStateManager.rotate(90, 0, 1, 0);
 
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.fstbmb_tex);
@@ -190,34 +190,34 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
 
     FontRenderer font = Minecraft.getMinecraft().fontRenderer;
     float f3 = 0.04F;
-    GL11.glTranslatef(0.815F, 0.9275F, 0.5F);
-    GL11.glScalef(f3, -f3, f3);
+    GlStateManager.translate(0.815F, 0.9275F, 0.5F);
+    GlStateManager.scale(f3, -f3, f3);
     GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
-    GL11.glRotatef(90, 0, 1, 0);
+    GlStateManager.rotate(90, 0, 1, 0);
     GlStateManager.depthMask(false);
-    GL11.glTranslatef(0, 1, 0);
+    GlStateManager.translate(0, 1, 0);
     font.drawString("00:15", 0, 0, 0xff0000);
     NTMRenderHelper.resetColor();
     GlStateManager.depthMask(true);
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glTranslated(0, 2, 0);
+    GlStateManager.translate(0, 2, 0);
     bindTexture(ResourceManager.turbofan_blades_tex);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslated(x + 0.5, y + 20, z + 0.5);
+    GlStateManager.translate(x + 0.5, y + 20, z + 0.5);
     bindTexture(ResourceManager.turbofan_blades_tex);
 
     ResourceManager.BFG10K.renderAll();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y + 6, z + 0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y + 6, z + 0.5);
 
     Tessellator tes = Tessellator.getInstance();
     BufferBuilder buf = tes.getBuffer();
@@ -317,7 +317,7 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
     Vector3f bruh2 = new Vector3f(bruh1.x / bruh1.w, bruh1.y / bruh1.w, bruh1.z / bruh1.w);
     // System.out.println(bruh2);
 
-    GL11.glTranslated(-0.5, -4, 0);
+    GlStateManager.translate(-0.5, -4, 0);
     RayTraceResult r =
         Library.rayTraceIncludeEntities(
             te.getWorld(),
@@ -342,7 +342,7 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
     FloatBuffer buffer = LensSpikeVisibilityHandler.getMatrixBuf(spikeV);
     buffer.rewind();
     GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);*/
-    /*GL11.glTranslated(0, 5, 0);
+    /*GlStateManager.translate(0, 5, 0);
     AxisAlignedBB bb1 = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
     AxisAlignedBB bb2 = new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(-0.2, 0.7, 0.1);
     Collider a = new AABBCollider(bb1, 1);
@@ -389,7 +389,7 @@ public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTest
     GlStateManager.enableAlpha();
     GlStateManager.depthMask(true);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderNTMSkybox extends IRenderHandler { //why an abstract class uses the I-prefix is beyond me but ok, alright, whatever
 	
@@ -48,7 +48,7 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 			world.provider.setSkyRenderer(this);
 		}
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.depthMask(false);
 
 		GlStateManager.enableTexture2D();
@@ -62,12 +62,12 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 		
 		GlStateManager.color(brightness, brightness, brightness, 1.0F);
 		
-		GL11.glPushMatrix();
-		GL11.glScalef(0.9999F, 0.9999F, 0.9999F);
-		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(140.0F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(-40.0F, 0.0F, 0.0F, 1.0F);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.9999F, 0.9999F, 0.9999F);
+		GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(140.0F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(-40.0F, 0.0F, 0.0F, 1.0F);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(digammaStar);
 		
 		float digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().player);
@@ -82,12 +82,12 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 		buf.pos(var12, dist, var12).tex(1, 1).endVertex();
 		buf.pos(-var12, dist, var12).tex(1, 0).endVertex();
 		tessellator.draw();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
-		GL11.glPushMatrix();
-		GL11.glRotatef(-40.0F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef((System.currentTimeMillis() % (360 * 1000) / 1000F), 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef((System.currentTimeMillis() % (360 * 100) / 100F), 1.0F, 0.0F, 0.0F);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(-40.0F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate((System.currentTimeMillis() % (360 * 1000) / 1000F), 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate((System.currentTimeMillis() % (360 * 100) / 100F), 1.0F, 0.0F, 0.0F);
 		
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(bobmazonSat);
 		
@@ -100,7 +100,7 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 		buf.pos(var12, dist, var12).tex(1, 1).endVertex();
 		buf.pos(-var12, dist, var12).tex(1, 0).endVertex();
 		tessellator.draw();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
 		GlStateManager.depthMask(true);
 
@@ -109,7 +109,7 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
 		didLastRender = true;
 	}

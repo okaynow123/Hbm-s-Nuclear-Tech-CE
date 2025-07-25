@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleBookCircle extends Particle {
 
@@ -46,7 +46,7 @@ public class ParticleBookCircle extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GlStateManager.enableBlend();
@@ -73,7 +73,7 @@ public class ParticleBookCircle extends Particle {
 		float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - entPosX);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - entPosY);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - entPosZ);
-        GL11.glTranslated(f5, f6, f7);
+        GlStateManager.translate(f5, f6, f7);
         
         float scale = particleScale;
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -90,6 +90,6 @@ public class ParticleBookCircle extends Particle {
 		GlStateManager.depthMask(true);
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

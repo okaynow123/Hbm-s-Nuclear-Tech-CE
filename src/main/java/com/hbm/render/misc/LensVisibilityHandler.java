@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;
@@ -97,7 +97,7 @@ public class LensVisibilityHandler {
 			GlStateManager.disableCull();
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.turbofan_blades_tex);
 			
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			ClientProxy.AUX_GL_BUFFER.put(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
 			GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
@@ -111,7 +111,7 @@ public class LensVisibilityHandler {
 			GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, fragmentsPassedQuery);
 			GL11.glCallList(checkSphere);
 			GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			
 			GlStateManager.colorMask(true, true, true, true);
 			GlStateManager.depthMask(true);
@@ -131,7 +131,7 @@ public class LensVisibilityHandler {
 				GlStateManager.disableCull();
 				Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.turbofan_blades_tex);
 				
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				ClientProxy.AUX_GL_BUFFER.put(modelviewMatrix);
 				ClientProxy.AUX_GL_BUFFER.rewind();
 				GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
@@ -145,7 +145,7 @@ public class LensVisibilityHandler {
 				GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, fragmentsPassedQuery);
 				GL11.glCallList(checkSphere);
 				GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				
 				GlStateManager.colorMask(true, true, true, true);
 				GlStateManager.depthMask(true);

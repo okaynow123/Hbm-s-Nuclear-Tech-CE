@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 
 public class RenderZirnoxDebris extends Render<EntityZirnoxDebris> {
@@ -24,13 +24,13 @@ public class RenderZirnoxDebris extends Render<EntityZirnoxDebris> {
 
     @Override
     public void doRender(EntityZirnoxDebris entity, double x, double y, double z, float entityYaw, float partialTicks){
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y + 0.125D, z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y + 0.125D, z);
 
         EntityZirnoxDebris debris = entity;
 
-        GL11.glRotatef(debris.getEntityId() % 360, 0, 1, 0); //rotate based on entity ID to add unique randomness
-        GL11.glRotatef(debris.lastRot + (debris.rot - debris.lastRot) * partialTicks, 1, 1, 1);
+        GlStateManager.rotate(debris.getEntityId() % 360, 0, 1, 0); //rotate based on entity ID to add unique randomness
+        GlStateManager.rotate(debris.lastRot + (debris.rot - debris.lastRot) * partialTicks, 1, 1, 1);
 
         EntityZirnoxDebris.DebrisType type = debris.getType();
 
@@ -44,7 +44,7 @@ public class RenderZirnoxDebris extends Render<EntityZirnoxDebris> {
             default: break;
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

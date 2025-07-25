@@ -20,7 +20,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 
 public class CanneryFirebox extends CanneryBase {
@@ -160,50 +160,50 @@ public class CanneryFirebox extends CanneryBase {
             float doorAngle = data.getFloat("angle");
             float prevDoorAngle = data.getFloat("lastAngle");
 
-            GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glShadeModel(GL11.GL_SMOOTH);
-            GL11.glEnable(GL11.GL_CULL_FACE);
+            GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+            GlStateManager.enableLighting();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GlStateManager.enableCull();
 
             switch (rotation) {
                 case 3:
-                    GL11.glRotatef(0, 0F, 1F, 0F);
+                    GlStateManager.rotate(0, 0F, 1F, 0F);
                     break;
                 case 5:
-                    GL11.glRotatef(90, 0F, 1F, 0F);
+                    GlStateManager.rotate(90, 0F, 1F, 0F);
                     break;
                 case 2:
-                    GL11.glRotatef(180, 0F, 1F, 0F);
+                    GlStateManager.rotate(180, 0F, 1F, 0F);
                     break;
                 case 4:
-                    GL11.glRotatef(270, 0F, 1F, 0F);
+                    GlStateManager.rotate(270, 0F, 1F, 0F);
                     break;
             }
 
             ITileActorRenderer.bindTexture(ResourceManager.heater_firebox_tex);
             ResourceManager.heater_firebox.renderPart("Main");
 
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
 
             float door = prevDoorAngle + (doorAngle - prevDoorAngle) * interp;
-            GL11.glTranslated(1.375, 0, 0.375);
-            GL11.glRotatef(door, 0F, -1F, 0F);
-            GL11.glTranslated(-1.375, 0, -0.375);
+            GlStateManager.translate(1.375, 0, 0.375);
+            GlStateManager.rotate(door, 0F, -1F, 0F);
+            GlStateManager.translate(-1.375, 0, -0.375);
             ResourceManager.heater_firebox.renderPart("Door");
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
 
             if (isOn) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_CULL_FACE);
+                GlStateManager.disableLighting();
+                GlStateManager.disableCull();
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
                 ResourceManager.heater_firebox.renderPart("InnerBurning");
-                GL11.glEnable(GL11.GL_LIGHTING);
+                GlStateManager.enableLighting();
 
                 GL11.glPopAttrib();
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             } else {
                 ResourceManager.heater_firebox.renderPart("InnerEmpty");
             }

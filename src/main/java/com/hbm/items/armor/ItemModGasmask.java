@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,13 +94,13 @@ public class ItemModGasmask extends ItemArmorMod implements IGasMask {
 		EntityPlayer me = MainRegistry.proxy.me();
 		boolean isMe = player == me;
 		if(!isMe){
-			GL11.glPushMatrix();
+			GlStateManager.pushMatrix();
 			offset(player, me, interp);
 		}
-		if(model.isSneak) GL11.glTranslatef(0, -0.1875F, 0);
+		if(model.isSneak) GlStateManager.translate(0, -0.1875F, 0);
 		modelM65.render(player, 0F, 0F, 0, yawWrapped, pitch, 0.0625F);
 		if(!isMe){
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 

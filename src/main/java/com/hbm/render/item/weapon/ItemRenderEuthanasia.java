@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderEuthanasia extends TEISRBase {
 
@@ -23,10 +23,10 @@ public class ItemRenderEuthanasia extends TEISRBase {
 		Minecraft.getMinecraft().renderEngine.bindTexture(euthanasia_rl);
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(-0.25, 0, 0);
+			GlStateManager.translate(-0.25, 0, 0);
 		case FIRST_PERSON_RIGHT_HAND:
 			GL11.glScaled(0.5, 0.5, 0.5);
-			GL11.glTranslated(1.3, 1.1, 1.6);
+			GlStateManager.translate(1.3, 1.1, 1.6);
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
 				GL11.glRotated(10, 0, 1, 0);
 				GL11.glRotated(-50, 0, 0, 1);
@@ -44,7 +44,7 @@ public class ItemRenderEuthanasia extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0.4, 0.2, 0.2);
+			GlStateManager.translate(0.4, 0.2, 0.2);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 			euthanasia.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);

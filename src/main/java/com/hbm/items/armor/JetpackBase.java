@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -109,12 +109,12 @@ public abstract class JetpackBase extends ItemArmorMod {
         EntityPlayer me = MainRegistry.proxy.me();
         boolean isMe = player == me;
         if (!isMe) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             offset(player, me, interp);
         }
         modelJetpack.render(event.getEntityPlayer(), 0.0F, 0.0F, 0, yawWrapped, pitch, 0.0625F);
         if (!isMe) {
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

@@ -19,7 +19,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderXVL1456 extends TEISRBase {
 
@@ -32,7 +32,7 @@ public class ItemRenderXVL1456 extends TEISRBase {
 	
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.enableCull();
 		Minecraft.getMinecraft().renderEngine.bindTexture(tau_rl);
 		float f = 0;
@@ -45,14 +45,14 @@ public class ItemRenderXVL1456 extends TEISRBase {
 		}
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(50.5, 0, 8.4);
+			GlStateManager.translate(50.5, 0, 8.4);
 		case FIRST_PERSON_RIGHT_HAND:
 			double[] recoil = HbmAnimations.getRelevantTransformation("RECOIL", type == TransformType.FIRST_PERSON_RIGHT_HAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
 			double[] spin = HbmAnimations.getRelevantTransformation("SPIN", type == TransformType.FIRST_PERSON_RIGHT_HAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
 			spin = ItemGunGauss.getCharge(itemStackIn) > 0 ? spin : new double[]{0, 0, 0};
 			
 			GL11.glScaled(10, 10, 10);
-			GL11.glTranslated(-1.7 - recoil[2]*0.3 - spin[1], 0.4, -0.8);
+			GlStateManager.translate(-1.7 - recoil[2]*0.3 - spin[1], 0.4, -0.8);
 			GL11.glRotated(182, 1, 0, 0);
 			GL11.glRotated(-5, 0, 1, 0);
 			GL11.glRotated(30 + recoil[1]*0.2, 0, 0, 1);
@@ -62,7 +62,7 @@ public class ItemRenderXVL1456 extends TEISRBase {
 			}
 			swordModel.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, (float)spin[0]*0.000006F*(ItemGunGauss.getCharge(itemStackIn)+MainRegistry.proxy.partialTicks()));
 			GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER2);
-			GL11.glLoadIdentity();
+			GlStateManager.loadIdentity();
 			GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 			ClientProxy.AUX_GL_BUFFER.put(12, ClientProxy.AUX_GL_BUFFER2.get(12));
 			ClientProxy.AUX_GL_BUFFER.put(13, ClientProxy.AUX_GL_BUFFER2.get(13));
@@ -78,7 +78,7 @@ public class ItemRenderXVL1456 extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(-0.25, 0.1, -0.4);
+			GlStateManager.translate(-0.25, 0.1, -0.4);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(180, 0, 0, 1);
 			GL11.glScaled(0.75, 0.75, 0.75);
@@ -87,6 +87,6 @@ public class ItemRenderXVL1456 extends TEISRBase {
 		default:
 			break;
 		}
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 	}
 }

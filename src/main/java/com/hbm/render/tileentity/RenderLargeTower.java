@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityTowerLarge;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderLargeTower extends TileEntitySpecialRenderer<TileEntityTowerLarge>
     implements IItemRendererProvider {
@@ -26,8 +26,8 @@ public class RenderLargeTower extends TileEntitySpecialRenderer<TileEntityTowerL
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
 
@@ -37,7 +37,7 @@ public class RenderLargeTower extends TileEntitySpecialRenderer<TileEntityTowerL
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
     GlStateManager.enableCull();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

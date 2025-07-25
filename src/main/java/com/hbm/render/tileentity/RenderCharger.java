@@ -8,7 +8,7 @@ import com.hbm.tileentity.machine.TileEntityCharger;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> {
 	
@@ -22,8 +22,8 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 
 		if(te.isOn){
-			GL11.glPushMatrix();
-	        GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+			GlStateManager.pushMatrix();
+	        GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 	        GlStateManager.enableLighting();
 			GlStateManager.enableCull();
 			GlStateManager.color(1, 1, 1, 1);
@@ -31,7 +31,7 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 			 
 	        BeamPronter.prontBeam(Vec3.createVectorHelper(0, te.pointingUp ? te.range + 0.5 : -te.range - 0.5, 0), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x002038, 0x002038, 0, 1, 0F, 1, 0.499F);
 	        
-	        GL11.glPopMatrix();
+	        GlStateManager.popMatrix();
        	}
 	}
 }

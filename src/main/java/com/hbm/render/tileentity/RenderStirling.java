@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderStirling extends TileEntitySpecialRenderer<TileEntityStirling>
     implements IItemRendererProvider, ITileActorRenderer {
@@ -26,23 +26,23 @@ public class RenderStirling extends TileEntitySpecialRenderer<TileEntityStirling
       float interp,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
     switch (tile.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
@@ -51,7 +51,7 @@ public class RenderStirling extends TileEntitySpecialRenderer<TileEntityStirling
     float rot = stirling.lastSpin + (stirling.spin - stirling.lastSpin) * interp;
     renderCommon(rot, stirling.hasCog, stirling.getGeatMeta());
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   private void renderCommon(float rot, boolean hasCog, int type) {
@@ -63,22 +63,22 @@ public class RenderStirling extends TileEntitySpecialRenderer<TileEntityStirling
     ResourceManager.stirling.renderPart("Base");
 
     if (hasCog) {
-      GL11.glPushMatrix();
-      GL11.glTranslated(0, 1.375, 0);
-      GL11.glRotatef(-rot, 0, 0, 1);
-      GL11.glTranslated(0, -1.375, 0);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0, 1.375, 0);
+      GlStateManager.rotate(-rot, 0, 0, 1);
+      GlStateManager.translate(0, -1.375, 0);
       ResourceManager.stirling.renderPart("Cog");
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 1.375, 0.25);
-    GL11.glRotatef(rot * 2 + 3, 1, 0, 0);
-    GL11.glTranslated(0, -1.375, -0.25);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(0, 1.375, 0.25);
+    GlStateManager.rotate(rot * 2 + 3, 1, 0, 0);
+    GlStateManager.translate(0, -1.375, -0.25);
     ResourceManager.stirling.renderPart("CogSmall");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glTranslated(Math.sin(rot * Math.PI / 90D) * 0.25 + 0.125, 0, 0);
+    GlStateManager.translate(Math.sin(rot * Math.PI / 90D) * 0.25 + 0.125, 0, 0);
     ResourceManager.stirling.renderPart("Piston");
   }
 
@@ -130,27 +130,27 @@ public class RenderStirling extends TileEntitySpecialRenderer<TileEntityStirling
     float lastSpin = data.getFloat("lastSpin");
     float spin = data.getFloat("spin");
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 
     switch (rotation) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
     renderCommon(lastSpin + (spin - lastSpin) * interp, hasCog, type);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

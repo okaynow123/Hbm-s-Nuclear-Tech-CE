@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelArmorDigamma extends ModelArmorBase {
 
@@ -31,11 +31,11 @@ public class ModelArmorDigamma extends ModelArmorBase {
 		
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		if(this.isChild) {
-			GL11.glScalef(0.75F, 0.75F, 0.75F);
-			GL11.glTranslatef(0.0F, 16.0F * par7, 0.0F);
+			GlStateManager.scale(0.75F, 0.75F, 0.75F);
+			GlStateManager.translate(0.0F, 16.0F * par7, 0.0F);
 		}
 		body.copyTo(cassette);
 		
@@ -44,12 +44,12 @@ public class ModelArmorDigamma extends ModelArmorBase {
 			head.render(par7*1.1F);
 		}
 		if(this.isChild) {
-			GL11.glScalef(0.75F, 0.75F, 0.75F);
+			GlStateManager.scale(0.75F, 0.75F, 0.75F);
 		}
 		if(type == 2) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fau_chest);
 			body.render(par7*1.1F);
-	        GL11.glEnable(GL11.GL_BLEND);
+	        GlStateManager.enableBlend();
 	        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fau_cassette);
 			cassette.render(par7*1.1F);
@@ -69,6 +69,6 @@ public class ModelArmorDigamma extends ModelArmorBase {
 		}
 		
 		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

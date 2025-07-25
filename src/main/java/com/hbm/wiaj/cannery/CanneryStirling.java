@@ -16,7 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class CanneryStirling extends CanneryBase {
 
@@ -186,10 +186,10 @@ public class CanneryStirling extends CanneryBase {
             double y = data.getDouble("y");
             double z = data.getDouble("z");
 
-            GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glShadeModel(GL11.GL_SMOOTH);
-            GL11.glEnable(GL11.GL_CULL_FACE);
+            GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+            GlStateManager.enableLighting();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GlStateManager.enableCull();
 
             ITileActorRenderer.bindTexture(ResourceManager.heater_oilburner_tex);
             ResourceManager.heater_oilburner.renderAll();

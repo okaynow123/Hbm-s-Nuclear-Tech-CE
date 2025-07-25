@@ -12,7 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Objects;
 
@@ -22,8 +22,8 @@ public class RenderCable extends TileEntitySpecialRenderer<TileEntityCableBaseNT
 	public void render(TileEntityCableBaseNT te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		if(te.getBlockType() != ModBlocks.red_cable)
 			return;
-		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
 		GlStateManager.enableLighting();
 		GlStateManager.enableCull();
 		bindTexture(ResourceManager.cable_neo_tex);
@@ -51,8 +51,8 @@ public class RenderCable extends TileEntitySpecialRenderer<TileEntityCableBaseNT
 			if(nZ) ResourceManager.cable_neo.renderPart("posZ");
 		}
 
-		GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
-		GL11.glPopMatrix();
+		GlStateManager.translate(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+		GlStateManager.popMatrix();
 	}
 
 	/**

@@ -14,7 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class DoorDecl {
 
@@ -43,7 +43,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0, 0, 0.5);
+			GlStateManager.translate(0, 0, 0.5);
 		};
 		
 		@Override
@@ -133,7 +133,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0.375, 0, 0);
+			GlStateManager.translate(0.375, 0, 0);
 		};
 		
 		@Override
@@ -209,7 +209,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0.375, 0, 0);
+			GlStateManager.translate(0.375, 0, 0);
 		};
 		
 		@Override
@@ -365,7 +365,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0, 0, 0.5);
+			GlStateManager.translate(0, 0, 0.5);
 		};
 		
 		@Override
@@ -555,7 +555,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0, 0, 0.5);
+			GlStateManager.translate(0, 0, 0.5);
 		};
 		
 		@Override
@@ -641,7 +641,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0.4375, 0, 0.5);
+			GlStateManager.translate(0.4375, 0, 0.5);
 		};
 		
 		@Override
@@ -715,7 +715,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glTranslated(0.25, 0, 0);
+			GlStateManager.translate(0.25, 0, 0);
 		};
 		
 		@Override
@@ -807,7 +807,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform(){
-			GL11.glTranslated(0.375, 0, 0);
+			GlStateManager.translate(0.375, 0, 0);
 		}
 		
 		@Override

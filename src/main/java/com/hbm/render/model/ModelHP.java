@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelHP extends ModelBase {
 
@@ -139,22 +139,22 @@ public class ModelHP extends ModelBase {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		Printer.render(f5);
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		Hatch.render(f5);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		Display.render(f5);
 		Stock.render(f5);
 		StockBottom.render(f5);
 		StockPlate.render(f5);
 		Barrel.render(f5);
-		GL11.glEnable(GL11.GL_BLEND);
-		// GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableBlend();
+		// GlStateManager.disableAlpha();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		Lens1.render(f5);
 		Lens2.render(f5);
 		Lens3.render(f5);
 		Beam.render(f5);
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.disableBlend();
 		Handle.render(f5);
 		Dot.render(f5);
 		Back.render(f5);

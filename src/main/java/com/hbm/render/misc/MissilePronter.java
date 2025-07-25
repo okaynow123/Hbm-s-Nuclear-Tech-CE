@@ -6,7 +6,7 @@ import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.texture.TextureManager;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.nio.DoubleBuffer;
 
@@ -18,13 +18,13 @@ public class MissilePronter {
 		//if(!missile.hadFuselage())
 		//	return;
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		if(missile.thruster != null && missile.thruster.type.name().equals(PartType.THRUSTER.name())) {
 			
 			tex.bindTexture(missile.thruster.texture);
 			missile.thruster.model.renderAll();
-			GL11.glTranslated(0, missile.thruster.height, 0);
+			GlStateManager.translate(0, missile.thruster.height, 0);
 		}
 		
 		if(missile.fuselage != null && missile.fuselage.type.name().equals(PartType.FUSELAGE.name())) {
@@ -37,7 +37,7 @@ public class MissilePronter {
 			
 			tex.bindTexture(missile.fuselage.texture);
 			missile.fuselage.model.renderAll();
-			GL11.glTranslated(0, missile.fuselage.height, 0);
+			GlStateManager.translate(0, missile.fuselage.height, 0);
 		}
 		
 		if(missile.warhead != null && missile.warhead.type.name().equals(PartType.WARHEAD.name())) {
@@ -46,7 +46,7 @@ public class MissilePronter {
 			missile.warhead.model.renderAll();
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public static void prontRocket(RocketStruct rocket, TextureManager tex) {
@@ -59,9 +59,9 @@ public class MissilePronter {
 
 	// Attaches a set of stages together
 	public static void prontRocket(RocketStruct rocket, EntityRideableRocket entity, TextureManager tex, boolean isDeployed, float interp) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 		boolean hasShroud = false;
 
@@ -73,21 +73,21 @@ public class MissilePronter {
 			int cluster = stage.getCluster();
 
 			if(isDeployed && stage.thruster != null && stage.fins != null && stage.fins.height > stage.thruster.height) {
-				GL11.glTranslated(0, stage.fins.height - stage.thruster.height, 0);
+				GlStateManager.translate(0, stage.fins.height - stage.thruster.height, 0);
 			}
 
 			for(int c = 0; c < cluster; c++) {
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				{
 
 					if(c > 0) {
 						float spin = (float)c / (float)(cluster - 1);
-						GL11.glRotatef(360.0F * spin, 0, 1, 0);
+						GlStateManager.rotate(360.0F * spin, 0, 1, 0);
 
 						if(stage.fuselage != null) {
-							GL11.glTranslated(stage.fuselage.part.bottom.radius, 0, 0);
+							GlStateManager.translate(stage.fuselage.part.bottom.radius, 0, 0);
 						} else if(stage.thruster != null) {
-							GL11.glTranslated(stage.thruster.part.top.radius, 0, 0);
+							GlStateManager.translate(stage.thruster.part.top.radius, 0, 0);
 						}
 					}
 
@@ -104,7 +104,7 @@ public class MissilePronter {
 							tex.bindTexture(stage.thruster.texture);
 							stage.thruster.getModel(isDeployed).renderAll();
 						}
-						GL11.glTranslated(0, stage.thruster.height, 0);
+						GlStateManager.translate(0, stage.thruster.height, 0);
 					}
 
 					if(stage.fuselage != null) {
@@ -116,17 +116,17 @@ public class MissilePronter {
 						for(int s = 0; s < stack; s++) {
 							tex.bindTexture(stage.fuselage.texture);
 							stage.fuselage.getModel(isDeployed).renderAll();
-							GL11.glTranslated(0, stage.fuselage.height, 0);
+							GlStateManager.translate(0, stage.fuselage.height, 0);
 						}
 					}
 
 				}
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 
 
-			if(stage.thruster != null) GL11.glTranslated(0, stage.thruster.height, 0);
-			if(stage.fuselage != null) GL11.glTranslated(0, stage.fuselage.height * stack, 0);
+			if(stage.thruster != null) GlStateManager.translate(0, stage.thruster.height, 0);
+			if(stage.fuselage != null) GlStateManager.translate(0, stage.fuselage.height * stack, 0);
 
 			// Only the bottom-most stage can be deployed
 			isDeployed = false;
@@ -142,8 +142,8 @@ public class MissilePronter {
 			}
 		}
 
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

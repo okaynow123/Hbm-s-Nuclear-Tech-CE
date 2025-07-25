@@ -12,25 +12,25 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENSU> implements IItemRendererProvider, ITileActorRenderer {
 
 	@Override
 	public void render(TileEntityMachineFENSU te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glTranslatef((float)x + 0.5F, (float)y, (float)z + 0.5F);
+		GlStateManager.translate((float)x + 0.5F, (float)y, (float)z + 0.5F);
 
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 		switch(te.getBlockMetadata() - BlockDummyable.offset) {
-		case 2: GL11.glRotatef(90, 0F, 1F, 0F); break;
-		case 4: GL11.glRotatef(180, 0F, 1F, 0F); break;
-		case 3: GL11.glRotatef(270, 0F, 1F, 0F); break;
-		case 5: GL11.glRotatef(0, 0F, 1F, 0F); break;
+		case 2: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+		case 4: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+		case 3: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+		case 5: GlStateManager.rotate(0, 0F, 1F, 0F); break;
 		}
 
         
@@ -40,12 +40,12 @@ public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENS
         ResourceManager.fensu.renderPart("Base");
         float rot = fensu.prevRotation + (fensu.rotation - fensu.prevRotation) * partialTicks;
 
-        GL11.glTranslated(0, 2.5, 0);
+        GlStateManager.translate(0, 2.5, 0);
         GL11.glRotated(rot, 1, 0, 0);
-        GL11.glTranslated(0, -2.5, 0);
+        GlStateManager.translate(0, -2.5, 0);
         ResourceManager.fensu.renderPart("Disc");
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
 	        GlStateManager.disableLighting();
 	        GlStateManager.disableCull();
@@ -54,11 +54,11 @@ public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENS
 	        GlStateManager.enableCull();
 	        GlStateManager.enableLighting();
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -70,16 +70,16 @@ public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENS
 		float lastSpin = data.getFloat("lastSpin");
 		float spin = data.getFloat("spin");
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+		GlStateManager.enableLighting();
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 		switch(rotation) {
-			case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
-			case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
-			case 2: GL11.glRotatef(180, 0F, 1F, 0F); break;
-			case 4: GL11.glRotatef(270, 0F, 1F, 0F); break;
+			case 3: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+			case 5: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+			case 2: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+			case 4: GlStateManager.rotate(270, 0F, 1F, 0F); break;
 		}
 
 		ITileActorRenderer.bindTexture(ResourceManager.fensu_tex[0]);
@@ -87,14 +87,14 @@ public class RenderFENSU extends TileEntitySpecialRenderer<TileEntityMachineFENS
 
 		float rot = lastSpin + (spin - lastSpin) * interp;
 
-		GL11.glTranslated(0, 2.5, 0);
+		GlStateManager.translate(0, 2.5, 0);
 		GL11.glRotated(rot, 1, 0, 0);
-		GL11.glTranslated(0, -2.5, 0);
+		GlStateManager.translate(0, -2.5, 0);
 		ResourceManager.fensu.renderPart("Disc");
 		ResourceManager.fensu.renderPart("Lights");
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

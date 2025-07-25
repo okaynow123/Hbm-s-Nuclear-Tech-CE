@@ -21,7 +21,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleGluonFlare extends Particle {
 
@@ -69,7 +69,7 @@ public class ParticleGluonFlare extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.flare2);
 		GlStateManager.disableDepth();
 		GlStateManager.disableAlpha();
@@ -103,7 +103,7 @@ public class ParticleGluonFlare extends Particle {
 	        f7 = (float)(pos.z - interpPosZ);
         }
         
-        GL11.glTranslated(f5, f6, f7);
+        GlStateManager.translate(f5, f6, f7);
 		if(visibilityId == -1){
 			GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 			visibilityId = LensVisibilityHandler.generate(ClientProxy.AUX_GL_BUFFER);
@@ -153,7 +153,7 @@ public class ParticleGluonFlare extends Particle {
 		GlStateManager.disableBlend();
 		GlStateManager.enableDepth();
 		GlStateManager.enableAlpha();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 }

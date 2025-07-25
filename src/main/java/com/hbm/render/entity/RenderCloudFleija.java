@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCloudFleija extends Render<EntityCloudFleija> {
 
@@ -32,10 +32,10 @@ public class RenderCloudFleija extends Render<EntityCloudFleija> {
 
     @Override
     public void doRender(EntityCloudFleija cloud, double x, double y, double z, float entityYaw, float partialTicks) {
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) x, (float) y, (float) z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) x, (float) y, (float) z);
         GlStateManager.disableLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         GlStateManager.enableCull();
         // GlStateManager.shadeModel(GL11.GL_SMOOTH);
         // GlStateManager.enableBlend();
@@ -43,7 +43,7 @@ public class RenderCloudFleija extends Render<EntityCloudFleija> {
         // GlStateManager.disableAlpha();
 
         float s = cloud.age + partialTicks;
-        GL11.glScalef(s, s, s);
+        GlStateManager.scale(s, s, s);
 
 
         bindTexture(blastTexture);
@@ -52,7 +52,7 @@ public class RenderCloudFleija extends Render<EntityCloudFleija> {
         GL20.glUniform4f(GL20.glGetUniformLocation(ResourceManager.normal_fadeout.getShaderId(), "color"), 0.2F*2, 0.92F*2, 0.83F*2, 1F);
         GL20.glUniform1f(GL20.glGetUniformLocation(ResourceManager.normal_fadeout.getShaderId(), "fadeout_mult"), 2.5F);
         ResourceManager.sphere_hq.renderAll();
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
+        GlStateManager.scale(1.5F, 1.5F, 1.5F);
         GL20.glUniform1f(GL20.glGetUniformLocation(ResourceManager.normal_fadeout.getShaderId(), "fadeout_mult"), 0.5F);
         ResourceManager.sphere_hq.renderAll();
         HbmShaderManager2.releaseShader();*/
@@ -60,9 +60,9 @@ public class RenderCloudFleija extends Render<EntityCloudFleija> {
         //GlStateManager.enableAlpha();
         // GlStateManager.disableBlend();
         GlStateManager.enableLighting();
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
         // GlStateManager.shadeModel(GL11.GL_FLAT);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelBoltAction extends ModelBase {
 
@@ -201,9 +201,9 @@ public class ModelBoltAction extends ModelBase {
 		
 		
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_ALPHA_BITS);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
         Tessellator tessellator = Tessellator.getInstance();
@@ -214,9 +214,9 @@ public class ModelBoltAction extends ModelBase {
         tessellator.draw();
         
         GlStateManager.enableLighting();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
         GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void renderAnim(Entity entity, float f, float f1, float f2, float f3, float f4, float f5, float rot, float tran) {

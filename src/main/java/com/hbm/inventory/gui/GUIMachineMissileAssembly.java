@@ -14,7 +14,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -58,7 +58,7 @@ public class GUIMachineMissileAssembly extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -79,7 +79,7 @@ public class GUIMachineMissileAssembly extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 115, guiTop + 35, 176, 0, 18, 18);
 		
 		/// DRAW MISSILE START
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		MissileMultipart missile = new MissileMultipart();
 		
@@ -95,22 +95,22 @@ public class GUIMachineMissileAssembly extends GuiInfoContainer {
 		if(assembler.inventory.getStackInSlot(4) != null)
 			missile.thruster = MissilePart.getPart(assembler.inventory.getStackInSlot(4).getItem());
 		
-		GL11.glTranslatef(guiLeft + 88, guiTop + 98, 100);
-		GL11.glRotatef(System.currentTimeMillis() / 10 % 360, 0, -1, 0);
+		GlStateManager.translate(guiLeft + 88, guiTop + 98, 100);
+		GlStateManager.rotate(System.currentTimeMillis() / 10 % 360, 0, -1, 0);
 		
 		double size = 8 * 18;
 		double scale = size / Math.max(missile.getHeight(), 6);
 		
-		GL11.glTranslated(missile.getHeight() / 2 * scale, 0, 0);
+		GlStateManager.translate(missile.getHeight() / 2 * scale, 0, 0);
 		GL11.glScaled(scale, scale, scale);
 		
-		GL11.glRotatef(90, 1, 0, 0);
-		GL11.glRotatef(-90, 0, 0, 1);
-		GL11.glScalef(-1, -1, -1);
+		GlStateManager.rotate(90, 1, 0, 0);
+		GlStateManager.rotate(-90, 0, 0, 1);
+		GlStateManager.scale(-1, -1, -1);
 		
 		MissilePronter.prontMissile(missile, Minecraft.getMinecraft().getTextureManager());
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		/// DRAW MISSILE END
 	}
 }

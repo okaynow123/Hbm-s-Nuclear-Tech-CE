@@ -30,7 +30,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 
 import javax.annotation.Nullable;
@@ -79,8 +79,8 @@ public class ModelRendererUtil {
 	@SuppressWarnings("deprecation")
 	private static <T extends EntityLivingBase> List<Pair<Matrix4f, ModelRenderer>> getBoxesFromMob(T e, RenderLivingBase<T> render, float partialTicks) {
 		ModelBase model = render.getMainModel();
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		GlStateManager.disableCull();
 		GlStateManager.enableRescaleNormal();
 		//So basically we're just going to copy vanialla methods so the 
@@ -176,7 +176,7 @@ public class ModelRendererUtil {
 
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.enableCull();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		return list;
 	}
 	
@@ -199,7 +199,7 @@ public class ModelRendererUtil {
 		}
 		if(render.isHidden || !render.showModel || !compiled)
 			return;
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		doTransforms(render, scale);
 		if(render.childModels != null)
 			for(ModelRenderer renderer : render.childModels) {
@@ -211,7 +211,7 @@ public class ModelRendererUtil {
 		mat.load(ClientProxy.AUX_GL_BUFFER);
 		ClientProxy.AUX_GL_BUFFER.rewind();
 		list.add(Pair.of(mat, render));
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static void doTransforms(ModelRenderer m, float scale) {

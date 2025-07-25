@@ -120,7 +120,7 @@ public class HbmShaderManager {
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
 		GlStateManager.pushMatrix();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		gaussFbo.framebufferClear();
 		gaussFbo.bindFramebuffer(true);
@@ -171,20 +171,20 @@ public class HbmShaderManager {
 		GL20.glUniform1i(GL20.glGetUniformLocation(combine, "mcImage"), 2);
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		int tex = GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
+		GlStateManager.bindTexture( Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		gaussFbo.framebufferRender(Minecraft.getMinecraft().getFramebuffer().framebufferWidth, Minecraft.getMinecraft().displayHeight);
 
 		releaseShader();
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+		GlStateManager.bindTexture( tex);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
 		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.enableDepth();
 		GlStateManager.enableLighting();
 		GlStateManager.enableAlpha();
@@ -393,7 +393,7 @@ public class HbmShaderManager {
 		amount = BobMathUtil.remap(amount, 0.0F, 1.0F, 0.34F, 0.7F);
 		GL20.glUniform1f(GL20.glGetUniformLocation(dissolve, "amount"), amount);
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, noise1);
+		GlStateManager.bindTexture( noise1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL20.glUniform1i(GL20.glGetUniformLocation(dissolve, "lightmap"), 1);
 		GL20.glUniform1i(GL20.glGetUniformLocation(dissolve, "noise"), 2);
@@ -404,9 +404,9 @@ public class HbmShaderManager {
 	public static void useWormShader(float offset){
 		useShader2(bfg_worm);
 		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, noise1);
+		GlStateManager.bindTexture( noise1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, noise2);
+		GlStateManager.bindTexture( noise2);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL20.glUniform1i(GL20.glGetUniformLocation(bfg_worm, "noise"), 2);
 		GL20.glUniform1i(GL20.glGetUniformLocation(bfg_worm, "bigNoise"), 3);

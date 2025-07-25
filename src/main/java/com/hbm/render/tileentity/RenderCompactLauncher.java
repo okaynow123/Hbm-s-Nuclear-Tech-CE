@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCompactLauncher extends TileEntitySpecialRenderer<TileEntityCompactLauncher>
     implements IItemRendererProvider {
@@ -28,18 +28,18 @@ public class RenderCompactLauncher extends TileEntitySpecialRenderer<TileEntityC
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
 
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.enableCull();
 
     bindTexture(ResourceManager.compact_launcher_tex);
     ResourceManager.compact_launcher.renderAll();
 
-    GL11.glTranslatef(0F, 1.0625F, 0F);
+    GlStateManager.translate(0F, 1.0625F, 0F);
 
     /// DRAW MISSILE START
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     if (launcher.load != null && launcher.clearingTimer == 0) {
       // ItemStack custom = launcher.getStackInSlot(0);
 
@@ -50,10 +50,10 @@ public class RenderCompactLauncher extends TileEntitySpecialRenderer<TileEntityC
       //
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
     /// DRAW MISSILE END
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

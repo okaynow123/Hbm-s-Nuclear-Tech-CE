@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
 
@@ -97,7 +97,7 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
         GlStateManager.disableDepth();
         GL11.glDepthMask(false);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableAlpha();
         Minecraft.getMinecraft().getTextureManager().bindTexture(asbestosBlur);
         NTMRenderHelper.startDrawingTexturedQuads();
@@ -109,6 +109,6 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
         GL11.glDepthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 }

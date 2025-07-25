@@ -5,26 +5,26 @@ import com.hbm.render.item.TEISRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderWeaponAR15 extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack stack){
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		GlStateManager.enableCull();
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.ar15_tex);
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(1.95, 0.4, 0.5);
+			GlStateManager.translate(1.95, 0.4, 0.5);
 			GL11.glScaled(0.25, 0.25, 0.25);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(-30, 1, 0, 0);
 			break;
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glTranslated(-1, 0.5, 0.5);
+			GlStateManager.translate(-1, 0.5, 0.5);
 			GL11.glScaled(0.25, 0.25, 0.25);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(-30, 1, 0, 0);
@@ -35,13 +35,13 @@ public class ItemRenderWeaponAR15 extends TEISRBase {
 		case HEAD:
 		case FIXED:
 		case GROUND:
-			GL11.glTranslated(0.5, -0.2, -0.2);
+			GlStateManager.translate(0.5, -0.2, -0.2);
 			GL11.glScaled(0.125, 0.125, 0.125);
 			GL11.glRotated(180, 0, 1, 0);
 			break;
 		case GUI:
 			GlStateManager.enableLighting();
-			GL11.glTranslated(0.4, 0.4, 0);
+			GlStateManager.translate(0.4, 0.4, 0);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(-40, 1, 0, 0);
 			GL11.glScaled(0.05, 0.05, 0.05);
@@ -54,6 +54,6 @@ public class ItemRenderWeaponAR15 extends TEISRBase {
 		ResourceManager.ar15.renderAll();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

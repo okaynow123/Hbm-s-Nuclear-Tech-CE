@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderGasCent extends TileEntitySpecialRenderer<TileEntityMachineGasCent>
     implements IItemRendererProvider {
@@ -26,22 +26,22 @@ public class RenderGasCent extends TileEntitySpecialRenderer<TileEntityMachineGa
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     switch (te.getBlockMetadata()) {
       case 4:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
@@ -49,7 +49,7 @@ public class RenderGasCent extends TileEntitySpecialRenderer<TileEntityMachineGa
     ResourceManager.centrifuge_gas.renderAll();
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

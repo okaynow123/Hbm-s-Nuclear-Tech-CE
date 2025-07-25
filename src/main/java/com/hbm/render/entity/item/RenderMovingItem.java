@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMovingItem extends Render<EntityMovingItem> {
 
@@ -25,16 +25,16 @@ public class RenderMovingItem extends Render<EntityMovingItem> {
 	@Override
 	public void doRender(EntityMovingItem item, double x, double y, double z, float f1, float f2) {
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
 
 		ItemStack stack = item.getItemStack();
 		GL11.glScaled(0.5, 0.5, 0.5);
 		if(!(stack.getItem() instanceof ItemBlock)) {
-			GL11.glRotatef(90F, 1.0F, 0.0F, 0.0F);
-			GL11.glTranslated(0.0, 0, -0.03);
+			GlStateManager.rotate(90F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.translate(0.0, 0, -0.03);
 		} else {
-			GL11.glTranslated(0, 0.25, 0);
+			GlStateManager.translate(0, 0.25, 0);
 		}
 
         IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, item.world, null);
@@ -42,7 +42,7 @@ public class RenderMovingItem extends Render<EntityMovingItem> {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

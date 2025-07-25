@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleMobGib extends Particle {
 
@@ -74,7 +74,7 @@ public class ParticleMobGib extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.enableColorMaterial();
@@ -103,6 +103,6 @@ public class ParticleMobGib extends Particle {
 		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderTurretArty extends TileEntitySpecialRenderer<TileEntityTurretArty>
     implements IItemRendererProvider {
@@ -24,8 +24,8 @@ public class RenderTurretArty extends TileEntitySpecialRenderer<TileEntityTurret
       float alpha) {
     Vec3d pos = turret.byHorizontalIndexOffset();
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + pos.x, y, z + pos.z);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + pos.x, y, z + pos.z);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -43,17 +43,17 @@ public class RenderTurretArty extends TileEntitySpecialRenderer<TileEntityTurret
     GL11.glRotated(yaw - 90, 0, 1, 0);
     ResourceManager.turret_arty.renderPart("Carriage");
 
-    GL11.glTranslated(0, 3, 0);
+    GlStateManager.translate(0, 3, 0);
     GL11.glRotated(pitch, 1, 0, 0);
-    GL11.glTranslated(0, -3, 0);
+    GlStateManager.translate(0, -3, 0);
     ResourceManager.turret_arty.renderPart("Cannon");
     double barrel = turret.lastBarrelPos + (turret.barrelPos - turret.lastBarrelPos) * interp;
     double length = 2.5;
-    GL11.glTranslated(0, 0, barrel * length);
+    GlStateManager.translate(0, 0, barrel * length);
     ResourceManager.turret_arty.renderPart("Barrel");
 
-    GL11.glShadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.popMatrix();
   }
 
   @Override

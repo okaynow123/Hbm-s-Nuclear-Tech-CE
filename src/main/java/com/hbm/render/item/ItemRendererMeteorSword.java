@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRendererMeteorSword extends TEISRBase {
 
@@ -27,7 +27,7 @@ public class ItemRendererMeteorSword extends TEISRBase {
 	
 	@Override
 	public void renderByItem(ItemStack stack) {
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.translate(0.5, 0.5, 0.5);
 
 		Minecraft mc = Minecraft.getMinecraft();
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
@@ -63,12 +63,12 @@ public class ItemRendererMeteorSword extends TEISRBase {
             int p_77018_3_ = 0;
             int p_77018_5_ = 16;
             int zLevel = 0;
-            GL11.glMatrixMode(GL11.GL_TEXTURE);
-            GL11.glPushMatrix();
+            GlStateManager.matrixMode(GL11.GL_TEXTURE);
+            GlStateManager.pushMatrix();
             GL11.glScaled(8, 8, 8);
-            GL11.glTranslated(f2, 0, 0);
+            GlStateManager.translate(f2, 0, 0);
             GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(-0.5F, -0.5F, -0.5F);
@@ -86,7 +86,7 @@ public class ItemRendererMeteorSword extends TEISRBase {
             Minecraft.getMinecraft().getRenderItem().renderQuads(bufferbuilder, itemModel.getQuads((IBlockState)null, (EnumFacing)null, 0L), color, stack);
             tessellator.draw();
             
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
             /*BufferBuilder buf = tessellator.getBuffer();
             buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             buf.pos((double)(p_77018_2_ + 0), (double)(p_77018_3_ + p_77018_5_), (double)zLevel).tex((double)((f2 + (float)p_77018_5_ * f4) * f), (double)((f3 + (float)p_77018_5_) * f1)).endVertex();
@@ -94,9 +94,9 @@ public class ItemRendererMeteorSword extends TEISRBase {
             buf.pos((double)(p_77018_2_ + p_77018_4_), (double)(p_77018_3_ + 0), (double)zLevel).tex((double)((f2 + (float)p_77018_4_) * f), (double)((f3 + 0.0F) * f1)).endVertex();
             buf.pos((double)(p_77018_2_ + 0), (double)(p_77018_3_ + 0), (double)zLevel).tex((double)((f2 + 0.0F) * f), (double)((f3 + 0.0F) * f1)).endVertex();
             tessellator.draw();*/
-            GL11.glMatrixMode(GL11.GL_TEXTURE);
-            GL11.glPopMatrix();
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.matrixMode(GL11.GL_TEXTURE);
+            GlStateManager.popMatrix();
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

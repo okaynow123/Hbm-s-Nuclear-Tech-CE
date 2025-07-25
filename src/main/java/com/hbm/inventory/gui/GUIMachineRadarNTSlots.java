@@ -13,7 +13,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketCloseWindow;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ public class GUIMachineRadarNTSlots extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         super.drawDefaultBackground();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 

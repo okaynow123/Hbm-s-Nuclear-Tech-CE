@@ -2,7 +2,7 @@ package com.hbm.render;
 
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -18,7 +18,7 @@ public class RenderSparks {
 		float g2 = (color2 >> 8 & 255)/255F;
 		float b2 = (color2 & 255)/255F;
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GlStateManager.glLineWidth(3F);
@@ -48,15 +48,15 @@ public class RenderSparks {
 			z = prevZ + dir.zCoord;
 
 			//Drillgon200: Neither tessellator nor buffer builder worked, and I'm too lazy to try and fix it.
-			GL11.glLineWidth(5F);
+			GlStateManager.glLineWidth(5F);
 			GL11.glBegin(3);
-			GL11.glColor4f(r1, g1, b1, 1.0F);
+			GlStateManager.color(r1, g1, b1, 1.0F);
 			GL11.glVertex3d(prevX, prevY, prevZ);
 			GL11.glVertex3d(x, y, z);
 			GL11.glEnd();
-			GL11.glLineWidth(2F);
+			GlStateManager.glLineWidth(2F);
 			GL11.glBegin(3);
-			GL11.glColor4f(r2, g2, b2, 1.0F);
+			GlStateManager.color(r2, g2, b2, 1.0F);
 			GL11.glVertex3d(prevX, prevY, prevZ);
 			GL11.glVertex3d(x, y, z);
 			GL11.glEnd();
@@ -66,7 +66,7 @@ public class RenderSparks {
 
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

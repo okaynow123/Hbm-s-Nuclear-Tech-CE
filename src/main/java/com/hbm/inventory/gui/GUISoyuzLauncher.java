@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -82,9 +82,9 @@ public class GUISoyuzLauncher extends GuiInfoContainer {
 			cents += "0";
 		
 		float scale = 0.5F;
-		GL11.glScalef(scale, scale, 1);
+		GlStateManager.scale(scale, scale, 1);
 		this.fontRenderer.drawString(secs + ":" + cents, (int)(153.5F / scale), (int)(37.5F / scale), 0xff0000);
-		GL11.glScalef(1/scale, 1/scale, 1);
+		GlStateManager.scale(1/scale, 1/scale, 1);
 	}
 	
 	@Override

@@ -9,45 +9,45 @@ import com.hbm.util.BobMathUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderPyroOven extends TileEntitySpecialRenderer<TileEntityMachinePyroOven> implements IItemRendererProvider {
 
     @Override
     public void render(TileEntityMachinePyroOven tile, double x, double y, double z, float f, int destroyStage, float alpha) {
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y, z + 0.5);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_CULL_FACE);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5, y, z + 0.5);
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
 
         switch(tile.getBlockMetadata() - BlockDummyable.offset) {
-            case 2: GL11.glRotatef(180, 0F, 1F, 0F); break;
-            case 4: GL11.glRotatef(270, 0F, 1F, 0F); break;
-            case 3: GL11.glRotatef(0, 0F, 1F, 0F); break;
-            case 5: GL11.glRotatef(90, 0F, 1F, 0F); break;
+            case 2: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+            case 4: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+            case 3: GlStateManager.rotate(0, 0F, 1F, 0F); break;
+            case 5: GlStateManager.rotate(90, 0F, 1F, 0F); break;
         }
         float anim = tile.prevAnim + (tile.anim - tile.prevAnim) * f;
 
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.pyrooven_tex);
         ResourceManager.pyrooven.renderPart("Oven");
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(BobMathUtil.sps(anim * 0.125) / 2 - 0.5, 0, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(BobMathUtil.sps(anim * 0.125) / 2 - 0.5, 0, 0);
         ResourceManager.pyrooven.renderPart("Slider");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(1.5, 0, 1.5);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(1.5, 0, 1.5);
         GL11.glRotated(anim * -15D % 360D, 0, 1, 0);
-        GL11.glTranslated(-1.5, 0, -1.5);
+        GlStateManager.translate(-1.5, 0, -1.5);
         ResourceManager.pyrooven.renderPart("Fan");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glShadeModel(GL11.GL_FLAT);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -59,16 +59,16 @@ public class RenderPyroOven extends TileEntitySpecialRenderer<TileEntityMachineP
     public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase() {
             public void renderInventory() {
-                GL11.glTranslated(0, -1, 0);
+                GlStateManager.translate(0, -1, 0);
                 GL11.glScaled(3.5, 3.5, 3.5);
             }
             public void renderCommon() {
                 GL11.glScaled(0.5, 0.5, 0.5);
-                GL11.glRotatef(90, 0F, 1F, 0F);
-                GL11.glShadeModel(GL11.GL_SMOOTH);
+                GlStateManager.rotate(90, 0F, 1F, 0F);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
                 bindTexture(ResourceManager.pyrooven_tex);
                 ResourceManager.pyrooven.renderAll();
-                GL11.glShadeModel(GL11.GL_FLAT);
+                GlStateManager.shadeModel(GL11.GL_FLAT);
             }};
     }
 }

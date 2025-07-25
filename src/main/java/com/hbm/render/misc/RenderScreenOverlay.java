@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class RenderScreenOverlay {
@@ -38,7 +38,7 @@ public class RenderScreenOverlay {
 	private static float lastDigResult;
 	
 	public static void renderRadCounter(ScaledResolution resolution, float in, Gui gui) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.enableBlend();
         GlStateManager.disableDepth();
@@ -93,13 +93,13 @@ public class RenderScreenOverlay {
 
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 
 
 	public static void renderDigCounter(ScaledResolution resolution, float in, Gui gui) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.enableBlend();
         GlStateManager.disableDepth();
@@ -154,7 +154,7 @@ public class RenderScreenOverlay {
 
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 	
@@ -172,20 +172,20 @@ public class RenderScreenOverlay {
 		
 		int size = cross.size;
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 			Minecraft.getMinecraft().renderEngine.bindTexture(misc);
 	        GlStateManager.enableBlend();
 	        GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 	        gui.drawTexturedModalRect(resolution.getScaledWidth() / 2 - (size / 2), resolution.getScaledHeight() / 2 - (size / 2), cross.x, cross.y, size, size);
 	        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 	        GlStateManager.disableBlend();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 	
 	public static void renderAmmo(ScaledResolution resolution, Gui gui, Item ammo, int count, int max, int dura, EnumHand hand, boolean renderCount) {
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
         
 		int pX = resolution.getScaledWidth() / 2 + 62 + 36;
 		int pZ = resolution.getScaledHeight() - 21;
@@ -210,13 +210,13 @@ public class RenderScreenOverlay {
         GlStateManager.disableRescaleNormal();
         GlStateManager.enableBlend();
         
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 	
 	public static void renderAmmoAlt(ScaledResolution resolution, Gui gui, Item ammo, int count, EnumHand hand) {
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		int pX = resolution.getScaledWidth() / 2 + 62 + 36 + 18;
 		int pZ = resolution.getScaledHeight() - 21 - 16;
@@ -235,7 +235,7 @@ public class RenderScreenOverlay {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 

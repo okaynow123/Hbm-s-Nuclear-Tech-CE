@@ -7,7 +7,7 @@ import com.hbm.tileentity.machine.TileEntityChimneyIndustrial;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderChimneyIndustrial extends TileEntitySpecialRenderer<TileEntityChimneyIndustrial>
     implements IItemRendererProvider {
@@ -27,19 +27,19 @@ public class RenderChimneyIndustrial extends TileEntitySpecialRenderer<TileEntit
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glRotatef(180, 0F, 1F, 0F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.rotate(180, 0F, 1F, 0F);
 
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.disableCull();
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.chimney_industrial_tex);
     ResourceManager.chimney_industrial.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.enableCull();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

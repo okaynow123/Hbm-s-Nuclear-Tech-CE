@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -21,7 +21,7 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
 
     @Override
     public void renderByItem(ItemStack itemStackIn) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GlStateManager.enableCull();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.detonator_laser_tex);
@@ -31,23 +31,23 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
             case FIRST_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND:
                 if(type == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
-                    GL11.glTranslated(0.3, 0.9, -0.3);
+                    GlStateManager.translate(0.3, 0.9, -0.3);
                     GL11.glRotated(205, 0, 0, 1);
-                    GL11.glTranslated(-0.2, 1.1, 0.8);
+                    GlStateManager.translate(-0.2, 1.1, 0.8);
                     GL11.glRotated(-25, 0, 0, 1);
                     GL11.glRotated(180, 1, 0, 0);
                 } else {
-                    GL11.glTranslated(0, 0, 0.9);
+                    GlStateManager.translate(0, 0, 0.9);
                     GL11.glRotated(0, 0, 0, 1);
                 }
                 double s0 = 0.25D;
                 GL11.glScaled(s0, s0, s0);
-                GL11.glRotatef(80F, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(-20F, 1.0F, 0.0F, 0.0F);
-                GL11.glTranslatef(1.0F, 0.5F, 3.0F);
+                GlStateManager.rotate(80F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(-20F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translate(1.0F, 0.5F, 3.0F);
                 if(type == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND) {
                     GL11.glRotated(205, 0, 0, 1);
-                    GL11.glTranslated(0.2, 1.1, 0.8);
+                    GlStateManager.translate(0.2, 1.1, 0.8);
                     GL11.glRotated(-25, 0, 0, 1);
                 }
                 break;
@@ -56,12 +56,12 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
             case GROUND:
             case FIXED:
             case HEAD:
-                GL11.glScalef(0.375F, 0.375F, 0.375F);
-                GL11.glTranslated(1.75, -0.5, 0.4);
+                GlStateManager.scale(0.375F, 0.375F, 0.375F);
+                GlStateManager.translate(1.75, -0.5, 0.4);
                 GL11.glRotated(180, 1, 0, 1);
                 break;
             case GUI:
-                GL11.glTranslated(0.26, 0.23, 0);
+                GlStateManager.translate(0.26, 0.23, 0);
                 GL11.glRotated(90, 0, 1, 0);
                 GL11.glRotated(45, 1, 0, 0);
                 GL11.glScaled(0.2, 0.2, 0.2);
@@ -71,23 +71,23 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
 
         ResourceManager.detonator_laser.renderPart("Main");
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableLighting();
+        GlStateManager.disableTexture2D();
         GL11.glColor3f(1F, 0F, 0F);
         ResourceManager.detonator_laser.renderPart("Lights");
         GL11.glColor3f(1F, 1F, 1F);
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
         float px = 0.0625F;
-        GL11.glTranslatef(0.5626F, px * 18, -px * 14);
+        GlStateManager.translate(0.5626F, px * 18, -px * 14);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -114,33 +114,33 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
         tessellator.draw();
 
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         String s;
         Random rand = new Random(System.currentTimeMillis() / 500);
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         float f3 = 0.01F;
-        GL11.glTranslatef(0.5625F, 1.3125F, 0.875F);
-        GL11.glScalef(f3, -f3, f3);
-        GL11.glRotatef(90, 0, 1, 0);
+        GlStateManager.translate(0.5625F, 1.3125F, 0.875F);
+        GlStateManager.scale(f3, -f3, f3);
+        GlStateManager.rotate(90, 0, 1, 0);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
 
-        GL11.glTranslatef(3F, -2F, 0.2F);
+        GlStateManager.translate(3F, -2F, 0.2F);
 
         for(int i = 0; i < 3; i++) {
             s = (rand.nextInt(900000) + 100000) + "";
             font.drawString(s, 0, 0, 0xff0000);
-            GL11.glTranslatef(0F, 12.5F, 0F);
+            GlStateManager.translate(0F, 12.5F, 0F);
         }
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
         GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         GlStateManager.shadeModel(GL11.GL_FLAT);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

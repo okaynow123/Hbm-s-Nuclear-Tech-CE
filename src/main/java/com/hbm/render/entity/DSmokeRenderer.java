@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 public class DSmokeRenderer extends Render<EntityDSmokeFX> {
@@ -59,14 +59,14 @@ public class DSmokeRenderer extends Render<EntityDSmokeFX> {
 			}
 
 			if (sprite != null) {
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				GL11.glPushAttrib(GL11.GL_CURRENT_BIT);
-				GL11.glTranslatef((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
+				GlStateManager.translate((float) p_76986_2_, (float) p_76986_4_, (float) p_76986_6_);
 				GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-				GL11.glScalef(0.5F, 0.5F, 0.5F);
-				GL11.glScalef(7.5F, 7.5F, 7.5F);
+				GlStateManager.scale(0.5F, 0.5F, 0.5F);
+				GlStateManager.scale(7.5F, 7.5F, 7.5F);
 				//
-				//GL11.glScalef(0.5F, 0.5F, 0.5F);
+				//GlStateManager.scale(0.5F, 0.5F, 0.5F);
 				//
 				this.bindEntityTexture(p_76986_1_);
 				Tessellator tessellator = Tessellator.getInstance();
@@ -74,7 +74,7 @@ public class DSmokeRenderer extends Render<EntityDSmokeFX> {
 				this.func_77026_a(tessellator, sprite);
 				GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 				GL11.glPopAttrib();
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 		}
 	}
@@ -97,8 +97,8 @@ public class DSmokeRenderer extends Render<EntityDSmokeFX> {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
-		GL11.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		BufferBuilder buf = tes.getBuffer();
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		//buf.putNormal(0.0F, 1.0F, 0.0F);

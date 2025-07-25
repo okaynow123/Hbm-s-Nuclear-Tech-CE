@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderHeatingOven extends TileEntitySpecialRenderer<TileEntityHeaterOven>
     implements IItemRendererProvider {
@@ -27,55 +27,55 @@ public class RenderHeatingOven extends TileEntitySpecialRenderer<TileEntityHeate
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
     switch (tile.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
-    GL11.glRotatef(-90, 0F, 1F, 0F);
+    GlStateManager.rotate(-90, 0F, 1F, 0F);
 
     TileEntityHeaterOven oven = (TileEntityHeaterOven) tile;
 
     bindTexture(ResourceManager.heater_oven_tex);
     ResourceManager.heater_oven.renderPart("Main");
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     float door = oven.prevDoorAngle + (oven.doorAngle - oven.prevDoorAngle) * partialTicks;
-    GL11.glTranslated(0, 0, door * 0.75D / 135D);
+    GlStateManager.translate(0, 0, door * 0.75D / 135D);
     ResourceManager.heater_oven.renderPart("Door");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     if (oven.wasOn) {
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 
-      GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDisable(GL11.GL_CULL_FACE);
+      GlStateManager.disableLighting();
+      GlStateManager.disableCull();
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
       ResourceManager.heater_oven.renderPart("InnerBurning");
-      GL11.glEnable(GL11.GL_LIGHTING);
+      GlStateManager.enableLighting();
 
       GL11.glPopAttrib();
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     } else {
       ResourceManager.heater_oven.renderPart("Inner");
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

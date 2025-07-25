@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 public class RenderCatalyticReformer
@@ -32,39 +32,39 @@ public class RenderCatalyticReformer
       int destroyStage,
       float alpha) {
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5, y, z + 0.5);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glDisable(GL11.GL_CULL_FACE);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5, y, z + 0.5);
+    GlStateManager.enableLighting();
+    GlStateManager.disableCull();
 
     switch (tile.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.catalytic_reformer_tex);
     ResourceManager.catalytic_reformer.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
 
     if (MainRegistry.polaroidID == 11) {
       /// rapidly spinning dicks ///
       GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-      GL11.glTranslated(-1.125, 1.375, 1);
+      GlStateManager.translate(-1.125, 1.375, 1);
       double s = 0.125D;
       GL11.glScaled(s, s, s);
       GL11.glRotated(System.currentTimeMillis() / 5D % 360D, 0, -1, 0);
-      GL11.glTranslated(0, 0.1, -0.5);
+      GlStateManager.translate(0, 0.1, -0.5);
 
       this.bindTexture(extra);
       HorsePronter.reset();
@@ -81,8 +81,8 @@ public class RenderCatalyticReformer
       HorsePronter.pront();
     }
 
-    GL11.glEnable(GL11.GL_CULL_FACE);
-    GL11.glPopMatrix();
+    GlStateManager.enableCull();
+    GlStateManager.popMatrix();
   }
 
   @Override

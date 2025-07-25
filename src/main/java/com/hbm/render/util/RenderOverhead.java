@@ -20,7 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.*;
 
@@ -64,12 +64,12 @@ public class RenderOverhead {
 			FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
 			float f = 1.6F;
 			float scale = 0.016666668F * f;
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x + 0.0F, (float) y + entity.height + 0.75F, (float) z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float) x + 0.0F, (float) y + entity.height + 0.75F, (float) z);
 			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
-			GL11.glScalef(-scale, -scale, scale);
+			GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+			GlStateManager.scale(-scale, -scale, scale);
 			GlStateManager.disableLighting();
 			GlStateManager.depthMask(false);
 			if(depthTest) {
@@ -103,7 +103,7 @@ public class RenderOverhead {
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
 			GlStateManager.color(1, 1, 1, 1);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -113,12 +113,12 @@ public class RenderOverhead {
 			FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
 			float f = 1.6F;
 			float scale = 0.016666668F * f;
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x + 0.0F, (float) y + offset, (float) z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((float) x + 0.0F, (float) y + offset, (float) z);
 			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
-			GL11.glScalef(-scale, -scale, scale);
+			GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+			GlStateManager.scale(-scale, -scale, scale);
 			GlStateManager.disableLighting();
 			GlStateManager.depthMask(false);
 			if(depthTest) {
@@ -152,7 +152,7 @@ public class RenderOverhead {
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
 			GlStateManager.color(1, 1, 1, 1);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
@@ -163,7 +163,7 @@ public class RenderOverhead {
 		double y =  player.prevPosY + (player.posY - player.prevPosY) * partialTicks;
 		double z =  player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.disableColorMaterial();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
@@ -239,7 +239,7 @@ public class RenderOverhead {
 		GL11.glDisable(GL11.GL_POINT_SMOOTH);
 		GlStateManager.disableBlend();
 		GlStateManager.enableDepth();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 
 	public static final HashMap<BlockPos, Marker> queuedMarkers = new HashMap();
@@ -258,14 +258,14 @@ public class RenderOverhead {
 		double y =  player.prevPosY + (player.posY - player.prevPosY) * partialTicks;
 		double z =  player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glDisable(GL11.GL_COLOR_MATERIAL);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableLighting();
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.disableDepth();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();
@@ -336,13 +336,13 @@ public class RenderOverhead {
 
 		tess.draw();
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 		GL11.glDisable(GL11.GL_POINT_SMOOTH);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.disableBlend();
+		GlStateManager.enableDepth();
 
 		for(Map.Entry<BlockPos, Marker> entry : tagList) {
 
@@ -383,7 +383,7 @@ public class RenderOverhead {
 
 			if(!label.isEmpty()) drawTag(1F, len, label, vec.xCoord, vec.yCoord, vec.zCoord, 100, true, marker.color, marker.color);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 

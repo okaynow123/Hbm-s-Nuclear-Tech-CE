@@ -10,14 +10,14 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRendererHot extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack stack) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.5, 0.5, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0.5, 0.5, 0);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
@@ -52,6 +52,6 @@ public class ItemRendererHot extends TEISRBase {
             //GlStateManager.disableBlend();
             GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

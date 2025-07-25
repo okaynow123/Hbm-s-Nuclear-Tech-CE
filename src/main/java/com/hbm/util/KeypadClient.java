@@ -21,7 +21,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -144,7 +144,7 @@ public class KeypadClient extends Keypad {
 
 	//Garbage render code, should have thought of a better system.
 	public void render() {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.keypad_tex);
 		GlStateManager.enableRescaleNormal();
 		transform.store(AUX_GL_MATRIX);
@@ -163,15 +163,15 @@ public class KeypadClient extends Keypad {
 			GL11.glCallList(mainModel);
 			GL11.glCallList(displayModel);
 			for(int i = 0; i < buttons.length; i ++){
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				if(buttons[i].cooldown > 0){
-					GL11.glTranslated(0, 0, 0.05);
+					GlStateManager.translate(0, 0, 0.05);
 					Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.keypad_success_tex);
 				} else {
 					Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.keypad_tex);
 				}
 				GL11.glCallList(keyModels[i]);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		} else {
@@ -182,8 +182,8 @@ public class KeypadClient extends Keypad {
 		GlStateManager.enablePolygonOffset();
 		GlStateManager.doPolygonOffset(-1.0F, -1.0F);
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.275, 0.67, -0.0625);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0.275, 0.67, -0.0625);
 		float s = 0.02F;
 		GL11.glScaled(s*0.5, -s*0.5, s);
 		GL11.glRotated(180, 0, 1, 0);
@@ -202,47 +202,47 @@ public class KeypadClient extends Keypad {
 				disp = ""+(i+1);
 				break;
 			}
-			GL11.glPushMatrix();
-			GL11.glTranslated((i%3)*0.234375F*100, (i/3)*0.175781F*100, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((i%3)*0.234375F*100, (i/3)*0.175781F*100, 0);
 			if(buttons[i].cooldown > 0){
-				GL11.glTranslated(0, 0, -0.05*50);
+				GlStateManager.translate(0, 0, -0.05*50);
 			}
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glNormal3f(1, 0, 0);
 			font.drawString(disp, 0, 0, 0xFF404040);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
 		int code = buildIntCode();
 		
 		if(code < 0){
-			GL11.glTranslated(0.3, 1-0.08, 0.03125);
+			GlStateManager.translate(0.3, 1-0.08, 0.03125);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glNormal3f(1, 0, 0);
 			if(isSettingCode){
 				GL11.glScaled(s*0.5F, -s*0.5, s);
 				font.drawString("Enter New", 0, 0, 0xFFFFEE00);
-				GL11.glTranslated(0, 8, 0);
+				GlStateManager.translate(0, 8, 0);
 				font.drawString("Code:", 0, 0, 0xFFFFEE00);
 			} else if(successColorTicks > 0){
 				GL11.glScaled(s*0.5F, -s*0.5, s);
 				font.drawString("Access", 0, 0, 0xFF15FF00);
-				GL11.glTranslated(0, 8, 0);
+				GlStateManager.translate(0, 8, 0);
 				font.drawString("Granted", 0, 0, 0xFF15FF00);
 			} else if(failColorTicks  > 0){
 				GL11.glScaled(s*0.5F, -s*0.5, s);
 				font.drawString("Access", 0, 0, 0xFFFF0800);
-				GL11.glTranslated(0, 8, 0);
+				GlStateManager.translate(0, 8, 0);
 				font.drawString("Denied", 0, 0, 0xFFFF0800);
 			} else {
-				GL11.glTranslated(0, -0.035, 0);
+				GlStateManager.translate(0, -0.035, 0);
 				GL11.glScaled(s*0.5F, -s*0.5, s);
 				font.drawString("Enter Code:", 0, 0, 0xFFFFFFFF);
 			}
 		} else {
-			GL11.glTranslated(0.3, 1-0.09, 0.03125);
+			GlStateManager.translate(0.3, 1-0.09, 0.03125);
 			GL11.glScaled(s*0.85, -s*0.9, s);
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glNormal3f(1, 0, 0);
@@ -255,6 +255,6 @@ public class KeypadClient extends Keypad {
 		
 		GlStateManager.disablePolygonOffset();
 		GlStateManager.disableRescaleNormal();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

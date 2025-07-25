@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderMP40 extends TEISRBase {
 
@@ -27,15 +27,15 @@ public class ItemRenderMP40 extends TEISRBase {
 		switch(type){
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			
 			if (type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glTranslated(-0.2, 1.1, 0.8);
+				GlStateManager.translate(-0.2, 1.1, 0.8);
 				GL11.glRotated(-00, 0, 1, 0);
 				GL11.glRotated(-25, 0, 0, 1);
 				GL11.glRotated(180, 1, 0, 0);
 			} else {
-				GL11.glTranslated(1.8, 1.1, 1.2);
+				GlStateManager.translate(1.8, 1.1, 1.2);
 				GL11.glRotated(180, 1, 0, 0);
 				GL11.glRotated(180, 0, 1, 0);
 				GL11.glRotated(25, 0, 0, 1);
@@ -49,8 +49,8 @@ public class ItemRenderMP40 extends TEISRBase {
 		case GROUND:
 		case FIXED:
 		case HEAD:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			GL11.glTranslated(1.0, 1, 0.7);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.translate(1.0, 1, 0.7);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(180, 1, 0, 0);
 

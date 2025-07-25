@@ -8,7 +8,7 @@ import com.hbm.tileentity.machine.TileEntityMachinePlasmaHeater;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderPlasmaHeater extends TileEntitySpecialRenderer<TileEntityMachinePlasmaHeater>
     implements IItemRendererProvider {
@@ -27,8 +27,8 @@ public class RenderPlasmaHeater extends TileEntitySpecialRenderer<TileEntityMach
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
 
     GlStateManager.enableCull();
     GlStateManager.enableLighting();
@@ -36,26 +36,26 @@ public class RenderPlasmaHeater extends TileEntitySpecialRenderer<TileEntityMach
 
     switch (te.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glTranslatef(0, 0, 18);
+    GlStateManager.translate(0, 0, 18);
 
     bindTexture(ResourceManager.iter_microwave);
     ResourceManager.iter.renderPart("Microwave");
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

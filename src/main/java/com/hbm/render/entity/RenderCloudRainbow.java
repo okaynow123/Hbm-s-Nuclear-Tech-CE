@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderCloudRainbow extends Render<EntityCloudFleijaRainbow> {
 
@@ -31,40 +31,40 @@ public class RenderCloudRainbow extends Render<EntityCloudFleijaRainbow> {
 	@Override
 	public void doRender(EntityCloudFleijaRainbow cloud, double x, double y, double z, float entityYaw,
 			float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT);
-        GL11.glTranslated(x, y, z);
+        GlStateManager.translate(x, y, z);
         GlStateManager.disableLighting();
-        GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.enableCull();
+		GlStateManager.disableTexture2D();
         
-        GL11.glScalef(cloud.age+partialTicks, cloud.age+partialTicks, cloud.age+partialTicks);
+        GlStateManager.scale(cloud.age+partialTicks, cloud.age+partialTicks, cloud.age+partialTicks);
 
 		GL11.glColor3ub((byte)cloud.world.rand.nextInt(0x100), (byte)cloud.world.rand.nextInt(0x100), (byte)cloud.world.rand.nextInt(0x100));
 
-        GL11.glScalef(0.5F, 0.5F, 0.5F);
+        GlStateManager.scale(0.5F, 0.5F, 0.5F);
         blastModel.renderAll();
-        GL11.glScalef(1/0.5F, 1/0.5F, 1/0.5F);
+        GlStateManager.scale(1/0.5F, 1/0.5F, 1/0.5F);
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		
         for(float i = 0.6F; i <= 1F; i += 0.1F) {
 
     		GL11.glColor3ub((byte)cloud.world.rand.nextInt(0x100), (byte)cloud.world.rand.nextInt(0x100), (byte)cloud.world.rand.nextInt(0x100));
     		
-            GL11.glScalef(i, i, i);
+            GlStateManager.scale(i, i, i);
             blastModel.renderAll();
-            GL11.glScalef(1/i, 1/i, 1/i);
+            GlStateManager.scale(1/i, 1/i, 1/i);
         }
         
-		GL11.glDisable(GL11.GL_BLEND);
+		GlStateManager.disableBlend();
         GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.enableTexture2D();
+        GlStateManager.disableCull();
         
         GL11.glPopAttrib();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 
 	@Override

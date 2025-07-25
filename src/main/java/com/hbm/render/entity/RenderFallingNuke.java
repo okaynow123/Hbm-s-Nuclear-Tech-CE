@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderFallingNuke extends Render<EntityFallingNuke> {
 
@@ -27,23 +27,23 @@ public class RenderFallingNuke extends Render<EntityFallingNuke> {
 
 	@Override
 	public void doRender(EntityFallingNuke entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-        GL11.glTranslatef((float)x, (float)y, (float)z);
+		GlStateManager.pushMatrix();
+        GlStateManager.translate((float)x, (float)y, (float)z);
         
 		switch(entity.getDataManager().get(EntityFallingNuke.FACING))
 		{
 		case NORTH:
-			GL11.glRotatef(0, 0F, 1F, 0F);
-	        GL11.glTranslated(-2.0D, 0.0D, 0.0D); break;
+			GlStateManager.rotate(0, 0F, 1F, 0F);
+	        GlStateManager.translate(-2.0D, 0.0D, 0.0D); break;
 		case WEST:
-			GL11.glRotatef(90, 0F, 1F, 0F);
-	        GL11.glTranslated(-2.0D, 0.0D, 0.0D); break;
+			GlStateManager.rotate(90, 0F, 1F, 0F);
+	        GlStateManager.translate(-2.0D, 0.0D, 0.0D); break;
 		case SOUTH:
-			GL11.glRotatef(180, 0F, 1F, 0F);
-	        GL11.glTranslated(-2.0D, 0.0D, 0.0D); break;
+			GlStateManager.rotate(180, 0F, 1F, 0F);
+	        GlStateManager.translate(-2.0D, 0.0D, 0.0D); break;
 		case EAST:
-			GL11.glRotatef(-90, 0F, 1F, 0F);
-	        GL11.glTranslated(-2.0D, 0.0D, 0.0D); break;
+			GlStateManager.rotate(-90, 0F, 1F, 0F);
+	        GlStateManager.translate(-2.0D, 0.0D, 0.0D); break;
 	    default:
 	       	break;
 		}
@@ -53,12 +53,12 @@ public class RenderFallingNuke extends Render<EntityFallingNuke> {
 		if(f < -80)
 			f = 0;
 		
-        GL11.glRotatef(f, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(f, 0.0F, 0.0F, 1.0F);
 
         bindTexture(boyTexture);
         boyModel.renderAll();
         
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@Override

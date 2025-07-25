@@ -6,7 +6,7 @@ import com.hbm.entity.missile.EntityRideableRocket.RocketState;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderDropPod extends RenderRocketPart {
 
@@ -29,7 +29,7 @@ public class RenderDropPod extends RenderRocketPart {
 		ResourceManager.drop_pod.renderPart("DropPod");
 
 		// Render door
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		{
 
 			float doorRotation = 0;
@@ -39,16 +39,16 @@ public class RenderDropPod extends RenderRocketPart {
 				doorRotation = MathHelper.clamp(90 - lerpTimer * 2, 0, 90);
 			}
 
-			GL11.glTranslatef(0.69291F, 2.8333F, 0);
-			GL11.glRotatef(doorRotation, 0, 0, 1);
-			GL11.glTranslatef(-0.69291F, -2.8333F, 0);
+			GlStateManager.translate(0.69291F, 2.8333F, 0);
+			GlStateManager.rotate(doorRotation, 0, 0, 1);
+			GlStateManager.translate(-0.69291F, -2.8333F, 0);
 			ResourceManager.drop_pod.renderPart("Door");
 
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		// Render airbrakes
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		{
 
 			float brakeRotation = 0;
@@ -71,35 +71,35 @@ public class RenderDropPod extends RenderRocketPart {
 			}
 
 			for(int i = 0; i < 4; i++) {
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				{
 
-					GL11.glRotatef(i * 90 - 45, 0, 1, 0);
-					GL11.glTranslated(0.46194, 3.5, 0);
-					GL11.glRotatef(brakeRotation, 0, 0, 1);
-					GL11.glTranslated(-0.46194, -3.5, 0);
-					GL11.glRotatef(45, 0, 1, 0);
+					GlStateManager.rotate(i * 90 - 45, 0, 1, 0);
+					GlStateManager.translate(0.46194, 3.5, 0);
+					GlStateManager.rotate(brakeRotation, 0, 0, 1);
+					GlStateManager.translate(-0.46194, -3.5, 0);
+					GlStateManager.rotate(45, 0, 1, 0);
 					ResourceManager.drop_pod.renderPart("Airbrake0");
 
 				}
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			}
 
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		// Render legs
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		{
 
 			double legExtension = 1;
 			if(state == RocketState.LAUNCHING) legExtension = 0;
 
-			GL11.glTranslated(0, -legExtension * 0.5, 0);
+			GlStateManager.translate(0, -legExtension * 0.5, 0);
 			ResourceManager.drop_pod.renderPart("Legs");
 
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

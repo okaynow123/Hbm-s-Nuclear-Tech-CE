@@ -3,7 +3,7 @@ package com.hbm.render.util;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class SmallBlockPronter {
 

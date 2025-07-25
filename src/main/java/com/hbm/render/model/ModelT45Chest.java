@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelT45Chest extends ModelBiped {
 
@@ -244,33 +244,33 @@ public class ModelT45Chest extends ModelBiped {
 		@Override
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 			setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-			GL11.glPushMatrix();
-			GL11.glScalef(1.13F, 1.13F, 1.13F);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.13F, 1.13F, 1.13F);
 			if(this.isChild) {
-				GL11.glScalef(0.75F, 0.75F, 0.75F);
-				GL11.glTranslatef(0.0F, 16.0F * par7, 0.0F);
-				GL11.glScalef(0.75F, 0.75F, 0.75F);
+				GlStateManager.scale(0.75F, 0.75F, 0.75F);
+				GlStateManager.translate(0.0F, 16.0F * par7, 0.0F);
+				GlStateManager.scale(0.75F, 0.75F, 0.75F);
 			}
 			this.chest.render(par7);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 			this.renderLeft(par1Entity, par2, par3, par4, par5, par6, par7);
 			this.renderRight(par1Entity, par2, par3, par4, par5, par6, par7);
 		}
 
 		public void renderLeft(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 			setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-			GL11.glPushMatrix();
-			GL11.glScalef(1.13F, 1.13F, 1.13F);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.13F, 1.13F, 1.13F);
 			this.leftarm.render(par7);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		public void renderRight(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 			setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-			GL11.glPushMatrix();
-			GL11.glScalef(1.13F, 1.13F, 1.13F);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.13F, 1.13F, 1.13F);
 			this.rightarm.render(par7);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
 		// Jabelar, you saved my time! I was about to redo all this crap if you can

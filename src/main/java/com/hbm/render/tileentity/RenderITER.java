@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
     implements IItemRendererProvider {
@@ -30,9 +30,9 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
       float partialTicks,
       int destroyStage,
       float alpha2) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
-    GL11.glTranslatef((float) x + 0.5F, (float) y - 2, (float) z + 0.5F);
+    GlStateManager.translate((float) x + 0.5F, (float) y - 2, (float) z + 0.5F);
 
     GlStateManager.enableCull();
     GlStateManager.enableLighting();
@@ -68,14 +68,14 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
     }
     ResourceManager.iter.renderPart("Torus");
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     GL11.glRotated(iter.lastRotor + (iter.rotor - iter.lastRotor) * partialTicks, 0, 1, 0);
     bindTexture(ResourceManager.iter_solenoid);
     ResourceManager.iter.renderPart("Solenoid");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     if (iter.plasmaNew.getFill() > 0) {
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       GL11.glRotated(iter.lastRotor + (iter.rotor - iter.lastRotor) * partialTicks, 0, 1, 0);
 
       GlStateManager.disableLighting();
@@ -92,9 +92,9 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
       int b = (int) ((color & 0xFF) / 2F * alpha);
 
       GlStateManager.color(r / 255F, g / 255F, b / 255F);
-      GL11.glTranslatef(0, 2.5F, 0);
+      GlStateManager.translate(0, 2.5F, 0);
       GL11.glScaled(1, alpha, 1);
-      GL11.glTranslatef(0, -2.5F, 0);
+      GlStateManager.translate(0, -2.5F, 0);
 
       bindTexture(ResourceManager.iter_plasma);
       ResourceManager.iter.renderPart("Plasma");
@@ -104,12 +104,12 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
       GlStateManager.disableBlend();
       GlStateManager.depthMask(true);
 
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
 
     GlStateManager.shadeModel(GL11.GL_FLAT);
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   private int getColor(Fluid type) {

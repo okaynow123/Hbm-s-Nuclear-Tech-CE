@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.glu.Project;
 
 @SideOnly(Side.CLIENT)
@@ -40,14 +40,14 @@ public class WorldSpaceFPRender {
 			return;
 			
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		Project.gluPerspective(70, (float) Minecraft.getMinecraft().displayWidth / (float) Minecraft.getMinecraft().displayHeight, 0.05F, Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16F * 2.0F);
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glPushMatrix();
+		GlStateManager.loadIdentity();
+		GlStateManager.pushMatrix();
 			
-		GL11.glTranslated(-0.3, 0, -2.25);
+		GlStateManager.translate(-0.3, 0, -2.25);
 		GL11.glRotated(90, 0, 1, 0);
 		
 		//Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.skin);
@@ -58,9 +58,9 @@ public class WorldSpaceFPRender {
 		Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson((float) e.getRenderPartialTicks());
 		HbmShaderManager2.releaseShader();
 		GlStateManager.colorMask(true, true, true, true);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 	}
 
@@ -70,18 +70,18 @@ public class WorldSpaceFPRender {
 		
 		GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		GlStateManager.pushMatrix();
+		GlStateManager.loadIdentity();
 		Project.gluPerspective(70, (float) Minecraft.getMinecraft().displayWidth / (float) Minecraft.getMinecraft().displayHeight, 0.05F, Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16F * 2.0F);
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-		GL11.glPushMatrix();
+		GlStateManager.loadIdentity();
+		GlStateManager.pushMatrix();
 		
 		Minecraft.getMinecraft().entityRenderer.itemRenderer.renderItemInFirstPerson(e.getPartialTicks());
 		
 		/*if(ticksActive >= 0){
-			GL11.glPushMatrix();
-			GL11.glTranslated(-0.3, 0, -2.25);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(-0.3, 0, -2.25);
 			GL11.glRotated(90, 0, 1, 0);
 	
 			RenderHelper.enableStandardItemLighting();
@@ -101,7 +101,7 @@ public class WorldSpaceFPRender {
 	        	}
 	        	return false;
 	        });
-	        GL11.glPopMatrix();
+	        GlStateManager.popMatrix();
 		}
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.turbofan_blades_tex);
         for(ParticleLightningStrip p : lightning_strips){
@@ -109,9 +109,9 @@ public class WorldSpaceFPRender {
         		p.renderParticle(Tessellator.getInstance().getBuffer(), Minecraft.getMinecraft().getRenderViewEntity(), e.getPartialTicks(), 0, 0, 0, 0, 0);
         }*/
         
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 	}
 	

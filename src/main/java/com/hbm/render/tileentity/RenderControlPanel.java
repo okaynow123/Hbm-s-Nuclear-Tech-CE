@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityControlPanel>
     implements IItemRendererProvider {
@@ -27,7 +27,7 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
     switch (te.panelType) {
       case CUSTOM_PANEL:
@@ -39,16 +39,16 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
     }
 
     GlStateManager.enableRescaleNormal();
-    GL11.glPushMatrix();
-    GL11.glTranslated(-0.5, 0, -0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(-0.5, 0, -0.5);
     te.panel.transform.store(ClientProxy.AUX_GL_BUFFER);
     ClientProxy.AUX_GL_BUFFER.rewind();
     GL11.glMultMatrix(ClientProxy.AUX_GL_BUFFER);
     te.updateTransform();
     te.panel.render();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
     GlStateManager.disableRescaleNormal();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override
@@ -86,22 +86,22 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glTranslated(x + .5, y, z + .5);
-    GL11.glPushMatrix();
-    GL11.glRotatef(-90, 0, 0, 1);
+    GlStateManager.translate(x + .5, y, z + .5);
+    GlStateManager.pushMatrix();
+    GlStateManager.rotate(-90, 0, 0, 1);
 
     switch ((te.getBlockMetadata() & 3) + 2) {
       case 4:
-        GL11.glRotatef(-180, 1, 0, 0);
+        GlStateManager.rotate(-180, 1, 0, 0);
         break;
       case 2:
-        GL11.glRotatef(-90, 1, 0, 0);
+        GlStateManager.rotate(-90, 1, 0, 0);
         break;
       case 5:
-        GL11.glRotatef(-0, 1, 0, 0);
+        GlStateManager.rotate(-0, 1, 0, 0);
         break;
       case 3:
-        GL11.glRotatef(-270, 1, 0, 0);
+        GlStateManager.rotate(-270, 1, 0, 0);
         break;
     }
 
@@ -109,20 +109,20 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
     boolean isDown = ((te.getBlockMetadata() >> 3) == 1);
 
     if (isUp) {
-      GL11.glRotatef(-180, 1, 0, 0);
-      GL11.glRotatef(-90, 0, 0, 1);
-      GL11.glTranslated(0, -1, 0);
+      GlStateManager.rotate(-180, 1, 0, 0);
+      GlStateManager.rotate(-90, 0, 0, 1);
+      GlStateManager.translate(0, -1, 0);
     } else if (isDown) {
-      GL11.glRotatef(90, 0, 0, 1);
+      GlStateManager.rotate(90, 0, 0, 1);
     } else {
-      GL11.glTranslated(-.5, -.5, 0);
+      GlStateManager.translate(-.5, -.5, 0);
     }
 
     GlStateManager.enableRescaleNormal();
     //		bindTexture(ResourceManager.control_panel_custom_tex);
 
-    GL11.glPushMatrix();
-    GL11.glTranslated(-0.5, 0, -0.5);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(-0.5, 0, -0.5);
 
     float a_off = te.panel.a_off;
     float b_off = te.panel.b_off;
@@ -178,8 +178,8 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
 
     GlStateManager.enableLighting();
     GlStateManager.disableRescaleNormal();
-    GL11.glPopMatrix();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
+    GlStateManager.popMatrix();
   }
 
   public void renderFrontPanel(
@@ -190,31 +190,31 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glTranslated(x + .5F, y, z + .5F);
-    GL11.glPushMatrix();
+    GlStateManager.translate(x + .5F, y, z + .5F);
+    GlStateManager.pushMatrix();
 
     switch (te.getBlockMetadata()) {
       case 2:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
     }
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     bindTexture(
         new ResourceLocation(
             RefStrings.MODID + ":textures/models/control_panel/control_panel_front.png"));
     ResourceManager.control_panel_front.renderAll();
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 }

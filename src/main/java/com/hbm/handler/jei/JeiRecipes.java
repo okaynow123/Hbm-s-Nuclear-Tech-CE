@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -227,7 +227,7 @@ public class JeiRecipes {
 
 			if (isHighSpeed) {
 				minecraft.getTextureManager().bindTexture(new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png"));
-				GL11.glColor4f(1f, 1f, 1f, 1f);
+				GlStateManager.color(1f, 1f, 1f, 1f);
 				Gui.drawModalRectWithCustomSizedTexture(23, 19, 184, 37, 16, 16, 256, 256);
 			}
 		}

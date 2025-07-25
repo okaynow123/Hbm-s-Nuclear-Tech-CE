@@ -7,18 +7,18 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureManager;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
 public class TomPronter2 {
 
 	public static void prontTom() {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		GlStateManager.disableCull();
 		GlStateManager.disableLighting();
-		GL11.glScalef(100F, 100F, 100F);
+		GlStateManager.scale(100F, 100F, 100F);
 		
 		TextureManager tex = Minecraft.getMinecraft().getTextureManager();
 		
@@ -32,8 +32,8 @@ public class TomPronter2 {
         GlStateManager.disableAlpha();
 
         float rot = -System.currentTimeMillis() / 10 % 360;
-		//GL11.glScalef(1.2F, 2F, 1.2F);
-		GL11.glScalef(0.8F, 5F, 0.8F);
+		//GlStateManager.scale(1.2F, 2F, 1.2F);
+		GlStateManager.scale(0.8F, 5F, 0.8F);
 		
 		Random rand = new Random(0);
 		
@@ -42,13 +42,13 @@ public class TomPronter2 {
 			
 			int r = rand.nextInt(90);
 			
-			GL11.glRotatef(rot + r, 0, 1, 0);
+			GlStateManager.rotate(rot + r, 0, 1, 0);
 			
 			ResourceManager.tom_flame.renderAll();
 			
-			GL11.glRotatef(rot, 0, -1, 0);
+			GlStateManager.rotate(rot, 0, -1, 0);
 			
-			GL11.glScalef(-1.015F, 0.9F, 1.015F);
+			GlStateManager.scale(-1.015F, 0.9F, 1.015F);
         }
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.disableBlend();
@@ -58,6 +58,6 @@ public class TomPronter2 {
 		GlStateManager.enableLighting();
         HmfController.resetMod();
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

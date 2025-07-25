@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -185,7 +185,7 @@ public class ParticleGluonDisintegration extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();
 		GlStateManager.enableRescaleNormal();
 		float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
@@ -195,7 +195,7 @@ public class ParticleGluonDisintegration extends Particle {
         float rotateY = (float)(this.prevRotY + (this.rotY - this.prevRotY) * (double)partialTicks);
         float rotateZ = (float)(this.prevRotZ + (this.rotZ - this.prevRotZ) * (double)partialTicks);
         
-        GL11.glTranslated(f5, f6, f7);
+        GlStateManager.translate(f5, f6, f7);
         Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
 		if(dl == -1){
 			dl = GL11.glGenLists(1);
@@ -249,7 +249,7 @@ public class ParticleGluonDisintegration extends Particle {
         GlStateManager.disableBlend();
 		
 		GlStateManager.disableRescaleNormal();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 }

@@ -21,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 
 import javax.annotation.Nullable;
@@ -234,23 +234,23 @@ public class BakedModelUtil {
 		        	int texIdx = data[0];
 		        	int rows = data[1];
 		        	GlStateManager.matrixMode(GL11.GL_TEXTURE);
-					GL11.glPushMatrix();
-					GL11.glLoadIdentity();
+					GlStateManager.pushMatrix();
+					GlStateManager.loadIdentity();
 					float size = 1F/rows;
 			        float u = (texIdx%rows)*size;
 			        float v = (texIdx/4)*size;
-			        GL11.glTranslated(u, v, 0);
+			        GlStateManager.translate(u, v, 0);
 			        GL11.glScaled(size, size, 1);
 					GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		        }
 		        
 				GlStateManager.viewport(0, 0, width, height);
 				GlStateManager.bindTexture(texId);
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				GlStateManager.matrixMode(GL11.GL_PROJECTION);
-				GL11.glPushMatrix();
-				GL11.glLoadIdentity();
+				GlStateManager.pushMatrix();
+				GlStateManager.loadIdentity();
 				ResourceManager.gravitymap_render.use();
 				
 				//Don't really know why this needs a negative roll but ok.
@@ -283,9 +283,9 @@ public class BakedModelUtil {
 				GL11.glCallList(geo[0]);
 				//RenderHelper.renderFullscreenTriangle(true);
 				HbmShaderManager2.releaseShader();
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 				
 				GLCompat.framebufferRenderbuffer(GLCompat.GL_FRAMEBUFFER, GLCompat.GL_DEPTH_ATTACHMENT, GLCompat.GL_RENDERBUFFER, 0);
 				GLCompat.bindFramebuffer(GLCompat.GL_FRAMEBUFFER, fbo2);
@@ -294,7 +294,7 @@ public class BakedModelUtil {
 				
 				if(data.length > 0){
 					GlStateManager.matrixMode(GL11.GL_TEXTURE);
-					GL11.glPopMatrix();
+					GlStateManager.popMatrix();
 					GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 				}
 				

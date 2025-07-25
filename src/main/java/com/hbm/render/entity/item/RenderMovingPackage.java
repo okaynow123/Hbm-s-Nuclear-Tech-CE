@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMovingPackage extends Render<EntityMovingPackage> {
 
@@ -27,8 +27,8 @@ public class RenderMovingPackage extends Render<EntityMovingPackage> {
     @Override
     public void doRender(EntityMovingPackage entity, double x, double y, double z, float f1, float f2) {
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y + 0.3125, z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y + 0.3125, z);
 
         if(this.dummy == null) {
             this.dummy = new ItemStack(ModBlocks.crate);
@@ -41,7 +41,7 @@ public class RenderMovingPackage extends Render<EntityMovingPackage> {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         Minecraft.getMinecraft().getRenderItem().renderItem(dummy, model);
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

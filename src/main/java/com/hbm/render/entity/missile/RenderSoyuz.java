@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderSoyuz extends Render<EntitySoyuz> {
 
@@ -20,14 +20,14 @@ public class RenderSoyuz extends Render<EntitySoyuz> {
 	
 	@Override
 	public void doRender(EntitySoyuz entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, z);
         GlStateManager.enableCull();
         
         int type = entity.getDataManager().get(EntitySoyuz.SKIN);
         SoyuzPronter.prontSoyuz(type);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

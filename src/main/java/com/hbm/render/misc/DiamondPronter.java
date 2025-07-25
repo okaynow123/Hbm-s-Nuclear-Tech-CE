@@ -5,7 +5,7 @@ import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class DiamondPronter {
 
@@ -13,7 +13,7 @@ public class DiamondPronter {
 	
 	public static void pront(int poison, int flammability, int reactivity, EnumSymbol symbol) {
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		
@@ -106,6 +106,6 @@ public class DiamondPronter {
 		}
 
 		GlStateManager.disableBlend();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

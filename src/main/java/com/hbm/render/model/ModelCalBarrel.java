@@ -3,7 +3,7 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelCalBarrel extends ModelBase {
 
@@ -76,8 +76,8 @@ public class ModelCalBarrel extends ModelBase {
 	}
 
 	public void renderAll(float f5) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, 1D / 16D * 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1D / 16D * 1, 0);
 		Shape1.render(f5);
 		Shape2.render(f5);
 		Shape3.render(f5);
@@ -85,7 +85,7 @@ public class ModelCalBarrel extends ModelBase {
 		Shape5.render(f5);
 		Shape6.render(f5);
 		Shape7.render(f5);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

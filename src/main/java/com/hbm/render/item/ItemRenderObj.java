@@ -5,7 +5,7 @@ import com.hbm.main.ResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderObj extends TEISRBase {
 
@@ -16,12 +16,12 @@ public class ItemRenderObj extends TEISRBase {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.brimstone_tex);
 		switch(type) {
 		case FIRST_PERSON_LEFT_HAND:
-			GL11.glTranslated(2, 0, 0);
+			GlStateManager.translate(2, 0, 0);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glRotated(40, 1, 0, 0);
 			break;
 		case FIRST_PERSON_RIGHT_HAND:
-			GL11.glTranslated(-0.9, -0.2, 0);
+			GlStateManager.translate(-0.9, -0.2, 0);
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glRotated(40, 1, 0, 0);
 			break;
@@ -30,7 +30,7 @@ public class ItemRenderObj extends TEISRBase {
 		case GROUND:
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
-			GL11.glTranslated(0.5, -0.5, -0.85);
+			GlStateManager.translate(0.5, -0.5, -0.85);
 			break;
 		default:
 			break;

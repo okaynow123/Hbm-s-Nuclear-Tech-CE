@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Matrix4f;
@@ -105,9 +105,9 @@ public class HbmShaderManager2 {
     public static float[] inv_ViewProjectionMatrix = new float[16];
 	
     public static void createInvMVP(){
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
     	GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
-    	GL11.glPopMatrix();
+    	GlStateManager.popMatrix();
 		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER2);
 		Matrix4f view = new Matrix4f();
 		Matrix4f proj = new Matrix4f();
@@ -179,7 +179,7 @@ public class HbmShaderManager2 {
 		GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0+3);
 		GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
 		GlStateManager.bindTexture(Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
+		GlStateManager.bindTexture(Minecraft.getMinecraft().getFramebuffer().framebufferTexture);
 		GLCompat.uniform1i(GLCompat.getUniformLocation(ResourceManager.heat_distortion_post.getShaderId(), "mc_tex"), 3);
 		GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0);
 		Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
@@ -352,7 +352,7 @@ public class HbmShaderManager2 {
             height = Minecraft.getMinecraft().displayHeight;
             width = Minecraft.getMinecraft().displayWidth;
         }
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         
         buf.bindFramebuffer(false);
         
@@ -374,7 +374,7 @@ public class HbmShaderManager2 {
         
         Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
        
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         GlStateManager.enableDepth();
     }
     

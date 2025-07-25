@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMissileCustom extends Render<EntityMissileCustom> {
 
@@ -24,14 +24,14 @@ public class RenderMissileCustom extends Render<EntityMissileCustom> {
 	
 	@Override
 	public void doRender(EntityMissileCustom entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		double[] pos = NTMRenderHelper.getRenderPosFromMissile(entity, partialTicks);
 		x = pos[0];
 		y = pos[1];
 		z = pos[2];
-		GL11.glTranslated(x, y, z);
-        GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
+		GlStateManager.translate(x, y, z);
+        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
 		int w = entity.getDataManager().get(entity.WARHEAD);
 		int f = entity.getDataManager().get(entity.FUSELAGE);
 		int s = entity.getDataManager().get(entity.FINS);
@@ -43,7 +43,7 @@ public class RenderMissileCustom extends Render<EntityMissileCustom> {
 		missile.thruster = MissilePart.getPart(Item.getItemById(t));
         MissilePronter.prontMissile(missile, Minecraft.getMinecraft().getTextureManager());
         
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

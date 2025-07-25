@@ -6,7 +6,7 @@ import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRendererBedrockOre extends TEISRBase {
 
@@ -24,8 +24,8 @@ public class ItemRendererBedrockOre extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack stack) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0.5, 0.5, 0.5);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0.5, 0.5, 0.5);
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, itemModel);
 		if(stack.getItem() instanceof ItemBedrockOre){
 			ItemBedrockOre oreItem = (ItemBedrockOre)stack.getItem();
@@ -35,7 +35,7 @@ public class ItemRendererBedrockOre extends TEISRBase {
 				layerTex = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("hbm:items/ore_bedrock_layer");
 			}
 
-			GL11.glTranslated(-0.5, -0.5, -HALF_A_PIXEL);
+			GlStateManager.translate(-0.5, -0.5, -HALF_A_PIXEL);
 			NTMRenderHelper.setColor(color);
         	NTMRenderHelper.startDrawingTexturedQuads();
 			NTMRenderHelper.drawFullTexture(layerTex, 0, 0, 1, 1, 0, false);
@@ -43,7 +43,7 @@ public class ItemRendererBedrockOre extends TEISRBase {
 			NTMRenderHelper.draw();
         	NTMRenderHelper.resetColor();
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		super.renderByItem(stack);
 	}
 }

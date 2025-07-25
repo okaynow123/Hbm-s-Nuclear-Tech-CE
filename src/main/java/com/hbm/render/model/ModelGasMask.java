@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelGasMask extends ModelBiped {
 
@@ -97,10 +97,10 @@ public class ModelGasMask extends ModelBiped {
 	@Override
 	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-		GL11.glPushMatrix();
-		GL11.glScalef(1.15F, 1.15F, 1.15F);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(1.15F, 1.15F, 1.15F);
 		this.mask.render(par7);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	protected void convertToChild(ModelRenderer parParent, ModelRenderer parChild) {

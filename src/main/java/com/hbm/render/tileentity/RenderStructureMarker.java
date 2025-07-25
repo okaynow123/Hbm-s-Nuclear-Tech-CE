@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL14;
 
 public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityStructureMarker> {
@@ -58,9 +58,9 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 	
 	@Override
 	public void render(TileEntityStructureMarker te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
-		GL11.glRotatef(180, 0F, 0F, 1F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) x, (float) y, (float) z);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
 
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
@@ -73,7 +73,7 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 		NTMRenderHelper.draw();
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void renderBlocks(int x, int y, int z, int type, int meta) {
@@ -100,7 +100,7 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 			}
 			
 
-			GL11.glTranslatef(offsetX, 0, offsetZ);
+			GlStateManager.translate(offsetX, 0, offsetZ);
 			for(int a = 0; a < 3; a++) {
 				for(int b = 0; b < 3; b++) {
 					for(int c = 0; c < 3; c++) {
@@ -124,8 +124,8 @@ public class RenderStructureMarker extends TileEntitySpecialRenderer<TileEntityS
 
 	//TODO: remove that
 	public void renderSmolBlockAt(TextureAtlasSprite loc1, TextureAtlasSprite loc2, int x, int y, int z) {
-		// GL11.glTranslatef(x, y, z);
-		GL11.glRotatef(180, 0F, 0F, 1F);
+		// GlStateManager.translate(x, y, z);
+		GlStateManager.rotate(180, 0F, 0F, 1F);
 		NTMRenderHelper.addVertexWithUV(x + 1 - 11 * pixel / 2, y + 1 - 11 * pixel / 2, z + 1 - 11 * pixel / 2, loc2.getMaxU(), loc2.getMinV());
 		NTMRenderHelper.addVertexWithUV(x + 11 * pixel / 2, y + 1 - 11 * pixel / 2, z + 1 - 11 * pixel / 2, loc2.getMinU(), loc2.getMinV());
 		NTMRenderHelper.addVertexWithUV(x + 11 * pixel / 2, y + 11 * pixel / 2, z + 1 - 11 * pixel / 2, loc2.getMinU(), loc2.getMaxV());

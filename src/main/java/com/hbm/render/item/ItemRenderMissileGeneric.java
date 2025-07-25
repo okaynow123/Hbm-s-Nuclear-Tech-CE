@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -44,7 +44,7 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 		Consumer<TextureManager> renderer = renderers.get(new ComparableStack(item).makeSingular());
 		if(renderer == null) return;
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		double guiScale = 1;
 		double guiOffset = 0;
@@ -62,15 +62,15 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 			case TYPE_CARRIER: guiScale = 0.625D; break;
 		}
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0F);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableLighting();
+		GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+		GlStateManager.enableAlpha();
 		boolean l = false;
 		switch(type) {
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
 			double s = 0.15;
-			GL11.glTranslated(0.5, -0.25, 0.25);
+			GlStateManager.translate(0.5, -0.25, 0.25);
 			GL11.glScaled(s, s, s);
 			GL11.glScaled(guiScale, guiScale, guiScale);
 			
@@ -78,7 +78,7 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
 			double heldScale = 0.1;
-			GL11.glTranslated(0.5, -0.25, 0.3);
+			GlStateManager.translate(0.5, -0.25, 0.3);
 			GL11.glScaled(heldScale, heldScale, heldScale);
 			GL11.glScaled(guiScale, guiScale, guiScale);
 			break;
@@ -92,20 +92,20 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 			RenderHelper.enableGUIStandardItemLighting();
 			double s3 = 0.0625;
 			GL11.glScaled(s3, s3, s3);
-			GL11.glTranslated(15 - guiOffset, 1 + guiOffset, 0);
+			GlStateManager.translate(15 - guiOffset, 1 + guiOffset, 0);
 			GL11.glScaled(guiScale, guiScale, guiScale);
 			GL11.glRotated(45, 0, 0, 1);
-			GL11.glRotatef(System.currentTimeMillis() / 15 % 360, 0, 1, 0);
+			GlStateManager.rotate(System.currentTimeMillis() / 15 % 360, 0, 1, 0);
 			l = true;
 			break;
 		default: break;
 		}
 		
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GlStateManager.disableCull();
 		renderer.accept(Minecraft.getMinecraft().renderEngine);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GlStateManager.enableCull();
 		if(l) RenderHelper.enableStandardItemLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public static Consumer<TextureManager> generateStandard(ResourceLocation texture, IModelCustom model) { return generateWithScale(texture, model, 1F); }
@@ -114,10 +114,10 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 	
 	public static Consumer<TextureManager> generateWithScale(ResourceLocation texture, IModelCustom model, float scale) {
 		return x -> {
-			GL11.glScalef(scale, scale, scale);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			x.bindTexture(texture); model.renderAll();
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		};
 	}
 	
@@ -130,9 +130,9 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 		renderers.put(new ComparableStack(ModItems.missile_emp), generateStandard(ResourceManager.missileMicroEMP_tex, ResourceManager.missileMicro));
 
 		renderers.put(new ComparableStack(ModItems.missile_stealth), x -> {
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			x.bindTexture(ResourceManager.missileStealth_tex); ResourceManager.missileStealth.renderAll();
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		});
 
 		renderers.put(new ComparableStack(ModItems.missile_generic), generateStandard(ResourceManager.missileV2_HE_tex, ResourceManager.missileV2));
@@ -163,21 +163,21 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 
 		renderers.put(new ComparableStack(ModItems.missile_doomsday), generateStandard(ResourceManager.missileDoomsday_tex, ResourceManager.missileNuclear));
 		renderers.put(new ComparableStack(ModItems.missile_carrier), x -> {
-			GL11.glScalef(2F, 2F, 2F);
+			GlStateManager.scale(2F, 2F, 2F);
 			x.bindTexture(ResourceManager.missileCarrier_tex);
 			ResourceManager.missileCarrier.renderAll();
-			GL11.glTranslated(0.0D, 0.5D, 0.0D);
-			GL11.glTranslated(1.25D, 0.0D, 0.0D);
+			GlStateManager.translate(0.0D, 0.5D, 0.0D);
+			GlStateManager.translate(1.25D, 0.0D, 0.0D);
 			x.bindTexture(ResourceManager.missileBooster_tex);
 			ResourceManager.missileBooster.renderAll();
-			GL11.glTranslated(-2.5D, 0.0D, 0.0D);
+			GlStateManager.translate(-2.5D, 0.0D, 0.0D);
 			ResourceManager.missileBooster.renderAll();
-			GL11.glTranslated(1.25D, 0.0D, 0.0D);
-			GL11.glTranslated(0.0D, 0.0D, 1.25D);
+			GlStateManager.translate(1.25D, 0.0D, 0.0D);
+			GlStateManager.translate(0.0D, 0.0D, 1.25D);
 			ResourceManager.missileBooster.renderAll();
-			GL11.glTranslated(0.0D, 0.0D, -2.5D);
+			GlStateManager.translate(0.0D, 0.0D, -2.5D);
 			ResourceManager.missileBooster.renderAll();
-			GL11.glTranslated(0.0D, 0.0D, 1.25D);
+			GlStateManager.translate(0.0D, 0.0D, 1.25D);
 		});
 	}
 }

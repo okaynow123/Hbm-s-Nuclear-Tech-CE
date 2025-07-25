@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nonnull;
 
@@ -156,10 +156,10 @@ public class NodeConnection extends NodeElement {
 		Tessellator.getInstance().draw();
 		
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
 		GL11.glScaled(0.4, 0.4, 0.4);
-		GL11.glTranslated(-x, -y, 0);
+		GlStateManager.translate(-x, -y, 0);
 		if(isTyping){
 			String s = builder.toString();
 			font.drawString(s + (Minecraft.getMinecraft().world.getTotalWorldTime()%20 > 10 ? "_" : ""), x+(isInput ? 16 : -font.getStringWidth(name)-1), y+1F, 0xFFAFAFAF, false);
@@ -174,7 +174,7 @@ public class NodeConnection extends NodeElement {
 				font.drawString(s, x+94-font.getStringWidth(s), y+1, 0xFFAFAFAF, false);
 			}
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	@SideOnly(Side.CLIENT)

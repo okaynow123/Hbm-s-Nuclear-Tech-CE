@@ -17,7 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -70,18 +70,18 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 
 	@Override
 	public void doRender(EntityBulletBase bullet, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		
 		int style = bullet.getDataManager().get(EntityBulletBase.STYLE);
 		int trail = bullet.getDataManager().get(EntityBulletBase.TRAIL);
 		
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GlStateManager.translate((float) x, (float) y, (float) z);
 		if(style != BulletConfiguration.STYLE_TRACER){
-			GL11.glRotatef(bullet.prevRotationYaw + (bullet.rotationYaw - bullet.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(bullet.prevRotationPitch + (bullet.rotationPitch - bullet.prevRotationPitch) * partialTicks + 180, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotate(bullet.prevRotationYaw + (bullet.rotationYaw - bullet.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(bullet.prevRotationPitch + (bullet.rotationPitch - bullet.prevRotationPitch) * partialTicks + 180, 0.0F, 0.0F, 1.0F);
 			
-			GL11.glScalef(1.5F, 1.5F, 1.5F);
-			GL11.glRotatef(new Random(bullet.getEntityId()).nextInt(90) - 45, 1.0F, 0.0F, 0.0F);
+			GlStateManager.scale(1.5F, 1.5F, 1.5F);
+			GlStateManager.rotate(new Random(bullet.getEntityId()).nextInt(90) - 45, 1.0F, 0.0F, 0.0F);
 		}
 
 		switch (style) {
@@ -134,7 +134,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 			break;
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void renderBullet(int type) {
@@ -194,8 +194,8 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 
 		if (type == 8) {
 			bindTexture(ResourceManager.rpc_tex);
-			GL11.glScalef(0.25F, 0.25F, 0.25F);
-			GL11.glRotatef(180, 1, 0, 0);
+			GlStateManager.scale(0.25F, 0.25F, 0.25F);
+			GlStateManager.rotate(180, 1, 0, 0);
 			ResourceManager.rpc.renderAll();
 			return;
 		}
@@ -205,7 +205,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 
 	private void renderGrenade(int type) {
 
-		GL11.glScalef(0.25F, 0.25F, 0.25F);
+		GlStateManager.scale(0.25F, 0.25F, 0.25F);
 
 		switch (type) {
 		case 0:
@@ -233,7 +233,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 	
 	private void renderNuke(int type) {
 
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
+        GlStateManager.scale(1.5F, 1.5F, 1.5F);
 		
 		switch(type) {
 		case 0:
@@ -250,12 +250,12 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 	}
 	
 	private void renderFlechette() {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		
-        GL11.glScalef(1F/16F, 1F/16F, 1F/16F);
-        GL11.glScalef(-1, 1, 1);
+        GlStateManager.scale(1F/16F, 1F/16F, 1F/16F);
+        GlStateManager.scale(-1, 1, 1);
         
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();
@@ -317,7 +317,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private void renderDart(int style, int eID) {
@@ -339,7 +339,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 			break;
 		}
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
@@ -348,10 +348,10 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         GlStateManager.depthMask(false);
 
-        GL11.glScalef(1F/4F, 1F/8F, 1F/8F);
-        GL11.glScalef(-1, 1, 1);
+        GlStateManager.scale(1F/4F, 1F/8F, 1F/8F);
+        GlStateManager.scale(-1, 1, 1);
 
-        GL11.glScalef(2, 2, 2);
+        GlStateManager.scale(2, 2, 2);
         
 		Tessellator tess = Tessellator.getInstance();
 		BufferBuilder buf = tess.getBuffer();
@@ -425,7 +425,7 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
         GlStateManager.enableCull();
         GlStateManager.depthMask(true);
 		
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	private void renderOrb(int type) {
@@ -441,20 +441,20 @@ public class RenderBulletMk2 extends Render<EntityBulletBase> {
 		case 0:
 			bindTexture(ResourceManager.tom_flame_tex);
 			ResourceManager.sphere_uv_anim.renderAll();
-			GL11.glScalef(0.3F, 0.3F, 0.3F);
+			GlStateManager.scale(0.3F, 0.3F, 0.3F);
 			ResourceManager.sphere_uv_anim.renderAll();
-			GL11.glScalef(1F/0.3F, 1F/0.3F, 1F/0.3F);
+			GlStateManager.scale(1F/0.3F, 1F/0.3F, 1F/0.3F);
 			for(int i = 0; i < 5; i++)
 				RenderSparks.renderSpark((int) (System.currentTimeMillis() / 100 + 100 * i), 0, 0, 0, 0.5F, 2, 2, 0x8080FF, 0xFFFFFF);
 			break;
 		case 1:
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			GlStateManager.disableTexture2D();
 			GlStateManager.color(0.5F, 0.0F, 0.0F, 0.5F);
 			ResourceManager.sphere_uv.renderAll();
-			GL11.glScalef(0.75F, 0.75F, 0.75F);
+			GlStateManager.scale(0.75F, 0.75F, 0.75F);
 			ResourceManager.sphere_uv.renderAll();
-			GL11.glScalef(1F/0.75F, 1F/0.75F, 1F/0.75F);
+			GlStateManager.scale(1F/0.75F, 1F/0.75F, 1F/0.75F);
 			GlStateManager.enableTexture2D();
 			for(int i = 0; i < 3; i++)
 				RenderSparks.renderSpark((int) (System.currentTimeMillis() / 100 + 100 * i), 0, 0, 0, 1F, 2, 3, 0xFF0000, 0xFF8080);

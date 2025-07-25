@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleSlicedMob extends Particle {
 
@@ -57,7 +57,7 @@ public class ParticleSlicedMob extends Particle {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.enableColorMaterial();
@@ -89,7 +89,7 @@ public class ParticleSlicedMob extends Particle {
 			ClientProxy.AUX_GL_BUFFER.get(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
 			ClientProxy.deferredRenderers.add(() -> {
-				GL11.glPushMatrix();
+				GlStateManager.pushMatrix();
 				ClientProxy.AUX_GL_BUFFER.put(matrix);
 				ClientProxy.AUX_GL_BUFFER.rewind();
 				GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
@@ -108,7 +108,7 @@ public class ParticleSlicedMob extends Particle {
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, x, y);
 				
 				Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
-				GL11.glPopMatrix();
+				GlStateManager.popMatrix();
 			});
 		}
 		
@@ -118,7 +118,7 @@ public class ParticleSlicedMob extends Particle {
 		GlStateManager.disablePolygonOffset();
 		GlStateManager.disableRescaleNormal();
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 }

@@ -9,7 +9,7 @@ import com.hbm.tileentity.machine.TileEntityMachineReactorBreeding;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderBreeder extends TileEntitySpecialRenderer<TileEntityMachineReactorBreeding>
     implements IItemRendererProvider {
@@ -28,32 +28,32 @@ public class RenderBreeder extends TileEntitySpecialRenderer<TileEntityMachineRe
       float partialTicks,
       int destroyStage,
       float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
     GlStateManager.disableCull();
 
-    GL11.glRotatef(90, 0F, 1F, 0F);
+    GlStateManager.rotate(90, 0F, 1F, 0F);
 
     switch (breeder.getBlockMetadata() - BlockDummyable.offset) {
       case 2:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 3:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
 
     if (breeder.progress > 0.0F)
       for (int i = 0; i < 3; i++) {
-        GL11.glPushMatrix();
-        GL11.glRotatef((float) (Math.PI * i), 0F, 1F, 0F);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate((float) (Math.PI * i), 0F, 1F, 0F);
         RenderSparks.renderSpark(
             (int) ((System.currentTimeMillis() % 10000) / 100 + i),
             0,
@@ -64,7 +64,7 @@ public class RenderBreeder extends TileEntitySpecialRenderer<TileEntityMachineRe
             4,
             0x00ff00,
             0xffffff);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
       }
 
     GL11.glScaled(0.5, 0.5, 0.5);
@@ -77,7 +77,7 @@ public class RenderBreeder extends TileEntitySpecialRenderer<TileEntityMachineRe
 
     GlStateManager.enableCull();
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
 
   @Override

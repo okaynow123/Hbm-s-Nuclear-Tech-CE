@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderMissileBurst extends Render<EntityMissileTier3.EntityMissileBurst> {
 
@@ -21,24 +21,24 @@ public class RenderMissileBurst extends Render<EntityMissileTier3.EntityMissileB
 	
 	@Override
 	public void doRender(EntityMissileTier3.EntityMissileBurst missile, double x, double y, double z, float entityYaw, float partialTicks) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.enableLighting();
 		double[] renderPos = NTMRenderHelper.getRenderPosFromMissile(missile, partialTicks);
 		x = renderPos[0];
 		y = renderPos[1];
 		z = renderPos[2];
-		GL11.glTranslated(x, y, z);
-        GL11.glScalef(RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3);
-        GL11.glRotatef(missile.prevRotationYaw + (missile.rotationYaw - missile.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(missile.prevRotationPitch + (missile.rotationPitch - missile.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
+		GlStateManager.translate(x, y, z);
+        GlStateManager.scale(RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3);
+        GlStateManager.rotate(missile.prevRotationYaw + (missile.rotationYaw - missile.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(missile.prevRotationPitch + (missile.rotationPitch - missile.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.missileHuge_HE_tex);
         ResourceManager.missileHuge.renderAll();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	@Override

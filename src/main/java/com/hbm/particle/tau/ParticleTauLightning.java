@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleTauLightning extends ParticleFirstPerson {
 
@@ -61,7 +61,7 @@ public class ParticleTauLightning extends ParticleFirstPerson {
 	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.tau_lightning);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GlStateManager.disableAlpha();
@@ -78,8 +78,8 @@ public class ParticleTauLightning extends ParticleFirstPerson {
         float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
-        GL11.glTranslated(f5, f6, f7);
-        GL11.glScalef(f4, f4, f4);
+        GlStateManager.translate(f5, f6, f7);
+        GlStateManager.scale(f4, f4, f4);
 		GL11.glRotated(this.particleAngle+timeScale*rotationOverLife, 1, 0, 0);
         Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
         
@@ -94,7 +94,7 @@ public class ParticleTauLightning extends ParticleFirstPerson {
         GlStateManager.depthMask(true);
         GlStateManager.enableCull();
         GlStateManager.disableBlend();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 	}
 	
 	@Override

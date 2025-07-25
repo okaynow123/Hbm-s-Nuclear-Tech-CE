@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePress> implements IItemRendererProvider {
 
@@ -47,19 +47,19 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 		    
 		    GL11.glStencilMask(0xFF);
 		    GL11.glClearStencil(0);
-		    GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT );
+		    GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT );
 		    GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
 		    GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 		    GL11.glColorMask(false, false, false, false);
 		    GL11.glDepthMask(false);
-		    GL11.glDisable(GL11.GL_TEXTURE_2D);
+		    GlStateManager.disableTexture2D();
 		    GL11.glBegin(GL11.GL_QUADS);
 		    GL11.glVertex3d(x, y, z);
 		    GL11.glVertex3d(x, y, z+1);
 		    GL11.glVertex3d(x, y+1, z+1);
 		    GL11.glVertex3d(x, y+1, z);
 		    GL11.glEnd();
-		    GL11.glEnable(GL11.GL_TEXTURE_2D);
+		    GlStateManager.enableTexture2D();
 		    GL11.glDepthMask(true);
 		    GL11.glColorMask(true, true, true, true);
 		    GL11.glStencilMask(0x00);
@@ -73,8 +73,8 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 		if (duck != null) {
 		    
 			
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-		    GL11.glLoadIdentity();
+			GlStateManager.matrixMode(GL11.GL_PROJECTION);
+		    GlStateManager.loadIdentity();
 		    float rightFactor = Minecraft.getMinecraft().displayWidth/duck[2];
 		    float leftFactor = Minecraft.getMinecraft().displayWidth/duck[0];
 		    float topFactor = Minecraft.getMinecraft().displayHeight/duck[3];
@@ -87,11 +87,11 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 		    
 		    IntBuffer vp = GLAllocation.createDirectIntBuffer(16);
 			
-		    GL11.glViewport((int) (Minecraft.getMinecraft().displayWidth/leftFactor), (int) (Minecraft.getMinecraft().displayHeight/bottomFactor), (int) (Minecraft.getMinecraft().displayWidth/rightFactor-Minecraft.getMinecraft().displayWidth/leftFactor), (int) (Minecraft.getMinecraft().displayHeight/topFactor-Minecraft.getMinecraft().displayHeight/bottomFactor));
+		    GlStateManager.viewport((int) (Minecraft.getMinecraft().displayWidth/leftFactor), (int) (Minecraft.getMinecraft().displayHeight/bottomFactor), (int) (Minecraft.getMinecraft().displayWidth/rightFactor-Minecraft.getMinecraft().displayWidth/leftFactor), (int) (Minecraft.getMinecraft().displayHeight/topFactor-Minecraft.getMinecraft().displayHeight/bottomFactor));
 		    GL11.glGetInteger(GL11.GL_VIEWPORT, vp);
 		
 		    
-		    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		    GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 		}*/
 		
 		/*if(te.getPos().getX() % 2 == 0){
@@ -104,16 +104,16 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 		DoubleBuffer buf = GLAllocation.createDirectByteBuffer(8*4).asDoubleBuffer();
 		buf.put(new double[]{1, 0, 1, 0});
 		buf.rewind();
-		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buf);
-		GL11.glPopMatrix();*/
+		GlStateManager.popMatrix();*/
 		
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glTranslated(x + 0.5D, y, z + 0.5D);
+		GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 		GlStateManager.enableLighting();
-		GL11.glRotatef(180, 0F, 1F, 0F);
+		GlStateManager.rotate(180, 0F, 1F, 0F);
 		
 		
 		
@@ -124,56 +124,56 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 
 		
 		renderTileEntityAt2(te, x, y, z, partialTicks);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		//GL11.glDisable(GL11.GL_CLIP_PLANE0);
 		//if(model.controller.getAnim() == AnimationWrapper.EMPTY)
 		//	model.controller.setAnim(new AnimationWrapper(anim_test).onEnd(new EndResult(EndType.REPEAT_REVERSE, null)));
-		/*GL11.glPushMatrix();
+		/*GlStateManager.pushMatrix();
 		if(ResourceManager.model.controller.getAnim() == AnimationWrapper.EMPTY)
 			ResourceManager.model.controller.setAnim(new AnimationWrapper(ResourceManager.anim_test).onEnd(new EndResult(EndType.REPEAT, null)));
-		GL11.glTranslated(x+0.5, y+4, z+0.5);
+		GlStateManager.translate(x+0.5, y+4, z+0.5);
 		this.bindTexture(ResourceManager.turbofan_blades_tex);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.disableCull();
 		ResourceManager.model.renderAnimated(System.currentTimeMillis());
 		GlStateManager.enableCull();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GL11.glPopMatrix();*/
+		GlStateManager.popMatrix();*/
 		/*if(te.getPos().getX() % 2 == 0){
 			GlStateManager.disableBlend();
 			HbmShaderManager.releaseShader2();
 		}*/
 		
-		// GL11.glMatrixMode(GL11.GL_PROJECTION);
-		// GL11.glLoadIdentity();
+		// GlStateManager.matrixMode(GL11.GL_PROJECTION);
+		// GlStateManager.loadIdentity();
 		// GL11.glLoadMatrix(oldMatrix);
-		// GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		// GL11.glViewport(0, 0, Minecraft.getMinecraft().displayWidth,
+		// GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+		// GlStateManager.viewport(0, 0, Minecraft.getMinecraft().displayWidth,
 		// Minecraft.getMinecraft().displayHeight);
 		// GL11.glDisable(GL11.GL_STENCIL_TEST);
 	}
 
 	public void renderTileEntityAt2(TileEntity tileEntity, double x, double y, double z, float f) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, 1 - 0.125D, 0);
-		GL11.glScalef(0.95F, 1, 0.95F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1 - 0.125D, 0);
+		GlStateManager.scale(0.95F, 1, 0.95F);
 
 		TileEntityMachinePress press = (TileEntityMachinePress) tileEntity;
 		float f1 = press.progress * (1 - 0.125F) / TileEntityMachinePress.maxProgress;
-		GL11.glTranslated(0, -f1, 0);
+		GlStateManager.translate(0, -f1, 0);
 		this.bindTexture(ResourceManager.press_head_tex);
 
 		ResourceManager.press_head.renderAll();
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		renderTileEntityAt3(tileEntity, x, y, z, f);
 	}
 
 	public void renderTileEntityAt3(TileEntity tileEntity, double x, double y, double z, float f) {
-		GL11.glTranslated(0, 1, -1);
+		GlStateManager.translate(0, 1, -1);
 		GlStateManager.enableLighting();
-		GL11.glRotatef(180, 0F, 1F, 0F);
-		GL11.glRotatef(-90, 1F, 0F, 0F);
+		GlStateManager.rotate(180, 0F, 1F, 0F);
+		GlStateManager.rotate(-90, 1F, 0F, 0F);
 		
 		TileEntityMachinePress press = (TileEntityMachinePress) tileEntity;
 		ItemStack stack = press.syncStack.copy();
@@ -182,9 +182,9 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 			IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, tileEntity.getWorld(), null);
 			model = ForgeHooksClient.handleCameraTransforms(model, TransformType.FIXED, false);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			GL11.glTranslatef(0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(180, 0F, 1F, 0F);
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			GlStateManager.translate(0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(180, 0F, 1F, 0F);
+			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			
 			
 			Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);

@@ -9,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
 
@@ -82,7 +82,7 @@ public class ParticleExplosionSmall extends ParticleFXRotating {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableAlpha();
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.003921569F);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 
 
         newScale = (float) (0.25 + 1 - Math.pow(1 - ageScaled, 4) + (this.particleAge + partialTicks) * 0.02) * this.particleScale;

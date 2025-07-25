@@ -9,13 +9,13 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemRenderWeaponSauer extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -36,9 +36,9 @@ public class ItemRenderWeaponSauer extends TEISRBase {
 
 
 			if(type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glTranslated(0.8, -1, 0);
+				GlStateManager.translate(0.8, -1, 0);
 				if(this.entity != null && entity.isSneaking()) {
-					GL11.glTranslated(-0.5, 0.1, -0.53);
+					GlStateManager.translate(-0.5, 0.1, -0.53);
 					GL11.glRotated(7, 0, 1, 0);
 					GL11.glRotated(4, 1, 0, 0);
 				}
@@ -46,37 +46,37 @@ public class ItemRenderWeaponSauer extends TEISRBase {
 				GL11.glRotated(20, 1, 0, 0);
 				GL11.glRotated(-10, 0, 1, 0);
 			} else {
-				GL11.glTranslated(0.2, -1, 0);
+				GlStateManager.translate(0.2, -1, 0);
 				GL11.glRotated(-75, 0, 1, 0);
 				GL11.glRotated(22, 1, 0, 0);
 				GL11.glRotated(-10, 0, 1, 0);
 			}
 
 			if(recoil != null)
-				GL11.glTranslated(0, 0, recoil[0]);
+				GlStateManager.translate(0, 0, recoil[0]);
 
 			if(player.isSneaking() && type == TransformType.FIRST_PERSON_RIGHT_HAND) {
-				GL11.glRotatef(-3F, 0.0F, 0.0F, 1.0F);
-				GL11.glRotatef(2F, 0.0F, 1.0F, 0.0F);
-				GL11.glRotatef(3F, 1.0F, 0.0F, 0.0F);
-				GL11.glTranslatef(-2.0F, 0.5F, 0.3F);
+				GlStateManager.rotate(-3F, 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(2F, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotate(3F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(-2.0F, 0.5F, 0.3F);
 			}
 
 			if(tilt != null) {
-				GL11.glTranslated(0, -5, 0);
+				GlStateManager.translate(0, -5, 0);
 				GL11.glRotated(tilt[2] * -0.5, 1, 0, 0);
-				GL11.glTranslated(0, 5, 0);
+				GlStateManager.translate(0, 5, 0);
 				GL11.glRotated(tilt[0], 0, 0, 1);
 
-				GL11.glTranslated(0, 0, cock[0] * 2);
+				GlStateManager.translate(0, 0, cock[0] * 2);
 				ResourceManager.sauergun.renderPart("Lever");
-				GL11.glTranslated(0, 0, -cock[0] * 2);
+				GlStateManager.translate(0, 0, -cock[0] * 2);
 
-				GL11.glTranslated(eject[2] * 10, -eject[2], 0);
+				GlStateManager.translate(eject[2] * 10, -eject[2], 0);
 				GL11.glRotated(eject[2] * 90, -1, 0, 0);
 				ResourceManager.sauergun.renderPart("Shell");
 				GL11.glRotated(eject[2] * 90, 1, 0, 0);
-				GL11.glTranslated(-eject[2] * 10, eject[2], 0);
+				GlStateManager.translate(-eject[2] * 10, eject[2], 0);
 
 			} else {
 
@@ -90,7 +90,7 @@ public class ItemRenderWeaponSauer extends TEISRBase {
 		case HEAD:
 		case GROUND:
 			final double scale = 0.4;
-			GL11.glTranslated(0.5, 0, 0.7);
+			GlStateManager.translate(0.5, 0, 0.7);
 			if(type == TransformType.FIXED){
 				GL11.glRotated(90, 0, 1, 0);
 			}
@@ -104,9 +104,9 @@ public class ItemRenderWeaponSauer extends TEISRBase {
 
 			double s = 0.16;
 			GL11.glScaled(s, s, s);
-			GL11.glTranslatef(3.6F, 2.1F, 0.0F);
-			GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(40F, 1.0F, 0.0F, 0.0F);
+			GlStateManager.translate(3.6F, 2.1F, 0.0F);
+			GlStateManager.rotate(90F, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(40F, 1.0F, 0.0F, 0.0F);
 			ResourceManager.sauergun.renderPart("Lever");
 
 			break;
@@ -118,6 +118,6 @@ public class ItemRenderWeaponSauer extends TEISRBase {
 
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }
