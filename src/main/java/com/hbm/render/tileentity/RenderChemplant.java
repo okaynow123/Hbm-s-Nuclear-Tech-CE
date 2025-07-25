@@ -14,194 +14,190 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachineChemplant>
-    implements IItemRendererProvider {
+        implements IItemRendererProvider {
 
-  @Override
-  public void render(
-      TileEntityMachineChemplant te,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GlStateManager.enableLighting();
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glRotatef(180, 0F, 1F, 0F);
-    switch (te.getBlockMetadata() - BlockDummyable.offset) {
-      case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
-        break;
-      case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
-        break;
-      case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
-        break;
-      case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
-        break;
-    }
-
-    GL11.glTranslated(-0.5D, 0.0D, 0.5D);
-
-    bindTexture(ResourceManager.chemplant_body_tex);
-
-    GL11.glShadeModel(GL11.GL_SMOOTH);
-    ResourceManager.chemplant_body.renderAll();
-    GL11.glShadeModel(GL11.GL_FLAT);
-
-    GL11.glPopMatrix();
-
-    renderExtras(te, x, y, z, partialTicks);
-  }
-
-  public void renderExtras(TileEntity tileEntity, double x, double y, double z, float f) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GlStateManager.enableLighting();
-    GL11.glDisable(GL11.GL_CULL_FACE);
-    GL11.glRotatef(180, 0F, 1F, 0F);
-    TileEntityMachineChemplant chem = (TileEntityMachineChemplant) tileEntity;
-    switch (tileEntity.getBlockMetadata() - BlockDummyable.offset) {
-      case 5:
-        GL11.glRotatef(180, 0F, 1F, 0F);
-        break;
-      case 2:
-        GL11.glRotatef(270, 0F, 1F, 0F);
-        break;
-      case 4:
-        GL11.glRotatef(0, 0F, 1F, 0F);
-        break;
-      case 3:
-        GL11.glRotatef(90, 0F, 1F, 0F);
-        break;
-    }
-
-    GL11.glTranslated(-0.5D, 0.0D, 0.5D);
-
-    bindTexture(ResourceManager.chemplant_spinner_tex);
-
-    int rotation = (int) (System.currentTimeMillis() % (360 * 5)) / 5;
-
-    GL11.glPushMatrix();
-    GL11.glTranslated(-0.625, 0, 0.625);
-
-    if (chem.tanksNew[0].getTankType() != Fluids.NONE && chem.isProgressing)
-      GL11.glRotatef(-rotation, 0F, 1F, 0F);
-    else
-      GL11.glRotatef(-45, 0F, 1F, 0F);
-
-    ResourceManager.chemplant_spinner.renderAll();
-    GL11.glPopMatrix();
-
-    GL11.glPushMatrix();
-    GL11.glTranslated(0.625, 0, 0.625);
-
-    if (chem.tanksNew[1].getTankType() != Fluids.NONE && chem.isProgressing)
-      GL11.glRotatef(rotation, 0F, 1F, 0F);
-    else
-      GL11.glRotatef(45, 0F, 1F, 0F);
-
-    ResourceManager.chemplant_spinner.renderAll();
-    GL11.glPopMatrix();
-
-    double push = Math.sin((System.currentTimeMillis() % 2000) / 1000D * Math.PI) * 0.25 - 0.25;
-
-    bindTexture(ResourceManager.chemplant_piston_tex);
-
-    GL11.glPushMatrix();
-
-    if (chem.isProgressing) GL11.glTranslated(0, push, 0);
-    else GL11.glTranslated(0, -0.25, 0);
-
-    ResourceManager.chemplant_piston.renderAll();
-    GL11.glPopMatrix();
-
-    bindTexture(ResourceManager.chemplant_fluid_tex);
-    int color = 0;
-
-    GlStateManager.disableLighting();
-    if (chem.tanksNew[0].getTankType() != Fluids.NONE) {
-      GL11.glPushMatrix();
-
-      if (chem.isProgressing) HmfController.setMod(50000D, -250D);
-      else HmfController.setMod(50000D, -50000D);
-
-      color = chem.tanksNew[0].getTankType().getColor();
-      GL11.glColor3ub(
-          (byte) ((color & 0xFF0000) >> 16),
-          (byte) ((color & 0x00FF00) >> 8),
-          (byte) ((color & 0x0000FF) >> 0));
-      GL11.glTranslated(-0.625, 0, 0.625);
-
-      int count = chem.tanksNew[0].getFill() * 16 / 24000;
-      for (int i = 0; i < count; i++) {
-
-        if (i < count - 1) ResourceManager.chemplant_fluid.renderAll();
-        else ResourceManager.chemplant_fluidcap.renderAll();
-        GL11.glTranslated(0, 0.125, 0);
-      }
-      GL11.glPopMatrix();
-    }
-
-    if (chem.tanksNew[1].getTankType() != Fluids.NONE) {
-      GL11.glPushMatrix();
-
-      if (chem.isProgressing) HmfController.setMod(50000D, 250D);
-      else HmfController.setMod(50000D, 50000D);
-
-      color = chem.tanksNew[1].getTankType().getColor();
-      GL11.glColor3ub(
-          (byte) ((color & 0xFF0000) >> 16),
-          (byte) ((color & 0x00FF00) >> 8),
-          (byte) ((color & 0x0000FF) >> 0));
-      GL11.glTranslated(0.625, 0, 0.625);
-
-      int count = chem.tanksNew[1].getFill() * 16 / 24000;
-      for (int i = 0; i < count; i++) {
-
-        if (i < count - 1) ResourceManager.chemplant_fluid.renderAll();
-        else ResourceManager.chemplant_fluidcap.renderAll();
-        GL11.glTranslated(0, 0.125, 0);
-      }
-      GL11.glPopMatrix();
-    }
-    GlStateManager.enableLighting();
-
-    HmfController.resetMod();
-
-    GL11.glPopMatrix();
-  }
-
-  @Override
-  public Item getItemForRenderer() {
-    return Item.getItemFromBlock(ModBlocks.machine_chemplant);
-  }
-
-  @Override
-  public ItemRenderBase getRenderer(Item item) {
-    return new ItemRenderBase() {
-      public void renderInventory() {
-        GlStateManager.translate(0, -2, 0);
-        GlStateManager.scale(3.5, 3.5, 3.5);
-      }
-
-      public void renderCommon() {
+    @Override
+    public void render(
+            TileEntityMachineChemplant te,
+            double x,
+            double y,
+            double z,
+            float partialTicks,
+            int destroyStage,
+            float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+        GlStateManager.enableLighting();
         GlStateManager.disableCull();
+        GlStateManager.rotate(180, 0F, 1F, 0F);
+        switch (te.getBlockMetadata() - BlockDummyable.offset) {
+            case 5 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+            case 2 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+            case 4 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+            case 3 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+        }
+
+        GlStateManager.translate(-0.5D, 0.0D, 0.5D);
+
         bindTexture(ResourceManager.chemplant_body_tex);
+
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
         ResourceManager.chemplant_body.renderAll();
-        bindTexture(ResourceManager.chemplant_piston_tex);
-        ResourceManager.chemplant_piston.renderAll();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+
+        GlStateManager.popMatrix();
+
+        renderExtras(te, x, y, z, partialTicks);
+    }
+
+    public void renderExtras(TileEntity tileEntity, double x, double y, double z, float f) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+        GlStateManager.enableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.rotate(180, 0F, 1F, 0F);
+        TileEntityMachineChemplant chem = (TileEntityMachineChemplant) tileEntity;
+        switch (tileEntity.getBlockMetadata() - BlockDummyable.offset) {
+            case 5 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+            case 2 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+            case 4 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+            case 3 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+        }
+
+        GlStateManager.translate(-0.5D, 0.0D, 0.5D);
+
         bindTexture(ResourceManager.chemplant_spinner_tex);
-        GL11.glTranslated(-0.625, 0, 0.625);
+
+        int rotation = (int) (System.currentTimeMillis() % (360 * 5)) / 5;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-0.625, 0, 0.625);
+
+        if (chem.tanksNew[0].getTankType() != Fluids.NONE && chem.isProgressing)
+            GlStateManager.rotate(-rotation, 0F, 1F, 0F);
+        else
+            GlStateManager.rotate(-45, 0F, 1F, 0F);
+
         ResourceManager.chemplant_spinner.renderAll();
-        GL11.glTranslated(1.25, 0, 0);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.625, 0, 0.625);
+
+        if (chem.tanksNew[1].getTankType() != Fluids.NONE && chem.isProgressing)
+            GlStateManager.rotate(rotation, 0F, 1F, 0F);
+        else
+            GlStateManager.rotate(45, 0F, 1F, 0F);
+
         ResourceManager.chemplant_spinner.renderAll();
-        GlStateManager.enableCull();
-      }
-    };
-  }
+        GlStateManager.popMatrix();
+
+        double push = Math.sin((System.currentTimeMillis() % 2000) / 1000D * Math.PI) * 0.25 - 0.25;
+
+        bindTexture(ResourceManager.chemplant_piston_tex);
+
+        GlStateManager.pushMatrix();
+
+        if (chem.isProgressing)
+            GlStateManager.translate(0, push, 0);
+        else
+            GlStateManager.translate(0, -0.25, 0);
+
+        ResourceManager.chemplant_piston.renderAll();
+        GlStateManager.popMatrix();
+
+        bindTexture(ResourceManager.chemplant_fluid_tex);
+
+        GlStateManager.disableLighting();
+        if (chem.tanksNew[0].getTankType() != Fluids.NONE) {
+            GlStateManager.pushMatrix();
+
+            if (chem.isProgressing)
+                HmfController.setMod(50000D, -250D);
+            else
+                HmfController.setMod(50000D, -50000D);
+
+            int color = chem.tanksNew[0].getTankType().getColor();
+            GlStateManager.color(
+                    ((color >> 16) & 0xFF) / 255.0f,
+                    ((color >> 8) & 0xFF) / 255.0f,
+                    (color & 0xFF) / 255.0f);
+
+            GlStateManager.translate(-0.625, 0, 0.625);
+
+            int count = chem.tanksNew[0].getFill() * 16 / 24000;
+            for (int i = 0; i < count; i++) {
+                if (i < count - 1)
+                    ResourceManager.chemplant_fluid.renderAll();
+                else
+                    ResourceManager.chemplant_fluidcap.renderAll();
+                GlStateManager.translate(0, 0.125, 0);
+            }
+            GlStateManager.popMatrix();
+        }
+
+        if (chem.tanksNew[1].getTankType() != Fluids.NONE) {
+            GlStateManager.pushMatrix();
+
+            if (chem.isProgressing)
+                HmfController.setMod(50000D, 250D);
+            else
+                HmfController.setMod(50000D, 50000D);
+
+            int color = chem.tanksNew[1].getTankType().getColor();
+            GlStateManager.color(
+                    ((color >> 16) & 0xFF) / 255.0f,
+                    ((color >> 8) & 0xFF) / 255.0f,
+                    (color & 0xFF) / 255.0f);
+
+            GlStateManager.translate(0.625, 0, 0.625);
+
+            int count = chem.tanksNew[1].getFill() * 16 / 24000;
+            for (int i = 0; i < count; i++) {
+                if (i < count - 1)
+                    ResourceManager.chemplant_fluid.renderAll();
+                else
+                    ResourceManager.chemplant_fluidcap.renderAll();
+                GlStateManager.translate(0, 0.125, 0);
+            }
+            GlStateManager.popMatrix();
+        }
+
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.enableLighting();
+
+        HmfController.resetMod();
+
+        GlStateManager.popMatrix();
+    }
+
+
+    @Override
+    public Item getItemForRenderer() {
+        return Item.getItemFromBlock(ModBlocks.machine_chemplant);
+    }
+
+    @Override
+    public ItemRenderBase getRenderer(Item item) {
+        return new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -2, 0);
+                GlStateManager.scale(3.5, 3.5, 3.5);
+            }
+
+            public void renderCommon() {
+                GlStateManager.disableCull();
+                bindTexture(ResourceManager.chemplant_body_tex);
+                ResourceManager.chemplant_body.renderAll();
+                bindTexture(ResourceManager.chemplant_piston_tex);
+                ResourceManager.chemplant_piston.renderAll();
+                bindTexture(ResourceManager.chemplant_spinner_tex);
+                GlStateManager.translate(-0.625, 0, 0.625);
+                ResourceManager.chemplant_spinner.renderAll();
+                GlStateManager.translate(1.25, 0, 0);
+                ResourceManager.chemplant_spinner.renderAll();
+                GlStateManager.enableCull();
+            }
+        };
+    }
 }

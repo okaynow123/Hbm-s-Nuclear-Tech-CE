@@ -19,134 +19,130 @@ import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
 public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachineOreSlopper>
-    implements IItemRendererProvider {
+        implements IItemRendererProvider {
 
-  @Override
-  public void render(
-      TileEntityMachineOreSlopper slopper,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+    private static final ItemStack bedrockOreStack = new ItemStack(ModItems.bedrock_ore, 1, 0);
 
-    switch (slopper.getBlockMetadata() - BlockDummyable.offset) {
-      case 3:
-        GL11.glRotatef(180, 0F, 1F, 0F);
-        break;
-      case 5:
-        GL11.glRotatef(270, 0F, 1F, 0F);
-        break;
-      case 2:
-        GL11.glRotatef(0, 0F, 1F, 0F);
-        break;
-      case 4:
-        GL11.glRotatef(90, 0F, 1F, 0F);
-        break;
+    private static ItemStack getCachedBedrockOreStack() {
+        return bedrockOreStack;
     }
 
-    GL11.glShadeModel(GL11.GL_SMOOTH);
-    bindTexture(ResourceManager.ore_slopper_tex);
-    ResourceManager.ore_slopper.renderPart("Base");
+    @Override
+    public void render(
+            TileEntityMachineOreSlopper slopper,
+            double x,
+            double y,
+            double z,
+            float partialTicks,
+            int destroyStage,
+            float alpha) {
 
-    GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
 
-    double slide = slopper.prevSlider + (slopper.slider - slopper.prevSlider) * partialTicks;
-    GL11.glTranslated(0, 0, slide * -3);
-    ResourceManager.ore_slopper.renderPart("Slider");
+        int meta = slopper.getBlockMetadata() - BlockDummyable.offset;
+        float rotationY = switch (meta) {
+            case 3 -> 180f;
+            case 5 -> 270f;
+            case 4 -> 90f;
+            default -> 0f;
+        };
+        GlStateManager.rotate(rotationY, 0F, 1F, 0F);
 
-    GL11.glPushMatrix();
-    double extend =
-        (slopper.prevBucket + (slopper.bucket - slopper.prevBucket) * partialTicks) * 1.5;
-    GL11.glTranslated(0, -MathHelper.clamp(extend - 0.25, 0, 1.25), 0);
-    ResourceManager.ore_slopper.renderPart("Hydraulics");
-    GL11.glTranslated(0, -MathHelper.clamp(extend, 0, 1.25), 0);
-    ResourceManager.ore_slopper.renderPart("Bucket");
-
-    if (slopper.animation == slopper.animation.LIFTING) {
-      GL11.glTranslated(0.0625D, 4.3125D, 2D);
-      GL11.glEnable(GL11.GL_LIGHTING);
-      GL11.glRotatef(90, 0F, 1F, 0F);
-      GL11.glRotatef(-90, 1F, 0F, 0F);
-      ItemStack stack = new ItemStack(ModItems.bedrock_ore, 1, 0);
-      if (!stack.isEmpty()) {
-        IBakedModel model =
-            Minecraft.getMinecraft()
-                .getRenderItem()
-                .getItemModelWithOverrides(stack, slopper.getWorld(), null);
-        model =
-            ForgeHooksClient.handleCameraTransforms(
-                model, ItemCameraTransforms.TransformType.FIXED, false);
-
-        Minecraft.getMinecraft()
-            .getTextureManager()
-            .bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-        GL11.glScaled(1.75, 1.75, 1.75);
-
-        Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
-      }
-    }
-
-    GL11.glPopMatrix();
-    GL11.glPopMatrix();
-
-    double blades = slopper.prevBlades + (slopper.blades - slopper.prevBlades) * partialTicks;
-
-    GL11.glPushMatrix();
-    GL11.glTranslated(0.375, 2.75, 0);
-    GL11.glRotated(blades, 0, 0, 1);
-    GL11.glTranslated(-0.375, -2.75, 0);
-    ResourceManager.ore_slopper.renderPart("BladesLeft");
-    GL11.glPopMatrix();
-
-    GL11.glPushMatrix();
-    GL11.glTranslated(-0.375, 2.75, 0);
-    GL11.glRotated(-blades, 0, 0, 1);
-    GL11.glTranslated(0.375, -2.75, 0);
-    ResourceManager.ore_slopper.renderPart("BladesRight");
-    GL11.glPopMatrix();
-
-    double fan = slopper.prevFan + (slopper.fan - slopper.prevFan) * partialTicks;
-
-    GL11.glPushMatrix();
-    GL11.glTranslated(0, 1.875, -1);
-    GL11.glRotated(-fan, 1, 0, 0);
-    GL11.glTranslated(0, -1.875, 1);
-    ResourceManager.ore_slopper.renderPart("Fan");
-    GL11.glPopMatrix();
-
-    GL11.glShadeModel(GL11.GL_FLAT);
-
-    GL11.glPopMatrix();
-  }
-
-  @Override
-  public Item getItemForRenderer() {
-    return Item.getItemFromBlock(ModBlocks.machine_ore_slopper);
-  }
-
-  @Override
-  public ItemRenderBase getRenderer(Item item) {
-    return new ItemRenderBase() {
-      public void renderInventory() {
-        GlStateManager.translate(0, -3, 0);
-        GlStateManager.scale(3.75, 3.75, 3.75);
-      }
-
-      public void renderCommon() {
-        GlStateManager.scale(0.5, 0.5, 0.5);
-        GlStateManager.rotate(-90, 0F, 1F, 0F);
+        int oldShadeModel = GL11.glGetInteger(GL11.GL_SHADE_MODEL);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
         bindTexture(ResourceManager.ore_slopper_tex);
-        ResourceManager.ore_slopper.renderAll();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-      }
-    };
-  }
+        ResourceManager.ore_slopper.renderPart("Base");
+
+        GlStateManager.pushMatrix();
+        double slide = slopper.prevSlider + (slopper.slider - slopper.prevSlider) * partialTicks;
+        GlStateManager.translate(0, 0, slide * -3);
+        ResourceManager.ore_slopper.renderPart("Slider");
+
+        double extend = (slopper.prevBucket + (slopper.bucket - slopper.prevBucket) * partialTicks) * 1.5;
+        double clamp1 = MathHelper.clamp(extend - 0.25, 0, 1.25);
+        double clamp2 = MathHelper.clamp(extend, 0, 1.25);
+
+        GlStateManager.translate(0, -clamp1, 0);
+        ResourceManager.ore_slopper.renderPart("Hydraulics");
+        GlStateManager.translate(0, -clamp2, 0);
+        ResourceManager.ore_slopper.renderPart("Bucket");
+
+        if (slopper.animation == TileEntityMachineOreSlopper.SlopperAnimation.LIFTING) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0.0625D, 4.3125D, 2D);
+            GlStateManager.rotate(90, 0F, 1F, 0F);
+            GlStateManager.rotate(-90, 1F, 0F, 0F);
+            GlStateManager.scale(1.75, 1.75, 1.75);
+
+            final ItemStack stack = getCachedBedrockOreStack();
+            if (!stack.isEmpty()) {
+                Minecraft mc = Minecraft.getMinecraft();
+                IBakedModel model = mc.getRenderItem().getItemModelWithOverrides(stack, slopper.getWorld(), null);
+                model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
+
+                mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                mc.getRenderItem().renderItem(stack, model);
+            }
+            GlStateManager.popMatrix();
+        }
+
+        GlStateManager.popMatrix();
+
+        double blades = slopper.prevBlades + (slopper.blades - slopper.prevBlades) * partialTicks;
+        double fan = slopper.prevFan + (slopper.fan - slopper.prevFan) * partialTicks;
+
+        renderRotatingPart(0.375, 2.75, 0, blades, "BladesLeft");
+        renderRotatingPart(-0.375, 2.75, 0, -blades, "BladesRight");
+        renderRotatingPart(0, 1.875, -1, -fan, "Fan", true);
+
+        GlStateManager.shadeModel(oldShadeModel);
+        GlStateManager.popMatrix();
+    }
+
+    // Helper for rotating part rendering
+    private void renderRotatingPart(double x, double y, double z, double angle, String part) {
+        renderRotatingPart(x, y, z, angle, part, false);
+    }
+
+    private void renderRotatingPart(double x, double y, double z, double angle, String part, boolean fanMode) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        if (fanMode) {
+            GlStateManager.rotate((float) angle, 1, 0, 0);
+        } else {
+            GlStateManager.rotate((float) angle, 0, 0, 1);
+        }
+        GlStateManager.translate(-x, -y, -z);
+        ResourceManager.ore_slopper.renderPart(part);
+        GlStateManager.popMatrix();
+    }
+
+
+    @Override
+    public Item getItemForRenderer() {
+        return Item.getItemFromBlock(ModBlocks.machine_ore_slopper);
+    }
+
+    @Override
+    public ItemRenderBase getRenderer(Item item) {
+        return new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -3, 0);
+                GlStateManager.scale(3.75, 3.75, 3.75);
+            }
+
+            public void renderCommon() {
+                GlStateManager.scale(0.5, 0.5, 0.5);
+                GlStateManager.rotate(-90, 0F, 1F, 0F);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.ore_slopper_tex);
+                ResourceManager.ore_slopper.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        };
+    }
 }
