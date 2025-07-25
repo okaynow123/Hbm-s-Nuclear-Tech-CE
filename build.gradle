@@ -1,6 +1,6 @@
 //version: 1753288091
 /*
- * DO NOT CHANGE THIS FILE!
+ * DO NOT CHANGE THIS FILE! fuck off
  * Also, you may replace this file at any time if there is an update available.
  * Please check https://github.com/GregTechCEu/Buildscripts/blob/master/build.gradle for updates.
  * You can also run ./gradlew updateBuildScript to update your buildscript.
@@ -1549,3 +1549,82 @@ def getLastTag() {
     return runShell('git describe --abbrev=0 --tags ' +
             (githubTag.isPresent() ? runShell('git rev-list --tags --skip=1 --max-count=1') : ''))
 }
+
+def sourceBackupDir = file("build/tmp/sourceBackup")
+
+tasks.register('patchAndBackupSources') {
+    group = 'build'
+
+    def targetFile = file("build/rfg/minecraft-src/java/net/minecraft/client/renderer/GlStateManager.java")
+    def backupFile = file("$sourceBackupDir/GlStateManager.java.bak")
+
+    inputs.file(targetFile).withPathSensitivity(PathSensitivity.NONE)
+    outputs.file(backupFile)
+    outputs.file(targetFile).withPropertyName("patchedSource")
+
+    doLast {
+        copy { from targetFile; into sourceBackupDir; rename { 'GlStateManager.java.bak' } }
+
+        String originalContent = targetFile.getText('UTF-8')
+        if (!originalContent.contains("public static void rotate(double")) {
+            def methodToInject = """
+
+    @SuppressWarnings("all")
+    public static void rotate(double angle, float x, float y, float z) {
+        // This is a compile-time-only stub. The real implementation is injected by coremod at runtime.
+    }
+
+"""
+            int lastBraceIndex = originalContent.lastIndexOf('}')
+            String newContent = originalContent.substring(0, lastBraceIndex) + methodToInject + originalContent.substring(lastBraceIndex)
+            targetFile.setText(newContent, 'UTF-8')
+        }
+    }
+}
+
+tasks.register('restoreOriginalSources') {
+    group = 'build'
+
+    def targetFile = file("build/rfg/minecraft-src/java/net/minecraft/client/renderer/GlStateManager.java")
+    def backupFile = file("$sourceBackupDir/GlStateManager.java.bak")
+
+    inputs.file(backupFile)
+    outputs.file(targetFile)
+
+    doLast {
+        if (backupFile.exists()) {
+            copy { from backupFile; into targetFile.parent; rename { 'GlStateManager.java' } }
+            delete(backupFile)
+        }
+    }
+}
+
+tasks.register('repatchSourcesForIDE') {
+    group = 'ide'
+
+    def targetFile = file("build/rfg/minecraft-src/java/net/minecraft/client/renderer/GlStateManager.java")
+    outputs.file(targetFile)
+
+    doLast {
+        String originalContent = targetFile.getText('UTF-8')
+        if (!originalContent.contains("public static void rotate(double")) {
+            def methodToInject = """
+
+    @SuppressWarnings("all")
+    public static void rotate(double angle, float x, float y, float z) {
+        // This is a compile-time-only stub. The real implementation is injected by a coremod at runtime.
+    }
+
+"""
+            int lastBraceIndex = originalContent.lastIndexOf('}')
+            String newContent = originalContent.substring(0, lastBraceIndex) + methodToInject + originalContent.substring(lastBraceIndex)
+            targetFile.setText(newContent, 'UTF-8')
+        }
+    }
+}
+
+tasks.named('patchAndBackupSources').configure {it.dependsOn(tasks.named('decompressDecompiledSources'))}
+tasks.named('compilePatchedMcJava').configure {it.dependsOn(tasks.named('patchAndBackupSources'))}
+tasks.named('restoreOriginalSources').configure {it.dependsOn(tasks.named('classes'))}
+tasks.named('reobfJar').configure {it.dependsOn(tasks.named('restoreOriginalSources'))}
+tasks.named('build').configure {it.finalizedBy(tasks.named('repatchSourcesForIDE'))}

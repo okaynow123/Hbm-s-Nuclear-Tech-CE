@@ -11,31 +11,32 @@ import java.util.Map;
 @IFMLLoadingPlugin.SortingIndex(2077) // mlbv: this shit must be greater than 1000, after the srg transformer
 public class HbmCorePlugin implements IFMLLoadingPlugin {
 
-	static final Logger coreLogger = LogManager.getLogger("HBM CoreMod");
-	public static boolean runtimeDeobfEnabled = false;
+    static final Logger coreLogger = LogManager.getLogger("HBM CoreMod");
+    static boolean runtimeDeobfEnabled = false;
 
-	@Override
-	public String[] getASMTransformerClass() {
-		return new String[]{"com.hbm.core.EntityPlayerMPTransformer", "com.hbm.core.InventoryPlayerTransformer"};
-	}
+    @Override
+    public String[] getASMTransformerClass() {
+        return new String[]{"com.hbm.core.GlStateManagerTransformer", "com.hbm.core.EntityPlayerMPTransformer", "com.hbm.core" +
+				".InventoryPlayerTransformer"};
+    }
 
-	@Override
-	public String getModContainerClass() {
-		return "com.hbm.core.HbmCoreModContainer";
-	}
+    @Override
+    public String getModContainerClass() {
+        return "com.hbm.core.HbmCoreModContainer";
+    }
 
-	@Override
-	public String getSetupClass() {
-		return null;
-	}
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
 
-	@Override
-	public void injectData(Map<String, Object> data) {
-		runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
-	}
+    @Override
+    public void injectData(Map<String, Object> data) {
+        runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
+    }
 
-	@Override
-	public String getAccessTransformerClass() {
-		return null;
-	}
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
+    }
 }
