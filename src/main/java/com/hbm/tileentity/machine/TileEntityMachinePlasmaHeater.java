@@ -5,10 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegisterTE;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerMachinePlasmaHeater;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -24,54 +21,32 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 @AutoRegisterTE
-public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IFFtoNTMF, IGUIProvider {
+public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;
 	public static final long maxPower = 10000000000L;
 
-	public FluidTankNTM[] tanksNew;
-	public FluidTankNTM plasmaNew;
-
-	public FluidTank[] tanks;
-	public Fluid[] types = new Fluid[]{Fluids.DEUTERIUM.getFF(), Fluids.TRITIUM.getFF()};
-	public FluidTank plasma;
-	public Fluid plasmaType = Fluids.PLASMA_DT.getFF();
-
-	private static boolean converted = false;
+	public FluidTankNTM[] tanks;
+	public FluidTankNTM plasma;
 	
 	public TileEntityMachinePlasmaHeater() {
-		super(5);
-		tanksNew = new FluidTankNTM[2];
-		tanksNew[0] = new FluidTankNTM(Fluids.DEUTERIUM, 16000, 0);
-		tanksNew[1] = new FluidTankNTM(Fluids.TRITIUM, 16000, 1);
-		plasmaNew = new FluidTankNTM(Fluids.PLASMA_DT, 64000, 2);
-
-		tanks = new FluidTank[2];
-		tanks[0] = new FluidTank(16000);
-		tanks[1] = new FluidTank(16000);
-		plasma = new FluidTank(64000);
-
-		converted = true;
+		super(5, true, true);
+		tanks = new FluidTankNTM[2];
+		tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 16000);
+		tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 16000);
+		plasma = new FluidTankNTM(Fluids.PLASMA_DT, 64000);
 	}
 
 	@Override
@@ -82,35 +57,30 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			if(!converted){
-				convertAndSetFluids(types, tanks, tanksNew);
-				convertAndSetFluid(plasmaType, plasma, plasmaNew);
-				converted = true;
-			}
 			if(this.world.getTotalWorldTime() % 20 == 0)
 				this.updateConnections();
 
 			/// START Managing all the internal stuff ///
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
-			tanksNew[0].setType(1, 2, inventory);
-			tanksNew[1].setType(3, 4, inventory);
+			tanks[0].setType(1, 2, inventory);
+			tanks[1].setType(3, 4, inventory);
 			updateType();
 
 			int maxConv = 50;
 			int powerReq = 100000;
 
-			int convert = Math.min(tanksNew[0].getFill(), tanksNew[1].getFill());
-			convert = Math.min(convert, (plasmaNew.getMaxFill() - plasmaNew.getFill()) * 2);
+			int convert = Math.min(tanks[0].getFill(), tanks[1].getFill());
+			convert = Math.min(convert, (plasma.getMaxFill() - plasma.getFill()) * 2);
 			convert = Math.min(convert, maxConv);
 			convert = (int) Math.min(convert, power / powerReq);
 			convert = Math.max(0, convert);
 
-			if(convert > 0 && plasmaNew.getTankType() != Fluids.NONE) {
+			if(convert > 0 && plasma.getTankType() != Fluids.NONE) {
 
-				tanksNew[0].setFill(tanksNew[0].getFill() - convert);
-				tanksNew[1].setFill(tanksNew[1].getFill() - convert);
+				tanks[0].setFill(tanks[0].getFill() - convert);
+				tanks[1].setFill(tanks[1].getFill() - convert);
 
-				plasmaNew.setFill(plasmaNew.getFill() + convert * 2);
+				plasma.setFill(plasma.getFill() + convert * 2);
 				power -= convert * powerReq;
 
 				this.markDirty();
@@ -128,20 +98,19 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 				if(pos1 != null) {
 					TileEntity te = world.getTileEntity(new BlockPos(pos1[0], pos1[1], pos1[2]));
 
-					if(te instanceof TileEntityITER) {
-						TileEntityITER iter = (TileEntityITER)te;
+					if(te instanceof TileEntityITER iter) {
 
-						if(iter.plasmaNew.getFill() == 0 && this.plasmaNew.getTankType() != Fluids.NONE) {
-							iter.plasmaNew.setTankType(this.plasmaNew.getTankType());
+                        if(iter.plasmaNew.getFill() == 0 && this.plasma.getTankType() != Fluids.NONE) {
+							iter.plasmaNew.setTankType(this.plasma.getTankType());
 						}
 
 						if(iter.isOn) {
 
-							if(iter.plasmaNew.getTankType() == this.plasmaNew.getTankType()) {
+							if(iter.plasmaNew.getTankType() == this.plasma.getTankType()) {
 
-								int toLoad = Math.min(iter.plasmaNew.getMaxFill() - iter.plasmaNew.getFill(), this.plasmaNew.getFill());
+								int toLoad = Math.min(iter.plasmaNew.getMaxFill() - iter.plasmaNew.getFill(), this.plasma.getFill());
 								toLoad = Math.min(toLoad, 40);
-								this.plasmaNew.setFill(this.plasmaNew.getFill() - toLoad);
+								this.plasma.setFill(this.plasma.getFill() - toLoad);
 								iter.plasmaNew.setFill(iter.plasmaNew.getFill() + toLoad);
 								this.markDirty();
 								iter.markDirty();
@@ -154,9 +123,6 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 			/// END Loading plasma into the ITER ///
 
 			/// START Notif packets ///
-			for(int i = 0; i < tanksNew.length; i++)
-				tanksNew[i].updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
-			plasmaNew.updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
 			this.networkPackNT(50);
 			/// END Notif packets ///
 		}
@@ -165,12 +131,18 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
+		for(FluidTankNTM tank : this.tanks)
+			tank.serialize(buf);
+		this.plasma.serialize(buf);
 		buf.writeLong(power);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
 		super.deserialize(buf);
+		for(FluidTankNTM tank : this.tanks)
+			tank.deserialize(buf);
+		this.plasma.deserialize(buf);
 		this.power = buf.readLong();
 	}
 
@@ -182,42 +154,42 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 		for(int i = 1; i < 4; i++) {
 			for(int j = -1; j < 2; j++) {
 				this.trySubscribe(world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
-				this.trySubscribe(tanksNew[0].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
-				this.trySubscribe(tanksNew[1].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
+				this.trySubscribe(tanks[0].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
+				this.trySubscribe(tanks[1].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
 			}
 		}
 	}
 
 	private void updateType() {
 
-		List<FluidType> types = new ArrayList() {{ add(tanksNew[0].getTankType()); add(tanksNew[1].getTankType()); }};
+		List<FluidType> types = new ArrayList<>() {{ add(tanks[0].getTankType()); add(tanks[1].getTankType()); }};
 
 		if(types.contains(Fluids.DEUTERIUM) && types.contains(Fluids.TRITIUM)) {
-			plasmaNew.setTankType(Fluids.PLASMA_DT);
+			plasma.setTankType(Fluids.PLASMA_DT);
 			return;
 		}
 		if(types.contains(Fluids.DEUTERIUM) && types.contains(Fluids.HELIUM3)) {
-			plasmaNew.setTankType(Fluids.PLASMA_DH3);
+			plasma.setTankType(Fluids.PLASMA_DH3);
 			return;
 		}
 		if(types.contains(Fluids.DEUTERIUM) && types.contains(Fluids.HYDROGEN)) {
-			plasmaNew.setTankType(Fluids.PLASMA_HD);
+			plasma.setTankType(Fluids.PLASMA_HD);
 			return;
 		}
 		if(types.contains(Fluids.HYDROGEN) && types.contains(Fluids.TRITIUM)) {
-			plasmaNew.setTankType(Fluids.PLASMA_HT);
+			plasma.setTankType(Fluids.PLASMA_HT);
 			return;
 		}
 		if(types.contains(Fluids.HELIUM4) && types.contains(Fluids.OXYGEN)) {
-			plasmaNew.setTankType(Fluids.PLASMA_XM);
+			plasma.setTankType(Fluids.PLASMA_XM);
 			return;
 		}
 		if(types.contains(Fluids.BALEFIRE) && types.contains(Fluids.AMAT)) {
-			plasmaNew.setTankType(Fluids.PLASMA_BF);
+			plasma.setTankType(Fluids.PLASMA_BF);
 			return;
 		}
 
-		plasmaNew.setTankType(Fluids.NONE);
+		plasma.setTankType(Fluids.NONE);
 	}
 	
 	public long getPowerScaled(int i) {
@@ -227,42 +199,19 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-
 		this.power = nbt.getLong("power");
-		if(!converted){
-			tanks[0].readFromNBT(nbt.getCompoundTag("fuel_1"));
-			tanks[1].readFromNBT(nbt.getCompoundTag("fuel_2"));
-			plasma.readFromNBT(nbt.getCompoundTag("plasma"));
-			plasmaType = FluidRegistry.getFluid(nbt.getString("plasma_type"));
-		} else {
-			tanksNew[0].readFromNBT(nbt, "fuel_1n");
-			tanksNew[1].readFromNBT(nbt, "fuel_2n");
-			plasmaNew.readFromNBT(nbt, "plasman");
-			if(nbt.hasKey("fuel_1")){
-				nbt.removeTag("fuel_1");
-				nbt.removeTag("fuel_2");
-				nbt.removeTag("plasma");
-				nbt.removeTag("plasma_type");
-			}
-		}
+		tanks[0].readFromNBT(nbt, "fuel_1n");
+		tanks[1].readFromNBT(nbt, "fuel_2n");
+		plasma.readFromNBT(nbt, "plasman");
 	}
 
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-
 		nbt.setLong("power", power);
-		if(!converted){
-			nbt.setTag("fuel_1", tanks[0].writeToNBT(new NBTTagCompound()));
-			nbt.setTag("fuel_2", tanks[1].writeToNBT(new NBTTagCompound()));
-			nbt.setTag("plasma", plasma.writeToNBT(new NBTTagCompound()));
-			if(plasmaType != null)
-				nbt.setString("plasma_type", plasmaType.getName());
-		} else {
-			tanksNew[0].writeToNBT(nbt, "fuel_1n");
-			tanksNew[1].writeToNBT(nbt, "fuel_2n");
-			plasmaNew.writeToNBT(nbt, "plasman");
-		}
+		tanks[0].writeToNBT(nbt, "fuel_1n");
+		tanks[1].writeToNBT(nbt, "fuel_2n");
+		plasma.writeToNBT(nbt, "plasman");
 		return nbt;
 	}
 	
@@ -295,35 +244,12 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 
 	@Override
 	public FluidTankNTM[] getAllTanks() {
-		return new FluidTankNTM[] {tanksNew[0], tanksNew[1], plasmaNew};
+		return new FluidTankNTM[] {tanks[0], tanks[1], plasma};
 	}
 
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
-		return tanksNew;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-			);
-		}
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
+		return tanks;
 	}
 
 	@Override

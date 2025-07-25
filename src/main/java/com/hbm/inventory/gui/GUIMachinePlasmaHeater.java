@@ -13,11 +13,11 @@ import org.lwjgl.opengl.GL11;
 public class GUIMachinePlasmaHeater extends GuiInfoContainer {
 
 	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_fusion_heater.png");
-	private TileEntityMachinePlasmaHeater plasmaHeater;
+	private final TileEntityMachinePlasmaHeater microwave;
 
 	public GUIMachinePlasmaHeater(InventoryPlayer invPlayer, TileEntityMachinePlasmaHeater tile) {
 		super(new ContainerMachinePlasmaHeater(invPlayer, tile));
-		this.plasmaHeater = tile;
+		this.microwave = tile;
 
 		this.xSize = 176;
 		this.ySize = 168;
@@ -27,15 +27,18 @@ public class GUIMachinePlasmaHeater extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		plasmaHeater.tanksNew[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 17, 16, 52);
-		plasmaHeater.tanksNew[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 17, 16, 52);
-		plasmaHeater.plasmaNew.renderTankInfo(this, mouseX, mouseY, guiLeft + 98, guiTop + 17, 16, 52);
-		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 17, 16, 34, plasmaHeater.power, TileEntityMachinePlasmaHeater.maxPower);
+		microwave.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 17, 16, 52);
+		microwave.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 17, 16, 52);
+		microwave.plasma.renderTankInfo(this, mouseX, mouseY, guiLeft + 98, guiTop + 17, 16, 52);
+		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 17, 16, 34, microwave.power, TileEntityMachinePlasmaHeater.maxPower);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
+		String name = this.microwave.hasCustomInventoryName() ? this.microwave.getInventoryName() : I18n.format(this.microwave.getInventoryName());
+
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 
@@ -48,12 +51,12 @@ public class GUIMachinePlasmaHeater extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		int i = (int)plasmaHeater.getPowerScaled(34);
+		int i = (int) microwave.getPowerScaled(34);
 		drawTexturedModalRect(guiLeft + 8, guiTop + 51 - i, 176, 34 - i, 16, i);
 
-		plasmaHeater.tanksNew[0].renderTank(guiLeft + 62, guiTop + 69, this.zLevel, 16, 52);
-		plasmaHeater.tanksNew[1].renderTank(guiLeft + 134, guiTop + 69, this.zLevel, 16, 52);
-		plasmaHeater.plasmaNew.renderTank(guiLeft + 98, guiTop + 69, this.zLevel, 16, 52);
+		microwave.tanks[0].renderTank(guiLeft + 62, guiTop + 69, this.zLevel, 16, 52);
+		microwave.tanks[1].renderTank(guiLeft + 134, guiTop + 69, this.zLevel, 16, 52);
+		microwave.plasma.renderTank(guiLeft + 98, guiTop + 69, this.zLevel, 16, 52);
 		GL11.glPopAttrib();
 	}
 }
