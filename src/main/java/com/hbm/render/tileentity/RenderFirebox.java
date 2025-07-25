@@ -20,65 +20,71 @@ public class RenderFirebox extends TileEntitySpecialRenderer<TileEntityHeaterFir
 
   @Override
   public void render(
-      TileEntityHeaterFirebox tile,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
-    GL11.glPushMatrix();
-    GL11.glTranslated(x + 0.5D, y, z + 0.5D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_CULL_FACE);
+          TileEntityHeaterFirebox tile,
+          double x,
+          double y,
+          double z,
+          float partialTicks,
+          int destroyStage,
+          float alpha) {
+
+    GlStateManager.pushMatrix();
+    GlStateManager.translate(x + 0.5D, y, z + 0.5D);
+    GlStateManager.enableLighting();
+    GlStateManager.enableCull();
 
     switch (tile.getBlockMetadata() - BlockDummyable.offset) {
       case 3:
-        GL11.glRotatef(0, 0F, 1F, 0F);
+        GlStateManager.rotate(0, 0F, 1F, 0F);
         break;
       case 5:
-        GL11.glRotatef(90, 0F, 1F, 0F);
+        GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 2:
-        GL11.glRotatef(180, 0F, 1F, 0F);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
-        GL11.glRotatef(270, 0F, 1F, 0F);
+        GlStateManager.rotate(270, 0F, 1F, 0F);
         break;
     }
-    GL11.glRotatef(-90, 0F, 1F, 0F);
 
-    TileEntityHeaterFirebox firebox = (TileEntityHeaterFirebox) tile;
+    GlStateManager.rotate(-90, 0F, 1F, 0F);
+
+    TileEntityHeaterFirebox firebox = tile;
 
     bindTexture(ResourceManager.heater_firebox_tex);
     ResourceManager.heater_firebox.renderPart("Main");
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
     float door = firebox.prevDoorAngle + (firebox.doorAngle - firebox.prevDoorAngle) * partialTicks;
-    GL11.glTranslated(1.375, 0, 0.375);
-    GL11.glRotatef(door, 0F, -1F, 0F);
-    GL11.glTranslated(-1.375, 0, -0.375);
+    GlStateManager.translate(1.375, 0, 0.375);
+    GlStateManager.rotate(door, 0F, -1F, 0F);
+    GlStateManager.translate(-1.375, 0, -0.375);
     ResourceManager.heater_firebox.renderPart("Door");
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
 
     if (firebox.wasOn) {
-      GL11.glPushMatrix();
-      GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+      GlStateManager.pushMatrix();
+      GlStateManager.pushAttrib();
 
-      GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDisable(GL11.GL_CULL_FACE);
+      GlStateManager.disableLighting();
+      GlStateManager.disableCull();
+
+      // Full brightness
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-      ResourceManager.heater_firebox.renderPart("InnerBurning");
-      GL11.glEnable(GL11.GL_LIGHTING);
 
-      GL11.glPopAttrib();
-      GL11.glPopMatrix();
+      ResourceManager.heater_firebox.renderPart("InnerBurning");
+
+      GlStateManager.enableLighting();
+      GlStateManager.popAttrib();
+      GlStateManager.popMatrix();
     } else {
       ResourceManager.heater_firebox.renderPart("InnerEmpty");
     }
 
-    GL11.glPopMatrix();
+    GlStateManager.popMatrix();
   }
+
 
   @Override
   public Item getItemForRenderer() {
@@ -90,12 +96,10 @@ public class RenderFirebox extends TileEntitySpecialRenderer<TileEntityHeaterFir
     return new ItemRenderBase() {
       public void renderInventory() {
         GlStateManager.translate(0, -1, 0);
-        GlStateManager.scale(1.9, 1.9, 1.9);
+        GlStateManager.scale(3.25, 3.25, 3.25);
       }
 
       public void renderCommon() {
-        GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.scale(1.9, 1.9, 1.9);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.heater_firebox_tex);
         ResourceManager.heater_firebox.renderAll();

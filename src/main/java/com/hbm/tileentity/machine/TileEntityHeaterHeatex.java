@@ -16,6 +16,7 @@ import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.gui.GUIHeaterHeatex;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -41,13 +42,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @AutoRegisterTE
-public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHeatSource, IControlReceiver, IGUIProvider, IFluidStandardTransceiver, ITickable, IFFtoNTMF {
+public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHeatSource, IControlReceiver, IGUIProvider, IFluidStandardTransceiver, ITickable, IFFtoNTMF, IFluidCopiable {
 
     public FluidTankNTM[] tanksNew;
     public FluidTank[] tanks;
     public Fluid[] tankTypes;
 
-    public int amountToCool = 1;
+    public int amountToCool = 24_000;
     public int tickDelay = 1;
     public int heatGen;
     public int heatEnergy;

@@ -8,39 +8,46 @@ public class ItemRenderBase extends TEISRBase {
 
 	@Override
 	public void renderByItem(ItemStack itemStackIn) {
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GlStateManager.enableCull();
-		switch(type){
-		case FIRST_PERSON_LEFT_HAND:
-		case FIRST_PERSON_RIGHT_HAND:
-		case THIRD_PERSON_LEFT_HAND:
-		case THIRD_PERSON_RIGHT_HAND:
-			GL11.glRotated(-90, 0, 1, 0);
-			GL11.glScaled(0.4, 0.4, 0.4);
-			break;
-		case HEAD:
-		case FIXED:
-		case GROUND:
-			GL11.glScaled(0.4, 0.4, 0.4);
-			GL11.glRotated(-90, 0, 1, 0);
-			GlStateManager.translate(2.5, 0, 0);
-			renderNonInv(itemStackIn);
-			break;
-		case GUI:
-			GlStateManager.enableLighting();
-			GL11.glRotated(30, 1, 0, 0);
-			GL11.glRotated(45+180, 0, 1, 0);
-			GL11.glScaled(0.062, 0.062, 0.062);
-			GL11.glTranslated(0, 12, -11.3);
-			renderInventory(itemStackIn);
-			break;
-		case NONE:
-			break;
+
+		switch (type) {
+			case FIRST_PERSON_LEFT_HAND:
+			case FIRST_PERSON_RIGHT_HAND:
+			case THIRD_PERSON_LEFT_HAND:
+			case THIRD_PERSON_RIGHT_HAND:
+				GlStateManager.rotate(-90F, 0F, 1F, 0F);
+				GlStateManager.scale(0.4F, 0.4F, 0.4F);
+				break;
+
+			case HEAD:
+			case FIXED:
+			case GROUND:
+				GlStateManager.scale(0.4F, 0.4F, 0.4F);
+				GlStateManager.rotate(-90F, 0F, 1F, 0F);
+				GlStateManager.translate(2.5F, 0F, 0F);
+				renderNonInv(itemStackIn);
+				break;
+
+			case GUI:
+				GlStateManager.enableLighting();
+				GlStateManager.rotate(30F, 1F, 0F, 0F);
+				GlStateManager.rotate(225F, 0F, 1F, 0F); // 45 + 180
+				GlStateManager.scale(0.062F, 0.062F, 0.062F);
+				GlStateManager.translate(0F, 12F, -11.3F);
+				renderInventory(itemStackIn);
+				break;
+
+			case NONE:
+				break;
 		}
+
 		renderCommon(itemStackIn);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
-	
+
+
+
 	public void renderNonInv(ItemStack stack) { renderNonInv(); }
 	public void renderInventory(ItemStack stack) { renderInventory(); }
 	public void renderCommon(ItemStack stack) { renderCommon(); }
