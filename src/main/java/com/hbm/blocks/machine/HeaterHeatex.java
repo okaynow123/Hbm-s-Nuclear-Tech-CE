@@ -86,14 +86,11 @@ public class HeaterHeatex extends BlockDummyable implements ITooltipProvider, IL
 
         TileEntity te = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
 
-        if (!(te instanceof TileEntityHeaterHeatex))
+        if (!(te instanceof TileEntityHeaterHeatex heater))
             return;
-
-        TileEntityHeaterHeatex heater = (TileEntityHeaterHeatex) te;
 
         List<String> text = new ArrayList<>();
         text.add(String.format("%,d", heater.heatEnergy) + " TU");
-        text.add("§c<- §r"+String.format("%,d", heater.heatGen) + " TU/t");
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 }

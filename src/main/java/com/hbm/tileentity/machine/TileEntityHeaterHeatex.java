@@ -50,7 +50,6 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
 
     public int amountToCool = 24_000;
     public int tickDelay = 1;
-    public int heatGen;
     public int heatEnergy;
     private boolean converted;
 
