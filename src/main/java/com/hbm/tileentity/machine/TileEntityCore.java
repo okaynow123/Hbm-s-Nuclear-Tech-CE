@@ -34,6 +34,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -82,11 +83,13 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
 
             meltdownTick = false;
 
-            lastTickValid = world.getChunkProvider().isChunkGeneratedAt(chunkX, chunkZ) &&
-                    world.getChunkProvider().isChunkGeneratedAt(chunkX + 1, chunkZ + 1) &&
-                    world.getChunkProvider().isChunkGeneratedAt(chunkX + 1, chunkZ - 1) &&
-                    world.getChunkProvider().isChunkGeneratedAt(chunkX - 1, chunkZ + 1) &&
-                    world.getChunkProvider().isChunkGeneratedAt(chunkX - 1, chunkZ - 1);
+            ChunkProviderServer provider = (ChunkProviderServer) world.getChunkProvider();
+            lastTickValid =
+                    provider.chunkExists(chunkX, chunkZ) &&
+                            provider.chunkExists(chunkX + 1, chunkZ + 1) &&
+                            provider.chunkExists(chunkX + 1, chunkZ - 1) &&
+                            provider.chunkExists(chunkX - 1, chunkZ + 1) &&
+                            provider.chunkExists(chunkX - 1, chunkZ - 1);
 
             if (lastTickValid && heat > 0 && heat >= field) {
 
