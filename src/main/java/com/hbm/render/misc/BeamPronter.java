@@ -168,7 +168,6 @@ public class BeamPronter {
 
 	
 	public static void gluonBeam(Vec3d pos1, Vec3d pos2, float size){
-		//long l = System.nanoTime();
 		GlStateManager.pushMatrix();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
