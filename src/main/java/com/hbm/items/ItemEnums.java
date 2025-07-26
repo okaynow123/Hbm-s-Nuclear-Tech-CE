@@ -23,6 +23,12 @@ public class ItemEnums {
     WOOD
   }
 
+  public enum SoyuzSkinType {
+    NORMAL,
+    LUNAR,
+    POST_WAR
+  }
+
   public enum EnumLegendaryType {
     TIER1,
     TIER2,

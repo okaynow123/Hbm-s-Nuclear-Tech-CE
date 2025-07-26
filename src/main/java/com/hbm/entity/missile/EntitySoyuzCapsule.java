@@ -54,18 +54,8 @@ public class EntitySoyuzCapsule extends EntityThrowable {
     				}
     			}
     			ItemStack stack = ItemStack.EMPTY;
-    			switch(soyuz){
-    			case 0:
-    				stack = new ItemStack(ModItems.missile_soyuz0);
-    				break;
-    			case 1:
-    				stack = new ItemStack(ModItems.missile_soyuz1);
-    				break;
-    			case 2:
-    				stack = new ItemStack(ModItems.missile_soyuz2);
-    				break;
-    			}
-    			capsule.inventory.setStackInSlot(18, stack);
+
+				capsule.inventory.setStackInSlot(18, new ItemStack(ModItems.missile_soyuz, 1, soyuz));
     		}
         }
     }
