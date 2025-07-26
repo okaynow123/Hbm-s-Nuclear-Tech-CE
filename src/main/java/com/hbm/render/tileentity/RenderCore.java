@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
@@ -44,7 +44,7 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         GlStateManager.disableTexture2D();
 
         GlStateManager.scale(0.25F, 0.25F, 0.25F);
-        GlStateManager.color(0.1F, 0.1F, 0.1F);
+        GlStateManager.color(0.5F, 0.5F, 0.5F);
         ResourceManager.sphere_uv.renderAll();
 
         GlStateManager.enableBlend();
@@ -69,11 +69,9 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
     }
 
     public void renderOrb(TileEntityCore core, double x, double y, double z) {
-
         GlStateManager.pushMatrix();
 
         int color = core.color;
-
 
         float r = ((color & 0xFF0000) >> 16) / 256F;
         float g = ((color & 0x00FF00) >> 8) / 256F;
@@ -90,15 +88,12 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         GlStateManager.enableCull();
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
         GlStateManager.scale(0.25F, 0.25F, 0.25F);
         ResourceManager.sphere_ruv.renderAll();
 
-        GlStateManager.scale(2F, 2F, 2F);
-
         GlStateManager.enableBlend();
-        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
         double ix = (core.getWorld().getTotalWorldTime() * 0.1D) % (Math.PI * 2D);
         double t = 0.8F;
@@ -108,7 +103,6 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         pulse /= 2D;
 
         for (int i = 0; i <= 16; i++) {
-
             GlStateManager.pushMatrix();
 
             float s = 1F + 0.25F * i;
@@ -125,8 +119,11 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         GlStateManager.enableLighting();
         GlStateManager.enableTexture2D();
         GlStateManager.disableCull();
+        GlStateManager.color(1f, 1f, 1f, 1f);
         GlStateManager.popMatrix();
     }
+
+
     public void renderFlare(TileEntityCore core) {
         int color = core.color;
         float r = ((color & 0xFF0000) >> 16) / 255F;
