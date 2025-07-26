@@ -1,6 +1,8 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotPattern;
+import com.hbm.items.ModItems;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineAutocrafter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -9,10 +11,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerAutocrafter extends Container {
 
-    private TileEntityMachineAutocrafter autocrafter;
+    private final TileEntityMachineAutocrafter autocrafter;
 
     public ContainerAutocrafter(InventoryPlayer invPlayer, TileEntityMachineAutocrafter tedf) {
         autocrafter = tedf;
@@ -23,7 +26,7 @@ public class ContainerAutocrafter extends Container {
                 this.addSlotToContainer(new SlotPattern(tedf.inventory, j + i * 3, 44 + j * 18, 22 + i * 18));
             }
         }
-        this.addSlotToContainer(new SlotPattern(tedf.inventory, 9, 116, 40));
+        this.addSlotToContainer(new SlotPattern(tedf.inventory, 9, 116, 40, true));
 
         /* RECIPE */
         for(int i = 0; i < 3; i++) {
@@ -48,7 +51,7 @@ public class ContainerAutocrafter extends Container {
     }
 
     @Override
-    public ItemStack slotClick(int index, int button, ClickType clickTypeIn, EntityPlayer player) {
+    public @NotNull ItemStack slotClick(int index, int button, @NotNull ClickType clickTypeIn, @NotNull EntityPlayer player) {
         if(index < 0 || index > 9) {
             return super.slotClick(index, button, clickTypeIn, player);
         }
@@ -74,10 +77,8 @@ public class ContainerAutocrafter extends Container {
 
         if(button == 1 && clickTypeIn == ClickType.PICKUP && slot.getHasStack()) {
             autocrafter.nextMode(index);
-            return ret;
 
         } else {
-
             slot.putStack(held != ItemStack.EMPTY ? held.copy() : ItemStack.EMPTY);
 
             if(slot.getHasStack()) {
@@ -87,44 +88,41 @@ public class ContainerAutocrafter extends Container {
             slot.onSlotChanged();
             autocrafter.initPattern(slot.getStack(), index);
             autocrafter.updateTemplateGrid();
-
-            return ret;
         }
+        return ret;
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-        ItemStack var3 = ItemStack.EMPTY;
-        Slot var4 = (Slot) this.inventorySlots.get(slot);
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int index) {
+        ItemStack rStack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
 
-        if(var4 != null && var4.getHasStack()) {
-            ItemStack var5 = var4.getStack();
-            var3 = var5.copy();
+        if(slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            rStack = stack.copy();
 
-            if(slot < 10) { //filters
-                return ItemStack.EMPTY;
-            }
-
-            if(slot <= this.inventorySlots.size() - 1) {
-                if(!this.mergeItemStack(var5, this.inventorySlots.size(), this.inventorySlots.size(), true)) {
+            if(index <= 20 && index >= 10) {
+                if(!this.mergeItemStack(stack, 21, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
+            } else if(index > 20){
+                if(Library.isItemDischargeableBattery(rStack)) {
+                    if(!this.mergeItemStack(stack, 20, 21, false)) return ItemStack.EMPTY;
+                } else return ItemStack.EMPTY;
             }
 
-            if (var5.isEmpty())
-            {
-                var4.putStack(ItemStack.EMPTY);
-            }
-            else {
-                var4.onSlotChanged();
+            if (stack.isEmpty()){
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
             }
         }
 
-        return var3;
+        return rStack;
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@NotNull EntityPlayer player) {
         return autocrafter.isUseableByPlayer(player);
     }
 }
