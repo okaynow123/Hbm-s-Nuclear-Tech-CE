@@ -45,6 +45,9 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
         return this.getMaxPower();
     }
 
+    default void trySubscribe(World world, BlockPos pos, ForgeDirection dir) {
+        trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir);
+    }
     default void trySubscribe(World world, int x, int y, int z, ForgeDirection dir) {
 
         TileEntity te = Compat.getTileStandard(world, x, y, z);
