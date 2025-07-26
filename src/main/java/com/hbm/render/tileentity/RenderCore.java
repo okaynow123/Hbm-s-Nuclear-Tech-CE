@@ -146,7 +146,6 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         GlStateManager.disableAlpha();
         GlStateManager.enableCull();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
-        GlStateManager.depthMask(false);
         RenderHelper.disableStandardItemLighting();
         GlStateManager.pushMatrix();
 
@@ -183,7 +182,6 @@ public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
         }
 
         GlStateManager.popMatrix();
-        GlStateManager.depthMask(true);
         GlStateManager.disableCull();
         GlStateManager.disableBlend();
         GlStateManager.shadeModel(GL11.GL_FLAT);
