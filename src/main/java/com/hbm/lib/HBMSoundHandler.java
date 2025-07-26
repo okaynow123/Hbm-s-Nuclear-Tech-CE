@@ -226,6 +226,7 @@ public final class HBMSoundHandler {
     public static SoundEvent crucibleEnd;
     public static SoundEvent crucibleSwing;
     public static SoundEvent crucibleLoop;
+    public static SoundEvent cDeploy;
     public static SoundEvent jsg_reload0;
     public static SoundEvent jsg_reload1;
     public static SoundEvent mob_gib;
@@ -526,6 +527,7 @@ public final class HBMSoundHandler {
         crucibleEnd = register("weapon.crucible_end");
         crucibleSwing = register("weapon.crucible_swing");
         crucibleLoop = register("weapon.crucible_loop");
+        cDeploy = register("weapon.cDeploy");
         jsg_reload0 = register("weapon.jsg_reload0");
         jsg_reload1 = register("weapon.jsg_reload1");
         mob_gib = register("weapon.mob_gib");

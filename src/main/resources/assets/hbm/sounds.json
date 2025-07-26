@@ -168,6 +168,7 @@
     "weapon.crucible_end": {"category": "player", "sounds": [{"name": "hbm:weapon/crucible_end", "stream": false}]},
     "weapon.crucible_swing": {"category": "player", "sounds": [{"name": "hbm:weapon/crucible_swing", "stream": false}]},
     "weapon.crucible_loop": {"category": "player", "sounds": [{"name": "hbm:weapon/crucible_loop", "stream": false}]},
+    "weapon.cDeploy": {"category": "player", "sounds": [{"name": "hbm:weapon/cdeploy", "stream": false}]},
     "weapon.dFlash": {"category": "player", "sounds": [{"name": "hbm:weapon/dFlash", "stream": false}]},
     "weapon.jsg_reload0": {"category": "player", "sounds": [{"name": "hbm:weapon/jsg_reload0", "stream": false}]},
     "weapon.jsg_reload1": {"category": "player", "sounds": [{"name": "hbm:weapon/jsg_reload1", "stream": false}]},

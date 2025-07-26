@@ -15,7 +15,6 @@ public class ItemSoyuz extends ItemEnumMulti {
 
     public ItemSoyuz(String s) {
         super(s, ItemEnums.SoyuzSkinType.class, false, true);
-        ModItems.ALL_ITEMS.add(this);
     }
 
     @Override

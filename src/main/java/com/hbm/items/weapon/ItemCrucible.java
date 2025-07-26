@@ -55,14 +55,15 @@ public class ItemCrucible extends ItemSwordCutter implements IPostRender {
 			return;
 		if(!(player instanceof EntityPlayerMP))
 			return;
-		//World world = player.world;
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("type", "sound");
-		tag.setString("mode", "crucible_loop");
-		tag.setInteger("playerId", player.getEntityId());
-		PacketDispatcher.wrapper.sendToAllTracking(new AuxParticlePacketNT(tag, 0, 0, 0), player);
-		PacketThreading.createSendToThreadedPacket(new AuxParticlePacketNT(tag, 0, 0, 0), (EntityPlayerMP) player);
-		//world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.cDeploy, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		World world = player.world;
+		// FIXME: figure out why this caused a CME when Aether is present
+//		NBTTagCompound tag = new NBTTagCompound();
+//		tag.setString("type", "sound");
+//		tag.setString("mode", "crucible_loop");
+//		tag.setInteger("playerId", player.getEntityId());
+//		PacketDispatcher.wrapper.sendToAllTracking(new AuxParticlePacketNT(tag, 0, 0, 0), player);
+//		PacketThreading.createSendToThreadedPacket(new AuxParticlePacketNT(tag, 0, 0, 0), (EntityPlayerMP) player);
+		world.playSound(null, player.getPosition(), HBMSoundHandler.cDeploy, SoundCategory.PLAYERS, 5.0F, 1.0F);
 	}
 	
 	@Override
