@@ -18,16 +18,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockConveyorChute extends BlockConveyor {
     public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 2); //Bottom 0, Middle 1, Input 2
-    
+
     public BlockConveyorChute(Material materialIn, String s) {
         super(materialIn, s);
     }
 
     @Override
-    public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
+    public void onEntityCollision(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Entity entity) {
         super.onEntityCollision(world, pos, state, entity);
 
         Block belowBlock = world.getBlockState(pos.down()).getBlock();
@@ -69,7 +70,7 @@ public class BlockConveyorChute extends BlockConveyor {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(TYPE, getUpdatedType(worldIn, pos, placer.getHorizontalFacing().getOpposite())));
     }
 
@@ -96,12 +97,12 @@ public class BlockConveyorChute extends BlockConveyor {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@NotNull IBlockState state) {
         return false;
     }
 
@@ -111,7 +112,7 @@ public class BlockConveyorChute extends BlockConveyor {
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, BlockPos pos) {
         return FULL_BLOCK_AABB;
     }
 
@@ -121,7 +122,7 @@ public class BlockConveyorChute extends BlockConveyor {
     }
 
     @Override
-    public BlockStateContainer createBlockState() {
+    public @NotNull BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[]{FACING, TYPE});
     }
 
@@ -129,9 +130,9 @@ public class BlockConveyorChute extends BlockConveyor {
     public int getMetaFromState(IBlockState state) {
         return ((EnumFacing)state.getValue(FACING)).getIndex() - 2 + (state.getValue(TYPE)<<2);
     }
-    
+
     @Override
-    public IBlockState getStateFromMeta(int meta) {
+    public @NotNull IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.values()[((meta % 4)+2)];
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, meta>>2);
     }

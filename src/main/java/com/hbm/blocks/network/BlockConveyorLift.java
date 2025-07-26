@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockConveyorLift extends BlockConveyorChute {
     public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 2); //Bottom 0, Middle 1, Input 2
@@ -56,7 +57,7 @@ public class BlockConveyorLift extends BlockConveyorChute {
     }
 
     @Override
-    public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
+    public void onEntityCollision(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Entity entity) {
         if(!world.isRemote) {
 
             if(entity instanceof EntityItem && entity.ticksExisted > 10 && !entity.isDead) {
