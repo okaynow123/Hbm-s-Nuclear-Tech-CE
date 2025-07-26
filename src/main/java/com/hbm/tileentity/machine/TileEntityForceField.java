@@ -149,12 +149,12 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 			this.powerCons = this.baseCon + rStack * this.radCon + hStack * this.shCon;
 			
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
-			
+
 			if(blink > 0) {
 				blink--;
 				color = 0xFF0000;
 			} else {
-				color = 0x00C6FF;
+				color = 0x00FF00;
 			}
 		}
 		
