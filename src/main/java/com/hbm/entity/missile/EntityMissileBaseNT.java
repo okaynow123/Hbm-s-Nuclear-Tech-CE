@@ -15,7 +15,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -32,15 +31,12 @@ import java.util.List;
 
 public abstract class EntityMissileBaseNT extends EntityThrowableInterp implements IChunkLoader, IRadarDetectableNT {
 
-    public static final DataParameter<Byte> pr3 = EntityDataManager.createKey(EntityMissileBaseNT.class,
-			DataSerializers.BYTE);
+    public static final DataParameter<Byte> pr3 = EntityDataManager.createKey(EntityMissileBaseNT.class, DataSerializers.BYTE);
 
     public int startX;
     public int startZ;
-    public int startY;
     public int targetX;
     public int targetZ;
-    public int targetY;
     public double velocity;
     public double decelY;
     public double accelXZ;
@@ -54,10 +50,8 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
         this.ignoreFrustumCheck = true;
         startX = (int) posX;
         startZ = (int) posZ;
-        startY = getHeight(world, startX, startZ);
         targetX = (int) posX;
         targetZ = (int) posZ;
-        targetY = getHeight(world, targetX, targetZ);
     }
 
     public EntityMissileBaseNT(World world, float x, float y, float z, int a, int b) {
@@ -66,10 +60,8 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
         this.setLocationAndAngles(x, y, z, 0, 0);
         startX = (int) x;
         startZ = (int) z;
-        startY = getHeight(world, startX, startZ);
         targetX = a;
         targetZ = b;
-        targetY = getHeight(world, targetX, targetZ);
         this.motionY = 2;
 
         Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
@@ -80,19 +72,6 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
         this.rotationYaw = (float) (Math.atan2(targetX - posX, targetZ - posZ) * 180.0D / Math.PI);
 
         this.setSize(1.5F, 1.5F);
-    }
-
-    public static int getHeight(World world, int x, int z) {
-        if (!world.isBlockLoaded(new BlockPos(x, 0, z))) {
-            MainRegistry.logger.warn("Attempted to get height for unloaded chunk at {}, {}. Using sea level as " +
-					"temporary default.", x, z);
-            return world.getSeaLevel();
-        }
-        BlockPos topPos = world.getTopSolidOrLiquidBlock(new BlockPos(x, 0, z));
-        BlockPos groundPos = topPos.down();
-        // MainRegistry.logger.info("Highest solid/liquid block found: {} at Y {}", world.getBlockState(groundPos)
-		// .getBlock(), groundPos.getY());
-        return groundPos.getY();
     }
 
     /**
@@ -119,7 +98,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
     protected void entityInit() {
         super.entityInit();
         init(ForgeChunkManager.requestTicket(MainRegistry.instance, world, Type.ENTITY));
-        this.getDataManager().register(pr3, Byte.valueOf((byte) 5));
+        this.getDataManager().register(pr3, (byte) 5);
     }
 
     @Override
@@ -141,57 +120,42 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
 
         if (this.health <= 0) { //check its not been blown up
             this.killMissile();
+            return;
         }
 
         if (velocity < 4) {
-            velocity += 0.02; // Smooth velocity increase
+            velocity += MathHelper.clamp(this.ticksExisted / 60D * 0.05D, 0, 0.05);
         }
 
         if (!world.isRemote) {
-            targetY = getHeight(world, targetX, targetZ);
-            double distanceToTarget =
-					Math.sqrt((targetX - posX) * (targetX - posX) + (targetZ - posZ) * (targetZ - posZ));// Euclidean
-			// distance
+            if (hasPropulsion()) {
+                this.motionY -= decelY * velocity;
 
-            // Calculate cruise altitude but clamp it to a max of 500
-            double cruiseAltitude = Math.min((Math.max(startY, targetY) + distanceToTarget * Math.PI), 500); //
-			// Assert a maximum cruise height
+                Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
+                vector = vector.normalize();
+                vector.xCoord *= accelXZ;
+                vector.zCoord *= accelXZ;
 
-            // Clamp the missile's Y position to be no higher than 1000 to stop crazy heights
-            if (posY > 500) {
-                posY = 500;
+                if (motionY > 0) {
+                    motionX += vector.xCoord * velocity;
+                    motionZ += vector.zCoord * velocity;
+                }
+
+                if (motionY < 0) {
+                    motionX -= vector.xCoord * velocity;
+                    motionZ -= vector.zCoord * velocity;
+                }
+            } else {
+                motionX *= 0.99;
+                motionZ *= 0.99;
+
+                if (motionY > -1.5) motionY -= 0.05;
             }
 
-            /**
-             * @author Bailie Byrne
-             * @discord bailieb123
-             * Cruise altitude is annoying but works
-             * Currently using the abs distance multiplied by Pi to give the max Y coord the missile flies at
-             * Obviously for really short distances 1 block the missile barely gets off the ground
-             * If any errors occur setting this to be like 150 or 200 (+startY to be safe) should work
-             */
-
-            if (distanceToTarget <= 100) {
-                // Descent Phase: Prioritized when close to the target.
-                Vec3 vector = Vec3.createVectorHelper(targetX - posX, targetY - posY, targetZ - posZ).normalize();
-                motionX = vector.xCoord * velocity;
-                motionY = Math.max(vector.yCoord * velocity * 0.85, -2);
-                motionZ = vector.zCoord * velocity;
-
-                if (motionY == -2 && distanceToTarget < 10 && this.isCluster) {
-                    cluster();
-                }
-            } else if (posY < cruiseAltitude) {
-                // Ascent Phase: Engaged if not at cruise altitude and still far from target.
-                motionX *= 0.98;
-                motionY = Math.max(motionY + 0.1, 0.5); // Stronger initial ascent
-                motionZ *= 0.98;
-            } else {
-                // Cruise Phase: Engaged when at cruise altitude and far from target.
-                Vec3 vector = Vec3.createVectorHelper(targetX - posX, targetY - posY, targetZ - posZ).normalize();
-                motionX = vector.xCoord * velocity;
-                motionY *= 0.95; // Slight damping to prevent floating issues
-                motionZ = vector.zCoord * velocity;
+            if (motionY < -velocity && this.isCluster) {
+                cluster();
+                this.setDead();
+                return;
             }
 
             this.rotationYaw = (float) (Math.atan2(targetX - posX, targetZ - posZ) * 180.0D / Math.PI);
@@ -218,8 +182,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
     }
 
     protected void spawnControlWithOffset(double offsetX, double offsetY, double offsetZ) {
-        Vec3 vec = Vec3.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY,
-				this.lastTickPosZ - this.posZ);
+        Vec3 vec = Vec3.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY, this.lastTickPosZ - this.posZ);
         double len = vec.length();
         vec = vec.normalize();
         Vec3 thrust = Vec3.createVectorHelper(0, 1, 0);
@@ -307,8 +270,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
             this.setDead();
             ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
             ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
-            ExplosionLarge.spawnMissileDebris(world, posX, posY, posZ, motionX, motionY, motionZ, 0.25, getDebris(),
-					getDebrisRareDrop());
+            ExplosionLarge.spawnMissileDebris(world, posX, posY, posZ, motionX, motionY, motionZ, 0.25, getDebris(), getDebrisRareDrop());
         }
     }
 
@@ -376,8 +338,8 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
             loadedChunks.clear();
             loadedChunks.add(new ChunkPos(newChunkX, newChunkZ));
             //loadedChunks.add(new ChunkCoordIntPair(newChunkX + (int) Math.floor((this.posX + this.motionX * this
-			// .motionMult()) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ * this.motionMult()) /
-			// 16D)));
+            // .motionMult()) / 16D), newChunkZ + (int) Math.floor((this.posZ + this.motionZ * this.motionMult()) /
+            // 16D)));
 
             for (ChunkPos chunk : loadedChunks) {
                 ForgeChunkManager.forceChunk(loaderTicket, chunk);
