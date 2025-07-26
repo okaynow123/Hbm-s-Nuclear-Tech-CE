@@ -1,7 +1,7 @@
 package com.hbm.entity.item;
 
-import com.hbm.api.block.IConveyorBelt;
-import com.hbm.api.block.IEnterableBlock;
+import com.hbm.api.conveyor.IConveyorBelt;
+import com.hbm.api.conveyor.IEnterableBlock;
 import com.hbm.tileentity.network.TileEntityCraneBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

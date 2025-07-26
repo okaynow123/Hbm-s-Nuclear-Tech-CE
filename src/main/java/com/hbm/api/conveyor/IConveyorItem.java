@@ -1,8 +1,8 @@
-package com.hbm.api.block;
+package com.hbm.api.conveyor;
 
 import net.minecraft.item.ItemStack;
 
 public interface IConveyorItem {
 
-    public ItemStack getItemStack();
+    ItemStack getItemStack();
 }

@@ -1,6 +1,6 @@
 package com.hbm.blocks.network;
 
-import com.hbm.api.block.IConveyorBelt;
+import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.item.EntityMovingItem;

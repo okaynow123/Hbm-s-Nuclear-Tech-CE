@@ -1,6 +1,6 @@
 package com.hbm.tileentity.network;
 
-import com.hbm.api.block.IConveyorBelt;
+import com.hbm.api.conveyor.IConveyorBelt;
 import cofh.core.util.core.SideConfig;
 import cofh.core.util.core.SlotConfig;
 import com.hbm.entity.item.EntityMovingItem;
