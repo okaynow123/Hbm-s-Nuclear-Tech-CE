@@ -122,7 +122,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
             } else if (countdown > 0) {
 
                 if (audio == null) {
-                    audio = this.createAudioLoop();
+                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.soyuzReady, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F);
                     audio.updateVolume(100);
                     audio.startSound();
                 } else if (!audio.isPlaying()) {
@@ -176,7 +176,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
         buf.writeLong(power);
         buf.writeByte(mode);
         buf.writeBoolean(starting);
-        buf.writeByte(rocketType);
+        buf.writeByte(this.getType());
         tanks[0].serialize(buf);
         tanks[1].serialize(buf);
     }
