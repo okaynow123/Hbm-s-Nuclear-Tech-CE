@@ -1,6 +1,9 @@
 # <u>**HBM's Nuclear Tech Mod Community Edition**</u>
 An attempt at a "definitive" port of NTM to 1.12. Came from necessity as other developers have failed to update and maintain other forks. Heavy WIP as there is much content to port
 
+> **IMPORTANT: If you have Universal Tweaks installed, set `B:"Disable Fancy Missing Model"` to `false` to fix model rotation**  
+> This can be found at `config/Universal Tweaks - Tweaks.cfg`
+
 ## FAQ
 
 ### Is it survival ready?
