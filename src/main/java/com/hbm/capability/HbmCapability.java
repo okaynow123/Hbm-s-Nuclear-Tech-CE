@@ -3,6 +3,7 @@ package com.hbm.capability;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.armor.ItemModShield;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -26,8 +29,12 @@ import java.util.concurrent.Callable;
 @SuppressWarnings("DataFlowIssue")
 public class HbmCapability {
 
+	public static final int dashCooldownLength = 5;
+	private static final int plinkCooldownLength = 10;
+
 	public interface IHBMData {
 		float shieldCap = 100;
+
 		boolean getKeyPressed(EnumKeybind key);
 		void setKeyPressed(EnumKeybind key, boolean pressed);
 		boolean getEnableBackpack();
@@ -36,12 +43,20 @@ public class HbmCapability {
 		float getShield();
 		float getMaxShield();
 		int getLastDamage();
+		int getDashCooldown();
+		int getStamina();
+		int getDashCount();
+		int getPlinkCooldown();
 		void setEnableBackpack(boolean b);
 		void setEnableHUD(boolean b);
 		void setOnLadder(boolean b);
 		void setShield(float f);
 		void setMaxShield(float f);
 		void setLastDamage(int i);
+		void setDashCooldown(int cooldown);
+		void setStamina(int stamina);
+		void setDashCount(int count);
+		void setPlinkCooldown(int cooldown);
 		default float getEffectiveMaxShield(EntityPlayer player){
 			float max = this.getMaxShield();
 			if(!player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).isEmpty()) {
@@ -88,6 +103,14 @@ public class HbmCapability {
 		public boolean enableBackpack = true;
 		public boolean enableHUD = true;
 		public boolean isOnLadder = false;
+		public boolean dashActivated = true;
+
+		public int dashCooldown = 0;
+
+		public int totalDashCount = 0;
+		public int stamina = 0;
+		public int plinkCooldown = 0;
+
 		public float shield = 0;
 		public float maxShield = 0;
 		/**
@@ -165,6 +188,46 @@ public class HbmCapability {
 
 		@Override
 		public void setOnLadder(boolean b){isOnLadder = b;}
+
+		@Override
+		public void setDashCooldown(int cooldown) {
+			dashCooldown = cooldown;
+        }
+
+		@Override
+		public int getDashCooldown() {
+			return dashCooldown;
+		}
+
+		@Override
+		public void setStamina(int stamina) {
+			this.stamina = stamina;
+        }
+
+		@Override
+		public int getStamina() {
+			return this.stamina;
+		}
+
+		@Override
+		public void setDashCount(int count) {
+			this.totalDashCount = count;
+        }
+
+		@Override
+		public int getDashCount() {
+			return this.totalDashCount;
+		}
+
+		@Override
+		public void setPlinkCooldown(int cooldown) {
+			this.plinkCooldown = cooldown;
+        }
+
+		@Override
+		public int getPlinkCooldown() {
+			return this.plinkCooldown;
+		}
 
 		@Override
 		public void setShield(float f) {
@@ -266,6 +329,26 @@ public class HbmCapability {
 			}
 
 			@Override
+			public int getDashCooldown() {
+				return 0;
+			}
+
+			@Override
+			public int getStamina() {
+				return 0;
+			}
+
+			@Override
+			public int getDashCount() {
+				return 0;
+			}
+
+			@Override
+			public int getPlinkCooldown() {
+				return 0;
+			}
+
+			@Override
 			public void setOnLadder(boolean b){
 			}
 
@@ -279,7 +362,22 @@ public class HbmCapability {
 
 			@Override
 			public void setLastDamage(int i) {
+			}
 
+			@Override
+			public void setDashCooldown(int cooldown) {
+			}
+
+			@Override
+			public void setStamina(int stamina) {
+			}
+
+			@Override
+			public void setDashCount(int count) {
+			}
+
+			@Override
+			public void setPlinkCooldown(int cooldown) {
 			}
 		};
 		
@@ -314,5 +412,13 @@ public class HbmCapability {
 		if(e.hasCapability(HBMDataProvider.HBM_CAP, null))
 			return e.getCapability(HBMDataProvider.HBM_CAP, null);
 		return HBMDataProvider.DUMMY;
+	}
+
+	public static void plink(@NotNull EntityPlayer player, @NotNull SoundEvent sound, float volume, float pitch) {
+		HbmCapability.IHBMData props = HbmCapability.getData(player);
+		if(props.getPlinkCooldown() <= 0) {
+			player.world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, volume, pitch);
+			props.setPlinkCooldown(plinkCooldownLength);
+		}
 	}
 }

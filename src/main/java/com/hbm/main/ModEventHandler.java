@@ -657,9 +657,9 @@ public class ModEventHandler {
     public void onEntityAttacked(LivingAttackEvent event) {
         EntityLivingBase e = event.getEntityLiving();
 
-        if (e instanceof EntityPlayer && ArmorUtil.checkArmor(e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+        if (e instanceof EntityPlayer player && ArmorUtil.checkArmor(e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
             if (event.getSource() != ModDamageSource.digamma) {
-                e.world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
+                HbmCapability.plink(player, SoundEvents.ENTITY_ITEM_BREAK, 5.0F, 1.0F + e.getRNG().nextFloat() * 0.5F);
                 event.setCanceled(true);
             }
         }

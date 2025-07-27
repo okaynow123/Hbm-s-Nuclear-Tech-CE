@@ -62,6 +62,8 @@ public class ArmorFSB extends ItemArmor {
 	public float damageMod = -1;
 	public float damageThreshold = 0;
 	public float protectionYield = 50F;
+	public int dashCount = 0;
+	public int stepSize = 0;
 	public boolean fireproof = false;
 	public boolean noHelmet = false;
 	public boolean vats = false;
@@ -401,6 +403,16 @@ public class ArmorFSB extends ItemArmor {
 
 	public ArmorFSB setProjectileProtection(float projectileProtection) {
 		this.projectileProtection = projectileProtection;
+		return this;
+	}
+
+	public ArmorFSB setDashCount(int dashCount) {
+		this.dashCount = dashCount;
+		return this;
+	}
+
+	public ArmorFSB setStepSize(int stepSize) {
+		this.stepSize = stepSize;
 		return this;
 	}
 

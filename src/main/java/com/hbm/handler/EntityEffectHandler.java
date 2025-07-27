@@ -8,13 +8,16 @@ import com.hbm.capability.HbmLivingProps.ContaminationEffect;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.IArmorModDash;
 import com.hbm.interfaces.Untested;
+import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.toclient.ExtPropPacket;
 import com.hbm.packet.toclient.HbmCapabilityPacket;
+import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ArmorRegistry;
@@ -31,12 +34,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -81,6 +86,9 @@ public class EntityEffectHandler {
 		handleDigamma(entity);
 		handleLungDisease(entity);
 		handleOil(entity);
+
+		handleDashing(entity);
+		handlePlinking(entity);
 	}
 	
 	private static void handleContamination(EntityLivingBase entity) {
@@ -440,9 +448,109 @@ public class EntityEffectHandler {
 		}
 	}
 
+	private static void handleDashing(EntityLivingBase entity) {
+
+		//AAAAAAAAAAAAAAAAAAAAEEEEEEEEEEEEEEEEEEEE
+		if(entity instanceof EntityPlayer player) {
+
+            HbmCapability.IHBMData props = HbmCapability.getData(player);
+
+			props.setDashCount(0);
+
+			ArmorFSB chestplate = null;
+
+			int armorDashCount = 0;
+			int armorModDashCount = 0;
+
+			if(ArmorFSB.hasFSBArmor(player)) {
+				ItemStack plate = player.inventory.armorInventory.get(2);
+
+				chestplate = (ArmorFSB)plate.getItem();
+			}
+
+			if(chestplate != null)
+				armorDashCount = chestplate.dashCount;
+
+			for(int armorSlot = 0; armorSlot < 4; armorSlot++) {
+				ItemStack armorStack = player.inventory.armorInventory.get(armorSlot);
+
+				if(!armorStack.isEmpty() && armorStack.getItem() instanceof ItemArmor) {
+
+					for(int modSlot = 0; modSlot < 8; modSlot++) {
+						ItemStack mod = ArmorModHandler.pryMods(armorStack)[modSlot];
+
+						if(mod != null && mod.getItem() instanceof IArmorModDash) {
+							int count = ((IArmorModDash)mod.getItem()).getDashes();
+							armorModDashCount += count;
+						}
+					}
+				}
+			}
+
+			int dashCount = armorDashCount + armorModDashCount;
+			boolean dashActivated = props.getKeyPressed(EnumKeybind.DASH);
+
+			if(dashCount * 30 < props.getStamina()) props.setStamina(dashCount * 30);
+
+			if(dashCount > 0) {
+
+				int perDash = 30;
+				int stamina = props.getStamina();
+
+				props.setDashCount(dashCount);
+
+				if(props.getDashCooldown() <= 0) {
+
+					if(dashActivated && stamina >= perDash) {
+
+						Vec3d lookingIn = player.getLookVec();
+						Vec3d strafeVec = player.getLookVec();
+						strafeVec.rotatePitch((float)Math.PI * 0.5F);
+
+						int forward = (int) Math.signum(player.moveForward);
+						int strafe = (int) Math.signum(player.moveStrafing);
+
+						if(forward == 0 && strafe == 0) forward = 1;
+
+						player.addVelocity(lookingIn.x * forward + strafeVec.x * strafe, 0, lookingIn.z * forward + strafeVec.z * strafe);
+						player.motionY = 0;
+						player.fallDistance = 0F;
+						player.playSound(HBMSoundHandler.rocketFlame, 1.0F, 1.0F);
+
+						props.setDashCooldown(HbmCapability.dashCooldownLength);
+						stamina -= perDash;
+					}
+				} else {
+					props.setDashCooldown(props.getDashCooldown() - 1);
+					props.setKeyPressed(EnumKeybind.DASH, false);
+				}
+
+				if(stamina < props.getDashCount() * perDash) {
+					stamina++;
+
+					if(stamina % perDash == perDash-1) {
+						player.playSound(HBMSoundHandler.techBoop, 1.0F, (1.0F + ((1F/12F)*(stamina/perDash))));
+						stamina++;
+					}
+				}
+
+				props.setStamina(stamina);
+			}
+		}
+	}
+
+	private static void handlePlinking(Entity entity) {
+
+		if(entity instanceof EntityPlayer player) {
+            HbmCapability.IHBMData  props = HbmCapability.getData(player);
+
+			if(props.getPlinkCooldown() > 0)
+				props.setPlinkCooldown(props.getPlinkCooldown() - 1);
+		}
+
+	}
 
 	private static boolean canVomit(Entity e) {
-		if(e.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) return false;
-		return true;
-	}
+        return !e.isCreatureType(EnumCreatureType.WATER_CREATURE, false);
+    }
 }

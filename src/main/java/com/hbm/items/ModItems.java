@@ -592,6 +592,22 @@ public class ModItems {
 	public static final Item t45_plate = new ArmorT45(MainRegistry.enumArmorMaterialT45, -1, EntityEquipmentSlot.CHEST, 1000000, 10000, 1000, 5, "t45_plate").cloneStats((ArmorFSB) t45_helmet).setCreativeTab(CreativeTabs.COMBAT);
 	public static final Item t45_legs = new ArmorT45(MainRegistry.enumArmorMaterialT45, -1, EntityEquipmentSlot.LEGS, 1000000, 10000, 1000, 5, "t45_legs").cloneStats((ArmorFSB) t45_helmet).setCreativeTab(CreativeTabs.COMBAT);
 	public static final Item t45_boots = new ArmorT45(MainRegistry.enumArmorMaterialT45, -1, EntityEquipmentSlot.FEET, 1000000, 10000, 1000, 5, "t45_boots").cloneStats((ArmorFSB) t45_helmet).setCreativeTab(CreativeTabs.COMBAT);
+
+	public static final Item steamsuit_helmet = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_helmet").setMod(0.25F).setCap(6.0F).setThreshold(4F)
+			.setFireproof(true)
+			.addEffect(new PotionEffect(MobEffects.HASTE, 30, 0))
+			.setBlastProtection(0.25F)
+			.setProtectionLevel(200F)
+			.setThreshold(5.0F)
+			.setStep(HBMSoundHandler.iron)
+			.setJump(HBMSoundHandler.ironJump)
+			.setFall(HBMSoundHandler.ironLand)
+			.addResistance("monoxide", 0F)
+			.addResistance("fall", 0);
+	public static final Item steamsuit_plate = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_plate").cloneStats((ArmorFSB) steamsuit_helmet);
+	public static final Item steamsuit_legs = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_legs").cloneStats((ArmorFSB) steamsuit_helmet);
+	public static final Item steamsuit_boots = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_boots").cloneStats((ArmorFSB) steamsuit_helmet);
+
 	public static final Item ajr_helmet = new ArmorAJR(MainRegistry.aMatAJR, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajr_helmet").setMod(0.25F).setCap(6.0F).setThreshold(4F)
 			.setFireproof(true)
 			.enableVATS(true)

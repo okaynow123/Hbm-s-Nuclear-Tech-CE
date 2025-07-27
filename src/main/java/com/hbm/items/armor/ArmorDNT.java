@@ -118,16 +118,10 @@ public class ArmorDNT extends ArmorFSBPowered {
 	
 	@Override
 	public void handleAttack(LivingAttackEvent event, ArmorFSB chestplate) {
-
 		EntityLivingBase e = event.getEntityLiving();
-
-		if(ArmorFSB.hasFSBArmor(e)) {
-				
-			if(event.getSource().isExplosion()) {
-				return;
-			}
-
-			e.world.playSound(null, e.posX, e.posY, e.posZ, SoundEvents.BLOCK_ANVIL_BREAK, SoundCategory.PLAYERS, 5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
+		if(e instanceof EntityPlayer player && ArmorFSB.hasFSBArmor(player)) {
+			if(event.getSource().isExplosion()) return;
+			HbmCapability.plink(player, SoundEvents.BLOCK_ANVIL_BREAK, 5F, 1.0F + e.getRNG().nextFloat() * 0.5F);
 			event.setCanceled(true);
 		}
 	}

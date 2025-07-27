@@ -1657,6 +1657,20 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             double vertical = MathHelper.clamp(Math.sin(System.currentTimeMillis() * 0.01 + 2), -0.7, 0.7) * 3;
             GlStateManager.translate(horizontal * mult, vertical * mult, 0);
         }
+
+        /// HANDLE FSB HUD ///
+
+        if (helmet.getItem() instanceof ArmorFSB) {
+            ((ArmorFSB) helmet.getItem()).handleOverlay(event, player);
+        }
+        if(!event.isCanceled() && event.getType() == ElementType.HOTBAR) {
+
+            HbmCapability.IHBMData props  = HbmCapability.getData(player);
+            if(props.getDashCount() > 0) {
+                RenderScreenOverlay.renderDashBar(event.getResolution(), Minecraft.getMinecraft().ingameGUI, props);
+
+            }
+        }
     }
 
     @SubscribeEvent(receiveCanceled = true)
