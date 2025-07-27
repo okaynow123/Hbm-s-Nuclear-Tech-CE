@@ -1,6 +1,5 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.inventory.container.ContainerCrateTungsten;
@@ -10,7 +9,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCrucible;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacket;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
@@ -24,7 +22,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,8 +43,11 @@ public class TileEntityCrateTungsten extends TileEntityCrateBase implements IBuf
 
     @Override
     public void update() {
-
         if (!world.isRemote) {
+            if (world.getTotalWorldTime() % 10 == 3 && needsUpdate){
+                scheduleCheck();
+                needsUpdate = false;
+            }
             if (heatTimer > 0)
                 heatTimer--;
 
@@ -65,20 +65,16 @@ public class TileEntityCrateTungsten extends TileEntityCrateBase implements IBuf
 
     @Override
     public void serialize(ByteBuf buf) {
+        super.serialize(buf);
         buf.writeInt(this.heatTimer);
         buf.writeLong(this.joules);
     }
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         this.heatTimer = buf.readInt();
         this.joules = buf.readLong();
-    }
-
-    public void networkPackNT(int range) {
-        if (!world.isRemote)
-            PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
-					new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
     }
 
     @Override

@@ -5,10 +5,10 @@ import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrateTungsten;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class GUICrateTungsten extends GUICrateBase<TileEntityCrateTungsten, ContainerCrateTungsten> {
 
@@ -22,7 +22,7 @@ public class GUICrateTungsten extends GUICrateBase<TileEntityCrateTungsten, Cont
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
         String title = I18n.format("container.crateTungsten");
-        float percent = this.diFurnace.cachedFillPercentage;
+        float percent = this.diFurnace.fillPercentage;
         String combinedTitle = combineTitle(title, percent);
         this.fontRenderer.drawString(combinedTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(combinedTitle) / 2, 6,
 				diFurnace.heatTimer == 0 ? 0xA0A0A0 : 0xFFCA53);

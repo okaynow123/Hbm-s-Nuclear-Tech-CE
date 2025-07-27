@@ -1,23 +1,18 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.config.MachineConfig;
 import com.hbm.tileentity.machine.TileEntityCrateBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> extends GuiContainer {
 
     protected final T diFurnace;
     private final ResourceLocation texture;
-    private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
 
     GUICrateBase(T tileentity, C container, int xSize, int ySize, ResourceLocation texture) {
         super(container);
@@ -29,7 +24,9 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
 
     static String combineTitle(String name, float percent) {
         String color;
-        if (percent >= 85) {
+        if (percent >= 100){
+            color = TextFormatting.DARK_PURPLE.toString();
+        } else if (percent >= 85) {
             color = TextFormatting.RED.toString();
         } else if (percent >= 50) {
             color = TextFormatting.GOLD.toString();
@@ -38,25 +35,6 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
         }
         String weightString = String.format(" %s(%.1f%%)", color, percent);
         return name + weightString;
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-        if (this.diFurnace.inventoryContentsChanged) {
-            if (!this.isCheckScheduled.compareAndSet(false, true)) {
-                return;
-            }
-            CompletableFuture.runAsync(() -> {
-                try {
-                    long size = diFurnace.getSize();
-                    this.diFurnace.cachedFillPercentage = (float) size / MachineConfig.crateByteSize * 100F;
-                } finally {
-                    this.isCheckScheduled.set(false);
-                }
-            });
-            this.diFurnace.inventoryContentsChanged = false;
-        }
     }
 
     @Override
@@ -69,7 +47,7 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
     public void initGui() {
         super.initGui();
         if (mc.player != null) {
-            TileEntityCrateBase.openInventory(mc.player);
+            diFurnace.openInventory(mc.player);
         }
     }
 
@@ -77,14 +55,14 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
     public void onGuiClosed() {
         super.onGuiClosed();
         if (mc.player != null) {
-            TileEntityCrateBase.closeInventory(mc.player);
+            diFurnace.closeInventory(mc.player);
         }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
         String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
-        float percent = this.diFurnace.cachedFillPercentage;
+        float percent = this.diFurnace.fillPercentage;
         String title = combineTitle(name, percent);
         this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 0x3F1515);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 44, this.ySize - 96 + 2, 0x3F1515);

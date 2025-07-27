@@ -1,21 +1,28 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.config.MachineConfig;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
+import com.hbm.main.MainRegistry;
+import com.hbm.packet.toclient.BufPacket;
+import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IGUIProvider;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -23,93 +30,103 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider {
+// mlbv: I tried overriding markDirty to calculate the changes but somehow it always delays by one operation.
+// also, implementing ITickable is a bad idea, remove it if you can find a better way.
+public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider, IBufPacketReceiver, ITickable {
 
     private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
     public ItemStackHandler inventory;
-    @SideOnly(Side.CLIENT)
-    public boolean inventoryContentsChanged = true;
-    @SideOnly(Side.CLIENT)
-    public float cachedFillPercentage = 0.0F;
+    public float fillPercentage = 0.0F;
     protected String customName;
     protected String name;
-    private volatile boolean inventoryTooLarge = false;
-    private long lastCheckTime = 0;
+    boolean needsUpdate = false;
+    private boolean needsSync = false;
 
     public TileEntityCrateBase(int scount, String name) {
         inventory = new ItemStackHandler(scount) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
-                if (world != null && world.isRemote) {
-                    inventoryContentsChanged = true;
-                }
+                needsUpdate = true;
             }
         };
         this.name = name;
     }
 
-    public static void openInventory(EntityPlayer player) {
+    public void openInventory(EntityPlayer player) {
+        if (!world.isRemote) {
+            // mlbv: i know how terrible this looks, change it if you can find a more elegant solution
+            PacketThreading.createSendToThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
+                    (EntityPlayerMP) ((WorldServer) world).getEntityFromUuid(player.getPersistentID()));
+        }
         player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
     }
 
-    public static void closeInventory(EntityPlayer player) {
+    public void closeInventory(EntityPlayer player) {
         player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
     }
 
-    /**
-     * A retarded check to prevent giant nbt
-     */
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world != null && !world.isRemote) {
-            if (inventoryTooLarge) {
-                InventoryHelper.dropInventoryItems(world, pos, this);
-                inventoryTooLarge = false;
-                return;
-            }
+    public void update() {
+        if (world.isRemote) return;
+        if (needsUpdate && world.getTotalWorldTime() % 5 == 4) {
+            scheduleCheck();
+            needsUpdate = false;
+        }
+        if (needsSync) {
+            networkPackNT(10);
+            needsSync = false;
+        }
+    }
 
-            long now = System.currentTimeMillis();
-            if (now - this.lastCheckTime < 1000) {
-                return;
-            }
-            if (!this.isCheckScheduled.compareAndSet(false, true)) {
-                return;
-            }
-            this.lastCheckTime = now;
-
-            CompletableFuture.runAsync(() -> {
+    void scheduleCheck() {
+        if (this.isCheckScheduled.compareAndSet(false, true)) {
+            CompletableFuture.supplyAsync(this::getSize).whenComplete((currentSize, error) -> {
                 try {
-                    long size = getSize();
-                    if (size > MachineConfig.crateByteSize * 2L) {
-                        inventoryTooLarge = true;
+                    if (error != null) {
+                        MainRegistry.logger.error("Error checking crate size at {}", pos, error);
+                        return;
+                    }
+                    if (currentSize > MachineConfig.crateByteSize * 2L) {
+                        ((WorldServer) world).addScheduledTask(this::ejectAndClearInventory);
+                    } else {
+                        this.fillPercentage = (float) currentSize / MachineConfig.crateByteSize * 100F;
                     }
                 } finally {
                     this.isCheckScheduled.set(false);
+                    needsSync = true;
                 }
             });
         }
     }
 
+    private void ejectAndClearInventory() {
+        InventoryHelper.dropInventoryItems(world, pos, this);
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            inventory.setStackInSlot(i, ItemStack.EMPTY);
+        }
+        this.fillPercentage = 0.0F;
+        super.markDirty();
+        MainRegistry.logger.debug("Crate at {} was oversized and has been emptied to prevent data corruption.", pos);
+    }
+
     public long getSize() {
         NBTTagCompound nbt = new NBTTagCompound();
         float rads = 0;
-        for(int i = 0; i < inventory.getSlots(); i++) {
+        for (int i = 0; i < inventory.getSlots(); i++) {
 
             ItemStack stack = inventory.getStackInSlot(i);
-            if(stack.isEmpty())
-                continue;
+            if (stack.isEmpty()) continue;
 
             rads += HazardSystem.getTotalRadsFromStack(stack) * stack.getCount();
             NBTTagCompound slot = new NBTTagCompound();
             stack.writeToNBT(slot);
             nbt.setTag("slot" + i, slot);
         }
-        if(rads > 0){
+        if (rads > 0) {
             nbt.setFloat("cRads", rads);
         }
-        if(this.isLocked()) {
+        if (this.isLocked()) {
             nbt.setInteger("lock", this.getPins());
             nbt.setDouble("lockMod", this.getMod());
         }
@@ -163,17 +180,30 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
         super.readFromNBT(compound);
         if (compound.hasKey("inventory")) {
             inventory.deserializeNBT(compound.getCompoundTag("inventory"));
-            if (this.world != null && this.world.isRemote) {
-                this.inventoryContentsChanged = true;
-            }
         }
+        fillPercentage = compound.getFloat("fill");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setTag("inventory", inventory.serializeNBT());
+        compound.setFloat("fill", fillPercentage);
         return compound;
+    }
+
+    public void networkPackNT(int range) {
+        if (!world.isRemote)
+            PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
+                    new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
+    }
+
+    public void serialize(ByteBuf buf) {
+        buf.writeFloat(this.fillPercentage);
+    }
+
+    public void deserialize(ByteBuf buf) {
+        this.fillPercentage = buf.readFloat();
     }
 
     @Override
