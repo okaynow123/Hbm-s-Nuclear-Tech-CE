@@ -102,62 +102,17 @@ public class InventoryUtil {
 	 * @param inv
 	 * @param start
 	 * @param end
-	 * @param stack
+	 * @param stack This is not modified!
 	 * @return
 	 */
-	public static ItemStack tryAddItemToInventory(IItemHandlerModifiable inv, int start, int end, ItemStack stack) {
-
-		ItemStack rem = tryAddItemToExistingStack(inv, start, end, stack);
-
-		if(rem.isEmpty())
-			return ItemStack.EMPTY;
-
-		boolean didAdd = tryAddItemToNewSlot(inv, start, end, rem);
-
-		if(didAdd)
-			return ItemStack.EMPTY;
-		else
-			return rem;
-	}
-
-	public static ItemStack tryAddItemToExistingStack(IItemHandlerModifiable inv, int start, int end, ItemStack stack) {
-
-		if(stack == null || stack.isEmpty())
-			return ItemStack.EMPTY;
-
-		for(int i = start; i <= end; i++) {
-
-			if(doesStackDataMatch(inv.getStackInSlot(i), stack)) {
-
-				int transfer = Math.min(stack.getCount(), inv.getStackInSlot(i).getMaxStackSize() - inv.getStackInSlot(i).getCount());
-
-				if(transfer > 0) {
-					inv.getStackInSlot(i).setCount(inv.getStackInSlot(i).getCount() + transfer);
-					stack.setCount(stack.getCount() - transfer);
-
-					if(stack.isEmpty())
-						return ItemStack.EMPTY;
-				}
-			}
+	public static ItemStack tryAddItemToInventory(IItemHandler inv, int start, int end, ItemStack stack) {
+		ItemStack remaining = stack;
+		for(int slot = start; slot <= end; slot++) {
+			remaining = inv.insertItem(slot, remaining, false);
+			if (remaining.isEmpty())
+				return ItemStack.EMPTY;
 		}
-
-		return stack;
-	}
-
-	public static boolean tryAddItemToNewSlot(IItemHandlerModifiable inv, int start, int end, ItemStack stack) {
-
-		if(stack == null || stack.isEmpty())
-			return true;
-
-		for(int i = start; i <= end; i++) {
-
-			if(inv.getStackInSlot(i).isEmpty()) {
-				inv.setStackInSlot(i, stack);
-				return true;
-			}
-		}
-
-		return false;
+		return remaining;
 	}
 
 	/**

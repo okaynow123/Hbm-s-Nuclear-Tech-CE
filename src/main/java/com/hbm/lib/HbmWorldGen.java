@@ -237,7 +237,7 @@ public class HbmWorldGen implements IWorldGenerator {
 	/**
 	 * Fake noise generator "unruh" ("unrest", the motion of a clockwork), using a bunch of layered, scaaled and offset
 	 * sine functions to simulate a simple noise generator that runs somewhat efficiently
-	 * @param long the random function seed used for this operation
+	 * @param seed the random function seed used for this operation
 	 * @param x the exact x-coord of the height you want
 	 * @param z the exact z-coord of the height you want
 	 * @param scale how much the x/z coords should be amplified
@@ -295,7 +295,7 @@ public class HbmWorldGen implements IWorldGenerator {
 		if(!isBedrock(world, orePos)) return;
 		world.setBlockState(orePos, ModBlocks.ore_bedrock_block.getDefaultState());
 		TileEntityBedrockOre bedrockOre = (TileEntityBedrockOre)world.getTileEntity(orePos);
-		bedrockOre.setOre(oreName);
+//		bedrockOre.setOre(oreName);
 	}
 
 	private boolean isBedrock(World world, BlockPos bPos){

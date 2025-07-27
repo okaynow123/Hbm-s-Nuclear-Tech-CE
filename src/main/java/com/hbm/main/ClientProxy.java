@@ -93,6 +93,7 @@ import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.tileentity.network.energy.*;
 import com.hbm.tileentity.turret.*;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.ColorUtil;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.Vec3dUtil;
 import com.hbm.wiaj.cannery.Jars;
@@ -123,6 +124,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -143,6 +145,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GLContext;
@@ -2124,11 +2127,26 @@ public class ClientProxy extends ServerProxy {
         Minecraft.getMinecraft().ingameGUI.setOverlayMessage(msg, false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public float partialTicks() {
             boolean paused = Minecraft.getMinecraft().isGamePaused();
             return paused ?  Minecraft.getMinecraft().renderPartialTicksPaused : Minecraft.getMinecraft().getRenderPartialTicks();
     }
 
+    @Override
+    public int getStackColor(@NotNull ItemStack stack, boolean amplify) {
+        if(stack.isEmpty()) return 0x000000;
+        int color;
+        if (stack.getItem() instanceof ItemBlock) {
+            try {
+                Block block = ((ItemBlock) stack.getItem()).getBlock();
+                IBlockState state = block.getStateFromMeta(stack.getMetadata());
+                color = state.getMapColor(null, null).colorValue;
+            } catch (Exception e) {
+                color = 0xCCCCCC;
+            }
+        } else color = ColorUtil.getAverageColorFromStack(stack);
+        if(amplify) color = ColorUtil.amplifyColor(color);
+        return color;
+    }
 }

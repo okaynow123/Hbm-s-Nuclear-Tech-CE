@@ -1,6 +1,10 @@
 package com.hbm.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -122,5 +126,23 @@ public class ColorUtil {
         }
 
         return 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static int getAverageColorFromStack(ItemStack stack) {
+        if (stack.isEmpty()) return 0xFFFFFF;
+        try {
+            TextureAtlasSprite sprite = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack).getParticleTexture();
+            if (sprite.getFrameCount() == 0) return 0xFFFFFF;
+            int[][] frameData = sprite.getFrameTextureData(0);
+            int lowestMipmapLevel = frameData.length - 1;
+            if (lowestMipmapLevel < 0) return 0xFFFFFF;
+            int[] smallestMipmap = frameData[lowestMipmapLevel];
+            if (smallestMipmap.length == 0) return 0xFFFFFF;
+            int avgColorARGB = smallestMipmap[0];
+            return avgColorARGB & 0x00FFFFFF;
+        } catch (Exception ex) {
+            return 0xFFFFFF;
+        }
     }
 }

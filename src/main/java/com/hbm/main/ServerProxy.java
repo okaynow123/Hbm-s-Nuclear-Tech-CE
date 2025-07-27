@@ -94,4 +94,6 @@ public class ServerProxy
 		list.add(stack);
 		return list;
 	}
+
+	public int getStackColor(ItemStack stack, boolean amplify) { return 0x000000; }
 }

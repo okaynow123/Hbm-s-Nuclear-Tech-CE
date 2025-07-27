@@ -1,7 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.block.IDrillInteraction;
-import com.hbm.api.block.IMiningDrill;
+import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
@@ -10,10 +9,9 @@ import com.hbm.blocks.gas.BlockGasBase;
 import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineExcavator;
@@ -25,11 +23,15 @@ import com.hbm.items.machine.ItemDrillbit;
 import com.hbm.items.machine.ItemDrillbit.EnumDrillType;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
+import com.hbm.items.special.ItemBedrockOreBase;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.I18nUtil;
 import com.hbm.util.InventoryUtil;
 import com.hbm.util.ItemStackUtil;
 import io.netty.buffer.ByteBuf;
@@ -50,41 +52,38 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @AutoRegisterTE
-public class TileEntityMachineExcavator extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardReceiver, ITickable, IControlReceiver, IGUIProvider, IMiningDrill, IFFtoNTMF {
+public class TileEntityMachineExcavator extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardReceiver, ITickable, IControlReceiver, IGUIProvider, IUpgradeInfoProvider, IFluidCopiable {
 
 	public static final long maxPower = 10_000_000;
 	public long power;
-	public boolean operational = false;
+	private boolean operational = false;
 	
 	public boolean enableDrill = false;
 	public boolean enableCrusher = false;
 	public boolean enableWalling = false;
 	public boolean enableVeinMiner = false;
 	public boolean enableSilkTouch = false;
-	public boolean hasNullifier = false;
+	private boolean hasNullifier = false;
 	
-	protected int ticksWorked = 0;
-	protected int targetDepth = 0; //0 is the first block below null position
-	protected boolean bedrockDrilling = false;
+	private int ticksWorked = 0;
+	private int targetDepth = 0; //0 is the first block below null position
+	private boolean bedrockDrilling = false;
 
 	public float drillRotation = 0F;
 	public float prevDrillRotation = 0F;
@@ -95,24 +94,14 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	public int chuteTimer = 0;
 	
 	public double speed = 1.0D;
-	public final long baseConsumption = 10_000L;
+	private final long baseConsumption = 10_000L;
 	public long consumption = baseConsumption;
-	protected int drillRating = 0;
-	public FluidTank tank;
-	public Fluid fluidType;
-	public FluidTankNTM tankNew;
-	private static boolean converted = false;
-	private Fluid oldFluid =Fluids.NONE.getFF();;
-
+	public FluidTankNTM tank;
 	private final UpgradeManager upgradeManager = new UpgradeManager();
 
 	public TileEntityMachineExcavator() {
-		super(14);
-		this.fluidType = null;
-		this.tank = new FluidTank(16_000);
-		this.tankNew = new FluidTankNTM(Fluids.SULFURIC_ACID, 16_000);
-
-		converted = true;
+		super(14, true, true);
+		this.tank = new FluidTankNTM(Fluids.NONE, 16_000);
 	}
 
 	@Override
@@ -120,18 +109,8 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		return "container.machineExcavator";
 	}
 
-	public boolean hasEnoughPower(){
-		if(bedrockDrilling)
-			return this.power >= this.getPowerConsumption() * 20;
-		return this.power >= this.getPowerConsumption();
-	}
-
 	@Override
 	public void update() {
-		if(!converted){
-			convertAndSetFluid(oldFluid, tank, tankNew);
-			converted = true;
-		}
 		//needs to happen on client too for GUI rendering
 		upgradeManager.eval(inventory, 2, 3);
 		int speedLevel = Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 10);
@@ -143,14 +122,14 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		
 		if(!world.isRemote) {
 
-			this.tankNew.setType(1, inventory);
+			this.tank.setType(1, inventory);
 			
 			if(world.getTotalWorldTime() % 20 == 0) {
 				tryEjectBuffer();
 				
 				for(DirPos posDir : getConPos()) {
 					this.trySubscribe(world, posDir.getPos().getX(), posDir.getPos().getY(), posDir.getPos().getZ(), posDir.getDir());
-					this.trySubscribe(tankNew.getTankType(), world, posDir.getPos().getX(), posDir.getPos().getY(), posDir.getPos().getZ(), posDir.getDir());
+					this.trySubscribe(tank.getTankType(), world, posDir.getPos().getX(), posDir.getPos().getY(), posDir.getPos().getZ(), posDir.getDir());
 				}
 			}
 			
@@ -161,9 +140,8 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 			int radiusLevel = Math.min(upgradeManager.getLevel(UpgradeType.EFFECT), 3);
 			
 			EnumDrillType type = this.getInstalledDrill();
-			if(this.enableDrill && type != null && hasEnoughPower()) {
-				
-				this.drillRating = (int)(type.speed * 80);
+			if(this.enableDrill && type != null && this.power >= this.getPowerConsumption()) {
+
 				operational = true;
 				this.power -= this.getPowerConsumption();
 				
@@ -181,7 +159,6 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 				}
 			} else {
 				this.targetDepth = 0;
-				this.drillRating = 0;
 			}
 
 			this.networkPackNT(150);
@@ -206,10 +183,10 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 			this.prevCrusherRotation = this.crusherRotation;
 			
 			if(this.operational) {
-				this.drillRotation += 5F;
+				this.drillRotation += 15F;
 				
 				if(this.enableCrusher) {
-					this.crusherRotation += 10F;
+					this.crusherRotation += 15F;
 				}
 			}
 			
@@ -249,7 +226,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		buf.writeInt(targetDepth);
 		buf.writeInt(chuteTimer);
 		buf.writeLong(power);
-		tankNew.serialize(buf);
+		tank.serialize(buf);
 	}
 
 	@Override
@@ -264,7 +241,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		targetDepth = buf.readInt();
 		chuteTimer = buf.readInt();
 		power = buf.readLong();
-		tankNew.deserialize(buf);
+		tank.deserialize(buf);
 	}
 	
 	protected int getY() {
@@ -272,21 +249,19 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	}
 	
 	/** Works outwards and tries to break a ring, returns true if all rings are broken (or ignorable) and the drill should extend. */
-	protected boolean tryDrill(int radius) {
+    private boolean tryDrill(int radius) {
 		int y = getY();
 
 		if(targetDepth == 0 || y == 0) {
 			radius = 1;
 		}
-		int installedTier = this.getInstalledDrill().tier;
 		for(int ring = 1; ring <= radius; ring++) {
 			
 			boolean ignoreAll = true;
 			float combinedHardness = 0F;
 			BlockPos bedrockOre = null;
 			bedrockDrilling = false;
-			
-			//Scanning to chgeck how much time it would take to break all of them at once
+
 			for(int x = pos.getX() - ring; x <= pos.getX() + ring; x++) {
 				for(int z = pos.getZ() - ring; z <= pos.getZ() + ring; z++) {
 					
@@ -298,18 +273,15 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 						Block b = bState.getBlock();
 						
 						if(b == ModBlocks.ore_bedrock_block) {
-							double tierDiff = ((TileEntityBedrockOre)world.getTileEntity(drillPos)).tier / (double)installedTier;
-							combinedHardness = (int)(2 * 60 * 20 * tierDiff);
+                            combinedHardness = 5 * 60 * 20;
 							bedrockOre = new BlockPos(x, y, z);
-							bedrockDrilling = true;
-							enableCrusher = false;
-							enableSilkTouch = false;
-							ignoreAll = false;
+                            bedrockDrilling = true;
+                            enableCrusher = false;
+                            ignoreAll = false;
 							break;
 						}
 						
-						if(shouldIgnoreBlock(bState, drillPos))
-							continue;
+						if(shouldIgnoreBlock(bState, drillPos)) continue;
 						
 						ignoreAll = false;
 						
@@ -328,8 +300,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 					if(bedrockOre == null) {
 						breakBlocks(ring);
 						buildWall(ring + 1, ring == radius && this.enableWalling);
-						if(ring == radius)
-							mineOresFromWall(ring + 1);
+						if(ring == radius) mineOresFromWall(ring + 1);
 						tryCollect(radius + 1);
 					} else {
 						collectBedrock(bedrockOre);
@@ -347,18 +318,16 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		ticksWorked = 0;
 		return true;
 	}
-	
-	
-	
+
 	/* breaks and drops all blocks in the specified ring */
-	protected void breakBlocks(int ring) {
+    private void breakBlocks(int ring) {
 		int y = getY();
-		
+
 		for(int x = pos.getX() - ring; x <= pos.getX() + ring; x++) {
 			for(int z = pos.getZ() - ring; z <= pos.getZ() + ring; z++) {
-				
+
 				if(ring == 1 || (x == pos.getX() - ring || x == pos.getX() + ring || z == pos.getZ() - ring || z == pos.getZ() + ring)) {
-					
+
 					BlockPos drillPos = new BlockPos(x, y, z);
 					IBlockState bState = world.getBlockState(drillPos);
 					if(!shouldIgnoreBlock(bState, drillPos)) {
@@ -369,7 +338,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		}
 	}
 	
-	public void tryMineAtLocation(IBlockState bState, BlockPos drillPos) {
+	private void tryMineAtLocation(IBlockState bState, BlockPos drillPos) {
 	
 		if(this.enableVeinMiner && this.getInstalledDrill().vein) {
 			
@@ -393,13 +362,14 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		}
 		breakSingleBlock(bState, drillPos);
 	}
-	
-	protected boolean isOreDictOre(Block b) {
+
+    // 1.7 = isOre(int x ,int y, int z, Block b)
+    private static boolean isOreDictOre(Block b) {
 		
 		/* doing this isn't terribly accurate but just for figuring out if there's OD it works */
 		Item blockItem = Item.getItemFromBlock(b);
 		
-		if(blockItem != null && blockItem != Items.AIR) {
+		if(blockItem != Items.AIR) {
 			List<String> names = ItemStackUtil.getOreDictNames(new ItemStack(blockItem));
 			
 			for(String name : names) {
@@ -412,15 +382,12 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		return false;
 	}
 	
-	private HashSet<BlockPos> recursionBrake = new HashSet();
+	private final HashSet<BlockPos> recursionBrake = new HashSet<>();
 	private int minX = 0, minY = 0, minZ = 0, maxX = 0, maxY = 0, maxZ = 0;
-	
-	protected void breakRecursively(BlockPos drillPos, int depth) {
+	private void breakRecursively(BlockPos drillPos, int depth) {
 		
-		if(depth < 0)
-			return;
-		if(recursionBrake.contains(drillPos))
-			return;
+		if(depth < 0) return;
+		if(recursionBrake.contains(drillPos)) return;
 		recursionBrake.add(drillPos);
 		
 		IBlockState bState = world.getBlockState(drillPos);
@@ -451,17 +418,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		}
 	}
 
-	@Override
-	public DrillType getDrillTier(){
-		return DrillType.INDUSTRIAL;
-	}
-
-	@Override
-	public int getDrillRating(){
-		return this.drillRating;
-	}
-
-	protected void breakSingleBlock(IBlockState bState, BlockPos drillPos) {
+	private void breakSingleBlock(IBlockState bState, BlockPos drillPos) {
 		Block b = bState.getBlock();
 		NonNullList<ItemStack> items = NonNullList.create();
   		b.getDrops(items, world, drillPos, bState, this.getFortuneLevel());
@@ -473,19 +430,9 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 				
 				ItemStack result = new ItemStack(Item.getItemFromBlock(b), 1, b.getMetaFromState(bState));
 					
-				if(result != null && !result.isEmpty()) {
+				if(!result.isEmpty()) {
 					items.clear();
 					items.add(result.copy());
-				}
-			} else if(b instanceof IDrillInteraction) {
-				IDrillInteraction in = (IDrillInteraction) b;
-				if(in.canBreak(world, drillPos.getX(), drillPos.getY(), drillPos.getZ(), bState, this)){
-					ItemStack drop = in.extractResource(world, drillPos.getX(), drillPos.getY(), drillPos.getZ(), bState, this);
-					
-					if(drop != null) {
-						items.clear();
-						items.add(drop.copy());
-					}
 				}
 			}
 			
@@ -529,7 +476,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	}
 	
 	/* builds a wall along the specified ring, replacing fluid blocks. if wallEverything is set, it will also wall off replacable blocks like air or grass */
-	protected void buildWall(int ring, boolean wallEverything) {
+    private void buildWall(int ring, boolean wallEverything) {
 		int y = getY();
 		
 		for(int x = pos.getX() - ring; x <= pos.getX() + ring; x++) {
@@ -547,14 +494,14 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 					
 					if(bState.getMaterial().isLiquid()) {
 						world.setBlockToAir(wallPos);
-						continue;
-					}
+                    }
 				}
 			}
 		}
 	}
 
-	protected void mineOresFromWall(int ring) {
+    // 1.7 mineOuterOres(int ring)
+    private void mineOresFromWall(int ring) {
 		int y = getY();
 		
 		for(int x = pos.getX() - ring; x <= pos.getX() + ring; x++) {
@@ -571,162 +518,138 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 			}
 		}
 	}
-	
-	protected void tryEjectBuffer() {
 
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		
-		/* try to insert into a valid container */
-		TileEntity te = world.getTileEntity(pos.add(dir.offsetX * 4, -3, dir.offsetZ * 4));
-
-		if(te == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing()))
-			return;
-		IItemHandler h = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing());
-		for(int i = 5; i < 14; i++) {
-			if(!inventory.getStackInSlot(i).isEmpty() || inventory.getStackInSlot(i).getCount() <= 0) {
-				tryFillContainerCap(h, i);
-			}
-		}
-	}
-
-	//Unloads output into chests. Capability version.
-    public boolean tryFillContainerCap(IItemHandler chest, int slot) {
-        //Check if we have something to output
-        if(inventory.getStackInSlot(slot).isEmpty())
-            return false;
-
-        return tryInsertItemCap(chest, inventory.getStackInSlot(slot));
+    private void tryEjectBuffer() {
+        ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+        BlockPos supplyPos = this.getPos().add(dir.offsetX * 4, -3, dir.offsetZ * 4);
+        ForgeDirection supplyDir = dir.getOpposite();
+        for (int i = 5; i <= 13; i++) {
+            ItemStack stackInSlot = this.inventory.getStackInSlot(i);
+            if (stackInSlot.isEmpty()) continue;
+            List<ItemStack> singleItemToEject = Collections.singletonList(stackInSlot.copy());
+            List<ItemStack> leftovers = trySupply(supplyPos, singleItemToEject, supplyDir, false);
+            ItemStack remainingStack = leftovers.isEmpty() ? ItemStack.EMPTY : leftovers.get(0);
+            this.inventory.setStackInSlot(i, remainingStack);
+        }
     }
-
-	//Unloads output into chests. Capability version.
-    public boolean tryInsertItemCap(IItemHandler chest, ItemStack stack) {
-        //Check if we have something to output
-        if(stack.isEmpty())
-            return false;
-
-        for(int i = 0; i < chest.getSlots(); i++) {
-            
-            ItemStack outputStack = stack.copy();
-            if(outputStack.isEmpty() || outputStack.getCount() == 0)
-                return true;
-
-            ItemStack chestItem = chest.getStackInSlot(i).copy();
-            if(chestItem.isEmpty() || (Library.areItemStacksCompatible(outputStack, chestItem, false) && chestItem.getCount() < chestItem.getMaxStackSize())) {
-                int fillAmount = Math.min(chestItem.getMaxStackSize()-chestItem.getCount(), outputStack.getCount());
-                
-                outputStack.setCount(fillAmount);
-
-                ItemStack rest = chest.insertItem(i, outputStack, true);
-                if(rest.getItem() == Item.getItemFromBlock(Blocks.AIR)){
-                    stack.shrink(outputStack.getCount());
-                    chest.insertItem(i, outputStack, false);
-                }
+    /**
+     * Scans for nearby item entities, attempts to output them externally,
+     * and then collects any remaining items into the internal buffer.
+     * @param radius The radius to scan for items.
+     */
+    private void tryCollect(int radius) {
+        int yLevel = getY();
+        AxisAlignedBB collectionArea = new AxisAlignedBB(pos.getX() - radius, yLevel - 1, pos.getZ() - radius, pos.getX() + radius + 1, yLevel + 2, pos.getZ() + radius + 1);
+        List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, collectionArea);
+        if (items.isEmpty()) return;
+        ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+        BlockPos supplyPos = this.getPos().add(dir.offsetX * 4, -3, dir.offsetZ * 4);
+        ForgeDirection supplyDir = dir.getOpposite();
+        for (EntityItem entityItem : items) {
+            if (entityItem.isDead) continue;
+            ItemStack originalStack = entityItem.getItem();
+            if (originalStack.isEmpty()) continue;
+            List<ItemStack> itemToSupply = Collections.singletonList(originalStack.copy());
+            List<ItemStack> leftovers = trySupply(supplyPos, itemToSupply, supplyDir, true);
+            ItemStack remainingStack;
+            if (leftovers.isEmpty()) {
+                remainingStack = ItemStack.EMPTY;
+            } else {
+                remainingStack = leftovers.get(0);
+            }
+            if (remainingStack.getCount() < originalStack.getCount()) {
+                chuteTimer = 40;
+            }
+            if (remainingStack.isEmpty()) {
+                entityItem.setDead();
+            } else {
+                entityItem.setItem(remainingStack);
             }
         }
-
-        return false;
     }
 	
-	/* pulls up an AABB around the drillbit and tries to either conveyor output or buffer collected items */
-	protected void tryCollect(int radius) {
-		int yLevel = getY();
-		
-		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos.getX() - radius, yLevel - 1, pos.getZ() - radius, pos.getX() + radius + 1, yLevel + 2, pos.getZ() + radius + 1));
-		
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		
-		/* try to insert into a valid container */
-		TileEntity tile = world.getTileEntity(pos.add(dir.offsetX * 4, -3, dir.offsetZ * 4));
-		supplyContainer(tile, items, dir.getOpposite());
-		
-		/* collect remaining items in internal buffer */
-		for(EntityItem entityItem : items) {
-			if(entityItem.isDead) continue;
-
-			ItemStack stack = entityItem.getItem();
-			if(stack.getCount() <= 0 || stack.isEmpty()){
-				entityItem.setDead();
-				continue;
-			}
-			stack = InventoryUtil.tryAddItemToInventory(inventory, 5, 13, stack);
-			if(stack.getCount() <= 0 || stack.isEmpty()){
-				entityItem.setDead();
-				continue;
-			}
-			entityItem.setItem(stack);
-			chuteTimer = 40;
-		}
-	}
-	
 	/* places all items into a connected container, if possible */
-	protected void supplyContainer(TileEntity te, List<EntityItem> items, ForgeDirection dir) {
-		if(te == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing()))
-			return;
-		IItemHandler h = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing());
-		if(!(h instanceof IItemHandlerModifiable))
-			return;
-		
-		IItemHandlerModifiable inv = (IItemHandlerModifiable)h;
-		
-		for(EntityItem entityItem : items) {
-			if(entityItem.isDead) continue;
-			ItemStack stack = entityItem.getItem();
-			if(stack.getCount() <= 0 || stack.isEmpty()){
-				entityItem.setDead();
-				continue;
-			}
-			stack = InventoryUtil.tryAddItemToInventory(inv, 0, inv.getSlots() - 1, stack);
-			chuteTimer = 40;
-			if(stack.getCount() <= 0 || stack.isEmpty()){
-				entityItem.setDead();
-			} else {
-				entityItem.setItem(stack);
-			}
-		}
-	}
+    private void supplyContainer(TileEntity te, List<ItemStack> items, ForgeDirection dir) {
+        if (te == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing())) {
+            return;
+        }
+        IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing());
 
-	protected void collectBedrock(BlockPos pos) {
-		if(tankNew.getTankType() == null) return;
-		TileEntity oreTile = world.getTileEntity(pos);
-		if(oreTile instanceof TileEntityBedrockOre) {
-			TileEntityBedrockOre ore = (TileEntityBedrockOre) oreTile;
-			
-			if(ore.oreName == null)
-				return;
-			if(ore.tier > this.getInstalledDrill().tier)
-				return;
-			if(ore.acidRequirement != null) {
-				
-				if(ore.acidRequirement.type != tankNew.getTankType() || ore.acidRequirement.fill > tankNew.getFill()) return;
+        ListIterator<ItemStack> iterator = items.listIterator();
+        while (iterator.hasNext()) {
+            ItemStack originalStack = iterator.next();
+            if (originalStack.isEmpty()) continue;
+            ItemStack remainingStack = InventoryUtil.tryAddItemToInventory(inv, 0, inv.getSlots() - 1, originalStack);
+            iterator.set(remainingStack);
+            if (remainingStack.getCount() < originalStack.getCount()) {
+                chuteTimer = 40;
+            }
+        }
+    }
 
-				tankNew.setFill(tankNew.getFill() - ore.acidRequirement.fill);
-			}
-			ItemStack bedrockOreStack = new ItemStack(ModItems.ore_bedrock, 1, BedrockOreRegistry.getOreIndex(ore.oreName));
-			InventoryUtil.tryAddItemToInventory(inventory, 5, 13, bedrockOreStack);
-		}
-	}
+    /** moves all items onto a connected conveyor belt */
+    private void supplyConveyor(IConveyorBelt belt, List<ItemStack> items, BlockPos pos) {
+        Random rand = world.rand;
+        ListIterator<ItemStack> iterator = items.listIterator();
+        while (iterator.hasNext()) {
+            ItemStack item = iterator.next();
+            if (item.isEmpty()) continue;
+            Vec3d base = new Vec3d(pos.getX() + rand.nextDouble(), pos.getY() + 0.5, pos.getZ() + rand.nextDouble());
+            Vec3d vec = belt.getClosestSnappingPosition(world, pos, base);
+            EntityMovingItem moving = new EntityMovingItem(world);
+            moving.setPosition(base.x, vec.y, base.z);
+            moving.setItemStack(item.copy());
+            if (world.spawnEntity(moving)) {
+                iterator.set(ItemStack.EMPTY);
+                chuteTimer = 40;
+            }
+        }
+    }
+
+    private void collectBedrock(BlockPos pos) {
+        TileEntity oreTile = world.getTileEntity(pos);
+        if (oreTile instanceof TileEntityBedrockOre ore) {
+
+            if (ore.resource == null) return;
+            if (ore.tier > this.getInstalledDrill().tier) return;
+            if (ore.acidRequirement != null) {
+                if (ore.acidRequirement.type != tank.getTankType() || ore.acidRequirement.fill > tank.getFill()) return;
+                tank.setFill(tank.getFill() - ore.acidRequirement.fill);
+            }
+
+            ItemStack stack = ore.resource.copy();
+            if (stack.getItem() == ModItems.bedrock_ore_base) {
+                ItemBedrockOreBase.setOreAmount(stack, pos.getX(), pos.getZ());
+            }
+
+            List<ItemStack> stacksToSupply = Collections.singletonList(stack);
+
+            ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+            BlockPos fillPos = this.getPos().add(dir.offsetX * 4, -3, dir.offsetZ * 4);
+            trySupply(fillPos, stacksToSupply, dir.getOpposite(), true);
+        }
+    }
 	
 	public long getPowerConsumption() {
 		return consumption;
 	}
 	
-	public int getFortuneLevel() {
+	private int getFortuneLevel() {
 		EnumDrillType type = getInstalledDrill();
 		
 		if(type != null) return type.fortune;
 		return 0;
 	}
 
-	public boolean shouldIgnoreBlock(IBlockState block, BlockPos pos) {
+	private boolean shouldIgnoreBlock(IBlockState block, BlockPos pos) {
 		Block b = block.getBlock();
 		if(b == Blocks.AIR) return true;
 		if(b == Blocks.BEDROCK) return true;
 		if(b instanceof BlockGasBase) return true;
 		float hardness = block.getBlockHardness(world, pos);
 		if(hardness < 0 || hardness > 3_500_000) return true;
-		if(block.getMaterial().isLiquid()) return true;
-		return false;
-	}
+        return block.getMaterial().isLiquid();
+    }
 
 	@Override
 	public void receiveControl(NBTTagCompound data) {
@@ -750,11 +673,12 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		
 		this.markDirty();
 	}
-	
+
+    @Nullable
 	public EnumDrillType getInstalledDrill() {
 		ItemStack slotItem = inventory.getStackInSlot(4);
-        if(slotItem != null && slotItem.getItem() instanceof ItemDrillbit) {
-			return ((ItemDrillbit)slotItem.getItem()).drillType;
+        if(!slotItem.isEmpty() && slotItem.getItem() instanceof ItemDrillbit drill) {
+			return drill.drillType;
 		}
 		
 		return null;
@@ -773,16 +697,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(!converted){
-			this.tank.readFromNBT(nbt);
-			if(nbt.hasKey("f")) {
-				this.fluidType = FluidRegistry.getFluid(nbt.getString("f"));
-				oldFluid = fluidType;
-			}
-		} else{
-			this.tankNew.readFromNBT(nbt, "tank");
-			if(nbt.hasKey("f")) nbt.removeTag("f");
-		}
+
 		this.enableDrill = nbt.getBoolean("d");
 		this.enableCrusher = nbt.getBoolean("c");
 		this.enableWalling = nbt.getBoolean("w");
@@ -790,6 +705,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		this.enableSilkTouch = nbt.getBoolean("s");
 		this.targetDepth = nbt.getInteger("t");
 		this.power = nbt.getLong("p");
+        this.tank.readFromNBT(nbt, "tank");
 	}
 	
 	@Override
@@ -801,7 +717,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		nbt.setBoolean("s", enableSilkTouch);
 		nbt.setInteger("t", targetDepth);
 		nbt.setLong("p", power);
-		tankNew.writeToNBT(nbt, "tank");
+		tank.writeToNBT(nbt, "tank");
 		return super.writeToNBT(nbt);
 	}
 
@@ -820,10 +736,14 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachineExcavator(player.inventory, this);
 	}
-	
+
+    private AxisAlignedBB bb = null;
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return TileEntity.INFINITE_EXTENT_AABB;
+	public @NotNull AxisAlignedBB getRenderBoundingBox() {
+        if(bb == null) {
+            bb = new AxisAlignedBB(pos.add(-3, 0, -3), pos.add(4, 5, 4));
+        }
+        return bb;
 	}
 
 	@Override
@@ -850,12 +770,12 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 
 	@Override
 	public FluidTankNTM[] getAllTanks() {
-		return new FluidTankNTM[] {tankNew};
+		return new FluidTankNTM[] {tank};
 	}
 
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
-		return new FluidTankNTM[] {tankNew};
+		return new FluidTankNTM[] {tank};
 	}
 
 
@@ -881,4 +801,86 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		}
 		return super.getCapability(capability, facing);
 	}
+
+    @Override
+    public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
+        return type == UpgradeType.SPEED || type == UpgradeType.POWER;
+    }
+
+    @Override
+    public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo) {
+        info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.machine_excavator));
+        if(type == UpgradeType.SPEED) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_DELAY, "-" + (100 - 200 / (level + 2)) + "%"));
+            info.add(TextFormatting.RED + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "+" + (level * 100) + "%"));
+        }
+        if(type == UpgradeType.POWER) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "-" + (100 - 100 / (level + 1)) + "%"));
+        }
+    }
+
+    @Override
+    public HashMap<UpgradeType, Integer> getValidUpgrades() {
+        HashMap<UpgradeType, Integer> upgrades = new HashMap<>();
+        upgrades.put(UpgradeType.SPEED, 3);
+        upgrades.put(UpgradeType.POWER, 3);
+        upgrades.put(UpgradeType.EFFECT, 3);
+        return upgrades;
+    }
+
+    /**
+     * Attempts to supply a list of items to an external inventory or conveyor belt.
+     * Can optionally try to place leftovers back into this machine's internal inventory.
+     *
+     * @param supplyPos The block position to supply items to.
+     * @param itemsToSupply The list of ItemStacks to be supplied. This list is not modified.
+     * @param supplyDir The direction from which the supply is occurring (used for IItemHandler).
+     * @param fillBack If true, attempts to place any leftovers into this machine's inventory (slots 5-13).
+     * @return A new List containing any leftover ItemStacks that could not be supplied anywhere.
+     */
+    private @NotNull List<ItemStack> trySupply(BlockPos supplyPos, List<ItemStack> itemsToSupply, ForgeDirection supplyDir, boolean fillBack) {
+        List<ItemStack> remainingItems = new ArrayList<>();
+        for (ItemStack item : itemsToSupply) {
+            if (!item.isEmpty()) {
+                remainingItems.add(item.copy());
+            }
+        }
+
+        if (remainingItems.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        TileEntity tile = world.getTileEntity(supplyPos);
+        supplyContainer(tile, remainingItems, supplyDir);
+        remainingItems.removeIf(ItemStack::isEmpty);
+        if (remainingItems.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Block b = world.getBlockState(supplyPos).getBlock();
+        if (b instanceof IConveyorBelt belt) {
+            supplyConveyor(belt, remainingItems, supplyPos);
+        }
+        if (remainingItems.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (fillBack) {
+            List<ItemStack> finalLeftovers = new ArrayList<>();
+            for (ItemStack leftover : remainingItems) {
+                ItemStack finalLeftover = InventoryUtil.tryAddItemToInventory(inventory, 5, 13, leftover);
+                if (!finalLeftover.isEmpty()) {
+                    finalLeftovers.add(finalLeftover);
+                }
+            }
+            return finalLeftovers;
+        }
+
+        return remainingItems;
+    }
+
+    @Override
+    public FluidTankNTM getTankToPaste() {
+        return tank;
+    }
 }

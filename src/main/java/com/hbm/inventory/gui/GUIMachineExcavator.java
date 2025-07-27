@@ -14,7 +14,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ public class GUIMachineExcavator extends GuiInfoContainer {
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 103, guiTop + 16, 18, 18, mouseX, mouseY, text5);
 		
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 220, guiTop + 17, 16, 52, drill.getPower(), drill.maxPower);
-		this.drill.tankNew.renderTankInfo(this, mouseX, mouseY, guiLeft + 202, guiTop + 18, 16, 52);
+		this.drill.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 202, guiTop + 18, 16, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 
@@ -138,7 +138,7 @@ public class GUIMachineExcavator extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 107, guiTop + 5, 209, 104, 10, 10);
 		}
 
-		drill.tankNew.renderTank(guiLeft + 202, guiTop + 70, this.zLevel, 16, 52);
+		drill.tank.renderTank(guiLeft + 202, guiTop + 70, this.zLevel, 16, 52);
 		GL11.glPopAttrib();
 	}
 }
