@@ -7,7 +7,6 @@ import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRadar extends TileEntitySpecialRenderer<TileEntityMachineRadarNT>
     implements IItemRendererProvider {
@@ -35,15 +34,14 @@ public class RenderRadar extends TileEntitySpecialRenderer<TileEntityMachineRada
     bindTexture(ResourceManager.radar_base_tex);
     ResourceManager.radar.renderPart("Base");
 
-    if (radar.power > 0)
-      GlStateManager.rotate(((float) -System.currentTimeMillis() / 10) % 360, 0F, 1F, 0F);
+    GlStateManager.rotate(
+        radar.prevRotation + (radar.rotation - radar.prevRotation) * partialTicks, 0F, -1F, 0F);
     GlStateManager.translate(-0.125D, 0, 0);
 
     bindTexture(ResourceManager.radar_dish_tex);
     ResourceManager.radar.renderPart("Dish");
 
     GlStateManager.popMatrix();
-
     GlStateManager.enableCull();
   }
 
@@ -64,6 +62,7 @@ public class RenderRadar extends TileEntitySpecialRenderer<TileEntityMachineRada
         GlStateManager.disableCull();
         bindTexture(ResourceManager.radar_base_tex);
         ResourceManager.radar.renderPart("Base");
+        GlStateManager.rotate(System.currentTimeMillis() % 3600 * 0.1F, 0, -1, 0);
         GlStateManager.translate(-0.125, 0, 0);
         bindTexture(ResourceManager.radar_dish_tex);
         ResourceManager.radar.renderPart("Dish");

@@ -4,11 +4,9 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineRadarLarge;
-import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class RenderRadarLarge extends TileEntitySpecialRenderer<TileEntityMachineRadarLarge>
     implements IItemRendererProvider {
@@ -19,7 +17,7 @@ public class RenderRadarLarge extends TileEntitySpecialRenderer<TileEntityMachin
 
   @Override
   public void render(
-      TileEntityMachineRadarLarge tileEntity,
+      TileEntityMachineRadarLarge radar,
       double x,
       double y,
       double z,
@@ -34,8 +32,7 @@ public class RenderRadarLarge extends TileEntitySpecialRenderer<TileEntityMachin
 
     bindTexture(ResourceManager.radar_large_tex);
     ResourceManager.radar_large.renderPart("Radar");
-
-    TileEntityMachineRadarNT radar = (TileEntityMachineRadarNT) tileEntity;
+    
     GlStateManager.rotate(
         radar.prevRotation + (radar.rotation - radar.prevRotation) * partialTicks, 0F, -1F, 0F);
 
