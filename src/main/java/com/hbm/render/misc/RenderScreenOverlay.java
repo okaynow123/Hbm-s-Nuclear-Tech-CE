@@ -95,6 +95,7 @@ public class RenderScreenOverlay {
 			Minecraft.getMinecraft().fontRenderer.drawString("<1 RAD/s", posX, posY - 8, 0x00FF00);
 		}
 
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
         GlStateManager.popMatrix();
@@ -156,6 +157,7 @@ public class RenderScreenOverlay {
 			Minecraft.getMinecraft().fontRenderer.drawString("<10 mDRX/s", posX, posY - 8, 0xFF3232);
 		}
 
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableDepth();
         GlStateManager.depthMask(true);
         GlStateManager.popMatrix();
@@ -394,6 +396,7 @@ public class RenderScreenOverlay {
 		font.drawString(label, labelX, labelY - 1, shadowColor);
 		font.drawString(label, labelX, labelY, textColor);
 
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 
