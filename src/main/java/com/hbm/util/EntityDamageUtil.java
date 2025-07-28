@@ -21,6 +21,9 @@ public class EntityDamageUtil {
 		}
 	}
 
+	// mlbv: yes this is empty
+	public static void damageArmorNT(EntityLivingBase living, float amount) { }
+
 	public static float getLastDamage(Entity victim) {
 		try {
 			return ((EntityLivingBase)victim).lastDamage;
