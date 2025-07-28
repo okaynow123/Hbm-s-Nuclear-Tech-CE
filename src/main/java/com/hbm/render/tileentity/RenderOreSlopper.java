@@ -73,16 +73,17 @@ public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachin
 
         if (slopper.animation == TileEntityMachineOreSlopper.SlopperAnimation.LIFTING) {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0.0625D, 4.3125D, 2D);
+            GlStateManager.translate(0D, 4.3125D, 2D);
             GlStateManager.rotate(90, 0F, 1F, 0F);
             GlStateManager.rotate(-90, 1F, 0F, 0F);
-            GlStateManager.scale(1.75, 1.75, 1.75);
+            // 1.75 * 0.5128205 = 0.897435875, same happens to RenderSolderingStation
+            GlStateManager.scale(0.897435875F, 0.897435875F, 0.897435875F);
 
             final ItemStack stack = getCachedBedrockOreStack();
             if (!stack.isEmpty()) {
                 Minecraft mc = Minecraft.getMinecraft();
                 IBakedModel model = mc.getRenderItem().getItemModelWithOverrides(stack, slopper.getWorld(), null);
-                model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
+                model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.NONE, false);
 
                 mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 mc.getRenderItem().renderItem(stack, model);
