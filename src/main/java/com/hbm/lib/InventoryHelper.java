@@ -9,6 +9,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class InventoryHelper {
 	
@@ -30,6 +31,11 @@ public class InventoryHelper {
             }
         }
 	}
+
+    public static void dropInventoryItems(World world, BlockPos pos, IItemHandler inventory) {
+        IntStream.range(0, inventory.getSlots()).mapToObj(inventory::getStackInSlot).filter(itemstack ->
+                !itemstack.isEmpty()).forEach(itemstack -> spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemstack));
+    }
 
     public static void dropInventoryItems(World world, BlockPos pos, ICapabilityProvider t, int beginSlot, int endSlot) {
         if(t == null)
