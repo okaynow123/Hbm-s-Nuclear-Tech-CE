@@ -54,7 +54,9 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 
 	@Override
 	public void onUpdate() {
-		super.onUpdate();
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
 
 		if(!world.isRemote) {
 
@@ -88,7 +90,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 			Vec3d vec = new Vec3d(motionX, motionY, motionZ).normalize();
 			MainRegistry.proxy.particleControl(posX - vec.x, posY - vec.y, posZ - vec.z, 2);
 		}
-
+		super.onUpdate();
 		float f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 		this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 		for(this.rotationPitch = (float) (Math.atan2(this.motionY, f2) * 180.0D / Math.PI) - 90; this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F);
