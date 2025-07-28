@@ -57,7 +57,7 @@ public class ItemModRadar extends ItemArmorMod {
 				return false;
 			}
 			
-			if(e instanceof IRadarDetectable || e instanceof IRadarDetectableNT && isEntityApproaching(entity, e)){
+			if(e instanceof IRadarDetectable || e instanceof IRadarDetectableNT && e.motionY < 0 && isEntityApproaching(entity, e)){
 				return true;
 			}
 		}
