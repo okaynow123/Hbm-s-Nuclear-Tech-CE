@@ -279,7 +279,7 @@ public class JetpackHandler {
 				JetpackInfo info = e.getValue();
 				if(jetpackActive(player)){
 					FluidTankNTM tank = getTank(player);
-					int drain = (int) Math.ceil(getDrain(tank.getTankType() == null ? null : tank.getTankType())*info.thrust);
+					int drain = (int) Math.ceil(getDrain(tank.getTankType() == Fluids.NONE ? null : tank.getTankType())*info.thrust);
 					if(info.thrust < 0.0001)
 						drain = 0;
 

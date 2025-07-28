@@ -12,46 +12,90 @@ public class FluidLoaderFillableItem implements IFluidLoadingHandler {
 
     @Override
     public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
-        return fill(slots.getStackInSlot(in), tank);
+        if (tank.pressure != 0) return false;
+        ItemStack inputStack = slots.getStackInSlot(in);
+        ItemStack outputStack = slots.getStackInSlot(out);
+        if (inputStack.isEmpty() || !outputStack.isEmpty()) {
+            return false;
+        }
+        ItemStack armorCopy = inputStack.copy();
+        armorCopy.setCount(1);
+        if (fill(armorCopy, tank)) {
+            slots.extractItem(in, 1, false);
+            slots.insertItem(out, armorCopy, false);
+            return true;
+        }
+        return false;
     }
 
-    public boolean fill(ItemStack stack, FluidTankNTM tank) {
+    private static boolean fill(ItemStack stack, FluidTankNTM tank) {
+        if (tank.getFill() <= 0) return false;
 
-        if (tank.pressure != 0) return false;
-
-        if (stack == null || stack.isEmpty()) return false;
-
+        boolean changed = false;
         FluidType type = tank.getTankType();
 
         if (stack.getItem() instanceof ItemArmor && ArmorModHandler.hasMods(stack)) {
-            for (ItemStack mod : ArmorModHandler.pryMods(stack)) {
+            ItemStack[] mods = ArmorModHandler.pryMods(stack);
+            for (ItemStack mod : mods) {
+                if (tank.getFill() <= 0) break;
 
-                if (mod != null && mod.getItem() instanceof IFillableItem) {
-                    fill(mod, tank);
+                if (mod != null && !mod.isEmpty() && mod.getItem() instanceof IFillableItem fillableMod) {
+                    if (fillableMod.acceptsFluid(type, mod)) {
+                        int amountToFill = tank.getFill();
+                        int remainder = fillableMod.tryFill(type, amountToFill, mod);
+
+                        if (remainder < amountToFill) {
+                            int amountFilled = amountToFill - remainder;
+                            tank.setFill(tank.getFill() - amountFilled);
+                            ArmorModHandler.applyMod(stack, mod);
+                            changed = true;
+                        }
+                    }
                 }
             }
         }
 
-        if (!(stack.getItem() instanceof IFillableItem fillable)) return false;
-
-        if (fillable.acceptsFluid(type, stack)) {
-            tank.setFill(fillable.tryFill(type, tank.getFill(), stack));
+        if (stack.getItem() instanceof IFillableItem fillable) {
+            if (fillable.acceptsFluid(type, stack) && tank.getFill() > 0) {
+                int amountToFill = tank.getFill();
+                int remainder = fillable.tryFill(type, amountToFill, stack);
+                if (remainder < amountToFill) {
+                    tank.setFill(remainder);
+                    changed = true;
+                }
+            }
         }
 
-        return true;
+        return changed;
     }
 
     @Override
     public boolean emptyItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
-        return empty(slots.getStackInSlot(in), tank);
+        ItemStack inputStack = slots.getStackInSlot(in);
+        ItemStack outputStack = slots.getStackInSlot(out);
+        if (inputStack.isEmpty() || !outputStack.isEmpty()) return false;
+        ItemStack armorCopy = inputStack.copy();
+        armorCopy.setCount(1);
+        boolean wasChanged = empty(armorCopy, tank);
+        if (wasChanged) {
+            slots.extractItem(in, 1, false);
+            slots.insertItem(out, armorCopy, false);
+            return true;
+        }
+        return false;
     }
 
-    public boolean empty(ItemStack stack, FluidTankNTM tank) {
-        if (stack == null || stack.isEmpty()) return false;
+    private static boolean empty(ItemStack stack, FluidTankNTM tank) {
+        if (tank.getFill() >= tank.getMaxFill()) return false;
         boolean success = false;
         if (stack.getItem() instanceof ItemArmor && ArmorModHandler.hasMods(stack)) {
-            for (ItemStack mod : ArmorModHandler.pryMods(stack)) {
-                if (empty(mod, tank)) success = true;
+            ItemStack[] mods = ArmorModHandler.pryMods(stack);
+            for (ItemStack mod : mods) {
+                if (tank.getFill() >= tank.getMaxFill()) break;
+                if (empty(mod, tank)) {
+                    ArmorModHandler.applyMod(stack, mod);
+                    success = true;
+                }
             }
         }
         if (!(stack.getItem() instanceof IFillableItem fillable)) {
