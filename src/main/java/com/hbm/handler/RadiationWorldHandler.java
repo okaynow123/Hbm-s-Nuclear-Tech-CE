@@ -7,11 +7,9 @@ import com.hbm.handler.RadiationSystemNT.RadPocket;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.RadiationSaveStructure;
 import com.hbm.saveddata.RadiationSavedData;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.BlockSand;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -111,6 +109,22 @@ public class RadiationWorldHandler {
     private static void decayBlock(World world, BlockPos pos, IBlockState state, boolean isLegacy) {
         Block block = state.getBlock();
         if (block.getRegistryName() == null) return;
+
+        if (block instanceof BlockDoublePlant) {
+            BlockPos lowerPos;
+            BlockPos upperPos;
+            if (state.getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.LOWER) {
+                lowerPos = pos;
+                upperPos = pos.up();
+            } else {
+                lowerPos = pos.down();
+                upperPos = pos;
+            }
+            world.setBlockState(upperPos, Blocks.AIR.getDefaultState(), 2);
+            world.setBlockState(lowerPos, ModBlocks.waste_grass_tall.getDefaultState(), 2);
+            return;
+        }
+
         String registryName = block.getRegistryName().toString();
 
         if ("hbm:waste_leaves".equals(registryName)) {
@@ -150,6 +164,6 @@ public class RadiationWorldHandler {
             }
         };
 
-        if (newState != null) world.setBlockState(pos, newState);
+        if (newState != null) world.setBlockState(pos, newState, 2);
     }
 }

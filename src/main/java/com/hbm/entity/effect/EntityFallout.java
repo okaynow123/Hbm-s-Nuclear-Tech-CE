@@ -148,16 +148,27 @@ public abstract class EntityFallout extends Entity implements IChunkLoader {
         Block block = blockState.getBlock();
         if (world.isAirBlock(pos)) return true;
         if (block instanceof BlockBush) {
-            Block blockBelow = world.getBlockState(pos.down()).getBlock();
+            BlockPos lowerPos = pos;
+            if (block instanceof BlockDoublePlant) {
+                BlockPos upperPos;
+                if (world.getBlockState(pos).getValue(BlockDoublePlant.HALF) == BlockDoublePlant.EnumBlockHalf.LOWER) {
+                    upperPos = pos.up();
+                } else {
+                    lowerPos = pos.down();
+                    upperPos = pos;
+                }
+                world.setBlockState(upperPos, Blocks.AIR.getDefaultState(), 2);
+            }
+            Block blockBelow = world.getBlockState(lowerPos.down()).getBlock();
             if (blockBelow == Blocks.FARMLAND) {
-                placeBlockFromDist(dist, ModBlocks.waste_dirt, pos.down());
-                placeBlockFromDist(dist, ModBlocks.waste_grass_tall, pos);
+                placeBlockFromDist(dist, ModBlocks.waste_dirt, lowerPos.down());
+                placeBlockFromDist(dist, ModBlocks.waste_grass_tall, lowerPos);
             } else if (blockBelow instanceof BlockGrass) {
-                placeBlockFromDist(dist, ModBlocks.waste_earth, pos.down());
-                placeBlockFromDist(dist, ModBlocks.waste_grass_tall, pos);
+                placeBlockFromDist(dist, ModBlocks.waste_earth, lowerPos.down());
+                placeBlockFromDist(dist, ModBlocks.waste_grass_tall, lowerPos);
             } else if (blockBelow == Blocks.MYCELIUM) {
-                placeBlockFromDist(dist, ModBlocks.waste_mycelium, pos.down());
-                world.setBlockState(pos, ModBlocks.mush.getDefaultState());
+                placeBlockFromDist(dist, ModBlocks.waste_mycelium, lowerPos.down());
+                world.setBlockState(lowerPos, ModBlocks.mush.getDefaultState());
             }
             return true;
         }
@@ -202,15 +213,9 @@ public abstract class EntityFallout extends Entity implements IChunkLoader {
             case "minecraft:dirt":
                 BlockDirt.DirtType dirtVariant = blockState.getValue(BlockDirt.VARIANT);
                 switch (dirtVariant) {
-                    case DIRT:
-                        placeBlockFromDist(dist, ModBlocks.waste_dirt, pos);
-                        break;
-                    case COARSE_DIRT:
-                        placeBlockFromDist(dist, ModBlocks.waste_gravel, pos);
-                        break;
-                    case PODZOL:
-                        placeBlockFromDist(dist, ModBlocks.waste_mycelium, pos);
-                        break;
+                    case DIRT -> placeBlockFromDist(dist, ModBlocks.waste_dirt, pos);
+                    case COARSE_DIRT -> placeBlockFromDist(dist, ModBlocks.waste_gravel, pos);
+                    case PODZOL -> placeBlockFromDist(dist, ModBlocks.waste_mycelium, pos);
                 }
                 return false;
             case "minecraft:farmland":
