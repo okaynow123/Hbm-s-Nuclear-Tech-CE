@@ -1595,12 +1595,12 @@ public class ModItems {
 	public static final Item bomb_waffle = new ItemFoodBase(20, 0, true, "bomb_waffle").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item schnitzel_vegan = new ItemFoodBase(3, 6, true, "schnitzel_vegan").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item cotton_candy = new ItemFoodBase(5, 0, true, "cotton_candy").setCreativeTab(MainRegistry.consumableTab).setFull3D();
-	public static final Item apple_lead = new ItemFoodBase(3, 0, true, "apple_lead").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item apple_lead1 = new ItemFoodBase(5, 0, true, "apple_lead1").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item apple_lead2 = new ItemFoodBase(10, 0, true, "apple_lead2").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item apple_schrabidium = new ItemFoodBase(5, 25, true, "apple_schrabidium").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item apple_schrabidium1 = new ItemFoodBase(10, 50, true, "apple_schrabidium1").setCreativeTab(MainRegistry.consumableTab);
-	public static final Item apple_schrabidium2 = new ItemFoodBase(20, 100, true, "apple_schrabidium2").setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_lead = new ItemFoodBase(3, 0, true, "apple_lead").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_lead1 = new ItemFoodBase(5, 0, true, "apple_lead1").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_lead2 = new ItemFoodBase(10, 0, true, "apple_lead2").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_schrabidium = new ItemFoodBase(5, 25, true, "apple_schrabidium").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_schrabidium1 = new ItemFoodBase(10, 50, true, "apple_schrabidium1").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_schrabidium2 = new ItemFoodBase(20, 100, true, "apple_schrabidium2").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
 	public static final Item tem_flakes = new ItemTemFlakes(0, 0, false, "tem_flakes").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item tem_flakes1 = new ItemTemFlakes(0, 0, false, "tem_flakes1").setCreativeTab(MainRegistry.consumableTab);
 	public static final Item tem_flakes2 = new ItemTemFlakes(0, 0, false, "tem_flakes2").setCreativeTab(MainRegistry.consumableTab);
@@ -3259,7 +3259,7 @@ public class ModItems {
 	public static final Item crystal_horn = new ItemCustomLore("crystal_horn").setCreativeTab(MainRegistry.partsTab);
 	public static final Item crystal_charred = new ItemCustomLore("crystal_charred").setCreativeTab(MainRegistry.partsTab);
 	public static final Item watch = new ItemCustomLore("watch").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1);
-	public static final Item apple_euphemium = new ItemAppleEuphemium(20, 100, false, "apple_euphemium").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+	public static final Item apple_euphemium = new ItemAppleEuphemium(20, 100, false, "apple_euphemium").setAlwaysEdible().setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	
 	public static final Item wand = new ItemWand("wand_k").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
 	public static final Item wand_s = new ItemWandS("wand_s").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
