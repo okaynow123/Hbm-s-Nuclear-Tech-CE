@@ -8,6 +8,11 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * This is intentionally different from upstream.
+ * The 1.7 version has a latent bug in armor mod handling, not writing the modified mod back to the armor's NBT.
+ * @author hbm, mlbv
+ */
 public class FluidLoaderFillableItem implements IFluidLoadingHandler {
 
     @Override

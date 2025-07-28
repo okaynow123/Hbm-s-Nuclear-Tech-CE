@@ -34,7 +34,11 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-@Untested
+/**
+ * This logic was heavily refactored to be threaded and event-driven. Do not aim for upstream parity.
+ *
+ * @author drillgon200, Alcater, mlbv
+ */
 public class HazardSystem {
 
     /**

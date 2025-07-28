@@ -56,6 +56,12 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Refactored to be fully threaded. Do not aim for upstream parity.
+ * This is actually way better than upstream.
+ *
+ * @author Drillgon, Zach2039, mlbv
+ */
 @Mod.EventBusSubscriber(modid = RefStrings.MODID)
 public class RadiationSystemNT {
 

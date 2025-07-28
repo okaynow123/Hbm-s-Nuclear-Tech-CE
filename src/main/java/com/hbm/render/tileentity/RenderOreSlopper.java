@@ -83,6 +83,7 @@ public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachin
             if (!stack.isEmpty()) {
                 Minecraft mc = Minecraft.getMinecraft();
                 IBakedModel model = mc.getRenderItem().getItemModelWithOverrides(stack, slopper.getWorld(), null);
+                // Don't use FIXED here! we handle the rotation manually.
                 model = ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.NONE, false);
 
                 mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

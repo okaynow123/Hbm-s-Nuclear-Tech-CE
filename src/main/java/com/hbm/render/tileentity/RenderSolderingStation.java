@@ -34,6 +34,7 @@ public class RenderSolderingStation extends TileEntitySpecialRenderer<TileEntity
         bindTexture(ResourceManager.soldering_station_tex);
         ResourceManager.soldering_station.renderAll();
 
+        // Do not change the translation and scale here, it's a 1.12.2 specific workaround
         if (!soldering_station.display.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(0D, 1.125D, 0D);

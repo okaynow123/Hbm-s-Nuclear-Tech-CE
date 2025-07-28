@@ -3,7 +3,6 @@ package com.hbm.capability;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.armor.ItemModShield;
-import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -32,6 +31,10 @@ public class HbmCapability {
 	public static final int dashCooldownLength = 5;
 	private static final int plinkCooldownLength = 10;
 
+	/**
+	 * Only add getter/setter to this interface. Do not add any additional default methods unless you really have to.
+	 * This work differently from upstream! If you need an example, compare the shield mechanism here with the one from 1.7.
+	 */
 	public interface IHBMData {
 		float shieldCap = 100;
 

@@ -18,6 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Some of the logic here is Bailie's creation
+ */
 public class EntityMissileAntiBallistic extends EntityThrowableInterp implements IChunkLoader, IRadarDetectable, IRadarDetectableNT {
 
 	private ForgeChunkManager.Ticket loaderTicket;

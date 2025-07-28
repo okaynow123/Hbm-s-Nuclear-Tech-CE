@@ -315,6 +315,15 @@ public final class HBMSoundHandler {
     public static SoundEvent[] voiceSounds;
     public static SoundEvent[] boilerGroanSounds;
 
+    /**
+     * How to register a sound:
+     * 1. Create the sound here, and register in init();
+     * 2. add the sound to sounds.json.
+     * IMPORTANT: suppose you create an entry like this:
+     * "block.assembleroperate": {"category": "block", "sounds": [{"name": "hbm:block/assemblerOperate", "stream": false}]},
+     * This works, but you must ensure that the .ogg file in src\main\resources\assets\hbm\sounds\block is in lowercase.
+     * In other words, there must be an assembleroperate.ogg under that directory. assemblerOperate.ogg won't work!
+     */
     public static void init() {
 
         explosionSmallNear = register("weapon.explosion_small_near");

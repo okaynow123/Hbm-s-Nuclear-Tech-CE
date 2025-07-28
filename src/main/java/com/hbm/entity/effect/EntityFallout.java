@@ -30,6 +30,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * The base class for all fallout entities, only aim for behavioral upstream parity.
+ *
+ * @author mlbv
+ */
 public abstract class EntityFallout extends Entity implements IChunkLoader {
 
     protected static final DataParameter<Integer> SCALE = EntityDataManager.createKey(EntityFallout.class, DataSerializers.VARINT);

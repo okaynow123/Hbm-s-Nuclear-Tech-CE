@@ -41,6 +41,8 @@ public class MKUCraftingHandler extends net.minecraftforge.registries.IForgeRegi
 
     @Override
     public boolean matches(@NotNull InventoryCrafting inventory, @NotNull World world) {
+        // Do not change the try-catch here, it's a workaround for mod compatibility
+        // where some mods attempt to read the recipe before the world is initialized
         try {
             if (!world.getWorldInfo().isInitialized() || lastSeed == world.getSeed() && MKURecipe != null) return false;
         } catch (NullPointerException ignored) {
