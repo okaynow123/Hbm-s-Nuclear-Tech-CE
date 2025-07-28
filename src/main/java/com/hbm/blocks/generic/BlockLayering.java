@@ -1,10 +1,13 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.items.IDynamicModels;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,22 +16,20 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockLayering extends Block {
+public class BlockLayering extends BlockBakeBase  {
 
     private static final AxisAlignedBB LAYER_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
 
-    public BlockLayering(Material material, String s) {
-        super(material);
-        this.setTranslationKey(s);
-        this.setRegistryName(s);
+    public BlockLayering(Material material, String s, String texture) {
+        super(material, s, new BlockBakeFrame(BlockBakeFrame.BlockForm.LAYER, texture));
         this.setHarvestLevel("pickaxe", 0);
         this.setCreativeTab(MainRegistry.controlTab);
-        ModBlocks.ALL_BLOCKS.add(this);
     }
 
     @Override

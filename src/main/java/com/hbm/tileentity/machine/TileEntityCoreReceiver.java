@@ -19,6 +19,7 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
@@ -44,6 +45,7 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
     public long power;
     public long joules;
+    public long prevJoules;
     public FluidTankNTM tank;
 
     public TileEntityCoreReceiver() {
@@ -72,6 +74,7 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
                 }
             }
 
+            prevJoules = joules;
             this.networkPackNT(50);
 
 
@@ -151,7 +154,7 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
 
-        buf.writeLong(joules);
+        buf.writeLong(prevJoules);
         tank.serialize(buf);
     }
 

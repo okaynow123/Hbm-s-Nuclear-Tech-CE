@@ -47,7 +47,7 @@ public class BlockBakeFrame {
         this.textureArray = textures;
         switch (textures.length) {
             case 1:
-                if (form == ALL || form == CROSS || form == CROP) break;
+                if (form == ALL || form == CROSS || form == CROP || form == LAYER) break;
             case 2:
                 if (form == PILLAR) break;
             case 3:
@@ -102,6 +102,7 @@ public class BlockBakeFrame {
     public enum BlockForm {
         ALL("minecraft:block/cube_all", 1, new String[]{"all"}),
         CROP("minecraft:block/crop", 1, new String[]{"crop"}),
+        LAYER("minecraft:block/snow", 1, new String[]{"snow"}),
         CROSS("minecraft:block/cross", 1, new String[]{"cross"}),
         PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
@@ -127,12 +128,12 @@ public class BlockBakeFrame {
     }
 
     public  static  int getYRotationForFacing(EnumFacing facing) {
-        switch (facing) {
-            case SOUTH: return 0;
-            case WEST:  return 90;
-            case NORTH: return 180;
-            case EAST:  return 270;
-            default:    return 0;
-        }
+        return switch (facing) {
+            case SOUTH -> 0;
+            case WEST -> 90;
+            case NORTH -> 180;
+            case EAST -> 270;
+            default -> 0;
+        };
     }
 }

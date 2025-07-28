@@ -34,21 +34,12 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
       float partialTicks,
       int destroyStage,
       float alpha) {
-    // RenderHelper.renderFlashLight(start, start.add(-20, 0, 0), 20, 1, ResourceManager.fl_cookie,
-    // partialTicks);
-    // FlashlightRenderer.addFlashlight(start, start.add(-20, 0, 0), 20, 20,
-    // ResourceManager.fl_cookie, true, true);
-    // LightRenderer.addPointLight(start, new Vec3d(1, 0.4, 0.1), 10);
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
+    GlStateManager.enableAlpha();
     GlStateManager.disableCull();
     GlStateManager.rotate(180, 0F, 1F, 0F);
-    // GlStateManager.pushMatrix();
-    // GlStateManager.translate(0, 5, 0);
-    // GlStateManager.bindTexture(RenderHelper.deferredNormalTex);
-    // ResourceManager.test.draw();
-    // GlStateManager.popMatrix();
     switch (assembler.getBlockMetadata()) {
       case 14:
         GlStateManager.rotate(180, 0F, 1F, 0F);
@@ -101,17 +92,11 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
 
       GlStateManager.popMatrix();
     }
-    /*GlStateManager.translate(-0.5, 3.6, -0.5);
-    bindTexture(ResourceManager.hatch_tex);
-    AnimationWrapper w = new AnimationWrapper(0, ResourceManager.silo_hatch_open);
-    ResourceManager.silo_hatch.controller.setAnim(w);
-    GlStateManager.shadeModel(GL11.GL_SMOOTH);
-    ResourceManager.silo_hatch.renderAnimated(5000);
-    GlStateManager.shadeModel(GL11.GL_FLAT);*/
 
     GlStateManager.popMatrix();
 
     renderSlider(assembler, x, y, z, partialTicks);
+    GlStateManager.disableAlpha();
   }
 
   public void renderSlider(

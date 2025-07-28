@@ -3,6 +3,8 @@ package com.hbm.tileentity.turret;
 import com.hbm.config.WeaponConfig;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.handler.CasingEjector;
+import com.hbm.handler.guncfg.GunDGKFactory;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerTurretBase;
@@ -10,6 +12,7 @@ import com.hbm.inventory.gui.GUITurretHoward;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.particle.SpentCasing;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.EntityDamageUtil;
@@ -18,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -136,9 +140,17 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 		timer++;
 
 		if(loaded > 0 && this.target != null) {
+			SpentCasing cfg = GunDGKFactory.CASINGDGK;
+
 
 			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 1F + world.rand.nextFloat() * 0.3F);
+
+			for(int i = 0; i < 2; i++) {
+				this.cachedCasingConfig = cfg;
+				this.spawnCasing();
+			}
+
 
 			if(timer % 2 == 0) {
 				loaded--;
@@ -184,6 +196,29 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		nbt.setInteger("loaded", loaded);
 		return super.writeToNBT(nbt);
+	}
+
+	@Override
+	protected Vec3d getCasingSpawnPos() {
+
+		Vec3d pos = this.getTurretPos();
+		Vec3 vec = Vec3.createVectorHelper(-0.875, 0.2, -0.125);
+		vec.rotateAroundZ((float) -this.rotationPitch);
+		vec.rotateAroundY((float) -(this.rotationYaw + Math.PI * 0.5));
+
+		return new Vec3d(pos.x+ vec.xCoord, pos.y+ vec.yCoord, pos.z+ vec.zCoord);
+	}
+
+	protected static CasingEjector ejector = new CasingEjector().setAngleRange(0.01F, 0.01F).setMotion(0, 0, -0.1);
+
+	@Override
+	protected CasingEjector getEjector() {
+		return ejector.setMotion(0.4, 0, 0).setAngleRange(0.02F, 0.03F);
+	}
+
+	@Override
+	public boolean usesCasings() {
+		return true;
 	}
 
 	@Override
