@@ -98,7 +98,7 @@ public class TileEntityMachineSiren extends TileEntity implements ITickable, ICo
 				return;
 			}
 			
-			boolean active = ctrlActive || world.getStrongPower(pos) > 0;
+			boolean active = ctrlActive || world.isBlockPowered(pos);
 			
 			if(getCurrentType().getType().name().equals(SoundType.LOOP.name())) {
 				
