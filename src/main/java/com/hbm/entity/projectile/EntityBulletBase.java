@@ -324,11 +324,12 @@ public class EntityBulletBase extends Entity implements IProjectile {
 				
 				if(overrideDamage != 0)
 					damage = overrideDamage;
-				if (!victim.attackEntityFrom(damagesource, damage)) {
-						float dmg = damage + ((EntityLivingBase)victim).lastDamage;
+				try {
+					if (!victim.attackEntityFrom(damagesource, damage)) {
+						float dmg = damage + ((EntityLivingBase) victim).lastDamage;
 						victim.attackEntityFrom(damagesource, dmg);
-				}
-				
+					}
+				} catch (Exception ignored) {}
 
 				// handle block collision
 			} else if (world.getBlockState(movement.getBlockPos()).getMaterial() != Material.AIR) {
