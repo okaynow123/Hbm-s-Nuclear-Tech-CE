@@ -1,6 +1,7 @@
 package com.hbm.items.armor;
 
 import com.hbm.api.entity.IRadarDetectable;
+import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.lib.HBMSoundHandler;
@@ -8,6 +9,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -32,15 +34,15 @@ public class ItemModRadar extends ItemArmorMod {
 	public void addDesc(List<String> list, ItemStack stack, ItemStack armor){
 		list.add("§5  " + stack.getDisplayName() + " (Range: "+range+"m)");
 	}
-	
+
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor){
 		if(entity.ticksExisted % 10 == 0 && isApproachingMissileDetected(entity, this.range)){
-			entity.playSound(HBMSoundHandler.nullRadar, 1.0F, 1.0F);
+			entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.nullRadar, SoundCategory.RECORDS, 1.0F, 1.0F);
 		}
 	}
 
-	public boolean isEntityApproaching(EntityLivingBase entity, Entity e){
+	private boolean isEntityApproaching(EntityLivingBase entity, Entity e){
 		boolean xAxisApproaching = (entity.posX < e.posX  && e.motionX < 0) || (entity.posX > e.posX  && e.motionX > 0);
 		boolean zAxisApproaching = (entity.posZ < e.posZ && e.motionZ < 0) || (entity.posZ > e.posZ && e.motionZ > 0);
 		return xAxisApproaching && zAxisApproaching;
@@ -51,11 +53,11 @@ public class ItemModRadar extends ItemArmorMod {
 		List<Entity> list = entity.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(entity.posX - r, 0D, entity.posZ - r, entity.posX + r, 10_000D, entity.posZ + r));
 		for(Entity e : list) {
 			
-			if(e instanceof EntityLivingBase && HbmLivingProps.getDigamma((EntityLivingBase) e) > 0.001) {
+			if(e instanceof EntityLivingBase entittLiving && HbmLivingProps.getDigamma(entittLiving) > 0.001) {
 				return false;
 			}
 			
-			if(e instanceof IRadarDetectable && e.motionY <= 0 && isEntityApproaching(entity, e)){
+			if(e instanceof IRadarDetectable || e instanceof IRadarDetectableNT && isEntityApproaching(entity, e)){
 				return true;
 			}
 		}
