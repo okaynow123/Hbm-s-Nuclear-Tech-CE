@@ -1,16 +1,19 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
+import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.entity.missile.EntityMissileBaseAdvanced;
+import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.entity.projectile.EntityArtilleryShell;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
+import com.hbm.handler.CompatHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.control_panel.ControlEvent;
@@ -26,14 +29,18 @@ import com.hbm.particle.SpentCasing;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
+import com.hbm.util.CompatExternal;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.INpc;
-import net.minecraft.entity.MultiPartEntityPart;
+import java.util.function.BiFunction;
+
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.entity.*;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.monster.IMob;
@@ -54,12 +61,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase implements IEnergyReceiverMK2, IControllable, IControlReceiver, ITickable {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase implements IEnergyReceiverMK2, IControllable, IControlReceiver, ITickable, SimpleComponent, CompatHandler.OCComponent {
 
 	@Override
 	public boolean hasPermission(EntityPlayer player){
@@ -605,13 +614,41 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		
 		if(e.isDead || !e.isEntityAlive())
 			return false;
-		
+
+		for(Class c : CompatExternal.turretTargetBlacklist) if(c.isAssignableFrom(e.getClass())) return false;
+
+		for(Class c : CompatExternal.turretTargetCondition.keySet()) {
+			if(c.isAssignableFrom(e.getClass())) {
+				BiFunction<Entity, Object, Integer> lambda = CompatExternal.turretTargetCondition.get(c);
+				if(lambda != null) {
+					int result = lambda.apply(e, this);
+					if(result == -1) return false;
+					if(result == 1) return true;
+				}
+			}
+		}
+
+		List<String> wl = getWhitelist();
+
+		if(wl != null) {
+
+			if(e instanceof EntityPlayer) {
+				if(wl.contains(e.getDisplayName())) {
+					return false;
+				}
+			} else if(e instanceof EntityLiving) {
+				if(wl.contains(e.getCustomNameTag())) {
+					return false;
+				}
+			}
+		}
 		if(targetAnimals) {
 			
 			if(e instanceof IAnimals)
 				return true;
 			if(e instanceof INpc)
 				return true;
+			for(Class c : CompatExternal.turretTargetFriendly) if(c.isAssignableFrom(e.getClass())) return true;
 		}
 		
 		if(targetMobs) {
@@ -623,33 +660,28 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 				return true;
 			if(e instanceof IMob)
 				return true;
+			for(Class c : CompatExternal.turretTargetHostile) if(c.isAssignableFrom(e.getClass())) return true;
 		}
 		
 		if(targetMachines) {
 
-			if(e instanceof EntityMissileBaseAdvanced)
-				return true;
-			if(e instanceof EntityMissileCustom)
-				return true;
-			if(e instanceof EntityMinecart)
-				return true;
-			if(e instanceof EntityBomber)
-				return true;
+			if(e instanceof IRadarDetectableNT && !((IRadarDetectableNT)e).canBeSeenBy(this)) return false;
+			if(e instanceof EntityMissileBaseNT) return e.motionY < 0;
+			if(e instanceof EntityMissileCustom) return e.motionY < 0;
+			if(e instanceof EntityMinecart) return true;
+			//if(e instanceof EntityRailCarBase) return true; //TODO
+			if(e instanceof EntityBomber) return true;
+			for(Class c : CompatExternal.turretTargetMachine) if(c.isAssignableFrom(e.getClass())) return true;
+
 		}
-		
-		if(targetPlayers && e instanceof EntityPlayer) {
-			
-			if(e instanceof FakePlayer)
-				return false;
-			
-			List<String> wl = getWhitelist();
-			
-			if(wl == null || wl.isEmpty())
-				return true;
-			
-			return !wl.contains(((EntityPlayer)e).getDisplayName().getUnformattedText());
+
+
+		if(targetPlayers ) {
+
+			if(e instanceof FakePlayer) return false;
+			if(e instanceof EntityPlayer) return true;
+			for(Class c : CompatExternal.turretTargetPlayer) if(c.isAssignableFrom(e.getClass())) return true;
 		}
-		
 		return false;
 	}
 	
@@ -946,5 +978,165 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	// OC stuff
+	// This is a large compat, so I have to leave comments to know what I'm doing
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String getComponentName() {
+		return "ntm_turret";
+	}
+
+	// On/Off
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setActive(Context context, Arguments args) {
+		this.isOn = args.checkBoolean(0);
+		return new Object[] {};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] isActive(Context context, Arguments args) {
+		return new Object[] {this.isOn};
+	}
+
+	// Energy information
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getEnergyInfo(Context context, Arguments args) {
+		return new Object[] {this.getPower(), this.getMaxPower()};
+	}
+
+	///////////////////////
+	// Whitelist Control //
+	///////////////////////
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getWhitelisted(Context context, Arguments args) {
+		if(inventory.getStackInSlot(0).getItem() == ModItems.turret_chip) {
+			String[] array = ItemTurretBiometry.getNames(inventory.getStackInSlot(0));
+			return new Object[] {array};
+		}
+		return new Object[] {};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] addWhitelist(Context context, Arguments args) {
+		if(this.getWhitelist() != null) {
+			List<String> names = this.getWhitelist();
+			if (names.contains(args.checkString(0)))
+				return new Object[]{false};
+		}
+		this.addName(args.checkString(0));
+		return new Object[]{true};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] removeWhitelist(Context context, Arguments args) {
+		List<String> names = this.getWhitelist();
+		if(!names.contains(args.checkString(0)))
+			return new Object[] {false};
+		this.removeName(names.indexOf(args.checkString(0)));
+		return new Object[] {true};
+	}
+
+	///////////////////////
+	// Targeting Control //
+	///////////////////////
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setTargeting(Context context, Arguments args) {
+		this.targetPlayers = args.checkBoolean(0);
+		this.targetAnimals = args.checkBoolean(1);
+		this.targetMobs = args.checkBoolean(2);
+		this.targetMachines = args.checkBoolean(3);
+		return new Object[] {};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getTargeting(Context context, Arguments args) {
+		return new Object[] {this.targetPlayers, this.targetAnimals, this.targetMobs, this.targetMachines};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] hasTarget(Context context, Arguments args) {
+		return new Object[] {this.target != null};
+	}
+
+	///////////////////
+	// Angle Control //
+	///////////////////
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getAngle(Context context, Arguments args) {
+		return new Object[] {Math.toDegrees(this.rotationPitch), Math.toDegrees(this.rotationYaw)};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] isAligned(Context context, Arguments args) {
+		return new Object[] {this.aligned};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public boolean canConnectNode(EnumFacing side) {
+		return side == EnumFacing.DOWN;
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String[] methods() { // :vomit:
+		return new String[] {
+				"setActive",
+				"isActive",
+				"getEnergyInfo",
+				"getWhitelisted",
+				"addWhitelist",
+				"removeWhitelist",
+				"setTargeting",
+				"getTargeting",
+				"hasTarget",
+				"getAngle",
+				"isAligned"
+		};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+		switch (method) {
+			case "setActive":
+				return setActive(context, args);
+			case "isActive":
+				return isActive(context, args);
+			case "getEnergyInfo":
+				return getEnergyInfo(context, args);
+			case "getWhitelisted":
+				return getWhitelisted(context, args);
+			case "addWhitelist":
+				return addWhitelist(context, args);
+			case "removeWhitelist":
+				return removeWhitelist(context, args);
+			case "setTargeting":
+				return setTargeting(context, args);
+			case "getTargeting":
+				return getTargeting(context, args);
+			case "hasTarget":
+				return hasTarget(context, args);
+			case "getAngle":
+				return getAngle(context, args);
+			case "isAligned":
+				return isAligned(context, args);
+		}
+		throw new NoSuchMethodException();
 	}
 }
