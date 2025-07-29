@@ -90,7 +90,7 @@ public class ItemModRadar extends ItemArmorMod {
 
 		List<Entity> detected = new ArrayList<>();
 		for (Entity e : list) {
-			if(e instanceof IRadarDetectable || e instanceof IRadarDetectableNT && e.motionY < 0 && isEntityApproaching(entity, e)){
+			if((e instanceof IRadarDetectable || e instanceof IRadarDetectableNT) && e.motionY < 0 && isEntityApproaching(entity, e)){
 				detected.add(e);
 			}
 		}
