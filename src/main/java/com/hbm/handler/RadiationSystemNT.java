@@ -25,7 +25,6 @@ import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,6 +39,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -241,8 +241,8 @@ public class RadiationSystemNT {
     private static void updateRadSaveData(World world) {
         RadiationSavedData data = RadiationSavedData.getData(world);
 
-        if (data.worldObj == null) {
-            data.worldObj = world;
+        if (data.world == null) {
+            data.world = world;
         }
 
         if (GeneralConfig.enableDebugMode) {
@@ -253,164 +253,134 @@ public class RadiationSystemNT {
     }
 
     /**
-     * Updates entity contamination and applies effects based on current rad levels
+     * Updates world-specific radiation data, such as thunder and the radiation save data.
      */
-    private static void updateEntityContamination(World world, boolean updateData) {
+    private static void updateWorldRadiationData(World world, boolean updateData) {
         if (world != null && !world.isRemote && GeneralConfig.enableRads) {
-            if (GeneralConfig.enableDebugMode) {
-                MainRegistry.logger.info("[Debug] Starting entity contamination processing");
-            }
-
             int thunder = AuxSavedData.getThunder(world);
-
             if (thunder > 0) AuxSavedData.setThunder(world, thunder - 1);
 
-            if (!world.loadedEntityList.isEmpty()) {
-
-                RadiationSavedData data = RadiationSavedData.getData(world);
-
-                if (data.worldObj == null) {
-                    data.worldObj = world;
-                }
-
-                if (world.getTotalWorldTime() % 20 == 15 && updateData) { // lets not make a lag spike at tick 0
-                    // unless a chunk requires update
-                    updateRadSaveData(world);
-                }
-
-                List<Object> oList = new ArrayList<>(world.loadedEntityList);
-
-                for (Object e : oList) {
-                    if (e instanceof EntityLivingBase entity) {
-
-                        // effect for radiation
-
-                        //TODO: This DESTROYS performance, rewrite or remove
-                        if (entity instanceof EntityPlayer player) {
-                            if (player.capabilities.isCreativeMode || player.isSpectator()) {
-                                continue;
-                            }
-                        }
-
-                        float eRad = HbmLivingProps.getRadiation(entity);
-
-                        if (eRad >= 200 && entity.getHealth() > 0 && entity instanceof EntityCreeper) {
-
-                            if (world.rand.nextInt(3) == 0) {
-                                EntityNuclearCreeper creep = new EntityNuclearCreeper(world);
-                                creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-                                if (!entity.isDead) world.spawnEntity(creep);
-                                entity.setDead();
-                            } else {
-                                entity.attackEntityFrom(ModDamageSource.radiation, 100F);
-                            }
-                            continue;
-
-                        } else if (eRad >= 500 && entity instanceof EntityCow && !(entity instanceof EntityMooshroom)) {
-                            EntityMooshroom creep = new EntityMooshroom(world);
-                            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-                            if (!entity.isDead) world.spawnEntity(creep);
-                            entity.setDead();
-                            continue;
-
-                        } else if (eRad >= 600 && entity instanceof EntityVillager vil) {
-                            EntityZombieVillager creep = new EntityZombieVillager(world);
-                            creep.setProfession(vil.getProfession());
-                            creep.setForgeProfession(vil.getProfessionForge());
-                            creep.setChild(vil.isChild());
-                            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-                            if (!entity.isDead) world.spawnEntity(creep);
-                            entity.setDead();
-                            continue;
-                        } else if (eRad >= 700 && entity instanceof EntityBlaze) {
-                            EntityRADBeast creep = new EntityRADBeast(world);
-                            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-                            if (!entity.isDead) world.spawnEntity(creep);
-                            entity.setDead();
-                            continue;
-                        } else if (eRad >= 800 && entity instanceof EntityHorse horsie) {
-                            EntityZombieHorse zomhorsie = new EntityZombieHorse(world);
-                            zomhorsie.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-                            zomhorsie.setGrowingAge(horsie.getGrowingAge());
-                            zomhorsie.setTemper(horsie.getTemper());
-                            zomhorsie.setHorseSaddled(horsie.isHorseSaddled());
-                            zomhorsie.setHorseTamed(horsie.isTame());
-                            zomhorsie.setOwnerUniqueId(horsie.getOwnerUniqueId());
-                            zomhorsie.makeMad();
-                            if (!entity.isDead) world.spawnEntity(zomhorsie);
-                            entity.setDead();
-                            continue;
-                        } else if (eRad >= 900 && entity.getClass().equals(EntityDuck.class)) {
-
-                            EntityQuackos quacc = new EntityQuackos(world);
-                            quacc.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
-
-                            if (!entity.isDead) world.spawnEntity(quacc);
-
-                            entity.setDead();
-                            continue;
-                        }
-
-                        if (eRad > 2500000) HbmLivingProps.setRadiation(entity, 2500000);
-
-                        if (eRad >= 1000) {
-                            entity.attackEntityFrom(ModDamageSource.radiation, 1000F);
-                            HbmLivingProps.setRadiation(entity, 0);
-
-                            if (entity.getHealth() > 0) {
-                                entity.setHealth(0);
-                                entity.onDeath(ModDamageSource.radiation);
-                            }
-
-                            if (entity instanceof EntityPlayerMP)
-                                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadDeath);
-                        } else if (eRad >= 800) {
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 2));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 10 * 20, 2));
-                            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 3 * 20, 2));
-                            if (world.rand.nextInt(700) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 3 * 20, 1));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 5 * 20, 3));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 5 * 20, 3));
-
-                        } else if (eRad >= 600) {
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 2));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 10 * 20, 2));
-                            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 3 * 20, 1));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 3));
-                            if (world.rand.nextInt(400) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 6 * 20, 2));
-
-                        } else if (eRad >= 400) {
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
-                            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5 * 20, 0));
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5 * 20, 1));
-                            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 2));
-                            if (world.rand.nextInt(600) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 4 * 20, 1));
-
-                        } else if (eRad >= 200) {
-                            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
-                            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5 * 20, 0));
-                            if (world.rand.nextInt(700) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 2));
-                            if (world.rand.nextInt(800) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 4 * 20, 0));
-                        } else if (eRad >= 100) {
-                            if (world.rand.nextInt(800) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 2 * 20, 0));
-                            if (world.rand.nextInt(1000) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 20, 0));
-
-                            if (entity instanceof EntityPlayerMP)
-                                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadPoison);
-                        }
-
-                    }
-                }
+            RadiationSavedData data = RadiationSavedData.getData(world);
+            if (data.world == null) {
+                data.world = world;
             }
-            if (GeneralConfig.enableDebugMode) {
-                MainRegistry.logger.info("[Debug] Finished entity contamination processing");
+
+            if (world.getTotalWorldTime() % 20 == 15 && updateData) {
+                // unless a chunk requires update
+                updateRadSaveData(world);
             }
+        }
+    }
+
+    /**
+     * Updates entity contamination and applies effects based on current rad levels
+     */
+    @SubscribeEvent
+    public static void onEntityUpdate(LivingUpdateEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        World world = entity.world;
+
+        if (world.isRemote || !GeneralConfig.enableRads || entity.isEntityInvulnerable(ModDamageSource.radiation)) return;
+
+        float eRad = HbmLivingProps.getRadiation(entity);
+
+        if (eRad < 100) return;
+        if (eRad >= 200 && entity.getHealth() > 0 && entity instanceof EntityCreeper) {
+            if (world.rand.nextInt(3) == 0) {
+                EntityNuclearCreeper creep = new EntityNuclearCreeper(world);
+                creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+                if (!entity.isDead) world.spawnEntity(creep);
+                entity.setDead();
+            } else {
+                entity.attackEntityFrom(ModDamageSource.radiation, 100F);
+            }
+            return;
+        } else if (eRad >= 500 && entity instanceof EntityCow && !(entity instanceof EntityMooshroom)) {
+            EntityMooshroom creep = new EntityMooshroom(world);
+            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            if (!entity.isDead) world.spawnEntity(creep);
+            entity.setDead();
+            return;
+        } else if (eRad >= 600 && entity instanceof EntityVillager vil) {
+            EntityZombieVillager creep = new EntityZombieVillager(world);
+            creep.setProfession(vil.getProfession());
+            creep.setForgeProfession(vil.getProfessionForge());
+            creep.setChild(vil.isChild());
+            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            if (!entity.isDead) world.spawnEntity(creep);
+            entity.setDead();
+            return;
+        } else if (eRad >= 700 && entity instanceof EntityBlaze) {
+            EntityRADBeast creep = new EntityRADBeast(world);
+            creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            if (!entity.isDead) world.spawnEntity(creep);
+            entity.setDead();
+            return;
+        } else if (eRad >= 800 && entity instanceof EntityHorse horsie) {
+            EntityZombieHorse zomhorsie = new EntityZombieHorse(world);
+            zomhorsie.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            zomhorsie.setGrowingAge(horsie.getGrowingAge());
+            zomhorsie.setTemper(horsie.getTemper());
+            zomhorsie.setHorseSaddled(horsie.isHorseSaddled());
+            zomhorsie.setHorseTamed(horsie.isTame());
+            zomhorsie.setOwnerUniqueId(horsie.getOwnerUniqueId());
+            zomhorsie.makeMad();
+            if (!entity.isDead) world.spawnEntity(zomhorsie);
+            entity.setDead();
+            return;
+        } else if (eRad >= 900 && entity instanceof EntityDuck) { // This is now safe since EntityQuackos is invulnerable
+            EntityQuackos quacc = new EntityQuackos(world);
+            quacc.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+            if (!entity.isDead) world.spawnEntity(quacc);
+            entity.setDead();
+            return;
+        }
+
+        if (eRad > 2500000) HbmLivingProps.setRadiation(entity, 2500000);
+
+        if (eRad >= 1000) {
+            entity.attackEntityFrom(ModDamageSource.radiation, 1000F);
+            HbmLivingProps.setRadiation(entity, 0);
+
+            if (entity.getHealth() > 0) {
+                entity.setHealth(0);
+                entity.onDeath(ModDamageSource.radiation);
+            }
+
+            if (entity instanceof EntityPlayerMP)
+                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadDeath);
+        } else if (eRad >= 800) {
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 2));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 10 * 20, 2));
+            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 3 * 20, 2));
+            if (world.rand.nextInt(700) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 3 * 20, 1));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 5 * 20, 3));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 5 * 20, 3));
+        } else if (eRad >= 600) {
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 2));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 10 * 20, 2));
+            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 3 * 20, 1));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 3));
+            if (world.rand.nextInt(400) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 6 * 20, 2));
+        } else if (eRad >= 400) {
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
+            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5 * 20, 0));
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5 * 20, 1));
+            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 2));
+            if (world.rand.nextInt(600) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 4 * 20, 1));
+        } else if (eRad >= 200) {
+            if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
+            if (world.rand.nextInt(500) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5 * 20, 0));
+            if (world.rand.nextInt(700) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 20, 2));
+            if (world.rand.nextInt(800) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 4 * 20, 0));
+        } else if (eRad >= 100) {
+            if (world.rand.nextInt(800) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 2 * 20, 0));
+            if (world.rand.nextInt(1000) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 20, 0));
+
+            if (entity instanceof EntityPlayerMP)
+                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadPoison);
         }
     }
 
@@ -483,8 +453,8 @@ public class RadiationSystemNT {
             RadiationWorldHandler.handleWorldDestruction(e.world);
         }
 
-        // Make entities stinky
-        updateEntityContamination(e.world, allowUpdate);
+        // Update world-level radiation data.
+        updateWorldRadiationData(e.world, allowUpdate);
     }
 
     @SubscribeEvent
