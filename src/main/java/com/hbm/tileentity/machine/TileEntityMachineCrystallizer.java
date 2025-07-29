@@ -290,7 +290,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+	public boolean canInsertItem(int slot, ItemStack itemStack) {
 		return slot == 0 && CrystallizerRecipes.getOutput(itemStack, this.tankNew.getTankType()) != null;
 	}
 	

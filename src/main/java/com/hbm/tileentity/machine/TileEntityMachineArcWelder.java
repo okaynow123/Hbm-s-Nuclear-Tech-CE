@@ -382,17 +382,17 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   }
 
   @Override
-  public boolean canExtractItem(int slot, ItemStack stack, int side) {
+  public boolean canExtractItem(int slot, ItemStack stack, int amount) {
     return slot == 3;
   }
 
   @Override
-  public boolean canInsertItem(int slot, ItemStack stack, int side) {
+  public boolean canInsertItem(int slot, ItemStack stack) {
     return slot < 3;
   }
 
   @Override
-  public int[] getAccessibleSlotsFromSide(EnumFacing side) {
+  public int[] getAccessibleSlotsFromSide(EnumFacing side, BlockPos accessorPos) {
     EnumFacing dir = EnumFacing.byIndex(this.getBlockMetadata() - 10);
     EnumFacing rot = dir.rotateY();
     BlockPos core = this.pos;
@@ -400,20 +400,20 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
     // Red
     BlockPos red1 = core.offset(rot);
     BlockPos red2 = core.offset(rot.getOpposite()).offset(dir.getOpposite());
-    if (this.pos.equals(red1) || this.pos.equals(red2)) {
+    if (accessorPos.equals(red1) || accessorPos.equals(red2)) {
       return new int[] {0, 3};
     }
 
     // Yellow
     BlockPos yellow = core.offset(dir.getOpposite());
-    if (this.pos.equals(yellow)) {
+    if (accessorPos.equals(yellow)) {
       return new int[] {1, 3};
     }
 
     // Green
     BlockPos green1 = core.offset(rot.getOpposite());
     BlockPos green2 = core.offset(rot).offset(dir.getOpposite());
-    if (this.pos.equals(green1) || this.pos.equals(green2)) {
+    if (accessorPos.equals(green1) || accessorPos.equals(green2)) {
       return new int[] {2, 3};
     }
 

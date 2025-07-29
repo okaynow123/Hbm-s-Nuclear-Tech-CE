@@ -7,6 +7,7 @@ import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidContainer;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -94,16 +95,18 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 				return super.getCapability(capability, facing);
 			}
 		}
-		if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return tile.getCapability(capability, facing);
-		}
-		if(power && capability == CapabilityEnergy.ENERGY){
-			return tile.getCapability(capability, facing);
-		}
-		if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return tile.getCapability(capability, facing);
-		}
-		return super.getCapability(capability, facing);
+		return CapabilityContextProvider.runWithContext(this.pos, () -> {
+			if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+				return tile.getCapability(capability, facing);
+			}
+			if(power && capability == CapabilityEnergy.ENERGY){
+				return tile.getCapability(capability, facing);
+			}
+			if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+				return tile.getCapability(capability, facing);
+			}
+			return super.getCapability(capability, facing);
+		});
 	}
 
 	@Override
@@ -114,16 +117,18 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 				return super.hasCapability(capability, facing);
 			}
 		}
-		if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return tile.hasCapability(capability, facing);
-		}
-		if(power && capability == CapabilityEnergy.ENERGY){
-			return tile.hasCapability(capability, facing);
-		}
-		if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return tile.hasCapability(capability, facing);
-		}
-		return super.hasCapability(capability, facing);
+		return CapabilityContextProvider.runWithContext(this.pos, () -> {
+			if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+				return tile.hasCapability(capability, facing);
+			}
+			if(power && capability == CapabilityEnergy.ENERGY){
+				return tile.hasCapability(capability, facing);
+			}
+			if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+				return tile.hasCapability(capability, facing);
+			}
+			return super.hasCapability(capability, facing);
+		});
 	}
 
 	@Override

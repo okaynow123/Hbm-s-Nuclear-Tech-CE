@@ -114,7 +114,7 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+	public boolean canInsertItem(int slot, ItemStack itemStack) {
 		if(slot == 0 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(1).getItem() != itemStack.getItem();
 		if(slot == 1 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(0).getItem() != itemStack.getItem();
 		return isItemValidForSlot(slot, itemStack);

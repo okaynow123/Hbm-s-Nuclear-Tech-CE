@@ -448,7 +448,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+    public boolean canInsertItem(int slot, ItemStack itemStack) {
         return this.isItemValidForSlot(slot, itemStack);
     }
 

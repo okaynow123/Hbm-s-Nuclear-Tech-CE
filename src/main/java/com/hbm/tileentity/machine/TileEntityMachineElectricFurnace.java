@@ -90,7 +90,7 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 	}
 	
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+	public boolean canInsertItem(int slot, ItemStack itemStack) {
 		return isItemValidForSlot(slot, itemStack);
 	}
 	

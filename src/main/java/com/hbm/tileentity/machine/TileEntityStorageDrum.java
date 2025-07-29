@@ -140,12 +140,12 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 	}
 
 	@Override
-	public boolean canInsertItem(int i, ItemStack itemStack, int j) {
+	public boolean canInsertItem(int i, ItemStack itemStack) {
 		return this.isItemValidForSlot(i, itemStack);
 	}
 
 	@Override
-	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
+	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
 		return !ContaminationUtil.isContaminated(itemStack) && StorageDrumRecipes.getOutput(itemStack) == null;
 	}
 

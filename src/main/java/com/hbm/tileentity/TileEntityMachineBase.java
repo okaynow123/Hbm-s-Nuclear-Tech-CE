@@ -1,7 +1,5 @@
 package com.hbm.tileentity;
 
-import com.hbm.api.energymk2.IEnergyHandlerMK2;
-import com.hbm.api.fluid.IFluidUser;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -12,6 +10,7 @@ import com.hbm.handler.atmosphere.AtmosphereBlob;
 import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import io.netty.buffer.ByteBuf;
@@ -109,6 +108,17 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         }
     }
 
+    /**
+     * It mimics the 1.7 IConditionalInvAccess behavior.
+     *
+     * @param side The side of the block being accessed.
+     * @param accessorPos The position of the block DOING the accessing (the proxy).
+     * @return An array of slots accessible from this proxy at this side.
+     */
+    public int[] getAccessibleSlotsFromSide(EnumFacing side, BlockPos accessorPos) {
+        return getAccessibleSlotsFromSide(side);
+    }
+
     public int[] getAccessibleSlotsFromSide(EnumFacing e) {
         return new int[]{};
     }
@@ -153,8 +163,24 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         return true;
     }
 
-    public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+    /**
+     * Checks if an item can be inserted into a slot from a specific side and accessor position.
+     * Mimics the 1.7 IConditionalInvAccess behavior.
+     */
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side, BlockPos accessorPos) {
+        return canInsertItem(slot, stack);
+    }
+
+    public boolean canInsertItem(int slot, ItemStack itemStack) {
         return this.isItemValidForSlot(slot, itemStack);
+    }
+
+    /**
+     * Checks if an item can be extracted from a slot from a specific side and accessor position.
+     * Mimics the 1.7 IConditionalInvAccess behavior.
+     */
+    public boolean canExtractItem(int slot, ItemStack stack, int amount, EnumFacing side, BlockPos accessorPos) {
+        return canExtractItem(slot, stack, amount);
     }
 
     public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
@@ -188,18 +214,23 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null)
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new ItemStackHandlerWrapper(inventory, getAccessibleSlotsFromSide(facing)) {
+            final BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
+            final EnumFacing side = facing;
+            int[] accessibleSlots = getAccessibleSlotsFromSide(side, accessorPos);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new ItemStackHandlerWrapper(inventory, accessibleSlots) {
                 @Override
                 public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                    if (canExtractItem(slot, inventory.getStackInSlot(slot), amount))
+                    if (canExtractItem(slot, inventory.getStackInSlot(slot), amount, side, accessorPos)) {
                         return super.extractItem(slot, amount, simulate);
+                    }
                     return ItemStack.EMPTY;
                 }
 
                 @Override
                 public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-                    if (canInsertItem(slot, stack, stack.getCount()))
+                    if (canInsertItem(slot, stack, side, accessorPos)) {
                         return super.insertItem(slot, stack, simulate);
+                    }
                     return stack;
                 }
             });
@@ -209,10 +240,14 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper
-                || capability == CapabilityEnergy.ENERGY && enableEnergyWrapper
-                || (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null)
-                || super.hasCapability(capability, facing);
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) return true;
+        if (capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) return true;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
+            if (facing == null) return true;
+            BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
+            return getAccessibleSlotsFromSide(facing, accessorPos).length > 0;
+        }
+        return super.hasCapability(capability, facing);
     }
 
     protected void updateRedstoneConnection(DirPos pos) {
