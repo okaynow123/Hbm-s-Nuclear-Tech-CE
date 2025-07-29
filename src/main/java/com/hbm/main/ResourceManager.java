@@ -100,7 +100,6 @@ public class ResourceManager {
 	public static final IModelCustom turret_cheapo_rotor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turret_cheapo_rotor.obj")).asVBO();
 
 	public static final IModelCustom turret_spitfire_gun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turret_spitfire_gun.obj")).asVBO();
-	public static final IModelCustom turret_arty = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_arty.obj")).asVBO();
 	public static final IModelCustom turret_cwis_head = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/cwis_head.obj")).asVBO();
 	public static final IModelCustom turret_cwis_gun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/cwis_gun.obj")).asVBO();
 	public static final IModelCustom turret_cheapo_head = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turret_cheapo_head.obj")).asVBO();
@@ -115,6 +114,7 @@ public class ResourceManager {
 	public static final IModelCustom turret_fritz = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_fritz.obj")).asVBO();
 	public static final IModelCustom turret_himars = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_himars.obj")).asVBO();
 	public static final IModelCustom turret_sentry = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_sentry.obj")).asVBO();
+	public static final IModelCustom turret_arty = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_arty.obj")).asVBO();
 
 	public static final IModelCustom turret_howard_damaged = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/turrets/turret_howard_damaged.obj")).asVBO();
 	
