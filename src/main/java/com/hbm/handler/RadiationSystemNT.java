@@ -941,6 +941,8 @@ public class RadiationSystemNT {
                 byte has = bdata.get();
                 if (has == 1) {
                     int yLevel = bdata.getShort();
+                    if (yLevel >> 4 != i)
+                        throw new IllegalStateException("Sub-chunk y-level mismatch. Expected index " + i + ", but data says " + (yLevel >> 4));
                     SubChunkRadiationStorage sc = new SubChunkRadiationStorage(data, new BlockPos(chunkPos.x << 4, yLevel, chunkPos.z << 4));
                     int len = bdata.getShort();
                     sc.pockets = new RadPocket[len];
@@ -960,8 +962,15 @@ public class RadiationSystemNT {
                     SubChunkKey key = new SubChunkKey(chunkPos, yLevel >> 4);
                     data.data.put(key, sc);
                 }
-            } catch (BufferUnderflowException ex) {
-                MainRegistry.logger.error("BufferUnderflowException while reading sub-chunk {}. Defaulting to 0s.", i);
+            } catch (BufferUnderflowException | IndexOutOfBoundsException | IllegalStateException ex) {
+                MainRegistry.logger.error("Data corruption detected while reading radiation data for sub-chunk {} in chunk {}. ", i, chunkPos, ex);
+                BlockPos subChunkPos = new BlockPos(chunkPos.x << 4, i << 4, chunkPos.z << 4);
+                SubChunkRadiationStorage corruptedStorage = new SubChunkRadiationStorage(data, subChunkPos);
+                corruptedStorage.pockets = new RadPocket[]{ new RadPocket(corruptedStorage, 0) };
+                corruptedStorage.pocketData = null;
+                SubChunkKey key = new SubChunkKey(chunkPos, i);
+                data.data.put(key, corruptedStorage);
+                break;
             }
         }
     }

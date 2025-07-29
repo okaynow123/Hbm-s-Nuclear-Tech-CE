@@ -68,8 +68,10 @@ public class EntityProcessorStandard implements IEntityProcessor {
 					double knockback = (1.0D - distanceScaled) * density;
 					
 					entity.attackEntityFrom(DamageSource.causeExplosionDamage(explosion.compat), (float) ((int) ((knockback * knockback + knockback) / 2.0D * 8.0D * size + 1.0D)));
-					double enchKnockback = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase) entity, knockback);
-					
+					double enchKnockback;
+					if (entity instanceof EntityLivingBase entityLiving) {
+						enchKnockback = EnchantmentProtection.getBlastDamageReduction(entityLiving, knockback);
+					} else enchKnockback = knockback;
 					entity.motionX += deltaX * enchKnockback;
 					entity.motionY += deltaY * enchKnockback;
 					entity.motionZ += deltaZ * enchKnockback;
