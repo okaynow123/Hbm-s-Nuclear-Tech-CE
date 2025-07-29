@@ -4,7 +4,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -40,11 +39,4 @@ public class BlockJungleCrate extends Block {
         if(rand.nextInt(3) == 0)
         	drops.add(new ItemStack(ModItems.crystal_gold));
 	}
-
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
-	}
-
-
 }

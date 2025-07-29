@@ -5,7 +5,6 @@ import com.hbm.handler.RadiationSystemNT;
 import com.hbm.interfaces.IRadResistantBlock;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockBreakable;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -40,12 +39,6 @@ public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock 
 		this.isRadResistant = isRadResistant;
 
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-
-
-	@Override
-	public BlockNTMGlass setSoundType(SoundType sound) {
-		return (BlockNTMGlass)super.setSoundType(sound);
 	}
 
 	@Override

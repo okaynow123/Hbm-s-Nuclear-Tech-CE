@@ -2,9 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
@@ -49,11 +47,6 @@ public class BlockGenericSlab extends BlockSlab {
 	@Override
 	public boolean isDouble() {
 		return isDouble;
-	}
-
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

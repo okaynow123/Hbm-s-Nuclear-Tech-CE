@@ -9,7 +9,6 @@ import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.*;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -152,11 +151,6 @@ public class BlockStorageCrate extends BlockContainer {
 		dropInv = true;
 
 		return flag;
-	}
-
-	@Override
-	public Block setSoundType(SoundType sound){
-		return super.setSoundType(sound);
 	}
 
 	@Override

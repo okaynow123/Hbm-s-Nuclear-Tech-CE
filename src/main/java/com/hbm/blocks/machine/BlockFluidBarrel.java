@@ -9,9 +9,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.machine.TileEntityBarrel;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -102,11 +100,6 @@ public class BlockFluidBarrel extends BlockContainer {
 			list.add(TextFormatting.GREEN + I18nUtil.resolveKey("desc.canhighcor"));
 			list.add(TextFormatting.YELLOW + I18nUtil.resolveKey("desc.cannotam"));
 		}
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 	
 	@Override

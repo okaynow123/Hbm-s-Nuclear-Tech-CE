@@ -3,10 +3,8 @@ package com.hbm.blocks.machine;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityHadron;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -36,11 +34,6 @@ public class BlockHadronCore extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityHadron();
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 	
 	@Override

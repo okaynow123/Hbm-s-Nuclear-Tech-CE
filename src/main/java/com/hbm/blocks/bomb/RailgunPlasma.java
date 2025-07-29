@@ -5,9 +5,7 @@ import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.bomb.TileEntityRailgun;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,11 +35,6 @@ public class RailgunPlasma extends BlockContainer {
 	@Override
 	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(I18nUtil.resolveKey("desc.usesdpc"));
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

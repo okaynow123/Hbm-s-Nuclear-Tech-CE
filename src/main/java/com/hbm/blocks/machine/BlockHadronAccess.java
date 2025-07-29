@@ -4,10 +4,8 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityProxyInventory;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -32,11 +30,6 @@ public class BlockHadronAccess extends BlockContainer {
 		this.setRegistryName(s);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 	
 	@Override

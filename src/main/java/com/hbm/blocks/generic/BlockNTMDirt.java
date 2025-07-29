@@ -1,9 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,11 +21,6 @@ public class BlockNTMDirt extends BlockDirt {
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

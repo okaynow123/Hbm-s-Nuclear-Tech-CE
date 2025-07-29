@@ -6,8 +6,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.albion.TileEntityPASource;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -55,11 +53,6 @@ public class BlockPASource extends BlockDummyable implements ITooltipProvider {
     @Override
     public int getHeightOffset() {
         return 1;
-    }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override

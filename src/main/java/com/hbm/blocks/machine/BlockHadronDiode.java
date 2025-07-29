@@ -4,9 +4,7 @@ import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.tileentity.machine.TileEntityHadronDiode;
 import com.hbm.tileentity.machine.TileEntityHadronDiode.DiodeConfig;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -34,11 +32,6 @@ public class BlockHadronDiode extends BlockContainer implements IToolable {
 		this.setRegistryName(s);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

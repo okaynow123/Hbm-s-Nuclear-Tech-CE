@@ -2,7 +2,6 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.tileentity.machine.TileEntityDemonLamp;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -23,11 +22,6 @@ public class DemonLamp extends BlockContainer {
 		super.setSoundType(st);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-	
-	@Override
-	public Block setSoundType(SoundType sound){
-		return super.setSoundType(sound);
 	}
 
 	@Override

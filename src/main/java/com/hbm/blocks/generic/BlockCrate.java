@@ -5,9 +5,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
 import com.hbm.lib.HBMSoundHandler;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -45,11 +43,6 @@ public class BlockCrate extends BlockFalling {
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Items.AIR;
-    }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override

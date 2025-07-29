@@ -2,7 +2,6 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -25,11 +24,6 @@ public class BlockPipe extends Block {
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
-    }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override

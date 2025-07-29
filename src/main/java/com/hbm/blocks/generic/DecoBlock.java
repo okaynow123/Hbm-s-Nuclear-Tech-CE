@@ -3,10 +3,8 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.deco.TileEntityDecoBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -48,11 +46,6 @@ public class DecoBlock extends BlockContainer {
         this.setCreativeTab(MainRegistry.blockTab);
 
         ModBlocks.ALL_BLOCKS.add(this);
-    }
-
-    @Override
-    public @NotNull Block setSoundType(@NotNull SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override

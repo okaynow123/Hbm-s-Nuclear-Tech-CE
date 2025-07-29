@@ -3,7 +3,6 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,11 +28,6 @@ public class BlockCanCrate extends Block {
 		this.setRegistryName(s);
 
 		ModBlocks.ALL_BLOCKS.add(this);
-	}
-
-	@Override
-	public Block setSoundType(SoundType sound) {
-		return super.setSoundType(sound);
 	}
 
 	@Override

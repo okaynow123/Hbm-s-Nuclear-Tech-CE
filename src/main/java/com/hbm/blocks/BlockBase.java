@@ -55,8 +55,4 @@ public class BlockBase extends Block {
             list.add(TextFormatting.GOLD + I18nUtil.resolveKey("trait.blastres", hardness));
         }
     }
-
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
-    }
 }

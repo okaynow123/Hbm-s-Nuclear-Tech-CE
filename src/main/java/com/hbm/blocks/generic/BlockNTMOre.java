@@ -129,9 +129,4 @@ public class BlockNTMOre extends BlockOre {
         if (entity instanceof EntityLivingBase)
             HazardSystem.applyHazards(this, (EntityLivingBase)entity);
     }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
-    }
 }

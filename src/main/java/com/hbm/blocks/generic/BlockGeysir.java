@@ -2,9 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.tileentity.deco.TileEntityGeysir;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -36,11 +34,6 @@ public class BlockGeysir extends BlockContainer {
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityGeysir();
-    }
-
-    @Override
-    public Block setSoundType(SoundType sound) {
-        return super.setSoundType(sound);
     }
 
     @Override
