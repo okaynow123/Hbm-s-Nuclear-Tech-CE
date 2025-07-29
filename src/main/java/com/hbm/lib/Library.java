@@ -29,10 +29,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
-import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -55,6 +55,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -65,6 +66,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.nbt.CompressedStreamTools.writeCompressed;
 
@@ -1229,4 +1231,154 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         }
         return percent;
     }
+
+	/**
+	 * Performs a raycast against all blocks and optionally entities in the world.
+	 * The ray is defined by a starting position, a direction vector, and a maximum length.
+	 *
+	 * @param world                         The world instance to perform the raycast in.
+	 * @param startPos                      The starting position of the ray.
+	 * @param directionVec                  The direction vector of the ray. This vector will be normalized.
+	 * @param maxLength                     The exact distance the ray will travel from the start vector.
+	 * @param stopOnLiquid                  If true, the ray will stop on liquid blocks.
+	 * @param ignoreBlockWithoutBoundingBox If true, blocks without a collision bounding box are ignored.
+	 * @param returnLastUncollidableBlock   If true, returns the last passable block before a miss.
+	 * @param stopOnEntity                  If true, the ray will also check for entity collisions.
+	 * @return A RayTraceResult containing the hit information, or null if nothing was hit.
+	 */
+	@Nullable
+	public static RayTraceResult rayTrace(@NotNull WorldServer world, @NotNull Vec3d startPos, @NotNull Vec3d directionVec, double maxLength, boolean stopOnLiquid,
+										  boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock, boolean stopOnEntity) {
+		if (Double.isNaN(startPos.x) || Double.isNaN(startPos.y) || Double.isNaN(startPos.z) || Double.isNaN(directionVec.x) || Double.isNaN(directionVec.y) || Double.isNaN(directionVec.z)) {
+			return null;
+		}
+
+		if (directionVec.lengthSquared() < 1.0E-7D) {
+			return null;
+		}
+
+		Vec3d endPos = startPos.add(directionVec.normalize().scale(maxLength));
+
+		RayTraceResult blockHitResult = rayTraceBlocksInternal(world, startPos, endPos, stopOnLiquid, ignoreBlockWithoutBoundingBox,
+				returnLastUncollidableBlock);
+
+		if (stopOnEntity) {
+			Vec3d rayTraceEndForEntities = endPos;
+			if (blockHitResult != null) {
+				rayTraceEndForEntities = blockHitResult.hitVec;
+			}
+
+			Entity closestEntity = null;
+			Vec3d entityHitVec = null;
+			double closestHitDistSq = rayTraceEndForEntities.squareDistanceTo(startPos);
+			AxisAlignedBB searchBB = new AxisAlignedBB(startPos.x, startPos.y, startPos.z, rayTraceEndForEntities.x, rayTraceEndForEntities.y,
+					rayTraceEndForEntities.z).expand(1.0, 1.0, 1.0);
+			List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(null, searchBB);
+
+			for (Entity entity : entities) {
+				if (entity.canBeCollidedWith() && !entity.noClip) {
+					AxisAlignedBB entityBB = entity.getEntityBoundingBox().grow(0.3D);
+					RayTraceResult entityIntercept = entityBB.calculateIntercept(startPos, rayTraceEndForEntities);
+
+					if (entityIntercept != null) {
+						double distSq = startPos.squareDistanceTo(entityIntercept.hitVec);
+						if (distSq < closestHitDistSq) {
+							closestEntity = entity;
+							entityHitVec = entityIntercept.hitVec;
+							closestHitDistSq = distSq;
+						}
+					}
+				}
+			}
+			if (closestEntity != null) {
+				return new RayTraceResult(closestEntity, entityHitVec);
+			}
+		}
+		return blockHitResult;
+	}
+
+	@Nullable
+	private static RayTraceResult rayTraceBlocksInternal(@NotNull WorldServer world, @NotNull Vec3d startVec, @NotNull Vec3d endVec, boolean stopOnLiquid,
+														 boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
+		Vec3d dir = endVec.subtract(startVec);
+		if (dir.lengthSquared() < 1.0E-7D) return null;
+		int x = MathHelper.floor(startVec.x);
+		int y = MathHelper.floor(startVec.y);
+		int z = MathHelper.floor(startVec.z);
+		if (!world.isChunkGeneratedAt(x >> 4, z >> 4)) {
+			return null;
+		}
+
+		int stepX = (int) Math.signum(dir.x);
+		int stepY = (int) Math.signum(dir.y);
+		int stepZ = (int) Math.signum(dir.z);
+
+		double tDeltaX = (stepX == 0) ? Double.POSITIVE_INFINITY : Math.abs(1.0 / dir.x);
+		double tDeltaY = (stepY == 0) ? Double.POSITIVE_INFINITY : Math.abs(1.0 / dir.y);
+		double tDeltaZ = (stepZ == 0) ? Double.POSITIVE_INFINITY : Math.abs(1.0 / dir.z);
+
+		double tMaxX = (stepX > 0) ? (x + 1 - startVec.x) * tDeltaX : (startVec.x - x) * tDeltaX;
+		double tMaxY = (stepY > 0) ? (y + 1 - startVec.y) * tDeltaY : (startVec.y - y) * tDeltaY;
+		double tMaxZ = (stepZ > 0) ? (z + 1 - startVec.z) * tDeltaZ : (startVec.z - z) * tDeltaZ;
+
+		BlockPos.MutableBlockPos currentPos = new BlockPos.MutableBlockPos(x, y, z);
+		IBlockState startState = world.getBlockState(currentPos);
+		if (isCollidable(world, startState, stopOnLiquid, ignoreBlockWithoutBoundingBox, currentPos)) {
+			return startState.collisionRayTrace(world, currentPos, startVec, endVec);
+		}
+
+		RayTraceResult lastMissResult = null;
+
+		while (true) {
+			EnumFacing sideHit;
+			if (tMaxX < tMaxY) {
+				if (tMaxX < tMaxZ) {
+					if (tMaxX > 1.0) break;
+					x += stepX;
+					tMaxX += tDeltaX;
+					sideHit = (stepX > 0) ? EnumFacing.WEST : EnumFacing.EAST;
+				} else {
+					if (tMaxZ > 1.0) break;
+					z += stepZ;
+					tMaxZ += tDeltaZ;
+					sideHit = (stepZ > 0) ? EnumFacing.NORTH : EnumFacing.SOUTH;
+				}
+			} else {
+				if (tMaxY < tMaxZ) {
+					if (tMaxY > 1.0) break;
+					y += stepY;
+					tMaxY += tDeltaY;
+					sideHit = (stepY > 0) ? EnumFacing.DOWN : EnumFacing.UP;
+				} else {
+					if (tMaxZ > 1.0) break;
+					z += stepZ;
+					tMaxZ += tDeltaZ;
+					sideHit = (stepZ > 0) ? EnumFacing.NORTH : EnumFacing.SOUTH;
+				}
+			}
+			if (!world.getChunkProvider().chunkExists(x >> 4, z >> 4)) break;
+			currentPos.setPos(x, y, z);
+			IBlockState currentState = world.getBlockState(currentPos);
+			if (isCollidable(world, currentState, stopOnLiquid, ignoreBlockWithoutBoundingBox, currentPos)) {
+				return currentState.collisionRayTrace(world, currentPos, startVec, endVec);
+			}
+			if (returnLastUncollidableBlock) {
+				double t = Math.min(tMaxX - tDeltaX, Math.min(tMaxY - tDeltaY, tMaxZ - tDeltaZ));
+				Vec3d missHitVec = startVec.add(dir.scale(t));
+				lastMissResult = new RayTraceResult(RayTraceResult.Type.MISS, missHitVec, sideHit, currentPos.toImmutable());
+			}
+		}
+
+		return returnLastUncollidableBlock ? lastMissResult : null;
+	}
+
+	private static boolean isCollidable(World world, IBlockState state, boolean stopOnLiquid, boolean ignoreNoBoundingBox, BlockPos pos) {
+		Block block = state.getBlock();
+		boolean hasBoundingBox = !ignoreNoBoundingBox || state.getCollisionBoundingBox(world, pos) != Block.NULL_AABB;
+
+		if (hasBoundingBox && block.canCollideCheck(state, stopOnLiquid)) {
+			return true;
+		}
+		return hasBoundingBox && state.getMaterial() == Material.PORTAL;
+	}
 }
