@@ -1,14 +1,11 @@
 package com.hbm.blocks;
 
-import static com.hbm.blocks.BlockEnums.OreType;
-import static com.hbm.blocks.OreEnumUtil.OreEnum;
-
 import com.hbm.blocks.bomb.*;
 import com.hbm.blocks.gas.*;
 import com.hbm.blocks.generic.*;
 import com.hbm.blocks.generic.BlockHazard.ExtDisplayEffect;
 import com.hbm.blocks.machine.*;
-import com.hbm.blocks.machine.albion.BlockPASource;
+import com.hbm.blocks.machine.albion.*;
 import com.hbm.blocks.machine.pile.*;
 import com.hbm.blocks.machine.rbmk.*;
 import com.hbm.blocks.network.*;
@@ -23,8 +20,6 @@ import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.machine.*;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -33,6 +28,12 @@ import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.hbm.blocks.BlockEnums.OreType;
+import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
 public class ModBlocks {
 
@@ -1198,7 +1199,7 @@ public class ModBlocks {
 	public static final int guiID_hadron = 103;
 
 	public static final Block pa_source = new BlockPASource("pa_source").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
-//	public static final Block pa_beamline = new BlockPABeamline().setStepSound(Block.soundTypeMetal).setBlockName("pa_beamline").setHardness(5.0F).setResistance(10.0F);
+	public static final Block pa_beamline = new BlockPABeamline("pa_beamline").setSoundType((SoundType.METAL)).setHardness(5.0F).setResistance(10.0F);
 //	public static final Block pa_rfc = new BlockPARFC().setStepSound(Block.soundTypeMetal).setBlockName("pa_rfc").setHardness(5.0F).setResistance(10.0F);
 //	public static final Block pa_quadrupole = new BlockPAQuadrupole().setStepSound(Block.soundTypeMetal).setBlockName("pa_quadrupole").setHardness(5.0F).setResistance(10.0F);
 //	public static final Block pa_dipole = new BlockPADipole().setStepSound(Block.soundTypeMetal).setBlockName("pa_dipole").setHardness(5.0F).setResistance(10.0F);

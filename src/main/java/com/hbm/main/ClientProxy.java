@@ -86,7 +86,7 @@ import com.hbm.tileentity.TileEntitySlidingBlastDoorKeypad;
 import com.hbm.tileentity.bomb.*;
 import com.hbm.tileentity.deco.*;
 import com.hbm.tileentity.machine.*;
-import com.hbm.tileentity.machine.albion.TileEntityPASource;
+import com.hbm.tileentity.machine.albion.*;
 import com.hbm.tileentity.machine.oil.*;
 import com.hbm.tileentity.machine.rbmk.*;
 import com.hbm.tileentity.network.TileEntityCraneSplitter;
@@ -261,7 +261,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineSolidifier.class, new RenderSolidifier());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineCyclotron.class, new RenderCyclotron());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPASource.class, new RenderPASource());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPABeamline.class, new RenderPABeamline());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPABeamline.class, new RenderPABeamline());
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPARFC.class, new RenderPARFC());
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPAQuadrupole.class, new RenderPAQuadrupole());
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPADipole.class, new RenderPADipole());

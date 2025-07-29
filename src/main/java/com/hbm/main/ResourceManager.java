@@ -278,11 +278,11 @@ public class ResourceManager {
 
 	//Albion Particle Accelerator
 	public static final IModelCustom pa_source = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/source.obj")).asVBO();
-//	public static final IModelCustom pa_beamline = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/beamline.obj")).asVBO();
-//	public static final IModelCustom pa_rfc = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/rfc.obj")).asVBO();
-//	public static final IModelCustom pa_quadrupole = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/quadrupole.obj")).asVBO();
-//	public static final IModelCustom pa_dipole = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/dipole.obj")).asVBO();
-//	public static final IModelCustom pa_detector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/detector.obj")).asVBO();
+	public static final IModelCustom pa_beamline = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/beamline.obj")).asVBO();
+	public static final IModelCustom pa_rfc = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/rfc.obj")).asVBO();
+	public static final IModelCustom pa_quadrupole = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/quadrupole.obj")).asVBO();
+	public static final IModelCustom pa_dipole = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/dipole.obj")).asVBO();
+	public static final IModelCustom pa_detector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/detector.obj")).asVBO();
 
 	//RTG
 	public static final IModelCustom rtg = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/rtg.obj")).asVBO();
@@ -953,11 +953,11 @@ public class ResourceManager {
 
 	//Albion Particle Accelerator
 	public static final ResourceLocation pa_source_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/source.png");
-//	public static final ResourceLocation pa_beamline_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/beamline.png");
-//	public static final ResourceLocation pa_rfc_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/rfc.png");
-//	public static final ResourceLocation pa_quadrupole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/quadrupole.png");
-//	public static final ResourceLocation pa_dipole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/dipole.png");
-//	public static final ResourceLocation pa_detector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/detector.png");
+	public static final ResourceLocation pa_beamline_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/beamline.png");
+	public static final ResourceLocation pa_rfc_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/rfc.png");
+	public static final ResourceLocation pa_quadrupole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/quadrupole.png");
+	public static final ResourceLocation pa_dipole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/dipole.png");
+	public static final ResourceLocation pa_detector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/detector.png");
 
 	//Waste Drum
 	public static final ResourceLocation waste_drum_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/drum_gray.png");
