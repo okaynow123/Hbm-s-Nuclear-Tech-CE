@@ -51,15 +51,13 @@ public class RadiationWorldHandler {
         }
 
         BlockPos startPos = p.parent.subChunkPos;
-        RadPocket[] pocketsByBlock = p.parent.pocketsByBlock;
 
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 for (int k = 0; k < 16; k++) {
                     if (world.rand.nextInt(3) != 0) continue;
-                    if (pocketsByBlock != null && pocketsByBlock[i * 256 + j * 16 + k] != p) continue;
-
                     BlockPos pos = startPos.add(i, j, k);
+                    if (p.parent.getPocket(pos) != p) continue;
                     if (world.isAirBlock(pos)) continue;
 
                     IBlockState state = world.getBlockState(pos);
