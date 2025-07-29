@@ -1,9 +1,15 @@
 package com.hbm.api.energymk2;
 
+import com.hbm.lib.Library;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Do not use intanceof checks on this interface!
+ *
+ * @see Library#isItemBattery
+ */
 public interface IBatteryItem {
 
 	/**

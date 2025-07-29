@@ -8,6 +8,7 @@ import com.hbm.blocks.gas.*;
 import com.hbm.blocks.generic.*;
 import com.hbm.blocks.generic.BlockHazard.ExtDisplayEffect;
 import com.hbm.blocks.machine.*;
+import com.hbm.blocks.machine.albion.BlockPASource;
 import com.hbm.blocks.machine.pile.*;
 import com.hbm.blocks.machine.rbmk.*;
 import com.hbm.blocks.network.*;
@@ -1195,6 +1196,13 @@ public class ModBlocks {
 	public static final Block hadron_core = new BlockHadronCore(Material.IRON, "hadron_core").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block hadron_power = new BlockHadronPower(Material.IRON, "hadron_power").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final int guiID_hadron = 103;
+
+	public static final Block pa_source = new BlockPASource("pa_source").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
+//	public static final Block pa_beamline = new BlockPABeamline().setStepSound(Block.soundTypeMetal).setBlockName("pa_beamline").setHardness(5.0F).setResistance(10.0F);
+//	public static final Block pa_rfc = new BlockPARFC().setStepSound(Block.soundTypeMetal).setBlockName("pa_rfc").setHardness(5.0F).setResistance(10.0F);
+//	public static final Block pa_quadrupole = new BlockPAQuadrupole().setStepSound(Block.soundTypeMetal).setBlockName("pa_quadrupole").setHardness(5.0F).setResistance(10.0F);
+//	public static final Block pa_dipole = new BlockPADipole().setStepSound(Block.soundTypeMetal).setBlockName("pa_dipole").setHardness(5.0F).setResistance(10.0F);
+//	public static final Block pa_detector = new BlockPADetector().setStepSound(Block.soundTypeMetal).setBlockName("pa_detector").setHardness(5.0F).setResistance(10.0F);
 
 	//Missle launch pads
 	public static final Block machine_missile_assembly = new MachineMissileAssembly(Material.IRON, "machine_missile_assembly").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
