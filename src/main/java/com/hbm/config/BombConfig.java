@@ -43,7 +43,7 @@ public class BombConfig {
 	public static boolean enableNukeNBTSaving = true;
 	public static boolean chunkloading = true;
 	public static int explosionAlgorithm = 2;
-
+	public static int maxThreads = -1;
 	
 	public static void loadFromConfig(Configuration config) {
 		final String CATEGORY_NUKES = CommonConfig.CATEGORY_NUKES;
@@ -175,5 +175,9 @@ public class BombConfig {
 		Property explosionAlgorithmP = config.get(CATEGORY_NUKE, "6.11_explosionAlgorithm", 2);
 		explosionAlgorithmP.setComment("Configures the algorithm of mk5 explosion. \n0 = Legacy, 1 = Threaded DDA, 2 = Threaded DDA with damage accumulation.");
 		explosionAlgorithm = explosionAlgorithmP.getInt();
+
+		Property maxThreadsP = config.get(CATEGORY_NUKE, "6.11.1_explosionMaxThreads", -1);
+		maxThreadsP.setComment("Configures the maximum thread count for the threaded DDA explosion algorithm.\n -N = CPU count - N, 0 = CPU count, N = N");
+		maxThreads = maxThreadsP.getInt();
 	}
 }

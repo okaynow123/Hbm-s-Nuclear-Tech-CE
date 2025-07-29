@@ -168,8 +168,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.consolidationFinished = true;
             return;
         }
-
-        int workers = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+        int processors = Runtime.getRuntime().availableProcessors();
+        int workers = BombConfig.maxThreads <= 0 ? Math.max(1, processors + BombConfig.maxThreads) : Math.min(BombConfig.maxThreads, processors);
         this.pool = new ForkJoinPool(workers);
 
         RayTracerTask mainTask = new RayTracerTask(0, rayCount);
