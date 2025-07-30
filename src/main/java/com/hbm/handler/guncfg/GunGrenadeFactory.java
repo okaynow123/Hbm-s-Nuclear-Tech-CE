@@ -11,45 +11,6 @@ import java.util.ArrayList;
 
 public class GunGrenadeFactory {
 
-	public static GunConfiguration getHK69Config() {
-		
-		GunConfiguration config = new GunConfiguration();
-		
-		config.rateOfFire = 30;
-		config.roundsPerCycle = 1;
-		config.gunMode = GunConfiguration.MODE_NORMAL;
-		config.firingMode = GunConfiguration.FIRE_MANUAL;
-		config.hasSights = true;
-		config.reloadDuration = 40;
-		config.firingDuration = 0;
-		config.ammoCap = 1;
-		config.reloadType = GunConfiguration.RELOAD_SINGLE;
-		config.allowsInfinity = true;
-		config.crosshair = Crosshair.L_CIRCUMFLEX;
-		config.firingSound = HBMSoundHandler.hkShoot;
-		config.reloadSound = GunConfiguration.RSOUND_GRENADE;
-		config.reloadSoundEnd = false;
-		
-		config.name = "Granatpistole HK69";
-		config.manufacturer = "Heckler & Koch";
-		
-		config.config = new ArrayList<Integer>();
-		config.config.add(BulletConfigSyncingUtil.GRENADE_NORMAL);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_HE);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_INCENDIARY);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_PHOSPHORUS);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_CHEMICAL);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_CONCUSSION);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_FINNED);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_SLEEK);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_NUCLEAR);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_TRACER);
-		config.config.add(BulletConfigSyncingUtil.GRENADE_KAMPF);
-		config.durability = 300;
-		
-		return config;
-	}
-
 	public static BulletConfiguration getGrenadeConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardGrenadeConfig();

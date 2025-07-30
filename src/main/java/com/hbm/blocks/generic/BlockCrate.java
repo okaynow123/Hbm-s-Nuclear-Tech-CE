@@ -91,23 +91,7 @@ public class BlockCrate extends BlockFalling {
         BlockCrate.addToListWithWeight(crateList, ModItems.ammo_container, 2);
 
         //Weapon Crate
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_revolver_iron, 10);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_revolver, 9);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_revolver_gold, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_revolver_lead, 8);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_revolver_cursed, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_calamity, 3);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_rpg, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_karl, 4);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_panzerschreck, 6);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_hk69, 8);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_stinger, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_mp40, 9);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_uzi, 6);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_uzi_silencer, 5);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_uboinik, 8);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_lever_action, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_bolt_action, 7);
+        //мухехехе
 
         //Lead Crate
         BlockCrate.addToListWithWeight(leadList, ModItems.ingot_uranium, 10);
@@ -162,9 +146,6 @@ public class BlockCrate extends BlockFalling {
 
         //Red Crate
         BlockCrate.addToListWithWeight(redList, ModItems.mysteryshovel, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_revolver_pip, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_revolver_blackjack, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_revolver_silver, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.ammo_44_pip, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.ammo_44_bj, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.ammo_44_silver, 1);

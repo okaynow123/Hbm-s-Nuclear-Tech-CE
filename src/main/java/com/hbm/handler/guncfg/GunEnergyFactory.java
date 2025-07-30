@@ -27,36 +27,6 @@ import java.util.ArrayList;
 
 public class GunEnergyFactory {
 
-	public static GunConfiguration getZOMGConfig() {
-
-		GunConfiguration config = new GunConfiguration();
-
-		config.rateOfFire = 1;
-		config.roundsPerCycle = 1;
-		config.gunMode = GunConfiguration.MODE_NORMAL;
-		config.firingMode = GunConfiguration.FIRE_AUTO;
-		config.reloadDuration = 10;
-		config.reloadSoundEnd = false;
-		config.firingDuration = 0;
-		config.durability = 100000;
-		config.reloadType = GunConfiguration.RELOAD_FULL;
-		config.ammoCap = 1000;
-		config.allowsInfinity = true;
-		config.crosshair = Crosshair.L_ARROWS;
-		config.firingSound = HBMSoundHandler.zomgShoot;
-		config.reloadSound = HBMSoundHandler.b92Reload;
-
-		config.name = "EMC101 Prismatic Negative Energy Cannon";
-		config.manufacturer = "MWT Prototype Labs";
-
-		config.comment.add("Taste the rainbow!");
-
-		config.config = new ArrayList<Integer>();
-		config.config.add(BulletConfigSyncingUtil.ZOMG_BOLT);
-
-		return config;
-	}
-
 	public static GunConfiguration getEMPConfig() {
 
 		GunConfiguration config = new GunConfiguration();

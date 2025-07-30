@@ -1,6 +1,6 @@
 package com.hbm.particle.tau;
 
-import com.hbm.items.weapon.ItemGunGauss;
+//import com.hbm.items.weapon.ItemGunGauss;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.ParticleFirstPerson;
 import com.hbm.render.NTMRenderHelper;
@@ -43,10 +43,10 @@ public class ParticleTauMuzzleLightning extends ParticleFirstPerson {
 			this.setExpired();
 			return;
 		}
-		if(ItemGunGauss.firstPersonFireCounter == -1){
-			particleAge = Math.max(particleAge, particleMaxAge-40);
-			return;
-		}
+//		if(ItemGunGauss.firstPersonFireCounter == -1){
+//			particleAge = Math.max(particleAge, particleMaxAge-40);
+//			return;
+//		}
 		for(int i = 0; i < positions.size(); i ++){
 			if(rand.nextInt(6) == 0){
 				positions.set(i, positions.get(i).add(new Vec3d(rand.nextFloat()-0.5, rand.nextFloat()-0.5, rand.nextFloat()-0.5).scale(0.05)));

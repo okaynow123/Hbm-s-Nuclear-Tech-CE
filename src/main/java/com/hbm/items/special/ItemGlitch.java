@@ -101,7 +101,6 @@ public class ItemGlitch extends Item implements IBatteryItem {
 				}
 				break;
 			case 13:
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.gun_revolver_pip));
 				player.inventory.addItemStackToInventory(new ItemStack(ModItems.bottle_rad));
 				player.inventory.addItemStackToInventory(new ItemStack(ModItems.geiger_counter));
 				player.sendMessage(new TextComponentTranslation("chat.glitch.13a"));
@@ -122,7 +121,6 @@ public class ItemGlitch extends Item implements IBatteryItem {
 				player.sendMessage(new TextComponentTranslation("chat.glitch.17"));
 				break;
 			case 18:
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.gun_lever_action));
 				player.inventory.addItemStackToInventory(new ItemStack(ModItems.ammo_20gauge, 12));
 				player.sendMessage(new TextComponentTranslation("chat.glitch.18"));
 				break;

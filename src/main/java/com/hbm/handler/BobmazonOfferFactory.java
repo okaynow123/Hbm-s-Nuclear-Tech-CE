@@ -114,14 +114,6 @@ public class BobmazonOfferFactory {
 		weapons.add(new Offer(new ItemStack(ModItems.detonator), Requirement.ASSEMBLY, 15 * inflation));
 		weapons.add(new Offer(new ItemStack(ModItems.detonator_laser), Requirement.CHEMICS, 60 * inflation));
 		weapons.add(new Offer(new ItemStack(ModItems.defuser), Requirement.OIL, 5 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_revolver), Requirement.ASSEMBLY, 15 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_revolver_nopip), Requirement.ASSEMBLY, 20 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_minigun), Requirement.OIL, 100 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_panzerschreck), Requirement.ASSEMBLY, 95 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_hk69), Requirement.ASSEMBLY, 60 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_uzi), Requirement.OIL, 80 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_lever_action), Requirement.ASSEMBLY, 60 * inflation));
-		weapons.add(new Offer(new ItemStack(ModItems.gun_bolt_action), Requirement.ASSEMBLY, 35 * inflation));
 		weapons.add(new Offer(new ItemStack(ModItems.gun_revolver_ammo, 6), Requirement.OIL, 12 * inflation));
 		weapons.add(new Offer(new ItemStack(ModItems.ammo_357_desh, 6), Requirement.OIL, 36 * inflation));
 		weapons.add(new Offer(new ItemStack(ModItems.ammo_44, 6), Requirement.OIL, 12 * inflation));
@@ -181,13 +173,10 @@ public class BobmazonOfferFactory {
 		special.add(new Offer(new ItemStack(ModItems.grenade_kit), Requirement.HIDDEN, 20 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.jetpack_vector), Requirement.HIDDEN, 10 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.jetpack_tank), Requirement.HIDDEN, 3 * inflation));
-		special.add(new Offer(new ItemStack(ModItems.gun_lever_action), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_20gauge, 24), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_20gauge_incendiary, 24), Requirement.HIDDEN, 7 * inflation));
-		special.add(new Offer(new ItemStack(ModItems.gun_uzi_silencer, 1), Requirement.HIDDEN, 5 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_22lr, 64), Requirement.HIDDEN, 3 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_22lr_ap, 64), Requirement.HIDDEN, 4 * inflation));
-		special.add(new Offer(new ItemStack(ModItems.gun_hk69, 24), Requirement.HIDDEN, 8 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_grenade, 6), Requirement.HIDDEN, 4 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.ammo_grenade_sleek, 6), Requirement.HIDDEN, 6 * inflation));
 		special.add(new Offer(new ItemStack(ModItems.gun_kit_1, 10), Requirement.HIDDEN, 1 * inflation));

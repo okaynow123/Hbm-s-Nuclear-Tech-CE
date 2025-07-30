@@ -64,7 +64,7 @@ public class DecoBlockAlt extends BlockContainer {
 			{
 				if(this == ModBlocks.statue_elb)
 				{
-					if(stack.getItem() == ModItems.gun_revolver_cursed)
+					if(stack.getItem() == ModItems.nothing) //gun_revolver_cursed
 					{
 						world.setBlockState(pos, ModBlocks.statue_elb_g.getDefaultState().withProperty(FACING, state.getValue(FACING)), 2);
 
@@ -101,7 +101,7 @@ public class DecoBlockAlt extends BlockContainer {
 				}
 				if(this == ModBlocks.statue_elb_w)
 				{
-					if(stack.getItem() == ModItems.gun_revolver_cursed)
+					if(stack.getItem() == ModItems.nothing) //gun_revolver_cursed
 					{
 						world.setBlockState(pos, ModBlocks.statue_elb_f.getDefaultState().withProperty(FACING, state.getValue(FACING)), 2);
 

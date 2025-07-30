@@ -87,8 +87,8 @@ public class EntityFBI extends EntityMob implements IRangedAttackMob {
 		int equip = rand.nextInt(2);
 
         switch(equip) {
-        case 0: this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_revolver_nopip)); break;
-        case 1: this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_ks23)); break;
+        case 0: this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.nothing)); break; //gun_revolver_pip
+        case 1: this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.nothing)); break; //gun_ks23
         }
         if(rand.nextInt(5) == 0) {
         	this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.security_helmet));
@@ -127,14 +127,14 @@ public class EntityFBI extends EntityMob implements IRangedAttackMob {
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
 		if(!this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).isEmpty()) {
-			if(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.gun_revolver_nopip) {
+			if(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.nothing) { //gun_revolver_pip
 				EntityBullet bullet = new EntityBullet(world, this, target, 3F, 2);
 				bullet.damage = 10;
 		        this.world.spawnEntity(bullet);
 		        this.playSound(HBMSoundHandler.revolverShootAlt, 1.0F, 1.0F);
 			}
 
-			if(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.gun_ks23) {
+			if(this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).getItem() == ModItems.nothing) { //gun_ks_23
 				for(int i = 0; i < 7; i++) {
 					EntityBullet bullet = new EntityBullet(world, this, target, 3F, 5);
 					bullet.damage = 3;

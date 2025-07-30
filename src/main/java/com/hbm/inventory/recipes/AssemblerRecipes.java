@@ -668,7 +668,6 @@ public class AssemblerRecipes extends SerializableRecipe {
 		makeRecipe(new ComparableStack(ModItems.missile_endo, 1), new AStack[] { new ComparableStack(ModItems.warhead_thermo_endo, 1), new ComparableStack(ModItems.fuel_tank_large, 1), new ComparableStack(ModItems.thruster_large, 1), new OreDictStack(TI.plate(), 14), new OreDictStack(STEEL.plate(), 20), new OreDictStack(AL.plate(), 12), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), }, 350);
 		makeRecipe(new ComparableStack(ModItems.missile_exo, 1), new AStack[] { new ComparableStack(ModItems.warhead_thermo_exo, 1), new ComparableStack(ModItems.fuel_tank_large, 1), new ComparableStack(ModItems.thruster_large, 1), new OreDictStack(TI.plate(), 14), new OreDictStack(STEEL.plate(), 20), new OreDictStack(AL.plate(), 12), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), }, 350);
 
-		makeRecipe(new ComparableStack(ModItems.gun_defabricator, 1), new AStack[] { new OreDictStack(STEEL.ingot(), 2), new OreDictStack(ANY_PLASTIC.ingot(), 8), new OreDictStack(IRON.plate(), 5), new ComparableStack(ModItems.mechanism_special, 3), new ComparableStack(Items.DIAMOND, 1), new ComparableStack(ModItems.plate_dalekanium, 3), }, 200);
 		makeRecipe(new ComparableStack(ModItems.gun_osipr_ammo, 24), new AStack[] { new OreDictStack(STEEL.plate(), 2), new ComparableStack(Items.REDSTONE, 1), new ComparableStack(Items.GLOWSTONE_DUST, 1), }, 50);
 		makeRecipe(new ComparableStack(ModItems.gun_osipr_ammo2, 1), new AStack[] { new OreDictStack(CMB.plate(), 4), new ComparableStack(Items.REDSTONE, 7), new ComparableStack(ModItems.powder_power, 3), }, 200);
 
@@ -903,7 +902,6 @@ public class AssemblerRecipes extends SerializableRecipe {
 				new ComparableStack(ModBlocks.steel_scaffold, 4),
 				new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BASIC)
 		}, 600);
-		makeRecipe(new ComparableStack(ModItems.gun_zomg, 1), new AStack[] { new ComparableStack(ModItems.crystal_xen, 2), new ComparableStack(ModItems.singularity_counter_resonant, 1), new ComparableStack(ModItems.mechanism_special, 3), new ComparableStack(ModItems.plate_paa, 12), new OreDictStack(OreDictManager.getReflector(), 8), new ComparableStack(ModItems.coil_magnetized_tungsten, 5), new ComparableStack(ModItems.powder_magic, 4), new OreDictStack(ASBESTOS.ingot(), 8) }, 200);
 
 		makeRecipe(new ComparableStack(ModItems.euphemium_capacitor, 1), new AStack[] {
 				new OreDictStack(NB.ingot(), 4),

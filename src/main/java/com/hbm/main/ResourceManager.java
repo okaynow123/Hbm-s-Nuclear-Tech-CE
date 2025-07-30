@@ -203,7 +203,6 @@ public class ResourceManager {
 	public static final IModelCustom thompson = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/thompson.obj")).asVBO();
 	public static final IModelCustom bolter = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/bolter.obj")).asVBO();
 	public static final IModelCustom ar15 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/ar15.obj")).asVBO();
-	public static IModelCustom cc_plasma_cannon = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/cc_assault_rifle.obj")).asVBO();
 	public static IModelCustom egon_hose = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/egon_hose.obj")).asVBO();
 	public static IModelCustom egon_backpack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/egon.obj")).asVBO();
 	
@@ -1825,7 +1824,6 @@ public class ResourceManager {
 			soyuz_launcher_support_base = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_support_base);
 			soyuz_launcher_support = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_support);
 			sphere_hq = new WavefrontObjDisplayList((HFRWavefrontObject)sphere_hq);
-			cc_plasma_cannon = new WavefrontObjDisplayList((HFRWavefrontObject)cc_plasma_cannon);
 			egon_hose = new WavefrontObjDisplayList((HFRWavefrontObject)egon_hose);
 			egon_backpack = new WavefrontObjDisplayList((HFRWavefrontObject)egon_backpack);
 			spinny_light = new WavefrontObjDisplayList((HFRWavefrontObject)spinny_light);

@@ -224,9 +224,7 @@ public class ItemCustomLore extends Item {
 			list.add("from a reactor will instantly shut");
 			list.add("it down.");
 		}
-		if(this == ModItems.gun_super_shotgun) {
-			list.add("It's super broken!");
-		}
+
 
 		if(this == ModItems.burnt_bark) {
 			list.add("A piece of bark from an exploded golden oak tree.");
