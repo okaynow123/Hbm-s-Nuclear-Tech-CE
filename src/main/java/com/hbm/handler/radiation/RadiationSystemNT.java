@@ -30,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -45,6 +46,8 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -57,6 +60,7 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.DoubleAdder;
+import java.util.function.Supplier;
 
 /**
  * Refactored to be fully threaded. Do not aim for upstream parity.
@@ -65,7 +69,7 @@ import java.util.concurrent.atomic.DoubleAdder;
  * @author Drillgon, Zach2039, mlbv
  */
 @Mod.EventBusSubscriber(modid = RefStrings.MODID)
-public class RadiationSystemNT {
+public final class RadiationSystemNT {
 
     /**
      * Per world radiation storage data
@@ -75,11 +79,56 @@ public class RadiationSystemNT {
     private static final ByteBuffer buf = ByteBuffer.allocate(524288);
     private static final float PRUNE_THRESHOLD = 0.1F;
     private static final float EXTRA_DECAY = 0.05F;
+    private static final Object futureLock = new Object();
     /**
      * A tick counter so radiation only updates once every second.
      */
     private static int ticks;
-    private static CompletableFuture<RadiationUpdates> radiationFuture;
+    /**
+     * A future that represents the completion of the entire current radiation update cycle (computation and application).
+     * This is used to chain updates and prevent race conditions. It should only be modified via the synchronized
+     * scheduleUpdate method.
+     */
+    private static volatile CompletableFuture<Void> radiationFuture = CompletableFuture.completedFuture(null);
+    private static MinecraftServer serverInstance;
+
+    @SubscribeEvent
+    public static void onServerStarting(FMLServerStartingEvent event) {
+        serverInstance = event.getServer();
+    }
+
+    /**
+     * Clear the server instance when it stops to prevent memory leaks.
+     */
+    @SubscribeEvent
+    public static void onServerStopping(FMLServerStoppingEvent event) {
+        try {
+            radiationFuture.get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            MainRegistry.logger.error("Radiation system timed out or failed to complete tasks during server shutdown.", e);
+        }
+        serverInstance = null;
+    }
+
+    /**
+     * Forces an asynchronous, non-blocking radiation update for a single world.
+     * If an update is already in progress, this new update will be scheduled to run immediately after the current one completes.
+     *
+     * @param world The server world to force an update on.
+     */
+    public static void forceUpdate(World world) {
+        if (world == null || world.isRemote) return;
+        scheduleUpdate(() -> scheduleWorldUpdate(world));
+    }
+
+    /**
+     * Forces an asynchronous, non-blocking radiation update for all loaded worlds.
+     * If an update is already in progress, this new update will be scheduled to run immediately after the current one completes.
+     */
+    public static void forceUpdateAll() {
+        // Schedule a new update that will be chained to the end of the current update queue.
+        scheduleUpdate(RadiationSystemNT::scheduleFullUpdate);
+    }
 
     /**
      * Increments the radiation at the specified block position. Only increments if the current radiation stored is less than max
@@ -155,9 +204,7 @@ public class RadiationSystemNT {
 
         // If no pockets, assume no radiation
         RadPocket pocket = getPocket(world, pos);
-        if (pocket == null) return 0;
-
-        return pocket.radiation.get();
+        return pocket == null ? 0 : pocket.radiation.get();
     }
 
     /**
@@ -206,9 +253,7 @@ public class RadiationSystemNT {
         if (pos.getY() > 255 || pos.getY() < 0) return false;
         //If the world radiation data doesn't exist, nothing is loaded
         WorldRadiationData worldRadData = worldMap.get(world);
-        if (worldRadData == null) {
-            return false;
-        }
+        if (worldRadData == null) return false;
         SubChunkKey key = new SubChunkKey(pos.getX() >> 4, pos.getZ() >> 4, pos.getY() >> 4);
         return worldRadData.data.containsKey(key);
     }
@@ -240,16 +285,62 @@ public class RadiationSystemNT {
 
     private static void updateRadSaveData(World world) {
         RadiationSavedData data = RadiationSavedData.getData(world);
-
-        if (data.world == null) {
-            data.world = world;
-        }
-
+        if (data.world == null) data.world = world;
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] Updated system for entity contamination processing at worldtime {}", world.getTotalWorldTime());
         }
 
         data.updateSystem();
+    }
+
+    /**
+     * Atomically schedules a new update to run after the current one completes.
+     *
+     * @param updateSupplier A supplier that returns a CompletableFuture for the new update.
+     */
+    private static void scheduleUpdate(Supplier<CompletableFuture<Void>> updateSupplier) {
+        synchronized (futureLock) {
+            radiationFuture = radiationFuture.thenComposeAsync(v -> updateSupplier.get(), pool);
+        }
+    }
+
+    /**
+     * Creates a CompletableFuture that computes and applies radiation updates for all worlds.
+     *
+     * @return A future that completes when the update is fully applied.
+     */
+    private static CompletableFuture<Void> scheduleFullUpdate() {
+        return CompletableFuture.supplyAsync(RadiationSystemNT::computeRadiationUpdates, pool).thenAcceptAsync(updates -> {
+            if (serverInstance != null) {
+                serverInstance.addScheduledTask(() -> applyRadiationUpdates(updates));
+            } else {
+                MainRegistry.logger.error("Cannot apply radiation updates: MinecraftServer instance is null!");
+            }
+        });
+    }
+
+    /**
+     * Creates a CompletableFuture that computes and applies radiation updates for a single world.
+     * This is safe because the world object is guaranteed to exist when forceUpdate(world) is called.
+     *
+     * @param world The world to update.
+     * @return A future that completes when the update is fully applied.
+     */
+    private static CompletableFuture<Void> scheduleWorldUpdate(World world) {
+        WorldRadiationData worldData = getWorldRadData(world);
+        return CompletableFuture.supplyAsync(() -> computeWorldRadiationUpdate(worldData), pool).thenAcceptAsync(update -> applyWorldRadiationUpdate(worldData, update), ((WorldServer) world)::addScheduledTask);
+    }
+
+    /**
+     * Computes radiation changes for all worlds.
+     */
+    private static RadiationUpdates computeRadiationUpdates() {
+        RadiationUpdates res = new RadiationUpdates();
+        worldMap.values().parallelStream().forEach(w -> {
+            RadiationUpdates.WorldUpdate wu = computeWorldRadiationUpdate(w);
+            res.updates.put(w, wu);
+        });
+        return res;
     }
 
     /**
@@ -261,9 +352,7 @@ public class RadiationSystemNT {
             if (thunder > 0) AuxSavedData.setThunder(world, thunder - 1);
 
             RadiationSavedData data = RadiationSavedData.getData(world);
-            if (data.world == null) {
-                data.world = world;
-            }
+            if (data.world == null) data.world = world;
 
             if (world.getTotalWorldTime() % 20 == 15 && updateData) {
                 // unless a chunk requires update
@@ -272,9 +361,21 @@ public class RadiationSystemNT {
         }
     }
 
-    /**
-     * Updates entity contamination and applies effects based on current rad levels
-     */
+    @SubscribeEvent
+    public static void onUpdate(TickEvent.ServerTickEvent e) {
+        if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation) return;
+
+        if (e.phase == Phase.END) {
+            ticks++;
+            if (radiationFuture.isDone() && ticks % 20 == 17) {
+                scheduleUpdate(RadiationSystemNT::scheduleFullUpdate);
+            }
+        }
+
+        // Rebuild chunks marked as dirty by block changes instantly on the main thread.
+        rebuildDirty();
+    }
+
     @SubscribeEvent
     public static void onEntityUpdate(LivingUpdateEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
@@ -347,8 +448,7 @@ public class RadiationSystemNT {
                 entity.onDeath(ModDamageSource.radiation);
             }
 
-            if (entity instanceof EntityPlayerMP)
-                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadDeath);
+            if (entity instanceof EntityPlayerMP) AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadDeath);
         } else if (eRad >= 800) {
             if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 30, 0));
             if (world.rand.nextInt(300) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 2));
@@ -379,8 +479,7 @@ public class RadiationSystemNT {
             if (world.rand.nextInt(800) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 2 * 20, 0));
             if (world.rand.nextInt(1000) == 0) entity.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 20, 0));
 
-            if (entity instanceof EntityPlayerMP)
-                AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadPoison);
+            if (entity instanceof EntityPlayerMP) AdvancementManager.grantAchievement((EntityPlayerMP) entity, AdvancementManager.achRadPoison);
         }
     }
 
@@ -445,47 +544,10 @@ public class RadiationSystemNT {
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] onWorldUpdate called for RadSys tick {}", ticks);
         }
-
-        boolean allowUpdate = (e.phase == Phase.START);
-
-        if (allowUpdate) {
-            // Make the world stinky
+        if (e.phase == Phase.START) {
             RadiationWorldHandler.handleWorldDestruction(e.world);
         }
-
-        // Update world-level radiation data.
-        updateWorldRadiationData(e.world, allowUpdate);
-    }
-
-    @SubscribeEvent
-    public static void onUpdate(TickEvent.ServerTickEvent e) {
-        //If we don't do advanced radiation, don't update
-        if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation) return;
-
-        if (GeneralConfig.enableDebugMode) {
-            MainRegistry.logger.info("[Debug] onUpdate called for RadSys tick {}", ticks);
-        }
-
-        if (e.phase == Phase.END) {
-            ticks++;
-            if (ticks % 20 == 17 && radiationFuture == null) {
-                //Every second, do a full system update, which will spread around radiation and all that
-                radiationFuture = CompletableFuture.supplyAsync(RadiationSystemNT::computeRadiationUpdates, pool);
-            }
-        }
-
-        if (radiationFuture != null && radiationFuture.isDone()) {
-            try {
-                RadiationUpdates updates = radiationFuture.get();
-                applyRadiationUpdates(updates);
-            } catch (InterruptedException | ExecutionException ex) {
-                MainRegistry.logger.error("Error applying radiation updates", ex);
-            }
-            radiationFuture = null;
-        }
-
-        //Make sure any chunks marked as dirty by radiation resistant blocks are rebuilt instantly
-        rebuildDirty();
+        updateWorldRadiationData(e.world, e.phase == Phase.START);
     }
 
     @SubscribeEvent
@@ -559,142 +621,144 @@ public class RadiationSystemNT {
         }
     }
 
-    private static RadiationUpdates computeRadiationUpdates() {
-        RadiationUpdates res = new RadiationUpdates();
-        worldMap.values().parallelStream().forEach(w -> {
-            RadiationUpdates.WorldUpdate wu = res.updates.computeIfAbsent(w, k -> new RadiationUpdates.WorldUpdate());
-            List<RadPocket> itrActive = new ArrayList<>(w.getActivePockets());
-            final ThreadLocalRandom rand = ThreadLocalRandom.current();
-            itrActive.parallelStream().forEach(p -> {
-                BlockPos pos = p.parent.subChunkPos;
-                p.radiation.updateAndGet(current -> Math.max(0.0f, current * 0.999F - 0.05F));
-                wu.dirtyChunkPositions.add(new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4));
-                float currentRadiation = p.radiation.get();
+    /**
+     * Computes radiation changes for a single world.
+     */
+    private static RadiationUpdates.WorldUpdate computeWorldRadiationUpdate(WorldRadiationData worldData) {
+        RadiationUpdates.WorldUpdate wu = new RadiationUpdates.WorldUpdate();
+        List<RadPocket> itrActive = new ArrayList<>(worldData.getActivePockets());
+        final ThreadLocalRandom rand = ThreadLocalRandom.current();
+
+        itrActive.parallelStream().forEach(p -> {
+            BlockPos pos = p.parent.subChunkPos;
+            p.radiation.updateAndGet(current -> Math.max(0.0f, current * 0.999F - 0.05F));
+            wu.dirtyChunkPositions.add(new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4));
+            float currentRadiation = p.radiation.get();
+            if (currentRadiation <= 0) {
+                // Pocket is depleted before spreading, add to its own accumulatedRads and it will be removed later.
+                p.radiation.set(0.0f);
+                p.accumulatedRads.reset();
+                return;
+            }
+
+            // Apply pruning for near-zero radiation in non-sealed pockets
+            if (!p.isSealed() && currentRadiation < PRUNE_THRESHOLD) {
+                p.radiation.updateAndGet(cur -> Math.max(0.0f, cur - EXTRA_DECAY));
+                currentRadiation = p.radiation.get();
                 if (currentRadiation <= 0) {
-                    // Pocket is depleted before spreading, add to its own accumulatedRads and it will be removed later.
                     p.radiation.set(0.0f);
                     p.accumulatedRads.reset();
                     return;
                 }
+            }
 
-                // Apply pruning for near-zero radiation in non-sealed pockets
-                if (!p.isSealed() && currentRadiation < PRUNE_THRESHOLD) {
-                    p.radiation.updateAndGet(cur -> Math.max(0.0f, cur - EXTRA_DECAY));
-                    currentRadiation = p.radiation.get();
-                    if (currentRadiation <= 0) {
-                        p.radiation.set(0.0f);
-                        p.accumulatedRads.reset();
-                        return;
-                    }
-                }
-
-                if (currentRadiation > RadiationConfig.fogRad && rand.nextInt(RadiationConfig.fogCh) == 0) {
-                    //Fog calculation works slightly differently here to account for the 3d nature of the system
-                    //We just try 10 random coordinates of the sub chunk
-                    //If the coordinate is inside this pocket and the block at the coordinate is air,
-                    //use it to spawn a rad particle at that block and break
-                    //Also only spawn it if it's close to the ground, otherwise you get a giant fart when nukes go off.
-                    for (int i = 0; i < 10; i++) {
-                        BlockPos randPos = new BlockPos(rand.nextInt(16), rand.nextInt(16), rand.nextInt(16));
-                        if (p.parent.getPocket(randPos) == p) {
-                            randPos = randPos.add(pos);
-                            @Untested("this is bad practice, but no crash observed so far")
-                            IBlockState state = w.world.getBlockState(randPos);
-                            Vec3d rPos = new Vec3d(randPos.getX() + 0.5, randPos.getY() + 0.5, randPos.getZ() + 0.5);
-                            RayTraceResult trace = w.world.rayTraceBlocks(rPos, rPos.add(0, -6, 0));
-                            if (state.getBlock().isAir(state, w.world, randPos) && trace != null && trace.typeOfHit == Type.BLOCK) {
-                                wu.fogPositions.add(randPos);
-                                break;
-                            }
+            if (currentRadiation > RadiationConfig.fogRad && rand.nextInt(RadiationConfig.fogCh) == 0) {
+                //Fog calculation works slightly differently here to account for the 3d nature of the system
+                //We just try 10 random coordinates of the sub chunk
+                //If the coordinate is inside this pocket and the block at the coordinate is air,
+                //use it to spawn a rad particle at that block and break
+                //Also only spawn it if it's close to the ground, otherwise you get a giant fart when nukes go off.
+                for (int i = 0; i < 10; i++) {
+                    BlockPos randPos = new BlockPos(rand.nextInt(16), rand.nextInt(16), rand.nextInt(16));
+                    if (p.parent.getPocket(randPos) == p) {
+                        randPos = randPos.add(pos);
+                        @Untested("this is bad practice, but no crash observed so far") IBlockState state = worldData.world.getBlockState(randPos);
+                        Vec3d rPos = new Vec3d(randPos.getX() + 0.5, randPos.getY() + 0.5, randPos.getZ() + 0.5);
+                        RayTraceResult trace = worldData.world.rayTraceBlocks(rPos, rPos.add(0, -6, 0));
+                        if (state.getBlock().isAir(state, worldData.world, randPos) && trace != null && trace.typeOfHit == Type.BLOCK) {
+                            wu.fogPositions.add(randPos);
+                            break;
                         }
                     }
                 }
+            }
 
-                float count = 0;
+            float count = 0;
+            for (EnumFacing e : EnumFacing.VALUES) {
+                count += p.connectionIndices[e.ordinal()].size();
+            }
+            float amountPer = count > 0 ? 0.7F / count : 0;
+            if (count == 0 || currentRadiation < 1) {
+                //Don't update if we have no connections or our own radiation is less than 1. Prevents micro radiation bleeding.
+                amountPer = 0;
+            }
+
+            final float radForThisTick = p.radiation.get();
+            // All pockets, even those not spreading, retain their own radiation value.
+            p.accumulatedRads.add(radForThisTick);
+
+            if (radForThisTick > 0 && amountPer > 0) {
+                // If spreading, subtract the spread amount from its own accumulated value.
+                p.accumulatedRads.add(-radForThisTick * 0.7F);
                 for (EnumFacing e : EnumFacing.VALUES) {
-                    count += p.connectionIndices[e.ordinal()].size();
-                }
-                float amountPer = count > 0 ? 0.7F / count : 0;
-                if (count == 0 || currentRadiation < 1) {
-                    //Don't update if we have no connections or our own radiation is less than 1. Prevents micro radiation bleeding.
-                    amountPer = 0;
-                }
-
-                final float radForThisTick = p.radiation.get();
-                // All pockets, even those not spreading, retain their own radiation value.
-                p.accumulatedRads.add(radForThisTick);
-
-                if (radForThisTick > 0 && amountPer > 0) {
-                    // If spreading, subtract the spread amount from its own accumulated value.
-                    p.accumulatedRads.add(-radForThisTick * 0.7F);
-                    for (EnumFacing e : EnumFacing.VALUES) {
-                        BlockPos nPos = pos.offset(e, 16);
-                        if (!w.world.isBlockLoaded(nPos) || nPos.getY() < 0 || nPos.getY() > 255) continue;
-                        List<Integer> cons = p.connectionIndices[e.ordinal()];
-                        if (cons.contains(-1)) {
-                            wu.dirtyRebuild.add(nPos);
-                            continue;
-                        }
-                        SubChunkRadiationStorage sc2 = getSubChunkStorage(w.world, nPos);
-                        if (sc2 == null) {
-                            wu.dirtyRebuild.add(nPos);
-                            continue;
-                        }
-                        for (int idx : cons) {
-                            if (idx < 0 || idx >= sc2.pockets.length) continue;
-                            RadPocket target = sc2.pockets[idx];
-                            if (!target.isSealed()) {
-                                final float radToAdd = radForThisTick * amountPer;
-                                target.accumulatedRads.add(radToAdd);
-                                // Collect the newly irradiated pocket.
-                                wu.toAdd.add(target);
-                            }
+                    BlockPos nPos = pos.offset(e, 16);
+                    if (!worldData.world.isBlockLoaded(nPos) || nPos.getY() < 0 || nPos.getY() > 255) continue;
+                    List<Integer> cons = p.connectionIndices[e.ordinal()];
+                    if (cons.contains(-1)) {
+                        wu.dirtyRebuild.add(nPos);
+                        continue;
+                    }
+                    SubChunkRadiationStorage sc2 = getSubChunkStorage(worldData.world, nPos);
+                    if (sc2 == null) {
+                        wu.dirtyRebuild.add(nPos);
+                        continue;
+                    }
+                    for (int idx : cons) {
+                        if (idx < 0 || idx >= sc2.pockets.length) continue;
+                        RadPocket target = sc2.pockets[idx];
+                        if (!target.isSealed()) {
+                            target.accumulatedRads.add(radForThisTick * amountPer);
+                            // Collect the newly irradiated pocket.
+                            wu.toAdd.add(target);
                         }
                     }
-                }
-            });
-            Set<RadPocket> allPocketsToUpdate = new HashSet<>(itrActive);
-            allPocketsToUpdate.addAll(wu.toAdd);
-            for (RadPocket act : allPocketsToUpdate) {
-                float newRadiation = (float) act.accumulatedRads.sumThenReset();
-                act.radiation.set(newRadiation);
-
-                if (newRadiation <= 0) {
-                    wu.toRemove.add(act);
                 }
             }
         });
-        return res;
+
+        Set<RadPocket> allPocketsToUpdate = new HashSet<>(itrActive);
+        allPocketsToUpdate.addAll(wu.toAdd);
+        for (RadPocket act : allPocketsToUpdate) {
+            float newRadiation = (float) act.accumulatedRads.sumThenReset();
+            act.radiation.set(newRadiation);
+            if (newRadiation <= 0) {
+                wu.toRemove.add(act);
+            }
+        }
+        return wu;
     }
 
+    /**
+     * Applies computed radiation changes for all worlds. MUST be called from the main server thread.
+     */
     private static void applyRadiationUpdates(RadiationUpdates updates) {
         for (Map.Entry<WorldRadiationData, RadiationUpdates.WorldUpdate> entry : updates.updates.entrySet()) {
-            WorldRadiationData w = entry.getKey();
-            RadiationUpdates.WorldUpdate wu = entry.getValue();
-            for (RadPocket p : wu.toAdd) {
-                w.addActivePocket(p);
+            applyWorldRadiationUpdate(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Applies computed radiation changes for a single world. MUST be called from the main server thread.
+     */
+    private static void applyWorldRadiationUpdate(WorldRadiationData worldData, RadiationUpdates.WorldUpdate update) {
+        for (RadPocket p : update.toAdd) worldData.addActivePocket(p);
+        for (RadPocket p : update.toRemove) worldData.removeActivePocket(p);
+
+        for (ChunkPos cp : update.dirtyChunkPositions) {
+            if (worldData.world instanceof WorldServer server && server.getChunkProvider().chunkExists(cp.x, cp.z)) {
+                worldData.world.getChunk(cp.x, cp.z).markDirty();
+            } else {
+                worldData.deferredDirty.add(cp);
             }
-            for (RadPocket p : wu.toRemove) {
-                w.removeActivePocket(p);
-            }
-            for (ChunkPos cp : wu.dirtyChunkPositions) {
-                int cx = cp.x;
-                int cz = cp.z;
-                if (w.world instanceof WorldServer server && server.getChunkProvider().chunkExists(cx, cz)) {
-                    w.world.getChunk(cx, cz).markDirty();
-                } else {
-                    w.deferredDirty.add(cp);
-                }
-            }
-            for (BlockPos d : wu.dirtyRebuild) {
-                markChunkForRebuild(w.world, d);
-            }
-            for (BlockPos f : wu.fogPositions) {
-                NBTTagCompound data = new NBTTagCompound();
-                data.setString("type", "radiationfog");
-                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, f.getX() + 0.5F, f.getY() + 0.5F, f.getZ() + 0.5F),
-                        new TargetPoint(w.world.provider.getDimension(), f.getX(), f.getY(), f.getZ(), 100));
-            }
+        }
+
+        for (BlockPos d : update.dirtyRebuild) markChunkForRebuild(worldData.world, d);
+
+        for (BlockPos f : update.fogPositions) {
+            NBTTagCompound data = new NBTTagCompound();
+            data.setString("type", "radiationfog");
+            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, f.getX() + 0.5F, f.getY() + 0.5F, f.getZ() + 0.5F),
+                    new TargetPoint(worldData.world.provider.getDimension(), f.getX(), f.getY(), f.getZ(), 100));
         }
     }
 
@@ -739,7 +803,8 @@ public class RadiationSystemNT {
                         Block block = blocks.get(x, y, z).getBlock();
                         BlockPos localPos = new BlockPos(x, y, z);
 
-                        if (!(block instanceof IRadResistantBlock && ((IRadResistantBlock) block).isRadResistant(chunk.getWorld(), localPos.add(subChunkPos)))) {
+                        if (!(block instanceof IRadResistantBlock && ((IRadResistantBlock) block).isRadResistant(chunk.getWorld(),
+                                localPos.add(subChunkPos)))) {
                             // This block is not resistant and has no pocket yet. Start a flood fill.
                             int currentPaletteIndex;
                             // If we have more than 14 pockets, merge new pockets into pocket 0 to prevent overflow.
@@ -792,7 +857,8 @@ public class RadiationSystemNT {
         }
         subChunk.add(chunk.getWorld(), subChunkPos);
         if (GeneralConfig.enableDebugMode) {
-            MainRegistry.logger.info("[Debug] Finished rebuild of chunk at {} with {} pockets.", new BlockPos(chunk.getPos().x, yIndex, chunk.getPos().z), pockets.size());
+            MainRegistry.logger.info("[Debug] Finished rebuild of chunk at {} with {} pockets.", new BlockPos(chunk.getPos().x, yIndex,
+                    chunk.getPos().z), pockets.size());
         }
     }
 
@@ -879,7 +945,8 @@ public class RadiationSystemNT {
                     // Continue if the block is not yet processed
                     if (existingPaletteIndex == SubChunkRadiationStorage.NO_POCKET_INDEX) {
                         Block block = chunk.get(newPos.getX(), newPos.getY(), newPos.getZ()).getBlock();
-                        if (!(block instanceof IRadResistantBlock && ((IRadResistantBlock) block).isRadResistant(world, newPos.add(subChunkWorldPos)))) {
+                        if (!(block instanceof IRadResistantBlock && ((IRadResistantBlock) block).isRadResistant(world,
+                                newPos.add(subChunkWorldPos)))) {
                             setPaletteIndex(pocketData, newPos, paletteIndex);
                             queue.add(newPos);
                         }
@@ -966,7 +1033,7 @@ public class RadiationSystemNT {
                 MainRegistry.logger.error("Data corruption detected while reading radiation data for sub-chunk {} in chunk {}. ", i, chunkPos, ex);
                 BlockPos subChunkPos = new BlockPos(chunkPos.x << 4, i << 4, chunkPos.z << 4);
                 SubChunkRadiationStorage corruptedStorage = new SubChunkRadiationStorage(data, subChunkPos);
-                corruptedStorage.pockets = new RadPocket[]{ new RadPocket(corruptedStorage, 0) };
+                corruptedStorage.pockets = new RadPocket[]{new RadPocket(corruptedStorage, 0)};
                 corruptedStorage.pocketData = null;
                 SubChunkKey key = new SubChunkKey(chunkPos, i);
                 data.data.put(key, corruptedStorage);
@@ -1088,7 +1155,6 @@ public class RadiationSystemNT {
     //the smaller 16*16*16 chunk
     public static class SubChunkRadiationStorage {
         public static final int NO_POCKET_INDEX = 15; // The sentinel value for a resistant block (binary 1111)
-
         public WorldRadiationData parent;
         public BlockPos subChunkPos;
         public int yLevel;
@@ -1098,7 +1164,9 @@ public class RadiationSystemNT {
          * If this is null, it signifies the entire sub-chunk is one single pocket (optimization).
          */
         public byte[] pocketData;
-        /** The palette of unique pockets in this sub-chunk. */
+        /**
+         * The palette of unique pockets in this sub-chunk.
+         */
         public RadPocket[] pockets;
 
         public SubChunkRadiationStorage(WorldRadiationData parent, BlockPos subChunkPos) {
@@ -1259,7 +1327,7 @@ public class RadiationSystemNT {
                 SubChunkKey chunkKey = new SubChunkKey(radPocket.getSubChunkPos().getX() >> 4, radPocket.getSubChunkPos().getZ() >> 4,
                         radPocket.getSubChunkPos().getY() >> 4);
                 MainRegistry.logger.info("[Debug] Added active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " +
-                                "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(),
+                        "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(),
                         radPocket.getSubChunkPos(), chunkKey, world);
             }
         }
