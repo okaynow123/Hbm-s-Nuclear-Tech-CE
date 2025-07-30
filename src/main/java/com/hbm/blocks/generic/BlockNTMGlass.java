@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.IRadResistantBlock;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockBreakable;

@@ -3,7 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.*;

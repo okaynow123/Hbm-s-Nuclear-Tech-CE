@@ -2,7 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.IDoor;
 import com.hbm.interfaces.IKeypadHandler;
 import com.hbm.interfaces.IRadResistantBlock;

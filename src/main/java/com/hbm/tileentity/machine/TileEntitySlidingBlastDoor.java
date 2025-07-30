@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.items.ModItems;

@@ -1,4 +1,4 @@
-package com.hbm.handler;
+package com.hbm.handler.radiation;
 
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.GeneralConfig;

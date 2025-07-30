@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.items.ModItems;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;

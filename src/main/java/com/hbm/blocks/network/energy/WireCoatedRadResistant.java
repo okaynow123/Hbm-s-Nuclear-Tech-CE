@@ -1,6 +1,6 @@
 package com.hbm.blocks.network.energy;
 
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.IRadResistantBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

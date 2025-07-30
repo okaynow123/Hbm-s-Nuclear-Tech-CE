@@ -2,7 +2,7 @@ package com.hbm.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.generic.BlockDoorGeneric;
-import com.hbm.handler.RadiationSystemNT;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.inventory.control_panel.ControlEvent;

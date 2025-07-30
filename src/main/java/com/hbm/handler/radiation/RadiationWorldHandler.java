@@ -1,9 +1,9 @@
-package com.hbm.handler;
+package com.hbm.handler.radiation;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.handler.RadiationSystemNT.RadPocket;
+import com.hbm.handler.radiation.RadiationSystemNT.RadPocket;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.RadiationSaveStructure;
 import com.hbm.saveddata.RadiationSavedData;
