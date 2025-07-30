@@ -17,6 +17,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.util.AtomicFloat;
 import com.hbm.util.SubChunkKey;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -55,7 +56,7 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.DoubleAdder;
 
 /**
  * Refactored to be fully threaded. Do not aim for upstream parity.
@@ -94,10 +95,10 @@ public class RadiationSystemNT {
             rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
         }
         RadPocket p = getPocket(world, pos);
-        if (p != null && p.radiation.get() < max) {
-            p.radiation.updateAndGet(current -> current + amount);
-            //Mark this pocket as active so it gets updated
-            if (amount > 0) {
+        if (p != null) {
+            float previous = p.radiation.getAndUpdate(current -> (current < max) ? current + amount : current);
+            if (previous < max && amount > 0) {
+                //Mark this pocket as active so it gets updated
                 WorldRadiationData data = getWorldRadData(world);
                 data.addActivePocket(p);
             }
@@ -116,8 +117,7 @@ public class RadiationSystemNT {
         if (pos.getY() < 0 || pos.getY() > 255 || !isSubChunkLoaded(world, pos)) return;
         RadPocket p = getPocket(world, pos);
         if (p == null) return;
-        p.radiation.updateAndGet(current -> current - Math.max(amount, 0));
-        if (p.radiation.get() < 0) p.radiation.set(0.0f);
+        p.radiation.updateAndGet(current -> Math.max(0.0f, current - Math.max(amount, 0)));
     }
 
     /**
@@ -573,7 +573,7 @@ public class RadiationSystemNT {
                 if (currentRadiation <= 0) {
                     // Pocket is depleted before spreading, add to its own accumulatedRads and it will be removed later.
                     p.radiation.set(0.0f);
-                    p.accumulatedRads.set(0.0f);
+                    p.accumulatedRads.reset();
                     return;
                 }
 
@@ -583,7 +583,7 @@ public class RadiationSystemNT {
                     currentRadiation = p.radiation.get();
                     if (currentRadiation <= 0) {
                         p.radiation.set(0.0f);
-                        p.accumulatedRads.set(0.0f);
+                        p.accumulatedRads.reset();
                         return;
                     }
                 }
@@ -622,11 +622,11 @@ public class RadiationSystemNT {
 
                 final float radForThisTick = p.radiation.get();
                 // All pockets, even those not spreading, retain their own radiation value.
-                p.accumulatedRads.updateAndGet(acc -> acc + radForThisTick);
+                p.accumulatedRads.add(radForThisTick);
 
                 if (radForThisTick > 0 && amountPer > 0) {
                     // If spreading, subtract the spread amount from its own accumulated value.
-                    p.accumulatedRads.updateAndGet(acc -> acc - radForThisTick * 0.7F);
+                    p.accumulatedRads.add(-radForThisTick * 0.7F);
                     for (EnumFacing e : EnumFacing.VALUES) {
                         BlockPos nPos = pos.offset(e, 16);
                         if (!w.world.isBlockLoaded(nPos) || nPos.getY() < 0 || nPos.getY() > 255) continue;
@@ -645,7 +645,7 @@ public class RadiationSystemNT {
                             RadPocket target = sc2.pockets[idx];
                             if (!target.isSealed()) {
                                 final float radToAdd = radForThisTick * amountPer;
-                                target.accumulatedRads.updateAndGet(acc -> acc + radToAdd);
+                                target.accumulatedRads.add(radToAdd);
                                 // Collect the newly irradiated pocket.
                                 wu.toAdd.add(target);
                             }
@@ -656,7 +656,7 @@ public class RadiationSystemNT {
             Set<RadPocket> allPocketsToUpdate = new HashSet<>(itrActive);
             allPocketsToUpdate.addAll(wu.toAdd);
             for (RadPocket act : allPocketsToUpdate) {
-                float newRadiation = act.accumulatedRads.getAndSet(0.0f);
+                float newRadiation = (float) act.accumulatedRads.sumThenReset();
                 act.radiation.set(newRadiation);
 
                 if (newRadiation <= 0) {
@@ -1035,10 +1035,10 @@ public class RadiationSystemNT {
 
     //A list of pockets completely closed off by radiation resistant blocks
     public static class RadPocket {
-        public final AtomicReference<Float> radiation = new AtomicReference<>(0.0f);
+        public final AtomicFloat radiation = new AtomicFloat(0.0f);
         @SuppressWarnings("unchecked")
         public final List<Integer>[] connectionIndices = new CopyOnWriteArrayList[EnumFacing.VALUES.length];
-        private final AtomicReference<Float> accumulatedRads = new AtomicReference<>(0.0f);
+        private final DoubleAdder accumulatedRads = new DoubleAdder();
         public SubChunkRadiationStorage parent;
         public int index;
 
@@ -1259,7 +1259,7 @@ public class RadiationSystemNT {
                 SubChunkKey chunkKey = new SubChunkKey(radPocket.getSubChunkPos().getX() >> 4, radPocket.getSubChunkPos().getZ() >> 4,
                         radPocket.getSubChunkPos().getY() >> 4);
                 MainRegistry.logger.info("[Debug] Added active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " +
-                                "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.get(), radPocket.isSealed(),
+                                "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(),
                         radPocket.getSubChunkPos(), chunkKey, world);
             }
         }
@@ -1269,7 +1269,7 @@ public class RadiationSystemNT {
             if (GeneralConfig.enableDebugMode) {
                 SubChunkKey chunkKey = new SubChunkKey(radPocket.getSubChunkPos().getX() >> 4, radPocket.getSubChunkPos().getZ() >> 4,
                         radPocket.getSubChunkPos().getY() >> 4);
-                MainRegistry.logger.info("[Debug] Removed active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " + "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.get(), radPocket.isSealed(), radPocket.getSubChunkPos(), chunkKey, world);
+                MainRegistry.logger.info("[Debug] Removed active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " + "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(), radPocket.getSubChunkPos(), chunkKey, world);
 
             }
         }
