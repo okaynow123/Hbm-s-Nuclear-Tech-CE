@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
 import com.hbm.inventory.recipes.CentrifugeRecipes;
 import com.hbm.inventory.recipes.DFCRecipes;
+import com.hbm.inventory.recipes.ParticleAcceleratorRecipes;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
@@ -82,6 +83,7 @@ public class JEIConfig implements IModPlugin {
     public static final String TRANSMUTATION = "hbm.transmutation";
     public static final String WASTEDRUM = "hbm.waste_drum";
     static final String ORE_SLOPPER = "hbm.ore_slopper";
+    static final String PA = "hbm.particle_accelerator";
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
@@ -101,6 +103,7 @@ public class JEIConfig implements IModPlugin {
     private SolderingStationRecipeHandler solderingStationHandler;
     private SolidificationHandler solidificationHandler;
     private OreSlopperHandler oreSlopperHandler;
+    private ParticleAcceleratorHandler particleAcceleratorHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -174,6 +177,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(Objects.requireNonNull(Blocks.CRAFTING_TABLE)), RBMKFUEL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), DFC);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_ore_slopper), ORE_SLOPPER);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_detector), PA);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_source), PA);
 
         registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
@@ -225,6 +230,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
         registry.addRecipes(oreSlopperHandler.getRecipes(), ORE_SLOPPER);
+        registry.addRecipes(particleAcceleratorHandler.getRecipes(), PA);
 
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
@@ -255,6 +261,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIElectrolyserFluid.class, 62, 26, 12, 40, ELECTROLYSIS_FLUID);
         registry.addRecipeClickArea(GUIElectrolyserMetal.class, 7, 46, 22, 25, ELECTROLYSIS_METAL);
         registry.addRecipeClickArea(GUIPyroOven.class, 57, 48, 27, 11, PYROLYSIS);
+        registry.addRecipeClickArea(GUIPADetector.class, 75, 35, 82-75, 43-35, PA);
+        registry.addRecipeClickArea(GUIPASource.class, 75, 35, 82-75, 43-35, PA);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
@@ -334,6 +342,7 @@ public class JEIConfig implements IModPlugin {
                 solderingStationHandler = new SolderingStationRecipeHandler(help),
                 solidificationHandler = new SolidificationHandler(help),
                 oreSlopperHandler = new OreSlopperHandler(help),
+                particleAcceleratorHandler = new ParticleAcceleratorHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),

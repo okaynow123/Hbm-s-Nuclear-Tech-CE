@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ParticleAcceleratorRecipes extends SerializableRecipe {
@@ -83,6 +84,33 @@ public class ParticleAcceleratorRecipes extends SerializableRecipe {
     @Override
     public void deleteRecipes() {
         recipes.clear();
+    }
+
+    public static ParticleAcceleratorRecipe getOutput(ItemStack input1, ItemStack input2) {
+
+        for(ParticleAcceleratorRecipe recipe : recipes) {
+
+            if(((recipe.input1.matchesRecipe(input1, true) && recipe.input2.matchesRecipe(input2, true)) ||
+                    (recipe.input1.matchesRecipe(input2, true) && recipe.input2.matchesRecipe(input1, true)))) {
+                return recipe;
+            }
+        }
+
+        return null;
+    }
+
+    public static HashMap<Object[], Object> getRecipes() {
+
+        HashMap<Object[], Object> recipes = new HashMap<>();
+
+        for(ParticleAcceleratorRecipe entry : ParticleAcceleratorRecipes.recipes) {
+            List<ItemStack> outputs = new ArrayList<>();
+            outputs.add(entry.output1);
+            if(entry.output2 != null) outputs.add(entry.output2);
+            recipes.put(new Object[] {entry.input1, entry.input2}, outputs.toArray(new ItemStack[0]));
+        }
+
+        return recipes;
     }
 
     public static class ParticleAcceleratorRecipe {
