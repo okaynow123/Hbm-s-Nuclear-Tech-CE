@@ -1200,10 +1200,11 @@ public class ModBlocks {
 
 	public static final Block pa_source = new BlockPASource("pa_source").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
 	public static final Block pa_beamline = new BlockPABeamline("pa_beamline").setSoundType((SoundType.METAL)).setHardness(5.0F).setResistance(10.0F);
-//	public static final Block pa_rfc = new BlockPARFC().setStepSound(Block.soundTypeMetal).setBlockName("pa_rfc").setHardness(5.0F).setResistance(10.0F);
-//	public static final Block pa_quadrupole = new BlockPAQuadrupole().setStepSound(Block.soundTypeMetal).setBlockName("pa_quadrupole").setHardness(5.0F).setResistance(10.0F);
-//	public static final Block pa_dipole = new BlockPADipole().setStepSound(Block.soundTypeMetal).setBlockName("pa_dipole").setHardness(5.0F).setResistance(10.0F);
-//	public static final Block pa_detector = new BlockPADetector().setStepSound(Block.soundTypeMetal).setBlockName("pa_detector").setHardness(5.0F).setResistance(10.0F);
+	public static final Block pa_rfc = new BlockPARFC("pa_rfc").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
+	public static final Block pa_quadrupole =
+			new BlockPAQuadrupole("pa_quadrupole").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
+	public static final Block pa_dipole = new BlockPADipole("pa_dipole").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
+	public static final Block pa_detector = new BlockPADetector("pa_detector").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F);
 
 	//Missle launch pads
 	public static final Block machine_missile_assembly = new MachineMissileAssembly(Material.IRON, "machine_missile_assembly").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);

@@ -148,15 +148,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import paulscode.sound.SoundSystemConfig;
 
 import java.awt.*;
 import java.io.File;
 import java.nio.FloatBuffer;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class ClientProxy extends ServerProxy {
 
@@ -262,10 +262,10 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineCyclotron.class, new RenderCyclotron());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPASource.class, new RenderPASource());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPABeamline.class, new RenderPABeamline());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPARFC.class, new RenderPARFC());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPAQuadrupole.class, new RenderPAQuadrupole());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPADipole.class, new RenderPADipole());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPADetector.class, new RenderPADetector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPARFC.class, new RenderPARFC());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPAQuadrupole.class, new RenderPAQuadrupole());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPADipole.class, new RenderPADipole());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPADetector.class, new RenderPADetector());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBroadcaster.class, new RenderBroadcaster());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGeiger.class, new RenderGeiger());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDeuteriumTower.class, new RenderDeuteriumTower());

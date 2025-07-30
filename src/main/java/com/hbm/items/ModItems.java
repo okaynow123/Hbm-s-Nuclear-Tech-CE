@@ -2792,6 +2792,8 @@ public class ModItems {
 	public static final Item watz_pellet = new ItemWatzPellet("watz_pellet", false);
 	public static final Item watz_pellet_depleted = new ItemWatzPellet("watz_pellet_depleted", true);
 
+	public static final Item pa_coil = new ItemPACoil("pa_coil").setCreativeTab(MainRegistry.controlTab);
+
 	public static final Item particle_empty = new ItemBase("particle_empty").setCreativeTab(MainRegistry.controlTab);
 	public static final Item particle_hydrogen = new ItemBase("particle_hydrogen").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
 	public static final Item particle_copper = new ItemBase("particle_copper").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
