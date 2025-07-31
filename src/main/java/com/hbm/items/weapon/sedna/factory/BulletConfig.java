@@ -2,6 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.bomb.BlockDetonatable;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.inventory.OreDictManager;
@@ -12,10 +13,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.util.BobMathUtil;
-import com.hbm.util.DamageResistanceHandler;
-import com.hbm.util.EntityDamageUtil;
-import com.hbm.util.TrackerUtil;
+import com.hbm.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -26,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 
 import java.util.ArrayList;
@@ -56,8 +55,8 @@ public class BulletConfig implements Cloneable {
 //            }
 
             ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
-            Vec3 face = Vec3.createVectorHelper(dir.offsetX, dir.offsetY, dir.offsetZ);
-            Vec3 vel = Vec3.createVectorHelper(bullet.motionX, bullet.motionY, bullet.motionZ).normalize();
+            Vec3d face = new Vec3d(dir.offsetX, dir.offsetY, dir.offsetZ);
+            Vec3d vel = new Vec3d(bullet.motionX, bullet.motionY, bullet.motionZ).normalize();
 
             double angle = Math.abs(BobMathUtil.getCrossAngle(vel, face) - 90);
 
