@@ -2,6 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.api.entity.IRadarDetectable;
 import com.hbm.api.entity.IRadarDetectableNT;
+import com.hbm.api.entity.IRadarDetectableNT.RadarScanParams;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.packet.PacketDispatcher;
@@ -14,11 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemModRadar extends ItemArmorMod {
@@ -80,7 +77,7 @@ public class ItemModRadar extends ItemArmorMod {
 		return xAxisApproaching && zAxisApproaching;
 	}
 
-	private static List<Entity> getApproachingMissiles(EntityLivingBase entity, int r) {
+	private List<Entity> getApproachingMissiles(EntityLivingBase entity, int r) {
 		List<Entity> list = entity.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(entity.posX - r, 0D, entity.posZ - r, entity.posX + r, 10_000D, entity.posZ + r));
 		for(Entity e : list) {
 			if(e instanceof EntityLivingBase entittLiving && HbmLivingProps.getDigamma(entittLiving) > 0.001) {
@@ -89,9 +86,20 @@ public class ItemModRadar extends ItemArmorMod {
 		}
 
 		List<Entity> detected = new ArrayList<>();
+		RadarScanParams params = new RadarScanParams(true, false, false, true);
 		for (Entity e : list) {
-			if((e instanceof IRadarDetectable || e instanceof IRadarDetectableNT) && e.motionY < 0 && isEntityApproaching(entity, e)){
-				detected.add(e);
+			if (e.motionY < 0 && isEntityApproaching(entity, e)) {
+				boolean isDetectable = false;
+				if (e instanceof IRadarDetectableNT detectableNT) {
+					if (detectableNT.canBeSeenBy(this) && detectableNT.paramsApplicable(params)) {
+						isDetectable = true;
+					}
+				} else if (e instanceof IRadarDetectable) {
+					isDetectable = true;
+				}
+				if (isDetectable) {
+					detected.add(e);
+				}
 			}
 		}
 		return detected;
