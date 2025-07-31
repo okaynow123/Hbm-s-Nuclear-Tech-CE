@@ -41,22 +41,15 @@ public class GUICoreInjector extends GuiInfoContainer {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawDefaultBackground();
-        GlStateManager.pushMatrix();
-        GlStateManager.pushAttrib();
-
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         injector.tanks[0].renderTank(guiLeft + 35, guiTop + 69, this.zLevel, 16, 52);
         injector.tanks[1].renderTank(guiLeft + 125, guiTop + 69, this.zLevel, 16, 52);
-        GlStateManager.popAttrib();
-        GlStateManager.popMatrix();
+        GlStateManager.disableBlend();
     }
 }
