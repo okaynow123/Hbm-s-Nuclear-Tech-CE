@@ -8,6 +8,7 @@ import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlManual.RBMKColor;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -54,14 +55,14 @@ public class TileEntityRBMKControlAuto extends TileEntityRBMKControl implements 
 				fauxLevel = this.levelUpper;
 				
 			} else {
-	
+
 				switch(this.function) {
 				case LINEAR:
 					// my brain hasn't been this challenged since my math finals in
 					// '19
 					fauxLevel = (this.heat - this.heatLower) * ((this.levelUpper - this.levelLower) / (this.heatUpper - this.heatLower)) + this.levelLower;
 					break;
-	
+
 				case QUAD_UP:
 					// so this is how we roll, huh?
 					fauxLevel = Math.pow((this.heat - this.heatLower) / (this.heatUpper - this.heatLower), 2) * (this.levelUpper - this.levelLower) + this.levelLower;
@@ -94,7 +95,7 @@ public class TileEntityRBMKControlAuto extends TileEntityRBMKControl implements 
 		else
 			this.function = null;
 	}
-	
+
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -108,6 +109,24 @@ public class TileEntityRBMKControlAuto extends TileEntityRBMKControl implements 
 			nbt.setInteger("function", function.ordinal());
 		
 		return nbt;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeDouble(this.levelLower);
+		buf.writeDouble(this.levelUpper);
+		buf.writeDouble(this.heatLower);
+		buf.writeDouble(this.heatUpper);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.levelLower = buf.readDouble();
+		this.levelUpper = buf.readDouble();
+		this.heatLower = buf.readDouble();
+		this.heatUpper = buf.readDouble();
 	}
 
 	@Override
@@ -128,7 +147,7 @@ public class TileEntityRBMKControlAuto extends TileEntityRBMKControl implements 
 		this.markDirty();
 	}
 	
-	public static enum RBMKFunction {
+	public enum RBMKFunction {
 		LINEAR,
 		QUAD_UP,
 		QUAD_DOWN

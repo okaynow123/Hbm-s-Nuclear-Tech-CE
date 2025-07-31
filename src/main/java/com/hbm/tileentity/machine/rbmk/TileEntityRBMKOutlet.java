@@ -45,8 +45,8 @@ public class TileEntityRBMKOutlet extends TileEntityLoadedBase implements ITicka
                         if (te instanceof TileEntityRBMKBase) {
                             TileEntityRBMKBase rbmk = (TileEntityRBMKBase) te;
 
-                            int prov = Math.min(steam.getMaxFill() - steam.getFill(), rbmk.steam);
-                            rbmk.steam -= prov;
+                            int prov = Math.min(steam.getMaxFill() - steam.getFill(), rbmk.reasimSteam);
+                            rbmk.reasimSteam -= prov;
                             steam.setFill(steam.getFill() + prov);
                         }
                     }

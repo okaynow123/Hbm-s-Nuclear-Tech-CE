@@ -6,238 +6,327 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class RBMKDials {
-public static final String KEY_SAVE_DIALS = "dialSaveDials";
-	
-	public static final String KEY_PASSIVE_COOLING = "dialPassiveCooling";
-	public static final String KEY_COLUMN_HEAT_FLOW = "dialColumnHeatFlow";
-	public static final String KEY_FUEL_DIFFUSION_MOD = "dialDiffusionMod";
-	public static final String KEY_HEAT_PROVISION = "dialHeatProvision";
-	public static final String KEY_COLUMN_HEIGHT = "dialColumnHeight";
-	public static final String KEY_PERMANENT_SCRAP = "dialEnablePermaScrap";
-	public static final String KEY_BOILER_HEAT_CONSUMPTION = "dialBoilerHeatConsumption";
-	public static final String KEY_CONTROL_SPEED_MOD = "dialControlSpeed";
-	public static final String KEY_REACTIVITY_MOD = "dialReactivityMod";
-	public static final String KEY_OUTGASSER_MOD = "dialOutgasserSpeedMod";
-	public static final String KEY_SURGE_MOD = "dialControlSurgeMod";
-	public static final String KEY_FLUX_RANGE = "dialFluxRange";
-	public static final String KEY_REASIM_RANGE = "dialReasimRange";
-	public static final String KEY_REASIM_COUNT = "dialReasimCount";
-	public static final String KEY_REASIM_MOD = "dialReasimOutputMod";
-	public static final String KEY_REASIM_BOILERS = "dialReasimBoilers";
-	public static final String KEY_REASIM_BOILER_SPEED = "dialReasimBoilerSpeed";
-	public static final String KEY_DISABLE_MELTDOWNS = "dialDisableMeltdowns";
-	public static final String KEY_ENABLE_MELTDOWN_OVERPRESSURE = "dialEnableMeltdownOverpressure";
-	
-	public static void createDials(World world) {
-		GameRules rules = world.getGameRules();
-		
-		if(!rules.getBoolean(KEY_SAVE_DIALS)) {
-			rules.setOrCreateGameRule(KEY_PASSIVE_COOLING, "1.0");
-			rules.setOrCreateGameRule(KEY_COLUMN_HEAT_FLOW, "0.2");
-			rules.setOrCreateGameRule(KEY_FUEL_DIFFUSION_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_HEAT_PROVISION, "0.2");
-			rules.setOrCreateGameRule(KEY_COLUMN_HEIGHT, "4");
-			rules.setOrCreateGameRule(KEY_PERMANENT_SCRAP, "true");
-			rules.setOrCreateGameRule(KEY_BOILER_HEAT_CONSUMPTION, "0.1");
-			rules.setOrCreateGameRule(KEY_CONTROL_SPEED_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_REACTIVITY_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_SAVE_DIALS, "true");
-			rules.setOrCreateGameRule(KEY_OUTGASSER_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_SURGE_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_FLUX_RANGE, "5");
-			rules.setOrCreateGameRule(KEY_REASIM_RANGE, "10");
-			rules.setOrCreateGameRule(KEY_REASIM_COUNT, "6");
-			rules.setOrCreateGameRule(KEY_REASIM_MOD, "1.0");
-			rules.setOrCreateGameRule(KEY_REASIM_BOILERS, "false");
-			rules.setOrCreateGameRule(KEY_REASIM_BOILER_SPEED, "0.05");
-			rules.setOrCreateGameRule(KEY_DISABLE_MELTDOWNS, "false");
-			rules.setOrCreateGameRule(KEY_ENABLE_MELTDOWN_OVERPRESSURE, "false");
-		}
-	}
-	
-	/**
-	 * Returns the amount of heat per tick removed from components passively
-	 * @param world
-	 * @return >0
-	 */
-	public static double getPassiveCooling(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_PASSIVE_COOLING), 5.0D), 0.0D);
-	}
-	
-	/**
-	 * Returns the percentual step size how quickly neighboring component heat equalizes. 1 is instant, 0.5 is in 50% steps, et cetera.
-	 * @param world
-	 * @return [0;1]
-	 */
-	public static double getColumnHeatFlow(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_COLUMN_HEAT_FLOW), 5.0D), 0.0D, 1.0D);
-	}
-	
-	/**
-	 * Returns a modifier for fuel rod diffusion, i.e. how quickly the core and hull temperatures equalize.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getFuelDiffusionMod(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_FUEL_DIFFUSION_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * Returns the percentual step size how quickly the fuel hull heat and the component heat equalizes. 1 is instant, 0.5 is in 50% steps, et cetera.
-	 * @param world
-	 * @return [0;1]
-	 */
-	public static double getFuelHeatProvision(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_HEAT_PROVISION), 0.2D), 0.0D, 1.0D);
-	}
-	
-	/**
-	 * Simple integer that decides how tall the structure is.
-	 * @param world
-	 * @return [0;250]
-	 */
-	public static int getColumnHeight(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(KEY_COLUMN_HEIGHT), 4), 1, 250) - 1;
-	}
-	
-	/**
-	 * Whether or not scrap entities despawn on their own or remain alive until picked up.
-	 * @param world
-	 * @return
-	 */
-	public static boolean getPermaScrap(World world) {
-		return world.getGameRules().getBoolean(KEY_PERMANENT_SCRAP);
-	}
-	
-	/**
-	 * How many heat units are consumed per steam unit (scaled per type) produced.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getBoilerHeatConsumption(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_BOILER_HEAT_CONSUMPTION), 0.1D), 0D);
-	}
-	
-	/**
-	 * A multiplier for how quickly the control rods move.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getControlSpeed(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_CONTROL_SPEED_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * A multiplier for how much flux the rods give out.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getReactivityMod(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_REACTIVITY_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * A multiplier for how much flux the rods give out.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getOutgasserMod(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_OUTGASSER_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * A multiplier for how high the power surge goes when inserting control rods.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getSurgeMod(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_SURGE_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * Simple integer that decides how far the flux of a normal fuel rod reaches.
-	 * @param world
-	 * @return [1;100]
-	 */
-	public static int getFluxRange(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(KEY_FLUX_RANGE), 5), 1, 100);
-	}
-	
-	/**
-	 * Simple integer that decides how far the flux of a ReaSim fuel rod reaches.
-	 * @param world
-	 * @return [1;100]
-	 */
-	public static int getReaSimRange(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(KEY_REASIM_RANGE), 10), 1, 100);
-	}
-	
-	/**
-	 * Simple integer that decides how many neutrons are created from ReaSim fuel rods.
-	 * @param world
-	 * @return [1;24]
-	 */
-	public static int getReaSimCount(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(KEY_REASIM_COUNT), 6), 1, 24);
-	}
-	
-	/**
-	 * Returns a modifier for the outgoing flux of individual streams from the ReaSim fuel rod to compensate for the potentially increased stream count.
-	 * @param world
-	 * @return >0
-	 */
-	public static double getReaSimOutputMod(World world) {
-		return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_REASIM_MOD), 1.0D), 0.0D);
-	}
-	
-	/**
-	 * Whether or not all components should act like boilers with dedicated in/outlet blocks
-	 * @param world
-	 * @return
-	 */
-	public static boolean getReasimBoilers(World world) {
-		return world.getGameRules().getBoolean(KEY_REASIM_BOILERS) || (GeneralConfig.enable528 && GeneralConfig.enable528ReasimBoilers);
-	}
-	
-	/**
-	 * How much % of the possible steam ends up being produced per tick
-	 * @param world
-	 * @return [0;1]
-	 */
-	public static double getReaSimBoilerSpeed(World world) {
-		return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(KEY_REASIM_BOILER_SPEED), 0.05D), 0.0D, 1.0D);
-	}
-	
-	//why make the double representation accessible in a game rule when you can just force me to add a second pointless parsing operation?
-	public static double shittyWorkaroundParseDouble(String s, double def) {
-		try {
-			return Double.parseDouble(s);
-		} catch(Exception ex) { }
-		return def;
-	}
-	public static int shittyWorkaroundParseInt(String s, int def) {
-		try {
-			return Integer.parseInt(s);
-		} catch(Exception ex) { }
-		return def;
-	}
 
-	/**
-	 * Whether or not fuel columns should initiate a meltdown when overheating
-	 * The method is in reverse because the default for older worlds will be 'false'
-	 * @param world
-	 * @return
-	 */
-	public static boolean getMeltdownsDisabled(World world) {
-		return world.getGameRules().getBoolean(KEY_DISABLE_MELTDOWNS);
-	}
+    public static void createDials(World world) {
+        GameRules rules = world.getGameRules();
 
-	/**
-	 * Whether or not connected pipes and turbines should explode when the reactor undergoes a meltdown.
-	 * @param world
-	 * @return
-	 */
-	public static boolean getOverpressure(World world) {
-		return world.getGameRules().getBoolean(KEY_ENABLE_MELTDOWN_OVERPRESSURE);
-	}
+        if (!rules.getBoolean(RBMKKeys.KEY_SAVE_DIALS.keyString)) {
+            for (RBMKKeys key : RBMKKeys.values()) {
+                rules.setOrCreateGameRule(key.keyString, String.valueOf(key.defValue));
+            }
+        }
+    }
+
+    /**
+     * Returns the amount of heat per tick removed from components passively
+     *
+     * @param world
+     * @return >0
+     */
+    static double getPassiveCooling(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_PASSIVE_COOLING.keyString),
+                (double) RBMKKeys.KEY_PASSIVE_COOLING.defValue), 0.0D);
+    }
+
+    /**
+     * Returns the percentual step size how quickly neighboring component heat equalizes. 1 is instant, 0.5 is in 50% steps, et cetera.
+     *
+     * @param world
+     * @return [0;1]
+     */
+    static double getColumnHeatFlow(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_COLUMN_HEAT_FLOW.keyString),
+                (double) RBMKKeys.KEY_COLUMN_HEAT_FLOW.defValue), 0.0D, 1.0D);
+    }
+
+    /**
+     * Returns a modifier for fuel rod diffusion, i.e. how quickly the core and hull temperatures equalize.
+     *
+     * @param world
+     * @return >0
+     */
+    public static double getFuelDiffusionMod(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_FUEL_DIFFUSION_MOD.keyString),
+                (double) RBMKKeys.KEY_FUEL_DIFFUSION_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * Returns the percentual step size how quickly the fuel hull heat and the component heat equalizes. 1 is instant, 0.5 is in 50% steps, et cetera.
+     *
+     * @param world
+     * @return [0;1]
+     */
+    public static double getFuelHeatProvision(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_HEAT_PROVISION.keyString),
+                (double) RBMKKeys.KEY_HEAT_PROVISION.defValue), 0.0D, 1.0D);
+    }
+
+    /**
+     * Simple integer that decides how tall the structure is.
+     *
+     * @param world
+     * @return [0;250]
+     */
+    public static int getColumnHeight(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(RBMKKeys.KEY_COLUMN_HEIGHT.keyString),
+                (int) RBMKKeys.KEY_COLUMN_HEIGHT.defValue), 2, 16) - 1;
+    }
+
+    /**
+     * Whether or not scrap entities despawn on their own or remain alive until picked up.
+     *
+     * @param world
+     * @return
+     */
+    public static boolean getPermaScrap(World world) {
+        return world.getGameRules().getBoolean(RBMKKeys.KEY_PERMANENT_SCRAP.keyString);
+    }
+
+    /**
+     * How many heat units are consumed per steam unit (scaled per type) produced.
+     *
+     * @param world
+     * @return >0
+     */
+    static double getBoilerHeatConsumption(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_BOILER_HEAT_CONSUMPTION.keyString),
+                (double) RBMKKeys.KEY_BOILER_HEAT_CONSUMPTION.defValue), 0D);
+    }
+
+    /**
+     * A multiplier for how quickly the control rods move.
+     *
+     * @param world
+     * @return >0
+     */
+    static double getControlSpeed(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_CONTROL_SPEED_MOD.keyString),
+                (double) RBMKKeys.KEY_CONTROL_SPEED_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * A multiplier for how much flux the rods give out.
+     *
+     * @param world
+     * @return >0
+     */
+    public static double getReactivityMod(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_REACTIVITY_MOD.keyString),
+                (double) RBMKKeys.KEY_REACTIVITY_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * A multiplier for how much flux the rods give out.
+     *
+     * @param world
+     * @return >0
+     */
+    static double getOutgasserMod(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_OUTGASSER_MOD.keyString),
+                (double) RBMKKeys.KEY_OUTGASSER_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * A multiplier for how high the power surge goes when inserting control rods.
+     *
+     * @param world
+     * @return >0
+     */
+    static double getSurgeMod(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_SURGE_MOD.keyString),
+                (double) RBMKKeys.KEY_SURGE_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * Simple integer that decides how far the flux of a normal fuel rod reaches.
+     *
+     * @param world
+     * @return [1;100]
+     */
+    public static int getFluxRange(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(RBMKKeys.KEY_FLUX_RANGE.keyString),
+                (int) RBMKKeys.KEY_FLUX_RANGE.defValue), 1, 100);
+    }
+
+    /**
+     * Simple integer that decides how far the flux of a ReaSim fuel rod reaches.
+     *
+     * @param world
+     * @return [1;100]
+     */
+    static int getReaSimRange(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(RBMKKeys.KEY_REASIM_RANGE.keyString),
+                (int) RBMKKeys.KEY_REASIM_RANGE.defValue), 1, 100);
+    }
+
+    /**
+     * Simple integer that decides how many neutrons are created from ReaSim fuel rods.
+     *
+     * @param world
+     * @return [1;24]
+     */
+    static int getReaSimCount(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseInt(world.getGameRules().getString(RBMKKeys.KEY_REASIM_COUNT.keyString),
+                (int) RBMKKeys.KEY_REASIM_COUNT.defValue), 1, 24);
+    }
+
+    /**
+     * Returns a modifier for the outgoing flux of individual streams from the ReaSim fuel rod to compensate for the potentially increased stream
+     * count.
+     *
+     * @param world
+     * @return >0
+     */
+    static double getReaSimOutputMod(World world) {
+        return Math.max(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_REASIM_MOD.keyString),
+                (double) RBMKKeys.KEY_REASIM_MOD.defValue), 0.0D);
+    }
+
+    /**
+     * Whether or not all components should act like boilers with dedicated in/outlet blocks
+     *
+     * @param world
+     * @return
+     */
+    static boolean getReasimBoilers(World world) {
+        return world.getGameRules().getBoolean(RBMKKeys.KEY_REASIM_BOILERS.keyString) || (GeneralConfig.enable528 && GeneralConfig.enable528ReasimBoilers);
+    }
+
+    /**
+     * How much % of the possible steam ends up being produced per tick
+     *
+     * @param world
+     * @return [0;1]
+     */
+    static double getReaSimBoilerSpeed(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_REASIM_BOILER_SPEED.keyString),
+                (double) RBMKKeys.KEY_REASIM_BOILER_SPEED.defValue), 0.0D, 1.0D);
+    }
+
+    //why make the double representation accessible in a game rule when you can just force me to add a second pointless parsing operation?
+    private static double shittyWorkaroundParseDouble(String s, double def) {
+        try {
+            return Double.parseDouble(s);
+        } catch (Exception ex) {
+        }
+        return def;
+    }
+
+    private static int shittyWorkaroundParseInt(String s, int def) {
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception ex) {
+        }
+        return def;
+    }
+
+    /**
+     * Whether or not fuel columns should initiate a meltdown when overheating
+     * The method is in reverse because the default for older worlds will be 'false'
+     *
+     * @param world
+     * @return
+     */
+    static boolean getMeltdownsDisabled(World world) {
+        return world.getGameRules().getBoolean(RBMKKeys.KEY_DISABLE_MELTDOWNS.keyString);
+    }
+
+    /**
+     * Whether or not connected pipes and turbines should explode when the reactor undergoes a meltdown.
+     *
+     * @param world
+     * @return
+     */
+    static boolean getOverpressure(World world) {
+        return world.getGameRules().getBoolean(RBMKKeys.KEY_ENABLE_MELTDOWN_OVERPRESSURE.keyString);
+    }
+
+    /**
+     * The percentage of neutrons to moderate from fast to slow when they pass through a moderator.
+     *
+     * @param world
+     * @return
+     */
+    public static double getModeratorEfficiency(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_MODERATOR_EFFICIENCY.keyString),
+                (double) RBMKKeys.KEY_MODERATOR_EFFICIENCY.defValue), 0.0D, 1.0D);
+    }
+
+    /**
+     * The percentage of neutrons to be absorbed when a stream hits an absorber column.
+     *
+     * @param world
+     * @return
+     */
+    public static double getAbsorberEfficiency(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_ABSORBER_EFFICIENCY.keyString),
+                (double) RBMKKeys.KEY_ABSORBER_EFFICIENCY.defValue), 0.0D, 1.0D);
+    }
+
+    /**
+     * The percentage of neutron to reflect when a stream hits a reflector column.
+     *
+     * @param world
+     * @return
+     */
+    public static double getReflectorEfficiency(World world) {
+        return MathHelper.clamp(shittyWorkaroundParseDouble(world.getGameRules().getString(RBMKKeys.KEY_REFLECTOR_EFFICIENCY.keyString),
+                (double) RBMKKeys.KEY_REFLECTOR_EFFICIENCY.defValue), 0.0D, 1.0D);
+    }
+
+    /**
+     * Whether fuel rods should deplete, disabling this makes rods last forever
+     *
+     * @param world
+     * @return
+     */
+    public static boolean getDepletion(World world) {
+        return !world.getGameRules().getBoolean(RBMKKeys.KEY_DISABLE_DEPLETION.keyString);
+    }
+
+    /**
+     * Whether xenon poison should be calculated
+     *
+     * @param world
+     * @return
+     */
+    public static boolean getXenon(World world) {
+        return !world.getGameRules().getBoolean(RBMKKeys.KEY_DISABLE_XENON.keyString);
+    }
+
+    public enum RBMKKeys {
+        KEY_SAVE_DIALS("dialSaveDials", true),
+        KEY_PASSIVE_COOLING("dialPassiveCooling", 1.0),
+        KEY_COLUMN_HEAT_FLOW("dialColumnHeatFlow", 0.2),
+        KEY_FUEL_DIFFUSION_MOD("dialDiffusionMod", 1.0),
+        KEY_HEAT_PROVISION("dialHeatProvision", 0.2),
+        KEY_COLUMN_HEIGHT("dialColumnHeight", 4),
+        KEY_PERMANENT_SCRAP("dialEnablePermaScrap", true),
+        KEY_BOILER_HEAT_CONSUMPTION("dialBoilerHeatConsumption", 0.1),
+        KEY_CONTROL_SPEED_MOD("dialControlSpeed", 1.0),
+        KEY_REACTIVITY_MOD("dialReactivityMod", 1.0),
+        KEY_OUTGASSER_MOD("dialOutgasserSpeedMod", 1.0),
+        KEY_SURGE_MOD("dialControlSurgeMod", 1.0),
+        KEY_FLUX_RANGE("dialFluxRange", 5),
+        KEY_REASIM_RANGE("dialReasimRange", 10),
+        KEY_REASIM_COUNT("dialReasimCount", 6),
+        KEY_REASIM_MOD("dialReasimOutputMod", 1.0),
+        KEY_REASIM_BOILERS("dialReasimBoilers", false),
+        KEY_REASIM_BOILER_SPEED("dialReasimBoilerSpeed", 0.05),
+        KEY_DISABLE_MELTDOWNS("dialDisableMeltdowns", false),
+        KEY_ENABLE_MELTDOWN_OVERPRESSURE("dialEnableMeltdownOverpressure", false),
+        KEY_MODERATOR_EFFICIENCY("dialModeratorEfficiency", 1.0),
+        KEY_ABSORBER_EFFICIENCY("dialAbsorberEfficiency", 1.0),
+        KEY_REFLECTOR_EFFICIENCY("dialReflectorEfficiency", 1.0),
+        KEY_DISABLE_DEPLETION("dialDisableDepletion", false),
+        KEY_DISABLE_XENON("dialDisableXenon", false);
+
+        final String keyString;
+        final Object defValue;
+
+        RBMKKeys(String key, Object def) {
+            keyString = key;
+            defValue = def;
+        }
+    }
 }

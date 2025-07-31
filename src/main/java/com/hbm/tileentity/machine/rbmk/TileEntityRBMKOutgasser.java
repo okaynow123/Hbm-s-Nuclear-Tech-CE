@@ -4,6 +4,8 @@ import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.handler.neutron.NeutronStream;
+import com.hbm.handler.neutron.RBMKNeutronHandler;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.inventory.container.ContainerRBMKOutgasser;
 import com.hbm.inventory.control_panel.DataValue;
@@ -19,6 +21,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.Tuple;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -40,7 +43,6 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	public FluidTankNTM gas;
 	public double progress = 0;
-	public double usedFlux = 0;
 	public int duration = 10000;
 
 	public TileEntityRBMKOutgasser() {
@@ -98,26 +100,22 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	}
 
 	@Override
-	public void receiveFlux(NType type, double flux) {
+	public void receiveFlux(NeutronStream stream) {
 		
 		if(canProcess()) {
-			
-			if(type == NType.FAST)
-				flux *= 0.2D;
-			
-			progress += flux * RBMKDials.getOutgasserMod(world);
-			
+			double efficiency = Math.min(1 - stream.fluxRatio * 0.8, 1);
+			progress += stream.fluxQuantity * efficiency * RBMKDials.getOutgasserMod(world);
+
 			if(progress > duration) {
 				process();
 				this.markDirty();
 			}
 		} else if(!inventory.getStackInSlot(0).isEmpty()){
-			if(type == NType.FAST)
-				flux *= 0.2D;
-			ContaminationUtil.neutronActivateItem(inventory.getStackInSlot(0), (float)(flux * 0.001), 1F);
+			double efficiency = Math.min(1 - stream.fluxRatio * 0.8, 1);
+
+			ContaminationUtil.neutronActivateItem(inventory.getStackInSlot(0), (float)(stream.fluxQuantity * efficiency * 0.001), 1F);
 			this.markDirty();
 		}
-		this.usedFlux = flux;
 	}
 
 
@@ -184,6 +182,11 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	}
 
 	@Override
+	public RBMKNeutronHandler.RBMKType getRBMKType() {
+		return RBMKNeutronHandler.RBMKType.OUTGASSER;
+	}
+
+	@Override
 	public ColumnType getConsoleType() {
 		return ColumnType.OUTGASSER;
 	}
@@ -194,9 +197,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		data.setInteger("gas", this.gas.getFill());
 		data.setInteger("maxGas", this.gas.getMaxFill());
 		data.setShort("type", (short)this.gas.getTankType().getID());
-		data.setDouble("usedFlux", this.usedFlux);
 		data.setDouble("progress", this.progress);
-		data.setDouble("maxProgress", this.duration);
 		return data;
 	}
 	
@@ -205,19 +206,30 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		super.readFromNBT(nbt);
 		
 		this.progress = nbt.getDouble("progress");
-		this.duration = nbt.getInteger("duration");
 		this.gas.readFromNBT(nbt, "gas");
 	}
 	
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		
+
 		nbt.setDouble("progress", this.progress);
-		nbt.setInteger("duration", this.duration);
 		this.gas.writeToNBT(nbt, "gas");
-		
 		return nbt;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		this.gas.serialize(buf);
+		buf.writeDouble(this.progress);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.gas.deserialize(buf);
+		this.progress = buf.readDouble();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -66,23 +66,23 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
-		int i = boiler.feedOld.getFluidAmount() * 58 / boiler.feedOld.getCapacity();
+		int i = boiler.feed.getFill() * 58 / boiler.feed.getMaxFill();
 		drawTexturedModalRect(guiLeft + 126, guiTop + 82 - i, 176, 58 - i, 14, i);
 		
-		int j = boiler.steamOld.getFluidAmount() * 22 / boiler.steamOld.getCapacity();
+		int j = boiler.steam.getFill() * 22 / boiler.steam.getMaxFill();
 
 		if(j > 0) j++;
 		if(j > 22) j++;
 		
 		drawTexturedModalRect(guiLeft + 91, guiTop + 65 - j, 190, 24 - j, 4, j);
 		
-		if(boiler.steamType == Fluids.STEAM.getFF()){
+		if(boiler.steam.getTankType() == Fluids.STEAM){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 194, 0, 14, 58);
-		} else if(boiler.steamType == Fluids.HOTSTEAM.getFF()){
+		} else if(boiler.steam.getTankType() == Fluids.HOTSTEAM){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 208, 0, 14, 58);
-		} else if(boiler.steamType == Fluids.SUPERHOTSTEAM.getFF()){
+		} else if(boiler.steam.getTankType() == Fluids.SUPERHOTSTEAM){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 222, 0, 14, 58);
-		} else if(boiler.steamType == Fluids.ULTRAHOTSTEAM.getFF()){
+		} else if(boiler.steam.getTankType() == Fluids.ULTRAHOTSTEAM){
 			drawTexturedModalRect(guiLeft + 36, guiTop + 24, 236, 0, 14, 58);
 		}
 	}

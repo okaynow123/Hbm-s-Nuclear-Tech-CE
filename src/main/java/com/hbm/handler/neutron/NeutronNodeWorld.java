@@ -67,12 +67,11 @@ public class NeutronNodeWorld {
         public void cleanNodes() {
             List<BlockPos> toRemove = new ArrayList<>();
             for(NeutronNode cachedNode : nodeCache.values()) {
-                /*if(cachedNode.type == NeutronStream.NeutronType.RBMK) {
+                if(cachedNode.type == NeutronStream.NeutronType.RBMK) {
                     RBMKNeutronHandler.RBMKNeutronNode node = (RBMKNeutronHandler.RBMKNeutronNode) cachedNode;
                     toRemove.addAll(node.checkNode(this));
                 }
-				TODO: actually do this and uncache pile nodes
-				TODO x2: actually do rbmk neutron handlers
+				/* TODO: actually do this and uncache pile nodes
 				if(cachedNode.type == NeutronStream.NeutronType.PILE) {
 					PileNeutronNode node = (PileNeutronNode) cachedNode;
 					toRemove.addAll(node.checkNode());

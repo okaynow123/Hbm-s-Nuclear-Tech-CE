@@ -11,11 +11,13 @@ import com.hbm.inventory.gui.GUIRBMKControl;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -123,8 +125,26 @@ public class TileEntityRBMKControlManual extends TileEntityRBMKControl implement
 			nbt.setInteger("color", color.ordinal());
 		return nbt;
 	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		buf.writeDouble(this.startingLevel);
+		if(this.color != null)
+			buf.writeInt(this.color.ordinal());
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.startingLevel = buf.readDouble();
+		if(buf.isReadable(1)) {
+			int color = buf.readInt();
+			this.color = RBMKColor.values()[MathHelper.clamp(color, 0, RBMKColor.values().length)];
+		}
+	}
 	
-	public static enum RBMKColor {
+	public enum RBMKColor {
 		RED,
 		YELLOW,
 		GREEN,

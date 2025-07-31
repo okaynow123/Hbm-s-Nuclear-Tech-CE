@@ -8,7 +8,6 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.interfaces.IControlReceiver;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerRBMKBoiler;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
@@ -22,6 +21,7 @@ import com.hbm.lib.Library;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -29,9 +29,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,12 +38,8 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 @AutoRegisterTE
-public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF, IGUIProvider {
+public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements IControlReceiver, IFluidStandardTransceiver, IGUIProvider {
 
-    private static boolean converted = false;
-    public FluidTank feedOld;
-    public FluidTank steamOld;
-    public Fluid steamType;
     public FluidTankNTM feed;
     public FluidTankNTM steam;
     protected int consumption;
@@ -54,37 +47,16 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     public TileEntityRBMKBoiler() {
         super(0);
-        feedOld = new FluidTank(10000 * 20);
-        steamOld = new FluidTank(1000000 * 20);
-        steamType = Fluids.STEAM.getFF();;
 
         feed = new FluidTankNTM(Fluids.WATER, 10000);
         steam = new FluidTankNTM(Fluids.STEAM, 1000000);
-
-        converted = true;
-    }
-
-    public static double getHeatFromSteam(FluidType type) {
-        if (type == Fluids.STEAM) return 100D;
-        if (type == Fluids.HOTSTEAM) return 300D;
-        if (type == Fluids.SUPERHOTSTEAM) return 450D;
-        if (type == Fluids.ULTRAHOTSTEAM) return 600D;
-        return 0D;
-    }
-
-    public static double getFactorFromSteam(FluidType type) {
-        if (type == Fluids.STEAM) return 1D;
-        if (type == Fluids.HOTSTEAM) return 10D;
-        if (type == Fluids.SUPERHOTSTEAM) return 100D;
-        if (type == Fluids.ULTRAHOTSTEAM) return 1000D;
-        return 0D;
     }
 
     public void getDiagData(NBTTagCompound nbt) {
         this.writeToNBT(nbt);
         nbt.removeTag("jumpheight");
-        nbt.setInteger("water", feedOld.getFluidAmount());
-        nbt.setInteger("steam", steamOld.getFluidAmount());
+        nbt.setInteger("water", feed.getFill());
+        nbt.setInteger("steam", steam.getFill());
     }
 
     @Override
@@ -94,17 +66,12 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     @Override
     public void update() {
-        if (!converted) {
-            convertAndSetFluid(FluidRegistry.WATER, feedOld, feed);
-            convertAndSetFluid(steamType, steamOld, steam);
-            converted = true;
-        }
         if (!world.isRemote) {
 
             this.consumption = 0;
             this.output = 0;
 
-            double heatCap = this.getHeatFromSteam(steam.getTankType());
+            double heatCap = getHeatFromSteam(steam.getTankType());
             double heatProvided = this.heat - heatCap;
 
             if (heatProvided > 0) {
@@ -149,6 +116,22 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
         super.update();
     }
 
+    public static double getHeatFromSteam(FluidType type) {
+        if (type == Fluids.STEAM) return 100D;
+        if (type == Fluids.HOTSTEAM) return 300D;
+        if (type == Fluids.SUPERHOTSTEAM) return 450D;
+        if (type == Fluids.ULTRAHOTSTEAM) return 600D;
+        return 0D;
+    }
+
+    public static double getFactorFromSteam(FluidType type) {
+        if (type == Fluids.STEAM) return 1D;
+        if (type == Fluids.HOTSTEAM) return 10D;
+        if (type == Fluids.SUPERHOTSTEAM) return 100D;
+        if (type == Fluids.ULTRAHOTSTEAM) return 1000D;
+        return 0D;
+    }
+
     protected DirPos[] getOutputPos() {
 
         if (world.getBlockState(pos.down(1)).getBlock() == ModBlocks.rbmk_loader) {
@@ -179,32 +162,30 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        if (!converted) {
-            feedOld.readFromNBT(nbt.getCompoundTag("feed"));
-            steamOld.readFromNBT(nbt.getCompoundTag("steam"));
-            steamType = FluidRegistry.getFluid(nbt.getString("steamType"));
-            if (this.steamType == null) {
-                this.steamType = Fluids.STEAM.getFF();;
-            }
-        } else {
-            feed.readFromNBT(nbt, "feedNew");
-            steam.readFromNBT(nbt, "steamNew");
-        }
+        feed.readFromNBT(nbt, "feed");
+        steam.readFromNBT(nbt, "steam");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        if (!converted) {
-            nbt.setTag("feed", feedOld.writeToNBT(new NBTTagCompound()));
-            nbt.setTag("steam", steamOld.writeToNBT(new NBTTagCompound()));
-            nbt.setString("steamType", steamType.getName());
-        } else {
-            feed.writeToNBT(nbt, "feedNew");
-            steam.writeToNBT(nbt, "steamNew");
-            if (nbt.hasKey("steamType")) nbt.removeTag("steamType");
-        }
+        feed.writeToNBT(nbt, "feed");
+        steam.writeToNBT(nbt, "steam");
         return nbt;
+    }
+
+    @Override
+    public void serialize(ByteBuf buf){
+        super.serialize(buf);
+        steam.serialize(buf);
+        feed.serialize(buf);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+        this.steam.deserialize(buf);
+        this.feed.deserialize(buf);
     }
 
     @Override
@@ -214,28 +195,22 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     @Override
     public void receiveControl(NBTTagCompound data) {
-
         if (data.hasKey("compression")) {
-            FluidType type = steam.getTankType();
-            if (type == Fluids.STEAM) {
-                steam.setTankType(Fluids.HOTSTEAM);
-                steam.setFill(steam.getFill() / 10);
-            }
-            if (type == Fluids.HOTSTEAM) {
-                steam.setTankType(Fluids.SUPERHOTSTEAM);
-                steam.setFill(steam.getFill() / 10);
-            }
-            if (type == Fluids.SUPERHOTSTEAM) {
-                steam.setTankType(Fluids.ULTRAHOTSTEAM);
-                steam.setFill(steam.getFill() / 10);
-            }
-            if (type == Fluids.ULTRAHOTSTEAM) {
-                steam.setTankType(Fluids.STEAM);
-                steam.setFill(Math.min(steam.getFill() * 1000, steam.getMaxFill()));
-            }
-
+            this.cyceCompressor();
             this.markDirty();
         }
+    }
+
+    // mlbv: why is it named cyceCompressor?
+    public void cyceCompressor() {
+
+        FluidType type = steam.getTankType();
+        if(type == Fluids.STEAM) {			steam.setTankType(Fluids.HOTSTEAM);			steam.setFill(steam.getFill() / 10); }
+        if(type == Fluids.HOTSTEAM) {		steam.setTankType(Fluids.SUPERHOTSTEAM);	steam.setFill(steam.getFill() / 10); }
+        if(type == Fluids.SUPERHOTSTEAM) {	steam.setTankType(Fluids.ULTRAHOTSTEAM);	steam.setFill(steam.getFill() / 10); }
+        if(type == Fluids.ULTRAHOTSTEAM) {	steam.setTankType(Fluids.STEAM);			steam.setFill(Math.min(steam.getFill() * 1000, steam.getMaxFill())); }
+
+        this.markDirty();
     }
 
     @Override
@@ -251,7 +226,7 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
             for (DirPos pos : getOutputPos()) {
                 IPipeNet net = IFluidUser.getPipeNet(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), steam.getTankType());
                 if (net != null) {
-                    this.pipes.add(net);
+                    pipes.add(net);
                 }
             }
         }
@@ -267,11 +242,11 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
     @Override
     public NBTTagCompound getNBTForConsole() {
         NBTTagCompound data = new NBTTagCompound();
-        data.setInteger("waterNew", this.feed.getFill());
-        data.setInteger("maxWaterNew", this.feed.getMaxFill());
-        data.setInteger("steamNew", this.steam.getFill());
-        data.setInteger("maxSteamNew", this.steam.getMaxFill());
-        data.setShort("typeNew", (short) this.steam.getTankType().getID());
+        data.setInteger("water", this.feed.getFill());
+        data.setInteger("maxWater", this.feed.getMaxFill());
+        data.setInteger("steam", this.steam.getFill());
+        data.setInteger("maxSteam", this.steam.getMaxFill());
+        data.setShort("type", (short) this.steam.getTankType().getID());
         return data;
     }
 

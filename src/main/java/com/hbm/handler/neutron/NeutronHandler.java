@@ -2,7 +2,6 @@ package com.hbm.handler.neutron;
 
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -29,7 +28,7 @@ public class NeutronHandler {
 
             // Gamerule caching because this apparently is kinda slow?
             // meh, good enough
-            /*
+
             RBMKNeutronHandler.reflectorEfficiency = RBMKDials.getReflectorEfficiency(world.getKey());
             RBMKNeutronHandler.absorberEfficiency = RBMKDials.getAbsorberEfficiency(world.getKey());
             RBMKNeutronHandler.moderatorEfficiency = RBMKDials.getModeratorEfficiency(world.getKey());
@@ -38,7 +37,7 @@ public class NeutronHandler {
             // this broke everything because it was ONE OFF
             // IT'S NOT THE TOTAL HEIGHT IT'S THE AMOUNT OF BLOCKS ABOVE AAAAAAAAAAAAA
             RBMKNeutronHandler.columnHeight = RBMKDials.getColumnHeight(world.getKey()) + 1;
-            RBMKNeutronHandler.fluxRange = RBMKDials.getFluxRange(world.getKey());*/
+            RBMKNeutronHandler.fluxRange = RBMKDials.getFluxRange(world.getKey());
             // Th3_Sl1ze: I am NOT touching rbmk shit for now, I'm sleepy enough to fuck this all up
 
             world.getValue().runStreamInteractions(world.getKey());

@@ -44,8 +44,8 @@ public class TileEntityRBMKInlet extends TileEntity implements IFluidHandler, IT
 						if(te instanceof TileEntityRBMKBase) {
 							TileEntityRBMKBase rbmk = (TileEntityRBMKBase) te;
 							
-							int prov = Math.min(TileEntityRBMKBase.maxWater - rbmk.water, water.getFluidAmount());
-							rbmk.water += prov;
+							int prov = Math.min(TileEntityRBMKBase.maxWater - rbmk.reasimWater, water.getFluidAmount());
+							rbmk.reasimWater += prov;
 							water.drain(prov, true);
 						}
 					}

@@ -29,7 +29,7 @@ public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase
 
 			@Override
 			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-				if(canInsertItem(slot, stack, stack.getCount()))
+				if(canInsertItem(slot, stack))
 					return super.insertItem(slot, stack, simulate);
 				return stack;
 			}
@@ -77,7 +77,7 @@ public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase
 		return true;
 	}
 	
-	public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
+	public boolean canInsertItem(int slot, ItemStack itemStack) {
 		return this.isItemValidForSlot(slot, itemStack);
 	}
 

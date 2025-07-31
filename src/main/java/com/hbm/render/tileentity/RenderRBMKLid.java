@@ -52,9 +52,9 @@ public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKBase>
 				cherenkovG = rod.cherenkovG;
 				cherenkovB = rod.cherenkovB;
 			}
-			if(rod.fluxFast + rod.fluxSlow > 5) {
+			if(rod.fluxQuantity > 5) {
 				cherenkov = true;
-				cherenkovA = (float) Math.max(0.25F, Math.log(rod.fluxFast + rod.fluxSlow) * 0.01F);
+				cherenkovA = (float) Math.max(0.25F, Math.log(rod.fluxQuantity) * 0.01F);
 			}
 		}
 		int offset = 1;

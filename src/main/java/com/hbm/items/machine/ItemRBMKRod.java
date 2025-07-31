@@ -9,10 +9,13 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ItemRBMKRod extends Item {
 
@@ -261,7 +264,7 @@ public class ItemRBMKRod extends Item {
 		return ret;
 	}
 	
-	public static enum EnumBurnFunc {
+	public enum EnumBurnFunc {
 		PASSIVE("trait.rbmx.flux.passive"),				//const, no reactivity
 		PLATEU("trait.rbmx.flux.euler"),				//(1 - e^(-x/25)) * reactivity * 100
 		SIGMOID("trait.rbmx.flux.sigmoid"),				//100 / (1 + e^(-(x - 50) / 10)) <- tiny amount of reactivity at x=0 !
@@ -274,13 +277,13 @@ public class ItemRBMKRod extends Item {
 		
 		public String title = "";
 		
-		private EnumBurnFunc(String title) {
+		EnumBurnFunc(String title) {
 			this.title = title;
 		}
 	}
 	
 	/**
-	 * @param flux [0;100] ...or at least those are sane levels
+	 * @param enrichment [0;100] ...or at least those are sane levels
 	 * @return the amount of reactivity yielded, unmodified by xenon
 	 */
 	public double reactivityFunc(double in, double enrichment) {
@@ -335,18 +338,18 @@ public class ItemRBMKRod extends Item {
 			String reactivity = TextFormatting.YELLOW + "" + ((int)(this.reactivity * enrichment * 1000D) / 1000D) + TextFormatting.WHITE;
 			String enrichmentPer = TextFormatting.GOLD + " (" + ((int)(enrichment * 1000D) / 10D) + "%)";
 			
-			return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + "" + TextFormatting.WHITE + ")" : "x", reactivity).concat(enrichmentPer);
+			return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + TextFormatting.WHITE + ")" : "x", reactivity).concat(enrichmentPer);
 		}
 		
-		return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + "" + TextFormatting.WHITE + ")" : "x", reactivity);
+		return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + TextFormatting.WHITE + ")" : "x", reactivity);
 	}
 
-	public static enum EnumDepleteFunc {
+	public enum EnumDepleteFunc {
 		LINEAR,			//old function
 		RAISING_SLOPE,	//for breeding fuels such as MEU, maximum of 110% at 28% depletion
 		BOOSTED_SLOPE,	//for strong breeding fuels such Th232, maximum of 132% at 64% depletion
 		GENTLE_SLOPE,	//recommended for most fuels, maximum barely over the start, near the beginning
-		STATIC;			//for arcade-style neutron sources
+		STATIC            //for arcade-style neutron sources
 	}
 
 	public double reactivityModByEnrichment(double enrichment) {
@@ -394,7 +397,53 @@ public class ItemRBMKRod extends Item {
 	public static double getPoisonLevel(ItemStack stack) {
 		return getPoison(stack) / 100D;
 	}
-	
+
+	// START Special flux curve handling!
+	// Nothing really uses this yet, though it's a really fun feature to play around with.
+
+	// For the RBMK handler to see if the rod is special.
+	public boolean specialFluxCurve = false;
+
+	public ItemRBMKRod setFluxCurve(boolean bool) {
+		specialFluxCurve = bool;
+		return this;
+	}
+
+	/** Double 1: Flux ratio in.
+	 * Double 2: Depletion value.
+	 * Return double: Output flux ratio.
+	 **/
+	BiFunction<Double, Double, Double> ratioCurve;
+
+	/** Double 1: Flux quantity in. <br>
+	 * Double 2: Flux ratio in. <br>
+	 * Return double: Output flux quantity.
+	 **/
+	BiFunction<Double, Double, Double> fluxCurve;
+
+	public ItemRBMKRod setOutputRatioCurve(Function<Double, Double> func) {
+		this.ratioCurve = (fluxRatioIn, depletion) -> func.apply(fluxRatioIn) * 1.0D;
+		return this;
+	}
+
+	public ItemRBMKRod setDepletionOutputRatioCurve(BiFunction<Double, Double, Double> func) {
+		this.ratioCurve = func;
+		return this;
+	}
+
+	public ItemRBMKRod setOutputFluxCurve(BiFunction<Double, Double, Double> func) {
+		this.fluxCurve = func;
+		return this;
+	}
+
+	public double fluxRatioOut(double fluxRatioIn, double depletion) {
+		return MathHelper.clamp(ratioCurve.apply(fluxRatioIn, depletion), 0, 1);
+	}
+
+	public double fluxFromRatio(double quantity, double ratio) {
+		return fluxCurve.apply(quantity, ratio);
+	}
+
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flag) {
 		

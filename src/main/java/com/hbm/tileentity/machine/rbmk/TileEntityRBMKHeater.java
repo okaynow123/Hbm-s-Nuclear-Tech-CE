@@ -17,6 +17,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -40,8 +41,8 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 	
 	public TileEntityRBMKHeater() {
 		super(1);
-		this.feed = new FluidTankNTM(Fluids.COOLANT, 16_000, 0);
-		this.steam = new FluidTankNTM(Fluids.COOLANT_HOT, 16_000, 1);
+		this.feed = new FluidTankNTM(Fluids.COOLANT, 16_000);
+		this.steam = new FluidTankNTM(Fluids.COOLANT_HOT, 16_000);
 	}
 
 	@Override
@@ -55,9 +56,6 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 		if(!world.isRemote) {
 
 			feed.setType(0, inventory);
-
-			feed.updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
-			steam.updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
 
 			if(feed.getTankType().hasTrait(FT_Heatable.class)) {
 				FT_Heatable trait = feed.getTankType().getTrait(FT_Heatable.class);
@@ -138,6 +136,20 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 		feed.writeToNBT(nbt, "feed");
 		steam.writeToNBT(nbt, "steam");
 		return nbt;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		super.serialize(buf);
+		this.feed.serialize(buf);
+		this.steam.serialize(buf);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		super.deserialize(buf);
+		this.feed.deserialize(buf);
+		this.steam.deserialize(buf);
 	}
 	
 	@Override

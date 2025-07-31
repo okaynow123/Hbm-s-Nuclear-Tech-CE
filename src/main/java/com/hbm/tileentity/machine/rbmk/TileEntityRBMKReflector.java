@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.handler.neutron.RBMKNeutronHandler;
 import com.hbm.interfaces.AutoRegisterTE;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 
@@ -17,6 +18,11 @@ public class TileEntityRBMKReflector extends TileEntityRBMKBase {
 		}
 		
 		super.onMelt(reduce);
+	}
+
+	@Override
+	public RBMKNeutronHandler.RBMKType getRBMKType() {
+		return RBMKNeutronHandler.RBMKType.REFLECTOR;
 	}
 
 	@Override

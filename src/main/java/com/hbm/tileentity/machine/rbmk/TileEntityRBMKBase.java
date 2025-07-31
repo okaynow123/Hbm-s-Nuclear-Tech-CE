@@ -9,6 +9,8 @@ import com.hbm.config.MachineConfig;
 import com.hbm.entity.effect.EntitySpear;
 import com.hbm.entity.projectile.EntityRBMKDebris;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.handler.neutron.NeutronNodeWorld;
+import com.hbm.handler.neutron.RBMKNeutronHandler.RBMKType;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.control_panel.ControlEventSystem;
 import com.hbm.inventory.control_panel.DataValue;
@@ -19,12 +21,14 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.packet.toclient.BufPacket;
+import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.IOverpressurable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.I18nUtil;
 import java.util.*;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -42,17 +46,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements ITickable, IControllable {
 
+	@Deprecated
 	public static int rbmkHeight = 4;
 	
 	public double heat = 20.0D;
@@ -60,24 +64,24 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	public float downwardSpeed = 0.0F;
 	public boolean falling = false;
 	public static final byte gravity = 5; //in blocks per s^2
-	
-	public int water;
-	public static final int maxWater = 16000*20;
-	public int steam;
-	public static final int maxSteam = 16000*20;
+
+	public int reasimWater;
+	public static final int maxWater = 16000;
+	public int reasimSteam;
+	public static final int maxSteam = 16000;
 
 	public boolean hasLid() {
-		
+
 		if(!isLidRemovable())
 			return true;
-		
+
 		return this.getBlockMetadata() != RBMKBase.DIR_NO_LID.ordinal() + RBMKBase.offset;
 	}
 
 	public boolean isLidRemovable() {
 		return true;
 	}
-	
+
 	/**
 	 * Approx melting point of steel
 	 * This metric won't be used because fuel tends to melt much earlier than that
@@ -86,7 +90,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	public double maxHeat() {
 		return 1500D;
 	}
-	
+
 	/**
 	 * Around the same for every component except boilers which do not have passive cooling
 	 * @return
@@ -94,28 +98,25 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	public double passiveCooling() {
 		return RBMKDials.getPassiveCooling(world); //default: 5.0D
 	}
-	
+
 	//necessary checks to figure out whether players are close enough to ensure that the reactor can be safely used
 	public boolean shouldUpdate() {
 		return true;
 	}
 	
 	public int trackingRange() {
-		return 150;
+		return 15;
 	}
 	
 	@Override
 	public void update() {
-		
+
 		if(!world.isRemote) {
 			moveHeat();
-			if(RBMKDials.getReasimBoilers(world)) 
+			if(RBMKDials.getReasimBoilers(world))
 				boilWater();
 			coolPassively();
 			jump();
-			
-			NBTTagCompound data = new NBTTagCompound();
-			this.writeToNBT(data);
 			networkPackNT(trackingRange());
 		}
 	}
@@ -142,13 +143,13 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			}
 		} else{ // gravity fall
 			if(this.jumpheight > 0){
-				this.downwardSpeed = this.downwardSpeed + this.gravity * 0.05F;
+				this.downwardSpeed = this.downwardSpeed + gravity * 0.05F;
 				this.jumpheight = this.jumpheight - this.downwardSpeed;
 			} else {
 				this.jumpheight = 0;
 				this.downwardSpeed = 0;
 				this.falling = false;
-				world.playSound(null, pos.getX(),  pos.getY()+rbmkHeight+1,  pos.getZ(), HBMSoundHandler.rbmkLid, SoundCategory.BLOCKS, 2.0F, 1.0F);
+				world.playSound(null, pos.getX(),  pos.getY() + 4,  pos.getZ(), HBMSoundHandler.rbmkLid, SoundCategory.BLOCKS, 2.0F, 1.0F);
 			}
 		}
 	}
@@ -158,19 +159,21 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	 * The ReaSim boiler dial causes all RBMK parts to behave like boilers
 	 */
 	private void boilWater() {
-		
+
 		if(heat < 100D)
 			return;
-		
+
 		double heatConsumption = RBMKDials.getBoilerHeatConsumption(world);
 		double availableHeat = (this.heat - 100) / heatConsumption;
-		double availableWater = this.water;
-		double availableSpace = TileEntityRBMKBase.maxSteam - this.steam;
-		
-		int processedWater = (int)Math.floor(Math.min(availableHeat, Math.min(availableWater, availableSpace)) * RBMKDials.getReaSimBoilerSpeed(world));
-		
-		this.water -= processedWater;
-		this.steam += processedWater;
+		double availableWater = this.reasimWater;
+		double availableSpace = maxSteam - this.reasimSteam;
+
+		int processedWater = (int)Math.floor(Math.min(availableHeat, Math.min(availableWater, availableSpace)) * MathHelper.clamp(RBMKDials.getReaSimBoilerSpeed(world), 0D, 1D));
+
+		if(processedWater <= 0) return;
+
+		this.reasimWater -= processedWater;
+		this.reasimSteam += processedWater;
 		this.heat -= processedWater * heatConsumption;
 	}
 	
@@ -181,120 +184,149 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			ForgeDirection.WEST
 	};
 	
-	protected TileEntityRBMKBase[] heatCache = new TileEntityRBMKBase[4];
+	protected TileEntityRBMKBase[] neighbourCache = new TileEntityRBMKBase[4];
 	
 	/**
 	 * Moves heat to neighboring parts, if possible, in a relatively fair manner
 	 */
 	private void moveHeat() {
-		
+
+		boolean reasim = RBMKDials.getReasimBoilers(world);
+
 		List<TileEntityRBMKBase> rec = new ArrayList<>();
 		rec.add(this);
 		double heatTot = this.heat;
-		int waterTot = this.water;
-		int steamTot = this.steam;
-		
+		int waterTot = this.reasimWater;
+		int steamTot = this.reasimSteam;
+
 		int index = 0;
 		for(ForgeDirection dir : heatDirs) {
-			
-			if(heatCache[index] != null && heatCache[index].isInvalid())
-				heatCache[index] = null;
-			
-			if(heatCache[index] == null) {
-				TileEntity te = world.getTileEntity(new BlockPos(pos.getX() + dir.offsetX, pos.getY(), pos.getZ() + dir.offsetZ));
-				
-				if(te instanceof TileEntityRBMKBase) {
-					TileEntityRBMKBase base = (TileEntityRBMKBase) te;
-					heatCache[index] = base;
+
+			if(neighbourCache[index] != null && neighbourCache[index].isInvalid())
+				neighbourCache[index] = null;
+
+			if(neighbourCache[index] == null) {
+				TileEntity te = world.getTileEntity(getPos().add(dir.offsetX, 0, dir.offsetZ));
+
+				if(te instanceof TileEntityRBMKBase base) {
+                    neighbourCache[index] = base;
 				}
 			}
-			
+
 			index++;
 		}
-		
-		for(TileEntityRBMKBase base : heatCache) {
-			
+
+		for(TileEntityRBMKBase base : neighbourCache) {
+
 			if(base != null) {
 				rec.add(base);
 				heatTot += base.heat;
-				waterTot += base.water;
-				steamTot += base.steam;
+				if(reasim) {
+					waterTot += base.reasimWater;
+					steamTot += base.reasimSteam;
+				}
 			}
 		}
-		
+
 		int members = rec.size();
 		double stepSize = RBMKDials.getColumnHeatFlow(world);
-		
+
 		if(members > 1) {
-			
+
 			double targetHeat = heatTot / (double)members;
-			
+
 			int tWater = waterTot / members;
 			int rWater = waterTot % members;
 			int tSteam = steamTot / members;
 			int rSteam = steamTot % members;
-			
+
 			for(TileEntityRBMKBase rbmk : rec) {
 				double delta = targetHeat - rbmk.heat;
 				rbmk.heat += delta * stepSize;
-				
+
 				//set to the averages, rounded down
-				rbmk.water = tWater;
-				rbmk.steam = tSteam;
+				if(reasim) {
+					rbmk.reasimWater = tWater;
+					rbmk.reasimSteam = tSteam;
+				}
 			}
-			
+
 			//add the modulo to make up for the losses coming from rounding
-			this.water += rWater;
-			this.steam += rSteam;
-			
+			if(reasim) {
+				this.reasimWater += rWater;
+				this.reasimSteam += rSteam;
+			}
+
 			this.markDirty();
 		}
 	}
 	
-	protected void coolPassively() {
-		
+	private void coolPassively() {
+
+		if(TomSaveData.forWorld(world).fire > 1e-5) {
+			double light = this.world.getLightFor(EnumSkyBlock.SKY, getPos()) / 15D;
+			if(heat < 20 + (480 * light)) {
+				this.heat += this.passiveCooling() * 2;
+			}
+		}
+
 		this.heat -= this.passiveCooling();
-		
+
 		if(heat < 20)
 			heat = 20D;
+	}
+
+	public RBMKType getRBMKType() {
+		return RBMKType.OTHER;
 	}
 	
 	protected static boolean diag = false;
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		
+
 		if(!diag) {
 			super.readFromNBT(nbt);
 		}
 
 		this.heat = nbt.getDouble("heat");
-		this.jumpheight = nbt.getDouble("jumpheight");
-		this.water = nbt.getInteger("realSimWater");
-		this.steam = nbt.getInteger("realSimSteam");
+		this.reasimWater = nbt.getInteger("realSimWater");
+		this.reasimSteam = nbt.getInteger("realSimSteam");
 	}
 	
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		
+
 		if(!diag) {
 			super.writeToNBT(nbt);
 		}
-		
+
 		nbt.setDouble("heat", this.heat);
-		nbt.setDouble("jumpheight", this.jumpheight);
-		nbt.setInteger("realSimWater", this.water);
-		nbt.setInteger("realSimSteam", this.steam);
+		nbt.setInteger("realSimWater", this.reasimWater);
+		nbt.setInteger("realSimSteam", this.reasimSteam);
 		return nbt;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeDouble(this.heat);
+		buf.writeInt(this.reasimWater);
+		buf.writeInt(this.reasimSteam);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		this.heat = buf.readDouble();
+		this.reasimWater = buf.readInt();
+		this.reasimSteam = buf.readInt();
 	}
 	
 	public void getDiagData(NBTTagCompound nbt) {
 		diag = true;
 		this.writeToNBT(nbt);
 		diag = false;
-		nbt.removeTag("jumpheight");
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static void diagnosticPrintHook(RenderGameOverlayEvent.Pre event) {
 
@@ -302,50 +334,50 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		World world = mc.world;
 		RayTraceResult mop = mc.objectMouseOver;
 		ScaledResolution resolution = event.getResolution();
-		
-		if(mop != null && mop.typeOfHit == Type.BLOCK && world.getBlockState(mop.getBlockPos()).getBlock() instanceof RBMKBase) {
-			
-			RBMKBase rbmk = (RBMKBase)world.getBlockState(mop.getBlockPos()).getBlock();
+
+		if (mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK && world.getBlockState(mop.getBlockPos()).getBlock() instanceof RBMKBase rbmk) {
 			int[] pos = rbmk.findCore(world, mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ());
-			
-			if(pos == null)
+
+			if (pos == null)
 				return;
-			
-			TileEntityRBMKBase te = (TileEntityRBMKBase)world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+
+			TileEntityRBMKBase te = (TileEntityRBMKBase) world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
+			if (te == null) return;
 			NBTTagCompound flush = new NBTTagCompound();
 			te.getDiagData(flush);
 			Set<String> keys = flush.getKeySet();
-			
+
 			GlStateManager.pushMatrix();
-			
+			float scale = 0.5f;
+			GlStateManager.scale(scale, scale, 1.0f);
 			int pX = resolution.getScaledWidth() / 2 + 8;
 			int pZ = resolution.getScaledHeight() / 2;
-			
+
 			List<String> exceptions = new ArrayList<>();
 			exceptions.add("x");
 			exceptions.add("y");
 			exceptions.add("z");
 			exceptions.add("items");
 			exceptions.add("id");
+			exceptions.add("muffled");
 
 			String title = "Dump of Ordered Data Diagnostic (DODD)";
-			mc.fontRenderer.drawString(title, pX + 1, pZ - 19, 0x006000);
-			mc.fontRenderer.drawString(title, pX, pZ - 20, 0x00FF00);
+			mc.fontRenderer.drawString(title, (int)(pX / scale) + 1, (int)((pZ - 19) / scale), 0x006000);
+			mc.fontRenderer.drawString(title, (int)(pX / scale), (int)((pZ - 20) / scale), 0x00FF00);
 
-			mc.fontRenderer.drawString(I18nUtil.resolveKey(rbmk.getTranslationKey() + ".name"), pX + 1, pZ - 9, 0x606000);
-			mc.fontRenderer.drawString(I18nUtil.resolveKey(rbmk.getTranslationKey() + ".name"), pX, pZ - 10, 0xffff00);
-			
+			mc.fontRenderer.drawString(I18nUtil.resolveKey(rbmk.getTranslationKey() + ".name"), (int)(pX / scale) + 1, (int)((pZ - 9) / scale), 0x606000);
+			mc.fontRenderer.drawString(I18nUtil.resolveKey(rbmk.getTranslationKey() + ".name"), (int)(pX / scale), (int)((pZ - 10) / scale), 0xffff00);
+
 			String[] ents = new String[keys.size()];
 			keys.toArray(ents);
 			Arrays.sort(ents);
-			
-			for(String key : ents) {
-				
-				if(exceptions.contains(key))
+			int listPz = pZ;
+			for (String key : ents) {
+
+				if (exceptions.contains(key))
 					continue;
-				
-				mc.fontRenderer.drawString(key + ": " + flush.getTag(key), pX, pZ, 0xFFFFFF);
-				pZ += 10;
+				mc.fontRenderer.drawString(key + ": " + flush.getTag(key), (int)(pX / scale), (int)(listPz / scale), 0xFFFFFF);
+				listPz += (int) (10 * scale);
 			}
 
 			GlStateManager.disableBlend();
@@ -354,42 +386,42 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 		}
 	}
-	
+
 	public void onOverheat() {
-		
+
 		for(int i = 0; i < 4; i++) {
 			world.setBlockState(pos.up(i), Blocks.LAVA.getDefaultState());
 		}
 	}
 	
 	public void onMelt(int reduce) {
-		
+
 		standardMelt(reduce);
-		
+
 		if(this.getBlockMetadata() == RBMKBase.DIR_NORMAL_LID.ordinal() + RBMKBase.offset)
 			spawnDebris(DebrisType.LID);
 	}
 	
 	protected void standardMelt(int reduce) {
-		
+
 		int h = RBMKDials.getColumnHeight(world);
 		reduce = MathHelper.clamp(reduce, 1, h);
-		
+
 		if(world.rand.nextInt(3) == 0)
 			reduce++;
-		
+
 		for(int i = h; i >= 0; i--) {
-			
+
 			if(i <= h + 1 - reduce) {
-				
+
 				if(reduce > 1 && i == h + 1 - reduce) {
-					world.setBlockState(new BlockPos(pos.getX(), pos.getY() + i, pos.getZ()), ModBlocks.pribris_burning.getDefaultState());
+					world.setBlockState(pos.up(i), ModBlocks.pribris_burning.getDefaultState());
 				} else {
-					world.setBlockState(new BlockPos(pos.getX(), pos.getY() + i, pos.getZ()), ModBlocks.pribris.getDefaultState());
+					world.setBlockState(pos.up(i), ModBlocks.pribris.getDefaultState());
 				}
-				
+
 			} else {
-				world.setBlockToAir(new BlockPos(pos.getX(), pos.getY() + i, pos.getZ()));
+				world.setBlockToAir(pos.up(i));
 			}
 			IBlockState state = world.getBlockState(pos.up(i));
 			world.notifyBlockUpdate(pos.up(i), state, state, 3);
@@ -398,37 +430,37 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	
 	protected void spawnDebris(DebrisType type) {
 
-		EntityRBMKDebris debris = new EntityRBMKDebris(world, pos.getX() + 0.5D, pos.getY() + TileEntityRBMKBase.rbmkHeight, pos.getZ() + 0.5D, type);
+		EntityRBMKDebris debris = new EntityRBMKDebris(world, pos.getX() + 0.5D, pos.getY() + 4D, pos.getZ() + 0.5D, type);
 		debris.motionX = world.rand.nextGaussian() * 0.25D;
 		debris.motionZ = world.rand.nextGaussian() * 0.25D;
 		debris.motionY = 0.5D + world.rand.nextDouble() * 1.5D;
-		
+
 		if(type == DebrisType.LID) {
 			debris.motionX *= 0.5D;
 			debris.motionY += 0.5D;
 			debris.motionZ *= 0.5D;
 		}
-		
+
 		world.spawnEntity(debris);
 	}
 	
 	public static HashSet<TileEntityRBMKBase> columns = new HashSet<>();
-	public static HashSet<IPipeNet> pipes = new HashSet();
+	public static HashSet<IPipeNet> pipes = new HashSet<>();
 	
 	//assumes that !world.isRemote
 	public void meltdown() {
-		
+
 		RBMKBase.dropLids = false;
-		
+
 		columns.clear();
 		pipes.clear();
 		getFF(pos.getX(), pos.getY(), pos.getZ());
-		
+
 		int minX = pos.getX();
 		int maxX = pos.getX();
 		int minZ = pos.getZ();
 		int maxZ = pos.getZ();
-		
+
 		//set meltdown bounds
 		for(TileEntityRBMKBase rbmk : columns) {
 
@@ -441,7 +473,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			if(rbmk.pos.getZ() > maxZ)
 				maxZ = rbmk.pos.getZ();
 		}
-		
+
 		//Convert every rbmk part into debris
 		for(TileEntityRBMKBase rbmk : columns) {
 
@@ -449,25 +481,25 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			int distFromMaxX = maxX - rbmk.pos.getX();
 			int distFromMinZ = rbmk.pos.getZ() - minZ;
 			int distFromMaxZ = maxZ - rbmk.pos.getZ();
-			
+
 			int minDist = Math.min(distFromMinX, Math.min(distFromMaxX, Math.min(distFromMinZ, distFromMaxZ)));
-			
+
 			rbmk.onMelt(minDist + 1);
 		}
-		
+
 		//Adding extra rads near corium blocks
 		for(TileEntityRBMKBase rbmk : columns) {
-			
-			if(rbmk instanceof TileEntityRBMKRod && world.getBlockState(new BlockPos(rbmk.pos.getX(), rbmk.pos.getY(), rbmk.pos.getZ())).getBlock() == ModBlocks.corium_block) {
-				
+
+			if(rbmk instanceof TileEntityRBMKRod && world.getBlockState(rbmk.getPos()).getBlock() == ModBlocks.corium_block) {
+
 				for(int x = rbmk.pos.getX() - 1; x <= rbmk.pos.getX() + 1; x ++) {
 					for(int y = rbmk.pos.getY() - 1; y <= rbmk.pos.getY() + 1; y ++) {
 						for(int z = rbmk.pos.getZ() - 1; z <= rbmk.pos.getZ() + 1; z ++) {
-							
+
 							Block b = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-							
+
 							if(world.rand.nextInt(3) == 0 && (b == ModBlocks.pribris || b == ModBlocks.pribris_burning)) {
-								
+
 								if(RBMKBase.digamma)
 									world.setBlockState(new BlockPos(x, y, z), ModBlocks.pribris_digamma.getDefaultState());
 								else
@@ -481,8 +513,8 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 
 		/* Hanlde overpressure event */
 		if(RBMKDials.getOverpressure(world) && !pipes.isEmpty()) {
-			HashSet<IFluidConductor> pipeBlocks = new HashSet();
-			HashSet<IFluidConnector> pipeReceivers = new HashSet();
+			HashSet<IFluidConductor> pipeBlocks = new HashSet<>();
+			HashSet<IFluidConnector> pipeReceivers = new HashSet<>();
 
 			//unify all parts into single sets to prevent redundancy
 			pipes.forEach(x -> {
@@ -497,18 +529,16 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 
 			while(itPipes.hasNext() && count < max) {
 				IFluidConductor pipe = itPipes.next();
-				if(pipe instanceof TileEntity) {
-					TileEntity tile = (TileEntity) pipe;
-					world.setBlockToAir(tile.getPos());
+				if(pipe instanceof TileEntity tile) {
+                    world.setBlockToAir(tile.getPos());
 				}
 				count++;
 			}
 
 			while(itReceivers.hasNext()) {
 				IFluidConnector con = itReceivers.next();
-				if(con instanceof TileEntity) {
-					TileEntity tile = (TileEntity) con;
-					if(con instanceof IOverpressurable) {
+				if(con instanceof TileEntity tile) {
+                    if(con instanceof IOverpressurable) {
 						((IOverpressurable) con).explode(world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
 					} else {
 						world.setBlockToAir(tile.getPos());
@@ -517,21 +547,21 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 				}
 			}
 		}
-		
+
 		int smallDim = Math.max(maxX - minX, maxZ - minZ) * 2;
 		int avgX = minX + (maxX - minX) / 2;
 		int avgZ = minZ + (maxZ - minZ) / 2;
-		
+
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("type", "rbmkmush");
 		data.setFloat("scale", smallDim);
-		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, avgX + 0.5, pos.getY() + TileEntityRBMKBase.rbmkHeight, avgZ + 0.5), new TargetPoint(world.provider.getDimension(), avgX + 0.5, pos.getY() + TileEntityRBMKBase.rbmkHeight, avgZ + 0.5, 250));
+		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, avgX + 0.5, pos.getY() + 1, avgZ + 0.5), new TargetPoint(world.provider.getDimension(), avgX + 0.5, pos.getY() + 1, avgZ + 0.5, 250));
 		MainRegistry.proxy.effectNT(data);
-		
-		world.playSound(null, avgX + 0.5, pos.getY() + TileEntityRBMKBase.rbmkHeight>>1, avgZ + 0.5, HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
-		
+
+		world.playSound(null, avgX + 0.5, pos.getY() + 1, avgZ + 0.5, HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
+
 		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 50 + 0.5, pos.getY() - 50 + 0.5, pos.getZ() - 50 + 0.5, pos.getX() + 50 + 0.5, pos.getY() + 50 + 0.5, pos.getZ() + 50 + 0.5));
-		
+
 		for(EntityPlayer e : list) {
 			AdvancementManager.grantAchievement(e, AdvancementManager.progress_rbmk_boom);
 		}
@@ -540,24 +570,22 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			EntitySpear spear = new EntitySpear(world);
 			spear.posX = avgX + 0.5;
 			spear.posZ = avgZ + 0.5;
-			spear.posY = pos.getY() + TileEntityRBMKBase.rbmkHeight + 100;
+			spear.posY = pos.getY() + 100;
 			world.spawnEntity(spear);
 		}
-		
+
 		RBMKBase.dropLids = true;
 		RBMKBase.digamma = false;
 	}
 	
 	//Family and Friends
 	private void getFF(int x, int y, int z) {
-		
+
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		
-		if(te instanceof TileEntityRBMKBase) {
-			
-			TileEntityRBMKBase rbmk = (TileEntityRBMKBase) te;
-			
-			if(!columns.contains(rbmk)) {
+
+		if(te instanceof TileEntityRBMKBase rbmk) {
+
+            if(!columns.contains(rbmk)) {
 				columns.add(rbmk);
 				getFF(x + 1, y, z);
 				getFF(x - 1, y, z);
@@ -583,7 +611,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + TileEntityRBMKBase.rbmkHeight + 10, pos.getZ() + 1);
+		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 17, pos.getZ() + 1);
 	}
 
 	@Override
@@ -598,8 +626,8 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		Map<String, DataValue> data = new HashMap<>();
 
 		data.put("heat", new DataValueFloat((float) heat));
-		data.put("RSIM_feed", new DataValueFloat(water));
-		data.put("RSIM_steam", new DataValueFloat(steam));
+		data.put("RSIM_feed", new DataValueFloat(reasimWater));
+		data.put("RSIM_steam", new DataValueFloat(reasimSteam));
 
 		return data;
 	}
@@ -614,6 +642,13 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	public void invalidate() {
 		super.invalidate();
 		ControlEventSystem.get(world).removeControllable(this);
+		NeutronNodeWorld.removeNode(world, this.getPos()); // woo-fucking-hoo!!!
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		NeutronNodeWorld.removeNode(world, this.getPos()); // woo-fucking-hoo!!!
 	}
 
 	@Override
