@@ -16,10 +16,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
-public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachineOreSlopper>
-        implements IItemRendererProvider {
+public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachineOreSlopper> implements IItemRendererProvider {
 
     private static final ItemStack bedrockOreStack = new ItemStack(ModItems.bedrock_ore, 1, 0);
 
@@ -28,14 +27,7 @@ public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachin
     }
 
     @Override
-    public void render(
-            TileEntityMachineOreSlopper slopper,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha) {
+    public void render(TileEntityMachineOreSlopper slopper, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y, z + 0.5D);
@@ -93,6 +85,7 @@ public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachin
         }
 
         GlStateManager.popMatrix();
+        bindTexture(ResourceManager.ore_slopper_tex);
 
         double blades = slopper.prevBlades + (slopper.blades - slopper.prevBlades) * partialTicks;
         double fan = slopper.prevFan + (slopper.fan - slopper.prevFan) * partialTicks;
