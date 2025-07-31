@@ -334,14 +334,14 @@ public class EntityBullet extends Entity implements IProjectile {
 			//vec31 = new Vec3d(this.posX - this.motionX, this.posY - this.motionY, this.posZ - this.motionZ);
 			//Drillgon200: Ok that was retarded and completely breaks turrets.
 			
-			RayTraceResult movingobjectposition = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
+			RayTraceResult RayTraceResult = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
 			vec31 = new Vec3d(this.posX, this.posY, this.posZ);
 			vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 			vec31 = new Vec3d(this.posX - this.motionX, this.posY - this.motionY, this.posZ - this.motionZ);
 			
-			if (movingobjectposition != null) {
-				vec3 = new Vec3d(movingobjectposition.hitVec.x, movingobjectposition.hitVec.y, movingobjectposition.hitVec.z);
+			if (RayTraceResult != null) {
+				vec3 = new Vec3d(RayTraceResult.hitVec.x, RayTraceResult.hitVec.y, RayTraceResult.hitVec.z);
 			}
 
 			Entity entity = null;
@@ -360,10 +360,10 @@ public class EntityBullet extends Entity implements IProjectile {
 				if (entity1.canBeCollidedWith() && (entity1 != this.shootingEntity)) {
 					f1 = 0.3F;
 					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().grow(f1);
-					RayTraceResult movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
+					RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
-					if (movingobjectposition1 != null) {
-						double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
+					if (RayTraceResult1 != null) {
+						double d1 = vec31.distanceTo(RayTraceResult1.hitVec);
 
 						if (d1 < d0 || d0 == 0.0D) {
 							entity = entity1;
@@ -374,24 +374,24 @@ public class EntityBullet extends Entity implements IProjectile {
 			}
 
 			if (entity != null) {
-				movingobjectposition = new RayTraceResult(entity);
+				RayTraceResult = new RayTraceResult(entity);
 			}
 
-			if (movingobjectposition != null && movingobjectposition.entityHit != null && movingobjectposition.entityHit instanceof EntityPlayer) {
-				EntityPlayer entityplayer = (EntityPlayer) movingobjectposition.entityHit;
+			if (RayTraceResult != null && RayTraceResult.entityHit != null && RayTraceResult.entityHit instanceof EntityPlayer) {
+				EntityPlayer entityplayer = (EntityPlayer) RayTraceResult.entityHit;
 
 				if (entityplayer.capabilities.disableDamage || this.shootingEntity instanceof EntityPlayer && !((EntityPlayer) this.shootingEntity).canAttackPlayer(entityplayer)) {
-					movingobjectposition = null;
+					RayTraceResult = null;
 				}
 			}
 
 			float f2;
 			float f4;
 
-			if (movingobjectposition != null && CompatibilityConfig.isWarDim(world)) {
-				if (movingobjectposition.entityHit != null) {
+			if (RayTraceResult != null && CompatibilityConfig.isWarDim(world)) {
+				if (RayTraceResult.entityHit != null) {
 					// TODO: Remove test feature in release version
-					if (!(movingobjectposition.entityHit instanceof EntityItemFrame) || movingobjectposition.entityHit instanceof EntityItemFrame && (((EntityItemFrame) movingobjectposition.entityHit).getDisplayedItem() == null || ((EntityItemFrame) movingobjectposition.entityHit).getDisplayedItem() != null && ((EntityItemFrame) movingobjectposition.entityHit).getDisplayedItem().getItem() != ModItems.flame_pony)) {
+					if (!(RayTraceResult.entityHit instanceof EntityItemFrame) || RayTraceResult.entityHit instanceof EntityItemFrame && (((EntityItemFrame) RayTraceResult.entityHit).getDisplayedItem() == null || ((EntityItemFrame) RayTraceResult.entityHit).getDisplayedItem() != null && ((EntityItemFrame) RayTraceResult.entityHit).getDisplayedItem().getItem() != ModItems.flame_pony)) {
 						f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 						int k = MathHelper.ceil(f2 * this.damage);
 
@@ -432,13 +432,13 @@ public class EntityBullet extends Entity implements IProjectile {
 							}
 						}
 
-						if (fire || this.isBurning() && !(movingobjectposition.entityHit instanceof EntityEnderman)) {
-							movingobjectposition.entityHit.setFire(5);
+						if (fire || this.isBurning() && !(RayTraceResult.entityHit instanceof EntityEnderman)) {
+							RayTraceResult.entityHit.setFire(5);
 						}
 
-						if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) damage)) {
-							if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-								EntityLivingBase entitylivingbase = (EntityLivingBase) movingobjectposition.entityHit;
+						if (RayTraceResult.entityHit.attackEntityFrom(damagesource, (float) damage)) {
+							if (RayTraceResult.entityHit instanceof EntityLivingBase) {
+								EntityLivingBase entitylivingbase = (EntityLivingBase) RayTraceResult.entityHit;
 
 								if (rad) {
 									if (entitylivingbase instanceof EntityPlayer && ArmorUtil.checkForHazmat((EntityPlayer) entitylivingbase)) {
@@ -469,7 +469,7 @@ public class EntityBullet extends Entity implements IProjectile {
 									f4 = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
 
 									if (f4 > 0.0F) {
-										movingobjectposition.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6000000238418579D / f4, 0.1D, this.motionZ * this.knockbackStrength * 0.6000000238418579D / f4);
+										RayTraceResult.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6000000238418579D / f4, 0.1D, this.motionZ * this.knockbackStrength * 0.6000000238418579D / f4);
 									}
 								}
 								
@@ -479,15 +479,15 @@ public class EntityBullet extends Entity implements IProjectile {
 									EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase) this.shootingEntity, entitylivingbase);
 								}
 
-								if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity && movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP) {
+								if (this.shootingEntity != null && RayTraceResult.entityHit != this.shootingEntity && RayTraceResult.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP) {
 									((EntityPlayerMP) this.shootingEntity).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
 								}
 								if (this.pip) {
 									if (!world.isRemote) {
 										EntityBoxcar pippo = new EntityBoxcar(world);
-										pippo.posX = movingobjectposition.entityHit.posX;
-										pippo.posY = movingobjectposition.entityHit.posY + 50;
-										pippo.posZ = movingobjectposition.entityHit.posZ;
+										pippo.posX = RayTraceResult.entityHit.posX;
+										pippo.posY = RayTraceResult.entityHit.posY + 50;
+										pippo.posZ = RayTraceResult.entityHit.posZ;
 										for (int j = 0; j < 50; j++) {
 											EntityBSmokeFX fx = new EntityBSmokeFX(world, pippo.posX + (rand.nextDouble() - 0.5) * 4, pippo.posY + (rand.nextDouble() - 0.5) * 12, pippo.posZ + (rand.nextDouble() - 0.5) * 4, 0, 0, 0);
 											world.spawnEntity(fx);
@@ -495,20 +495,20 @@ public class EntityBullet extends Entity implements IProjectile {
 
 										world.spawnEntity(pippo);
 										
-										world.playSound(null, movingobjectposition.entityHit.posX, movingobjectposition.entityHit.posY + 50, movingobjectposition.entityHit.posZ, HBMSoundHandler.trainHorn, SoundCategory.HOSTILE, 10000F, 1F);
+										world.playSound(null, RayTraceResult.entityHit.posX, RayTraceResult.entityHit.posY + 50, RayTraceResult.entityHit.posZ, HBMSoundHandler.trainHorn, SoundCategory.HOSTILE, 10000F, 1F);
 									}
 									
 								}
 							}
 
-							if (!(movingobjectposition.entityHit instanceof EntityEnderman)) {
+							if (!(RayTraceResult.entityHit instanceof EntityEnderman)) {
 								if (!this.world.isRemote) {
-									if (!instakill || movingobjectposition.entityHit instanceof EntityPlayer) {
-										// movingobjectposition.entityHit.attackEntityFrom(DamageSource.generic,
+									if (!instakill || RayTraceResult.entityHit instanceof EntityPlayer) {
+										// RayTraceResult.entityHit.attackEntityFrom(DamageSource.generic,
 										// dmgMin + rand.nextInt(dmgMax -
 										// dmgMin));
-									} else if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-										((EntityLivingBase) movingobjectposition.entityHit).setHealth(0.0F);
+									} else if (RayTraceResult.entityHit instanceof EntityLivingBase) {
+										((EntityLivingBase) RayTraceResult.entityHit).setHealth(0.0F);
 									}
 								}
 								if (!this.getIsCritical())
@@ -516,15 +516,15 @@ public class EntityBullet extends Entity implements IProjectile {
 									;
 							}
 						} else {
-							if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-								float dmg = (float) damage + ((EntityLivingBase)movingobjectposition.entityHit).lastDamage;
-								movingobjectposition.entityHit.attackEntityFrom(damagesource, dmg);
+							if (RayTraceResult.entityHit instanceof EntityLivingBase) {
+								float dmg = (float) damage + ((EntityLivingBase)RayTraceResult.entityHit).lastDamage;
+								RayTraceResult.entityHit.attackEntityFrom(damagesource, dmg);
 							}
 						}
 
 						/* else {
-							if (movingobjectposition.entityHit instanceof EntityLivingBase && !(movingobjectposition.entityHit instanceof EntityHunterChopper)) {
-								EntityLivingBase target = (EntityLivingBase) movingobjectposition.entityHit;
+							if (RayTraceResult.entityHit instanceof EntityLivingBase && !(RayTraceResult.entityHit instanceof EntityHunterChopper)) {
+								EntityLivingBase target = (EntityLivingBase) RayTraceResult.entityHit;
 								target.setHealth((float) (target.getHealth() - damage));
 							}
 						}*/
@@ -532,16 +532,16 @@ public class EntityBullet extends Entity implements IProjectile {
 						this.setDead();
 					}
 				} else if (!this.getIsCritical()) {
-					this.field_145791_d = movingobjectposition.getBlockPos().getX();
-					this.field_145792_e = movingobjectposition.getBlockPos().getY();
-					this.field_145789_f = movingobjectposition.getBlockPos().getZ();
+					this.field_145791_d = RayTraceResult.getBlockPos().getX();
+					this.field_145792_e = RayTraceResult.getBlockPos().getY();
+					this.field_145789_f = RayTraceResult.getBlockPos().getZ();
 					BlockPos pos = new BlockPos(this.field_145791_d, this.field_145792_e, this.field_145789_f);
 					test_blockstate = this.world.getBlockState(pos);
 					this.field_145790_g = test_blockstate.getBlock();
 					this.inData = field_145790_g.getMetaFromState(test_blockstate);
-					this.motionX = ((float) (movingobjectposition.hitVec.x - this.posX));
-					this.motionY = ((float) (movingobjectposition.hitVec.y - this.posY));
-					this.motionZ = ((float) (movingobjectposition.hitVec.z - this.posZ));
+					this.motionX = ((float) (RayTraceResult.hitVec.x - this.posX));
+					this.motionY = ((float) (RayTraceResult.hitVec.y - this.posY));
+					this.motionZ = ((float) (RayTraceResult.hitVec.z - this.posZ));
 					f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 					this.posX -= this.motionX / f2 * 0.05000000074505806D;
 					this.posY -= this.motionY / f2 * 0.05000000074505806D;

@@ -70,13 +70,13 @@ public class EntityChopperMine extends Entity implements IProjectile {
 		Vec3d vec31 = new Vec3d(this.posX, this.posY, this.posZ);
 		Vec3d vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY,
 				this.posZ + this.motionZ);
-		RayTraceResult movingobjectposition = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
+		RayTraceResult RayTraceResult = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
 		vec31 = new Vec3d(this.posX, this.posY, this.posZ);
 		vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY,
 				this.posZ + this.motionZ);
 
-		if (movingobjectposition != null) {
-			vec3 = new Vec3d(movingobjectposition.hitVec.x, movingobjectposition.hitVec.y, movingobjectposition.hitVec.z);
+		if (RayTraceResult != null) {
+			vec3 = new Vec3d(RayTraceResult.hitVec.x, RayTraceResult.hitVec.y, RayTraceResult.hitVec.z);
 		}
 
 		Entity entity = null;
@@ -91,10 +91,10 @@ public class EntityChopperMine extends Entity implements IProjectile {
 			if (entity1.canBeCollidedWith() && (entity1 != this.shooter)) {
 				f1 = 0.3F;
 				AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand(f1, f1, f1);
-				RayTraceResult movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
+				RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
-				if (movingobjectposition1 != null) {
-					double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
+				if (RayTraceResult1 != null) {
+					double d1 = vec31.distanceTo(RayTraceResult1.hitVec);
 
 					if (d1 < d0 || d0 == 0.0D) {
 						entity = entity1;
@@ -105,11 +105,11 @@ public class EntityChopperMine extends Entity implements IProjectile {
 		}
 
 		if (entity != null) {
-			movingobjectposition = new RayTraceResult(entity);
+			RayTraceResult = new RayTraceResult(entity);
 		}
 
-		if (movingobjectposition != null && movingobjectposition.entityHit != null
-				&& movingobjectposition.entityHit instanceof EntityPlayer) {
+		if (RayTraceResult != null && RayTraceResult.entityHit != null
+				&& RayTraceResult.entityHit instanceof EntityPlayer) {
 			if(CompatibilityConfig.isWarDim(world))
 				world.createExplosion(shooter, this.posX, this.posY, this.posZ, 5F, false);
 			this.setDead();

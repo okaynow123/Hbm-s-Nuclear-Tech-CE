@@ -3,8 +3,8 @@ package com.hbm.util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class Vec3NT {
 
+public class Vec3NT {
     public double x;
     public double y;
     public double z;
