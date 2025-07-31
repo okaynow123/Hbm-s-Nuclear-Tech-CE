@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
@@ -422,8 +423,10 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 	public IRenderHandler getSkyRenderer() {
 		// I do not condone this because it WILL confuse your players, but if you absolutely must,
 		// you can uncomment this line below in your fork to get default skybox rendering on Earth.
-		
-		// if(dimensionId == 0) return super.getSkyRenderer();
+
+		// mlbv: nah ill do it anyway
+		if(!GeneralConfig.enableSkybox && this.getDimensionType() == DimensionType.OVERWORLD)
+			return super.getSkyRenderer();
 		
 		// Make sure you also uncomment the relevant line in getMoonPhase below too.
 
@@ -471,7 +474,8 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 	@Override
 	public int getMoonPhase(long worldTime) {
 		// Uncomment this line as well to return moon phase difficulty calcs to vanilla
-		// if(dimensionId == 0) return super.getMoonPhase(worldTime);
+		if(!GeneralConfig.enableSkybox && getDimensionType() == DimensionType.OVERWORLD)
+			return super.getMoonPhase(worldTime);
 
 		CelestialBody body = CelestialBody.getBody(world);
 
