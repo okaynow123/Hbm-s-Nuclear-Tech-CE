@@ -61,6 +61,7 @@ import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.entity.*;
+import com.hbm.render.entity.RenderBeam;
 import com.hbm.render.entity.effect.*;
 import com.hbm.render.entity.item.RenderMovingItem;
 import com.hbm.render.entity.item.RenderMovingPackage;

@@ -1,14 +1,14 @@
 package com.hbm.explosion.vanillant.standard;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
+import com.hbm.items.weapon.sedna.factory.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
-import com.hbm.util.DamageResistanceHandler;
 import com.hbm.util.EntityDamageUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
-import static com.hbm.util.DamageResistanceHandler.*;
+import static com.hbm.util.DamageResistanceHandler.DamageClass;
 
 public class EntityProcessorCrossSmooth extends EntityProcessorCross {
 
@@ -36,14 +36,14 @@ public class EntityProcessorCrossSmooth extends EntityProcessorCross {
 
     @Override
     public void attackEntity(Entity entity, ExplosionVNT source, float amount) {
-        if(!entity.isEntityAlive()) return;
-        if(source.exploder == entity) amount *= 0.5F;
+        if (!entity.isEntityAlive()) return;
+        if (source.exploder == entity) amount *= 0.5F;
         DamageSource dmg = BulletConfig.getDamage(null, source.exploder instanceof EntityLivingBase ? (EntityLivingBase) source.exploder : null, clazz);
-        if(!(entity instanceof EntityLivingBase)) {
+        if (!(entity instanceof EntityLivingBase)) {
             entity.attackEntityFrom(dmg, amount);
         } else {
             EntityDamageUtil.attackEntityFromNT((EntityLivingBase) entity, dmg, amount, true, false, 0F, pierceDT, pierceDR);
-            if(!entity.isEntityAlive()) ConfettiUtil.decideConfetti((EntityLivingBase) entity, dmg);
+            if (!entity.isEntityAlive()) ConfettiUtil.decideConfetti((EntityLivingBase) entity, dmg);
         }
     }
 
