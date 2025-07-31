@@ -1,9 +1,9 @@
 package com.hbm.render.loader;
 
 import com.hbm.render.amlfrom1710.IModelCustom;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelRendererObj {
 
@@ -21,10 +21,10 @@ public class ModelRendererObj {
     IModelCustom model;
 
     public ModelRendererObj(IModelCustom model, String... parts) {
-    	this.model = model;
-    	this.parts = parts;
+        this.model = model;
+        this.parts = parts;
     }
-    
+
     public ModelRendererObj setPosition(float x, float y, float z) {
         this.offsetX = x;
         this.offsetY = y;
@@ -38,23 +38,22 @@ public class ModelRendererObj {
         this.rotationPointZ = z;
         return this;
     }
-    
-    public void copyTo(ModelRendererObj obj) {
 
-    	obj.offsetX = offsetX;
-    	obj.offsetY = offsetY;
-    	obj.offsetZ = offsetZ;
-    	obj.rotateAngleX = rotateAngleX;
-    	obj.rotateAngleY = rotateAngleY;
-    	obj.rotateAngleZ = rotateAngleZ;
-    	obj.rotationPointX = rotationPointX;
-    	obj.rotationPointY = rotationPointY;
-    	obj.rotationPointZ = rotationPointZ;
+    public void copyTo(ModelRendererObj obj) {
+        obj.offsetX = offsetX;
+        obj.offsetY = offsetY;
+        obj.offsetZ = offsetZ;
+        obj.rotateAngleX = rotateAngleX;
+        obj.rotateAngleY = rotateAngleY;
+        obj.rotateAngleZ = rotateAngleZ;
+        obj.rotationPointX = rotationPointX;
+        obj.rotationPointY = rotationPointY;
+        obj.rotationPointZ = rotationPointZ;
     }
 
     @SideOnly(Side.CLIENT)
     public void render(float scale) {
-    	GlStateManager.pushMatrix();
+        GlStateManager.pushMatrix();
 
         GlStateManager.translate(this.offsetX * scale, this.offsetY * scale, this.offsetZ * scale);
 
@@ -77,16 +76,14 @@ public class ModelRendererObj {
 
         GlStateManager.translate(-this.rotationPointX * scale, -this.rotationPointY * scale, -this.rotationPointZ * scale);
 
-    	GlStateManager.scale(scale, scale, scale);
+        GlStateManager.scale(scale, scale, scale);
 
-    	if(parts != null && parts.length > 0)
-    		for(String part : parts)
-    			model.renderPart(part);
-    	else
-    		model.renderAll();
+        if (parts != null && parts.length > 0) for (String part : parts)
+            model.renderPart(part);
+        else model.renderAll();
 
 
-    	GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
 
     }
 }

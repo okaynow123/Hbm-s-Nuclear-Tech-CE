@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class ModelArmorWings extends ModelArmorBase {
 
@@ -153,7 +153,12 @@ public class ModelArmorWings extends ModelArmorBase {
 		
 		GlStateManager.popMatrix();
 	}
-	
+
+	@Override
+	protected void renderArmor(Entity entity, float scale) {
+
+	}
+
 	protected boolean doesRotateZ() {
 		return true;
 	}

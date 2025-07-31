@@ -9,11 +9,13 @@ package com.hbm.render.model;
 import com.hbm.handler.ArmorUtil;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class ModelM65 extends ModelBiped {
 	// fields
@@ -102,16 +104,18 @@ public class ModelM65 extends ModelBiped {
 
 	@Override
 	public void setRotationAngles(float f2, float f3, float f4, float f5, float f6, float f7, Entity entity) {
-		
-		if(entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			if (player.isSneaking()) {
-				this.isSneak = true;
-			} else {
-				this.isSneak = false;
-			}
-		}
 		super.setRotationAngles(f2, f3, f4, f5, f6, f7, entity);
+
+		if (entity instanceof EntityArmorStand entityarmorstand) {
+			this.bipedHead.rotateAngleX = 0.017453292F * entityarmorstand.getHeadRotation().getX();
+			this.bipedHead.rotateAngleY = 0.017453292F * entityarmorstand.getHeadRotation().getY();
+			this.bipedHead.rotateAngleZ = 0.017453292F * entityarmorstand.getHeadRotation().getZ();
+			this.isSneak = false;
+		} else if (entity instanceof EntityPlayer player) {
+			this.isSneak = player.isSneaking();
+		} else {
+			this.isSneak = false;
+		}
 		this.mask.rotationPointX = this.bipedHead.rotationPointX;
 		this.mask.rotationPointY = this.bipedHead.rotationPointY;
 		this.mask.rotateAngleY = this.bipedHead.rotateAngleY;

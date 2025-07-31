@@ -4,11 +4,10 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.ModelRendererObj;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelArmorBJ extends ModelArmorBase {
-	
-	ModelRendererObj jetpack;
+
+	private final ModelRendererObj jetpack;
 
 	public ModelArmorBJ(int type) {
 		super(type);
@@ -24,48 +23,37 @@ public class ModelArmorBJ extends ModelArmorBase {
 	}
 
 	@Override
-	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
-		
-		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
+	public void renderArmor(Entity par1Entity, float par7) {
 		body.copyTo(jetpack);
-		GlStateManager.pushMatrix();
-		if(this.isChild) {
-			GlStateManager.scale(0.75F, 0.75F, 0.75F);
-			GlStateManager.translate(0.0F, 16.0F * par7, 0.0F);
-		}
-		if(type == 0) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_eyepatch);
-			head.render(par7*1.001F);
-		}
-		if(this.isChild) {
-			GlStateManager.scale(0.75F, 0.75F, 0.75F);
-		}
-		if(type == 1 || type == 5) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_chest);
-			body.render(par7);
-			
-			if(type == 5) {
-				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_jetpack);
-				jetpack.render(par7);
+		switch (type) {
+			case 0 -> {
+				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_eyepatch);
+				head.render(par7 * 1.001F);
 			}
-			
-			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_arm);
-			leftArm.render(par7);
-			rightArm.render(par7);
-		}
+			case 1, 5 -> {
+				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_chest);
+				body.render(par7);
 
-		if(type == 2) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_leg);
-			leftLeg.render(par7);
-			rightLeg.render(par7);
+				if (type == 5) {
+					Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_jetpack);
+					jetpack.render(par7);
+				}
+
+				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_arm);
+				leftArm.render(par7);
+				rightArm.render(par7);
+			}
+			case 2 -> {
+				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_leg);
+				leftLeg.render(par7);
+				rightLeg.render(par7);
+			}
+			case 3 -> {
+				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_leg);
+				leftFoot.render(par7);
+				rightFoot.render(par7);
+			}
 		}
-		if(type == 3) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.bj_leg);
-			leftFoot.render(par7);
-			rightFoot.render(par7);
-		}
-		
-		GlStateManager.popMatrix();
 	}
 
 }

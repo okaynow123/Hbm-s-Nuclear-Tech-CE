@@ -4,7 +4,6 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.ModelRendererObj;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelHat extends ModelArmorBase {
 
@@ -22,17 +21,10 @@ public class ModelHat extends ModelArmorBase {
 	}
 
 	@Override
-	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
-
-		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
-
-		GlStateManager.pushMatrix();
-
+	public void renderArmor(Entity par1Entity, float par7) {
 		if(type == 0) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.hat);
 			head.render(par7*1.001F);
 		}
-
-		GlStateManager.popMatrix();
 	}
 }
