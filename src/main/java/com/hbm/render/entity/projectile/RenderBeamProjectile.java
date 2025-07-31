@@ -17,11 +17,11 @@ public class RenderBeamProjectile extends Render<EntityBulletBeamBase> {
 
     protected RenderBeamProjectile(RenderManager renderManager) {
         super(renderManager);
+        this.shadowSize = -1; //Disable shadow
     }
 
     @Override
     public void doRender(EntityBulletBeamBase bullet, double x, double y, double z, float f0, float interp) {
-        this.shadowSize = -1; //Disable shadow
         if (bullet.config == null) bullet.config = bullet.getBulletConfig();
         if (bullet.config == null) return;
 

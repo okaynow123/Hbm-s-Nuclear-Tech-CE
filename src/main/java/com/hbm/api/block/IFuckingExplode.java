@@ -1,5 +1,6 @@
 package com.hbm.api.block;
 
+import com.hbm.entity.item.EntityTNTPrimedBase;
 import net.minecraft.world.World;
 
 public interface IFuckingExplode {
