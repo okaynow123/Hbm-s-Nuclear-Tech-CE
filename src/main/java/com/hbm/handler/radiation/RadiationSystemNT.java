@@ -92,7 +92,6 @@ public final class RadiationSystemNT {
     private static volatile CompletableFuture<Void> radiationFuture = CompletableFuture.completedFuture(null);
     private static MinecraftServer serverInstance;
 
-    @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event) {
         serverInstance = event.getServer();
     }
@@ -100,14 +99,12 @@ public final class RadiationSystemNT {
     /**
      * Clear the server instance when it stops to prevent memory leaks.
      */
-    @SubscribeEvent
     public static void onServerStopping(FMLServerStoppingEvent event) {
         try {
             radiationFuture.get(5, TimeUnit.SECONDS);
         } catch (Exception e) {
             MainRegistry.logger.error("Radiation system timed out or failed to complete tasks during server shutdown.", e);
         }
-        serverInstance = null;
     }
 
     /**

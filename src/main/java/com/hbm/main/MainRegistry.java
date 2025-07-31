@@ -37,6 +37,7 @@ import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
 import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.interfaces.Spaghetti;
@@ -616,5 +617,11 @@ public class MainRegistry {
         //MUST be initialized AFTER achievements!!
         BobmazonOfferFactory.reset();
         BobmazonOfferFactory.init();
+        RadiationSystemNT.onServerStarting(evt);
+    }
+
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent evt) {
+        RadiationSystemNT.onServerStopping(evt);
     }
 }
