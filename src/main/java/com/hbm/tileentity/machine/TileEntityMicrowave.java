@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMicrowave;
 import com.hbm.inventory.gui.GUIMicrowave;
 import com.hbm.lib.ForgeDirection;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMicrowave extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;

@@ -3,7 +3,7 @@ package com.hbm.blocks.machine;
 import com.hbm.api.fluid.IFluidConnector;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.TileEntityPWRController;
@@ -124,7 +124,7 @@ public class BlockPWR extends BlockContainer implements ILookOverlay {
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
 
-    @AutoRegisterTE
+    @AutoRegister
     public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler, IFluidConnector {
 
         public IBlockState originalBlockState;

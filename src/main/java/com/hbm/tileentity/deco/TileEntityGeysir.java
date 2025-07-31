@@ -6,7 +6,7 @@ import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.entity.particle.EntityOrangeFX;
 import com.hbm.entity.projectile.EntityShrapnel;
 import com.hbm.entity.projectile.EntityWaterSplash;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityGeysir extends TileEntity implements ITickable {
 
 	int timer;

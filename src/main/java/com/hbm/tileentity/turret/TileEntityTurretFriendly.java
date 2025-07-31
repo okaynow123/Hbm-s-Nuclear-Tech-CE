@@ -1,7 +1,7 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretFriendly;
 import com.hbm.tileentity.IGUIProvider;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretFriendly extends TileEntityTurretChekhov implements IGUIProvider {
 
 	static List<Integer> configs = new ArrayList<>();

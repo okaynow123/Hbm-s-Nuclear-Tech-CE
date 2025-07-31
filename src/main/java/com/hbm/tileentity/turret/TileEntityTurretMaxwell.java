@@ -1,7 +1,7 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretMaxwell;
 import com.hbm.items.ModItems;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements IGUIProvider {
 
 	@Override

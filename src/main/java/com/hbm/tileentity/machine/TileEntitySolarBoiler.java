@@ -2,12 +2,10 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -17,14 +15,13 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidStandardTransceiver {
 
     public FluidTankNTM[] tanks;

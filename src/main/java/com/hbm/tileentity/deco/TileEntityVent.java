@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.particle.EntityChlorineFX;
 import com.hbm.entity.particle.EntityCloudFX;
 import com.hbm.entity.particle.EntityPinkCloudFX;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityVent extends TileEntity implements ITickable {
 
 	Random rand = new Random();

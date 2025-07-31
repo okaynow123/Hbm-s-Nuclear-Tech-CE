@@ -3,7 +3,7 @@ package com.hbm.tileentity;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidConnector;
 import com.hbm.api.tile.IHeatSource;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidContainer;
 import com.hbm.inventory.fluid.FluidType;
@@ -24,7 +24,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidAcceptor, IFluidConnector, IFluidHandler {
 
 	TileEntity tile;

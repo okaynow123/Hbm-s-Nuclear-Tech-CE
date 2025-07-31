@@ -1,6 +1,6 @@
 package com.hbm.tileentity.bomb;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerNukeSolinium;
 import com.hbm.inventory.gui.GUINukeSolinium;
 import com.hbm.items.ModItems;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityNukeSolinium extends TileEntity implements IGUIProvider {
 
 	public ItemStackHandler inventory;

@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.particle.book.ParticleBookCircle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -8,7 +8,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityBlackBook extends TileEntity implements ITickable {
 
 	public int effectTime;

@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerMachineAmmoPress;
 import com.hbm.inventory.gui.GUIMachineAmmoPress;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineAmmoPress extends TileEntityMachineBase
     implements IControlReceiver, IGUIProvider, ITickable {
 

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.bomb;
 
 import com.hbm.entity.missile.EntityMissileBaseNT;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.items.weapon.ItemMissileStandard.MissileFormFactor;
 import com.hbm.lib.DirPos;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityLaunchPadLarge extends TileEntityLaunchPadBase {
 
 	public int formFactor = -1;

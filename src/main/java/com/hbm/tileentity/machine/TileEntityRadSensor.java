@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.saveddata.RadiationSavedData;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRadSensor extends TileEntity implements ITickable, SimpleComponent {
 
 	public float chunkRads = 0;

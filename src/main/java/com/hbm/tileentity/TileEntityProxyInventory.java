@@ -1,12 +1,12 @@
 package com.hbm.tileentity;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityProxyInventory extends TileEntityProxyBase {
 
 	@Override

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.entity.projectile.EntityArtilleryRocket;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHIMARS;
 import com.hbm.items.ModItems;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implements IGUIProvider {
 
   public enum FiringMode {

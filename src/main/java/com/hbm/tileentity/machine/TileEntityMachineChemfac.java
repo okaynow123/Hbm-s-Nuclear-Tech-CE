@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerChemfac;
 import com.hbm.inventory.fluid.Fluids;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase implements IGUIProvider {
 	float rotSpeed;
 	public float rot;

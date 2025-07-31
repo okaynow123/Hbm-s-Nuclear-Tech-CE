@@ -5,11 +5,9 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.machine.MachineCharger;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.config.GeneralConfig;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -24,10 +22,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
 
 	public static final int range = 3;

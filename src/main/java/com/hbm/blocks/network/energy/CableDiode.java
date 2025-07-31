@@ -10,11 +10,9 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.Compat;
@@ -41,7 +39,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -163,7 +160,7 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 		return EnumBlockRenderType.MODEL;
 	}
 
-	@AutoRegisterTE
+	@AutoRegister
 	public static class TileEntityDiode extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
 
 		@Override

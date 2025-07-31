@@ -1,7 +1,7 @@
 package com.hbm.tileentity.deco;
 
 import com.hbm.blocks.machine.BlockSpinnyLight;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
 import com.hbm.inventory.control_panel.IControllable;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import java.util.Arrays;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySpinnyLight extends TileEntity implements IControllable {
 	
 	public EnumDyeColor color = EnumDyeColor.WHITE;

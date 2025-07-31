@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.inventory.container.ContainerCrateTungsten;
 import com.hbm.inventory.gui.GUICrateTungsten;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCrateTungsten extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, ILaserable, IGUIProvider {
     private final Random rand = new Random();
 

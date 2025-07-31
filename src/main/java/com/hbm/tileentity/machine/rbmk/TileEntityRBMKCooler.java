@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.fluid.Fluids;
@@ -19,7 +19,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidStandardReceiver {
 
 	public FluidTankNTM tank;

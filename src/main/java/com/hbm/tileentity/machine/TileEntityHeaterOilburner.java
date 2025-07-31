@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.container.ContainerOilburner;
@@ -14,7 +14,6 @@ import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIOilburner;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,11 +22,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF {
 
     public static final int maxHeatEnergy = 100_000;

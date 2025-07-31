@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
 
     public boolean onFire = true;

@@ -1,12 +1,12 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import io.netty.buffer.ByteBuf;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachinePumpSteam extends TileEntityMachinePumpBase {
 
     public FluidTankNTM steam;

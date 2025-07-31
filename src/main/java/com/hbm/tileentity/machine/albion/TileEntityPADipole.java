@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine.albion;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerPADipole;
 import com.hbm.inventory.fluid.FluidType;
@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProvider, IControlReceiver, IParticleUser {
 
     public static final long usage = 100_000;

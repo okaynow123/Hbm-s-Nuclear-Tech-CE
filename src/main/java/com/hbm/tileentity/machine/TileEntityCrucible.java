@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCrucible;
 import com.hbm.inventory.gui.GUICrucible;
 import com.hbm.inventory.material.MaterialShapes;
@@ -17,7 +17,6 @@ import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IMetalCopiable;
@@ -49,7 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCrucible extends TileEntityMachineBase implements IGUIProvider, ICrucibleAcceptor, IConfigurableMachine, ITickable, IMetalCopiable {
 
     public int heat;

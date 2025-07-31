@@ -4,7 +4,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretJeremy;
 import com.hbm.lib.HBMSoundHandler;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IGUIProvider {
 
 	private static List<Integer> configs = new ArrayList<>();

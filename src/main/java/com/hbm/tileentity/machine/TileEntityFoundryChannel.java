@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.block.ICrucibleAcceptor;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityFoundryChannel extends TileEntityFoundryBase {
 	
 	public int nextUpdate;

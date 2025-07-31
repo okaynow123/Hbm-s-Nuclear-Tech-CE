@@ -3,7 +3,7 @@ package com.hbm.tileentity.turret;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretChekhov;
 import com.hbm.lib.HBMSoundHandler;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements IGUIProvider {
 
 	static List<Integer> configs = new ArrayList<>();

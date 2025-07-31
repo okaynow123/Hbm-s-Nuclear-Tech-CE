@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerSolidifier;
 import com.hbm.inventory.fluid.Fluids;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineSolidifier extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFluidCopiable {
 
     public long power;

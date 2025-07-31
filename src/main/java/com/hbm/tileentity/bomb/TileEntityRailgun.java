@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.config.RadiationConfig;
 import com.hbm.entity.projectile.EntityRailgunBlast;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerRailgun;
 import com.hbm.inventory.gui.GUIRailgun;
 import com.hbm.items.ModItems;
@@ -40,7 +40,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public ItemStackHandler inventory;

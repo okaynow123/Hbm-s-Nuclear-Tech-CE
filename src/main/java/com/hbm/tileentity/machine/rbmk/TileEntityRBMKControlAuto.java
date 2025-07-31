@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine.rbmk;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerRBMKControlAuto;
 import com.hbm.inventory.gui.GUIRBMKControlAuto;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKControlAuto extends TileEntityRBMKControl implements IControlReceiver, IGUIProvider {
 	
 	public RBMKFunction function = RBMKFunction.LINEAR;

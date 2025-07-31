@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.tileentity.TileEntity;
@@ -10,7 +10,7 @@ import net.minecraft.util.SoundCategory;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityGeiger extends TileEntity implements ITickable {
 
 	int timer = 0;

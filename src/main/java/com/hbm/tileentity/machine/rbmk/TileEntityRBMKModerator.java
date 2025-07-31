@@ -2,10 +2,10 @@ package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKModerator extends TileEntityRBMKBase {
 	
 	@Override

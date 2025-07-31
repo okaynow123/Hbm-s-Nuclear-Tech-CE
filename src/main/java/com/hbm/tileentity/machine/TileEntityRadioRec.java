@@ -1,9 +1,9 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRadioRec extends TileEntity {
 
 }

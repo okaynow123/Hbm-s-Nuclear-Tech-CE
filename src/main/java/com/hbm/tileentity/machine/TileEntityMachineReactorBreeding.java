@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.ReactorResearch;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineReactorBreeding;
 import com.hbm.inventory.gui.GUIMachineReactorBreeding;
 import com.hbm.inventory.recipes.BreederRecipes;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineReactorBreeding extends TileEntityMachineBase implements IBufPacketReceiver, IGUIProvider, ITickable {
 
     public int flux;

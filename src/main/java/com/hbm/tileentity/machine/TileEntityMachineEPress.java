@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMachineEPress;
@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineEPress extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider, IUpgradeInfoProvider {
 
 	public long power = 0;

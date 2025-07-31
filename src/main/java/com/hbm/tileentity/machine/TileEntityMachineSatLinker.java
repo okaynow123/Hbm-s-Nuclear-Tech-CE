@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineSatLinker;
 import com.hbm.inventory.gui.GUIMachineSatLinker;
 import com.hbm.items.ISatChip;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineSatLinker extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;

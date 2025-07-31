@@ -6,7 +6,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.FFUtils;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.Untested;
 import com.hbm.inventory.container.ContainerMachineLargeTurbine;
@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 public class TileEntityMachineLargeTurbine extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFFtoNTMF {
 

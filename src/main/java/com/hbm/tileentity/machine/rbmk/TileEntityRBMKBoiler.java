@@ -6,7 +6,7 @@ import com.hbm.api.fluid.IPipeNet;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerRBMKBoiler;
 import com.hbm.inventory.control_panel.DataValue;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements IControlReceiver, IFluidStandardTransceiver, IGUIProvider {
 
     public FluidTankNTM feed;

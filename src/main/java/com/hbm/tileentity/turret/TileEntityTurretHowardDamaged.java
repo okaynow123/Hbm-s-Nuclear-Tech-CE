@@ -2,7 +2,7 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.config.WeaponConfig;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretHowardDamaged extends TileEntityTurretHoward {
 
 	@Override

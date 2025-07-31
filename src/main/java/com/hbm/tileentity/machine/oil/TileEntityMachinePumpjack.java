@@ -5,7 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.SolarSystem;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineOilWell;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIMachineOilWell;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachinePumpjack extends TileEntityOilDrillBase {
 
 	protected static int maxPower = 250_000;

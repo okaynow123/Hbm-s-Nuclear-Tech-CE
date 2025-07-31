@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDeconRad extends TileEntity implements ITickable {
 
 	private static float radRemove;

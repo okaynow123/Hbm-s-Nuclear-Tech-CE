@@ -5,7 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.inventory.container.ContainerCoreEmitter;
 import com.hbm.inventory.fluid.Fluids;
@@ -49,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2,  ILaserable, IFluidStandardReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
 
 	public long power;

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.machine.MachineDiFurnaceRTG;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.recipes.BlastFurnaceRecipes;
 import com.hbm.inventory.container.ContainerDiFurnaceRTG;
 import com.hbm.inventory.gui.GUIDiFurnaceRTG;
@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITickable, ICapabilityProvider, IGUIProvider {
 
 	public int rtgPower;

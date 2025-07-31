@@ -1,11 +1,11 @@
 package com.hbm.tileentity.deco;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDecoPoleSatelliteReceiver extends TileEntity {
 	
 	@Override

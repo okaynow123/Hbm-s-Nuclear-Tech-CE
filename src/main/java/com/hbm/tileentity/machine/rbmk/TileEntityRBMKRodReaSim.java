@@ -3,13 +3,13 @@ package com.hbm.tileentity.machine.rbmk;
 import com.hbm.handler.neutron.NeutronNodeWorld;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
 import com.hbm.handler.neutron.RBMKNeutronHandler.RBMKNeutronNode;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import net.minecraft.util.math.Vec3d;
 
 import static com.hbm.handler.neutron.RBMKNeutronHandler.makeNode;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKRodReaSim extends TileEntityRBMKRod {
 	
 	public TileEntityRBMKRodReaSim() {

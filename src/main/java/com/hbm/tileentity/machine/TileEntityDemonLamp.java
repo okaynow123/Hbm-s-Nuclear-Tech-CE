@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDemonLamp extends TileEntity implements ITickable {
 
 	@Override

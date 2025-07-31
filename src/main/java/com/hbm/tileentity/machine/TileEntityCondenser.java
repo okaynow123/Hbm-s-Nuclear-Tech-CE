@@ -6,12 +6,10 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
@@ -26,13 +24,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCondenser extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IConfigurableMachine, IFluidCopiable, IFFtoNTMF {
 
 	public int age = 0;

@@ -5,7 +5,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
 
 // THE BURNER OF WOOD
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineWoodBurner extends TileEntityMachinePolluting implements IFluidStandardTransceiver, IControlReceiver, IEnergyProviderMK2, IGUIProvider, ITickable, IFluidCopiable, IFFtoNTMF {
 	
 	public long power;

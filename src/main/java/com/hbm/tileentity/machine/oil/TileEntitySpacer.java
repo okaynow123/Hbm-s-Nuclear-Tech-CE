@@ -1,12 +1,12 @@
 package com.hbm.tileentity.machine.oil;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySpacer extends TileEntity {
 	
 	AxisAlignedBB bb = null;

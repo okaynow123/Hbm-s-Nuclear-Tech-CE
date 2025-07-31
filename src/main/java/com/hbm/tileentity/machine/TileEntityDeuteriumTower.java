@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
@@ -10,7 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDeuteriumTower extends TileEntityDeuteriumExtractor {
 
 	public TileEntityDeuteriumTower() {

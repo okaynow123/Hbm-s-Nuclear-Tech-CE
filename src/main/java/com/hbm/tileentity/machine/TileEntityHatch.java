@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.BlockSeal;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityHatch extends TileEntity implements ITickable {
 
 	private BlockPos controller;

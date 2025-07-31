@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineRTG;
 import com.hbm.inventory.gui.GUIMachineRTG;
 import com.hbm.items.machine.ItemRTGPellet;
@@ -30,7 +30,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineRTG extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IGUIProvider {
 
 	public ItemStackHandler inventory;

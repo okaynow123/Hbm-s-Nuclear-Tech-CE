@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineTeleLinker;
 import com.hbm.inventory.gui.GUIMachineTeleLinker;
 import com.hbm.items.machine.ItemTurretBiometry;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineTeleLinker extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;

@@ -5,8 +5,7 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
@@ -16,7 +15,6 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -33,7 +31,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidStandardTransceiver,
         IConfigurableMachine, IFluidCopiable {
 

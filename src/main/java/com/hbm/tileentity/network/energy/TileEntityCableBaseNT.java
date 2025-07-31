@@ -2,28 +2,17 @@ package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.IEnergyConductorMK2;
 import com.hbm.api.energymk2.Nodespace;
-import com.hbm.api.energymk2.VirtualFEProvider;
-import com.hbm.api.energymk2.VirtualFEReceiver;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCableBaseNT extends TileEntity implements IBufPacketReceiver, ITickable, IEnergyConductorMK2 {
 	
 	protected Nodespace.PowerNode node;

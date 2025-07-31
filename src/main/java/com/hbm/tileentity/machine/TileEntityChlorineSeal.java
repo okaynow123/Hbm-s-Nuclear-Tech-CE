@@ -1,13 +1,13 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityChlorineSeal extends TileEntity implements ITickable {
 
 	@Override

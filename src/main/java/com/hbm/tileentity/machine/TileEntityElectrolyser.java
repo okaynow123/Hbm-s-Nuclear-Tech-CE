@@ -6,7 +6,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerElectrolyserFluid;
@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityElectrolyser extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IControlReceiver,
         IGUIProvider, IUpgradeInfoProvider, IFluidCopiable, IMetalCopiable, ITickable {
 

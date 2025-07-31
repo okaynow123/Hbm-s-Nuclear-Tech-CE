@@ -4,7 +4,7 @@ import com.hbm.api.fluid.*;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.inventory.container.ContainerBarrel;
@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Set;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityBarrel extends TileEntityMachineBase implements
         ITickable, IPersistentNBT, IFluidCopiable,
         IFluidStandardTransceiver, SimpleComponent,

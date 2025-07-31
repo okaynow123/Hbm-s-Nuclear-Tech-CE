@@ -6,7 +6,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.neutron.NeutronStream;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerRBMKOutgasser;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, IRBMKLoadable, IGUIProvider {
 
 	public FluidTankNTM gas;

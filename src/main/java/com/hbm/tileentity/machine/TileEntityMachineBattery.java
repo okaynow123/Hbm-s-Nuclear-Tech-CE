@@ -6,7 +6,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineBattery;
 import com.hbm.inventory.gui.GUIMachineBattery;
 import com.hbm.lib.ForgeDirection;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineBattery extends TileEntityMachineBase implements ITickable, IEnergyConductorMK2, IEnergyProviderMK2, IEnergyReceiverMK2, SimpleComponent, IGUIProvider {
 
 	public long[] log = new long[20];

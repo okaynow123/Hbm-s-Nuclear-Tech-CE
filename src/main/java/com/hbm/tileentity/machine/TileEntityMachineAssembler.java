@@ -5,7 +5,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.MultiblockHandler;
 import com.hbm.handler.MultiblockHandlerXR;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAssembler;
 import com.hbm.inventory.gui.GUIMachineAssembler;
@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineAssembler extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
     public static final long maxPower = 2000000;

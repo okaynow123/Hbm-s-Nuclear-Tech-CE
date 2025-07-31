@@ -6,7 +6,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineRotaryFurnace;
 import com.hbm.inventory.fluid.Fluids;
@@ -49,7 +49,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
     implements IFluidStandardTransceiver,
         IGUIProvider,

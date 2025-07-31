@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine.albion;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerPARFC;
 import com.hbm.inventory.gui.GUIPARFC;
 import com.hbm.lib.DirPos;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvider, IParticleUser {
 
     public static final long usage = 250_000;

@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.missile.EntityMinerRocket;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineSatDock;
 import com.hbm.inventory.gui.GUIMachineSatDock;
 import com.hbm.items.ISatChip;
@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineSatDock extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	private static final int[] access = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };

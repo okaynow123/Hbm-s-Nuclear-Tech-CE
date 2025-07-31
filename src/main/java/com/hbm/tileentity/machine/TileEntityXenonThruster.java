@@ -8,7 +8,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityXenonThruster extends TileEntityMachineBase implements ITickable, IPropulsion, IFluidStandardReceiver, IEnergyReceiverMK2 {
 
 	public FluidTankNTM[] tanks;

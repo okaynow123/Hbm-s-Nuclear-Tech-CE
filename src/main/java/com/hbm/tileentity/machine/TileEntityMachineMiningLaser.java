@@ -6,7 +6,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.gas.BlockGasBase;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.recipes.CentrifugeRecipes;
 import com.hbm.inventory.recipes.ShredderRecipes;
@@ -57,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineMiningLaser extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardSender, IMiningDrill, IFFtoNTMF, IGUIProvider {
 
 	public long power;

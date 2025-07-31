@@ -1,7 +1,7 @@
 package com.hbm.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IKeypadHandler;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.lib.ForgeDirection;
@@ -17,7 +17,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 @Spaghetti("Weird stuff to make it work property client side")
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySlidingBlastDoorKeypad extends TileEntityKeypadBase {
 
 	public boolean foundCore = false;

@@ -6,7 +6,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.IPersistentInfoProvider;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -176,7 +176,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         player.addExhaustion(0.025F);
     }
 
-    @AutoRegisterTE
+    @AutoRegister
     public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable {
 
         public long power;

@@ -1,7 +1,7 @@
 package com.hbm.tileentity.deco;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDecoBlockAlt extends TileEntity implements ITickable {
 	
 	@Override

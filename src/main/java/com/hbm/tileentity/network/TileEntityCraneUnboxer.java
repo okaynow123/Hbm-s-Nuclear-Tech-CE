@@ -2,7 +2,7 @@ package com.hbm.tileentity.network;
 
 import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.entity.item.EntityMovingItem;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCraneUnboxer;
 import com.hbm.inventory.gui.GUICraneUnboxer;
 import com.hbm.items.ModItems;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIProvider {
     private int tickCounter = 0;
     public static int[] allowed_slots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};

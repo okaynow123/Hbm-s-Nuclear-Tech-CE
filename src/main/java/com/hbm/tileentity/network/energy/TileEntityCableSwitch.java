@@ -1,9 +1,9 @@
 package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.Nodespace;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCableSwitch extends TileEntityCableBaseNT {
 
 	@Override

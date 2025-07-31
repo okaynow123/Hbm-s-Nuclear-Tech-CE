@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine.albion;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerPASource;
 import com.hbm.inventory.gui.GUIPASource;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPASource extends TileEntityCooledBase implements IGUIProvider, IControlReceiver {
 
     public static final long usage = 100_000;

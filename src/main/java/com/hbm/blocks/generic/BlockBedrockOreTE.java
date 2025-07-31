@@ -2,7 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -79,7 +79,7 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay {
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}
 
-	@AutoRegisterTE
+	@AutoRegister
 	public static class TileEntityBedrockOre extends TileEntity {
 
 		public ItemStack resource;

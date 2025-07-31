@@ -2,7 +2,7 @@ package com.hbm.tileentity;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,7 +10,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
 
 //can be used as a soruce too since the core TE handles that anyway
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityProxyEnergy extends TileEntityProxyBase implements IEnergyReceiverMK2 {
 
 	@Override

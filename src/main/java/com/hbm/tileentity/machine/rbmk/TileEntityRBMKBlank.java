@@ -1,10 +1,10 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKBlank extends TileEntityRBMKBase {
 	
 	@Override

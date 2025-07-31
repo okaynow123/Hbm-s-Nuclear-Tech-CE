@@ -5,7 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ILaserable;
 import com.hbm.inventory.container.ContainerCoreReceiver;
 import com.hbm.inventory.fluid.Fluids;
@@ -19,7 +19,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
@@ -40,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IGUIProvider, IFluidStandardReceiver, ILaserable, CompatHandler.OCComponent {
 
     public long power;

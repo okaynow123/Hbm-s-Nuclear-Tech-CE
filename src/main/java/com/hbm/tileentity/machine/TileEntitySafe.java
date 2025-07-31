@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerSafe;
 import com.hbm.inventory.gui.GUISafe;
 import com.hbm.tileentity.IGUIProvider;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySafe extends TileEntityCrateBase implements IGUIProvider {
 
     public TileEntitySafe() {

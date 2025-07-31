@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCrateTemplate;
 import com.hbm.inventory.gui.GUICrateTemplate;
 import net.minecraft.client.gui.GuiScreen;
@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCrateTemplate extends TileEntityCrateBase {
 
     public TileEntityCrateTemplate() {

@@ -8,8 +8,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -19,7 +18,6 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
@@ -46,13 +44,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityChungus extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, SimpleComponent, IEnergyProviderMK2, CompatHandler.OCComponent, IFluidCopiable, IConfigurableMachine, IFFtoNTMF {
 
 	public long power;

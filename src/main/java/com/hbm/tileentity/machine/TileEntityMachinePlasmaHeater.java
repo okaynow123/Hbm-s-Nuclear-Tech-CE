@@ -5,7 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachinePlasmaHeater;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IGUIProvider {
 
 	public long power;

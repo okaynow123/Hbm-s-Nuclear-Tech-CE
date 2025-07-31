@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDeconDi extends TileEntity implements ITickable {
 
 	private static float digammaRemove;

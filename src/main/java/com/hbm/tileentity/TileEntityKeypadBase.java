@@ -1,6 +1,6 @@
 package com.hbm.tileentity;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IKeypadHandler;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.util.Keypad;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityKeypadBase extends TileEntity implements ITickable, IKeypadHandler {
 
 	public Keypad keypad;

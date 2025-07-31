@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerMachineRadGen;
 import com.hbm.inventory.gui.GUIMachineRadGen;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineRadGen extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IGUIProvider {
 
 	public int[] progress = new int[12];

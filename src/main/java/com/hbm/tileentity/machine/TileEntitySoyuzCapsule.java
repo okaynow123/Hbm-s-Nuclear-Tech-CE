@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerSoyuzCapsule;
 import com.hbm.inventory.gui.GUISoyuzCapsule;
 import com.hbm.tileentity.IGUIProvider;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySoyuzCapsule extends TileEntityInventoryBase implements IGUIProvider {
 
 	private static final AxisAlignedBB SOYUZ_CAPSULE_BOX = new AxisAlignedBB(-1, -1, -1, 2, 3, 2);

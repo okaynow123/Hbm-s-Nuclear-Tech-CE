@@ -8,7 +8,7 @@ import com.hbm.entity.mob.EntityNuclearCreeper;
 import com.hbm.entity.mob.EntityTaintCrab;
 import com.hbm.entity.mob.EntityTeslaCrab;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTesla extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
 
 	public long power;

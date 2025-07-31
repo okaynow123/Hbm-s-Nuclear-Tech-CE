@@ -1,8 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
-import com.hbm.packet.toclient.BufPacket;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.TileEntityTickingBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,12 +10,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySolarMirror extends TileEntityTickingBase {
 
 	public int tX;

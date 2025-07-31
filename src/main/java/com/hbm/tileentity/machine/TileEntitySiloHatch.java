@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.BlockSiloHatch;
 import com.hbm.blocks.machine.DummyBlockSiloHatch;
 import com.hbm.handler.radiation.RadiationSystemNT;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntitySiloHatch extends TileEntityLockableBase implements ITickable, IAnimatedDoor {
 
     public DoorState state = DoorState.CLOSED;

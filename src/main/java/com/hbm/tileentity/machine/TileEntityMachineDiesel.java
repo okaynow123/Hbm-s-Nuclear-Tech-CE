@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.recipes.EngineRecipes;
 import com.hbm.inventory.recipes.EngineRecipes.FuelGrade;
 import com.hbm.inventory.container.ContainerMachineDiesel;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineDiesel extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider {
 
 	public long power;

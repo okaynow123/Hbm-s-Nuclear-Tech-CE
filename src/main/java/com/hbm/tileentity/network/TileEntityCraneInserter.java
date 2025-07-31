@@ -1,6 +1,6 @@
 package com.hbm.tileentity.network;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCraneInserter;
 import com.hbm.inventory.gui.GUICraneInserter;
 import com.hbm.lib.Library;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCraneInserter extends TileEntityCraneBase implements IGUIProvider {
 
     public TileEntityCraneInserter() {

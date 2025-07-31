@@ -5,7 +5,7 @@ import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.radiation.RadiationSystemNT;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCore;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -42,7 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityCore extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 

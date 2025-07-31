@@ -8,7 +8,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
     implements ITickable,
         IEnergyProviderMK2,

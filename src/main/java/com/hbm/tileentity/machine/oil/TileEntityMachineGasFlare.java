@@ -6,7 +6,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.explosion.ExplosionThermo;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerMachineGasFlare;
@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineGasFlare extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardReceiver, IGUIProvider, IControlReceiver, IFluidCopiable {
 	public long power;
 	public static final long maxPower = 1000000;

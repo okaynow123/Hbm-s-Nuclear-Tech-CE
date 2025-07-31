@@ -8,11 +8,10 @@ import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.neutron.NeutronNodeWorld;
 import com.hbm.handler.neutron.NeutronStream;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerRBMKRod;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
-import com.hbm.inventory.control_panel.DataValueString;
 import com.hbm.inventory.gui.GUIRBMKRod;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKRod;
@@ -31,8 +30,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -45,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IRBMKLoadable, IGUIProvider {
 
 	// New system!!

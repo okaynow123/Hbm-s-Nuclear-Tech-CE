@@ -5,7 +5,7 @@ import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerCrystallizer;
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineCrystallizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFFtoNTMF {
 
 	public long power;

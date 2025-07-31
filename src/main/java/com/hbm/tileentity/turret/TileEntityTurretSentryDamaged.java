@@ -1,7 +1,7 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.Vec3dUtil;
@@ -13,7 +13,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretSentryDamaged extends TileEntityTurretSentry {
 
   @Override

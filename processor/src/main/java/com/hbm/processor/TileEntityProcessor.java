@@ -1,7 +1,7 @@
 package com.hbm.processor;
 
 import com.google.auto.service.AutoService;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.*;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.hbm.interfaces.AutoRegisterTE")
+@SupportedAnnotationTypes("com.hbm.interfaces.AutoRegister")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SuppressWarnings("unused")
 public class TileEntityProcessor extends AbstractProcessor {
@@ -37,7 +37,7 @@ public class TileEntityProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element element : roundEnv.getElementsAnnotatedWith(AutoRegisterTE.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(AutoRegister.class)) {
             if (!(element instanceof TypeElement)) {
                 messager.printMessage(Diagnostic.Kind.ERROR, "Annotation @AutoRegisterTE can only be applied to classes.", element);
                 continue;
@@ -56,7 +56,7 @@ public class TileEntityProcessor extends AbstractProcessor {
             try {
                 String qualifiedName = typeElement.getQualifiedName().toString();
                 String simpleName = typeElement.getSimpleName().toString();
-                AutoRegisterTE annotation = typeElement.getAnnotation(AutoRegisterTE.class);
+                AutoRegister annotation = typeElement.getAnnotation(AutoRegister.class);
                 String registrationId = annotation.value();
                 if (registrationId.trim().isEmpty()) registrationId = generateRegistrationId(simpleName);
                 tileEntitiesToRegister.put(qualifiedName, registrationId);

@@ -4,7 +4,7 @@ import com.hbm.api.block.ICrucibleAcceptor;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineStrandCaster;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
     implements IGUIProvider, ICrucibleAcceptor, IFluidStandardTransceiver {
 

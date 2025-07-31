@@ -1,14 +1,14 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineOrbus extends TileEntityBarrel {
 
 	public TileEntityMachineOrbus() {

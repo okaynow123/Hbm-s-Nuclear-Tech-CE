@@ -4,7 +4,7 @@ import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineDiFurnace;
 import com.hbm.handler.pollution.PollutionHandler;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerDiFurnace;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIDiFurnace;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityDiFurnace extends TileEntityMachinePolluting implements ITickable, IFluidStandardSender, IGUIProvider {
 
 

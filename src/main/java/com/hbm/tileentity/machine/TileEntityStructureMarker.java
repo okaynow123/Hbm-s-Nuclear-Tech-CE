@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEStructurePacket;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,7 +9,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityStructureMarker extends TileEntity implements ITickable {
 
 	// 0: Factory

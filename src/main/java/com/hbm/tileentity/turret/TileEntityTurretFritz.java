@@ -6,7 +6,7 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.recipes.FluidCombustionRecipes;
 import com.hbm.inventory.container.ContainerTurretBase;
@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFluidStandardReceiver, IFluidCopiable, IFFtoNTMF, IGUIProvider {
 
 	public FluidTank tankOld;

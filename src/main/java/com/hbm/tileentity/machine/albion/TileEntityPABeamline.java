@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine.albion;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
 import net.minecraft.tileentity.TileEntity;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPABeamline extends TileEntity implements IParticleUser {
 
     @Override

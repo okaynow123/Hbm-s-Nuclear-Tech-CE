@@ -1,9 +1,9 @@
 package com.hbm.tileentity.deco;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.tileentity.TileEntity;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityTestRender extends TileEntity {
 
 }

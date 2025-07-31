@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerFurnaceIron;
 import com.hbm.inventory.gui.GUIFurnaceIron;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityFurnaceIron extends TileEntityMachineBase implements IGUIProvider, ITickable {
 	
 	public int maxBurnTime;

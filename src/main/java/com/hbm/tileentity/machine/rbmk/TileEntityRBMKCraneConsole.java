@@ -5,7 +5,7 @@ import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.lib.ForgeDirection;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements ITickable, SimpleComponent, IControllable {
 	
 	public int centerX;

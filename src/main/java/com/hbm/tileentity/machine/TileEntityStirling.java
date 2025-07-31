@@ -8,13 +8,11 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.entity.projectile.EntityCog;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -26,14 +24,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyProviderMK2, IConfigurableMachine, ITickable {
 
     /* CONFIGURABLE CONSTANTS */

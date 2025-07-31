@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerForceField;
 import com.hbm.inventory.gui.GUIForceField;
 import com.hbm.items.ModItems;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityForceField extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2, IGUIProvider {
 
 	public ItemStackHandler inventory;

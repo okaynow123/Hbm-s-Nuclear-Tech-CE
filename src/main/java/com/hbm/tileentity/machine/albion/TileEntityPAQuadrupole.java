@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine.albion;
 
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerPAQuadrupole;
 import com.hbm.inventory.gui.GUIPAQuadrupole;
 import com.hbm.items.ModItems;
@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPAQuadrupole extends TileEntityCooledBase implements IGUIProvider, IParticleUser {
 
     public static final long usage = 100_000;

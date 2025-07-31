@@ -4,7 +4,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.projectile.EntityShrapnel;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerWatz;
 import com.hbm.inventory.fluid.Fluids;
@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityWatz extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IControlReceiver, IGUIProvider, IFluidCopiable {
 
 	public FluidTankNTM[] tanks;

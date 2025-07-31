@@ -11,7 +11,7 @@ import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerReactorZirnox;
@@ -62,7 +62,7 @@ import java.util.List;
 import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent {
 
     public static final int maxHeat = 100000;

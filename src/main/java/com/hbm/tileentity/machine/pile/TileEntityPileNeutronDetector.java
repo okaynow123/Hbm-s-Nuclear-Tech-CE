@@ -2,12 +2,12 @@ package com.hbm.tileentity.machine.pile;
 
 import com.hbm.api.block.IPileNeutronReceiver;
 import com.hbm.blocks.machine.pile.BlockGraphiteNeutronDetector;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityPileNeutronDetector extends TileEntity implements IPileNeutronReceiver, ITickable {
 
     public int lastNeutrons;

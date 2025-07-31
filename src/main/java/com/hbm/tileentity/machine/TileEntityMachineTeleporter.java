@@ -2,12 +2,10 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.handler.threading.PacketThreading;
-import com.hbm.interfaces.AutoRegisterTE;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -23,13 +21,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@AutoRegisterTE
+@AutoRegister
 public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements ITickable, IEnergyReceiverMK2 {
 
 	public long power = 0;
