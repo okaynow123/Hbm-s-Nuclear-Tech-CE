@@ -22,6 +22,7 @@ import com.hbm.entity.grenade.*;
 import com.hbm.entity.item.EntityFireworks;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.entity.item.EntityMovingPackage;
+import com.hbm.entity.item.EntityTNTPrimedBase;
 import com.hbm.entity.logic.*;
 import com.hbm.entity.missile.*;
 import com.hbm.entity.mob.*;
@@ -68,6 +69,12 @@ import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import mezz.jei.startup.ModRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -524,6 +531,12 @@ public class MainRegistry {
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_mist"), EntityMist.class, "entity_mist", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_cog"), EntityCog.class, "entity_cog", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_zirnox_debris"), EntityZirnoxDebris.class, "entity_zirnox_debris", i++, MainRegistry.instance, 1000, 1, true);
+
+        EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_bullet_mk4"), EntityBulletBaseMK4.class, "entity_bullet_mk4", i++, MainRegistry.instance, 256, 1, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_beam_mk4"), EntityBulletBeamBase.class, "entity_beam_mk4", i++, MainRegistry.instance, 256, 1, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_ntm_tnt_primed"), EntityTNTPrimedBase.class, "entity_ntm_tnt_primed", i++, MainRegistry.instance, 256, 1, false);
+
+
         AutoRegistry.registerEntities(i);
         ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback() {
 

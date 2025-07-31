@@ -13,8 +13,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityTNTPrimedBase extends Entity {
 
@@ -22,9 +20,7 @@ public class EntityTNTPrimedBase extends Entity {
     private static final DataParameter<String> TILE = EntityDataManager.<String>createKey(EntityTNTPrimedBase.class, DataSerializers.STRING); //Block's registry name (INCLUDES THE MODID)
     private static final DataParameter<Byte> META = EntityDataManager.<Byte>createKey(EntityTNTPrimedBase.class, DataSerializers.BYTE); //Block's meta
 
-
     public int fuse;
-    @SideOnly(Side.CLIENT)
     public IBlockState state;
 
 

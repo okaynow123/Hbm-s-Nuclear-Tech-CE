@@ -19,6 +19,7 @@ import com.hbm.entity.grenade.*;
 import com.hbm.entity.item.EntityFireworks;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.entity.item.EntityMovingPackage;
+import com.hbm.entity.item.EntityTNTPrimedBase;
 import com.hbm.entity.logic.*;
 import com.hbm.entity.missile.*;
 import com.hbm.entity.mob.*;
@@ -65,6 +66,7 @@ import com.hbm.render.entity.RenderBeam;
 import com.hbm.render.entity.effect.*;
 import com.hbm.render.entity.item.RenderMovingItem;
 import com.hbm.render.entity.item.RenderMovingPackage;
+import com.hbm.render.entity.item.RenderTNTPrimedBase;
 import com.hbm.render.entity.missile.*;
 import com.hbm.render.entity.mob.*;
 import com.hbm.render.entity.projectile.*;
@@ -621,6 +623,9 @@ public class ClientProxy extends ServerProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityQuasar.class, RenderQuasar.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityMist.class, RenderMist.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityCog.class, RenderCog.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBulletBeamBase.class, RenderBeamProjectile.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBulletBaseMK4.class, RenderBulletMK4.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(EntityTNTPrimedBase.class, RenderTNTPrimedBase.FACTORY);
 
         AutoRegistry.registerRenderInfo();
 
