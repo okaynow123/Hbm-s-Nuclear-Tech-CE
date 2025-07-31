@@ -1,6 +1,7 @@
 package com.hbm.render.item.weapon;
 
 import com.hbm.animloader.AnimationWrapper;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemSwordCutter;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.HbmAnimations;
@@ -13,8 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
+@AutoRegister(item = "hf_sword")
 public class ItemRenderHFSword extends TEISRBase {
 
 	@Override

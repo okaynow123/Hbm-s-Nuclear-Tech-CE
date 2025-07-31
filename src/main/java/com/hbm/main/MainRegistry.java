@@ -59,18 +59,14 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.satellites.Satellite;
-import com.hbm.tileentity.TileEntityRegistrar;
-import com.hbm.tileentity.bomb.*;
-import com.hbm.tileentity.machine.rbmk.*;
+import com.hbm.tileentity.bomb.TileEntityLaunchPadBase;
+import com.hbm.tileentity.bomb.TileEntityNukeCustom;
+import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.CrashHelper;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -97,6 +93,11 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
 @Spaghetti("Total cluserfuck")
@@ -337,8 +338,8 @@ public class MainRegistry {
         aMatFau.setRepairItem(new ItemStack(ModItems.plate_armor_fau));
         aMatDNS.setRepairItem(new ItemStack(ModItems.plate_armor_dnt));
 
-        TileEntityRegistrar.init();
-
+        AutoRegistry.registerTileEntities();
+        AutoRegistry.loadAuxiliaryData();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
         int i = 0;
@@ -466,7 +467,7 @@ public class MainRegistry {
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_bhole"), EntityMissileTier0.EntityMissileBHole.class, "entity_missile_bhole", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_schrab"), EntityMissileTier0.EntityMissileSchrabidium.class, "entity_missile_schrab", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_emp"), EntityMissileTier0.EntityMissileEMP.class, "entity_missile_emp", i++, MainRegistry.instance, 1000, 1, true);
-        EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_ab"), EntityMissileAntiBallistic.class, "entity_missile_ab", i++, MainRegistry.instance, 1000, 1, true);
+//        EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_ab"), EntityMissileAntiBallistic.class, "entity_missile_ab", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_missile_stealth"), EntityMissileStealth.class, "entity_missile_stealth", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_carrier"), EntityCarrier.class, "entity_carrier", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_booster"), EntityBooster.class, "entity_booster", i++, MainRegistry.instance, 1000, 1, true);
@@ -521,7 +522,7 @@ public class MainRegistry {
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_mist"), EntityMist.class, "entity_mist", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_cog"), EntityCog.class, "entity_cog", i++, MainRegistry.instance, 1000, 1, true);
         EntityRegistry.registerModEntity(new ResourceLocation(RefStrings.MODID, "entity_zirnox_debris"), EntityZirnoxDebris.class, "entity_zirnox_debris", i++, MainRegistry.instance, 1000, 1, true);
-
+        AutoRegistry.registerEntities(i);
         ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback() {
 
             @Override

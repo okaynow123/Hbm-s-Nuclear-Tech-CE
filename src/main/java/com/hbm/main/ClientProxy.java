@@ -231,7 +231,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePress.class, new RenderPress());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAmmoPress.class, new RenderAmmoPress());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHeatBoilerIndustrial.class, new RenderIndustrialBoiler());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
+//        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssemfac.class, new RenderAssemfac());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTestRender.class, new RenderTestRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineChemplant.class, new RenderChemplant());
@@ -492,7 +492,7 @@ public class ClientProxy extends ServerProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityMissileTier0.EntityMissileSchrabidium.class, RenderMissileSchrabidium.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityEMPBlast.class, RenderEMPBlast.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityMissileTier0.EntityMissileEMP.class, RenderMissileEMP.FACTORY);
-        RenderingRegistry.registerEntityRenderingHandler(EntityMissileAntiBallistic.class, RenderMissileAB.FACTORY);
+//        RenderingRegistry.registerEntityRenderingHandler(EntityMissileAntiBallistic.class, RenderMissileAB.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityMissileStealth.class, RenderMissileStealth.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityBooster.class, RenderBoosterMissile.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityCarrier.class, RenderCarrierMissile.FACTORY);
@@ -621,6 +621,7 @@ public class ClientProxy extends ServerProxy {
         RenderingRegistry.registerEntityRenderingHandler(EntityMist.class, RenderMist.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityCog.class, RenderCog.FACTORY);
 
+        AutoRegistry.registerRenderInfo();
 
         ModelLoader.setCustomStateMapper(ModBlocks.toxic_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
         ModelLoader.setCustomStateMapper(ModBlocks.radwater_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
@@ -1958,7 +1959,7 @@ public class ClientProxy extends ServerProxy {
         ModItems.crucible.setTileEntityItemStackRenderer(new ItemRenderCrucible());
         ModItems.boltgun.setTileEntityItemStackRenderer(new ItemRenderBoltgun());
         ModItems.hs_sword.setTileEntityItemStackRenderer(new ItemRenderHSSword());
-        ModItems.hf_sword.setTileEntityItemStackRenderer(new ItemRenderHFSword());
+//        ModItems.hf_sword.setTileEntityItemStackRenderer(new ItemRenderHFSword());
         ModItems.gun_egon.setTileEntityItemStackRenderer(new ItemRenderGunEgon());
         ModItems.jshotgun.setTileEntityItemStackRenderer(new ItemRenderJShotgun());
 
@@ -1996,6 +1997,7 @@ public class ClientProxy extends ServerProxy {
 
         ModItems.forge_fluid_identifier.setTileEntityItemStackRenderer(new FFIdentifierRender());
 
+        AutoRegistry.preInitClient();
         for (Map.Entry<Item, TileEntityItemStackRenderer> entry : RBMKItemRenderers.itemRenderers.entrySet()) {
             entry.getKey().setTileEntityItemStackRenderer(entry.getValue());
         }

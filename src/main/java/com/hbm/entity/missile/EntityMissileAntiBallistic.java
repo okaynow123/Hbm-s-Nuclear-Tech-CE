@@ -5,6 +5,7 @@ import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.projectile.EntityThrowableInterp;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * Some of the logic here is Bailie's creation
  */
+@AutoRegister(name = "entity_missile_ab", trackingRange = 1000)
 public class EntityMissileAntiBallistic extends EntityThrowableInterp implements IChunkLoader, IRadarDetectable, IRadarDetectableNT {
 
 	private ForgeChunkManager.Ticket loaderTicket;

@@ -1,6 +1,7 @@
 package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityMissileAntiBallistic;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,11 +9,12 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
+@AutoRegister(factory = "FACTORY")
 public class RenderMissileAB extends Render<EntityMissileAntiBallistic> {
 
-	public static final IRenderFactory<EntityMissileAntiBallistic> FACTORY = (RenderManager man) -> {return new RenderMissileAB(man);};
+	public static final IRenderFactory<EntityMissileAntiBallistic> FACTORY = RenderMissileAB::new;
 	
 	protected RenderMissileAB(RenderManager renderManager) {
 		super(renderManager);

@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
@@ -15,8 +16,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
+@AutoRegister
 public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachineAssembler>
     implements IItemRendererProvider {
 

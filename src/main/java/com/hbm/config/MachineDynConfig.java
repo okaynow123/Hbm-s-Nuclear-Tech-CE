@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.main.AutoRegistry;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IConfigurableMachine;
-import com.hbm.tileentity.TileEntityRegistrar;
 
 import java.io.File;
 import java.io.FileReader;
@@ -36,8 +36,13 @@ public class MachineDynConfig {
 
         //it's a lit of dummy tile entity instances that are only used once in order to make the init work
         //not exactly a great solution but this little smear of ugliness carries all the good parts on its back so i will allow it
-        List<IConfigurableMachine> dummies = new ArrayList();
-        TileEntityRegistrar.configurable.forEach(x -> { try { dummies.add(x.newInstance()); } catch(Exception ex) {} }); // <- lambda comes with a hidden little try/catch block hidden inside, like a kinder surprise egg that is filled with shit
+        List<IConfigurableMachine> dummies = new ArrayList<>();
+        AutoRegistry.configurableMachineClasses.forEach(x -> {
+            try {
+                dummies.add(x.newInstance());
+            } catch (Exception ignored) {
+            }
+        }); // <- lambda comes with a hidden little try/catch block hidden inside, like a kinder surprise egg that is filled with shit
         File file = new File(dir.getAbsolutePath() + File.separatorChar + "hbmMachines.json");
 
 
