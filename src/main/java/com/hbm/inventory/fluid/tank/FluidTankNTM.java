@@ -44,6 +44,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         loadingHandlers.add(new FluidLoaderFillableItem());
         loadingHandlers.add(new FluidLoaderInfinite());
         loadingHandlers.add(new FluidLoaderForge());
+        noDualUnload.add(ModItems.chlorine_pinwheel);
+        noDualUnload.add(ModItems.fluid_barrel_infinite);
+        noDualUnload.add(ModItems.inf_water);
+        noDualUnload.add(ModItems.inf_water_mk2);
+        noDualUnload.add(ModItems.inf_water_mk3);
+        noDualUnload.add(ModItems.inf_water_mk4);
     }
 
     @Deprecated

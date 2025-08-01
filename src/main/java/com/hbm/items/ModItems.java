@@ -1330,7 +1330,7 @@ public class ModItems {
 
 	//Generic Items
 	public static final Item pellet_coal = new ItemFuel("pellet_coal", 320).setCreativeTab(MainRegistry.partsTab);
-	public static final Item chlorine_pinwheel = new ItemBase("chlorine_pinwheel").setCreativeTab(MainRegistry.partsTab);
+	public static final Item chlorine_pinwheel = new ItemFluidContainerInfinite(Fluids.CHLORINE, 1, 2, "chlorine_pinwheel").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ring_starmetal = new ItemBase("ring_starmetal").setCreativeTab(MainRegistry.partsTab);
 	public static final Item flywheel_beryllium = new ItemBase("flywheel_beryllium").setCreativeTab(MainRegistry.partsTab);
 	public static final Item component_limiter = new ItemBase("component_limiter").setCreativeTab(MainRegistry.partsTab);
