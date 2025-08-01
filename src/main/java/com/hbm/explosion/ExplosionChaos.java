@@ -72,7 +72,7 @@ public class ExplosionChaos {
 	public static void destruction(World world, BlockPos pos) {
 
 		Block b = world.getBlockState(pos).getBlock();
-		if(b == Blocks.BEDROCK || b == ModBlocks.reinforced_brick || b == ModBlocks.reinforced_sand || b == ModBlocks.reinforced_glass || b == ModBlocks.reinforced_lamp_on || b == ModBlocks.reinforced_lamp_off) {
+		if(b == Blocks.BEDROCK || b == ModBlocks.reinforced_brick || b == ModBlocks.reinforced_sand || b == ModBlocks.reinforced_glass || b == ModBlocks.reinforced_lamp_on || b == ModBlocks.reinforced_lamp_off || b.getExplosionResistance(null) > 2_000_000) {
 
 		} else {
 			world.setBlockToAir(pos);
@@ -566,7 +566,7 @@ public class ExplosionChaos {
 					int ZZ = YY + zz * zz;
 					if(ZZ < r22) {
 						pos.setPos(X, Y, Z);
-						if(!(world.getBlockState(pos).getBlock() == Blocks.BEDROCK && Y <= 0))
+						if(!(world.getBlockState(pos).getBlock().getExplosionResistance(null) > 2_000_000 && Y <= 0))
 							world.setBlockToAir(pos);
 					}
 				}
