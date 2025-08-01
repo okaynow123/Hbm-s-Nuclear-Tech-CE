@@ -256,7 +256,7 @@ public class EntityDamageUtil {
     }
 
     public static SoundEvent getDeathSound(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getDeathSound", "func_70673_aS");
+        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getDeathSound", "func_184615_bR");
         try {
             return (SoundEvent) m.invoke(living);
         } catch (Exception e) {
@@ -265,7 +265,7 @@ public class EntityDamageUtil {
     }
 
     public static SoundEvent getHurtSound(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getHurtSound", "func_70621_aR");
+        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getHurtSound", "func_184601_bQ");
         try {
             return (SoundEvent) m.invoke(living);
         } catch (Exception e) {
