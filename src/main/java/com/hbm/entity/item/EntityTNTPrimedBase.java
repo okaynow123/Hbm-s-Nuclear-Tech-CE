@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import javax.annotation.Nullable;
+
 public class EntityTNTPrimedBase extends Entity {
 
     private static final DataParameter<Integer> FUSE = EntityDataManager.<Integer>createKey(EntityTNTPrimedBase.class, DataSerializers.VARINT); // Fuse time in ticks
@@ -25,6 +27,7 @@ public class EntityTNTPrimedBase extends Entity {
 
 
     public boolean detonateOnCollision;
+    @Nullable
     private EntityLivingBase tntPlacedBy;
 
     public EntityTNTPrimedBase(World world) {

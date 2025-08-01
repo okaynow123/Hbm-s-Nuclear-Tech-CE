@@ -51,7 +51,7 @@ public abstract class BlockDetonatable  extends BlockFlammable implements IFucki
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos) {
         if (!world.isRemote && shouldIgnite(world, pos)) {
             world.setBlockToAir(pos);
-            onBlockDestroyedByExplosion(world, pos, null);
+            onBlockExploded(world, pos, null);
         }
     }
 

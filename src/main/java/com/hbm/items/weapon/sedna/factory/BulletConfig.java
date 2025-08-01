@@ -277,7 +277,7 @@ public class BulletConfig implements Cloneable {
     }
 
     public BulletConfig setItem(GunFactory.EnumAmmoSecret ammo) {
-        this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_secret, 1, ammo.ordinal());
+        //this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_secret, 1, ammo.ordinal());//FIXME
         return this;
     }
 
