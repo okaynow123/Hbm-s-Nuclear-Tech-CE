@@ -224,7 +224,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     @Override
     public void cacheChunksTick(int timeBudgetMs) {
-        if (unsafeAccess || collectFinished) return;
+        if (collectFinished) return;
         final long deadline = System.nanoTime() + (timeBudgetMs * 1_000_000L);
         while (System.nanoTime() < deadline) {
             SubChunkKey ck = reactiveSnapQueue.poll();
