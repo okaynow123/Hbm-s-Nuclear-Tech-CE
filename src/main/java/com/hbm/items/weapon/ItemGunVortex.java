@@ -60,9 +60,9 @@ public class ItemGunVortex extends ItemGunBase {
 		
 		for(Entity e : entsOnBeam){
 			if((e instanceof EntityLivingBase) && CompatibilityConfig.isWarDim(world)){
-				float dmg = 30;
+				float dmg = 100;
 				e.hurtResistantTime = 0;
-				e.attackEntityFrom(ModDamageSource.radiation, dmg);
+				e.attackEntityFrom(ModDamageSource.radiation, dmg); //MetalloloM: As i know Vortex is some kind of Railgun so it's damage source should be kinetic
 			}
 		}
 		

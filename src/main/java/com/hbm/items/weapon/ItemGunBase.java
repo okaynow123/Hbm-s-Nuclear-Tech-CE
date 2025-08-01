@@ -52,6 +52,11 @@ import java.util.List;
 
 public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 
+	/** Timestamp for rendering smoke nodes and muzzle flashes */
+	public long[] lastShot;
+	/** [0;1] randomized every shot for various rendering applications */
+	public double shotRand = 0D;
+
 	public GunConfiguration mainConfig;
 	public GunConfiguration altConfig;
 
@@ -461,7 +466,9 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 	// item mouseover text
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		Item ammo = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack))).ammo;
+		BulletConfiguration config = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack)));
+		if (config == null) return;
+		Item ammo = config.ammo;
 
 		if(mainConfig.ammoCap > 0){
 			int mag = getMag(stack);
