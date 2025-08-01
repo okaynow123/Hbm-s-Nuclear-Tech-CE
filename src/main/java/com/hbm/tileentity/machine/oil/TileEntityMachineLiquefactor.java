@@ -150,7 +150,7 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
 
     @Override
     public void serialize(ByteBuf buf) {
-        super.deserialize(buf);
+        super.serialize(buf);
         buf.writeLong(this.power);
         buf.writeInt(this.progress);
         buf.writeInt(this.usage);

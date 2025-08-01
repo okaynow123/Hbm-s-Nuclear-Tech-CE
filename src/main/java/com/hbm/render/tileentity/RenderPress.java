@@ -176,9 +176,9 @@ public class RenderPress extends TileEntitySpecialRenderer<TileEntityMachinePres
 		GlStateManager.rotate(-90, 1F, 0F, 0F);
 		
 		TileEntityMachinePress press = (TileEntityMachinePress) tileEntity;
-		ItemStack stack = press.syncStack.copy();
+		ItemStack stack = press.syncStack;
 
-		if(!(stack.getItem() instanceof ItemBlock) && !stack.isEmpty()) {
+		if(stack != null && !(stack.getItem() instanceof ItemBlock) && !stack.isEmpty()) {
 			IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(stack, tileEntity.getWorld(), null);
 			model = ForgeHooksClient.handleCameraTransforms(model, TransformType.FIXED, false);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

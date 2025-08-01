@@ -35,8 +35,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,8 +48,9 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 
 	public int progress;
 	public final static int maxProgress = 200;
+	@Nullable
 	@SideOnly(Side.CLIENT)
-	public ItemStack syncStack = ItemStack.EMPTY;
+	public ItemStack syncStack;
 	private boolean isRetracting = false;
 	private int delay;
 

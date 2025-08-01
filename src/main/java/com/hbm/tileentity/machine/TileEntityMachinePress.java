@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
 public class TileEntityMachinePress extends TileEntityMachineBase implements ITickable, IGUIProvider {
@@ -38,8 +39,9 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 	private boolean isRetracting = false;
 	private int delay;
 
+	@Nullable
 	@SideOnly(Side.CLIENT)
-	public ItemStack syncStack = ItemStack.EMPTY;
+	public ItemStack syncStack;
 
 	public TileEntityMachinePress() {
 		super(4);

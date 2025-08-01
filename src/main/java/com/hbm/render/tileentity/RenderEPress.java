@@ -125,9 +125,9 @@ public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPr
     GlStateManager.translate(-1, -1.15F, 0);
 
     TileEntityMachineEPress press = (TileEntityMachineEPress) tileentity;
-    ItemStack stack = press.syncStack.copy();
+    ItemStack stack = press.syncStack;
 
-    if (!(stack.getItem() instanceof ItemBlock)) {
+    if (stack != null && !(stack.getItem() instanceof ItemBlock)) {
       IBakedModel model =
           Minecraft.getMinecraft()
               .getRenderItem()

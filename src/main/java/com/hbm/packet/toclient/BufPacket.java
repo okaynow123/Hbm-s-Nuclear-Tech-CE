@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BufPacket extends PrecompiledPacket {
 
@@ -47,6 +49,7 @@ public class BufPacket extends PrecompiledPacket {
     public static class Handler implements IMessageHandler<BufPacket, IMessage> {
 
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(BufPacket m, MessageContext ctx) {
 
             if(Minecraft.getMinecraft().world == null)
