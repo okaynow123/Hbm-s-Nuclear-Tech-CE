@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.RedBarrel;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.grenade.EntityGrenadeTau;
-import com.hbm.entity.mob.EntityNuclearCreeper;
+import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.particle.EntityBSmokeFX;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
@@ -443,7 +443,7 @@ public class EntityBullet extends Entity implements IProjectile {
 								if (rad) {
 									if (entitylivingbase instanceof EntityPlayer && ArmorUtil.checkForHazmat((EntityPlayer) entitylivingbase)) {
 									} else if (entitylivingbase instanceof EntityCreeper) {
-										EntityNuclearCreeper creep = new EntityNuclearCreeper(this.world);
+										EntityCreeperNuclear creep = new EntityCreeperNuclear(this.world);
 										creep.setLocationAndAngles(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, entitylivingbase.rotationYaw, entitylivingbase.rotationPitch);
 										if (!entitylivingbase.isDead)
 											if (!world.isRemote)
@@ -455,7 +455,7 @@ public class EntityBullet extends Entity implements IProjectile {
 										entitylivingbase.setDead();
 										if (!this.world.isRemote)
 											this.world.spawnEntity(creep);
-									} else if (entitylivingbase instanceof EntityLivingBase && !(entitylivingbase instanceof EntityNuclearCreeper) && !(entitylivingbase instanceof EntityMooshroom) && !(entitylivingbase instanceof EntityZombie)) {
+									} else if (entitylivingbase instanceof EntityLivingBase && !(entitylivingbase instanceof EntityCreeperNuclear) && !(entitylivingbase instanceof EntityMooshroom) && !(entitylivingbase instanceof EntityZombie)) {
 										entitylivingbase.addPotionEffect(new PotionEffect(MobEffects.POISON, 2 * 60 * 20, 2));
 										entitylivingbase.addPotionEffect(new PotionEffect(MobEffects.WITHER, 20, 4));
 										entitylivingbase.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 1 * 60 * 20, 1));

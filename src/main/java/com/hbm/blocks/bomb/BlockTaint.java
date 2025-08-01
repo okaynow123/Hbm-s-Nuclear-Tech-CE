@@ -1,7 +1,7 @@
 package com.hbm.blocks.bomb;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.entity.mob.EntityTaintedCreeper;
+import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.block.Block;
@@ -120,7 +120,7 @@ public class BlockTaint extends Block {
     	}
     	
     	if(entity instanceof EntityCreeper) {
-    		EntityTaintedCreeper creep = new EntityTaintedCreeper(world);
+    		EntityCreeperTainted creep = new EntityCreeperTainted(world);
     		creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
 
     		if(!world.isRemote) {

@@ -4,7 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.entity.mob.EntityCyberCrab;
-import com.hbm.entity.mob.EntityNuclearCreeper;
+import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.mob.EntityTaintCrab;
 import com.hbm.entity.mob.EntityTeslaCrab;
 import com.hbm.handler.ArmorUtil;
@@ -128,8 +128,8 @@ public class TileEntityTesla extends TileEntityMachineBase implements ITickable,
 				e.onStruckByLightning(new EntityLightningBolt(worldObj, e.posX, e.posY, e.posZ, true));
 			}
 			
-			if(e instanceof EntityNuclearCreeper) {
-				((EntityNuclearCreeper)e).getDataManager().set(EntityNuclearCreeper.POWERED, true);
+			if(e instanceof EntityCreeperNuclear creeperNuclear) {
+				creeperNuclear.setPowered(true);
 			}
 			
 			double offset = 0;

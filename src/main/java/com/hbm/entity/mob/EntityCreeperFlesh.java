@@ -16,8 +16,8 @@ public class EntityCreeperFlesh extends EntityCreeper {
         super(world);
     }
 
-
-    private void explode() {
+    @Override
+    protected void explode() {
         if(!this.world.isRemote) {
             NBTTagCompound vdat = new NBTTagCompound();
             vdat.setString("type", "giblets");

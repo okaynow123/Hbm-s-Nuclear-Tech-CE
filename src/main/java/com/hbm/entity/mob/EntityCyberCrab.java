@@ -26,7 +26,7 @@ public class EntityCyberCrab extends EntityMob implements IRangedAttackMob, IRad
 	private static final Predicate<EntityLiving> selector = new Predicate<EntityLiving>(){
 		@Override
 		public boolean apply(EntityLiving input) {
-			return !(input instanceof EntityCyberCrab || input instanceof EntityCreeper || input instanceof EntityNuclearCreeper);
+			return !(input instanceof EntityCyberCrab || input instanceof EntityCreeper || input instanceof EntityCreeperNuclear);
 		}
 	};
 	

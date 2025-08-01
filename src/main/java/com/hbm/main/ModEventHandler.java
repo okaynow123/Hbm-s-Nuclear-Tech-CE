@@ -17,7 +17,7 @@ import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCyberCrab;
-import com.hbm.entity.mob.EntityTaintedCreeper;
+import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.forgefluid.FFPipeNetwork;
@@ -799,7 +799,7 @@ public class ModEventHandler {
             event.getEntity().entityDropItem(new ItemStack(ModItems.bottle_rad).setStackDisplayName("§aAlcater's §2Neo §aNuka§r"), 0.5F);
         }
 
-        if (event.getEntity() instanceof EntityTaintedCreeper && event.getSource() == ModDamageSource.boxcar) {
+        if (event.getEntity() instanceof EntityCreeperTainted && event.getSource() == ModDamageSource.boxcar) {
 
             for (EntityPlayer player : event.getEntity().getEntityWorld().getEntitiesWithinAABB(EntityPlayer.class, event.getEntity().getEntityBoundingBox().grow(50, 50, 50))) {
                 AdvancementManager.grantAchievement(player, AdvancementManager.bobHidden);

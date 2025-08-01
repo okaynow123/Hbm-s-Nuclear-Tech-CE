@@ -5,7 +5,7 @@ import com.hbm.blocks.bomb.BlockTaint;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.mob.EntityTaintedCreeper;
+import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -82,7 +82,7 @@ public class HbmPotion extends Potion {
 	public void performEffect(EntityLivingBase entity, int level) {
 
 		if(this == taint) {
-			if(!(entity instanceof EntityTaintedCreeper) && entity.world.rand.nextInt(80) == 0)
+			if(!(entity instanceof EntityCreeperTainted) && entity.world.rand.nextInt(80) == 0)
 				entity.attackEntityFrom(ModDamageSource.taint, (level + 1));
 			
 			if(GeneralConfig.enableHardcoreTaint && !entity.world.isRemote && CompatibilityConfig.isWarDim(entity.world)) {

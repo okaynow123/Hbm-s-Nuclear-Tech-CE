@@ -4,7 +4,7 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.entity.mob.EntityDuck;
-import com.hbm.entity.mob.EntityNuclearCreeper;
+import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.handler.threading.PacketThreading;
@@ -385,7 +385,7 @@ public final class RadiationSystemNT {
         if (eRad < 100) return;
         if (eRad >= 200 && entity.getHealth() > 0 && entity instanceof EntityCreeper) {
             if (world.rand.nextInt(3) == 0) {
-                EntityNuclearCreeper creep = new EntityNuclearCreeper(world);
+                EntityCreeperNuclear creep = new EntityCreeperNuclear(world);
                 creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
                 if (!entity.isDead) world.spawnEntity(creep);
                 entity.setDead();

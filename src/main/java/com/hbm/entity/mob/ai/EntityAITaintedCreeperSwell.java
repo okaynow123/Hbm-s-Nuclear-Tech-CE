@@ -1,16 +1,16 @@
 package com.hbm.entity.mob.ai;
 
-import com.hbm.entity.mob.EntityTaintedCreeper;
+import com.hbm.entity.mob.EntityCreeperTainted;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class EntityAITaintedCreeperSwell extends EntityAIBase {
     /** The creeper that is swelling. */
-    EntityTaintedCreeper swellingCreeper;
+    private final EntityCreeperTainted swellingCreeper;
     /** The creeper's attack target. This is used for the changing of the creeper's state. */
-    EntityLivingBase creeperAttackTarget;
+    private EntityLivingBase creeperAttackTarget;
 
-    public EntityAITaintedCreeperSwell(EntityTaintedCreeper p_i1655_1_)
+    public EntityAITaintedCreeperSwell(EntityCreeperTainted p_i1655_1_)
     {
         this.swellingCreeper = p_i1655_1_;
         this.setMutexBits(1);
