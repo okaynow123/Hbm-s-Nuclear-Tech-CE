@@ -159,7 +159,7 @@ public class EntityDamageUtil {
                 living.playSound(sound, getSoundVolume(living), getSoundPitch(living)); //#
             living.onDeath(source);
         } else {
-            sound = getHurtSound(living);
+            sound = getHurtSound(living, source);
             if (didAttackRegister && sound != null)
                 living.playSound(sound, getSoundVolume(living), getSoundPitch(living)); //#
         }
@@ -256,26 +256,26 @@ public class EntityDamageUtil {
     }
 
     public static SoundEvent getDeathSound(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getDeathSound", "func_184615_bR");
         try {
+            Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getDeathSound", "func_184615_bR");
             return (SoundEvent) m.invoke(living);
         } catch (Exception e) {
         }
         return SoundEvents.ENTITY_GENERIC_DEATH;
     }
 
-    public static SoundEvent getHurtSound(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getHurtSound", "func_184601_bQ");
+    public static SoundEvent getHurtSound(EntityLivingBase living, DamageSource source) {
         try {
-            return (SoundEvent) m.invoke(living);
+            Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getHurtSound", "func_184601_bQ", DamageSource.class);
+            return (SoundEvent) m.invoke(living, source);
         } catch (Exception e) {
         }
         return SoundEvents.ENTITY_GENERIC_HURT;
     }
 
     public static float getSoundVolume(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getSoundVolume", "func_70599_aP");
         try {
+            Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getSoundVolume", "func_70599_aP");
             return (float) m.invoke(living);
         } catch (Exception e) {
         }
@@ -283,8 +283,8 @@ public class EntityDamageUtil {
     }
 
     public static float getSoundPitch(EntityLivingBase living) {
-        Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getSoundPitch", "func_70647_i");
         try {
+            Method m = ReflectionHelper.findMethod(EntityLivingBase.class, "getSoundPitch", "func_70647_i");
             return (float) m.invoke(living);
         } catch (Exception e) {
         }
