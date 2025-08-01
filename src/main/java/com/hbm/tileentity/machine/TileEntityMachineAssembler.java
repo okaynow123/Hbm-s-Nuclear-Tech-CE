@@ -55,7 +55,6 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
     public boolean needsProcess = true;
     public int maxProgress = 100;
     public boolean isProgressing;
-    @SideOnly(Side.CLIENT)
     public int recipe;
     int consumption = 100;
     int speed = 100;
