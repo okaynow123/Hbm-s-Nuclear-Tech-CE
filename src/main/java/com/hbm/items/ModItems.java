@@ -2059,8 +2059,7 @@ public class ModItems {
 	public static final Item coil_copper_torus = new ItemBase("coil_copper_torus").setCreativeTab(MainRegistry.partsTab);
 	public static final Item coil_magnetized_tungsten = new ItemCustomLore("coil_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
 
-	//Gun ammo assemblies and ammo
-
+	//Gun ammo
 	public static final Item assembly_nuke = new ItemBase("assembly_nuke").setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item ammo_debug = new ItemBase("ammo_debug");
@@ -2068,7 +2067,6 @@ public class ModItems {
 	//public static final Item ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true);
 
 	//Drillgon200: screw organization, porting takes less time if I don't have to search for each individual spot.
-	// TODO: Remove the old ammo below
 
 	public static final Item ammo_shell = new ItemAmmo("ammo_shell").setCreativeTab(MainRegistry.weaponTab);
 	public static final Item ammo_shell_explosive = new ItemAmmo("ammo_shell_explosive").setCreativeTab(MainRegistry.weaponTab);

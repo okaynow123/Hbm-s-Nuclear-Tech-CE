@@ -52,6 +52,11 @@ import java.util.List;
 
 public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 
+	/** Timestamp for rendering smoke nodes and muzzle flashes */
+	public long[] lastShot;
+	/** [0;1] randomized every shot for various rendering applications */
+	public double shotRand = 0D;
+
 	public GunConfiguration mainConfig;
 	public GunConfiguration altConfig;
 
