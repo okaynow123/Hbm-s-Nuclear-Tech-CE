@@ -78,25 +78,25 @@ public class ItemChopper extends Item {
 			return ActionResult.newResult(EnumActionResult.PASS, stack);
 
 		} else {
-			RayTraceResult movingobjectposition = this.rayTrace(world, player, true);
+			RayTraceResult RayTraceResult = this.rayTrace(world, player, true);
 
-			if(movingobjectposition == null || movingobjectposition.typeOfHit == Type.MISS) {
+			if(RayTraceResult == null || RayTraceResult.typeOfHit == Type.MISS) {
 				return ActionResult.newResult(EnumActionResult.PASS, stack);
 			} else {
-				if(movingobjectposition.typeOfHit == Type.BLOCK) {
-					int i = movingobjectposition.getBlockPos().getX();
-					int j = movingobjectposition.getBlockPos().getY();
-					int k = movingobjectposition.getBlockPos().getZ();
+				if(RayTraceResult.typeOfHit == Type.BLOCK) {
+					int i = RayTraceResult.getBlockPos().getX();
+					int j = RayTraceResult.getBlockPos().getY();
+					int k = RayTraceResult.getBlockPos().getZ();
 
-					if(!world.canMineBlockBody(player, movingobjectposition.getBlockPos())) {
+					if(!world.canMineBlockBody(player, RayTraceResult.getBlockPos())) {
 						return ActionResult.newResult(EnumActionResult.PASS, stack);
 					}
 
-					if(!player.canPlayerEdit(movingobjectposition.getBlockPos(), movingobjectposition.sideHit, stack)) {
+					if(!player.canPlayerEdit(RayTraceResult.getBlockPos(), RayTraceResult.sideHit, stack)) {
 						return ActionResult.newResult(EnumActionResult.PASS, stack);
 					}
 
-					if(world.getBlockState(movingobjectposition.getBlockPos()).getBlock() instanceof BlockLiquid) {
+					if(world.getBlockState(RayTraceResult.getBlockPos()).getBlock() instanceof BlockLiquid) {
 						Entity entity = spawnCreature(world, stack.getItemDamage(), i, j, k);
 
 						if(entity != null) {

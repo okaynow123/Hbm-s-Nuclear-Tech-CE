@@ -234,13 +234,13 @@ public class EntityModBeam extends Entity implements IProjectile {
             ++this.ticksInAir;
             Vec3d vec31 = new Vec3d(this.posX, this.posY, this.posZ);
             Vec3d vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            RayTraceResult movingobjectposition = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
+            RayTraceResult RayTraceResult = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
             vec31 = new Vec3d(this.posX, this.posY, this.posZ);
             vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
-            if (movingobjectposition != null)
+            if (RayTraceResult != null)
             {
-                vec3 = new Vec3d(movingobjectposition.hitVec.x, movingobjectposition.hitVec.y, movingobjectposition.hitVec.z);
+                vec3 = new Vec3d(RayTraceResult.hitVec.x, RayTraceResult.hitVec.y, RayTraceResult.hitVec.z);
             }
 
             Entity entity = null;
@@ -257,11 +257,11 @@ public class EntityModBeam extends Entity implements IProjectile {
                 {
                     f1 = 0.3F;
                     AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand(f1, f1, f1);
-                    RayTraceResult movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
+                    RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
-                    if (movingobjectposition1 != null)
+                    if (RayTraceResult1 != null)
                     {
-                        double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
+                        double d1 = vec31.distanceTo(RayTraceResult1.hitVec);
 
                         if (d1 < d0 || d0 == 0.0D)
                         {
@@ -274,25 +274,25 @@ public class EntityModBeam extends Entity implements IProjectile {
 
             if (entity != null)
             {
-                movingobjectposition = new RayTraceResult(entity);
+                RayTraceResult = new RayTraceResult(entity);
             }
 
-            if (movingobjectposition != null && movingobjectposition.entityHit != null && movingobjectposition.entityHit instanceof EntityPlayer)
+            if (RayTraceResult != null && RayTraceResult.entityHit != null && RayTraceResult.entityHit instanceof EntityPlayer)
             {
-                EntityPlayer entityplayer = (EntityPlayer)movingobjectposition.entityHit;
+                EntityPlayer entityplayer = (EntityPlayer)RayTraceResult.entityHit;
                 
                 if (entityplayer.capabilities.disableDamage || this.shootingEntity instanceof EntityPlayer && !((EntityPlayer)this.shootingEntity).canAttackPlayer(entityplayer))
                 {
-                    movingobjectposition = null;
+                    RayTraceResult = null;
                 }
             }
 
             float f2;
 
             
-            if (movingobjectposition != null)
+            if (RayTraceResult != null)
             {
-                if (movingobjectposition.entityHit != null && movingobjectposition.entityHit != this.shootingEntity)
+                if (RayTraceResult.entityHit != null && RayTraceResult.entityHit != this.shootingEntity)
                 {
                     f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     int k = MathHelper.ceil(f2 * this.damage);
@@ -302,20 +302,20 @@ public class EntityModBeam extends Entity implements IProjectile {
                         k += this.rand.nextInt(k / 2 + 2);
                     }
                     
-                    if(movingobjectposition.entityHit instanceof EntityLivingBase) {
-                    	((EntityLivingBase)movingobjectposition.entityHit).addPotionEffect(new PotionEffect(HbmPotion.bang, 60, 0));
+                    if(RayTraceResult.entityHit instanceof EntityLivingBase) {
+                    	((EntityLivingBase)RayTraceResult.entityHit).addPotionEffect(new PotionEffect(HbmPotion.bang, 60, 0));
                     } else {
                     	explode();
                     }
                     
                 	this.setDead();
                 }
-                else if(movingobjectposition.typeOfHit == Type.BLOCK)
+                else if(RayTraceResult.typeOfHit == Type.BLOCK)
                 {
-                	IBlockState newState = world.getBlockState(movingobjectposition.getBlockPos());
-                    this.field_145791_d = movingobjectposition.getBlockPos().getX();
-                    this.field_145792_e = movingobjectposition.getBlockPos().getY();
-                    this.field_145789_f = movingobjectposition.getBlockPos().getZ();
+                	IBlockState newState = world.getBlockState(RayTraceResult.getBlockPos());
+                    this.field_145791_d = RayTraceResult.getBlockPos().getX();
+                    this.field_145792_e = RayTraceResult.getBlockPos().getY();
+                    this.field_145789_f = RayTraceResult.getBlockPos().getZ();
                     this.field_145790_g = newState.getBlock();
                     this.inData = newState.getBlock().getMetaFromState(newState);
                 }

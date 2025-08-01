@@ -89,12 +89,12 @@ public class EntityRailgunBlast extends Entity implements IChunkLoader {
 
 		Vec3d vec3 = new Vec3d(this.posX, this.posY, this.posZ);
 		Vec3d vec31 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-		RayTraceResult movingobjectposition = this.world.rayTraceBlocks(vec3, vec31);
+		RayTraceResult RayTraceResult = this.world.rayTraceBlocks(vec3, vec31);
 
-		if(movingobjectposition != null) {
+		if(RayTraceResult != null) {
 
 			if(!this.world.isRemote) {
-				this.setLocationAndAngles(movingobjectposition.getBlockPos().getX(), movingobjectposition.getBlockPos().getY(), movingobjectposition.getBlockPos().getZ(), 0, 0);
+				this.setLocationAndAngles(RayTraceResult.getBlockPos().getX(), RayTraceResult.getBlockPos().getY(), RayTraceResult.getBlockPos().getZ(), 0, 0);
 				
 				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius>>1, posX, posY, posZ));
 				if(BombConfig.enableNukeClouds) {

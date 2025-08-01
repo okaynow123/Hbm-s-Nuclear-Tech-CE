@@ -277,13 +277,13 @@ public class EntityBulletBase extends Entity implements IProjectile {
 			if (entity1.canBeCollidedWith() && (entity1 != this.shooter)) {
 				f1 = 0.3F;
 				AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().grow(f1);
-				RayTraceResult movingobjectposition1 = axisalignedbb1.calculateIntercept(vecOrigin, vecDestination);
+				RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vecOrigin, vecDestination);
 
-				if (movingobjectposition1 != null && movingobjectposition1.typeOfHit != Type.MISS) {
-					double d1 = vecOrigin.distanceTo(movingobjectposition1.hitVec);
+				if (RayTraceResult1 != null && RayTraceResult1.typeOfHit != Type.MISS) {
+					double d1 = vecOrigin.distanceTo(RayTraceResult1.hitVec);
 					if (d1 < d0 || d0 == 0.0D) {
 						victim = entity1;
-						victimResult = movingobjectposition1;
+						victimResult = RayTraceResult1;
 						d0 = d1;
 					}
 				}

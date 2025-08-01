@@ -52,11 +52,11 @@ public class DamageResistanceHandler {
     /**
      * Currently cached DT reduction
      */
-    private static float currentPDT = 0F;
+    public static float currentPDT = 0F;
     /**
      * Currently cached armor piercing %
      */
-    private static float currentPDR = 0F;
+    public static float currentPDR = 0F; //Norwood: I'll need that elsewhere
 
     public static void init() {
         File folder = MainRegistry.configHbmDir;

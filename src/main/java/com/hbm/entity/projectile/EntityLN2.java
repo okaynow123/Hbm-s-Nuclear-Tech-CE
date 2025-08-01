@@ -258,13 +258,13 @@ public class EntityLN2 extends Entity implements IProjectile {
             ++this.ticksInAir;
             Vec3d vec31 = new Vec3d(this.posX, this.posY, this.posZ);
             Vec3d vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            RayTraceResult movingobjectposition = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
+            RayTraceResult RayTraceResult = this.world.rayTraceBlocks(vec31, vec3, false, true, false);
             vec31 = new Vec3d(this.posX, this.posY, this.posZ);
             vec3 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
-            if (movingobjectposition != null)
+            if (RayTraceResult != null)
             {
-                vec3 = new Vec3d(movingobjectposition.hitVec.x, movingobjectposition.hitVec.y, movingobjectposition.hitVec.z);
+                vec3 = new Vec3d(RayTraceResult.hitVec.x, RayTraceResult.hitVec.y, RayTraceResult.hitVec.z);
             }
 
             Entity entity = null;
@@ -281,11 +281,11 @@ public class EntityLN2 extends Entity implements IProjectile {
                 {
                     f1 = 0.3F;
                     AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().grow(f1);
-                    RayTraceResult movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
+                    RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
-                    if (movingobjectposition1 != null)
+                    if (RayTraceResult1 != null)
                     {
-                        double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
+                        double d1 = vec31.distanceTo(RayTraceResult1.hitVec);
 
                         if (d1 < d0 || d0 == 0.0D)
                         {
@@ -298,25 +298,25 @@ public class EntityLN2 extends Entity implements IProjectile {
 
             if (entity != null)
             {
-                movingobjectposition = new RayTraceResult(entity);
+                RayTraceResult = new RayTraceResult(entity);
             }
 
-            if (movingobjectposition != null && movingobjectposition.entityHit != null && movingobjectposition.entityHit instanceof EntityPlayer)
+            if (RayTraceResult != null && RayTraceResult.entityHit != null && RayTraceResult.entityHit instanceof EntityPlayer)
             {
-                EntityPlayer entityplayer = (EntityPlayer)movingobjectposition.entityHit;
+                EntityPlayer entityplayer = (EntityPlayer)RayTraceResult.entityHit;
 
                 if (entityplayer.capabilities.disableDamage || this.shootingEntity instanceof EntityPlayer && !((EntityPlayer)this.shootingEntity).canAttackPlayer(entityplayer))
                 {
-                    movingobjectposition = null;
+                    RayTraceResult = null;
                 }
             }
 
             float f2;
             float f4;
 
-            if (movingobjectposition != null && CompatibilityConfig.isWarDim(world))
+            if (RayTraceResult != null && CompatibilityConfig.isWarDim(world))
             {
-                if (movingobjectposition.entityHit != null)
+                if (RayTraceResult.entityHit != null)
                 {
                     f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     int k = MathHelper.ceil(f2 * this.damage);
@@ -337,11 +337,11 @@ public class EntityLN2 extends Entity implements IProjectile {
                         damagesource = ModDamageSource.causeIceDamage(this, this.shootingEntity);
                     }
 
-                    if (movingobjectposition.entityHit.attackEntityFrom(damagesource, k))
+                    if (RayTraceResult.entityHit.attackEntityFrom(damagesource, k))
                     {
-                        if (movingobjectposition.entityHit instanceof EntityLivingBase)
+                        if (RayTraceResult.entityHit instanceof EntityLivingBase)
                         {
-                            EntityLivingBase entitylivingbase = (EntityLivingBase)movingobjectposition.entityHit;
+                            EntityLivingBase entitylivingbase = (EntityLivingBase)RayTraceResult.entityHit;
 
                             if (this.knockbackStrength > 0)
                             {
@@ -349,7 +349,7 @@ public class EntityLN2 extends Entity implements IProjectile {
 
                                 if (f4 > 0.0F)
                                 {
-                                    movingobjectposition.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6000000238418579D / f4, 0.1D, this.motionZ * this.knockbackStrength * 0.6000000238418579D / f4);
+                                    RayTraceResult.entityHit.addVelocity(this.motionX * this.knockbackStrength * 0.6000000238418579D / f4, 0.1D, this.motionZ * this.knockbackStrength * 0.6000000238418579D / f4);
                                 }
                             }
 
@@ -359,17 +359,17 @@ public class EntityLN2 extends Entity implements IProjectile {
                                 EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.shootingEntity, entitylivingbase);
                             }
 
-                            if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity && movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
+                            if (this.shootingEntity != null && RayTraceResult.entityHit != this.shootingEntity && RayTraceResult.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP)
                             {
                                 ((EntityPlayerMP)this.shootingEntity).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
                             }
                         }
 
-                        if (!(movingobjectposition.entityHit instanceof EntityEnderman))
+                        if (!(RayTraceResult.entityHit instanceof EntityEnderman))
                         {
-                            if (!this.world.isRemote && movingobjectposition.entityHit instanceof EntityLivingBase)
+                            if (!this.world.isRemote && RayTraceResult.entityHit instanceof EntityLivingBase)
                             {
-                            	movingobjectposition.entityHit.attackEntityFrom(damagesource, 5F);
+                            	RayTraceResult.entityHit.attackEntityFrom(damagesource, 5F);
                             }
                         }
                     }
@@ -378,14 +378,14 @@ public class EntityLN2 extends Entity implements IProjectile {
                 {
                 	BlockPos newPos = new BlockPos(this.field_145791_d, this.field_145792_e, this.field_145789_f);
                 	IBlockState newState = world.getBlockState(newPos);
-                    this.field_145791_d = movingobjectposition.getBlockPos().getX();
-                    this.field_145792_e = movingobjectposition.getBlockPos().getY();
-                    this.field_145789_f = movingobjectposition.getBlockPos().getZ();
+                    this.field_145791_d = RayTraceResult.getBlockPos().getX();
+                    this.field_145792_e = RayTraceResult.getBlockPos().getY();
+                    this.field_145789_f = RayTraceResult.getBlockPos().getZ();
                     this.field_145790_g = newState.getBlock();
                     this.inData = newState.getBlock().getMetaFromState(newState);
-                    this.motionX = ((float)(movingobjectposition.hitVec.x - this.posX));
-                    this.motionY = ((float)(movingobjectposition.hitVec.y - this.posY));
-                    this.motionZ = ((float)(movingobjectposition.hitVec.z - this.posZ));
+                    this.motionX = ((float)(RayTraceResult.hitVec.x - this.posX));
+                    this.motionY = ((float)(RayTraceResult.hitVec.y - this.posY));
+                    this.motionZ = ((float)(RayTraceResult.hitVec.z - this.posZ));
                     f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     this.posX -= this.motionX / f2 * 0.05000000074505806D;
                     this.posY -= this.motionY / f2 * 0.05000000074505806D;

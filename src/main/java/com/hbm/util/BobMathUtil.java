@@ -238,6 +238,7 @@ public class BobMathUtil {
      * @param vec vector
      * @return vec3 containing yaw, pitch, nothing.
      */
+    //FIXME
     public static Vec3d getEulerAngles(Vec3d vec) {
         double yaw = Math.toDegrees(Math.atan2(vec.x, vec.z));
         double sqrt = MathHelper.sqrt(vec.x * vec.x + vec.z * vec.z);
