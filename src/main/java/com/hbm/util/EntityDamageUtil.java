@@ -19,7 +19,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @Untested
@@ -29,7 +28,11 @@ public class EntityDamageUtil {
     public static boolean attackEntityFromIgnoreIFrame(Entity victim, DamageSource src, float damage) {
 
         if (!victim.attackEntityFrom(src, damage)) {
-            float dmg = damage + ((EntityLivingBase) victim).lastDamage;
+            float lastDamage = 0;
+            if (victim instanceof EntityLivingBase entityLivingBase) {
+                lastDamage = entityLivingBase.lastDamage;
+            }
+            float dmg = damage + lastDamage;
             return victim.attackEntityFrom(src, dmg);
         } else {
             return true;
@@ -40,24 +43,15 @@ public class EntityDamageUtil {
     public static void damageArmorNT(EntityLivingBase living, float amount) {
     }
 
-    public static float getLastDamage(Entity victim) {
-        try {
-            return ((EntityLivingBase) victim).lastDamage;
-        } catch (Exception x) {
-            return 0F;
-        }
-    }
-
     public static boolean wasAttackedByV1(DamageSource source) {
 
         if (source instanceof EntityDamageSource) {
-            Entity attacker = ((EntityDamageSource) source).getImmediateSource();
+            Entity attacker = source.getImmediateSource();
 
-            if (attacker instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) attacker;
+            if (attacker instanceof EntityPlayer player) {
                 ItemStack chestplate = player.inventory.armorInventory.get(2);
 
-                if (chestplate != null && ArmorModHandler.hasMods(chestplate)) {
+                if (!chestplate.isEmpty() && ArmorModHandler.hasMods(chestplate)) {
                     ItemStack[] mods = ArmorModHandler.pryMods(chestplate);
 
                     if (mods[ArmorModHandler.extra] != null && mods[ArmorModHandler.extra].getItem() == ModItems.v1) {
@@ -93,7 +87,7 @@ public class EntityDamageUtil {
         if (living instanceof EntityPlayer && ((EntityPlayer) living).capabilities.disableDamage && !source.canHarmInCreative())
             return false;
 
-        setIdleTime(living, 0);
+        living.idleTime = 0;
         if (living.getHealth() <= 0.0F) return false;
         if (source.isFireDamage() && living.isPotionActive(MobEffects.FIRE_RESISTANCE)) return false;
 
@@ -119,20 +113,20 @@ public class EntityDamageUtil {
         Entity entity = source.getTrueSource();
 
         if (entity != null) {
-            if (entity instanceof EntityLivingBase) {
-                living.setRevengeTarget((EntityLivingBase) entity);
+            if (entity instanceof EntityLivingBase entityLivingBase) {
+                living.setRevengeTarget(entityLivingBase);
             }
 
-            if (entity instanceof EntityPlayer) {
-                setRecentlyHit(living, 100);
-                setAttackingPlayer(living, (EntityPlayer) entity);
+            if (entity instanceof EntityPlayer player) {
+                living.recentlyHit = 100;
+                living.attackingPlayer = player;
 
-            } else if (entity instanceof EntityTameable) {
-                EntityTameable entitywolf = (EntityTameable) entity;
+            } else if (entity instanceof EntityTameable entitywolf) {
 
                 if (entitywolf.isTamed()) {
-                    setRecentlyHit(living, 100);
-                    setAttackingPlayer(living, null); //Null? I HOPE this wont cause NPEs?
+                    living.recentlyHit = 100;
+                    living.attackingPlayer = null; //Null? I HOPE this wont cause NPEs?
+                    // mlbv: yes it won't
                 }
             }
         }
@@ -296,30 +290,4 @@ public class EntityDamageUtil {
         }
         return 1F;
     }
-
-    public static void setRecentlyHit(EntityLivingBase living, int amount) {
-        Field field = ReflectionHelper.findField(EntityLivingBase.class, "recentlyHit", "field_70718_bc");
-        try {
-            field.set(living, amount);
-        } catch (Exception e) {
-        }
-
-
-    }
-    public static void setAttackingPlayer(EntityLivingBase living, EntityPlayer attackingPlayer) {
-        Field field = ReflectionHelper.findField(EntityLivingBase.class, "attackingPlayer", "field_70717_bb");
-        try {
-            field.set(living, attackingPlayer);
-        } catch (Exception e) {
-        }
-    }
-    public static void setIdleTime(EntityLivingBase living, int value) {
-        Field field = ReflectionHelper.findField(EntityLivingBase.class, "idleTime", "field_70708_bq");
-        try {
-            field.set(living, value);
-        } catch (Exception e) {
-        }
-    }
-
-
 }
