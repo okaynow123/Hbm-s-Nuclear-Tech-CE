@@ -50,7 +50,6 @@ public class LoopedSoundPacket implements IMessage {
         buf.writeInt(z);
     }
 
-    @SideOnly(Side.CLIENT)
     public static class Handler implements IMessageHandler<LoopedSoundPacket, IMessage> {
         private static void process(LoopedSoundPacket msg) {
             Minecraft mc = Minecraft.getMinecraft();
@@ -97,6 +96,7 @@ public class LoopedSoundPacket implements IMessage {
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(LoopedSoundPacket msg, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> process(msg));
             return null;

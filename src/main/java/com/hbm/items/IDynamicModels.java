@@ -41,6 +41,7 @@ public interface IDynamicModels {
         INSTANCES.forEach(dynamicSprite -> dynamicSprite.registerSprite(map));
     }
 
+    @SideOnly(Side.CLIENT)
     public static void registerCustomStateMappers() {
         for (IDynamicModels model : INSTANCES) {
             if (model.getSelf() == null || !(model.getSelf() instanceof Block block)) continue;
@@ -54,6 +55,7 @@ public interface IDynamicModels {
 
     }
 
+    @SideOnly(Side.CLIENT)
     static void registerColorHandlers() {
         for (IDynamicModels model : INSTANCES) {
             IItemColor colorHandler = model.getColorHandler();
@@ -77,14 +79,14 @@ public interface IDynamicModels {
         return null;
     }
 
-
+    @SideOnly(Side.CLIENT)
     void bakeModel(ModelBakeEvent event);
 
     default Object getSelf() {
         return this;
     }
 
-
+    @SideOnly(Side.CLIENT)
     void registerModel();
 
     @SideOnly(Side.CLIENT)

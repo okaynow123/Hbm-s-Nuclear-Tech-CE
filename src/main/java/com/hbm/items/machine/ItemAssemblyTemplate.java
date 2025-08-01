@@ -148,6 +148,7 @@ public class ItemAssemblyTemplate extends Item {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
         try {
             ComparableStack comp = getRecipeOutput(stack);

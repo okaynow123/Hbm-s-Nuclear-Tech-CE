@@ -392,6 +392,7 @@ public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILoo
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static void registerColorHandler() {
         IBlockColor ductColorHandler = new IBlockColor() {
             @Override

@@ -42,10 +42,10 @@ public class SetSubChunkAirPacket implements IMessage {
         subY = buf.readUnsignedByte();
     }
 
-    @SideOnly(Side.CLIENT)
     public static class Handler implements IMessageHandler<SetSubChunkAirPacket, IMessage> {
 
         @Override
+        @SideOnly(Side.CLIENT)
         public IMessage onMessage(SetSubChunkAirPacket message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> handle(message));
             return null;

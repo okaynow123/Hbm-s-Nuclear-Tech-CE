@@ -31,8 +31,10 @@ public class ItemGunShotty extends ItemGunBase {
 	
 	//The 
 	public static Vec3d rayTrace = null;
-	public static Vec2f screenPos = new Vec2f(0, 0);
-	public static Vec2f prevScreenPos = new Vec2f(0, 0);
+	@SideOnly(Side.CLIENT)
+	public static Vec2f screenPos;
+	@SideOnly(Side.CLIENT)
+	public static Vec2f prevScreenPos;
 	//For swinging left or right with the meathook
 	public static float motionStrafe;
 	
@@ -116,6 +118,7 @@ public class ItemGunShotty extends ItemGunBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected void updateClient(ItemStack stack, World world, EntityPlayer player, int slot, EnumHand hand) {
+		if (screenPos == null) screenPos = new Vec2f(0, 0);
 		prevScreenPos = screenPos;
 		RayTraceResult ray = Library.rayTraceEntitiesInCone(player, 30, 1, 6);
 		if(ray != null && ray.typeOfHit == Type.ENTITY){
