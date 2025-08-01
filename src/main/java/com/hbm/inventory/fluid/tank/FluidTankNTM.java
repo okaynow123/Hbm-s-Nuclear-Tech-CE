@@ -6,8 +6,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.TEFluidPacket;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -18,7 +16,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,11 +24,10 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -119,27 +115,6 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
             return dif;
         }
         return 0;
-    }
-
-    //Called on TE update
-    @Deprecated
-    public void updateTank(TileEntity te) {
-        updateTank(te, 100);
-    }
-
-    @Deprecated
-    public void updateTank(TileEntity te, int range) {
-        updateTank(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), te.getWorld().provider.getDimension(), range);
-    }
-
-    @Deprecated
-    public void updateTank(int x, int y, int z, int dim) {
-        updateTank(x, y, z, dim, 100);
-    }
-
-    @Deprecated
-    public void updateTank(int x, int y, int z, int dim, int range) {
-        PacketDispatcher.wrapper.sendToAllAround(new TEFluidPacket(x, y, z, fluid, index, type), new NetworkRegistry.TargetPoint(dim, x, y, z, range));
     }
 
     //Fills tank from canisters

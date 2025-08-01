@@ -20,6 +20,7 @@ import com.hbm.packet.toclient.AuxElectricityPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -147,12 +148,21 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			this.sendFluidToAll(tanksNew[1], this);
 
 			tanksNew[1].unloadTank(5, 6, inventory);
-
-			for(int i = 0; i < 2; i++)
-				tanksNew[i].updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
-
 			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 50));
+			networkPackNT(50);
 		}
+	}
+
+	@Override
+	public void serialize(ByteBuf buf){
+		for(FluidTankNTM tank : tanksNew)
+			tank.serialize(buf);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf){
+		for(FluidTankNTM tank : tanksNew)
+			tank.deserialize(buf);
 	}
 
 	@Override

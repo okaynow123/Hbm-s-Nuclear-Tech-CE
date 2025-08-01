@@ -3,12 +3,9 @@ package com.hbm.tileentity.machine.oil;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IFluidAcceptor;
-import com.hbm.interfaces.IFluidSource;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerLiquefactor;
 import com.hbm.inventory.fluid.FluidStack;
-import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUILiquefactor;
@@ -19,8 +16,6 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -34,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityMachineLiquefactor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidSource, IFluidStandardSender, IGUIProvider, ITickable {
+public class TileEntityMachineLiquefactor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSender, IGUIProvider, ITickable {
 
     public long power;
     public static final long maxPower = 100000;
@@ -63,7 +58,6 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
 
         if(!world.isRemote) {
             this.power = Library.chargeTEFromItems(inventory, 1, power, maxPower);
-            tank.updateTank(this);
 
             this.updateConnections();
 
@@ -78,10 +72,6 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
                 this.process();
             else
                 this.progress = 0;
-
-            if(world.getTotalWorldTime() % 10 == 0) {
-                this.fillFluidInit(tank.getTankType());
-            }
 
             this.sendFluid();
 
@@ -204,59 +194,6 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     @Override
     public long getMaxPower() {
         return maxPower;
-    }
-
-    @Override
-    public void setFillForSync(int fill, int index) {
-        tank.setFill(fill);
-    }
-
-    @Override
-    public void setFluidFill(int fill, FluidType type) {
-        if(type == tank.getTankType())
-            tank.setFill(fill);
-    }
-
-    @Override
-    public void setTypeForSync(FluidType type, int index) {
-        tank.setTankType(type);
-    }
-
-    @Override
-    public int getFluidFill(FluidType type) {
-        return type == tank.getTankType() ? tank.getFill() : 0;
-    }
-
-    @Override
-    public void fillFluidInit(FluidType type) {
-        fillFluid(pos.getX(), pos.getY() - 1, pos.getZ(), getTact(), type);
-        fillFluid(pos.getX(), pos.getY() + 4, pos.getZ(), getTact(), type);
-        fillFluid(pos.getX() + 2, pos.getY() + 1, pos.getZ(), getTact(), type);
-        fillFluid(pos.getX() - 2, pos.getY() + 1, pos.getZ(), getTact(), type);
-        fillFluid(pos.getX(), pos.getY() + 1, pos.getZ() + 2, getTact(), type);
-        fillFluid(pos.getX(), pos.getY() + 1, pos.getZ() - 2, getTact(), type);
-    }
-
-    @Override
-    public void fillFluid(int x, int y, int z, boolean newTact, FluidType type) {
-        Library.transmitFluid(x, y, z, newTact, this, world, type);
-    }
-
-    @Override
-    public boolean getTact() {
-        return world.getTotalWorldTime() % 20 < 10;
-    }
-
-    private List<IFluidAcceptor> consumers = new ArrayList();
-
-    @Override
-    public List<IFluidAcceptor> getFluidList(FluidType type) {
-        return consumers;
-    }
-
-    @Override
-    public void clearFluidList(FluidType type) {
-        consumers.clear();
     }
 
     AxisAlignedBB bb = null;

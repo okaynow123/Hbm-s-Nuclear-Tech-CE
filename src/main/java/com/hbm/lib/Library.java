@@ -14,9 +14,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.interfaces.IFluidDuct;
-import com.hbm.interfaces.IFluidSource;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
@@ -383,16 +381,8 @@ public class Library {
 	public static boolean checkFluidConnectables(World world, BlockPos pos, FluidType type)
 	{
 		TileEntity tileentity = world.getTileEntity(pos);
-		if(tileentity != null && tileentity instanceof IFluidDuct && ((IFluidDuct)tileentity).getType() == type)
+		if(tileentity instanceof IFluidDuct && ((IFluidDuct) tileentity).getType() == type)
 			return true;
-		if((tileentity != null && (tileentity instanceof IFluidAcceptor ||
-				tileentity instanceof IFluidSource)) ||
-				world.getBlockState(pos).getBlock() == ModBlocks.fusion_hatch ||
-				world.getBlockState(pos).getBlock() == ModBlocks.dummy_port_compact_launcher ||
-				world.getBlockState(pos).getBlock() == ModBlocks.dummy_port_launch_table ||
-				world.getBlockState(pos).getBlock() == ModBlocks.rbmk_loader) {
-			return true;
-		}
 
 		if(world.getBlockState(pos).getBlock() == ModBlocks.machine_mining_laser && tileentity instanceof TileEntityProxyInventory)
 			return true;
@@ -794,8 +784,6 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	// 	 * You won't be missed.
 	// 	 */
 	// }
-
-	public static void transmitFluid(int x, int y, int z, boolean newTact, IFluidSource that, World worldObj, FluidType type) { }
 
 	//Th3_Sl1ze: Sincerely I hate deprecated interfaces but couldn't figure out how to make mechs work without them. Will let them live for now
 

@@ -6,7 +6,6 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.interfaces.IFluidAcceptor;
 import com.hbm.inventory.container.ContainerBarrel;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -71,7 +70,6 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     //Drillgon200: I think this would be much easier to read as an enum.
     //Norwood: This could have been a byte
     public short mode = 0;
-    public List<IFluidAcceptor> list = new ArrayList();
     protected boolean sendingBrake = false;
     private int age = 0;
     // Th3_Sl1ze: Ugh. Maybe there's a smarter way to convert fluids from forge tank to NTM tank but I don't know any other client-seamless methods.

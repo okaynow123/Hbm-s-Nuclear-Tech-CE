@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -35,9 +35,9 @@ public class GUIITER extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 108, 34, 16, iter.power, TileEntityITER.maxPower);
 
-		iter.tanksNew[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 54, 16, 52); //Water
-		iter.tanksNew[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 54, 16, 52); //Steam
-		iter.plasmaNew.renderTankInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 54, 34, 34); //Plasma
+		iter.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 54, 16, 52); //Water
+		iter.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 54, 16, 52); //Steam
+		iter.plasma.renderTankInfo(this, mouseX, mouseY, guiLeft + 71, guiTop + 54, 34, 34); //Plasma
 		
 		String text = "Magnets are " + ((iter.isOn && iter.power >= TileEntityITER.powerReq) ? "ON" : "OFF");
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 76, guiTop + 94, 24, 12, mouseX, mouseY, new String[] { text });
@@ -79,7 +79,7 @@ public class GUIITER extends GuiInfoContainer {
 		if(iter.isOn && iter.power >= TileEntityITER.powerReq)
 			drawTexturedModalRect(guiLeft + 76, guiTop + 94, 194, 0, 24, 12);
 
-		if(iter.plasmaNew.getFill() > 0 && iter.getShield() >= iter.plasmaNew.getTankType().temperature)
+		if(iter.plasma.getFill() > 0 && iter.getShield() >= iter.plasma.getTankType().temperature)
 			drawTexturedModalRect(guiLeft + 97, guiTop + 17, 218, 0, 18, 18);
 		
 		int i = (int)iter.getPowerScaled(34);
@@ -89,10 +89,10 @@ public class GUIITER extends GuiInfoContainer {
 		drawTexturedModalRect(guiLeft + 44, guiTop + 22, 176, 18, j, 7);
 
 		for(int t = 0; t < 2; t++) {
-			iter.tanksNew[t].renderTank(guiLeft + 26 + 108 * t, guiTop + 106, this.zLevel, 16, 52);
+			iter.tanks[t].renderTank(guiLeft + 26 + 108 * t, guiTop + 106, this.zLevel, 16, 52);
 		}
 
-		iter.plasmaNew.renderTank(guiLeft + 71, guiTop + 88, this.zLevel, 34, 34);
+		iter.plasma.renderTank(guiLeft + 71, guiTop + 88, this.zLevel, 34, 34);
 		GL11.glPopAttrib();
 	}
 }

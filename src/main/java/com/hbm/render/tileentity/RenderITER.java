@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.fluids.Fluid;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
     implements IItemRendererProvider {
@@ -74,7 +74,7 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
     ResourceManager.iter.renderPart("Solenoid");
     GlStateManager.popMatrix();
 
-    if (iter.plasmaNew.getFill() > 0) {
+    if (iter.plasma.getFill() > 0) {
       GlStateManager.pushMatrix();
       GL11.glRotated(iter.lastRotor + (iter.rotor - iter.lastRotor) * partialTicks, 0, 1, 0);
 
@@ -84,9 +84,9 @@ public class RenderITER extends TileEntitySpecialRenderer<TileEntityITER>
       GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
       GlStateManager.depthMask(false);
 
-      int color = iter.plasmaNew.getTankType().getColor();
+      int color = iter.plasma.getTankType().getColor();
 
-      double alpha = (double) iter.plasmaNew.getFill() / (double) iter.plasmaNew.getMaxFill();
+      double alpha = (double) iter.plasma.getFill() / (double) iter.plasma.getMaxFill();
       int r = (int) (((color & 0xFF0000) >> 16) / 2F * alpha);
       int g = (int) (((color & 0xFF00) >> 8) / 2F * alpha);
       int b = (int) ((color & 0xFF) / 2F * alpha);

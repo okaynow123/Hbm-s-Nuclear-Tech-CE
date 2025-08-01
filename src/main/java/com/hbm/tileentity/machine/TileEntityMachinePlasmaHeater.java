@@ -100,18 +100,18 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 
 					if(te instanceof TileEntityITER iter) {
 
-                        if(iter.plasmaNew.getFill() == 0 && this.plasma.getTankType() != Fluids.NONE) {
-							iter.plasmaNew.setTankType(this.plasma.getTankType());
+                        if(iter.plasma.getFill() == 0 && this.plasma.getTankType() != Fluids.NONE) {
+							iter.plasma.setTankType(this.plasma.getTankType());
 						}
 
 						if(iter.isOn) {
 
-							if(iter.plasmaNew.getTankType() == this.plasma.getTankType()) {
+							if(iter.plasma.getTankType() == this.plasma.getTankType()) {
 
-								int toLoad = Math.min(iter.plasmaNew.getMaxFill() - iter.plasmaNew.getFill(), this.plasma.getFill());
+								int toLoad = Math.min(iter.plasma.getMaxFill() - iter.plasma.getFill(), this.plasma.getFill());
 								toLoad = Math.min(toLoad, 40);
 								this.plasma.setFill(this.plasma.getFill() - toLoad);
-								iter.plasmaNew.setFill(iter.plasmaNew.getFill() + toLoad);
+								iter.plasma.setFill(iter.plasma.getFill() + toLoad);
 								this.markDirty();
 								iter.markDirty();
 							}

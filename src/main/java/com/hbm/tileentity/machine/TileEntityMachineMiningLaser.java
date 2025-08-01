@@ -123,7 +123,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			this.sendFluid(tankNew, world, pos.getX(), pos.getY() - 2, pos.getZ(), Library.NEG_Z);
 
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
-			tankNew.updateTank(pos.getX(), pos.getY(), pos.getZ(), this.world.provider.getDimension());
 
 			//reset progress if the position changes
 			if(lastTargetX != targetX ||
@@ -218,6 +217,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		buf.writeBoolean(beam);
 		buf.writeBoolean(isOn);
 		buf.writeDouble(clientBreakProgress);
+		tankNew.serialize(buf);
 	}
 
 	@Override
@@ -233,6 +233,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		this.beam = buf.readBoolean();
 		this.isOn = buf.readBoolean();
 		this.breakProgress = buf.readDouble();
+		tankNew.deserialize(buf);
 	}
 
 	private void buildDam() {

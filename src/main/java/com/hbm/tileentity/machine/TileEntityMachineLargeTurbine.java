@@ -133,9 +133,6 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
 
             tanksNew[1].unloadTank(5, 6, inventory);
 
-            for (int i = 0; i < 2; i++)
-                tanksNew[i].updateTank(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
-
             networkPackNT(50);
         } else {
             this.lastRotor = this.rotor;
