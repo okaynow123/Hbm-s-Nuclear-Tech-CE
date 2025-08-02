@@ -153,7 +153,7 @@ public class AnvilRecipes {
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(DIAMOND.dust()), new AnvilOutput(new ItemStack(Items.DIAMOND))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(new OreDictStack(EMERALD.dust()), new AnvilOutput(new ItemStack(Items.EMERALD))).setTier(3));
 		constructionRecipes.add(new AnvilConstructionRecipe(
-				new OreDictStack(RAREEARTH.ingot()),
+				new OreDictStack(RAREEARTH.gem()),
 				new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.fragment_boron)),
 						new AnvilOutput(new ItemStack(ModItems.fragment_boron), 0.5F),

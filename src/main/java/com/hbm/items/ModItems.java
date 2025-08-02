@@ -918,7 +918,7 @@ public class ModItems {
 	public static final Item ingot_pb209 = new ItemBase( "ingot_pb209").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_ra226 = new ItemBase( "ingot_ra226").setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_ac227 = new ItemBase( "ingot_ac227").setCreativeTab(MainRegistry.partsTab);
-	public static final Item ingot_gh336 = new ItemBase( "ingot_gh336").setCreativeTab(MainRegistry.partsTab);
+	public static final Item ingot_gh336 = new ItemCustomLore( "ingot_gh336").setRarity(EnumRarity.EPIC).setCreativeTab(MainRegistry.partsTab);
 	public static final Item ingot_radspice = new ItemBase( "ingot_radspice").setCreativeTab(MainRegistry.partsTab);
 
 	public static final Item ingot_electronium = new ItemUnstable(30, 6000, "ingot_electronium").setCreativeTab(MainRegistry.partsTab);

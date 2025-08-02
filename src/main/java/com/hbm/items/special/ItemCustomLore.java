@@ -261,33 +261,6 @@ public class ItemCustomLore extends Item {
 			else
 				list.add("RTG fuel pellet for infinite energy! (almost)");
 		}
-		if(this == ModItems.ingot_combine_steel) {
-			/*list.add("\"I mean, it's a verb for crying out loud.");
-			list.add("The aliens aren't verbs. They're nouns!\"");
-			list.add("\"Actually, I think it's also the name");
-			list.add("of some kind of farm equipment, like a");
-			list.add("thresher or something.\"");
-			list.add("\"That's even worse. Now we have a word");
-			list.add("that could mean 'to mix things together',");
-			list.add("a piece of farm equipment, and let's see...");
-			list.add("oh yea, it can also mean 'the most advanced");
-			list.add("form of life in the known universe'.\"");
-			list.add("\"So?\"");
-			list.add("\"'So?' C'mon man, they're ALIENS!\"");*/
-			list.add("*insert Civil Protection reference here*");
-		}
-		if(this == ModItems.ingot_euphemium) {
-			list.add("A very special and yet strange element.");
-		}
-		if(this == ModItems.powder_euphemium) {
-			list.add("Pulverized pink.");
-			list.add("Tastes like strawberries.");
-		}
-		if(this == ModItems.nugget_euphemium) {
-			list.add("A small piece of a pink metal.");
-			list.add("It's properties are still unknown,");
-			list.add("DEAL WITH IT carefully.");
-		}
 //		if(this == ModItems.rod_quad_euphemium) {
 //			list.add("A quad fuel rod which contains a");
 //			list.add("very small ammount of a strange new element.");
@@ -299,41 +272,12 @@ public class ItemCustomLore extends Item {
 			else
 				list.add("Tastes nice in Tea");
 		}
-		if(this == ModItems.mech_key)
-		{
-			list.add("It pulses with power.");
-		}
 		if(this == ModItems.nugget_mox_fuel) {
 			list.add("Moxie says: " + TextFormatting.BOLD + "TAX EVASION.");
 		}
 		if(this == ModItems.billet_mox_fuel) {
 			list.add(TextFormatting.ITALIC + "Pocket-Moxie!");
 		}
-		
-		if(this == ModItems.ingot_lanthanium)
-		{
-			list.add("'Lanthanum'");
-		}
-
-		if(this == ModItems.ingot_gh336 || this == ModItems.billet_gh336 || this == ModItems.nugget_gh336)
-		{
-			list.add("Seaborgium's colleague");
-		}
-
-		if(this == ModItems.billet_flashlead)
-		{
-			list.add("The lattice decays, causing antimatter-matter annihilation reactions, causing the release of pions, decaying into muons, catalyzing fusion of the nuclei, creating the new element. Please try to keep up.");
-		}
-		
-		if(this == ModItems.ingot_tantalium || this == ModItems.nugget_tantalium || this == ModItems.gem_tantalium || this == ModItems.powder_tantalium)
-		{
-			list.add("'Tantalum'");
-		}
-		if(this == ModItems.euphemium_capacitor)
-		{
-			list.add("Permits passive dispersion of accumulated positive energy.");
-		}
-
 		if(this == ModItems.factory_core_titanium || this == ModItems.factory_core_advanced)
 		{
 			list.add("Used in factories to make the speed change");
@@ -349,7 +293,7 @@ public class ItemCustomLore extends Item {
 					setSize = Item.REGISTRY.getKeys().size();
 				
 				int r = rand.nextInt(setSize);
-				
+
 				Item item = Item.getItemById(r);
 				
 				if(item != null) {
@@ -363,6 +307,7 @@ public class ItemCustomLore extends Item {
 	
 	static int setSize = 0;
 
+	// mlbv: this is retarded, refactor asap
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
 		if(this == ModItems.plate_euphemium || 
