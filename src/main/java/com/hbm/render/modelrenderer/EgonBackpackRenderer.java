@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class EgonBackpackRenderer extends ModelRenderer {
 
@@ -13,6 +13,7 @@ public class EgonBackpackRenderer extends ModelRenderer {
 	
 	public EgonBackpackRenderer(ModelBase model) {
 		super(model);
+		this.addBox(0.0F, 0.0F, 0.0F, 0, 0, 0);
 	}
 	
 	@Override

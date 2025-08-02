@@ -215,7 +215,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 		} else {
 			config = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack)));
 		}
-		
+		if (config == null) return;
 		int bullets = getBullets(world, player, hand, config);
 		
 		for(int k = 0; k < mainConfig.roundsPerCycle; k++) {
@@ -345,6 +345,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 			}	
 
 			BulletConfiguration cfg = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack)));
+			if (cfg == null) return;
 			Item ammo = cfg.ammo;
 
 			int loadCount = 0;
@@ -423,17 +424,17 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 			for(Integer config : mainConfig.config) {
 
 				BulletConfiguration cfg = BulletConfigSyncingUtil.pullConfig(config);
-
+				if (cfg == null) continue;
 				if(Library.hasInventoryItem(player.inventory, cfg.ammo)) {
 					return true;
 				}
 			}
 
 		} else {
-
-			Item ammo = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack))).ammo;
-			if(Library.hasInventoryItem(player.inventory, ammo))
-				return true;
+			BulletConfiguration config = BulletConfigSyncingUtil.pullConfig(mainConfig.config.get(getMagType(stack)));
+			if(config == null) return false;
+			Item ammo = config.ammo;
+            return Library.hasInventoryItem(player.inventory, ammo);
 		}
 
 		return false;
@@ -446,7 +447,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 		for(Integer config : mainConfig.config) {
 
 			BulletConfiguration cfg = BulletConfigSyncingUtil.pullConfig(config);
-
+			if (cfg == null) return;
 			if(Library.hasInventoryItem(player.inventory, cfg.ammo)) {
 				setMagType(stack, mainConfig.config.indexOf(config));
 				break;
@@ -513,12 +514,14 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 			return null;
 		ItemGunBase gun = (ItemGunBase)stack.getItem();
 		GunConfiguration guncfg = main ? gun.mainConfig : (gun.altConfig != null ? gun.altConfig : gun.mainConfig);
-		Item ammo = BulletConfigSyncingUtil.pullConfig(guncfg.config.get(0)).ammo;
+		BulletConfiguration bulletConfiguration = BulletConfigSyncingUtil.pullConfig(guncfg.config.get(0));
+		if(bulletConfiguration == null) return null;
+		Item ammo = bulletConfiguration.ammo;
 
 		for(Integer config : guncfg.config) {
 			
 			BulletConfiguration cfg = BulletConfigSyncingUtil.pullConfig(config);
-			
+			if (cfg == null) continue;
 			if(Library.hasInventoryItem(player.inventory, cfg.ammo)) {
 				ammo = cfg.ammo;
 				break;
@@ -536,7 +539,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 		for(Integer config : guncfg.config) {
 			
 			BulletConfiguration cfg = BulletConfigSyncingUtil.pullConfig(config);
-			
+			if (cfg == null) continue;
 			if(Library.hasInventoryItem(player.inventory, cfg.ammo)) {
 				return cfg;
 			}
@@ -717,7 +720,7 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 		GunConfiguration gcfg = gun.mainConfig;
 		if(event.getType() == ElementType.HOTBAR){
 			BulletConfiguration bcfg = BulletConfigSyncingUtil.pullConfig(gun.mainConfig.config.get(ItemGunBase.getMagType(player.getHeldItem(hand))));
-	
+			if (bcfg == null) return;
 			Item ammo = bcfg.ammo;
 			int count = ItemGunBase.getMag(player.getHeldItem(hand));
 			int max = gcfg.ammoCap;

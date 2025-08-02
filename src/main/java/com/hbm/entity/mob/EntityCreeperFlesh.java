@@ -26,10 +26,12 @@ public class EntityCreeperFlesh extends EntityCreeper {
             PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(vdat, posX, posY + height * 0.5, posZ), new NetworkRegistry.TargetPoint(dimension, posX, posY + height * 0.5, posZ, 150));
 
             this.setDead();
-
+            boolean mobGriefing = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
             ExplosionVNT vnt = new ExplosionVNT(world, posX, posY, posZ, this.getPowered() ? 7 : 4, this);
-            vnt.setBlockAllocator(new BlockAllocatorBulkie(30, this.getPowered() ? 16 : 8));
-            vnt.setBlockProcessor(new BlockProcessorStandard().withBlockEffect(new BlockMutatorBulkie(ModBlocks.tumor)));
+            if (mobGriefing) {
+                vnt.setBlockAllocator(new BlockAllocatorBulkie(30, this.getPowered() ? 16 : 8));
+                vnt.setBlockProcessor(new BlockProcessorStandard().withBlockEffect(new BlockMutatorBulkie(ModBlocks.tumor)));
+            }
             vnt.setEntityProcessor(new EntityProcessorStandard().withRangeMod(0.25F));
             vnt.setPlayerProcessor(new PlayerProcessorStandard());
             vnt.setSFX(new ExplosionEffectStandard());

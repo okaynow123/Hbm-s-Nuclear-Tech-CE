@@ -118,7 +118,7 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 	@Override
 	protected void explode() {
 		if (!this.world.isRemote) {
-			boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
+			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
 
 			if (this.getPowered()) {
 				EntityNukeTorex.statFac(world, posX, posY, posZ, 70);
