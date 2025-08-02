@@ -56,9 +56,7 @@ public abstract class ModelArmorBase extends ModelBiped {
             GlStateManager.scale(0.75F, 0.75F, 0.75F);
             GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
         }
-        if (entityIn.isSneaking() && !(entityIn instanceof EntityArmorStand)) {
-            GlStateManager.translate(0.0F, 0.2F, 0.0F);
-        }
+
         renderArmor(entityIn, scale);
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.popMatrix();
