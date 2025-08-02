@@ -1850,6 +1850,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         ItemStack stack = event.getItemStack();
         List<String> list = event.getToolTip();
 
+        /// DAMAGE RESISTANCE ///
+        DamageResistanceHandler.addInfo(stack, list);
+
         /// HAZMAT INFO ///
         List<HazardClass> hazInfo = ArmorRegistry.hazardClasses.get(stack.getItem());
 

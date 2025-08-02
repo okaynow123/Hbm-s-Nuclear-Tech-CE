@@ -64,6 +64,7 @@ import com.hbm.tileentity.bomb.TileEntityLaunchPadBase;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.CrashHelper;
+import com.hbm.util.DamageResistanceHandler;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
@@ -567,6 +568,7 @@ public class MainRegistry {
         ModBiomes.init();
         SolarSystem.init();
         PlanetGen.init();
+        DamageResistanceHandler.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
         CraftingManager.addBedrockOreSmelting();
@@ -600,13 +602,13 @@ public class MainRegistry {
         HbmDetox.init();
         NTMBatteryCapabilityHandler.initialize();
 
+
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)
             World.MAX_ENTITY_RADIUS = 5;
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_gneiss.getDefaultState(), 0.01D, 5, 8, 30)); //DecorateBiomeEvent.Pre
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.HEMATITE.ordinal()), 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
 
-//        NTMCraftTweaker.applyPostInitActions();
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();
             ModForgeFluids.registerFluidColors();

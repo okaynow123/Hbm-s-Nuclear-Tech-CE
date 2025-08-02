@@ -379,7 +379,7 @@ public class DamageResistanceHandler {
         currentPDR = 0;
     }
 
-//    @SubscribeEvent
+    @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event.getSource().isDamageAbsolute()) return;
 
@@ -396,7 +396,7 @@ public class DamageResistanceHandler {
         }
     }
 
-//    @SubscribeEvent
+    @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
         event.setAmount(calculateDamage(event.getEntityLiving(), event.getSource(), event.getAmount(), currentPDT, currentPDR));
         if (event.getEntityLiving() instanceof IResistanceProvider irp) {
