@@ -2,6 +2,8 @@ package com.hbm.lib;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyConnectorBlock;
 import com.hbm.api.energymk2.IEnergyConnectorMK2;
@@ -11,23 +13,20 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
 import com.hbm.config.GeneralConfig;
+import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.interfaces.IFluidDuct;
 import com.hbm.interfaces.Spaghetti;
+import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.TileEntityProxyInventory;
 import com.hbm.util.BobMathUtil;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
-import javax.imageio.ImageIO;
+import com.hbm.util.InventoryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
@@ -65,6 +64,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 import static net.minecraft.nbt.CompressedStreamTools.writeCompressed;
 
@@ -1368,5 +1375,188 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 			return true;
 		}
 		return hasBoundingBox && state.getMaterial() == Material.PORTAL;
+	}
+
+	/**
+	 * Attempts to export a list of items to an external inventory or conveyor belt at a given position.
+	 * It first tries to insert into an IItemHandler (chest, etc.), then tries to place on an IConveyorBelt.
+	 *
+	 * @param world         The world object.
+	 * @param exportToPos   The block position of the target inventory/conveyor.
+	 * @param accessSide    The direction from which the target block is being accessed.
+	 * @param itemsToExport A list of ItemStacks to be exported. This list will not be modified.
+	 * @return A new list containing any leftover ItemStacks that could not be fully exported. Returns an empty list on full success.
+	 */
+	public static @NotNull List<ItemStack> popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull ForgeDirection accessSide,
+													   @NotNull List<ItemStack> itemsToExport) {
+		if (itemsToExport.isEmpty()) return Collections.emptyList();
+
+		List<ItemStack> remainingItems = new ArrayList<>();
+		for (ItemStack item : itemsToExport) {
+			if (!item.isEmpty()) {
+				remainingItems.add(item.copy());
+			}
+		}
+
+		if (remainingItems.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		TileEntity tile = world.getTileEntity(exportToPos);
+		if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide.toEnumFacing())) {
+			IItemHandler inv = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide.toEnumFacing());
+			if (inv != null) {
+				ListIterator<ItemStack> iterator = remainingItems.listIterator();
+				while (iterator.hasNext()) {
+					ItemStack originalStack = iterator.next();
+					ItemStack leftover = InventoryUtil.tryAddItemToInventory(inv, 0, inv.getSlots() - 1, originalStack);
+					iterator.set(leftover);
+				}
+				remainingItems.removeIf(ItemStack::isEmpty);
+			}
+		}
+
+		if (remainingItems.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		Block block = world.getBlockState(exportToPos).getBlock();
+		if (block instanceof IConveyorBelt belt) {
+			ListIterator<ItemStack> iterator = remainingItems.listIterator();
+			while (iterator.hasNext()) {
+				ItemStack item = iterator.next();
+				Vec3d base = new Vec3d(exportToPos.getX() + 0.5, exportToPos.getY() + 0.5, exportToPos.getZ() + 0.5);
+				Vec3d vec = belt.getClosestSnappingPosition(world, exportToPos, base);
+				EntityMovingItem moving = new EntityMovingItem(world);
+				moving.setPosition(base.x, vec.y, base.z);
+				moving.setItemStack(item.copy());
+				if (world.spawnEntity(moving)) {
+					iterator.set(ItemStack.EMPTY);
+				}
+			}
+			remainingItems.removeIf(ItemStack::isEmpty);
+		}
+
+		return remainingItems;
+	}
+
+	/**
+	 * Attempts to pull items for a given recipe from a source inventory into a destination inventory.
+	 *
+	 * @param sourceContainer      The IItemHandler of the inventory to pull from.
+	 * @param sourceSlots          The specific slots in the source inventory that can be accessed.
+	 * @param destinationInventory The IItemHandlerModifiable of the machine's inventory to pull into.
+	 * @param recipeIngredients    A list of AStacks representing the required ingredients.
+	 * @param sourceTE             The TileEntity of the source inventory, used for canExtractItem checks. Can be null.
+	 * @param destStartSlot        The starting slot index (inclusive) of the ingredient area in the destination inventory.
+	 * @param destEndSlot          The ending slot index (inclusive) of the ingredient area in the destination inventory.
+	 * @param finalizeBy           A Runnable that is executed if at least one item is successfully pulled. Can be null.
+	 * @return true if any items were successfully pulled, false otherwise.
+	 */
+	@CanIgnoreReturnValue
+	public static boolean pullItemsForRecipe(@NotNull IItemHandler sourceContainer, int @NotNull [] sourceSlots,
+											 @NotNull IItemHandlerModifiable destinationInventory, @NotNull List<AStack> recipeIngredients,
+											 @Nullable TileEntityMachineBase sourceTE, int destStartSlot, int destEndSlot,
+											 @Nullable Runnable finalizeBy) {
+		if (recipeIngredients.isEmpty() || sourceSlots.length == 0) return false;
+		boolean itemsPulled = false;
+
+		Map<Integer, ItemStack> availableItems = new HashMap<>();
+		for (int slot : sourceSlots) {
+			ItemStack stack = sourceContainer.getStackInSlot(slot);
+			if (!stack.isEmpty()) {
+				availableItems.put(slot, stack.copy());
+			}
+		}
+
+		if (availableItems.isEmpty()) {
+			return false;
+		}
+
+		for (AStack recipeIngredient : recipeIngredients) {
+			if (recipeIngredient == null || recipeIngredient.count() <= 0) {
+				continue;
+			}
+
+			AStack singleIngredient = recipeIngredient.copy().singulize();
+			int maxStackSize = singleIngredient.getStack().getMaxStackSize();
+			if (maxStackSize <= 0) maxStackSize = 1;
+			int slotsNeeded = (int) Math.ceil((double) recipeIngredient.count() / maxStackSize);
+
+			List<Integer> partialSlots = new ArrayList<>();
+			List<Integer> fullSlots = new ArrayList<>();
+			List<Integer> emptySlots = new ArrayList<>();
+
+			for (int i = destStartSlot; i <= destEndSlot; i++) {
+				ItemStack destStack = destinationInventory.getStackInSlot(i);
+				if (destStack.isEmpty()) {
+					emptySlots.add(i);
+					continue;
+				}
+				ItemStack compareStack = destStack.copy();
+				compareStack.setCount(1);
+				if (singleIngredient.isApplicable(compareStack)) {
+					if (destStack.getCount() < destStack.getMaxStackSize()) {
+						partialSlots.add(i);
+					} else {
+						fullSlots.add(i);
+					}
+				}
+			}
+			int slotsOccupied = partialSlots.size() + fullSlots.size();
+
+			for (int destSlot : partialSlots) {
+				ItemStack destStack = destinationInventory.getStackInSlot(destSlot);
+				int amountToPull = destStack.getMaxStackSize() - destStack.getCount();
+				if (amountToPull <= 0) continue;
+				itemsPulled = isItemsPulled(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, amountToPull);
+			}
+
+			int newSlotsToFill = slotsNeeded - slotsOccupied;
+			if (newSlotsToFill > 0) {
+				for (int i = 0; i < newSlotsToFill && i < emptySlots.size(); i++) {
+					int destSlot = emptySlots.get(i);
+                    itemsPulled = isItemsPulled(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, maxStackSize);
+				}
+			}
+		}
+
+		if (itemsPulled && finalizeBy != null) {
+			finalizeBy.run();
+		}
+
+		return itemsPulled;
+	}
+
+	private static boolean isItemsPulled(@NotNull IItemHandler sourceContainer, @NotNull IItemHandlerModifiable destinationInventory, @Nullable TileEntityMachineBase sourceTE, boolean itemsPulled, Map<Integer, ItemStack> availableItems, AStack singleIngredient, int destSlot, int amountToPull) {
+		for (Map.Entry<Integer, ItemStack> entry : availableItems.entrySet()) {
+			if (amountToPull <= 0) break;
+			int sourceSlot = entry.getKey();
+			ItemStack sourceStack = entry.getValue();
+			if (sourceStack.isEmpty()) continue;
+
+			ItemStack compareSourceStack = sourceStack.copy();
+			compareSourceStack.setCount(1);
+			if (!singleIngredient.isApplicable(compareSourceStack)) continue;
+
+			int pullThisTime = Math.min(amountToPull, sourceStack.getCount());
+			if (sourceTE != null && !sourceTE.canExtractItem(sourceSlot, sourceStack, pullThisTime)) continue;
+
+			ItemStack extracted = sourceContainer.extractItem(sourceSlot, pullThisTime, false);
+			if (!extracted.isEmpty()) {
+				sourceStack.shrink(extracted.getCount());
+
+				ItemStack destStack = destinationInventory.getStackInSlot(destSlot);
+				if (destStack.isEmpty()) {
+					destinationInventory.setStackInSlot(destSlot, extracted);
+				} else {
+					destStack.grow(extracted.getCount());
+					destinationInventory.setStackInSlot(destSlot, destStack);
+				}
+				amountToPull -= extracted.getCount();
+				itemsPulled = true;
+			}
+		}
+		return itemsPulled;
 	}
 }

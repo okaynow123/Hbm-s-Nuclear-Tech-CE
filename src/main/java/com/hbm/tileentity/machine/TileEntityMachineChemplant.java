@@ -27,7 +27,6 @@ import com.hbm.util.InventoryUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,13 +47,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @AutoRegister
 public class TileEntityMachineChemplant extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider, ITickable {
@@ -221,32 +217,35 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
             if (lsu1 < fluidDelay) lsu1++;
 
             ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
-            ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
-            TileEntity te1 = world.getTileEntity(new BlockPos(pos.getX() - dir.offsetX * 2, pos.getY(), pos.getZ() - dir.offsetZ * 2));
-            TileEntity te2 = world.getTileEntity(new BlockPos(pos.getX() + dir.offsetX * 3 + rot.offsetX, pos.getY(), pos.getZ() + dir.offsetZ * 3 + rot.offsetZ));
+            ejectOutput();
+            TileEntity input = world.getTileEntity(new BlockPos(pos.getX() - dir.offsetX * 2, pos.getY(), pos.getZ() - dir.offsetZ * 2));
+            if (input != null && input.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY())) {
+                IItemHandler cap = input.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY());
 
-            if (te1 != null && te1.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY())) {
-                IItemHandler cap = te1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY());
-                int[] outputSlots = new int[]{5, 6, 7, 8, 11, 12, 19, 20};
-                for (int i : outputSlots) {
-                    tryFillContainerCap(cap, i);
+                ItemStack template = inventory.getStackInSlot(4);
+                if (!template.isEmpty() && template.getItem() == ModItems.chemistry_template) {
+                    ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(template.getItemDamage());
+                    if (recipe != null && recipe.inputs != null) {
+                        List<AStack> ingredients = new ArrayList<>();
+                        for (AStack a : recipe.inputs) {
+                            if (a != null) ingredients.add(a);
+                        }
+
+                        if (!ingredients.isEmpty()) {
+                            int[] slots;
+                            TileEntityMachineBase sourceTE = (input instanceof TileEntityMachineBase) ? (TileEntityMachineBase) input : null;
+                            if (sourceTE != null) {
+                                slots = sourceTE.getAccessibleSlotsFromSide(dir.toEnumFacing().rotateY());
+                            } else {
+                                slots = new int[cap.getSlots()];
+                                for (int i = 0; i < slots.length; i++) slots[i] = i;
+                            }
+
+                            Library.pullItemsForRecipe(cap, slots, this.inventory, ingredients, sourceTE, 13, 16, this::markDirty);
+                        }
+                    }
                 }
             }
-
-            if (te2 != null && te2.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY())) {
-                IItemHandler cap = te2.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.toEnumFacing().rotateY());
-                int[] slots;
-                if (te2 instanceof TileEntityMachineBase) {
-                    slots = ((TileEntityMachineBase) te2).getAccessibleSlotsFromSide(dir.toEnumFacing().rotateY());
-                    tryFillAssemblerCap(cap, slots, (TileEntityMachineBase) te2);
-                } else {
-                    slots = new int[cap.getSlots()];
-                    for (int i = 0; i < slots.length; i++)
-                        slots[i] = i;
-                    tryFillAssemblerCap(cap, slots, null);
-                }
-            }
-
 
             if (isProgressing && this.world.getTotalWorldTime() % 3 == 0) {
                 ForgeDirection rotP = dir.getRotation(ForgeDirection.UP);
@@ -448,201 +447,27 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
         }
     }
 
-    //Unloads output into chests. Capability version.
-    public boolean tryFillContainerCap(IItemHandler chest, int slot) {
-        //Check if we have something to output
-        if (inventory.getStackInSlot(slot).isEmpty())
-            return false;
-
-        for (int i = 0; i < chest.getSlots(); i++) {
-
-            ItemStack outputStack = inventory.getStackInSlot(slot).copy();
-            if (outputStack.isEmpty())
-                return false;
-
-            ItemStack chestItem = chest.getStackInSlot(i).copy();
-            if (chestItem.isEmpty() || (Library.areItemStacksCompatible(outputStack, chestItem, false) && chestItem.getCount() < chestItem.getMaxStackSize())) {
-                inventory.getStackInSlot(slot).shrink(1);
-                if (inventory.getStackInSlot(slot).isEmpty())
-                    inventory.setStackInSlot(slot, ItemStack.EMPTY);
-
-                outputStack.setCount(1);
-                chest.insertItem(i, outputStack, false);
-
-                return true;
-            }
-        }
-        //Chest is full
-        return false;
-    }
-
-    private int getValidSlot(AStack nextIngredient) {
-        int firstFreeSlot = -1;
-        int stackCount = (int) Math.ceil(nextIngredient.count() / 64F);
-        int stacksFound = 0;
-
-        nextIngredient = nextIngredient.singulize();
-
-        for (int k = 13; k < 17; k++) { //scaning inventory if some of the ingredients allready exist
-            if (stacksFound < stackCount) {
-                ItemStack assStack = inventory.getStackInSlot(k).copy();
-                if (assStack.isEmpty()) {
-                    if (firstFreeSlot < 13)
-                        firstFreeSlot = k;
-                    continue;
-                } else { // check if there are already enough filled stacks is full
-
-                    assStack.setCount(1);
-                    if (nextIngredient.isApplicable(assStack)) { // check if it is the right item
-
-                        if (inventory.getStackInSlot(k).getCount() < assStack.getMaxStackSize()) // is that stack full?
-                            return k; // found a not full slot where we already have that ingredient
-                        else
-                            stacksFound++;
-                    }
-                }
-            } else {
-                return -1; // All required stacks are full
-            }
-        }
-        if (firstFreeSlot < 13) // nothing free in assembler inventory anymore
-            return -2;
-        return firstFreeSlot;
-    }
-
-    public boolean tryFillAssemblerCap(IItemHandler container, int[] allowedSlots, TileEntityMachineBase te) {
-        if (allowedSlots.length < 1)
-            return false;
-        List<AStack> recipeIngredients = null;//Loading Ingredients
-        if (recipeIngredients == null) //No recipe template found
-            return false;
-        else {
-            Map<Integer, ItemStack> itemStackMap = new HashMap<>();
-
-            for (int slot : allowedSlots) {
-                container.getStackInSlot(slot);
-                if (container.getStackInSlot(slot).isEmpty()) { // check next slot in chest if it is empty
-                    continue;
-                } else { // found an item in chest
-                    itemStackMap.put(slot, container.getStackInSlot(slot).copy());
-                }
-            }
-            if (itemStackMap.isEmpty()) {
-                return false;
-            }
-
-            for (AStack recipeIngredient : recipeIngredients) {
-
-                AStack nextIngredient = recipeIngredient.copy(); // getting new ingredient
-
-                int ingredientSlot = getValidSlot(nextIngredient);
-
-
-                if (ingredientSlot < 13)
-                    continue; // Ingredient filled or Assembler is full
-
-                int possibleAmount = inventory.getStackInSlot(ingredientSlot).getMaxStackSize() - inventory.getStackInSlot(ingredientSlot).getCount(); // how many items do we need to fill the stack?
-
-                if (possibleAmount == 0) { // full
-                    System.out.println("This should never happen method getValidSlot broke");
-                    continue;
-                }
-                // Ok now we know what we are looking for (nexIngredient) and where to put it (ingredientSlot) - So lets see if we find some of it in containers
-                for (Map.Entry<Integer, ItemStack> set :
-                        itemStackMap.entrySet()) {
-                    ItemStack stack = set.getValue();
-                    int slot = set.getKey();
-                    ItemStack compareStack = stack.copy();
-                    compareStack.setCount(1);
-
-                    if (isItemAcceptable(nextIngredient.getStack(), compareStack)) { // bingo found something
-
-                        int foundCount = Math.min(stack.getCount(), possibleAmount);
-                        if (te != null && !te.canExtractItem(slot, stack, foundCount))
-                            continue;
-                        if (foundCount > 0) {
-                            possibleAmount -= foundCount;
-                            container.extractItem(slot, foundCount, false);
-                            inventory.getStackInSlot(ingredientSlot);
-                            if (inventory.getStackInSlot(ingredientSlot).isEmpty()) {
-
-                                stack.setCount(foundCount);
-                                inventory.setStackInSlot(ingredientSlot, stack);
-
-                            } else {
-                                inventory.getStackInSlot(ingredientSlot).grow(foundCount); // transfer complete
-                            }
-                        } else {
-                            break; // ingredientSlot filled
-                        }
-                    }
-                }
-
-            }
-            return true;
-        }
-    }
-
-    //boolean true: remove items, boolean false: simulation mode
-    public boolean removeItems(List<AStack> stack, IItemHandlerModifiable array) {
-
-        if (stack == null)
-            return true;
-        for (AStack aStack : stack) {
-            for (int j = 0; j < aStack.count(); j++) {
-                AStack sta = aStack.copy();
-                sta.setCount(1);
-                if (!canRemoveItemFromArray(sta, array))
-                    return false;
+    private void ejectOutput() {
+        ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+        ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
+        BlockPos outputPos = new BlockPos(pos.getX() + dir.offsetX * 3 + rot.offsetX, pos.getY(), pos.getZ() + dir.offsetZ * 3 + rot.offsetZ);
+        ForgeDirection accessSide = dir.getOpposite();
+        List<ItemStack> itemsToEject = new ArrayList<>();
+        for (int i = 5; i <= 8; i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (!stack.isEmpty()) {
+                itemsToEject.add(stack);
+                inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
 
-        return true;
-
-    }
-
-    public boolean canRemoveItemFromArray(AStack stack, IItemHandlerModifiable array) {
-
-        AStack st = stack.copy();
-
-        for (int i = 6; i < 18; i++) {
-
-            if (array.getStackInSlot(i).getItem() != Items.AIR) {
-                ItemStack sta = array.getStackInSlot(i).copy();
-                sta.setCount(1);
-
-                if (st.isApplicable(sta) && array.getStackInSlot(i).getCount() > 0) {
-                    array.getStackInSlot(i).shrink(1);
-
-                    if (array.getStackInSlot(i).isEmpty())
-                        array.setStackInSlot(i, ItemStack.EMPTY);
-
-                    return true;
-                }
+        if (itemsToEject.isEmpty()) return;
+        List<ItemStack> leftovers = Library.popProducts(world, outputPos, accessSide, itemsToEject);
+        if (!leftovers.isEmpty()) {
+            for (ItemStack leftover : leftovers) {
+                InventoryUtil.tryAddItemToInventory(inventory, 5, 8, leftover);
             }
         }
-
-        return false;
-    }
-
-    public boolean isItemAcceptable(ItemStack stack1, ItemStack stack2) {
-
-        if (stack1 != null && stack2 != null && stack1.getItem() != Items.AIR && stack1.getItem() != Items.AIR) {
-            if (Library.areItemStacksCompatible(stack1, stack2))
-                return true;
-
-            int[] ids1 = OreDictionary.getOreIDs(stack1);
-            int[] ids2 = OreDictionary.getOreIDs(stack2);
-
-            if (ids1.length > 0 && ids2.length > 0) {
-                for (int k : ids1)
-                    for (int i : ids2)
-                        if (k == i)
-                            return true;
-            }
-        }
-
-        return false;
     }
 
     @Override
