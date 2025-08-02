@@ -154,15 +154,6 @@ public class ArmorFSB extends ItemArmor {
     }
 
     public static void handleHurt(LivingHurtEvent event) {
-
-        EntityLivingBase e = event.getEntityLiving();
-
-        if (ArmorFSB.hasFSBArmor(e)) {
-
-            ArmorFSB chestplate = (ArmorFSB) e.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem();
-
-            chestplate.handleHurt(event, chestplate);
-        }
     }
 
     public static void handleTick(TickEvent.PlayerTickEvent event) {

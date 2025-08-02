@@ -279,6 +279,7 @@ public class MainRegistry {
         MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandlerImpact());
         MinecraftForge.EVENT_BUS.register(new PollutionHandler());
         MinecraftForge.EVENT_BUS.register(new NeutronHandler());
+        MinecraftForge.EVENT_BUS.register(new DamageResistanceHandler());
 
         if (event.getSide() == Side.CLIENT) {
             HbmKeybinds keyHandler = new HbmKeybinds();
