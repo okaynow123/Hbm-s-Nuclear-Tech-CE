@@ -1322,17 +1322,17 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         for (EntityPlayer player : Minecraft.getMinecraft().world.playerEntities) {
 
             //FSB world rendering
-            if (ArmorFSB.hasFSBArmor(player)) {
-                ItemStack plate = player.inventory.armorInventory.get(2);
-                ArmorFSB chestplate = (ArmorFSB) plate.getItem();
-                if (chestplate.flashlightPosition != null && plate.hasTagCompound() && plate.getTagCompound().getBoolean("flActive")) {
-                    Vec3d start = chestplate.flashlightPosition.rotatePitch(-(float) Math.toRadians(player.rotationPitch)).rotateYaw(-(float) Math.toRadians(player.rotationYaw)).add(player.getPositionEyes(partialTicks));
-                    boolean volume = true;
-                    if (player == Minecraft.getMinecraft().player && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
-                        volume = false;
-                    LightRenderer.addFlashlight(start, start.add(player.getLook(partialTicks).scale(30)), 30, 200, ResourceManager.fl_cookie, volume, true, true, true);
-                }
-            }
+//            if (ArmorFSB.hasFSBArmor(player)) {
+//                ItemStack plate = player.inventory.armorInventory.get(2);
+//                ArmorFSB chestplate = (ArmorFSB) plate.getItem();
+//                if (chestplate.flashlightPosition != null && plate.hasTagCompound() && plate.getTagCompound().getBoolean("flActive")) {
+//                    Vec3d start = chestplate.flashlightPosition.rotatePitch(-(float) Math.toRadians(player.rotationPitch)).rotateYaw(-(float) Math.toRadians(player.rotationYaw)).add(player.getPositionEyes(partialTicks));
+//                    boolean volume = true;
+//                    if (player == Minecraft.getMinecraft().player && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+//                        volume = false;
+//                    LightRenderer.addFlashlight(start, start.add(player.getLook(partialTicks).scale(30)), 30, 200, ResourceManager.fl_cookie, volume, true, true, true);
+//                }
+//            }
 
             //Gun world rendering
             if (player.getHeldItemMainhand().getItem() instanceof ItemGunBase) {
@@ -1849,6 +1849,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
         ItemStack stack = event.getItemStack();
         List<String> list = event.getToolTip();
+
+        /// DAMAGE RESISTANCE ///
+        DamageResistanceHandler.addInfo(stack, list);
 
         /// HAZMAT INFO ///
         List<HazardClass> hazInfo = ArmorRegistry.hazardClasses.get(stack.getItem());

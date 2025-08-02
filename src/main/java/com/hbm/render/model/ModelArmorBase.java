@@ -49,6 +49,8 @@ public abstract class ModelArmorBase extends ModelBiped {
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch,
                        float scale) {
+
+        this.setVisible(false); //Prevents zfighting with skin layers
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
         GlStateManager.pushMatrix();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);

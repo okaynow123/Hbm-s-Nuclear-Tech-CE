@@ -131,7 +131,7 @@ public class DamageResistanceHandler {
         registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F));
 //        registerSet(ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, new ResistanceStats()
-//                .setOther(0F, 1F));
+//                .setOther(0F, 1F)); //What?
         registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots, new ResistanceStats());
         registerSet(ModItems.cmb_helmet, ModItems.cmb_plate, ModItems.cmb_legs, ModItems.cmb_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F));
@@ -379,8 +379,8 @@ public class DamageResistanceHandler {
         currentPDR = 0;
     }
 
-//    @SubscribeEvent
-    public static void onEntityAttacked(LivingAttackEvent event) {
+    @SubscribeEvent
+    public void onEntityAttacked(LivingAttackEvent event) {
         if (event.getSource().isDamageAbsolute()) return;
 
         EntityLivingBase e = event.getEntityLiving();
@@ -396,8 +396,8 @@ public class DamageResistanceHandler {
         }
     }
 
-//    @SubscribeEvent
-    public static void onEntityHurt(LivingHurtEvent event) {
+    @SubscribeEvent
+    public void onEntityHurt(LivingHurtEvent event) {
         event.setAmount(calculateDamage(event.getEntityLiving(), event.getSource(), event.getAmount(), currentPDT, currentPDR));
         if (event.getEntityLiving() instanceof IResistanceProvider irp) {
             irp.onDamageDealt(event.getSource(), event.getAmount());

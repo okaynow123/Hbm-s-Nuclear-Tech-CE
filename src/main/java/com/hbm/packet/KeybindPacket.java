@@ -63,18 +63,18 @@ public class KeybindPacket implements IMessage {
 						props.setKeyPressed(EnumKeybind.values()[m.key], m.pressed);
 						break;
 					case 1:
-						EntityPlayer player = ctx.getServerHandler().player;
-						if(ArmorFSB.hasFSBArmor(player)){
-							ItemStack stack = player.inventory.armorInventory.get(2);
-							ArmorFSB fsbarmor = (ArmorFSB)stack.getItem();
-							if(fsbarmor.flashlightPosition != null){
-								if(!stack.hasTagCompound()){
-									stack.setTagCompound(new NBTTagCompound());
-								}
-								player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 0.5F, 1);
-								stack.getTagCompound().setBoolean("flActive", !stack.getTagCompound().getBoolean("flActive"));
-							}
-						}
+//						EntityPlayer player = ctx.getServerHandler().player;
+//						if(ArmorFSB.hasFSBArmor(player)){
+//							ItemStack stack = player.inventory.armorInventory.get(2);
+//							ArmorFSB fsbarmor = (ArmorFSB)stack.getItem();
+//							if(fsbarmor.flashlightPosition != null){
+//								if(!stack.hasTagCompound()){
+//									stack.setTagCompound(new NBTTagCompound());
+//								}
+//								player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 0.5F, 1);
+//								stack.getTagCompound().setBoolean("flActive", !stack.getTagCompound().getBoolean("flActive"));
+//							}
+//						}
 						break;
 					}
 				});
