@@ -43,6 +43,7 @@ public interface IFluidConnector extends ILoadedTile {
      * @param x
      * @param y
      * @param z
+     * @param dir The direction of the IFluidConnector that is to be subscribed to
      */
     public default void trySubscribe(FluidType type, World world, int x, int y, int z, ForgeDirection dir) {
 
@@ -77,6 +78,9 @@ public interface IFluidConnector extends ILoadedTile {
         }
     }
 
+    /**
+     * @param dir The direction of the IFluidConnector that is to be subscribed to
+     */
     public default void trySubscribe(FluidType type, World world, BlockPos pos, ForgeDirection dir){trySubscribe(type, world, pos.getX(), pos.getY(), pos.getZ(), dir);}
 
     public default void tryUnsubscribe(FluidType type, World world, int x, int y, int z) {

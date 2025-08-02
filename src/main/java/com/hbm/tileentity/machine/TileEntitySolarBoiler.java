@@ -41,7 +41,8 @@ public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufP
     public void update() {
 
         if(!world.isRemote) {
-
+            this.trySubscribe(tanks[0].getTankType(), world, pos.up(3), ForgeDirection.DOWN);
+            this.trySubscribe(tanks[1].getTankType(), world, pos.down(), ForgeDirection.UP);
             tryConvert();
             
             fillFluidInit(tanks[1]);
