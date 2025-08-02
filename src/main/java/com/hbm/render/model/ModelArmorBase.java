@@ -118,9 +118,9 @@ public abstract class ModelArmorBase extends ModelBiped {
         if (this.isSneak) {
             this.head.offsetY = 4.24F;
             this.head.rotationPointY -= 1.045F;
-            this.body.offsetY = 4F;
-            this.rightArm.offsetY = 4F;
-            this.leftArm.offsetY = 4F;
+            this.body.offsetY = 3.45F;
+            this.rightArm.offsetY = 3.45F;
+            this.leftArm.offsetY = 3.45F;
             this.rightFoot.offsetZ = this.rightLeg.offsetZ = 4F;
             this.leftFoot.offsetZ = this.leftLeg.offsetZ = 4F;
 
