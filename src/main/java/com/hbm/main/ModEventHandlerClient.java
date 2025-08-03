@@ -57,7 +57,10 @@ import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.entity.DSmokeRenderer;
-import com.hbm.render.item.*;
+import com.hbm.render.item.BakedModelCustom;
+import com.hbm.render.item.BakedModelNoGui;
+import com.hbm.render.item.TEISRBase;
+import com.hbm.render.item.TemplateBakedModel;
 import com.hbm.render.item.weapon.*;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.RenderAccessoryUtility;
@@ -134,7 +137,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
 import java.nio.FloatBuffer;
@@ -282,6 +285,8 @@ public class ModEventHandlerClient {
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
+        ModelLoader.setCustomModelResourceLocation(ModItems.icf_pellet, 0, new ModelResourceLocation(ModItems.icf_pellet.getRegistryName(),
+"inventory"));
 
         for (Item item : ModItems.ALL_ITEMS) {
             try {
@@ -566,6 +571,17 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
             return 0xFFFFFF;
         }, ModItems.siren_track);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                ItemICFPellet.EnumICFFuel type1 = ItemICFPellet.getType(stack, true);
+                ItemICFPellet.EnumICFFuel type2 = ItemICFPellet.getType(stack, false);
+                int r = (((type1.color & 0xff0000) >> 16) + ((type2.color & 0xff0000) >> 16)) / 2;
+                int g = (((type1.color & 0x00ff00) >> 8) + ((type2.color & 0x00ff00) >> 8)) / 2;
+                int b = ((type1.color & 0x0000ff) + (type2.color & 0x0000ff)) / 2;
+                return (r << 16) | (g << 8) | b;
+            }
+            return 0xFFFFFF;
+        }, ModItems.icf_pellet);
     }
 
     @SubscribeEvent
@@ -839,7 +855,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         RenderWatzMultiblock.elementSpriteSide = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_element_side");
         RenderWatzMultiblock.elementSpriteTop = evt.getMap().getAtlasSprite(RefStrings.MODID + ":blocks/watz_element_top");
 
-
+        RenderICFMultiblock.componentSprite0 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component");
+        RenderICFMultiblock.componentSprite2 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component.vessel_welded");
+        RenderICFMultiblock.componentSprite4 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component.structure_bolted");
     }
 
     @SubscribeEvent

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hbm:icf_controller"
+    },
+    "facing=south": {
+      "model": "hbm:icf_controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hbm:icf_controller",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "hbm:icf_controller",
+      "y": 90
+    }
+  }
+}

@@ -1109,6 +1109,7 @@ public class ModBlocks {
 	public static final Block struct_iter_core = new BlockStruct(Material.IRON, "struct_iter_core", TileEntityITERStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_plasma_core = new BlockPlasmaStruct(Material.IRON, "struct_plasma_core", TileEntityPlasmaStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_watz_core = new BlockStruct(Material.IRON, "struct_watz_core", TileEntityWatzStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block struct_icf_core = new BlockPlasmaStruct(Material.IRON, "struct_icf_core", TileEntityICFStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	//Sin upon gods earth
 	public static final Block factory_titanium_hull = new BlockBase(Material.IRON, "factory_titanium_hull").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1146,6 +1147,13 @@ public class ModBlocks {
 	public static final Block plasma = new BlockPlasma(Material.IRON, "plasma").setHardness(5.0F).setResistance(6000.0F).setLightLevel(1.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block iter = new MachineITER("iter").setHardness(5.0F).setResistance(6000.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block plasma_heater = new MachinePlasmaHeater("plasma_heater").setHardness(5.0F).setResistance(6000.0F).setCreativeTab(MainRegistry.machineTab);
+
+	public static final Block machine_icf_press = new MachineICFPress().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block icf = new MachineICF("icf").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block icf_component = new BlockICFComponent().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block icf_controller = new MachineICFController().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block icf_laser_component = new BlockICFLaserComponent().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block icf_block = new BlockICF().setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
 	//Watz Components
 	public static final Block watz_element = new BlockBase(Material.IRON, "watz_element").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

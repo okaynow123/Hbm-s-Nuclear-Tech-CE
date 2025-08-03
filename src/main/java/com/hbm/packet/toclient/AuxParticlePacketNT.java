@@ -1,25 +1,32 @@
 package com.hbm.packet.toclient;
 
-import java.io.IOException;
-
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.threading.ThreadedPacket;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
+
 public class AuxParticlePacketNT extends ThreadedPacket {
 
 	private NBTTagCompound nbt;
 
 	public AuxParticlePacketNT() { }
+
+	public AuxParticlePacketNT(NBTTagCompound nbt, BlockPos pos) {
+		this.nbt = nbt;
+		this.nbt.setDouble("posX", pos.getX() + 0.5);
+		this.nbt.setDouble("posY", pos.getY() + 0.5);
+		this.nbt.setDouble("posZ", pos.getZ() + 0.5);
+	}
 
 	public AuxParticlePacketNT(NBTTagCompound nbt, double x, double y, double z) {
 		this.nbt = nbt;

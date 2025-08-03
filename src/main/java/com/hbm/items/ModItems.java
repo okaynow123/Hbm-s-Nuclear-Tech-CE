@@ -55,7 +55,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -2144,6 +2143,10 @@ public class ModItems {
             .setMeltingPoint(100000)
             .setFuelColor(0.733F, 0F, 0F)
             .setCherenkovColor(1F, 0.25F, 0F);
+    public static final Item icf_pellet_empty = new ItemBase("icf_pellet_empty").setCreativeTab(MainRegistry.controlTab);
+    public static final Item icf_pellet = new ItemICFPellet("icf_pellet").setCreativeTab(MainRegistry.controlTab);
+    public static final Item icf_pellet_depleted = new ItemBase("icf_pellet_depleted").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
+
     public static final Item watz_pellet = new ItemWatzPellet("watz_pellet", false);
     public static final Item watz_pellet_depleted = new ItemWatzPellet("watz_pellet_depleted", true);
     public static final Item pa_coil = new ItemPACoil("pa_coil").setCreativeTab(MainRegistry.controlTab);
@@ -2744,16 +2747,5 @@ public class ModItems {
 
     public static void postInit() {
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }

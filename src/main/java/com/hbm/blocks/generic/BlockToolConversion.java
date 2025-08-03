@@ -45,8 +45,8 @@ import static com.hbm.handler.NTMToolHandler.conversions;
 public class BlockToolConversion extends BlockBase implements IToolable, ILookOverlay, ICustomBlockItem {
 
     public static final PropertyBool TOOLED = PropertyBool.create("tooled");
-    public static HashMap<Object[], Object> bufferedRecipes = new HashMap();
-    public static HashMap<Object[], Object> bufferedTools = new HashMap();
+    public static HashMap<Object[], Object> bufferedRecipes = new HashMap<>();
+    public static HashMap<Object[], Object> bufferedTools = new HashMap<>();
     public ItemBlock itemBlock;
     private boolean showMetaInCreative = true;
 
@@ -71,7 +71,7 @@ public class BlockToolConversion extends BlockBase implements IToolable, ILookOv
 
         for (Map.Entry<Pair<ToolType, MetaBlock>, Pair<AStack[], MetaBlock>> entry : conversions.entrySet()) {
 
-            List<AStack> list = new ArrayList();
+            List<AStack> list = new ArrayList<>();
 
             for (AStack stack : entry.getValue().getKey()) {
                 list.add(stack);

@@ -20,9 +20,8 @@ public class BeamPronter {
     }
 
     public static void prontBeam(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float size, int layers, float thickness) {
-
         GlStateManager.pushMatrix();
-        GL11.glDepthMask(depthMask);
+        GlStateManager.depthMask(depthMask);
 
         float sYaw = (float) (Math.atan2(skeleton.xCoord, skeleton.zCoord) * 180F / Math.PI);
         float sqrt = MathHelper.sqrt(skeleton.xCoord * skeleton.xCoord + skeleton.zCoord * skeleton.zCoord);
@@ -136,16 +135,16 @@ public class BeamPronter {
         }
 
         if (beam == EnumBeamType.SOLID) {
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GlStateManager.disableBlend();
-            GlStateManager.enableTexture2D();
+            GlStateManager.enableCull();
         }
 
         GlStateManager.enableLighting();
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
-        GL11.glDepthMask(true);
+        GlStateManager.depthMask(true);
         GlStateManager.popMatrix();
-
     }
 
     private static void addVertex(BufferBuilder buffer, double x, double y, double z, int color) {

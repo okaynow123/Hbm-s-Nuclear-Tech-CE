@@ -20,7 +20,8 @@ public class NTMToolHandler {
         return conversions;
     }
 
-    public static void addRecepie(ToolType toolType, String blockInTralslationKey, int metaIn, String blockOutTranslationKey, int metaOut, AStack... materials) {
+    public static void addRecipe(ToolType toolType, String blockInTralslationKey, int metaIn, String blockOutTranslationKey, int metaOut,
+                                 AStack... materials) {
         Block blockInRaw = Block.getBlockFromName(blockInTralslationKey);
         Block blockOutRaw = Block.getBlockFromName(blockOutTranslationKey);
         if (blockInRaw == null) {
@@ -46,14 +47,17 @@ public class NTMToolHandler {
         }
     }
 
-    public static void addRecepie(ToolType toolType, Block blockIn, Block blockOut, AStack... boltOredict) {
-        addRecepie(toolType, blockIn.getTranslationKey(), 0, blockOut.getTranslationKey(), 0, boltOredict);
+    public static void addRecipe(ToolType toolType, Block blockIn, Block blockOut, AStack... boltOredict) {
+        addRecipe(toolType, blockIn.getTranslationKey(), 0, blockOut.getTranslationKey(), 0, boltOredict);
     }
 
     public static void register() {
         conversions.put(new Pair<>(ToolType.BOLT, new MetaBlock(ModBlocks.watz_casing, 0)), new Pair<>(new AStack[]{new OreDictStack(OreDictManager.DURA.bolt(), 4)}, new MetaBlock(ModBlocks.watz_casing, 1)));
         conversions.put(new Pair<>(ToolType.BOLT, new MetaBlock(Blocks.STONE)), new Pair<>(new AStack[]{new OreDictStack(OreDictManager.DURA.bolt(), 1)}, new MetaBlock(Blocks.COBBLESTONE)));
+        conversions.put(new Pair<>(ToolType.TORCH, new MetaBlock(ModBlocks.icf_component, 1)),
+                new Pair<>(new AStack[]{new OreDictStack(OreDictManager.ANY_BISMOIDBRONZE.plateCast())}, new MetaBlock(ModBlocks.icf_component, 2)));
+        conversions.put(new Pair<>(ToolType.BOLT, new MetaBlock(ModBlocks.icf_component, 3)),
+                new Pair<>(new AStack[]{new OreDictStack(OreDictManager.STEEL.plateCast()), new OreDictStack(OreDictManager.DURA.bolt(), 4)},
+                        new MetaBlock(ModBlocks.icf_component, 4)));
     }
-
-
 }

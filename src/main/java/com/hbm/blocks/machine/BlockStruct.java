@@ -8,6 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.World;
 
+/**
+ * THIS IS NOT DIRECTION SENSITIVE!!!!
+ */
 public class BlockStruct extends BlockContainer {
 	private final Class<? extends TileEntity> structTEClass;
 
