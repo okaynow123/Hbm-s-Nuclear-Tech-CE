@@ -121,7 +121,7 @@ public class ContainerArmorTable extends Container {
 				for(int i = 0; i < this.upgrades.getSizeInventory(); ++i) {
 					ItemStack modStack = this.upgrades.getStackInSlot(i);
 					if(!modStack.isEmpty()) {
-						ArmorModHandler.applyMod(armorStack, modStack);
+						ArmorModHandler.removeMod(armorStack, i);
 					}
 				}
 				playerIn.dropItem(armorStack, false);
