@@ -371,6 +371,52 @@ public class PowerNetMK2 {
         return power - totalEnergyTransferred;
     }
 
+    public long extractPowerDiode(long power, boolean simulate) {
+        if (providerEntries.isEmpty() || power <= 0) return 0;
+
+        long timestamp = System.currentTimeMillis();
+
+        List<Tuple.Pair<IEnergyProviderMK2, Long>> providers = new ArrayList();
+        long supply = 0;
+
+        Iterator<Map.Entry<IEnergyProviderMK2, Long>> provIt = providerEntries.entrySet().iterator();
+
+        while (provIt.hasNext()) {
+            Map.Entry<IEnergyProviderMK2, Long> entry = provIt.next();
+            if (timestamp - entry.getValue() > timeout) {
+                if (!simulate) provIt.remove();
+                continue;
+            }
+            long prov = Math.min(entry.getKey().getPower(), entry.getKey().getProviderSpeed());
+            if (prov > 0) {
+                providers.add(new Tuple.Pair<>(entry.getKey(), prov));
+                supply += prov;
+            }
+        }
+
+        if (supply <= 0) return 0;
+
+        long powerToExtract = Math.min(power, supply);
+        long totalExtracted = 0;
+
+        for (Tuple.Pair<IEnergyProviderMK2, Long> entry : providers) {
+            double weight = (double) entry.getValue() / (double) supply;
+            long toExtract = (long) Math.ceil(powerToExtract * weight);
+
+            if (toExtract > 0) {
+                long actualExtract = Math.min(toExtract, entry.getKey().getPower());
+                if (!simulate) entry.getKey().usePower(actualExtract);
+                totalExtracted += actualExtract;
+            }
+        }
+
+        if (!simulate) {
+            this.energyTracker += totalExtracted;
+        }
+
+        return totalExtracted;
+    }
+
     public static final ReceiverComparator COMP = new ReceiverComparator();
 
     public static class ReceiverComparator implements Comparator<IEnergyReceiverMK2> {
