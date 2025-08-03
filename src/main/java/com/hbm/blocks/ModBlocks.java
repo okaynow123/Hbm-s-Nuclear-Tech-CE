@@ -378,31 +378,31 @@ public class ModBlocks {
 	public static final Block block_saturnite = new BlockBase(Material.IRON, "block_saturnite").setSoundType(SoundType.METAL).setCreativeTab(MainRegistry.blockTab).setHardness(6.0F).setResistance(800.0F);
 	public static final Block tektite = new BlockBase(Material.ROCK, "tektite").setSoundType(SoundType.STONE).setHardness(1.5F).setResistance(10F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block ore_tektite_osmiridium = new BlockBase(Material.ROCK, "ore_tektite_osmiridium").setSoundType(SoundType.STONE).setHardness(2.5F).setResistance(20F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block impact_dirt = new BlockDirt(Material.GROUND, true, "impact_dirt").setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
+	public static final Block impact_dirt = new BlockDirt(Material.GROUND, true, "impact_dirt").setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
 	public static final Block gravel_obsidian = new BlockFallingBase(Material.IRON, "gravel_obsidian", SoundType.GROUND).setHardness(5.0F).setResistance(600F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block gravel_diamond = new BlockFallingBase(Material.SAND, "gravel_diamond", SoundType.GROUND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.6F);
 
 	//Space blocks
-	public static final Block moon_turf = new BlockFallingBase(Material.SAND, "moon_turf", SoundType.SAND).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
-	public static final Block moon_rock = new BlockBase(Material.ROCK, "moon_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F);
-	public static final Block tumor = new BlockBase(Material.CLAY, "tumor").setSoundType(SoundType.SNOW).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F);
-	public static final Block duna_sands = new BlockFallingBase(Material.SAND, "duna_sands", SoundType.SAND).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
-	public static final Block duna_rock = new BlockBase(Material.ROCK, "duna_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F);
-	public static final Block dry_ice = new BlockBase(Material.ICE,"dry_ice").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
-	public static final Block ferric_clay = new BlockBase(Material.CLAY, "ferric_clay").setSoundType(SoundType.GROUND).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F);
-	public static final Block eve_silt = new BlockFallingBase(Material.SAND, "eve_silt", SoundType.SAND).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
-	public static final Block eve_rock = new BlockBase(Material.ROCK, "eve_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F);
-	public static final Block laythe_silt = new BlockFallingBase(Material.SAND, "laythe_silt", SoundType.SAND).setCreativeTab(MainRegistry.blockTab).setHardness(0.5F);
-	public static final Block ike_regolith = new BlockBase(Material.ROCK, "ike_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block ike_stone = new BlockBase(Material.ROCK, "ike_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block dres_rock = new BlockBase(Material.ROCK, "dres_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block moho_regolith = new BlockBase(Material.ROCK, "moho_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block moho_stone = new BlockBase(Material.ROCK, "moho_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block minmus_regolith = new BlockBase(Material.ROCK, "minmus_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block minmus_stone = new BlockBase(Material.ROCK, "minmus_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block minmus_smooth = new BlockBase(Material.ROCK, "minmus_smooth").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
-	public static final Block ore_gas = new BlockNTMOre("ore_gas", 3).setCreativeTab(MainRegistry.blockTab).setBlockUnbreakable().setHardness(5.0F).setResistance(10.0F);
-	public static final Block ore_gas_empty = new BlockBase(Material.ROCK, "ore_gas_empty").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block moon_turf = new BlockFallingBase(Material.SAND, "moon_turf", SoundType.SAND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
+	public static final Block moon_rock = new BlockBase(Material.ROCK, "moon_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F);
+	public static final Block tumor = new BlockBase(Material.CLAY, "tumor").setSoundType(SoundType.SNOW).setCreativeTab(MainRegistry.resourceTab).setHardness(1.0F);
+	public static final Block duna_sands = new BlockFallingBase(Material.SAND, "duna_sands", SoundType.SAND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
+	public static final Block duna_rock = new BlockBase(Material.ROCK, "duna_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F);
+	public static final Block dry_ice = new BlockBase(Material.ICE,"dry_ice").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
+	public static final Block ferric_clay = new BlockBase(Material.CLAY, "ferric_clay").setSoundType(SoundType.GROUND).setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F);
+	public static final Block eve_silt = new BlockFallingBase(Material.SAND, "eve_silt", SoundType.SAND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
+	public static final Block eve_rock = new BlockBase(Material.ROCK, "eve_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F);
+	public static final Block laythe_silt = new BlockFallingBase(Material.SAND, "laythe_silt", SoundType.SAND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F);
+	public static final Block ike_regolith = new BlockBase(Material.ROCK, "ike_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block ike_stone = new BlockBase(Material.ROCK, "ike_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block dres_rock = new BlockBase(Material.ROCK, "dres_rock").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block moho_regolith = new BlockBase(Material.ROCK, "moho_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block moho_stone = new BlockBase(Material.ROCK, "moho_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block minmus_regolith = new BlockBase(Material.ROCK, "minmus_regolith").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block minmus_stone = new BlockBase(Material.ROCK, "minmus_stone").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block minmus_smooth = new BlockBase(Material.ROCK, "minmus_smooth").setSoundType(SoundType.STONE).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block ore_gas = new BlockNTMOre("ore_gas", 3).setCreativeTab(MainRegistry.resourceTab).setBlockUnbreakable().setHardness(5.0F).setResistance(10.0F);
+	public static final Block ore_gas_empty = new BlockBase(Material.ROCK, "ore_gas_empty").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 
 	//Deco blocks TODO: Add CTM
 	public static final Block deco_titanium = new BlockBase(Material.IRON, "deco_titanium").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
@@ -590,10 +590,10 @@ public class ModBlocks {
 
 	public static final Block basalt_ore = new BlockOreBasalt("ore_basalt").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 
-	public static final Block basalt_smooth = new BlockBase(Material.ROCK, "basalt_smooth").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block basalt_brick = new BlockBase(Material.ROCK, "basalt_brick").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block basalt_polished = new BlockBase(Material.ROCK, "basalt_polished").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block basalt_tiles = new BlockBase(Material.ROCK, "basalt_tiles").setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block basalt_smooth = new BlockBase(Material.ROCK, "basalt_smooth").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block basalt_brick = new BlockBase(Material.ROCK, "basalt_brick").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block basalt_polished = new BlockBase(Material.ROCK, "basalt_polished").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block basalt_tiles = new BlockBase(Material.ROCK, "basalt_tiles").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
 
 	public static final Block block_cap = new BlockCap("block_cap").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
@@ -1252,7 +1252,7 @@ public class ModBlocks {
 	public static final Block vent_chlorine_seal = new BlockClorineSeal(Material.IRON, "vent_chlorine_seal").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block chlorine_gas = new BlockClorine(Material.CLOTH, "chlorine_gas").setHardness(0.0F).setResistance(0.0F).setCreativeTab(MainRegistry.machineTab);
 
-	public static final Block stone_resource = new BlockResourceStone().setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+	public static final Block stone_resource = new BlockResourceStone().setCreativeTab(MainRegistry.resourceTab).setHardness(5.0F).setResistance(10.0F);
 
 
 	public static final Block gas_radon = new BlockGasRadon("gas_radon").setCreativeTab(MainRegistry.resourceTab);
