@@ -143,12 +143,12 @@ public class DamageResistanceHandler {
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));
         registerSet(ModItems.steamsuit_helmet, ModItems.steamsuit_plate, ModItems.steamsuit_legs, ModItems.steamsuit_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F));
-//        registerSet(ModItems.dieselsuit_helmet, ModItems.dieselsuit_plate, ModItems.dieselsuit_legs, ModItems.dieselsuit_boots, new
-//        ResistanceStats()
-//                .addCategory(CATEGORY_PHYSICAL, 1F, 0.15F)
-//                .addCategory(CATEGORY_FIRE, 0.5F, 0.5F)
-//                .addCategory(CATEGORY_EXPLOSION, 2F, 0.15F)
-//                .setOther(0F, 0.1F));
+        registerSet(ModItems.dieselsuit_helmet, ModItems.dieselsuit_plate, ModItems.dieselsuit_legs, ModItems.dieselsuit_boots, new
+        ResistanceStats()
+                .addCategory(CATEGORY_PHYSICAL, 1F, 0.15F)
+                .addCategory(CATEGORY_FIRE, 0.5F, 0.5F)
+                .addCategory(CATEGORY_EXPLOSION, 2F, 0.15F)
+                .setOther(0F, 0.1F));
         registerSet(ModItems.t45_helmet, ModItems.t45_plate, ModItems.t45_legs, ModItems.t45_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.1F));
         registerSet(ModItems.ajr_helmet, ModItems.ajr_plate, ModItems.ajr_legs, ModItems.ajr_boots,
@@ -161,37 +161,37 @@ public class DamageResistanceHandler {
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate, ModItems.bj_legs, ModItems.bj_boots, bj);
         registerSet(ModItems.bj_helmet, ModItems.bj_plate_jetpack, ModItems.bj_legs, ModItems.bj_boots, bj);
-//        registerSet(ModItems.envsuit_helmet, ModItems.envsuit_plate, ModItems.envsuit_legs, ModItems.envsuit_boots, new ResistanceStats()
-//                .addCategory(CATEGORY_FIRE, 2F, 0.75F)
-//                .addExact(DamageSource.drown.getDamageType(), 0F, 1F)
-//                .addExact(DamageSource.FALL.getDamageType(), 5F, 0.75F)
-//                .setOther(0F, 0.1F));
+        registerSet(ModItems.envsuit_helmet, ModItems.envsuit_plate, ModItems.envsuit_legs, ModItems.envsuit_boots, new ResistanceStats()
+                .addCategory(CATEGORY_FIRE, 2F, 0.75F)
+                .addExact(DamageSource.DROWN.getDamageType(), 0F, 1F)
+                .addExact(DamageSource.FALL.getDamageType(), 5F, 0.75F)
+                .setOther(0F, 0.1F));
         registerSet(ModItems.hev_helmet, ModItems.hev_plate, ModItems.hev_legs, ModItems.hev_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F));
-//        registerSet(ModItems.bismuth_helmet, ModItems.bismuth_plate, ModItems.bismuth_legs, ModItems.bismuth_boots, new ResistanceStats()
-//                .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
-//                .addCategory(CATEGORY_FIRE, 5F, 0.5F)
-//                .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
-//                .addExact(DamageSource.FALL.getDamageType(), 0F, 1F)
-//                .setOther(2F, 0.25F));
+        registerSet(ModItems.bismuth_helmet, ModItems.bismuth_plate, ModItems.bismuth_legs, ModItems.bismuth_boots, new ResistanceStats()
+                .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
+                .addCategory(CATEGORY_FIRE, 5F, 0.5F)
+                .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
+                .addExact(DamageSource.FALL.getDamageType(), 0F, 1F)
+                .setOther(2F, 0.25F));
         registerSet(ModItems.fau_helmet, ModItems.fau_plate, ModItems.fau_legs, ModItems.fau_boots,
                 new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 0F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F));
         registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots,
                 new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 100F, 0.99F).addCategory(CATEGORY_FIRE, 0F, 1F).setOther(1000F, 1F));
-//        registerSet(ModItems.taurun_helmet, ModItems.taurun_plate, ModItems.taurun_legs, ModItems.taurun_boots, new ResistanceStats()
-//                .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
-//                .addCategory(CATEGORY_FIRE, 0F, 0.25F)
-//                .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
-//                .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
-//                .setOther(2F, 0.1F));
-//        registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
-//        ResistanceStats()
-//                .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
-//                .addCategory(CATEGORY_FIRE, 5F, 0.5F)
-//                .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
-//                .addExact(DamageClass.LASER.name(), 15F, 0.9F)
-//                .addExact(DamageSource.FALL.getDamageType(), 10F, 0.5F)
-//                .setOther(5F, 0.25F));
+        registerSet(ModItems.taurun_helmet, ModItems.taurun_plate, ModItems.taurun_legs, ModItems.taurun_boots, new ResistanceStats()
+                .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
+                .addCategory(CATEGORY_FIRE, 0F, 0.25F)
+                .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
+                .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
+                .setOther(2F, 0.1F));
+        registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
+        ResistanceStats()
+                .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
+                .addCategory(CATEGORY_FIRE, 5F, 0.5F)
+                .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
+                .addExact(DamageClass.LASER.name(), 15F, 0.9F)
+                .addExact(DamageSource.FALL.getDamageType(), 10F, 0.5F)
+                .setOther(5F, 0.25F));
 
         registerSet(ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots,
                 new ResistanceStats().setOther(1_000_000F, 1F));

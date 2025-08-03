@@ -522,6 +522,40 @@ public class ModItems {
     public static final Item steamsuit_plate = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_plate").cloneStats((ArmorFSB) steamsuit_helmet);
     public static final Item steamsuit_legs = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_legs").cloneStats((ArmorFSB) steamsuit_helmet);
     public static final Item steamsuit_boots = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_boots").cloneStats((ArmorFSB) steamsuit_helmet);
+    public static final Item trenchmaster_helmet = new ArmorTrenchmaster(MainRegistry.aMatTrench, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", "trenchmaster_helmet")
+            .addEffect(new PotionEffect(MobEffects.HASTE, 20, 1))
+            .addEffect(new PotionEffect(MobEffects.STRENGTH, 20, 2))
+            .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 20, 1))
+            .addEffect(new PotionEffect(MobEffects.SPEED, 20, 0));
+    public static final Item trenchmaster_plate = new ArmorTrenchmaster(MainRegistry.aMatTrench, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", "trenchmaster_plate").cloneStats((ArmorFSB) trenchmaster_helmet).setMaxStackSize(1);
+    public static final Item trenchmaster_legs = new ArmorTrenchmaster(MainRegistry.aMatTrench, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", "trenchmaster_legs").cloneStats((ArmorFSB) trenchmaster_helmet).setMaxStackSize(1);
+    public static final Item trenchmaster_boots = new ArmorTrenchmaster(MainRegistry.aMatTrench, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", "trenchmaster_boots").cloneStats((ArmorFSB) trenchmaster_helmet).setMaxStackSize(1);
+    public static final Item taurun_helmet = new ArmorTaurun(MainRegistry.aMatTaurun, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", "taurun_helmet")
+            .addEffect(new PotionEffect(MobEffects.STRENGTH, 20, 0));
+    public static final Item taurun_plate = new ArmorTaurun(MainRegistry.aMatTaurun, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", "taurun_plate").cloneStats((ArmorFSB) taurun_helmet).setMaxStackSize(1);
+    public static final Item taurun_legs = new ArmorTaurun(MainRegistry.aMatTaurun, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", "taurun_legs").cloneStats((ArmorFSB) taurun_helmet).setMaxStackSize(1);
+    public static final Item taurun_boots = new ArmorTaurun(MainRegistry.aMatTaurun, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", "taurun_boots").cloneStats((ArmorFSB) taurun_helmet).setMaxStackSize(1);
+    public static final Item bismuth_helmet = new ArmorBismuth(MainRegistry.aMatBismuth, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", "bismuth_helmet")
+            .addEffect(new PotionEffect(MobEffects.NIGHT_VISION, 20, 0))
+            .addEffect(new PotionEffect(MobEffects.REGENERATION, 20, 1))
+            .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 20, 0))
+            .addEffect(new PotionEffect(MobEffects.SPEED, 20, 0))
+            .setDashCount(3);
+    public static final Item bismuth_plate = new ArmorBismuth(MainRegistry.aMatBismuth, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", "bismuth_plate").cloneStats((ArmorFSB) bismuth_helmet).setMaxStackSize(1);
+    public static final Item bismuth_legs = new ArmorBismuth(MainRegistry.aMatBismuth, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", "bismuth_legs").cloneStats((ArmorFSB) bismuth_helmet).setMaxStackSize(1);
+    public static final Item bismuth_boots = new ArmorBismuth(MainRegistry.aMatBismuth, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", "bismuth_boots").cloneStats((ArmorFSB) bismuth_helmet).setMaxStackSize(1);
+    public static final Item envsuit_helmet = new ArmorEnvsuit(MainRegistry.aMatEnvsuit, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000, 1000, 250, 0, "envsuit_helmet")
+            .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 0))
+            .addEffect(new PotionEffect(MobEffects.SPEED, 30, 1));
+    public static final Item envsuit_plate = new ArmorEnvsuit(MainRegistry.aMatEnvsuit, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000, 1000, 250, 0, "envsuit_plate").cloneStats((ArmorFSB) envsuit_helmet);
+    public static final Item envsuit_legs = new ArmorEnvsuit(MainRegistry.aMatEnvsuit, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 100000, 1000, 250, 0, "envsuit_legs").cloneStats((ArmorFSB) envsuit_helmet);
+    public static final Item envsuit_boots = new ArmorEnvsuit(MainRegistry.aMatEnvsuit, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000, 1000, 250, 0, "envsuit_boots").cloneStats((ArmorFSB) envsuit_helmet);
+    public static final Item dieselsuit_helmet = new ArmorDiesel(MainRegistry.aMatDieselsuit, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.DIESEL, 64000, 500, 50, 1, "dieselsuit_helmet")
+            .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 2))
+            .addEffect(new PotionEffect(MobEffects.SPEED, 30, 2));
+    public static final Item dieselsuit_plate = new ArmorDiesel(MainRegistry.aMatDieselsuit, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.DIESEL, 64000, 500, 50, 1, "dieselsuit_plate").cloneStats((ArmorFSB) dieselsuit_helmet);
+    public static final Item dieselsuit_legs = new ArmorDiesel(MainRegistry.aMatDieselsuit, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", Fluids.DIESEL, 64000, 500, 50, 1, "dieselsuit_legs").cloneStats((ArmorFSB) dieselsuit_helmet);
+    public static final Item dieselsuit_boots = new ArmorDiesel(MainRegistry.aMatDieselsuit, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.DIESEL, 64000, 500, 50, 1, "dieselsuit_boots").cloneStats((ArmorFSB) dieselsuit_helmet);
     public static final Item ajr_helmet = new ArmorAJR(MainRegistry.aMatAJR, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajr_helmet")
             .enableVATS(true)
             .setHasGeigerSound(true)
