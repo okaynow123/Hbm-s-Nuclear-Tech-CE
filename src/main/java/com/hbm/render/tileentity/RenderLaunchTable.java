@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.main.ResourceManager;
@@ -15,8 +16,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister
 public class RenderLaunchTable extends TileEntitySpecialRenderer<TileEntityLaunchTable>
     implements IItemRendererProvider {
 

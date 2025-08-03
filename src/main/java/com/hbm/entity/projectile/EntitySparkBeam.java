@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -25,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_spark_beam", trackingRange = 1000)
 public class EntitySparkBeam extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntitySparkBeam.class, DataSerializers.BOOLEAN);

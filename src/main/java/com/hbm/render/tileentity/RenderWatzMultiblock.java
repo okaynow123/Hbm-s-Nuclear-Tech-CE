@@ -1,14 +1,14 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntityWatzStruct;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.render.util.SmallBlockPronter.*;
-
+@AutoRegister
 public class RenderWatzMultiblock extends TileEntitySpecialRenderer<TileEntityWatzStruct> {
 
     public static TextureAtlasSprite coolerSpriteTop;

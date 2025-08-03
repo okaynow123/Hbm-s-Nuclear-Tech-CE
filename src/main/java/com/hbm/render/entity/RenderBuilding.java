@@ -1,14 +1,14 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityBuilding;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBuilding extends Render<EntityBuilding> {
 
 	public static final IRenderFactory<EntityBuilding> FACTORY = (RenderManager man) -> {return new RenderBuilding(man);};

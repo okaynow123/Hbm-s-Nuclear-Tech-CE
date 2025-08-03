@@ -3,6 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionThermo;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
@@ -32,7 +33,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_plasma_beam", trackingRange = 1000)
 public class EntityPlasmaBeam extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityPlasmaBeam.class, DataSerializers.BOOLEAN);

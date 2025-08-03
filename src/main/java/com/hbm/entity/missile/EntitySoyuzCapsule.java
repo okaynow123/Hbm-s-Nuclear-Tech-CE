@@ -1,6 +1,7 @@
 package com.hbm.entity.missile;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_soyuz_capsule", trackingRange = 1000)
 public class EntitySoyuzCapsule extends EntityThrowable {
 
 	public int soyuz;

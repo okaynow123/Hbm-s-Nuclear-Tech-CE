@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_laser", trackingRange = 1000)
 public class EntityLaser extends Entity {
 
 	public static final DataParameter<String> PLAYER_NAME = EntityDataManager.createKey(EntityLaser.class, DataSerializers.STRING);

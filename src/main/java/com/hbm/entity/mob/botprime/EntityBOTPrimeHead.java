@@ -1,6 +1,7 @@
 package com.hbm.entity.mob.botprime;
 
 import com.hbm.entity.mob.EntityAINearestAttackableTargetNT;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.AdvancementManager;
 import net.minecraft.entity.Entity;
@@ -20,7 +21,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_balls_o_tron", trackingRange = 1000)
 public class EntityBOTPrimeHead extends EntityBOTPrimeBase {
 
 	/*   ___   _   _   _   ___           ___           _____ ___  ___ _  _       ___ ___  _ _   _ ___

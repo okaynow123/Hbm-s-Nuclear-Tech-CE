@@ -2,15 +2,16 @@ package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.handler.RocketStruct;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.misc.MissilePronter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderRocketCustom extends Render<EntityRideableRocket> {
 
     public static final IRenderFactory<EntityRideableRocket> FACTORY = (RenderManager man) -> {return new RenderRocketCustom(man);};

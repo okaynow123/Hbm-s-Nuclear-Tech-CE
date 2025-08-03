@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.HbmShaderManager2;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
@@ -13,7 +14,6 @@ import com.hbm.render.util.ModelRendererUtil.VertexData;
 import com.hbm.render.util.RenderMiscEffects;
 import com.hbm.tileentity.deco.TileEntityObjTester;
 import com.hbm.util.Vec3dUtil;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBox;
@@ -32,12 +32,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import java.util.List;
+@AutoRegister
 public class RenderObjTester extends TileEntitySpecialRenderer<TileEntityObjTester>
     implements IItemRendererProvider {
 

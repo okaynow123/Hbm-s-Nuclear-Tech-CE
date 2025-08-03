@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineEPress;
@@ -16,8 +17,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister
 public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPress>
     implements IItemRendererProvider {
 

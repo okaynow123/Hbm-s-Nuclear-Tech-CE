@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_zirnox_debris", trackingRange = 1000)
 public class EntityZirnoxDebris extends EntityDebrisBase {
 
     public EntityZirnoxDebris(World world) {

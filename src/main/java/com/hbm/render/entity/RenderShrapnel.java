@@ -1,6 +1,8 @@
 package com.hbm.render.entity;
 
+import com.hbm.entity.item.EntityFireworks;
 import com.hbm.entity.projectile.EntityShrapnel;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelShrapnel;
 import net.minecraft.client.renderer.entity.Render;
@@ -9,7 +11,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(entity = EntityShrapnel.class, factory = "FACTORY")
+@AutoRegister(entity = EntityFireworks.class, factory = "FACTORY")
 public class RenderShrapnel extends Render<Entity> {
 	
 	public static final IRenderFactory<Entity> FACTORY = man -> new RenderShrapnel(man);

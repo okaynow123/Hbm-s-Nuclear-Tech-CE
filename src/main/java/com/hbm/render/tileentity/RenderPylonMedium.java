@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.item.ItemRenderBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
@@ -10,7 +11,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
-
+@AutoRegister
 public class RenderPylonMedium extends TileEntitySpecialRenderer<TileEntityPylonMedium>
     implements IItemRendererProvider {
 

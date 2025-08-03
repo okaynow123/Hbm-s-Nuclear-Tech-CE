@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,7 +27,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_rocket", trackingRange = 1000)
 public class EntityRocket extends Entity implements IProjectile {
 
 	private static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityBullet.class, DataSerializers.BOOLEAN);

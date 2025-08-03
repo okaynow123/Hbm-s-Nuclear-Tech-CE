@@ -1,14 +1,14 @@
 package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityBooster;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBoosterMissile extends Render<EntityBooster> {
 
 	public static final IRenderFactory<EntityBooster> FACTORY = (RenderManager man) -> {return new RenderBoosterMissile(man);};

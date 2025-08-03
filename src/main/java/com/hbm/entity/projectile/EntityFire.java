@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
@@ -27,7 +28,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_fire", trackingRange = 1000)
 public class EntityFire extends Entity implements IProjectile {
 
 	private static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityBullet.class, DataSerializers.BOOLEAN);

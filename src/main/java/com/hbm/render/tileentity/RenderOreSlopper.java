@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
@@ -17,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
-
+@AutoRegister
 public class RenderOreSlopper extends TileEntitySpecialRenderer<TileEntityMachineOreSlopper> implements IItemRendererProvider {
 
     private static final ItemStack bedrockOreStack = new ItemStack(ModItems.bedrock_ore, 1, 0);

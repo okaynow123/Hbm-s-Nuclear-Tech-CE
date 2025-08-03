@@ -1,11 +1,12 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_pc")
 public class EntityGrenadePC extends EntityGrenadeBase {
 
 	public EntityGrenadePC(World p_i1773_1_) {

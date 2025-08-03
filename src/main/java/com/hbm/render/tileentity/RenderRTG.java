@@ -1,13 +1,16 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
+import com.hbm.tileentity.machine.TileEntityMachineMiniRTG;
+import com.hbm.tileentity.machine.TileEntityMachineRTG;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(tileentity = TileEntityMachineRTG.class)
+@AutoRegister(tileentity = TileEntityMachineMiniRTG.class)
 public class RenderRTG extends TileEntitySpecialRenderer<TileEntity> {
 
 	@Override

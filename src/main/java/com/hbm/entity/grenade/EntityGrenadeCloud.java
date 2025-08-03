@@ -1,11 +1,12 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_cloud")
 public class EntityGrenadeCloud extends EntityGrenadeBase {
 
 	public EntityGrenadeCloud(World p_i1773_1_) {

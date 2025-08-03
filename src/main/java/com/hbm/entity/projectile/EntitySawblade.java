@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_sawblade", trackingRange = 1000)
 public class EntitySawblade extends EntityThrowableInterp {
     public static final DataParameter<Integer> ORIENTATION = EntityDataManager.createKey(EntitySawblade.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> META = EntityDataManager.createKey(EntitySawblade.class, DataSerializers.VARINT);

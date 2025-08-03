@@ -1,6 +1,7 @@
 package com.hbm.entity.missile;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_soyuz", trackingRange = 1000)
 public class EntitySoyuz extends Entity {
 
 	public static final DataParameter<Integer> SKIN = EntityDataManager.createKey(EntitySoyuz.class, DataSerializers.VARINT);

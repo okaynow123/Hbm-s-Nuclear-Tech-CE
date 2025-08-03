@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelMultitoolClaw;
@@ -12,8 +13,17 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(item = "multitool_dig")
+@AutoRegister(item = "multitool_silk")
+@AutoRegister(item = "multitool_ext")
+@AutoRegister(item = "multitool_miner")
+@AutoRegister(item = "multitool_hit")
+@AutoRegister(item = "multitool_beam")
+@AutoRegister(item = "multitool_sky")
+@AutoRegister(item = "multitool_mega")
+@AutoRegister(item = "multitool_joule")
+@AutoRegister(item = "multitool_decon")
 public class ItemRenderMultitool extends TEISRBase {
 
 	protected ModelMultitoolOpen open;

@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.material.Mats;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
@@ -24,7 +25,7 @@ import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManage
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+@AutoRegister
 public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible>
     implements IItemRendererProvider, ITileActorRenderer {
 

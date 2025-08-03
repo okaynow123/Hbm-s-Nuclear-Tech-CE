@@ -2,6 +2,7 @@ package com.hbm.entity.missile;
 
 import com.hbm.entity.particle.EntityTSmokeFX;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +11,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_booster", trackingRange = 1000)
 public class EntityBooster extends EntityThrowable {
 
 	public EntityBooster(World p_i1582_1_) {

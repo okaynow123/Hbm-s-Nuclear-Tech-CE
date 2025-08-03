@@ -1,14 +1,15 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.turret.TileEntityTurretFritz;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(tileentity = TileEntityTurretFritz.class)
 public class RenderTurretFritz extends RenderTurretBase<TileEntityTurretFritz>
     implements IItemRendererProvider {
 

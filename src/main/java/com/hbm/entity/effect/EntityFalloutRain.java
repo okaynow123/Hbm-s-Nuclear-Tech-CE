@@ -3,6 +3,7 @@ package com.hbm.entity.effect;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.saveddata.AuxSavedData;
 import net.minecraft.block.Block;
@@ -24,7 +25,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
-
+@AutoRegister(name = "entity_fallout_rain", trackingRange = 1000)
 public class EntityFalloutRain extends EntityFallout implements IConstantRenderer {
 
 	private static final int WORLD_HEIGHT = 256;

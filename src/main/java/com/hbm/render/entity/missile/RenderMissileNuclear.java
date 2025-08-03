@@ -2,6 +2,7 @@ package com.hbm.render.entity.missile;
 
 import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileTier4;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,8 +10,12 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 // PRACTICALLY - TIER 4 MISSILES
+@AutoRegister(entity = EntityMissileTier4.EntityMissileN2.class, factory = "FACTORY")
+@AutoRegister(entity = EntityMissileTier4.EntityMissileNuclear.class, factory = "FACTORY")
+@AutoRegister(entity = EntityMissileTier4.EntityMissileMirv.class, factory = "FACTORY")
+@AutoRegister(entity = EntityMissileTier4.EntityMissileVolcano.class, factory = "FACTORY")
 public class RenderMissileNuclear extends Render<EntityMissileBaseNT> {
 
 	public static final IRenderFactory<EntityMissileBaseNT> FACTORY = (RenderManager man) -> {return new RenderMissileNuclear(man);};

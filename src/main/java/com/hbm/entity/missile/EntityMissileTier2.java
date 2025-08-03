@@ -4,6 +4,7 @@ import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.entity.logic.EntityEMP;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +39,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 	public int getBlipLevel() {
 		return IRadarDetectableNT.TIER2;
 	}
-
+	@AutoRegister(name = "entity_missile_strong", trackingRange = 1000)
 	public static class EntityMissileStrong extends EntityMissileTier2 {
 		public EntityMissileStrong(World world) { super(world); }
 		public EntityMissileStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -48,7 +49,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_generic_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_strong); }
 	}
-
+	@AutoRegister(name = "entity_missile_incendiary_strong", trackingRange = 1000)
 	public static class EntityMissileIncendiaryStrong extends EntityMissileTier2 {
 		public EntityMissileIncendiaryStrong(World world) { super(world); }
 		public EntityMissileIncendiaryStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -59,7 +60,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_incendiary_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_incendiary_strong); }
 	}
-
+	@AutoRegister(name = "entity_missile_cluster_strong", trackingRange = 1000)
 	public static class EntityMissileClusterStrong extends EntityMissileTier2 {
 		public EntityMissileClusterStrong(World world) { super(world); }
 		public EntityMissileClusterStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); this.isCluster = true; }
@@ -71,7 +72,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_cluster_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_cluster_strong); }
 	}
-
+	@AutoRegister(name = "entity_missile_buster_strong", trackingRange = 1000)
 	public static class EntityMissileBusterStrong extends EntityMissileTier2 {
 		public EntityMissileBusterStrong(World world) { super(world); }
 		public EntityMissileBusterStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -81,7 +82,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_buster_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_buster_strong); }
 	}
-
+	@AutoRegister(name = "entity_missile_emp_strong", trackingRange = 1000)
 	public static class EntityMissileEMPStrong extends EntityMissileTier2 {
 		public EntityMissileEMPStrong(World world) { super(world); }
 		public EntityMissileEMPStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }

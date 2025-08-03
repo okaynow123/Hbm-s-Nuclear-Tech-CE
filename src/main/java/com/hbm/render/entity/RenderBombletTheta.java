@@ -2,14 +2,15 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.missile.EntityBombletTheta;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.IModelCustom;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBombletTheta extends Render<EntityBombletTheta> {
 
 public static final IRenderFactory<EntityBombletTheta> FACTORY = (RenderManager man) -> {return new RenderBombletTheta(man);};

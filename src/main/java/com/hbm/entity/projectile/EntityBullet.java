@@ -7,6 +7,7 @@ import com.hbm.entity.grenade.EntityGrenadeTau;
 import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.particle.EntityBSmokeFX;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -47,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_bullet")
 public class EntityBullet extends Entity implements IProjectile {
 
 	private static final DataParameter<Boolean> TAU = EntityDataManager.createKey(EntityBullet.class, DataSerializers.BOOLEAN);

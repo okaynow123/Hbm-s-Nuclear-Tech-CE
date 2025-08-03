@@ -1,17 +1,18 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityBullet;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelBullet;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBullet extends Render<EntityBullet> {
 
 	public static final IRenderFactory<EntityBullet> FACTORY = (RenderManager manager) -> new RenderBullet(manager);

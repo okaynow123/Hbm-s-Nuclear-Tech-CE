@@ -1,6 +1,7 @@
 package com.hbm.entity.missile;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.items.ItemEnums.EnumAshType;
 import com.hbm.items.ModItems;
@@ -9,7 +10,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_missile_stealth", trackingRange = 1000)
 public class EntityMissileStealth extends EntityMissileBaseNT {
 
 	public EntityMissileStealth(World world) { super(world); }

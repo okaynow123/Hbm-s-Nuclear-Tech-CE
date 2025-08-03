@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.model.ModelPylon;
@@ -13,8 +14,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister
 public class RenderPylon extends TileEntitySpecialRenderer<TileEntityPylon> {
 
 	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":" + "textures/models/network/ModelPylon.png");

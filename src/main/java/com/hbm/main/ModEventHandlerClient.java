@@ -47,7 +47,6 @@ import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.toserver.GunButtonPacket;
 import com.hbm.packet.toserver.MeathookJumpPacket;
 import com.hbm.particle.ParticleBatchRenderer;
-import com.hbm.particle.ParticleDSmokeFX;
 import com.hbm.particle.ParticleFirstPerson;
 import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.physics.ParticlePhysicsBlocks;
@@ -56,7 +55,6 @@ import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
-import com.hbm.render.entity.DSmokeRenderer;
 import com.hbm.render.item.BakedModelCustom;
 import com.hbm.render.item.BakedModelNoGui;
 import com.hbm.render.item.TEISRBase;
@@ -592,16 +590,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         ItemAutogen.registerSprites(map);
 
         IDynamicModels.registerSprites(map);
-
-        DSmokeRenderer.sprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke1"));
-        DSmokeRenderer.sprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke2"));
-        DSmokeRenderer.sprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke3"));
-        DSmokeRenderer.sprites[3] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke4"));
-        DSmokeRenderer.sprites[4] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke5"));
-        DSmokeRenderer.sprites[5] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke6"));
-        DSmokeRenderer.sprites[6] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke7"));
-        DSmokeRenderer.sprites[7] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/d_smoke8"));
-        ParticleDSmokeFX.sprites = DSmokeRenderer.sprites;
 
 
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/steam_still"));

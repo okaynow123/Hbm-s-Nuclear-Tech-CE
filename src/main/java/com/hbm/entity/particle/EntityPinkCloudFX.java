@@ -4,11 +4,12 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.RadioRec;
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_pink_cloud_fx", trackingRange = 1000)
 public class EntityPinkCloudFX extends EntityModFX {
 
 	public EntityPinkCloudFX(World world) {

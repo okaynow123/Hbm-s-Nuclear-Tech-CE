@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_explosive_beam", trackingRange = 1000)
 public class EntityExplosiveBeam extends Entity implements IProjectile
 {
 	public static final DataParameter<Byte> CRITICAL  = EntityDataManager.createKey(EntityExplosiveBeam.class, DataSerializers.BYTE);

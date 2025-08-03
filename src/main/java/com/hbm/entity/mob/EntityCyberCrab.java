@@ -2,6 +2,7 @@ package com.hbm.entity.mob;
 
 import com.google.common.base.Predicate;
 import com.hbm.entity.projectile.EntityBullet;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
@@ -20,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_cyber_crab")
 public class EntityCyberCrab extends EntityMob implements IRangedAttackMob, IRadiationImmune {
 
 	private static final Predicate<EntityLiving> selector = new Predicate<EntityLiving>(){

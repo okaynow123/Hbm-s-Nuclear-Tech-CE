@@ -3,10 +3,11 @@ package com.hbm.entity.particle;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockCloudResidue;
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_cloud_fx", trackingRange = 1000)
 public class EntityCloudFX extends EntityModFX {
 
 	public EntityCloudFX(World world) {

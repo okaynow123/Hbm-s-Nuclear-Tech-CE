@@ -3,12 +3,13 @@ package com.hbm.entity.grenade;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityCloudFleija;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_aschrab")
 public class EntityGrenadeASchrab extends EntityGrenadeBase {
 
 	public EntityGrenadeASchrab(World p_i1773_1_) {

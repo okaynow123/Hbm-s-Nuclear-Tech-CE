@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_combine_ball", trackingRange = 1000)
 public class EntityCombineBall extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityCombineBall.class, DataSerializers.BOOLEAN);

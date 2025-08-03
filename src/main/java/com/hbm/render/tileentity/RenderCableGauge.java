@@ -1,15 +1,16 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.network.energy.BlockCableGauge.TileEntityCableGauge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
+@AutoRegister
 public class RenderCableGauge extends TileEntitySpecialRenderer<TileEntityCableGauge> {
 	
 	protected static final float fontOffset = 0.501F;

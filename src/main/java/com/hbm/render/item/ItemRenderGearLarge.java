@@ -1,11 +1,12 @@
 package com.hbm.render.item;
 
-import static com.hbm.render.NTMRenderHelper.bindTexture;
-
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
+import static com.hbm.render.NTMRenderHelper.bindTexture;
+@AutoRegister(item = "gear_large")
 public class ItemRenderGearLarge extends ItemRenderBase {
   @Override
   public void renderInventory() {

@@ -6,6 +6,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -59,7 +60,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		this.spawnControlWithOffset(0, 0, 0);
 		this.spawnControlWithOffset(-thrust.x, -thrust.z, -thrust.z);
 	}
-	
+	@AutoRegister(name = "entity_missile_nuclear", trackingRange = 1000)
 	public static class EntityMissileNuclear extends EntityMissileTier4 {
 		public EntityMissileNuclear(World world) { super(world); }
 		public EntityMissileNuclear(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -70,7 +71,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_nuclear); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_nuclear); }
 	}
-	
+	@AutoRegister(name = "entity_missile_mirv", trackingRange = 1000)
 	public static class EntityMissileMirv extends EntityMissileTier4 {
 		public EntityMissileMirv(World world) { super(world); }
 		public EntityMissileMirv(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -89,7 +90,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_mirv); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_nuclear_cluster); }
 	}
-	
+	@AutoRegister(name = "entity_missile_volcano", trackingRange = 1000)
 	public static class EntityMissileVolcano extends EntityMissileTier4 {
 		public EntityMissileVolcano(World world) { super(world); }
 		public EntityMissileVolcano(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -102,7 +103,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_volcano); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_volcano); }
 	}
-	
+	@AutoRegister(name = "entity_missile_doomsday", trackingRange = 1000)
 	public static class EntityMissileDoomsday extends EntityMissileTier4 {
 		public EntityMissileDoomsday(World world) { super(world); }
 		public EntityMissileDoomsday(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
@@ -125,7 +126,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		}
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_doomsday_rusted); }
 	}*/
-
+	@AutoRegister(name = "entity_missile_n2", trackingRange = 1000)
 	public static class EntityMissileN2 extends EntityMissileTier4 {
 		public EntityMissileN2(World world) { super(world); }
 		public EntityMissileN2(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }

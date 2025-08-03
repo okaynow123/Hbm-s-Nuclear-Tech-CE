@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.util.ViewModelPositonDebugger;
@@ -9,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(item = "boltgun")
 public class ItemRenderBoltgun extends TEISRBase {
 
     ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()

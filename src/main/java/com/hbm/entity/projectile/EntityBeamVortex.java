@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -7,7 +8,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_vortex_beam", trackingRange = 1000)
 public class EntityBeamVortex extends EntityBeamBase {
 
 	public EntityBeamVortex(World worldIn) {

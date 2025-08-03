@@ -4,13 +4,14 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.effect.EntityFalloutRain;
 import com.hbm.explosion.ExplosionFleija;
 import com.hbm.explosion.ExplosionNukeAdvanced;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_nuke_explosion_advanced")
 public class EntityNukeExplosionPlus extends Entity {
 
 	public int age = 0;

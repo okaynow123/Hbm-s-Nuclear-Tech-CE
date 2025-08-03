@@ -1,11 +1,12 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.misc.SoyuzLauncherPronter;
 import com.hbm.render.misc.SoyuzPronter;
 import com.hbm.tileentity.machine.TileEntitySoyuzLauncher;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister
 public class RenderSoyuzLauncher extends TileEntitySpecialRenderer<TileEntitySoyuzLauncher> {
 
 	@Override

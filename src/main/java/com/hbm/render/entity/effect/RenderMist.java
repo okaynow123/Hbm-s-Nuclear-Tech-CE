@@ -1,13 +1,14 @@
 package com.hbm.render.entity.effect;
 
 import com.hbm.entity.effect.EntityMist;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.jetbrains.annotations.Nullable;
 
-
+@AutoRegister(factory = "FACTORY")
 public class RenderMist extends Render<EntityMist> {
 
     public static final IRenderFactory<EntityMist> FACTORY = manager -> {return new RenderMist(manager);};

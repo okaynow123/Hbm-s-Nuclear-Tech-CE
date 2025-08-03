@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.particle.EntityOilSpillFX;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -15,7 +16,7 @@ import org.lwjgl.opengl.GL12;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@AutoRegister(factory = "FACTORY")
 public class SpillRenderer extends Render<EntityOilSpillFX> {
 
 	public static final IRenderFactory<EntityOilSpillFX> FACTORY = (RenderManager man) -> {return new SpillRenderer(man);};

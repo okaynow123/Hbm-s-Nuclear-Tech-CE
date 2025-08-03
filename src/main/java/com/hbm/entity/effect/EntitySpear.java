@@ -2,6 +2,7 @@ package com.hbm.entity.effect;
 
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_spear", trackingRange = 1000)
 public class EntitySpear extends Entity {
 	
 	public int ticksInGround;

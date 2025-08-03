@@ -1,9 +1,10 @@
 package com.hbm.entity.effect;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_raging_vortex", trackingRange = 1000)
 public class EntityRagingVortex extends EntityBlackHole {
 
 	int timer = 0;

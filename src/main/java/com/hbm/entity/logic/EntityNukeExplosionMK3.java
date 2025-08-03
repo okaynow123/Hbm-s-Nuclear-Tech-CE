@@ -9,6 +9,7 @@ import com.hbm.explosion.ExplosionFleija;
 import com.hbm.explosion.ExplosionNukeAdvanced;
 import com.hbm.explosion.ExplosionSolinium;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 @Spaghetti("why???")
+@AutoRegister(name = "entity_nuke_mk3", trackingRange = 1000)
 public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 	
 	public int age = 0;

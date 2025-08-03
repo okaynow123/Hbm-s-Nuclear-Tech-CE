@@ -3,6 +3,7 @@ package com.hbm.entity.missile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -10,7 +11,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_miner_rocket", trackingRange = 1000)
 public class EntityMinerRocket extends Entity {
 
 	public static final DataParameter<Integer> TIMER = EntityDataManager.createKey(EntityMinerRocket.class, DataSerializers.VARINT);

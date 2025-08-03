@@ -1,5 +1,6 @@
 package com.hbm.entity.mob;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_glowing_one", trackingRange = 1000)
 public class EntityGlowingOne extends EntityZombie implements IRadiationImmune {
 
 	public static final int effectRadius = 16;

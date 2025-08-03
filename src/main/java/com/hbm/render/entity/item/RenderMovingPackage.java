@@ -2,6 +2,7 @@ package com.hbm.render.entity.item;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.item.EntityMovingPackage;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -13,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderMovingPackage extends Render<EntityMovingPackage> {
 
     private ItemStack dummy;

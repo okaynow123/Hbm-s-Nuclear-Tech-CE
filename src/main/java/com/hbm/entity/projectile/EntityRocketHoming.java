@@ -4,6 +4,7 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.entity.particle.EntityTSmokeFX;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -33,7 +34,7 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@AutoRegister(name = "entity_stinger", trackingRange = 1000)
 public class EntityRocketHoming extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityMissileBaseAdvanced.class, DataSerializers.BOOLEAN);

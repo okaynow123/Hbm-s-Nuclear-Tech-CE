@@ -1,11 +1,9 @@
 package com.hbm.entity.grenade;
-
-
-
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_nuke")
 public class EntityGrenadeNuke extends EntityGrenadeBase
 {
     public int count = 2;

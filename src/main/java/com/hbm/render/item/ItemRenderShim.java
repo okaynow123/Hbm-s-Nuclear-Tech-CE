@@ -1,12 +1,17 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(item = "shimmer_sledge")
+@AutoRegister(item = "shimmer_axe")
+@AutoRegister(item = "stopsign")
+@AutoRegister(item = "sopsign")
+@AutoRegister(item = "chernobylsign")
 public class ItemRenderShim extends TEISRBase {
 	// Drillgon200: I hope I never have to look at this code again.
 

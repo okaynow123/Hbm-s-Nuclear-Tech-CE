@@ -3,6 +3,7 @@ package com.hbm.entity.mob;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.mob.ai.EntityAINuclearCreeperSwell;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
@@ -19,7 +20,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80)
 public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImmune {
 
 	public EntityCreeperNuclear(World worldIn) {

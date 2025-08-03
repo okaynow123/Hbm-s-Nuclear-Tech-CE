@@ -7,6 +7,7 @@ import com.hbm.animloader.AnimationWrapper.EndResult;
 import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IDoor;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.WavefrontObjDisplayList;
@@ -21,10 +22,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.nio.DoubleBuffer;
-
+@AutoRegister
 public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorGeneric>
     implements IItemRendererProvider {
 

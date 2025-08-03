@@ -5,6 +5,7 @@ import com.hbm.entity.effect.*;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_mod_beam", trackingRange = 1000)
 public class EntityModBeam extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityModBeam.class, DataSerializers.BOOLEAN);

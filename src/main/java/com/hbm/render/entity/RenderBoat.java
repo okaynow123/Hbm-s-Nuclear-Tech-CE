@@ -2,6 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.projectile.EntityDuchessGambit;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.tileentity.IItemRendererProvider;
@@ -11,8 +12,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(factory = "FACTORY")
 public class RenderBoat extends Render<EntityDuchessGambit> implements IItemRendererProvider {
 
   public static final IRenderFactory<EntityDuchessGambit> FACTORY =

@@ -2,6 +2,7 @@ package com.hbm.entity.missile;
 
 import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
 import com.hbm.main.AdvancementManager;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_carrier", trackingRange = 1000)
 public class EntityCarrier extends EntityThrowable {
 
 	public static final DataParameter<Boolean> HASBOOSTERS = EntityDataManager.createKey(EntityCarrier.class, DataSerializers.BOOLEAN);

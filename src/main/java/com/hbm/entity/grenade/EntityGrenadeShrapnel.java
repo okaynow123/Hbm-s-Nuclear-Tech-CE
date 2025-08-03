@@ -1,13 +1,14 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_shrapnel")
 public class EntityGrenadeShrapnel extends EntityGrenadeBouncyBase
 {
     public Entity shooter;

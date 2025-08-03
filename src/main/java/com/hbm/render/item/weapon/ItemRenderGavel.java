@@ -1,13 +1,17 @@
 package com.hbm.render.item.weapon;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.TEISRBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(item = "wood_gavel")
+@AutoRegister(item = "lead_gavel")
+@AutoRegister(item = "diamond_gavel")
+@AutoRegister(item = "mese_gavel")
 public class ItemRenderGavel extends TEISRBase {
 
 	@Override

@@ -1,5 +1,6 @@
 package com.hbm.entity.effect;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,7 +8,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_moonstone_blast", trackingRange = 1000)
 public class EntityCloudTom extends Entity implements IConstantRenderer {
 
 	public static final DataParameter<Integer> MAXAGE = EntityDataManager.createKey(EntityCloudTom.class, DataSerializers.VARINT);

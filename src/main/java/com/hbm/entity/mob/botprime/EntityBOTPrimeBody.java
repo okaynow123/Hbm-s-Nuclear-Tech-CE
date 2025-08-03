@@ -1,6 +1,7 @@
 package com.hbm.entity.mob.botprime;
 
 import com.hbm.entity.mob.EntityAINearestAttackableTargetNT;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_balls_o_tron_seg", trackingRange = 1000)
 public class EntityBOTPrimeBody extends EntityBOTPrimeBase {
 
 	public static final DataParameter<Boolean> SHIELD = EntityDataManager.createKey(EntityBOTPrimeBody.class, DataSerializers.BOOLEAN);

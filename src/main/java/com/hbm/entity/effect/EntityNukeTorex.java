@@ -1,5 +1,6 @@
 package com.hbm.entity.effect;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
  * Toroidial Convection Simulation Explosion Effect
  * Tor                             Ex
  */
+@AutoRegister(name = "entity_effect_torex", trackingRange = 1000)
 public class EntityNukeTorex extends Entity implements IConstantRenderer {
 
 	public static final DataParameter<Float> SCALE = EntityDataManager.createKey(EntityNukeTorex.class, DataSerializers.FLOAT);

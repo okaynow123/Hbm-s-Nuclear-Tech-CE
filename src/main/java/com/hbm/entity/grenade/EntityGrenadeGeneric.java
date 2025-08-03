@@ -1,9 +1,10 @@
 package com.hbm.entity.grenade;
 
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_generic")
 public class EntityGrenadeGeneric extends EntityGrenadeBouncyBase {
 
     public EntityGrenadeGeneric(World p_i1773_1_)

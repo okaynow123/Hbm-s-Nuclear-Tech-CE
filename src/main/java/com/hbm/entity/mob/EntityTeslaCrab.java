@@ -1,5 +1,6 @@
 package com.hbm.entity.mob;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntityTesla;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -7,7 +8,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_tesla_crab")
 public class EntityTeslaCrab extends EntityCyberCrab {
 	
 	public List<double[]> targets = new ArrayList<double[]>();

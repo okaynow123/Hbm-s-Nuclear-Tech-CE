@@ -1,7 +1,8 @@
 package com.hbm.entity.particle;
 
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_gasflame_fx", trackingRange = 1000)
 public class EntityGasFlameFX extends EntityModFX {
 
 	float smokeParticleScale;

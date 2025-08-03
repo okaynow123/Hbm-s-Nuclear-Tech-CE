@@ -1,13 +1,14 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import static com.hbm.render.NTMRenderHelper.bindTexture;
-
+@AutoRegister(item = "ammo_himars")
 public class ItemRenderTurretHIMARSAmmo extends ItemRenderBase {
   @Override
   public void renderInventory() {

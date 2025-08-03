@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityFire;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,8 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderFireProjectile extends Render<EntityFire> {
 
 	public static final IRenderFactory<EntityFire> FACTORY = (RenderManager man) -> {return new RenderFireProjectile(man, ModItems.flame_1, 0);};

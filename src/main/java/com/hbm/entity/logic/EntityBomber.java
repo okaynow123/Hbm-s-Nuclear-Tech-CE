@@ -8,6 +8,7 @@ import com.hbm.entity.projectile.EntityBoxcar;
 import com.hbm.entity.projectile.EntityRocketHoming;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -35,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_bomber", trackingRange = 1000)
 public class EntityBomber extends Entity implements IChunkLoader, IConstantRenderer {
 
 	public static final DataParameter<Integer> HEALTH = EntityDataManager.createKey(EntityBomber.class, DataSerializers.VARINT);

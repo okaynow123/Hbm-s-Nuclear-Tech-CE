@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.tileentity.machine.TileEntitySoyuzStruct;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,10 +8,9 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import static com.hbm.render.util.SmallBlockPronter.renderSimpleBlockAt;
-
+@AutoRegister
 public class RenderSoyuzMultiblock extends TileEntitySpecialRenderer<TileEntitySoyuzStruct> {
 	
 

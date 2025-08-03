@@ -3,6 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.effect.EntityCloudTom;
 import com.hbm.entity.logic.EntityTomBlast;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_tom_the_moonstone", trackingRange = 1000)
 public class EntityTom extends EntityThrowable implements IConstantRenderer {
 
 	public EntityTom(World p_i1582_1_) {

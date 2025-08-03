@@ -3,6 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.effect.EntityEMPBlast;
 import com.hbm.explosion.ExplosionNukeGeneric;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
@@ -30,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_discharge", trackingRange = 1000)
 public class EntityDischarge extends Entity implements IProjectile {
 
 	public static final DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityDischarge.class, DataSerializers.BOOLEAN);

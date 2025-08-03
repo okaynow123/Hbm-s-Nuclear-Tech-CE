@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderSparks;
 import com.hbm.tileentity.machine.TileEntityCore;
@@ -11,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
-
+@AutoRegister
 public class RenderCore extends TileEntitySpecialRenderer<TileEntityCore> {
 
     @Override

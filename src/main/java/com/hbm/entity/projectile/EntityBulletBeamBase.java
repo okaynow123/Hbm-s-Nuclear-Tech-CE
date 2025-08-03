@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.factory.BulletConfig;
 import com.hbm.util.Vec3NT;
 import io.netty.buffer.ByteBuf;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_beam_mk4", trackingRange = 256)
 public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpawnData {
 
     public EntityLivingBase thrower;

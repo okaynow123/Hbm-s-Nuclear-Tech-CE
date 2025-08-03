@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.special.ItemHot;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
@@ -10,8 +11,12 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(item = "ingot_steel_dusted")
+@AutoRegister(item = "ingot_chainsteel")
+@AutoRegister(item = "ingot_meteorite")
+@AutoRegister(item = "ingot_meteorite_forged")
+@AutoRegister(item = "blade_meteorite")
 public class ItemRendererHot extends TEISRBase {
 
 	@Override

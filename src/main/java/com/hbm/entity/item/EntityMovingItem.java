@@ -2,6 +2,7 @@ package com.hbm.entity.item;
 
 import com.hbm.api.conveyor.IConveyorItem;
 import com.hbm.api.conveyor.IEnterableBlock;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_c_item", trackingRange = 1000)
 public class EntityMovingItem extends EntityMovingConveyorObject implements IConveyorItem {
 
 	public static final DataParameter<ItemStack> STACK = EntityDataManager.createKey(EntityMovingItem.class, DataSerializers.ITEM_STACK);

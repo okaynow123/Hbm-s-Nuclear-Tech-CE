@@ -1,8 +1,9 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.machine.TileEntityBlackBook;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-
+@AutoRegister
 public class RenderBookCrafting extends TileEntitySpecialRenderer<TileEntityBlackBook> {
 
 	@Override

@@ -4,6 +4,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.explosion.ExplosionTom;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_tom_bust", trackingRange = 1000)
 public class EntityTomBlast extends Entity implements IChunkLoader {
 
 	public int age = 0;

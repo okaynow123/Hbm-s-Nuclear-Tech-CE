@@ -3,6 +3,7 @@ package com.hbm.entity.logic;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import cofh.redstoneflux.api.IEnergyProvider;
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.ParticleBurstPacket;
@@ -23,7 +24,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_emp", trackingRange = 1000)
 public class EntityEMP extends Entity implements IChunkLoader {
 
 	List<BlockPos> machines;

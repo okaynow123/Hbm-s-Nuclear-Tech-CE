@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.factory.BulletConfig;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.TrackerUtil;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_bullet_mk4", trackingRange = 256)
 public class EntityBulletBaseMK4 extends EntityThrowableInterp {
 
 

@@ -1,14 +1,18 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.machine.rbmk.RBMKBase;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControl;
+import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlAuto;
+import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlManual;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
-
+@AutoRegister(tileentity = TileEntityRBMKControlManual.class)
+@AutoRegister(tileentity = TileEntityRBMKControlAuto.class)
 public class RenderRBMKControlRod extends TileEntitySpecialRenderer<TileEntityRBMKControl>{
 
 	private ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/blocks/rbmk/rbmk_control.png");

@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.api.entity.IRadarDetectable;
 import com.hbm.entity.logic.IChunkLoader;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemAmmoArty;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_artillery_shell", trackingRange = 1000)
 public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoader, IRadarDetectable {
 
     private Ticket loaderTicket;

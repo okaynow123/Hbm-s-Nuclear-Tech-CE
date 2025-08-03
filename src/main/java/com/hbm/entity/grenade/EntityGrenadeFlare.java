@@ -1,5 +1,6 @@
 package com.hbm.entity.grenade;
 
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -7,7 +8,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_flare")
 public class EntityGrenadeFlare extends EntityThrowable
 {
     public Entity shooter;

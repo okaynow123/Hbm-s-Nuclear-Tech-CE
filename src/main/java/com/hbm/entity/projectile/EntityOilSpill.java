@@ -1,10 +1,11 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.entity.particle.EntityOilSpillFX;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_oil_spill", trackingRange = 1000)
 public class EntityOilSpill extends EntityThrowable {
 
 	public EntityOilSpill(World worldIn) {

@@ -1,13 +1,14 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityFBI;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelFBI;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(entity = EntityFBI.class, factory = "FACTORY")
 public class RenderFBI extends RenderBiped<EntityFBI> {
 
 	public static final IRenderFactory<EntityFBI> FACTORY = man -> new RenderFBI(man);

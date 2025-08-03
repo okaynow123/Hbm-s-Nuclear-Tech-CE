@@ -10,6 +10,7 @@ import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.handler.MissileStruct;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.FuelType;
@@ -28,7 +29,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_custom_missile", trackingRange = 1000)
 public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLoader {
 
 	public static final DataParameter<Integer> HEALTH = EntityDataManager.createKey(EntityMissileCustom.class, DataSerializers.VARINT);

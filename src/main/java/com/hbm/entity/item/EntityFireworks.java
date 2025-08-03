@@ -1,6 +1,7 @@
 package com.hbm.entity.item;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -10,7 +11,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
+@AutoRegister(name = "entity_firework_ball", trackingRange = 1000)
 public class EntityFireworks extends Entity {
 
 	int color;

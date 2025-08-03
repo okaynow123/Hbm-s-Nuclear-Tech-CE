@@ -2,6 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionThermo;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
@@ -28,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_ln2", trackingRange = 1000)
 public class EntityLN2 extends Entity implements IProjectile {
 
 	public static DataParameter<Boolean> CRITICAL = EntityDataManager.createKey(EntityLN2.class, DataSerializers.BOOLEAN);

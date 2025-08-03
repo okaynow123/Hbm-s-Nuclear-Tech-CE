@@ -4,12 +4,13 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-
+@AutoRegister(name = "entity_mob_flesh_creeper")
 public class EntityCreeperFlesh extends EntityCreeper {
 
     public EntityCreeperFlesh(World world) {

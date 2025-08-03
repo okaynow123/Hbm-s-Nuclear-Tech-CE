@@ -1,10 +1,11 @@
 package com.hbm.entity.particle;
 
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_chlorine_fx", trackingRange = 1000)
 public class EntityChlorineFX extends EntityModFX {
 
     public EntityChlorineFX(World world) {

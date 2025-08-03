@@ -1,12 +1,13 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(item = "fluid_icon")
 public class ItemRenderFluidIcon extends TEISRBase {
 
 	private static final double HALF_A_PIXEL = 0.03125;

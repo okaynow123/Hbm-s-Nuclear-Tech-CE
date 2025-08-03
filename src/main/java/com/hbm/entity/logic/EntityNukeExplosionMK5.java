@@ -8,6 +8,7 @@ import com.hbm.entity.effect.EntityFalloutUnderGround;
 import com.hbm.entity.mob.EntityGlowingOne;
 import com.hbm.explosion.ExplosionNukeRayBatched;
 import com.hbm.explosion.ExplosionNukeRayParallelized;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IExplosionRay;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
@@ -25,7 +26,7 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_nuke_mk5", trackingRange = 1000)
 public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
     //Strength of the blast
     private int strength;

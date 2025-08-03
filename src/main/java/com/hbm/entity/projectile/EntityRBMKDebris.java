@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.ContaminationUtil;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_rbmk_debris", trackingRange = 1000)
 public class EntityRBMKDebris extends Entity {
 
 	public static final DataParameter<Integer> TYPE_ID = EntityDataManager.createKey(EntityRBMKDebris.class, DataSerializers.VARINT);

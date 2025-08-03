@@ -3,6 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_boxcar", trackingRange = 1000)
 public class EntityBoxcar extends EntityThrowable implements IConstantRenderer {
 
 	public EntityBoxcar(World worldIn) {

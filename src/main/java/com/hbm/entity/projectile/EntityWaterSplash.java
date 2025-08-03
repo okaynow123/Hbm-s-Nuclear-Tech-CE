@@ -1,5 +1,6 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.packet.toclient.AuxParticlePacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -8,7 +9,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-
+@AutoRegister(name = "entity_water_splash", trackingRange = 1000)
 public class EntityWaterSplash extends EntityThrowable {
 
 	public EntityWaterSplash(World worldIn) {

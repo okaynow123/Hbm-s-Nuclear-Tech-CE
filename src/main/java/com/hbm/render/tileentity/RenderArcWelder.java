@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineArcWelder;
@@ -12,7 +13,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
+@AutoRegister
 public class RenderArcWelder extends TileEntitySpecialRenderer<TileEntityMachineArcWelder> implements IItemRendererProvider {
     @Override
     public void render(@NotNull TileEntityMachineArcWelder arc_welder, double x, double y, double z, float partialTicks, int destroyStage,

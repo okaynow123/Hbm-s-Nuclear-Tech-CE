@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.network.FluidDuctBox;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.Library;
@@ -10,8 +11,8 @@ import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(tileentity = TileEntityPipeBaseNT.class)
 public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEntitySpecialRenderer<T> {
 
 	@Override

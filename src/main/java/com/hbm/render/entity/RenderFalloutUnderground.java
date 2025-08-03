@@ -1,12 +1,13 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityFalloutUnderGround;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderFalloutUnderground extends Render<EntityFalloutUnderGround> {
 
 	public static final IRenderFactory<EntityFalloutUnderGround> FACTORY = (RenderManager man) -> {return new RenderFalloutUnderground(man);};

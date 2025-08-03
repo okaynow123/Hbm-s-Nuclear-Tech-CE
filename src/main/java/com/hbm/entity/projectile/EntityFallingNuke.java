@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.blocks.bomb.NukeCustom;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
@@ -12,7 +13,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_falling_bomb", trackingRange = 1000)
 public class EntityFallingNuke extends EntityThrowable {
 
 	public static final DataParameter<EnumFacing> FACING = EntityDataManager.createKey(EntityFallingNuke.class, DataSerializers.FACING);

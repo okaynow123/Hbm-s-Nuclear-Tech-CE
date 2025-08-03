@@ -5,6 +5,7 @@ import com.hbm.config.MobConfig;
 import com.hbm.entity.mob.ai.EntityAIBreaking;
 import com.hbm.entity.mob.ai.EntityAI_MLPF;
 import com.hbm.entity.projectile.EntityBullet;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -34,7 +35,7 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+@AutoRegister(name = "entity_ntm_fbi", trackingRange = 1000)
 public class EntityFBI extends EntityMob implements IRangedAttackMob {
 	
 	public EntityFBI(World world) {

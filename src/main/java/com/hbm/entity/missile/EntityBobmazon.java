@@ -1,6 +1,7 @@
 package com.hbm.entity.missile;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.material.Material;
@@ -11,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_bobmazon", trackingRange = 1000)
 public class EntityBobmazon extends Entity {
 
 	public ItemStack payload;

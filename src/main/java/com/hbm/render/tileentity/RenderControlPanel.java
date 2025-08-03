@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.ControlPanel;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
@@ -14,7 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister
 public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityControlPanel>
     implements IItemRendererProvider {
 

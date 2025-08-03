@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityFalloutRain;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -21,10 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderFallout extends Render<EntityFalloutRain> {
 
 	private Minecraft mc;
@@ -34,6 +36,8 @@ public class RenderFallout extends Render<EntityFalloutRain> {
 	private int rendererUpdateCount;
 	long lastTime = System.nanoTime();
 	private static final ResourceLocation falloutTexture = new ResourceLocation(RefStrings.MODID, "textures/entity/fallout.png");
+
+    public static final IRenderFactory<EntityFalloutRain> FACTORY = RenderFallout::new;
 	
 	public RenderFallout(RenderManager renderManager) {
         super(renderManager);

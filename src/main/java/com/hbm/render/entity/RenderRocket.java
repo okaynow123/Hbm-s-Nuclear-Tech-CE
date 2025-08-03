@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityRocket;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderRocket extends Render<EntityRocket> {
 
 	public static final IRenderFactory<EntityRocket> FACTORY = (RenderManager man) -> {return new RenderRocket(man, ModItems.man_core);};

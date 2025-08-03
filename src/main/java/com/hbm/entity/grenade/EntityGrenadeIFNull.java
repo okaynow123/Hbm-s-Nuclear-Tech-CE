@@ -1,5 +1,6 @@
 package com.hbm.entity.grenade;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.Entity;
@@ -11,7 +12,7 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_grenade_if_mystery")
 public class EntityGrenadeIFNull extends EntityGrenadeBouncyBase {
 
     public EntityGrenadeIFNull(World p_i1773_1_)

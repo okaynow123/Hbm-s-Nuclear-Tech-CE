@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityModBeam;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBeam6 extends Render<EntityModBeam> {
 
 	public static final IRenderFactory<EntityModBeam> FACTORY = (RenderManager man) -> {

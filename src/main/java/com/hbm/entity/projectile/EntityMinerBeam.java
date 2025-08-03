@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_miner_beam", trackingRange = 1000)
 public class EntityMinerBeam extends Entity implements IProjectile {
 
 	private int field_145791_d = -1;

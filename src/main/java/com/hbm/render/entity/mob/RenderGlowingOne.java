@@ -1,13 +1,14 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityGlowingOne;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(entity = EntityGlowingOne.class, factory = "FACTORY")
 public class RenderGlowingOne extends RenderZombie {
 
 	public static final IRenderFactory<EntityGlowingOne> FACTORY = man -> new RenderGlowingOne(man);

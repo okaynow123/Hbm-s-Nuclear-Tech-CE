@@ -1,6 +1,7 @@
 package com.hbm.entity.mob;
 
 import com.hbm.entity.particle.EntityBSmokeFX;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,6 +18,7 @@ import net.minecraft.world.World;
 /**
  *  BOW
  */
+@AutoRegister(name = "entity_elder_one", trackingRange = 1000)
 public class EntityQuackos extends EntityDuck {
 
 	/**

@@ -1,6 +1,7 @@
 package com.hbm.render.entity.item;
 
 import com.hbm.entity.item.EntityTNTPrimedBase;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +13,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(factory = "FACTORY")
 @SideOnly(Side.CLIENT) //Copy of RenderTNTPrimed, but allows for custom models
 public class RenderTNTPrimedBase extends Render<EntityTNTPrimedBase> {
 

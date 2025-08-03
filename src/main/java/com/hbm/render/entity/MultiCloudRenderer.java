@@ -1,6 +1,8 @@
 package com.hbm.render.entity;
 
-import com.hbm.entity.particle.EntityModFX;
+import com.hbm.entity.particle.*;
+import com.hbm.interfaces.AutoRegister;
+import com.hbm.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,11 +17,24 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
-
+@AutoRegister(entity = EntityOrangeFX.class, factory = "FACTORY_1")
+@AutoRegister(entity = EntityCloudFX.class, factory = "FACTORY_2")
+@AutoRegister(entity = EntityPinkCloudFX.class, factory = "FACTORY_3")
+@AutoRegister(entity = EntityChlorineFX.class, factory = "FACTORY_4")
+@AutoRegister(entity = EntitySmokeFX.class, factory = "FACTORY_5")
+@AutoRegister(entity = EntityBSmokeFX.class, factory = "FACTORY_6")
 public class MultiCloudRenderer extends Render<EntityModFX> {
+
+	public static final IRenderFactory<EntityOrangeFX> FACTORY_1 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.orange1, ModItems.orange2, ModItems.orange3, ModItems.orange4, ModItems.orange5, ModItems.orange6, ModItems.orange7, ModItems.orange8}, 0, man);};
+	public static final IRenderFactory<EntityCloudFX> FACTORY_2 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.cloud1, ModItems.cloud2, ModItems.cloud3, ModItems.cloud4, ModItems.cloud5, ModItems.cloud6, ModItems.cloud7, ModItems.cloud8}, 0, man);};
+	public static final IRenderFactory<EntityPinkCloudFX> FACTORY_3 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.pc1, ModItems.pc2, ModItems.pc3, ModItems.pc4, ModItems.pc5, ModItems.pc6, ModItems.pc7, ModItems.pc8}, 0, man);};
+	public static final IRenderFactory<EntityChlorineFX> FACTORY_4 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.chlorine1, ModItems.chlorine2, ModItems.chlorine3, ModItems.chlorine4, ModItems.chlorine5, ModItems.chlorine6, ModItems.chlorine7, ModItems.chlorine8}, 0, man);};
+	public static final IRenderFactory<EntitySmokeFX> FACTORY_5 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.smoke1, ModItems.smoke2, ModItems.smoke3, ModItems.smoke4, ModItems.smoke5, ModItems.smoke6, ModItems.smoke7, ModItems.smoke8}, 0, man);};
+	public static final IRenderFactory<EntityBSmokeFX> FACTORY_6 = (RenderManager man) -> {return new MultiCloudRenderer(new Item[]{ModItems.b_smoke1, ModItems.b_smoke2, ModItems.b_smoke3, ModItems.b_smoke4, ModItems.b_smoke5, ModItems.b_smoke6, ModItems.b_smoke7, ModItems.b_smoke8}, 0, man);};
 
 	private TextureAtlasSprite tex;
 	private Item[] textureItems;

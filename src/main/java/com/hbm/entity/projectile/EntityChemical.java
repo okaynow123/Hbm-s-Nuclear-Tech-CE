@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.*;
@@ -37,7 +38,7 @@ import net.minecraft.world.World;
 import java.awt.*;
 import java.util.List;
 
-
+@AutoRegister(name = "entity_chemthrower_splash", trackingRange = 1000)
 public class EntityChemical extends EntityThrowableNT{
     private static final DataParameter<? super Integer> FLUID_TYPE =  EntityDataManager.createKey(EntityChemical.class, DataSerializers.VARINT);
     /*

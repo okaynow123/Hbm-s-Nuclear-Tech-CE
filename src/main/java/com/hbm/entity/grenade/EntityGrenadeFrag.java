@@ -1,6 +1,7 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.explosion.ExplosionChaos;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.Entity;
@@ -10,7 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_frag")
 public class EntityGrenadeFrag extends EntityGrenadeBouncyBase
 {
     public Entity shooter;

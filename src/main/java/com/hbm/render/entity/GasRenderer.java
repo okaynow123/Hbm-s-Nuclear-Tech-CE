@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.particle.EntityGasFX;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,12 +12,12 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@AutoRegister(factory = "FACTORY")
 public class GasRenderer extends Render<EntityGasFX> {
 
 	public static final IRenderFactory<EntityGasFX> FACTORY = (RenderManager man) -> {return new GasRenderer(man);};

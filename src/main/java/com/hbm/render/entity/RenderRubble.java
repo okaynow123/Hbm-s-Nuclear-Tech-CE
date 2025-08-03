@@ -1,19 +1,23 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityRubble;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelRubble;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 import java.util.Random;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderRubble extends Render<EntityRubble> {
+
+	public static final IRenderFactory<EntityRubble> FACTORY = (RenderManager man) -> {return new RenderRubble(man);};
 
 	ModelRubble mine;
 	Random rand;

@@ -1,15 +1,16 @@
 package com.hbm.render.item.weapon;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelSword;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(item = "redstone_sword")
 public class ItemRedstoneSwordRender extends TileEntityItemStackRenderer {
 	
 	public static final ItemRedstoneSwordRender INSTANCE = new ItemRedstoneSwordRender();

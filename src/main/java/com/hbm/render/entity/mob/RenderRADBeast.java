@@ -1,6 +1,7 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityRADBeast;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
@@ -9,13 +10,13 @@ import com.hbm.render.misc.BeamPronter.EnumWaveType;
 import com.hbm.render.model.ModelM65Blaze;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBlaze;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(entity = EntityRADBeast.class, factory = "FACTORY")
 public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
 
 	public static final IRenderFactory<EntityRADBeast> FACTORY = man -> new RenderRADBeast(man);

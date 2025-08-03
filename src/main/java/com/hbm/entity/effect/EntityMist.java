@@ -4,6 +4,7 @@ package com.hbm.entity.effect;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.*;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_mist", trackingRange = 1000)
 public class EntityMist extends Entity {
 
     private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityMist.class, DataSerializers.FLOAT);

@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.machine.FoundryChannel;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityFoundryChannel;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.awt.*;
-
+@AutoRegister
 public class RenderFoundryChannel extends TileEntitySpecialRenderer<TileEntityFoundryChannel> {
     public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
 

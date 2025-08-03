@@ -1,5 +1,6 @@
 package com.hbm.entity.mob;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemZirnoxRodDepleted;
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_ntm_radiation_blaze", trackingRange = 1000)
 public class EntityRADBeast extends EntityMob implements IRadiationImmune {
 
 	public static final DataParameter<Integer> TARGET_ID = EntityDataManager.createKey(EntityRADBeast.class, DataSerializers.VARINT);

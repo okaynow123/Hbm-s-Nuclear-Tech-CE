@@ -2,6 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.effect.EntityCloudFleija;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,8 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderCloudFleija extends Render<EntityCloudFleija> {
 
     public static final IRenderFactory<EntityCloudFleija> FACTORY = (RenderManager man) -> {

@@ -1,19 +1,20 @@
 package com.hbm.render.entity.projectile;
 
 import com.hbm.entity.projectile.EntityBeamBase;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
 import com.hbm.render.misc.BeamPronter.EnumWaveType;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderVortexBeam extends Render<EntityBeamBase> {
 
 	public static final IRenderFactory<EntityBeamBase> FACTORY = man -> new RenderVortexBeam(man);

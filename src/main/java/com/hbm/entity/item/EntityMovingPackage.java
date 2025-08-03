@@ -2,6 +2,7 @@ package com.hbm.entity.item;
 
 import com.hbm.api.conveyor.IConveyorPackage;
 import com.hbm.api.conveyor.IEnterableBlock;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -11,7 +12,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_c_package", trackingRange = 1000)
 public class EntityMovingPackage extends EntityMovingConveyorObject implements IConveyorPackage {
 
     protected ItemStack[] contents = new ItemStack[0];

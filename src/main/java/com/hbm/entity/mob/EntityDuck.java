@@ -1,12 +1,13 @@
 package com.hbm.entity.mob;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_fucc_a_ducc", trackingRange = 1000)
 public class EntityDuck extends EntityChicken {
 
 	public EntityDuck(World worldIn) {

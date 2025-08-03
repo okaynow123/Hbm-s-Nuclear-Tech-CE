@@ -1,6 +1,7 @@
 package com.hbm.render.entity.effect;
 
 import com.hbm.entity.effect.EntityCloudTom;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.Minecraft;
@@ -15,8 +16,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(factory = "FACTORY")
 public class RenderCloudTom extends Render<EntityCloudTom> {
 
 	public static final IRenderFactory<EntityCloudTom> FACTORY = man -> new RenderCloudTom(man);

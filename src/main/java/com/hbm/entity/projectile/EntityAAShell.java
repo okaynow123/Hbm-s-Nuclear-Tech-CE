@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_aa_shell", trackingRange = 1000)
 public class EntityAAShell extends Entity {
 
 	public int speedOverride = 1;

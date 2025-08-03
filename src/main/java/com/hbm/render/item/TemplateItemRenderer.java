@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.items.ModItems;
@@ -13,7 +14,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
-
+@AutoRegister(item = "assembly_template")
+@AutoRegister(item = "chemistry_template")
+@AutoRegister(item = "crucible_template")
 public class TemplateItemRenderer extends TileEntityItemStackRenderer {
 
     public static final TemplateItemRenderer INSTANCE = new TemplateItemRenderer();

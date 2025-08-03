@@ -2,6 +2,7 @@ package com.hbm.entity.effect;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.projectile.EntityRubble;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_black_hole", trackingRange = 1000)
 public class EntityBlackHole extends Entity implements IConstantRenderer {
 
 	public static final DataParameter<Float> SIZE = EntityDataManager.createKey(EntityBlackHole.class, DataSerializers.FLOAT);

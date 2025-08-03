@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.particle.EntitySSmokeFX;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -14,10 +15,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
+@AutoRegister(factory = "FACTORY")
 public class SSmokeRenderer extends Render<EntitySSmokeFX> {
+
+	public static final IRenderFactory<EntitySSmokeFX> FACTORY = (RenderManager man) -> {return new SSmokeRenderer(man, ModItems.nuclear_waste);};
 
 	private Item item;
 	private int meta;

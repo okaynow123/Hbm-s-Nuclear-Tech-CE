@@ -1,5 +1,6 @@
 package com.hbm.render.item.weapon;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemGunEgon;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
@@ -19,8 +20,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(item = "gun_egon")
 public class ItemRenderGunEgon extends TEISRBase {
 
 	@Override

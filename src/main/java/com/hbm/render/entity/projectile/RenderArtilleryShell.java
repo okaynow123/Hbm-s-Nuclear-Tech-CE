@@ -1,13 +1,14 @@
 package com.hbm.render.entity.projectile;
 
 import com.hbm.entity.projectile.EntityArtilleryShell;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderArtilleryShell extends Render<EntityArtilleryShell> {
 
     public static final IRenderFactory<EntityArtilleryShell> FACTORY = man -> new RenderArtilleryShell(man);

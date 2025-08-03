@@ -1,6 +1,7 @@
 package com.hbm.entity.effect;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,7 +9,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_cloud_fleija", trackingRange = 1000)
 public class EntityCloudFleija extends Entity {
 
 	public static final DataParameter<Integer> MAXAGE = EntityDataManager.createKey(EntityCloudFleijaRainbow.class, DataSerializers.VARINT);

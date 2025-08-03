@@ -1,6 +1,7 @@
 package com.hbm.entity.item;
 
 import com.hbm.api.block.IFuckingExplode;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
-
+@AutoRegister(name = "entity_ntm_tnt_primed", trackingRange = 256)
 public class EntityTNTPrimedBase extends Entity {
 
     private static final DataParameter<Integer> FUSE = EntityDataManager.<Integer>createKey(EntityTNTPrimedBase.class, DataSerializers.VARINT); // Fuse time in ticks

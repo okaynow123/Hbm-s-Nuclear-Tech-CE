@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityLaserBeam;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,8 +13,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(factory = "FACTORY")
 public class RenderBeam2 extends Render<EntityLaserBeam> {
 
 	public static final IRenderFactory<EntityLaserBeam> FACTORY = (RenderManager man) -> {return new RenderBeam2(man);};

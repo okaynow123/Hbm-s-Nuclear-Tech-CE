@@ -4,6 +4,7 @@ import com.hbm.entity.mob.ai.EntityAIMaskmanCasualApproach;
 import com.hbm.entity.mob.ai.EntityAIMaskmanLasergun;
 import com.hbm.entity.mob.ai.EntityAIMaskmanMinigun;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
 import com.hbm.main.AdvancementManager;
@@ -22,7 +23,7 @@ import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_mask_man", trackingRange = 1000)
 public class EntityMaskMan extends EntityMob implements IRadiationImmune {
 
 	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS));

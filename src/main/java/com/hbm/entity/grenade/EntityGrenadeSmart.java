@@ -1,13 +1,14 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_smart")
 public class EntityGrenadeSmart extends EntityGrenadeBase {
 
     public EntityGrenadeSmart(World p_i1773_1_)

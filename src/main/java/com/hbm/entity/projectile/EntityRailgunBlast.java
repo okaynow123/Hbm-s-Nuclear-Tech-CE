@@ -4,6 +4,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.logic.IChunkLoader;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +19,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_railgun_pellet", trackingRange = 1000)
 public class EntityRailgunBlast extends Entity implements IChunkLoader {
 
 	public EntityRailgunBlast(World w) {

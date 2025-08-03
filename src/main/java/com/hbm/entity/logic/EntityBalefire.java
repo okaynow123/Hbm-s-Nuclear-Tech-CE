@@ -3,6 +3,7 @@ package com.hbm.entity.logic;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.explosion.ExplosionBalefire;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
@@ -18,7 +19,7 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_balefire", trackingRange = 1000)
 public class EntityBalefire extends Entity implements IChunkLoader {
 
 	public int age = 0;

@@ -1,18 +1,19 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityTeslaCrab;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
 import com.hbm.render.misc.BeamPronter.EnumWaveType;
 import com.hbm.render.model.ModelTeslaCrab;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(entity = EntityTeslaCrab.class, factory = "FACTORY")
 public class RenderTeslaCrab extends RenderLiving<EntityTeslaCrab> {
 
 	public static final IRenderFactory<EntityTeslaCrab> FACTORY = (RenderManager man) -> {

@@ -4,6 +4,7 @@ import com.hbm.entity.effect.EntityBlackHole;
 import com.hbm.entity.effect.EntityRagingVortex;
 import com.hbm.entity.effect.EntityVortex;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.NTMRenderHelper;
@@ -20,10 +21,10 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBlackHole extends Render<EntityBlackHole> {
 
 	public static final IRenderFactory<EntityBlackHole> FACTORY = (RenderManager man) -> {

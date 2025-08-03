@@ -1,13 +1,14 @@
 package com.hbm.entity.mob;
 
 import com.hbm.entity.mob.ai.EntityMoonWalkHelper;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_moon_cow", trackingRange = 80)
 public class EntityMoonCow extends EntityCow {
 
     public EntityMoonCow(World world) {

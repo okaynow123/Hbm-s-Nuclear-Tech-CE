@@ -1,6 +1,7 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.entity.effect.EntityMist;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
@@ -9,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import java.util.Random;
-
+@AutoRegister(name = "entity_grenade_gas")
 public class EntityGrenadeGas extends EntityGrenadeBouncyBase {
 	Random rand = new Random();
 

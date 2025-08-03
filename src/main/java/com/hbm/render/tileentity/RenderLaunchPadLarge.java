@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.main.ResourceManager;
@@ -12,10 +13,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.function.Consumer;
-
+@AutoRegister
 public class RenderLaunchPadLarge extends TileEntitySpecialRenderer<TileEntityLaunchPadLarge>
     implements IItemRendererProvider {
 
@@ -60,7 +61,7 @@ public class RenderLaunchPadLarge extends TileEntitySpecialRenderer<TileEntityLa
       double[] offset = null;
 
       switch (formFactor) {
-        case ABM:
+        case ABM, OTHER:
           parts = new String[] {"ABM_Pad", "ABM_Erector", "ABM_Pivot", "ABM_Rope"};
           offset = new double[] {1.5D, 1.25D};
           bindTexture(ResourceManager.missile_erector_abm_tex);
@@ -89,11 +90,6 @@ public class RenderLaunchPadLarge extends TileEntitySpecialRenderer<TileEntityLa
           parts = new String[] {"Atlas_Pad", "Atlas_Erector", "Atlas_Pivot", "Atlas_Rope"};
           offset = new double[] {4D, 1.5D};
           bindTexture(ResourceManager.missile_erector_atlas_tex);
-          break;
-        case OTHER:
-          parts = new String[] {"ABM_Pad", "ABM_Erector", "ABM_Pivot", "ABM_Rope"};
-          offset = new double[] {1.5D, 1.25D};
-          bindTexture(ResourceManager.missile_erector_abm_tex);
           break;
       }
 

@@ -4,6 +4,7 @@ import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_taint_crab")
 public class EntityTaintCrab extends EntityCyberCrab {
 
 	public List<double[]> targets = new ArrayList<double[]>();

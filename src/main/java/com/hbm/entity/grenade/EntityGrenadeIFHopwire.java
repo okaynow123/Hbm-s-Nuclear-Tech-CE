@@ -1,12 +1,13 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.entity.effect.EntityVortex;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_if_hopwire")
 public class EntityGrenadeIFHopwire extends EntityGrenadeBouncyBase {
 
     public EntityGrenadeIFHopwire(World p_i1773_1_)

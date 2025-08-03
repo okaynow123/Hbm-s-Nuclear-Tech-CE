@@ -2,11 +2,12 @@ package com.hbm.entity.particle;
 
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionNukeGeneric;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_agent_orange", trackingRange = 1000)
 public class EntityOrangeFX extends EntityModFX {
 
 	public EntityOrangeFX(World world) {

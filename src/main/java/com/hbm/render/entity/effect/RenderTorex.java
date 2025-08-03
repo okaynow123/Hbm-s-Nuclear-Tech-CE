@@ -2,6 +2,7 @@ package com.hbm.render.entity.effect;
 
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.effect.EntityNukeTorex.Cloudlet;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ModEventHandlerClient;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-
+@AutoRegister(factory = "FACTORY")
 public class RenderTorex extends Render<EntityNukeTorex> {
 
 	public static final IRenderFactory<EntityNukeTorex> FACTORY = man -> new RenderTorex(man);

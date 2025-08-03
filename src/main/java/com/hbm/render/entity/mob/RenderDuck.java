@@ -1,13 +1,14 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityDuck;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.entity.RenderChicken;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(entity = EntityDuck.class, factory = "FACTORY")
 public class RenderDuck extends RenderChicken {
 
 	public static final IRenderFactory<EntityDuck> FACTORY = man -> new RenderDuck(man);

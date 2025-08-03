@@ -1,23 +1,25 @@
 package com.hbm.render.entity.mob;
 
-import com.hbm.entity.mob.EntityDuck;
+import com.hbm.entity.mob.EntityQuackos;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.entity.RenderChicken;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 /**
  *  BOW
  */
+@AutoRegister(entity = EntityQuackos.class, factory = "FACTORY")
 public class RenderQuacc extends RenderChicken {
 
 	/**
 	 *  BOW
 	 */
-	public static final IRenderFactory<EntityDuck> FACTORY = man -> new RenderQuacc(man);
+	public static final IRenderFactory<EntityQuackos> FACTORY = man -> new RenderQuacc(man);
 	
 	/**
 	 *  BOW

@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
+@AutoRegister(name = "entity_shrapnel", trackingRange = 1000)
 public class EntityShrapnel extends EntityThrowable {
 
 	public static final DataParameter<Byte> TRAIL = EntityDataManager.createKey(EntityShrapnel.class, DataSerializers.BYTE);

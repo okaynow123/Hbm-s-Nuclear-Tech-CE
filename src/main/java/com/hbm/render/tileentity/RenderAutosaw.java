@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineAutosaw;
@@ -8,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.NotNull;
-
+@AutoRegister
 public class RenderAutosaw extends TileEntitySpecialRenderer<TileEntityMachineAutosaw>
     implements IItemRendererProvider {
 

@@ -2,6 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.RenderSparks;
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBulletMk2 extends Render<EntityBulletBase> {
 
 	public static final IRenderFactory<EntityBulletBase> FACTORY = (RenderManager man) -> {

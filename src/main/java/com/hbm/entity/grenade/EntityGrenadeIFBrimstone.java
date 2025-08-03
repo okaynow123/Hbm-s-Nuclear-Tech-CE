@@ -1,13 +1,14 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.entity.projectile.EntityBullet;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_grenade_if_brimstone")
 public class EntityGrenadeIFBrimstone extends EntityGrenadeBouncyBase {
 
     public EntityGrenadeIFBrimstone(World p_i1773_1_)

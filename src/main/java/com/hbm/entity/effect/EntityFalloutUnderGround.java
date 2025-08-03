@@ -3,12 +3,13 @@ package com.hbm.entity.effect;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
+@AutoRegister(name = "entity_fallout_flare", trackingRange = 1000)
 public class EntityFalloutUnderGround extends EntityFallout {
 
     private final double phi;

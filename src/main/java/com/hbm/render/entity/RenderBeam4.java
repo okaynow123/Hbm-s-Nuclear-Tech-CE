@@ -1,6 +1,7 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntitySparkBeam;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,7 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBeam4 extends Render<EntitySparkBeam> {
 
 	public static final IRenderFactory<EntitySparkBeam> FACTORY = (RenderManager man) -> {return new RenderBeam4(man);};

@@ -3,6 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.entity.Entity;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_duchessgambit", trackingRange = 1000)
 public class EntityDuchessGambit extends EntityThrowable {
 
 	public EntityDuchessGambit(World p_i1582_1_) {

@@ -1,6 +1,7 @@
 package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.EntityUFO;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
@@ -13,8 +14,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(factory = "FACTORY")
 public class RenderUFO extends Render<EntityUFO> {
 
 	public static final IRenderFactory<EntityUFO> FACTORY = man -> new RenderUFO(man);

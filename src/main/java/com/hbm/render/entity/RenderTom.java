@@ -2,16 +2,18 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityRailgunBlast;
 import com.hbm.entity.projectile.EntityTom;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.misc.TomPronter2;
 import com.hbm.render.util.TomPronter;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister(entity = EntityRailgunBlast.class, factory = "RAIL_FACTORY")
+@AutoRegister(entity = EntityTom.class, factory = "TOM_FACTORY")
 public class RenderTom<T extends Entity> extends Render<T> {
 
 	public static final IRenderFactory<EntityRailgunBlast> RAIL_FACTORY = (RenderManager man) -> {

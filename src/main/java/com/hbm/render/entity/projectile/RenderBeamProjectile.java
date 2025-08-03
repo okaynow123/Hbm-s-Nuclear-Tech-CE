@@ -1,7 +1,7 @@
 package com.hbm.render.entity.projectile;
 
-import com.hbm.entity.projectile.EntityBeamBase;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderBeamProjectile extends Render<EntityBulletBeamBase> {
 
     public static final IRenderFactory<EntityBulletBeamBase> FACTORY = RenderBeamProjectile::new;

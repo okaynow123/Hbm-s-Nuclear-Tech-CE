@@ -3,6 +3,7 @@ package com.hbm.entity.mob;
 import com.hbm.entity.particle.EntitySmokeFX;
 import com.hbm.entity.projectile.EntityBullet;
 import com.hbm.entity.projectile.EntityChopperMine;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 //Drillgon200: This whole thing is messed up and janky and I don't know what to about it.
+@AutoRegister(name = "entity_hunter_chopper", trackingRange = 1000)
 public class EntityHunterChopper extends EntityFlying implements IMob, IRadiationImmune {
 
 	public static final DataParameter<Boolean> DYING = EntityDataManager.createKey(EntityHunterChopper.class, DataSerializers.BOOLEAN);

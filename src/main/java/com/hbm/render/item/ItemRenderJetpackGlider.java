@@ -1,11 +1,12 @@
 package com.hbm.render.item;
 
-import static com.hbm.render.NTMRenderHelper.bindTexture;
-
 import com.hbm.animloader.AnimationWrapper;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 
+import static com.hbm.render.NTMRenderHelper.bindTexture;
+@AutoRegister(item = "jetpack_glider")
 public class ItemRenderJetpackGlider extends ItemRenderBase {
   @Override
   public void renderInventory() {

@@ -1,12 +1,13 @@
 package com.hbm.render.entity;
 
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderNukeMK5 extends Render<EntityNukeExplosionMK5> {
 
 	public static final IRenderFactory<EntityNukeExplosionMK5> FACTORY = (RenderManager man) -> {return new RenderNukeMK5(man);};

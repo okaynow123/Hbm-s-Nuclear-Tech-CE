@@ -1,6 +1,7 @@
 package com.hbm.render.entity.projectile;
 
 import com.hbm.entity.projectile.EntityCog;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -8,7 +9,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.jetbrains.annotations.Nullable;
-
+@AutoRegister(factory = "FACTORY")
 public class RenderCog extends Render<EntityCog> {
 
     public static final IRenderFactory<EntityCog> FACTORY = RenderCog::new;

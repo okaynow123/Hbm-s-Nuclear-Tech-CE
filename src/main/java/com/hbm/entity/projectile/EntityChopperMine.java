@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -15,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
-
+@AutoRegister(name = "entity_chopper_mine", trackingRange = 1000)
 public class EntityChopperMine extends Entity implements IProjectile {
 
 	public int timer = 0;

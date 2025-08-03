@@ -2,6 +2,7 @@ package com.hbm.render.entity.missile;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.missile.EntitySoyuzCapsule;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.tileentity.IItemRendererProvider;
@@ -11,8 +12,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+import org.lwjgl.opengl.GL11;
+@AutoRegister(factory = "FACTORY")
 public class RenderSoyuzCapsule extends Render<EntitySoyuzCapsule>
     implements IItemRendererProvider {
 

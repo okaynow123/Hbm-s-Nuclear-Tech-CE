@@ -2,6 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.grenade.EntityGrenadeFlare;
 import com.hbm.entity.projectile.EntitySchrab;
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,7 +15,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
-
+@AutoRegister(entity = EntityGrenadeFlare.class, factory = "FACTORY")
+@AutoRegister(entity = EntitySchrab.class, factory = "FACTORY_SCHRAB")
 public  class  RenderFlare <E extends Entity> extends Render<E> {
 
 	public static final IRenderFactory<EntityGrenadeFlare> FACTORY = (RenderManager man) -> {return new RenderFlare<EntityGrenadeFlare>(man);};

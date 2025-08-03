@@ -11,6 +11,7 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.handler.DataWatcher;
 import com.hbm.handler.RocketStruct;
 import com.hbm.handler.RocketStruct.RocketStage;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ItemVOTVdrive.Destination;
@@ -29,9 +30,6 @@ import com.hbm.util.CompatExternal;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.ParticleUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -60,6 +58,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+@AutoRegister(name = "entity_rideable_rocket", trackingRange = 1000)
 public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOverlay {
 
 	public ItemStack navDrive;
@@ -811,7 +813,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		if(canRide()) return;
 		super.clearChunkLoader();
 	}
-
+	@AutoRegister(name = "entity_rideable_rocket_dummy", trackingRange = 1000)
 	public static class EntityRideableRocketDummy extends Entity implements ILookOverlay {
 
 		public EntityRideableRocket parent;

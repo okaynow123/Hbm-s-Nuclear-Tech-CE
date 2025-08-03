@@ -1,9 +1,10 @@
 package com.hbm.entity.particle;
 
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
+@AutoRegister(name = "entity_smoke_fx", trackingRange = 1000)
 public class EntitySmokeFX extends EntityModFX {
 
 	public EntitySmokeFX(World world) {

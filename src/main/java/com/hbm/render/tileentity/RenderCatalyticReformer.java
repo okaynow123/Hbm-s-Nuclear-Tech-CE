@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
@@ -14,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL12;
-
+@AutoRegister
 public class RenderCatalyticReformer
     extends TileEntitySpecialRenderer<TileEntityMachineCatalyticReformer>
     implements IItemRendererProvider {

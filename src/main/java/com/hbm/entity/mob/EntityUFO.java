@@ -5,6 +5,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
@@ -45,7 +46,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_ntm_ufo", trackingRange = 1000)
 public class EntityUFO extends EntityFlying implements IMob, IRadiationImmune {
 
 	public static final DataParameter<Boolean> BEAM = EntityDataManager.createKey(EntityUFO.class, DataSerializers.BOOLEAN);

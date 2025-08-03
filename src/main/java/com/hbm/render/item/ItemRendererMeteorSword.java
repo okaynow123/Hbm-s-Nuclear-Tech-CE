@@ -1,5 +1,6 @@
 package com.hbm.render.item;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.util.RenderMiscEffects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,19 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import org.lwjgl.opengl.GL11;
-
+@AutoRegister(item = "meteorite_sword_seared", constructorArgsString = "1.0F, 0.5F, 0.0F")
+@AutoRegister(item = "meteorite_sword_reforged", constructorArgsString = "0.5F, 1.0F, 1.0F")
+@AutoRegister(item = "meteorite_sword_hardened", constructorArgsString = "0.25F, 0.25F, 0.25F")
+@AutoRegister(item = "meteorite_sword_alloyed", constructorArgsString = "0.0F, 0.5F, 1.0F")
+@AutoRegister(item = "meteorite_sword_machined", constructorArgsString = "1.0F, 1.0F, 0.0F")
+@AutoRegister(item = "meteorite_sword_treated", constructorArgsString = "0.5F, 1.0F, 0.5F")
+@AutoRegister(item = "meteorite_sword_etched", constructorArgsString = "1.0F, 1.0F, 0.5F")
+@AutoRegister(item = "meteorite_sword_bred", constructorArgsString = "0.5F, 0.5F, 0.0F")
+@AutoRegister(item = "meteorite_sword_irradiated", constructorArgsString = "0.75F, 1.0F, 0.0F")
+@AutoRegister(item = "meteorite_sword_fused", constructorArgsString = "1.0F, 0.0F, 0.5F")
+@AutoRegister(item = "meteorite_sword_baleful", constructorArgsString = "0.0F, 1.0F, 0.0F")
+@AutoRegister(item = "meteorite_sword_warped", constructorArgsString = "1.0F, 1.0F, 1.0F")
+@AutoRegister(item = "meteorite_sword_demonic", constructorArgsString = "1.0F, 0.0F, 0.0F")
 public class ItemRendererMeteorSword extends TEISRBase {
 
     float r;

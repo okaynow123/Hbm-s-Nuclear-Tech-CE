@@ -6,6 +6,7 @@ import com.hbm.entity.projectile.rocketbehavior.IRocketSteeringBehavior;
 import com.hbm.entity.projectile.rocketbehavior.IRocketTargetingBehavior;
 import com.hbm.entity.projectile.rocketbehavior.RocketSteeringBallisticArc;
 import com.hbm.entity.projectile.rocketbehavior.RocketTargetingPredictive;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.main.MainRegistry;
 import net.minecraft.entity.Entity;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@AutoRegister(name = "entity_artillery_rocket", trackingRange = 1000)
 public class EntityArtilleryRocket extends EntityThrowableNT
     implements IChunkLoader, IRadarDetectable {
 

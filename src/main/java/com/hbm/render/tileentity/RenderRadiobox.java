@@ -1,14 +1,14 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.machine.Radiobox;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelRadio;
 import com.hbm.tileentity.machine.TileEntityRadiobox;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-
+@AutoRegister
 public class RenderRadiobox extends TileEntitySpecialRenderer<TileEntityRadiobox> {
 
 	private static final ResourceLocation texture7 = new ResourceLocation(RefStrings.MODID + ":" + "textures/models/turrets/ModelRadio.png");
