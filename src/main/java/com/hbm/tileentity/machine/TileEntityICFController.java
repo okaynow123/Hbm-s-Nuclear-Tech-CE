@@ -37,6 +37,7 @@ public class TileEntityICFController extends TileEntityTickingBase implements IE
     private int capacitorCount;
     private int turbochargerCount;
     private AxisAlignedBB bb = null;
+    private long powerSync;
 
     public void setup(HashSet<BlockPos> ports, HashSet<BlockPos> cells, HashSet<BlockPos> emitters, HashSet<BlockPos> capacitors,
                       HashSet<BlockPos> turbochargers) {
@@ -152,7 +153,7 @@ public class TileEntityICFController extends TileEntityTickingBase implements IE
                         e.attackEntityFrom(DamageSource.IN_FIRE, 50);
                         e.setFire(5);
                     }
-
+                    powerSync = power;
                     this.setPower(0);
                 } else {
                     this.laserLength = 0;
@@ -178,7 +179,7 @@ public class TileEntityICFController extends TileEntityTickingBase implements IE
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
-        buf.writeLong(power);
+        buf.writeLong(powerSync);
         buf.writeInt(capacitorCount);
         buf.writeInt(turbochargerCount);
         buf.writeInt(laserLength);

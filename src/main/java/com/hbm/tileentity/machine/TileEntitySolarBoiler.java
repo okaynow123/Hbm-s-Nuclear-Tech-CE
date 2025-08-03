@@ -29,6 +29,7 @@ public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufP
     public int heatInput;
     public static int maxHeat = 320_000; //the heat required to turn 64k of water into steam
     public static final double diffusion = 0.1D;
+    private int heatSync, heatInputSync;
 
     public TileEntitySolarBoiler() {
         super();
@@ -42,12 +43,14 @@ public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufP
 
         if(!world.isRemote) {
             this.trySubscribe(tanks[0].getTankType(), world, pos.up(3), ForgeDirection.DOWN);
-            this.trySubscribe(tanks[1].getTankType(), world, pos.down(), ForgeDirection.UP);
+            this.trySubscribe(tanks[0].getTankType(), world, pos.down(), ForgeDirection.UP);
             tryConvert();
             
             fillFluidInit(tanks[1]);
             heat += heatInput;
             if(heat > maxHeat) heat = maxHeat;
+            heatSync = heat;
+            heatInputSync = heatInput;
             networkPackNT(25);
             heat *= 0.999;
             heatInput = 0;
@@ -98,8 +101,8 @@ public class TileEntitySolarBoiler extends TileEntityLoadedBase implements IBufP
     @Override
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
-        buf.writeInt(heat);
-        buf.writeInt(heatInput);
+        buf.writeInt(heatSync);
+        buf.writeInt(heatInputSync);
         tanks[0].serialize(buf);
         tanks[1].serialize(buf);
     }
