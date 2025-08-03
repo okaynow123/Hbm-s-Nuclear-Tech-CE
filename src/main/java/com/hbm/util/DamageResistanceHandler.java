@@ -130,14 +130,15 @@ public class DamageResistanceHandler {
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
         registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F));
-//        registerSet(ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, new ResistanceStats()
-//                .setOther(0F, 1F)); //What?
+        registerSet(ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, new ResistanceStats()
+                .setOther(0F, 1F)); //What?
+                         //MetalloloM: *Yes*
         registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots, new ResistanceStats());
         registerSet(ModItems.cmb_helmet, ModItems.cmb_plate, ModItems.cmb_legs, ModItems.cmb_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F));
         registerSet(ModItems.schrabidium_helmet, ModItems.schrabidium_plate, ModItems.schrabidium_legs, ModItems.schrabidium_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F));
-//        registerSet(ModItems.robes_helmet, ModItems.robes_plate, ModItems.robes_legs, ModItems.robes_boots, new ResistanceStats());
+        registerSet(ModItems.robes_helmet, ModItems.robes_plate, ModItems.robes_legs, ModItems.robes_boots, new ResistanceStats());
 
         registerSet(ModItems.security_helmet, ModItems.security_plate, ModItems.security_legs, ModItems.security_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));

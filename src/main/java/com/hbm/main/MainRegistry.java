@@ -151,6 +151,7 @@ public class MainRegistry {
     public static ArmorMaterial aMatTrench = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Trenchmaster", RefStrings.MODID + ":Trenchmaster", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatTaurun = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Taurun", RefStrings.MODID + ":Taurun", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatBismuth = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Bismuth", RefStrings.MODID + ":Bismuth", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatZirconium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Zirconium", RefStrings.MODID + ":Zirconium", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatEnvsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Envsuit", RefStrings.MODID + ":Envsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatRPA = EnumHelper.addArmorMaterial(RefStrings.MODID + ":RPA", RefStrings.MODID + ":RPA", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatHEV = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HEV", RefStrings.MODID + ":HEV", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);

@@ -1157,6 +1157,8 @@ public class ResourceManager {
 	public static final ResourceLocation hev_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/hev_chest.png");
 	public static final ResourceLocation hev_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/hev_arm.png");
 
+	public static final ResourceLocation zirconium_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/zirconium_2.png");
+
 	public static final ResourceLocation steamsuit_helmet = new ResourceLocation(RefStrings.MODID, "textures/armor/steamsuit_helmet.png");
 	public static final ResourceLocation steamsuit_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/steamsuit_leg.png");
 	public static final ResourceLocation steamsuit_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/steamsuit_chest.png");
