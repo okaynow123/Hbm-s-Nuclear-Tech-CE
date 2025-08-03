@@ -17,6 +17,7 @@ import java.lang.annotation.*;
  *   <li><b>Item Stack Renderer:</b> When annotating a class that extends
  *       {@code TileEntityItemStackRenderer},
  *       use {@link #item()} to specify the static field name of the {@code Item} this renderer should be bound to.</li>
+ *       use {@link #constructorArgs()} to provide constructor arguments.
  *
  *   <li><b>Tile Entity Renderer:</b> When annotating a class that extends {@code TileEntitySpecialRenderer<T>},
  *       use {@link #tileentity()} to specify the target tile entity class. If omitted, the processor will
@@ -53,7 +54,8 @@ public @interface AutoRegister {
      * {@code TileEntityItemStackRenderer} should be bound.
      * <p>
      * For example, a value of {@code "hf_sword"} would target a field like {@code ModItems.hf_sword}.
-     * This is required when annotating a TEISR class.
+     * This is required when annotating a TEISR class. Use {@link #constructorArgs()} to provide
+     * constructor arguments.
      */
     String item() default "";
 
@@ -107,4 +109,34 @@ public @interface AutoRegister {
      * Only applicable when annotating an entity class. Default = true.
      */
     boolean sendVelocityUpdates() default true;
+
+    /**
+     * Specifies raw string literals to be used as constructor arguments for {@code TileEntityItemStackRenderer}. Optional.
+     * <p>
+     * Each string in the array is injected directly as a parameter into the constructor call.
+     * <ul>
+     *   <li><b>Floats:</b> {@code constructorArgs = {"1.0F", "0.5F"}}</li>
+     *   <li><b>Integers (Hex):</b> {@code constructorArgs = {"0x575757", "0.2F"}}</li>
+     *   <li><b>Strings:</b> {@code constructorArgs = {"\"my_texture.png\""}} (Note the escaped quotes)</li>
+     * </ul>
+     * <b> An alternative to this is {@link #constructorArgsString()}
+     */
+    String[] constructorArgs() default {};
+
+    /**
+     * A convenience alternative to {@link #constructorArgs} that accepts a single, comma-separated string.
+     * <p>
+     * This is useful for simple argument lists. The processor will use this string directly as the
+     * content within the constructor's parentheses.
+     * <p>
+     * <b>Example:</b>
+     * <pre>
+     * {@code @AutoRegister(item = "...", constructorArgsString = "0.5F, 0.5F, 1.0F")}
+     * </pre>
+     *
+     * <b>You should use either this member or {@code constructorArgs}, but not both.</b>
+     *
+     * @see #constructorArgs()
+     */
+    String constructorArgsString() default "";
 }

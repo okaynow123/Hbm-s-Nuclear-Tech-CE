@@ -2,6 +2,7 @@ package com.hbm.processor;
 
 import com.google.auto.service.AutoService;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.AutoRegisterContainer;
 import com.squareup.javapoet.*;
 
 import javax.annotation.processing.*;
@@ -20,7 +21,10 @@ import java.io.IOException;
 import java.util.*;
 
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.hbm.interfaces.AutoRegister")
+@SupportedAnnotationTypes({
+        "com.hbm.interfaces.AutoRegister",
+        "com.hbm.interfaces.AutoRegisterContainer"
+})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AutoRegisterProcessor extends AbstractProcessor {
 
@@ -36,7 +40,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
     private final Map<String, String> tileEntities = new LinkedHashMap<>();
     private final List<EntityRendererInfo> entityRenderers = new ArrayList<>();
     private final Map<String, String> tileEntityRenderers = new LinkedHashMap<>();
-    private final Map<String, String> itemRenderers = new LinkedHashMap<>();
+    private final List<TeisrInfo> itemRenderers = new ArrayList<>();
     private final List<String> configurableMachines = new ArrayList<>();
 
     private Filer filer;
@@ -55,7 +59,10 @@ public class AutoRegisterProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        for (Element element : roundEnv.getElementsAnnotatedWith(AutoRegister.class)) {
+        Set<Element> annotatedElements = new HashSet<>();
+        annotatedElements.addAll(roundEnv.getElementsAnnotatedWith(AutoRegister.class));
+        annotatedElements.addAll(roundEnv.getElementsAnnotatedWith(AutoRegisterContainer.class));
+        for (Element element : annotatedElements) {
             if (!(element instanceof TypeElement)) continue;
             TypeElement typeElement = (TypeElement) element;
             if (typeElement.getModifiers().contains(Modifier.ABSTRACT)) continue;
@@ -111,11 +118,25 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             entityRenderers.add(new EntityRendererInfo(entityClassName, annotatedFqn, factoryFieldName));
         } else if (isSubtypeOf(annotatedElement, TEISR_FQN)) {
             if (annotation.item().isEmpty()) {
-                messager.printMessage(Diagnostic.Kind.ERROR, "An TEISR class must specify the 'item' parameter in its @AutoRegister annotation.",
+                messager.printMessage(Diagnostic.Kind.ERROR, "A TEISR class must specify the 'item' parameter in its @AutoRegister annotation.",
                         annotatedElement);
                 return;
             }
-            itemRenderers.put(annotatedFqn, annotation.item());
+            boolean hasArrayArgs = annotation.constructorArgs().length > 0;
+            boolean hasStringArgs = !annotation.constructorArgsString().isEmpty();
+
+            if (hasArrayArgs && hasStringArgs) {
+                messager.printMessage(Diagnostic.Kind.ERROR, "Cannot use both 'constructorArgs' and 'constructorArgsString'. Please use only one.", annotatedElement);
+                return;
+            }
+
+            String finalArgs;
+            if (hasStringArgs) {
+                finalArgs = annotation.constructorArgsString();
+            } else {
+                finalArgs = String.join(", ", annotation.constructorArgs());
+            }
+            itemRenderers.add(new TeisrInfo(annotatedFqn, annotation.item(), finalArgs));
 
         } else if (isSubtypeOf(annotatedElement, TE_FQN)) {
             String regId = annotation.name().trim().isEmpty() ? generateRegistrationId(annotatedElement.getSimpleName().toString()) :
@@ -160,7 +181,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         ClassName MOD_ITEMS = ClassName.get("com.hbm.items", "ModItems");
         ClassName ICONFIGURABLE_MACHINE = ClassName.get("com.hbm.tileentity", "IConfigurableMachine");
         TypeSpec.Builder registrarBuilder =
-                TypeSpec.classBuilder("GeneratedHBMRegistrar").addModifiers(Modifier.PUBLIC, Modifier.FINAL).addJavadoc("AUTO-GENERATED FILE. DO " + "NOT MODIFY.");
+                TypeSpec.classBuilder("GeneratedHBMRegistrar").addModifiers(Modifier.PUBLIC, Modifier.FINAL).addJavadoc("AUTO-GENERATED FILE. DO NOT MODIFY.");
         if (!configurableMachines.isEmpty()) {
             TypeName classOfConfigurable = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(ICONFIGURABLE_MACHINE));
             TypeName listOfConfigurables = ParameterizedTypeName.get(ClassName.get(java.util.List.class), classOfConfigurable);
@@ -216,11 +237,12 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             registrarBuilder.addMethod(method.build());
         }
         if (!itemRenderers.isEmpty()) {
-            MethodSpec.Builder method =
-                    MethodSpec.methodBuilder("registerItemRenderers").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(AnnotationSpec.builder(SIDE_ONLY).addMember("value", "$T.CLIENT", SIDE).build());
-            for (Map.Entry<String, String> entry : itemRenderers.entrySet()) {
-                method.addCode(CodeBlock.builder().add("$T.$L.setTileEntityItemStackRenderer(new $T());\n", MOD_ITEMS, entry.getValue(),
-                        ClassName.bestGuess(entry.getKey())).build());
+            MethodSpec.Builder method = MethodSpec.methodBuilder("registerItemRenderers")
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                    .addAnnotation(AnnotationSpec.builder(SIDE_ONLY).addMember("value", "$T.CLIENT", SIDE).build());
+            for (TeisrInfo info : itemRenderers) {
+                method.addStatement("$T.$L.setTileEntityItemStackRenderer(new $T(" + info.constructorArgs + "))",
+                        MOD_ITEMS, info.itemFieldName, ClassName.bestGuess(info.rendererFqn));
             }
             registrarBuilder.addMethod(method.build());
         }
@@ -280,9 +302,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             if (superclass != null && superclass.getKind() != TypeKind.NONE) {
                 queue.add(superclass);
             }
-            for (TypeMirror iface : currentElement.getInterfaces()) {
-                queue.add(iface);
-            }
+            queue.addAll(currentElement.getInterfaces());
         }
 
         return false;
@@ -341,6 +361,18 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             this.entityFqn = entityFqn;
             this.rendererFqn = rendererFqn;
             this.factoryFieldName = factoryFieldName;
+        }
+    }
+
+    private static class TeisrInfo {
+        final String rendererFqn;
+        final String itemFieldName;
+        final String constructorArgs;
+
+        TeisrInfo(String rendererFqn, String itemFieldName, String constructorArgs) {
+            this.rendererFqn = rendererFqn;
+            this.itemFieldName = itemFieldName;
+            this.constructorArgs = constructorArgs;
         }
     }
 }
