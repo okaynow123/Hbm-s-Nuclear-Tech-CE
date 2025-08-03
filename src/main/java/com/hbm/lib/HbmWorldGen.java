@@ -350,7 +350,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			j += 8;
 			Biome biome = world.getBiome(new BlockPos(i, 0, j));
 			
-			if (biome.getDefaultTemperature() >= 1F && biome.getRainfall() > 1F) {
+			if (biome.getDefaultTemperature() >= 0.8F && biome.getRainfall() > 0.7F) {
 				generateAStructure(world, rand, i, j, new Radio01(), parseInt(CompatibilityConfig.radioStructure.get(dimID)));
 			}
 			if (biome.getDefaultTemperature() <= 0.5F) {
