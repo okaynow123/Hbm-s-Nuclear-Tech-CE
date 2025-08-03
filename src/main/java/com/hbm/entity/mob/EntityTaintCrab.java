@@ -1,6 +1,7 @@
 package com.hbm.entity.mob;
 
 import com.hbm.entity.projectile.EntityBulletBase;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
@@ -68,19 +69,19 @@ public class EntityTaintCrab extends EntityCyberCrab {
 	}
 	
 	@Override
-	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) {
-		EntityBulletBase bullet = new EntityBulletBase(world, BulletConfigSyncingUtil.BMG50_STAR, this);
+	public void attackEntityWithRangedAttack(EntityLivingBase target, float distanceFactor) { //FIXME
+		//EntityBulletBaseMK4 bullet = new EntityBulletBaseMK4(this, XFactory762mm.r762_fmj, 10F, 0F, 0F, 0F, 0F);
 		//Vec3 motion = Vec3.createVectorHelper(posX - entity.posX, posY - entity.posZ - entity.height / 2, posZ - entity.posZ);
 		//motion = motion.normalize();
-		NBTTagCompound data = new NBTTagCompound();
-		data.setString("type", "vanilla");
-		data.setString("mode", "flame");
-		data.setDouble("mX", bullet.motionX * 0.3);
-		data.setDouble("mY", bullet.motionY * 0.3);
-		data.setDouble("mZ", bullet.motionZ * 0.3);
-		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, bullet.posX, bullet.posY, bullet.posZ), new TargetPoint(this.dimension, posX, posY, posZ, 50));
-        this.world.spawnEntity(bullet);
-        this.playSound(HBMSoundHandler.sawShoot, 1.0F, 0.5F);
+//		NBTTagCompound data = new NBTTagCompound();
+//		data.setString("type", "vanilla");
+//		data.setString("mode", "flame");
+//		data.setDouble("mX", bullet.motionX * 0.3);
+//		data.setDouble("mY", bullet.motionY * 0.3);
+//		data.setDouble("mZ", bullet.motionZ * 0.3);
+//		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, bullet.posX, bullet.posY, bullet.posZ), new TargetPoint(this.dimension, posX, posY, posZ, 50));
+//        this.world.spawnEntity(bullet);
+//        this.playSound(HBMSoundHandler.sawShoot, 1.0F, 0.5F);
 	}
 	
 }
