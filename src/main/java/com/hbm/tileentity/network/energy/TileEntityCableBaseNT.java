@@ -59,6 +59,10 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 		for (DirPos con : this.node.connections) {
 			BlockPos neighborPos = con.getPos();
 			ForgeDirection dir = con.getDir();
+
+			if (dir == ForgeDirection.UNKNOWN) {
+				continue;
+			}
 			EnumFacing facing = dir.toEnumFacing();
 
 			TileEntity te = world.getTileEntity(neighborPos);
