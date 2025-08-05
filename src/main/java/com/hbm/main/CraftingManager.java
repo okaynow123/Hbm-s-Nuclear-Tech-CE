@@ -83,7 +83,6 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.asbestos_cloth, 8), new Object[] { "SCS", "CPC", "SCS", 'S', Items.STRING, 'P', BR.dust(), 'C', Blocks.WOOL });
 		addRecipeAuto(Mats.MAT_DURA.make(ModItems.bolt, 4), new Object[] { "D", "D", 'D', DURA.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.pipes_steel, 1), new Object[] { "B", "B", "B", 'B', STEEL.block() });
-		addRecipeAuto(Mats.MAT_STEEL.make(ModItems.bolt, 4), new Object[] { "D", "D", 'D', W.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.bolt_compound, 1), new Object[] { "PDP", "PTP", "PDP", 'D', DURA.bolt(), 'T', W.bolt(), 'P', TI.plate() });
 		addRecipeAuto(new ItemStack(ModItems.pellet_coal, 1), new Object[] { "PFP", "FOF", "PFP", 'P', COAL.dust(), 'F', Items.FLINT, 'O', ModBlocks.gravel_obsidian });
 
