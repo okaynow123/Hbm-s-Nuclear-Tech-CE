@@ -280,7 +280,8 @@ public class ShredderRecipes {
 
 		ShredderRecipes.setRecipe(ModBlocks.ore_nether_coal, new ItemStack(ModItems.coal_infernal, 2));
 		ShredderRecipes.setRecipe(ModBlocks.ore_cinnabar, new ItemStack(ModItems.cinnabar, 2));
-		
+		ShredderRecipes.setRecipe(ModBlocks.block_slag, new ItemStack(ModItems.powder_cement, 4));
+
 		for(int i = 0; i < 16; i++) {
 			ShredderRecipes.setRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, i), new ItemStack(Items.CLAY_BALL, 4));
 			ShredderRecipes.setRecipe(new ItemStack(Blocks.WOOL, 1, i), new ItemStack(Items.STRING, 4));
