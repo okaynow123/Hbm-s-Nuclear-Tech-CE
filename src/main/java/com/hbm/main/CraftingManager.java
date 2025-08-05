@@ -54,8 +54,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
-import static com.hbm.blocks.generic.BlockMeta.META;
 import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
@@ -1391,8 +1389,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.turret_control, 1), new Object[] { "R12", "PPI", "  I", 'R', Items.REDSTONE, '1', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), '2', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.PCB), 'P', STEEL.plate(), 'I', STEEL.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.pellet_antimatter, 1), new Object[] { "###", "###", "###", '#', ItemCell.getFullCell(Fluids.AMAT) });
 		addRecipeAuto(new ItemStack(ModItems.fluid_tank_lead_empty, 8), new Object[] { "121", "131", "121", '1', PB.plate(), '2', ModItems.billet_u238, '3', ModItems.fluid_tank_empty });
-		addRecipeAuto(new ItemStack(ModItems.fluid_tank_empty, 8), new Object[] { "121", "131", "121", '1', AL.plate(), '2', IRON.plate() });
-		addRecipeAuto(new ItemStack(ModItems.fluid_barrel_empty, 2), new Object[] { "121", "131", "121", '1', STEEL.plate(), '2', AL.plate(), '3', Blocks.GLASS_PANE });
+		addRecipeAuto(new ItemStack(ModItems.fluid_tank_empty, 8), new Object[] { "121", "1G1", "121", '1', AL.plate(), '2', IRON.plate(), 'G', KEY_ANYPANE });
+		addRecipeAuto(new ItemStack(ModItems.fluid_barrel_empty, 2), new Object[] { "121", "131", "121", '1', STEEL.plate(), '2', AL.plate(), '3', KEY_ANYPANE });
 		addRecipeAuto(new ItemStack(ModItems.inf_water, 1), new Object[] { "222", "131", "222", '1', Items.WATER_BUCKET, '2', AL.plate(), '3', Items.DIAMOND });
 		addShapelessAuto(new ItemStack(ModItems.powder_desh_mix, 1), new Object[] { B.dustTiny(), B.dustTiny(), AC.dustTiny(), LA.dustTiny(), CE.dustTiny(), CO.dustTiny(), LI.dustTiny(), ND.dustTiny(), NB.dustTiny() });
 		addShapelessAuto(new ItemStack(ModItems.powder_desh_mix, 9), new Object[] { B.dust(), B.dust(), AC.dust(), LA.dust(), CE.dust(), CO.dust(), LI.dust(), ND.dust(), NB.dust() });
