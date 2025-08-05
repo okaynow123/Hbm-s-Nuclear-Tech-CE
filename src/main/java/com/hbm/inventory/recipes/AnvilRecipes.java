@@ -73,13 +73,11 @@ public class AnvilRecipes {
 		smithingRecipes.add(new AnvilSmithingMold(2, new OreDictStack(IRON.ingot()),  new OreDictStack("ingot")));
 		smithingRecipes.add(new AnvilSmithingMold(3, new OreDictStack(IRON.plate()),  new OreDictStack("plate")));
 		smithingRecipes.add(new AnvilSmithingMold(4, new OreDictStack(AL.wireFine(), 8), new OreDictStack("wireFine")));
-		smithingRecipes.add(new AnvilSmithingMold(5, new OreDictStack(IRON.plateCast()),  new OreDictStack("plateTriple")));
-		smithingRecipes.add(new AnvilSmithingMold(6, new OreDictStack(ALLOY.wireDense(), 1),  new OreDictStack("wireDense", 1)));
-		smithingRecipes.add(new AnvilSmithingMold(7, new ComparableStack(ModItems.blade_titanium), new ItemStack[] {
+		smithingRecipes.add(new AnvilSmithingMold(5, new ComparableStack(ModItems.blade_titanium), new ItemStack[] {
 				new ItemStack(ModItems.blade_titanium),
 				new ItemStack(ModItems.blade_tungsten)
-				}));
-		smithingRecipes.add(new AnvilSmithingMold(8, new ComparableStack(ModItems.blades_iron), new ItemStack[] {
+		}));
+		smithingRecipes.add(new AnvilSmithingMold(6, new ComparableStack(ModItems.blades_iron), new ItemStack[] {
 				new ItemStack(ModItems.blades_aluminum),
 				new ItemStack(ModItems.blades_gold),
 				new ItemStack(ModItems.blades_iron),
@@ -89,28 +87,30 @@ public class AnvilRecipes {
 				new ItemStack(ModItems.blades_combine_steel),
 				new ItemStack(ModItems.blades_schrabidium),
 				new ItemStack(ModItems.blades_desh)
-				}));
-		smithingRecipes.add(new AnvilSmithingMold(9, new ComparableStack(ModItems.stamp_iron_flat), new ItemStack[] {
+		}));
+		smithingRecipes.add(new AnvilSmithingMold(7, new ComparableStack(ModItems.stamp_iron_flat), new ItemStack[] {
 				new ItemStack(ModItems.stamp_stone_flat),
 				new ItemStack(ModItems.stamp_iron_flat),
 				new ItemStack(ModItems.stamp_steel_flat),
 				new ItemStack(ModItems.stamp_titanium_flat),
 				new ItemStack(ModItems.stamp_obsidian_flat),
 				new ItemStack(ModItems.stamp_desh_flat)
-				}));
-		smithingRecipes.add(new AnvilSmithingMold(10, new OreDictStack(STEEL.shell()), new OreDictStack(MaterialShapes.SHELL.name())));
-		smithingRecipes.add(new AnvilSmithingMold(11, new OreDictStack(STEEL.pipe()), new OreDictStack(MaterialShapes.PIPE.name())));
-		smithingRecipes.add(new AnvilSmithingMold(12, new OreDictStack(IRON.ingot(), 9), new OreDictStack("ingot", 9)));
+		}));
+		smithingRecipes.add(new AnvilSmithingMold(8, new OreDictStack(STEEL.shell()), new OreDictStack(MaterialShapes.SHELL.name())));
+		smithingRecipes.add(new AnvilSmithingMold(9, new OreDictStack(STEEL.pipe()), new OreDictStack(MaterialShapes.PIPE.name())));
+		smithingRecipes.add(new AnvilSmithingMold(10, new OreDictStack(IRON.ingot(), 9), new OreDictStack("ingot", 9)));
+		smithingRecipes.add(new AnvilSmithingMold(11, new OreDictStack(IRON.plate(), 9), new OreDictStack("plate", 9)));
+		smithingRecipes.add(new AnvilSmithingMold(12, new OreDictStack(IRON.block()), new OreDictStack("block")));
 		smithingRecipes.add(new AnvilSmithingMold(13, new OreDictStack(IRON.plate(), 9), new OreDictStack("plate", 9)));
-		smithingRecipes.add(new AnvilSmithingMold(14, new OreDictStack(ALLOY.wireDense(), 9),  new OreDictStack("wireDense", 9)));
-		smithingRecipes.add(new AnvilSmithingMold(15, new OreDictStack(IRON.block()), new OreDictStack("block")));
+		//smithingRecipes.add(new AnvilSmithingMold(14, new OreDictStack(ALLOY.wireDense(), 9),  new OreDictStack("wireDense", 9)));
+		//smithingRecipes.add(new AnvilSmithingMold(15, new OreDictStack(IRON.block()), new OreDictStack("block")));
 		
-		smithingRecipes.add(new AnvilSmithingMold(16, new ComparableStack(ModItems.pipes_steel), new ItemStack[] {new ItemStack(ModItems.pipes_steel)}));
-		smithingRecipes.add(new AnvilSmithingMold(17, new ComparableStack(ModItems.casing_357), new ItemStack[] {new ItemStack(ModItems.casing_357)}));
-		smithingRecipes.add(new AnvilSmithingMold(18, new ComparableStack(ModItems.casing_44), new ItemStack[] {new ItemStack(ModItems.casing_44)}));
-		smithingRecipes.add(new AnvilSmithingMold(19, new ComparableStack(ModItems.casing_9), new ItemStack[] {new ItemStack(ModItems.casing_9)}));
-		smithingRecipes.add(new AnvilSmithingMold(20, new ComparableStack(ModItems.casing_50), new ItemStack[] {new ItemStack(ModItems.casing_50)}));
-		smithingRecipes.add(new AnvilSmithingMold(21, new ComparableStack(ModItems.casing_buckshot), new ItemStack[] {new ItemStack(ModItems.casing_buckshot)}));
+		//smithingRecipes.add(new AnvilSmithingMold(16, new ComparableStack(ModItems.pipes_steel), new ItemStack[] {new ItemStack(ModItems.pipes_steel)}));
+		//smithingRecipes.add(new AnvilSmithingMold(17, new ComparableStack(ModItems.casing_357), new ItemStack[] {new ItemStack(ModItems.casing_357)}));
+		//smithingRecipes.add(new AnvilSmithingMold(18, new ComparableStack(ModItems.casing_44), new ItemStack[] {new ItemStack(ModItems.casing_44)}));
+		smithingRecipes.add(new AnvilSmithingMold(19, new OreDictStack(IRON.plateCast()), new OreDictStack("block")));
+		smithingRecipes.add(new AnvilSmithingMold(20, new OreDictStack(ALLOY.wireDense(), 1),  new OreDictStack("wireDense", 1)));
+		smithingRecipes.add(new AnvilSmithingMold(21, new OreDictStack(ALLOY.wireDense(), 9),  new OreDictStack("wireDense", 9)));
 		
 		
 		smithingRecipes.add(new AnvilSmithingCyanideRecipe());

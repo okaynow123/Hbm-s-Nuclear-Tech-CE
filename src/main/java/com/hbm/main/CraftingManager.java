@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.PlantEnums;
 import com.hbm.config.GeneralConfig;
 import com.hbm.crafting.handlers.ContainerUpgradeCraftingHandler;
 import com.hbm.crafting.handlers.MKUCraftingHandler;
@@ -14,6 +15,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
+import com.hbm.items.ItemEnums;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ModItems;
@@ -52,6 +54,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
+import static com.hbm.blocks.generic.BlockMeta.META;
 import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
@@ -79,7 +83,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.egg_balefire_shard, 1), new Object[] { "##", "##", '#', ModItems.powder_balefire });
 		addRecipeAuto(new ItemStack(ModItems.board_copper, 1), new Object[] { "TTT", "TTT", 'T', CU.plate() });
 		addRecipeAuto(new ItemStack(ModItems.hazmat_cloth_red, 1), new Object[] { "C", "R", "C", 'C', ModItems.hazmat_cloth, 'R', BAKELITE.dust() });
-		addRecipeAuto(new ItemStack(ModItems.hazmat_cloth_grey, 1), new Object[] { "DPD", "ICI", "DLD", 'C', ModItems.hazmat_cloth_red, 'P', IRON.plate(), 'L', PB.plate(), 'I', ANY_RUBBER.ingot(), 'D', I.dustTiny() });
+		addRecipeAuto(new ItemStack(ModItems.hazmat_cloth_grey, 1), new Object[] { " P ", "ICI", " L ", 'C', ModItems.hazmat_cloth_red, 'P', IRON.plate(), 'L', PB.plate(), 'I', ANY_RUBBER.ingot(),});
 		addRecipeAuto(new ItemStack(ModItems.asbestos_cloth, 8), new Object[] { "SCS", "CPC", "SCS", 'S', Items.STRING, 'P', BR.dust(), 'C', Blocks.WOOL });
 		addRecipeAuto(Mats.MAT_DURA.make(ModItems.bolt, 4), new Object[] { "D", "D", 'D', DURA.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.pipes_steel, 1), new Object[] { "B", "B", "B", 'B', STEEL.block() });
@@ -1023,7 +1027,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.syringe_awesome, 1), new Object[] { "SPS", "NCN", "SPS", 'C', ModItems.syringe_empty, 'S', S.dust(), 'P', PU239.nugget(), 'N', PU238.nugget() });
 		addRecipeAuto(new ItemStack(ModItems.syringe_awesome, 1), new Object[] { "SNS", "PCP", "SNS", 'C', ModItems.syringe_empty, 'S', S.dust(), 'P', PU239.nugget(), 'N', PU238.nugget() });
 		addRecipeAuto(new ItemStack(ModItems.syringe_metal_empty, 6), new Object[] { "P", "C", "B", 'B', Item.getItemFromBlock(Blocks.IRON_BARS), 'C', ModItems.rod_empty, 'P', IRON.plate() });
-		addRecipeAuto(new ItemStack(ModItems.syringe_metal_stimpak, 1), new Object[] { " N ", "NSN", " N ", 'N', Items.NETHER_WART, 'S', ModItems.syringe_metal_empty });
+		addRecipeAuto(new ItemStack(ModItems.syringe_metal_stimpak, 1), new Object[] { "SC ", "F  ", 'C', Items.CARROT, 'S', ModItems.syringe_metal_empty, 'F', new ItemStack(ModBlocks.plant_flower, 1, 0)});
 		addRecipeAuto(new ItemStack(ModItems.syringe_metal_medx, 1), new Object[] { " N ", "NSN", " N ", 'N', Items.QUARTZ, 'S', ModItems.syringe_metal_empty });
 		addRecipeAuto(new ItemStack(ModItems.syringe_metal_psycho, 1), new Object[] { " N ", "NSN", " N ", 'N', Items.GLOWSTONE_DUST, 'S', ModItems.syringe_metal_empty });
 		addRecipeAuto(new ItemStack(ModItems.pill_iodine, 8), new Object[] { "IF", 'I', I.dust(), 'F', F.dust() });
@@ -1045,6 +1049,11 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.radaway_strong, 1), new Object[] { ModItems.radaway, ModBlocks.mush });
 		addShapelessAuto(new ItemStack(ModItems.radaway_flush, 1), new Object[] { ModItems.radaway_strong, I.dust() });
 
+		addRecipeAuto(new ItemStack(ModItems.cigarette, 16), new Object[] { "AT", "PF", 'A', ModItems.ingot_asbestos, 'T', ANY_TAR.any(), 'P', ModItems.nugget_polonium, 'F', new ItemStack(ModItems.plant_item, 1, 0)});
+		addShapelessAuto(new ItemStack(Items.STRING, 3), new Object[] { new ItemStack(ModBlocks.plant_flower, 1, 1)});
+		addRecipeAuto(DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.ROPE, 4), new Object[] { "H  ", "H  ", "H  ", 'H', new ItemStack(ModBlocks.plant_flower, 1, 1)});
+		addRecipeAuto(new ItemStack(ModItems.biomass, 4), new Object[] { "HH ", "HH ", "HH ", 'H', new ItemStack(ModBlocks.plant_flower, 1, 1)});
+
 		addRecipeAuto(new ItemStack(ModItems.stealth_boy, 1), new Object[] { " B", "LI", "LC", 'B', Item.getItemFromBlock(Blocks.STONE_BUTTON), 'L', Items.LEATHER, 'I', STEEL.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) });
 
 		addRecipeAuto(new ItemStack(ModBlocks.sat_dock, 1), new Object[] { "SSS", "PCP", 'S', STEEL.ingot(), 'P', ANY_PLASTIC.ingot(), 'C', ModBlocks.crate_iron });
@@ -1062,7 +1071,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.bomb_multi, 1), new Object[] { "AAD", "CHF", "AAD", 'A', AL.wireFine(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), 'H', AL.shell(), 'F', ModItems.fins_quad_titanium, 'D', KEY_WHITE });
 		addShapelessAuto(new ItemStack(ModItems.powder_ice, 4), new Object[] { Items.SNOWBALL, KNO.dust(), REDSTONE.dust() });
 		addShapelessAuto(new ItemStack(ModItems.powder_poison, 4), new Object[] { Items.SPIDER_EYE, REDSTONE.dust(), "gemQuartz" });
-		addShapelessAuto(new ItemStack(ModItems.pill_herbal), new Object[] { COAL.dust(), Items.POISONOUS_POTATO, Items.NETHER_WART, Items.BEETROOT });
+		addShapelessAuto(new ItemStack(ModItems.powder_poison, 1), new Object[] { new ItemStack(ModBlocks.plant_flower, 1, 4)});
+		addRecipeAuto(new ItemStack(ModItems.pill_herbal), new Object[] { "CP ", "WF ", 'C', COAL.dust(), 'P', Items.POISONOUS_POTATO, 'W', Items.NETHER_WART, 'F', new ItemStack(ModBlocks.plant_flower, 1, 0)});
 		addShapelessAuto(new ItemStack(ModItems.pellet_gas, 2), new Object[] { Items.WATER_BUCKET, "dustGlowstone", STEEL.plate() , ModItems.ingot_iodine});
 
 		addRecipeAuto(new ItemStack(ModItems.flame_pony, 1), new Object[] { " O ", "DPD", " O ", 'D', new ItemStack(Items.DYE, 1, 11), 'O', new ItemStack(Items.DYE, 1, 9), 'P', Items.PAPER });
@@ -1081,6 +1091,14 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.man_explosive8, 1), new Object[] { "EEE", "ESE", "EEE", 'E', ModItems.man_explosive, 'S', STEEL.plate() });
 
 		addRecipeAuto(new ItemStack(ModItems.n2_charge, 1), new Object[] { " D ", "ERE", " D ", 'D', ModItems.ducttape, 'E', ModBlocks.det_charge, 'R', REDSTONE.block() });
+
+		addRecipeAuto(new ItemStack(ModBlocks.foundry_basin), new Object[] { "B B", "B B", "BSB", 'B', ModItems.ingot_firebrick, 'S', Blocks.STONE_SLAB });
+		addRecipeAuto(new ItemStack(ModBlocks.foundry_mold), new Object[] { "B B", "BSB", 'B', ModItems.ingot_firebrick, 'S', Blocks.STONE_SLAB });
+		addRecipeAuto(new ItemStack(ModBlocks.foundry_channel, 4), new Object[] { "B B", " S ", 'B', ModItems.ingot_firebrick, 'S', Blocks.STONE_SLAB });
+		//addRecipeAuto(new ItemStack(ModBlocks.foundry_tank), new Object[] { "B B", "I I", "BSB", 'B', ModItems.ingot_firebrick, 'I', STEEL.ingot(), 'S', Blocks.stone_slab });
+		addShapelessAuto(new ItemStack(ModBlocks.foundry_outlet), new Object[] { ModBlocks.foundry_channel, STEEL.plate() });
+		//addShapelessAuto(new ItemStack(ModBlocks.foundry_slagtap), new Object[] { ModBlocks.foundry_channel, Blocks.stonebrick });
+		addRecipeAuto(new ItemStack(ModItems.mold_base), new Object[] { " B ", "BIB", " B ", 'B', ModItems.ingot_firebrick, 'I', IRON.ingot() });
 
 		addRecipeAuto(new ItemStack(ModItems.custom_tnt, 1), new Object[] { " C ", "TIT", "TIT", 'C', CU.plate(), 'I', IRON.plate(), 'T', ANY_HIGHEXPLOSIVE.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.custom_nuke, 1), new Object[] { " C ", "LUL", "LUL", 'C', CU.plate(), 'L', PB.plate(), 'U', U235.ingot() });
@@ -2654,7 +2672,7 @@ public class CraftingManager {
 		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.DESH), new ItemStack(ModItems.ingot_desh), 3.0F);
 		GameRegistry.addSmelting(DictFrame.fromOne(ModItems.arc_electrode_burnt, ItemArcElectrode.EnumElectrodeType.SATURNITE), new ItemStack(ModItems.ingot_saturnite), 3.0F);
 
-		//GameRegistry.addSmelting(DictFrame.fromOne(ModBlocks.plant_flower, EnumFlowerType.TOBACCO), DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.TOBACCO), 0.1F);
+		GameRegistry.addSmelting(DictFrame.fromOne(ModBlocks.plant_flower, PlantEnums.EnumFlowerPlantType.TOBACCO), new ItemStack(ModItems.plant_item, 1, 0), 0.1F);
 
 		GameRegistry.addSmelting(ModItems.powder_cobalt_tiny, new ItemStack(ModItems.nugget_cobalt), 0.1F);
 		GameRegistry.addSmelting(ModItems.powder_co60_tiny, new ItemStack(ModItems.nugget_co60), 0.1F);
