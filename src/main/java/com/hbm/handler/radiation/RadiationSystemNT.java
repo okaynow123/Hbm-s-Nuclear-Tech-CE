@@ -378,7 +378,7 @@ public final class RadiationSystemNT {
         EntityLivingBase entity = event.getEntityLiving();
         World world = entity.world;
 
-        if (world.isRemote || !GeneralConfig.enableRads || entity.isEntityInvulnerable(ModDamageSource.radiation)) return;
+        if (world.isRemote || !GeneralConfig.enableRads || entity.isEntityInvulnerable(ModDamageSource.radiation) || entity instanceof EntityPlayerMP player && player.isSpectator()) return;
 
         float eRad = HbmLivingProps.getRadiation(entity);
 
