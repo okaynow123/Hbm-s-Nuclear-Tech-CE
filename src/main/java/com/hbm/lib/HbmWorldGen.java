@@ -661,7 +661,7 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeight(x, z);
 
-						OilSandBubble.spawnOil(world, x, y, z, 15 + rand.nextInt(31));
+						new OilSandBubble(15 + rand.nextInt(31)).generate(world, rand, new BlockPos(x, y, z));
 					}
 				}
 			}
@@ -672,7 +672,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			int randPosY = rand.nextInt(25);
 			int randPosZ = j + rand.nextInt(16);
 
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 7 + rand.nextInt(9));
+			new OilBubble(7 + rand.nextInt(9)).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
 		}
 
 		if (GeneralConfig.enableNITAN) {
