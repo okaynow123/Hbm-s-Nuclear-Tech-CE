@@ -1,6 +1,7 @@
 package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.main.MainRegistry;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -10,7 +11,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -55,6 +55,8 @@ public interface IPhasedStructure {
             BlockPos realOrigin = new BlockPos(originAtY0.getX(), newY, originAtY0.getZ());
             if (checkSpawningConditions(world, realOrigin)) {
                 return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, realOrigin));
+            } else if (GeneralConfig.enableDebugWorldGen) {
+                MainRegistry.logger.info("Structure {} at {} did not pass spawn condition check.", this.getClass().getSimpleName(), realOrigin);
             }
         }
         return Optional.empty();
@@ -64,9 +66,7 @@ public interface IPhasedStructure {
     }
 
     @Contract("_ -> new")
-    default List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin){
-        return Collections.emptyList();
-    }
+    List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin);
 
     default boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
         return true;

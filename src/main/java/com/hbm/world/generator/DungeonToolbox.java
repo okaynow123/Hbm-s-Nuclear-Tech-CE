@@ -37,6 +37,26 @@ public class DungeonToolbox {
 		}
 	}
 
+	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, List<IBlockState> blocks) {
+
+		if(blocks.isEmpty())
+			return;
+
+		for(int i = x; i < x + sx; i++) {
+
+			for(int j = y; j < y + sy; j++) {
+
+				for(int k = z; k < z + sz; k++) {
+
+					IBlockState b = getRandom(blocks, world.rand);
+					if(b == null)
+						b = Blocks.AIR.getDefaultState();
+					world.setBlockState(new BlockPos(i, j, k), b, 2 | 16);
+				}
+			}
+		}
+	}
+
 	//i know it's copy paste, but it's a better strat than using a wrapper and generating single-entry lists for no good reason
 	public static void generateBox(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, int sx, int sy, int sz, IBlockState block) {
 		
@@ -47,6 +67,20 @@ public class DungeonToolbox {
 				for(int k = z; k < z + sz; k++) {
 					
 					world.setBlockState(new BlockPos(i, j, k), block, 2);
+				}
+			}
+		}
+	}
+
+	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, IBlockState block) {
+
+		for(int i = x; i < x + sx; i++) {
+
+			for(int j = y; j < y + sy; j++) {
+
+				for(int k = z; k < z + sz; k++) {
+
+					world.setBlockState(new BlockPos(i, j, k), block, 2 | 16);
 				}
 			}
 		}

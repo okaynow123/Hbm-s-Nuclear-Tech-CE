@@ -8,12 +8,20 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"PointlessArithmeticExpression"})
 public class Geyser extends AbstractPhasedStructure {
 	public static final Geyser INSTANCE = new Geyser();
 	private Geyser() {}
+
+	@Override
+	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin);
+	}
+
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
 		generate_r0(builder, rand, 0, 0, 0);

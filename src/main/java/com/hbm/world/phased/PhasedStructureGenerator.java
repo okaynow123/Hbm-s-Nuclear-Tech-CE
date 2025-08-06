@@ -1,6 +1,7 @@
 package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.main.MainRegistry;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -34,10 +35,28 @@ public class PhasedStructureGenerator implements IWorldGenerator {
     }
 
     public void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure, Map<ChunkPos, List<BlockInfo>> layout) {
-        if (layout.isEmpty() && structure.getValidationPoints(BlockPos.ORIGIN).isEmpty()) return;
-        int dimId = world.provider.getDimension();
-        this.pendingValidations.computeIfAbsent(dimId, k -> ConcurrentHashMap.newKeySet())
-                .add(new PendingValidationStructure(origin, structure, layout, world.getSeed()));
+        if (layout.isEmpty()) {
+            if (GeneralConfig.enableDebugWorldGen)
+                MainRegistry.logger.warn("Skipping structure {} generation at {} due to empty layout.",
+                        structure.getClass().getSimpleName(), origin);
+            return;
+        }
+        PendingValidationStructure pending = new PendingValidationStructure(origin, structure, layout, world.getSeed());
+        IChunkProvider chunkProvider = world.getChunkProvider();
+        pending.chunksAwaitingGeneration.removeIf(chunkPos -> chunkProvider.isChunkGeneratedAt(chunkPos.x, chunkPos.z));
+        if (pending.chunksAwaitingGeneration.isEmpty()) {
+            ReadyToGenerateStructure validated = validate(world, pending);
+            if (validated != null) {
+                if (GeneralConfig.enableTickBasedWorldGenerator) {
+                    generationQueues.computeIfAbsent(world.provider.getDimension(), k -> new ConcurrentLinkedQueue<>()).add(validated);
+                    if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("All chunks present for {}. Scheduled for immediate generation.", pending.structure.getClass().getSimpleName());
+                } else {
+                    generateValidated(world, validated);
+                }
+            } else if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Structure {} at {} failed to validate on fast path.", pending.structure.getClass().getSimpleName(), pending.origin);
+        } else {
+            this.pendingValidations.computeIfAbsent(world.provider.getDimension(), k -> ConcurrentHashMap.newKeySet()).add(pending);
+        }
     }
 
     @Override
@@ -60,11 +79,12 @@ public class PhasedStructureGenerator implements IWorldGenerator {
 
                     if (validated != null) {
                         if (GeneralConfig.enableTickBasedWorldGenerator) {
+                            if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Scheduled {} generation at {}", pending.structure.getClass().getSimpleName(), validated.finalOrigin);
                             generationQueues.computeIfAbsent(dimId, k -> new ConcurrentLinkedQueue<>()).add(validated);
                         } else {
                             generateValidated(world, validated);
                         }
-                    }
+                    } else if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Structure {} at {} failed to validate.", pending.structure.getClass().getSimpleName(), pending.origin);
                     iterator.remove();
                 }
             }
@@ -95,6 +115,7 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         IPhasedStructure phasedStructure = validated.pending.structure;
         Random structureRand = validated.pending.createRandom();
         Map<ChunkPos, List<BlockInfo>> layout = validated.pending.layout;
+        if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Generating {} at {}", validated.pending.structure.getClass().getSimpleName(), validated.finalOrigin);
         int originChunkX = validated.finalOrigin.getX() >> 4;
         int originChunkZ = validated.finalOrigin.getZ() >> 4;
         for (Map.Entry<ChunkPos, List<BlockInfo>> entry : layout.entrySet()) {
@@ -137,16 +158,16 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             this.structure = structure;
             this.layout = layout;
             this.worldSeed = worldSeed;
-            Set<ChunkPos> allRequiredRelativeChunks = new HashSet<>(layout.keySet());
-            List<BlockPos> validationPoints = structure.getValidationPoints(BlockPos.ORIGIN);
-            for (BlockPos validationPoint : validationPoints) {
-                allRequiredRelativeChunks.add(new ChunkPos(validationPoint.getX() >> 4, validationPoint.getZ() >> 4));
-            }
+            this.requiredChunks = new HashSet<>();
             int originChunkX = origin.getX() >> 4;
             int originChunkZ = origin.getZ() >> 4;
-            this.requiredChunks = new HashSet<>();
-            for(ChunkPos relativePos : allRequiredRelativeChunks) {
-                this.requiredChunks.add(new ChunkPos(originChunkX + relativePos.x, originChunkZ + relativePos.z));
+            for (ChunkPos relativeLayoutChunk : layout.keySet()) {
+                this.requiredChunks.add(new ChunkPos(originChunkX + relativeLayoutChunk.x, originChunkZ + relativeLayoutChunk.z));
+            }
+            List<BlockPos> validationPointOffsets = structure.getValidationPoints(BlockPos.ORIGIN);
+            for (BlockPos offset : validationPointOffsets) {
+                BlockPos absoluteValidationPoint = origin.add(offset);
+                this.requiredChunks.add(new ChunkPos(absoluteValidationPoint));
             }
             this.chunksAwaitingGeneration = new HashSet<>(this.requiredChunks);
         }

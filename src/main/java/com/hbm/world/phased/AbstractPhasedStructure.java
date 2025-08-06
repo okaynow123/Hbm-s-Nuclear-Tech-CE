@@ -56,8 +56,10 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         }
 
         if (force) {
+            if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Forcing {} generation at {}", this.getClass().getSimpleName(), origin);
             PhasedStructureGenerator.INSTANCE.forceGenerateStructure(world, rand, origin, this, layout);
         } else {
+            if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Proposing {} generation at {}", this.getClass().getSimpleName(), origin);
             PhasedStructureGenerator.INSTANCE.scheduleStructureForValidation(world, origin, this, layout);
         }
         return true;
@@ -121,7 +123,7 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         }
     }
 
-    public static class LegacyBuilder {
+    public class LegacyBuilder {
         private final Map<BlockPos, BlockInfo> blocks = new HashMap<>();
         public final Random rand;
 
@@ -147,7 +149,7 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
             BlockInfo info = blocks.get(pos);
             if (info != null) return info.state;
             if (GeneralConfig.enableDebugWorldGen)
-                MainRegistry.logger.warn("WorldGen tried to get block state at {}, but no block has been placed there yet!", pos);
+                MainRegistry.logger.warn("Structure {} tried to retrieve non-existent BlockState at relative {}", AbstractPhasedStructure.this.getClass().getSimpleName(), pos);
             return Blocks.AIR.getDefaultState();
         }
 

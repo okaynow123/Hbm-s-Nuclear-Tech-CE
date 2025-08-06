@@ -5,16 +5,21 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"PointlessArithmeticExpression"})
 public class GeyserLarge extends AbstractPhasedStructure {
 	public static final GeyserLarge INSTANCE = new GeyserLarge();
 	private GeyserLarge() {}
+
+	@Override
+	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin);
+	}
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
