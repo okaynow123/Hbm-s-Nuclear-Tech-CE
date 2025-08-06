@@ -1493,9 +1493,12 @@ public class ClientProxy extends ServerProxy {
                 return HbmKeybinds.craneRightKey.isKeyDown();
             case CRANE_LOAD:
                 return HbmKeybinds.craneLoadKey.isKeyDown();
-            case GUN_PRIMARY:		return HbmKeybinds.gunPrimaryKey.isKeyDown();
-            case GUN_SECONDARY:		return HbmKeybinds.gunSecondaryKey.isKeyDown();
-            case GUN_TERTIARY:		return HbmKeybinds.gunTertiaryKey.isKeyDown();
+            case GUN_PRIMARY:
+                return org.lwjgl.input.Mouse.isButtonDown(0);
+            case GUN_SECONDARY:
+                return org.lwjgl.input.Mouse.isButtonDown(1);
+            case GUN_TERTIARY:
+                return org.lwjgl.input.Mouse.isButtonDown(2);
         }
 
         return false;

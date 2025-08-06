@@ -1,10 +1,15 @@
 package com.hbm.handler;
 
 import com.hbm.capability.HbmCapability;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -20,10 +25,6 @@ public class HbmKeybinds {
 	public static KeyBinding reloadKey = new KeyBinding(category + ".reload", Keyboard.KEY_R, category);
 	public static KeyBinding dashKey = new KeyBinding(category + ".dash", Keyboard.KEY_LSHIFT, category);
 
-	public static KeyBinding gunPrimaryKey = new KeyBinding(category + ".gunPrimary", -100, category);
-	public static KeyBinding gunSecondaryKey = new KeyBinding(category + ".gunSecondary", -99, category);
-	public static KeyBinding gunTertiaryKey = new KeyBinding(category + ".gunTertitary", -98, category);
-
 	public static KeyBinding craneUpKey = new KeyBinding(category + ".craneMoveUp", Keyboard.KEY_UP, category);
 	public static KeyBinding craneDownKey = new KeyBinding(category + ".craneMoveDown", Keyboard.KEY_DOWN, category);
 	public static KeyBinding craneLeftKey = new KeyBinding(category + ".craneMoveLeft", Keyboard.KEY_LEFT, category);
@@ -36,15 +37,32 @@ public class HbmKeybinds {
 		ClientRegistry.registerKeyBinding(reloadKey);
 		ClientRegistry.registerKeyBinding(dashKey);
 
-		ClientRegistry.registerKeyBinding(gunPrimaryKey);
-		ClientRegistry.registerKeyBinding(gunSecondaryKey);
-		ClientRegistry.registerKeyBinding(gunTertiaryKey);
-
 		ClientRegistry.registerKeyBinding(craneUpKey);
 		ClientRegistry.registerKeyBinding(craneDownKey);
 		ClientRegistry.registerKeyBinding(craneLeftKey);
 		ClientRegistry.registerKeyBinding(craneRightKey);
 		ClientRegistry.registerKeyBinding(craneLoadKey);
+	}
+	// this shit is so stupid that you need to fucking cancel all the exact events to just stop using a gun AS A FUCKING PICKAXE OR SWORD
+	@SubscribeEvent
+	public void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+		EntityPlayer player = event.getEntityPlayer();
+		if (player == null) return;
+
+		ItemStack mainHand = player.getHeldItemMainhand();
+
+		if (!mainHand.isEmpty() && mainHand.getItem() instanceof ItemGunBaseNT) {
+			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void onAttackEntity(AttackEntityEvent event) {
+		EntityPlayer player = event.getEntityPlayer();
+		ItemStack mainHand = player.getHeldItemMainhand();
+		if (!mainHand.isEmpty() && mainHand.getItem() instanceof ItemGunBaseNT) {
+			event.setCanceled(true);
+		}
 	}
 
 	@SubscribeEvent
