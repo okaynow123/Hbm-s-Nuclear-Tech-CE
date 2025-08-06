@@ -302,7 +302,7 @@ public class CommandHbm extends CommandBase {
                     if (rand.nextInt(50) == 0)
                         r = 50;
 
-                    new Sellafield().generate(world, (int) senderPos.x, (int) senderPos.z, r, r * 0.35D);
+					new Sellafield(r, r * 0.35D).generate(world, rand, genPos, true);
                 }
                 case "radio" -> Radio01.INSTANCE.generate(world, rand, genPos, force);
                 case "bunker" -> Bunker.INSTANCE.generate(world, rand, genPos, force);

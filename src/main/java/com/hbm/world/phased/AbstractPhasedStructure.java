@@ -25,8 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractPhasedStructure extends WorldGenerator implements IPhasedStructure {
     private static final Map<Class<? extends AbstractPhasedStructure>, Map<ChunkPos, List<BlockInfo>>> STRUCTURE_CACHE = new ConcurrentHashMap<>();
 
+    /**
+     * Static part. Leave this empty if the whole structure is dynamic.
+     */
     protected abstract void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand);
 
+    /**
+     * @return false if the structure is not completely static.
+     */
     protected boolean isCacheable() {
         return true;
     }
@@ -108,6 +114,9 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         void populate(@NotNull World worldIn, @NotNull Random random, @NotNull BlockPos blockPos, @NotNull TileEntity chest);
     }
 
+    /**
+     * A custom block info class, containing all the information needed to generate a block
+     */
     public static class BlockInfo {
         @NotNull
         final BlockPos relativePos;

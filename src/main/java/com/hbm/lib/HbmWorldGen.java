@@ -344,7 +344,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			if (rand.nextInt(50) == 0)
 				r = 50;
 
-			new Sellafield().generate(world, x, z, r, r * 0.35D);
+			new Sellafield(r, r * 0.35D).generate(world, rand, new BlockPos(x, 0, z));
 
 			if (GeneralConfig.enableDebugMode)
 				MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at x=" + x + " z=" + z);

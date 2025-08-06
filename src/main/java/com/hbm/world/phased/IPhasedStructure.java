@@ -25,6 +25,7 @@ public interface IPhasedStructure {
      * @param rand            A random object
      * @param structureOrigin The absolute origin (corner) of the entire structure in the world.
      * @param chunkPos        The position of the chunk to generate blocks in.
+     * @param blockInfos      The list of blocks to generate.
      */
     void generateForChunk(World world, Random rand, BlockPos structureOrigin, ChunkPos chunkPos, List<BlockInfo> blockInfos);
 
@@ -62,13 +63,25 @@ public interface IPhasedStructure {
         return Optional.empty();
     }
 
+    /**
+     * Dynamic part. All chunks required must be either explicitly declared by {@link #getValidationPoints},
+     * or is covered by {@link #generateForChunk}.<br>
+     * Violation is guaranteed to cause cascading worldgen.
+     */
     default void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin){
     }
 
+    /**
+     * Points used to determine the y of the structure. Structures will not spawn until all chunks required to validate has been generated.
+     */
     @Contract("_ -> new")
     List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin);
 
-    default boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+    /**
+     * Override to use custom spawning condition.
+     * @return true if the structure can spawn at the given position.
+     */
+    default boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos origin) {
         return true;
     }
 }
