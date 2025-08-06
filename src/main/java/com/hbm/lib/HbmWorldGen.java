@@ -1,6 +1,7 @@
 package com.hbm.lib;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockFlowerPlant;
 import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
@@ -79,19 +80,19 @@ public class HbmWorldGen implements IWorldGenerator {
 
 		if(!TomSaveData.forWorld(world).impact) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST) && rand.nextInt(16) == 0) {
-				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, FOXGLOVE.ordinal()));
+				DungeonToolbox.generateFlowers(world, rand, i, j, (BlockFlowerPlant) ModBlocks.plant_flower, FOXGLOVE);
 			}
 
 			if (biome == Biomes.ROOFED_FOREST && rand.nextInt(8) == 0) {
-				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, NIGHTSHADE.ordinal()));
+				DungeonToolbox.generateFlowers(world, rand, i, j, (BlockFlowerPlant) ModBlocks.plant_flower, NIGHTSHADE);
 			}
 
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) && rand.nextInt(8) == 0) {
-				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, TOBACCO.ordinal()));
+				DungeonToolbox.generateFlowers(world, rand, i, j, (BlockFlowerPlant) ModBlocks.plant_flower, TOBACCO);
 			}
 
 			if (rand.nextInt(64) == 0) {
-				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.plant_flower.getDefaultState().withProperty(META, HEMP.ordinal()));
+				DungeonToolbox.generateFlowers(world, rand, i, j, (BlockFlowerPlant) ModBlocks.plant_flower, HEMP);
 			}
 //			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER) && rand.nextInt(4) == 0) {
 //				DungeonToolbox.generateFlowers(world, rand, i, j, ModBlocks.reeds, 0);
