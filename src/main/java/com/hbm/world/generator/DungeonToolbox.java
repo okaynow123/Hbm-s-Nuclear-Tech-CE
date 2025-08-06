@@ -26,7 +26,7 @@ public class DungeonToolbox {
 		int y = world.getHeight(new BlockPos(x, 0, z)).getY();
 		BlockPos pos = new BlockPos(x, y, z);
 
-		new NTMFlowers(flower, type).generate(world, rand, pos);
+		//new NTMFlowers(flower, type).generate(world, rand, pos);
 	}
     private static final WorldGenFlowers dummyGen = new WorldGenFlowers(Blocks.RED_FLOWER, BlockFlower.EnumFlowerType.ALLIUM); // Unused dummy to extend class
 
