@@ -27,6 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -164,6 +165,15 @@ public class ItemGunBaseNT extends ItemBakedBase implements IKeybindReceiver, IE
             case DEBUG: tooltip.add((BobMathUtil.getBlink() ? TextFormatting.YELLOW : TextFormatting.GOLD) + "DEBUG"); break;
         }
     }
+
+    @Override
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) { return true;}
 
     @Override
     public boolean canHandleKeybind(EntityPlayer player, ItemStack stack, HbmKeybinds.EnumKeybind keybind) {

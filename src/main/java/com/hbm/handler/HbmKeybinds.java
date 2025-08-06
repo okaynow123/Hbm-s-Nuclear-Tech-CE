@@ -1,15 +1,10 @@
 package com.hbm.handler;
 
 import com.hbm.capability.HbmCapability;
-import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -42,27 +37,6 @@ public class HbmKeybinds {
 		ClientRegistry.registerKeyBinding(craneLeftKey);
 		ClientRegistry.registerKeyBinding(craneRightKey);
 		ClientRegistry.registerKeyBinding(craneLoadKey);
-	}
-	// this shit is so stupid that you need to fucking cancel all the exact events to just stop using a gun AS A FUCKING PICKAXE OR SWORD
-	@SubscribeEvent
-	public void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-		EntityPlayer player = event.getEntityPlayer();
-		if (player == null) return;
-
-		ItemStack mainHand = player.getHeldItemMainhand();
-
-		if (!mainHand.isEmpty() && mainHand.getItem() instanceof ItemGunBaseNT) {
-			event.setCanceled(true);
-		}
-	}
-
-	@SubscribeEvent
-	public void onAttackEntity(AttackEntityEvent event) {
-		EntityPlayer player = event.getEntityPlayer();
-		ItemStack mainHand = player.getHeldItemMainhand();
-		if (!mainHand.isEmpty() && mainHand.getItem() instanceof ItemGunBaseNT) {
-			event.setCanceled(true);
-		}
 	}
 
 	@SubscribeEvent
