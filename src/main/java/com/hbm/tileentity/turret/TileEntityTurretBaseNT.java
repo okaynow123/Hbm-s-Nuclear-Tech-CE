@@ -632,7 +632,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		if(wl != null) {
 
 			if(e instanceof EntityPlayer) {
-				if(wl.contains(e.getDisplayName())) {
+				if(wl.contains(e.getName())) {
 					return false;
 				}
 			} else if(e instanceof EntityLiving) {
