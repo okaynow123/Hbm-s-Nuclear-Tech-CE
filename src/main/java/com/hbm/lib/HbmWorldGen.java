@@ -1,27 +1,24 @@
 package com.hbm.lib;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
-import com.hbm.config.BedrockOreJsonConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.WorldConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
 import com.hbm.world.*;
-import com.hbm.world.dungeon.AncientTomb;
 import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
+import com.hbm.world.feature.BedrockOre;
 import com.hbm.world.feature.DepthDeposit;
 import com.hbm.world.feature.OilSpot;
-import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.generator.JungleDungeonStructure;
 import com.hbm.world.generator.MeteorDungeonStructure;
@@ -48,7 +45,6 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
-import java.util.List;
 import java.util.Random;
 
 import static com.hbm.blocks.PlantEnums.EnumFlowerPlantType.*;
@@ -187,6 +183,17 @@ public class HbmWorldGen implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.titaniumClusterSpawn.get(dimID)), 6, 15, 30, ModBlocks.cluster_titanium);
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.aluminiumClusterSpawn.get(dimID)), 6, 15, 35, ModBlocks.cluster_aluminium);
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.copperClusterSpawn.get(dimID)), 6, 15, 20, ModBlocks.cluster_copper);
+
+		if(WorldConfig.newBedrockOres) {
+
+			if(rand.nextInt(10) == 0) {
+				int randPosX = i + rand.nextInt(2) + 8;
+				int randPosZ = j + rand.nextInt(2) + 8;
+
+				BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), null, 0xD78A16, 1);
+			}
+
+		}
 		
 		//Stone ores
 		//DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.malachiteSpawn.get(dimID)), 16, 6, 40, ModBlocks.ore_malachite);
@@ -236,7 +243,6 @@ public class HbmWorldGen implements IWorldGenerator {
 		}
 		
 		generateBedrockOil(world, rand, i, j, dimID);
-		generateBedrockOre(world, rand, i, j, dimID);
 	}
 	
 	/**
@@ -281,31 +287,6 @@ public class HbmWorldGen implements IWorldGenerator {
 				}
 			}
 		}
-	}
-
-	private void generateBedrockOre(World world, Random rand, int i, int j, int dimID){
-		int dimBedrockOreFreq = parseInt(BedrockOreJsonConfig.dimOreRarity.get(dimID));
-		if (dimBedrockOreFreq > 0 && rand.nextInt(dimBedrockOreFreq) == 0) {
-			
-			String oreName = BedrockOreRegistry.rollOreName(dimID, rand);
-			if(oreName == null) return;
-			int sqrsize = 2;
-			for(int v = sqrsize; v >= -sqrsize; v--) {
-				for(int w = sqrsize; w >= -sqrsize; w--) {
-					for(int y = 6; y >= 0; y--) {
-						if(rand.nextInt(4) == 0) continue;
-						placeBedrockOre(world, new BlockPos(i+8+w, y, j+8+v), oreName);
-					}
-				}
-			}
-		}
-	}
-	
-	private void placeBedrockOre(World world, BlockPos orePos, String oreName){
-		if(!isBedrock(world, orePos)) return;
-		world.setBlockState(orePos, ModBlocks.ore_bedrock_block.getDefaultState());
-		TileEntityBedrockOre bedrockOre = (TileEntityBedrockOre)world.getTileEntity(orePos);
-//		bedrockOre.setOre(oreName);
 	}
 
 	private boolean isBedrock(World world, BlockPos bPos){
