@@ -5,6 +5,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.interfaces.IBulletHurtBehavior;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.potion.HbmPotion;
@@ -162,7 +163,7 @@ public class Gun12GaugeFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBuckshotConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_12gauge
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge
 		bullet.dmgMin = 1;
 		bullet.dmgMax = 4;
 		
@@ -173,7 +174,7 @@ public class Gun12GaugeFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBuckshotConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_12gauge_incendiary
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge_incendiary
 		bullet.wear = 15;
 		bullet.dmgMin = 1;
 		bullet.dmgMax = 4;
@@ -186,7 +187,7 @@ public class Gun12GaugeFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBuckshotConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_12gauge_shrapnel
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge_shrapnel
 		bullet.wear = 15;
 		bullet.dmgMin = 2;
 		bullet.dmgMax = 6;
@@ -201,7 +202,7 @@ public class Gun12GaugeFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBuckshotConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_12gauge_du
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge_du
 		bullet.wear = 20;
 		bullet.dmgMin = 3;
 		bullet.dmgMax = 8;
@@ -215,7 +216,7 @@ public class Gun12GaugeFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBuckshotConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_12gauge_marauder
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge_marauder
 		bullet.wear = 20;
 		bullet.dmgMin = 100;
 		bullet.dmgMax = 500;
@@ -238,7 +239,7 @@ public class Gun12GaugeFactory {
 
 		BulletConfiguration bullet = BulletConfigFactory.standardAirstrikeConfig();
 
-		bullet.ammo = ModItems.nothing; //ammo_12gauge_sleek
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_12gauge_sleek
 
 		return bullet;
 	}

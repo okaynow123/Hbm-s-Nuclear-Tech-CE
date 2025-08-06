@@ -5,7 +5,6 @@ import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.entity.logic.EntityBomber;
-import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.entity.projectile.EntityArtilleryShell;
@@ -31,11 +30,6 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
 import com.hbm.util.CompatExternal;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.BiFunction;
-
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -66,6 +60,11 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase implements IEnergyReceiverMK2, IControllable, IControlReceiver, ITickable, SimpleComponent, CompatHandler.OCComponent {
@@ -344,7 +343,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 					
 					BulletConfiguration conf = BulletConfigSyncingUtil.pullConfig(c);
 					
-					if(conf.ammo == inventory.getStackInSlot(i).getItem())
+					if(conf.ammo.item == inventory.getStackInSlot(i).getItem())
 						return conf;
 				}
 			}
@@ -827,8 +826,8 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		for(Integer i : getAmmoList()) {
 			BulletConfiguration config = BulletConfigSyncingUtil.pullConfig(i);
 			
-			if(config != null && config.ammo != null) {
-				ammoStacks.add(new ItemStack(config.ammo));
+			if(config != null && !config.ammo.getStack().isEmpty()) {
+				ammoStacks.add(config.ammo.getStack());
 			}
 		}
 		

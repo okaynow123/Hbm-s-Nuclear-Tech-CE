@@ -1,5 +1,6 @@
 package com.hbm.inventory;
 
+import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
@@ -186,10 +187,9 @@ public class RecipesCommon {
 		public ComparableStack(Block item, int stacksize, Enum<?> theEnum) {
 			this(item, stacksize, theEnum.ordinal());
 		}
-		
+
 		public ItemStack toStack() {
-			
-			return new ItemStack(item, stacksize, meta);
+			return new ItemStack(item == null ? ModItems.nothing : item, stacksize, meta);
 		}
 		
 		@Override

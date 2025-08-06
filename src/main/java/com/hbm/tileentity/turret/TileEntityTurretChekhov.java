@@ -88,7 +88,7 @@ public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements I
 			
 			if(conf != null) {
 				this.spawnBullet(conf);
-				this.consumeAmmo(conf.ammo);
+				this.consumeAmmo(conf.ammo.item);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.chekhov_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());

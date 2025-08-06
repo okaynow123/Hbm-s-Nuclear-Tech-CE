@@ -13,12 +13,22 @@ import java.util.Random;
 
 public class CasingCreator implements IParticleCreator {
 
-    /** Casing without smoke */
+    /** Default casing without smoke */
     public static void composeEffect(World world, EntityPlayer player, double frontOffset, double heightOffset, double sideOffset, double frontMotion, double heightMotion, double sideMotion, double motionVariance, String casing) {
-        composeEffect(world, player, frontOffset, heightOffset, sideOffset, frontMotion, heightMotion, sideMotion, motionVariance, casing, false, 0, 0, 0);
+        composeEffect(world, player, frontOffset, heightOffset, sideOffset, frontMotion, heightMotion, sideMotion, motionVariance, 5F, 10F, casing, false, 0, 0, 0);
     }
 
+    /** Casing without smoke */
+    public static void composeEffect(World world, EntityPlayer player, double frontOffset, double heightOffset, double sideOffset, double frontMotion, double heightMotion, double sideMotion, double motionVariance, float multPitch, float multYaw, String casing) {
+        composeEffect(world, player, frontOffset, heightOffset, sideOffset, frontMotion, heightMotion, sideMotion, motionVariance, multPitch, multYaw, casing, false, 0, 0, 0);
+    }
+
+    /** Default casing, but with smoke*/
     public static void composeEffect(World world, EntityPlayer player, double frontOffset, double heightOffset, double sideOffset, double frontMotion, double heightMotion, double sideMotion, double motionVariance, String casing, boolean smoking, int smokeLife, double smokeLift, int nodeLife) {
+        composeEffect(world, player, frontOffset, heightOffset, sideOffset, frontMotion, heightMotion, sideMotion, motionVariance, 5F, 10F, casing, false, 0, 0, 0);
+    }
+
+    public static void composeEffect(World world, EntityPlayer player, double frontOffset, double heightOffset, double sideOffset, double frontMotion, double heightMotion, double sideMotion, double motionVariance, float mPitch, float mYaw, String casing, boolean smoking, int smokeLife, double smokeLift, int nodeLife) {
 
         if(player.isSneaking()) heightOffset -= 0.075F;
 

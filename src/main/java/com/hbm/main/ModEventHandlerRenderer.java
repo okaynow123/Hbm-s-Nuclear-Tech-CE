@@ -4,12 +4,20 @@ import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.packet.toclient.PermaSyncHandler;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -18,11 +26,14 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
 public class ModEventHandlerRenderer {
@@ -111,6 +122,47 @@ public class ModEventHandlerRenderer {
 			event.setRed(event.getRed() * (1 - interp) + sootColor * interp);
 			event.setGreen(event.getGreen() * (1 - interp) + sootColor * interp);
 			event.setBlue(event.getBlue() * (1 - interp) + sootColor * interp);
+		}
+	}
+
+	@SubscribeEvent
+	public void onRenderHeldGun(RenderPlayerEvent.Pre event) {
+
+		EntityPlayer player = event.getEntityPlayer();
+		RenderPlayer renderer = event.getRenderer();
+		ItemStack held = player.getHeldItemMainhand();
+
+		if(!held.isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemGunBaseNT) {
+			renderer.getMainModel().rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
+
+			//technically not necessary but it probably fixes some issues with mods that implement their armor weirdly
+			TileEntityItemStackRenderer render = held.getItem().getTileEntityItemStackRenderer();
+			if(render instanceof ItemRenderWeaponBase renderGun) {
+				if(renderGun.isAkimbo()) {
+					ModelBiped biped = renderer.getMainModel();
+					renderer.getMainModel().bipedLeftArm.rotateAngleY = biped.bipedLeftArm.rotateAngleY = 0.1F + biped.bipedHead.rotateAngleY;
+				}
+			}
+		}
+	}
+	// Th3_Sl1ze: the funny thing is that this method is the ONLY thing that 'boots up' itemrenderweaponbase
+	// by default it doesn't want to render the model at all
+	// for now the real problem is that it sets the type to 'null' and I don't know how to fix that rn
+	// TODO
+	@SubscribeEvent
+	public void onRenderHand(RenderHandEvent event) {
+
+		//can't use plaxer.getHeldItem() here because the item rendering persists for a few frames after hitting the switch key
+		ItemRenderer itemRenderer = Minecraft.getMinecraft().entityRenderer.itemRenderer;
+		ItemStack toRender = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "field_187467_d");
+
+		if(toRender != null) {
+			TileEntityItemStackRenderer render = toRender.getItem().getTileEntityItemStackRenderer();
+
+			if(render instanceof ItemRenderWeaponBase) {
+				((ItemRenderWeaponBase) render).setPerspectiveAndRender(toRender, event.getPartialTicks());
+				event.setCanceled(true);
+			}
 		}
 	}
 	

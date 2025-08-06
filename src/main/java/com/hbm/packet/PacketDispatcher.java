@@ -69,6 +69,8 @@ public class PacketDispatcher {
 		wrapper.registerMessage(SatPanelPacket.Handler.class, SatPanelPacket.class, i++, Side.CLIENT);
 		//Signals server to do coord based satellite stuff
 		wrapper.registerMessage(SatCoordPacket.Handler.class, SatCoordPacket.class, i++, Side.SERVER);
+		//Triggers gun animations of the client
+		wrapper.registerMessage(GunAnimationPacketSedna.Handler.class, GunAnimationPacketSedna.class, i++, Side.CLIENT);
 		//Signals server to perform orbital strike, among other things
 		wrapper.registerMessage(SatLaserPacket.Handler.class, SatLaserPacket.class, i++, Side.SERVER);
 		//Sets the gun animation on server because there is no client side nbt tag
@@ -100,7 +102,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(PacketSpecialDeath.Handler.class, PacketSpecialDeath.class, i++, Side.CLIENT);
 		//Universal keybind packet
 		wrapper.registerMessage(KeybindPacket.Handler.class, KeybindPacket.class, i++, Side.SERVER);
-		wrapper.registerMessage(KeybindPacket.Handler.class, KeybindPacket.class, i-1, Side.CLIENT);
 		//To tell the server to cut a mob for the cutting swords
 		wrapper.registerMessage(PacketMobSlicer.Handler.class, PacketMobSlicer.class, i++, Side.SERVER);
 		//Sync packet for jetpack data

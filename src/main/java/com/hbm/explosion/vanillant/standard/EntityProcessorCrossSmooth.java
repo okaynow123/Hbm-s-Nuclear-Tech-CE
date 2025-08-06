@@ -1,7 +1,7 @@
 package com.hbm.explosion.vanillant.standard;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.items.weapon.sedna.factory.BulletConfig;
+import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
 import com.hbm.util.EntityDamageUtil;
 import net.minecraft.entity.Entity;

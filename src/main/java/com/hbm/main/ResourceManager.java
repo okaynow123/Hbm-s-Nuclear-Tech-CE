@@ -13,6 +13,8 @@ import com.hbm.render.Vbo;
 import com.hbm.render.WavefrontObjDisplayList;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.WavefrontObject;
+import com.hbm.render.anim.sedna.AnimationLoader;
+import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.misc.LensVisibilityHandler;
 import com.hbm.util.KeypadClient;
 import net.minecraft.client.Minecraft;
@@ -20,6 +22,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.HashMap;
 
 public class ResourceManager {
 
@@ -665,8 +669,22 @@ public class ResourceManager {
 	public static final IModelCustom crucible = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/crucible.obj")).asVBO();
 	public static final IModelCustom detonator_laser = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/detonator_laser.obj")).asVBO();
 	public static final IModelCustom boltgun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/boltgun.obj")).asVBO();
-	
-	
+
+	public static final IModelCustom lilmac = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/lilmac.obj")).asVBO();
+
+	public static final HashMap<String, BusAnimationSedna> python_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/python.json"));
+	public static final HashMap<String, BusAnimationSedna> cursed_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/cursed.json"));
+	public static final HashMap<String, BusAnimationSedna> novac_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/novac.json"));
+	public static final HashMap<String, BusAnimationSedna> ks23_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/ks23.json"));
+	public static final HashMap<String, BusAnimationSedna> spas_12_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/spas12.json"));
+	public static final HashMap<String, BusAnimationSedna> supershotty_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/supershotty.json"));
+	public static final HashMap<String, BusAnimationSedna> benelli_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/benelli.json"));
+	public static final HashMap<String, BusAnimationSedna> congolake_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/congolake.json"));
+	public static final HashMap<String, BusAnimationSedna> am180_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/am180.json"));
+	public static final HashMap<String, BusAnimationSedna> flamethrower_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/flamethrower.json"));
+	public static final HashMap<String, BusAnimationSedna> stg77_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/stg77.json"));
+	public static final HashMap<String, BusAnimationSedna> lag_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/lag.json"));
+
 	// Control panel
 	public static final IModelCustom control_panel_custom = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/control_panel/control_panel_custom.obj")).asVBO();
 	public static final IModelCustom control_panel_front = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/control_panel/control_panel_front.obj")).asVBO();
@@ -1118,6 +1136,8 @@ public class ResourceManager {
 	public static final ResourceLocation boltgun_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/boltgun.png");
 	public static final ResourceLocation hs_sword_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/hs_sword.png");
 	public static final ResourceLocation hf_sword_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/hf_sword.png");
+
+	public static final ResourceLocation debug_gun_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/debug_gun.png");
 	
 	public static final ResourceLocation brimstone_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/brimstone.png");
 	public static final ResourceLocation hk69_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/hk69.png");

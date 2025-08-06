@@ -6,7 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-
+// Th3_Sl1ze: for now I'll leave it because of good old Drillgon guns. Maybe it can become sophisticated and in a single class,
+// but I'm a lazy fucker so I'll create die Neuen HbmAnimations for sedna weapons.
 public class HbmAnimations {
 
 	//in flans mod and afaik also MW, there's an issue that there is only one

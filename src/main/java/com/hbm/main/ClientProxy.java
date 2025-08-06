@@ -28,6 +28,7 @@ import com.hbm.items.special.ItemAutogen;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.items.tool.ItemGasCanister;
+import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
@@ -322,6 +323,11 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_exo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER), reg);
+    }
+
+    @Override
+    public void registerGunCfg() {
+        GunFactoryClient.init();
     }
 
     @Override
@@ -1487,6 +1493,9 @@ public class ClientProxy extends ServerProxy {
                 return HbmKeybinds.craneRightKey.isKeyDown();
             case CRANE_LOAD:
                 return HbmKeybinds.craneLoadKey.isKeyDown();
+            case GUN_PRIMARY:		return HbmKeybinds.gunPrimaryKey.isKeyDown();
+            case GUN_SECONDARY:		return HbmKeybinds.gunSecondaryKey.isKeyDown();
+            case GUN_TERTIARY:		return HbmKeybinds.gunTertiaryKey.isKeyDown();
         }
 
         return false;

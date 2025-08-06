@@ -6,22 +6,18 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IBulletImpactBehavior;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
 import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.render.anim.HbmAnimations.AnimType;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
-import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.ArrayList;
 
@@ -100,7 +96,7 @@ public class GunEnergyFactory {
 
 		BulletConfiguration bullet = new BulletConfiguration();
 
-		bullet.ammo = ModItems.nugget_euphemium;
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nugget_euphemium);
 		bullet.ammoCount = 1000;
 		bullet.wear = 1;
 		bullet.velocity = 1F;

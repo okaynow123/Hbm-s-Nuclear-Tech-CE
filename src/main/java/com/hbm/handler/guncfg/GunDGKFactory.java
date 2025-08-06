@@ -1,6 +1,7 @@
 package com.hbm.handler.guncfg;
 
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.particle.SpentCasing;
 
@@ -16,7 +17,7 @@ public class GunDGKFactory {
 	public static BulletConfiguration getDGKConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardBulletConfig();
-		bullet.ammo = ModItems.ammo_dgk;
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_dgk);
 		return bullet;
 	}
 }

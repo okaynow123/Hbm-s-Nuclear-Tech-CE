@@ -16,10 +16,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 @Untested
 //OH man this will be a goldmine of bugs
@@ -78,6 +83,76 @@ public class EntityDamageUtil {
 
     public static void setBeenAttacked(EntityLivingBase living) {
         living.velocityChanged = living.getRNG().nextDouble() >= living.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getAttributeValue();
+    }
+
+    public static RayTraceResult getMouseOver(EntityPlayer attacker, double reach) {
+
+        World world = attacker.world;
+        RayTraceResult objectMouseOver;
+        Entity pointedEntity = null;
+
+        objectMouseOver = rayTrace(attacker, reach, 1F);
+
+        Vec3d pos = getPosition(attacker);
+        Vec3d look = attacker.getLook(1F);
+        Vec3d end = pos.add(look.x * reach, look.y * reach, look.z * reach);
+        Vec3d hitvec = null;
+        float grace = 1.0F;
+        List list = world.getEntitiesWithinAABBExcludingEntity(attacker, attacker.getEntityBoundingBox().expand(look.x * reach, look.y * reach, look.z * reach).expand(grace, grace, grace));
+
+        double closest = reach;
+
+        for(int i = 0; i < list.size(); ++i) {
+            Entity entity = (Entity) list.get(i);
+
+            if(entity.canBeCollidedWith()) {
+
+                float borderSize = entity.getCollisionBorderSize();
+                AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(borderSize, borderSize, borderSize);
+                RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(pos, end);
+
+                if(axisalignedbb.contains(pos)) {
+                    if(0.0D <= closest) {
+                        pointedEntity = entity;
+                        hitvec = movingobjectposition == null ? pos : movingobjectposition.hitVec;
+                        closest = 0.0D;
+                    }
+
+                } else if(movingobjectposition != null) {
+                    double dist = pos.distanceTo(movingobjectposition.hitVec);
+
+                    if(dist < closest || closest == 0.0D) {
+                        if(entity == attacker.getRidingEntity() && !entity.canRiderInteract()) {
+                            if(closest == 0.0D) {
+                                pointedEntity = entity;
+                                hitvec = movingobjectposition.hitVec;
+                            }
+                        } else {
+                            pointedEntity = entity;
+                            hitvec = movingobjectposition.hitVec;
+                            closest = dist;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(pointedEntity != null && (closest < reach || objectMouseOver == null)) {
+            objectMouseOver = new RayTraceResult(pointedEntity, hitvec);
+        }
+
+        return objectMouseOver;
+    }
+
+    public static RayTraceResult rayTrace(EntityPlayer player, double dist, float interp) {
+        Vec3d pos = getPosition(player);
+        Vec3d look = player.getLook(interp);
+        Vec3d end = pos.add(look.x * dist, look.y * dist, look.z * dist);
+        return player.world.rayTraceBlocks(pos, end, false, false, true);
+    }
+
+    public static Vec3d getPosition(EntityPlayer player) {
+        return new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
     }
 
     private static boolean attackEntityFromNTInternal(EntityLivingBase living, DamageSource source, float amount, boolean ignoreIFrame, boolean allowSpecialCancel, double knockbackMultiplier) {

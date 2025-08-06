@@ -57,6 +57,7 @@ import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -65,6 +66,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatBasic;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
@@ -118,6 +122,9 @@ public class MainRegistry {
     public static CreativeTabs weaponTab = new WeaponTab(CreativeTabs.getNextID(), "tabWeapon");
     // drinks, kits, tools
     public static CreativeTabs consumableTab = new ConsumableTab(CreativeTabs.getNextID(), "tabConsumable");
+
+    public static StatBase statMines;
+    public static StatBase statBullets;
     public static int generalOverride = 0;
     public static int polaroidID = 1;
     public static int x;
@@ -360,6 +367,8 @@ public class MainRegistry {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        statMines = new StatBasic("stat.ntmMines", new TextComponentString(I18n.format("stat.ntmMines"))).registerStat();
+        statBullets = new StatBasic("stat.ntmBullets", new TextComponentString(I18n.format("stat.ntmBullets"))).registerStat();
         ModItems.init();
         proxy.init(event);
         ModBlocks.init();
@@ -396,6 +405,7 @@ public class MainRegistry {
         SerializableRecipe.registerAllHandlers();
         SerializableRecipe.initialize();
         AnvilRecipes.register();
+        ClientConfig.initConfig();
         WasteDrumRecipes.registerRecipes();
         ItemDepletedFuel.registerPoolRecepies();
         RefineryRecipes.registerRefinery();

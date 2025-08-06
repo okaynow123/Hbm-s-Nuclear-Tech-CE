@@ -1,4 +1,4 @@
-package com.hbm.items.weapon.sedna.factory;
+package com.hbm.items.weapon.sedna;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

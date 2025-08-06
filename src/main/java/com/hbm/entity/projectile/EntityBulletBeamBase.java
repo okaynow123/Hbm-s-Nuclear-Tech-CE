@@ -1,7 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.weapon.sedna.factory.BulletConfig;
+import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.util.Vec3NT;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;

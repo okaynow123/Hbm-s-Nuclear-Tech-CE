@@ -13,8 +13,6 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.Vec3dUtil;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -25,6 +23,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AutoRegister
 public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IGUIProvider {
@@ -158,7 +159,7 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
 
       if (conf != null) {
         this.spawnBullet(conf, 5F);
-        this.consumeAmmo(conf.ammo);
+        this.consumeAmmo(conf.ammo.item);
         this.world.playSound(
             null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 

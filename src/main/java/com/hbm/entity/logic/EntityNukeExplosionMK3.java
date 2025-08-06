@@ -13,6 +13,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -311,6 +313,62 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 			}
 		}
 		return false;
+	}
+
+	public static EntityNukeExplosionMK3 statFacFleija(World world, double x, double y, double z, int range) {
+
+		EntityNukeExplosionMK3 entity = new EntityNukeExplosionMK3(world);
+		entity.posX = x;
+		entity.posY = y;
+		entity.posZ = z;
+		entity.destructionRange = range;
+		entity.speed = BombConfig.blastSpeed;
+		entity.coefficient = 1.0F;
+		entity.waste = false;
+
+		Iterator<Entry<ATEntry, Long>> it = at.entrySet().iterator();
+
+		while(it.hasNext()) {
+
+			Entry<ATEntry, Long> next = it.next();
+			if(next.getValue() < world.getTotalWorldTime()) {
+				it.remove();
+				continue;
+			}
+
+			ATEntry entry = next.getKey();
+			if(entry.dim != world.provider.getDimension())  continue;
+
+			Vec3d vec = new Vec3d(x - entry.x, y - entry.y, z - entry.z);
+
+			if(vec.length() < 300) {
+				entity.setDead();
+
+				/* just to make sure */
+				if(!world.isRemote) {
+
+					for(int i = 0; i < 2; i++) {
+						double ix = i == 0 ? x : (entry.x + 0.5);
+						double iy = i == 0 ? y : (entry.y + 0.5);
+						double iz = i == 0 ? z : (entry.z + 0.5);
+
+						world.playSound(null, ix, iy, iz, HBMSoundHandler.ufoBlast, SoundCategory.PLAYERS, 15.0F, 0.7F + world.rand.nextFloat() * 0.2F);
+
+						NBTTagCompound data = new NBTTagCompound();
+						data.setString("type", "plasmablast");
+						data.setFloat("r", 0.0F);
+						data.setFloat("g", 0.75F);
+						data.setFloat("b", 1.0F);
+						data.setFloat("scale", 7.5F);
+						PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, ix, iy, iz), new TargetPoint(entry.dim, ix, iy, iz, 150));
+					}
+				}
+
+				break;
+			}
+		}
+
+		return entity;
 	}
 
 	public static class ATEntry {

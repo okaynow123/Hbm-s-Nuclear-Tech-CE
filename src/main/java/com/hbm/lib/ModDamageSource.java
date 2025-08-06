@@ -46,17 +46,20 @@ public class ModDamageSource extends DamageSource {
     public static DamageSource asbestos = (new DamageSource("asbestos")).setDamageIsAbsolute().setDamageBypassesArmor();
     public static DamageSource blacklung = (new DamageSource("blacklung")).setDamageIsAbsolute().setDamageBypassesArmor();
     public static DamageSource mku = (new DamageSource("mku")).setDamageIsAbsolute().setDamageBypassesArmor();
+
+    public static final String s_bullet = "revolverBullet";
+    public static final String s_zomg_prefix = "subAtomic";
 	
 	public ModDamageSource(String p_i1566_1_) {
 		super(p_i1566_1_);
 	}
     public static DamageSource causeBulletDamage(EntityBullet p_76353_0_, Entity p_76353_1_)
     {
-        return (new EntityDamageSourceIndirect("revolverBullet", p_76353_0_, p_76353_1_)).setProjectile();
+        return (new EntityDamageSourceIndirect(s_bullet, p_76353_0_, p_76353_1_)).setProjectile();
     }
     public static DamageSource causeBulletDamage(EntityBulletBase base, Entity ent)
     {
-        return (new EntityDamageSourceIndirect("revolverBullet", base, ent)).setProjectile();
+        return (new EntityDamageSourceIndirect(s_bullet, base, ent)).setProjectile();
     }
     public static DamageSource causeBulletGibDamage(EntityBulletBase base, Entity ent)
     {
@@ -76,7 +79,7 @@ public class ModDamageSource extends DamageSource {
     }
     public static DamageSource causeSubatomicDamage(EntityRainbow p_76353_0_, Entity p_76353_1_)
     {
-        return (new EntityDamageSourceIndirect("subAtomic", p_76353_0_, p_76353_1_)).setProjectile().setDamageBypassesArmor();
+        return (new EntityDamageSourceIndirect(s_zomg_prefix + (p_76353_0_.world.rand.nextInt(5) + 1), p_76353_0_, p_76353_1_)).setProjectile().setDamageBypassesArmor();
     }
     public static DamageSource causeSubatomicDamage2(EntityRainbow p_76353_0_, Entity p_76353_1_)
     {

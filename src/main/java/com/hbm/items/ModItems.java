@@ -34,7 +34,7 @@ import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.items.weapon.ItemMissile.Rarity;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
-import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmo;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
@@ -1810,8 +1810,9 @@ public class ModItems {
     public static final Item coil_magnetized_tungsten = new ItemCustomLore("coil_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
     //Gun ammo
     public static final Item assembly_nuke = new ItemBase("assembly_nuke").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ammo_debug = new ItemBase("ammo_debug");
-    public static final Item ammo_standard = new ItemEnumMulti("ammo_standard", EnumAmmo.class, true, true).setCreativeTab(MainRegistry.weaponTab);
+    public static Item gun_debug;
+    public static Item ammo_debug;
+    public static Item ammo_standard;
     public static final Item ammo_shell = new ItemAmmo("ammo_shell").setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_shell_explosive = new ItemAmmo("ammo_shell_explosive").setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_shell_apfsds_t = new ItemAmmo("ammo_shell_apfsds_t").setCreativeTab(MainRegistry.weaponTab);
@@ -2767,6 +2768,7 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.RecursionAbility(9));
 
     public static void preInit() {
+        GunFactory.init();
         for (Item item : ALL_ITEMS) {
             ForgeRegistries.ITEMS.register(item);
         }

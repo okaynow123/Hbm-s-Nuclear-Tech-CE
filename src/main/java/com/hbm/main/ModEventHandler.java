@@ -944,6 +944,7 @@ public class ModEventHandler {
 
         if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemMainhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(0), event.getEntityLiving().getHeldItemMainhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.MAIN_HAND);
+            ((IEquipReceiver)event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND));
         }
         if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemOffhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(1), event.getEntityLiving().getHeldItemOffhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemOffhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.OFF_HAND);

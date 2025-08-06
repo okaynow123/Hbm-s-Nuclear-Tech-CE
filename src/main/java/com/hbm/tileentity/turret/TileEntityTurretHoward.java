@@ -126,7 +126,7 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 				BulletConfiguration conf = this.getFirstConfigLoaded();
 
 				if(conf != null) {
-					this.consumeAmmo(conf.ammo);
+					this.consumeAmmo(conf.ammo.item);
 					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_reload, SoundCategory.BLOCKS, 4.0F, 1F);
 					loaded = 200;
 				}

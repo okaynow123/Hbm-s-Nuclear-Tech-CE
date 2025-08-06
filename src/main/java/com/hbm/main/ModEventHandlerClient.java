@@ -38,6 +38,9 @@ import com.hbm.items.tool.ItemCanister;
 import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.*;
+import com.hbm.items.weapon.sedna.GunConfig;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.ItemGunBaseSedna;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.RecoilHandler;
@@ -55,11 +58,13 @@ import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
+import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.item.BakedModelCustom;
 import com.hbm.render.item.BakedModelNoGui;
 import com.hbm.render.item.TEISRBase;
 import com.hbm.render.item.TemplateBakedModel;
 import com.hbm.render.item.weapon.*;
+import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.RenderAccessoryUtility;
 import com.hbm.render.misc.RenderScreenOverlay;
@@ -82,6 +87,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelBiped;
@@ -126,6 +132,7 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -889,6 +896,19 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
     }
 
     @SubscribeEvent
+    public void setupNewFOV(FOVUpdateEvent event) {
+
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        ItemStack held = player.getHeldItemMainhand();
+
+        if(held.isEmpty()) return;
+
+        TileEntityItemStackRenderer customRenderer = held.getItem().getTileEntityItemStackRenderer();
+        if(!(customRenderer instanceof ItemRenderWeaponBase renderGun)) return;
+        event.setNewfov(renderGun.getViewFOV(held, event.getFov()));
+    }
+
+    @SubscribeEvent
     public void inputUpdate(InputUpdateEvent e) {
         EntityPlayer player = e.getEntityPlayer();
         if (player.getHeldItemMainhand().getItem() == ModItems.gun_supershotgun && ItemGunShotty.hasHookedEntity(player.world, player.getHeldItemMainhand())) {
@@ -1505,11 +1525,11 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             GlStateManager.disableBlend();
         }
         /// HANDLE GUN AND AMMO OVERLAYS ///
-        if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBase) {
+        if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IItemHUD) {
             ((IItemHUD) player.getHeldItem(EnumHand.MAIN_HAND).getItem()).renderHUD(event, event.getType(), player, player.getHeldItem(EnumHand.MAIN_HAND), EnumHand.MAIN_HAND);
         }
 
-        if (player.getHeldItem(EnumHand.OFF_HAND) != null && player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemGunBase) {
+        if (player.getHeldItem(EnumHand.OFF_HAND) != null && player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof IItemHUD) {
             ((IItemHUD) player.getHeldItem(EnumHand.OFF_HAND).getItem()).renderHUD(event, event.getType(), player, player.getHeldItem(EnumHand.OFF_HAND), EnumHand.OFF_HAND);
         }
 
@@ -1546,6 +1566,53 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 }
             }
             TileEntityRBMKBase.diagnosticPrintHook(event);
+        }
+
+        /// HANLDE SEDNA ANIMATION BUSES ///
+
+        for(int i = 0; i < HbmAnimationsSedna.hotbar.length; i++) {
+            for(int j = 0; j < HbmAnimationsSedna.hotbar[i].length; j++) {
+
+                HbmAnimationsSedna.Animation animation = HbmAnimationsSedna.hotbar[i][j];
+
+                if(animation == null)
+                    continue;
+
+                if(animation.holdLastFrame)
+                    continue;
+
+                long time = System.currentTimeMillis() - animation.startMillis;
+
+                if(time > animation.animation.getDuration())
+                    HbmAnimationsSedna.hotbar[i][j] = null;
+            }
+        }
+
+        /// HANDLE SCOPE OVERLAY ///
+        ItemStack held = player.getHeldItemMainhand();
+
+        if(player.isSneaking() && !held.isEmpty() && held.getItem() instanceof ItemGunBaseSedna && event.getType() == ElementType.HOTBAR)  {
+            GunConfigurationSedna config = ((ItemGunBaseSedna) held.getItem()).mainConfig;
+
+            if(config.scopeTexture != null) {
+                ScaledResolution resolution = event.getResolution();
+                RenderScreenOverlay.renderScope(resolution, config.scopeTexture);
+            }
+        }
+
+        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT && ItemGunBaseNT.aimingProgress == ItemGunBaseNT.prevAimingProgress && ItemGunBaseNT.aimingProgress == 1F && event.getType() == ElementType.HOTBAR)  {
+            ItemGunBaseNT gun = (ItemGunBaseNT) held.getItem();
+            GunConfig cfg = gun.getConfig(held, 0);
+            if(cfg.getScopeTexture(held) != null) {
+                ScaledResolution resolution = event.getResolution();
+                RenderScreenOverlay.renderScope(resolution, cfg.getScopeTexture(held));
+            }
+        }
+
+        //prevents NBT changes (read: every fucking tick) on guns from bringing up the item's name over the hotbar
+        ItemStack highlightedItem = ObfuscationReflectionHelper.getPrivateValue(GuiIngame.class, Minecraft.getMinecraft().ingameGUI, "field_92016_l");
+        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT && !highlightedItem.isEmpty() && highlightedItem.getItem() == held.getItem()) {
+            ObfuscationReflectionHelper.setPrivateValue(GuiIngame.class, Minecraft.getMinecraft().ingameGUI, held, "field_92016_l");
         }
 
         /// HANDLE ANIMATION BUSES ///

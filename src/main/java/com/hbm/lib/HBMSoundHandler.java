@@ -220,6 +220,8 @@ public final class HBMSoundHandler {
     public static SoundEvent gluonEnd;
     public static SoundEvent gluonHit;
     public static SoundEvent jetpack;
+    public static SoundEvent switchmode1;
+    public static SoundEvent switchmode2;
     public static SoundEvent mukeExplosion;
     public static SoundEvent explosion_medium;
     public static SoundEvent crucibleStart;
@@ -414,6 +416,8 @@ public final class HBMSoundHandler {
         osiprShoot = register("weapon.osiprShoot");
         zomgShoot = register("weapon.zomgShoot");
         jetpackTank = register("item.jetpackTank");
+        switchmode1 = register("weapon.switchmode1");
+        switchmode2 = register("weapon.switchmode2");
         nullTau = register("misc.nullTau");
         nullRadar = register("misc.nullRadar");
         immolatorIgnite = register("weapon.immolatorIgnite");

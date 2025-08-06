@@ -133,7 +133,7 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 			
 			if(conf != null && this.target != null) {
 				this.target.attackEntityFrom(ModDamageSource.electricity, 30F + world.rand.nextInt(11));
-				this.consumeAmmo(conf.ammo);
+				this.consumeAmmo(conf.ammo.item);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.tauShoot, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 				this.shot = true;
 				networkPackNT(250);

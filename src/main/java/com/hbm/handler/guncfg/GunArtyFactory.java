@@ -1,6 +1,7 @@
 package com.hbm.handler.guncfg;
 
 import com.hbm.handler.BulletConfiguration;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 
 public class GunArtyFactory {
@@ -9,7 +10,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -22,7 +23,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -35,7 +36,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -48,7 +49,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -61,7 +62,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -74,7 +75,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -87,7 +88,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -100,7 +101,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -113,7 +114,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -126,7 +127,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;
@@ -139,7 +140,7 @@ public class GunArtyFactory {
 
         BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 
-        bullet.ammo = ModItems.ammo_shell_explosive;
+        bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
         bullet.dmgMin = 35;
         bullet.dmgMax = 45;
         bullet.explosive = 4F;

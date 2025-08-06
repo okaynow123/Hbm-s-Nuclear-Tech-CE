@@ -3,18 +3,16 @@ package com.hbm.render.misc;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.RadiationConfig;
 import com.hbm.interfaces.Spaghetti;
+import com.hbm.items.weapon.sedna.impl.ItemGunStinger;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class RenderScreenOverlay {
@@ -186,6 +184,19 @@ public class RenderScreenOverlay {
 	        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 	        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
+	}
+
+	public static void renderStingerLockon(ScaledResolution resolution, Gui gui) {
+
+		int progress = (int) (ItemGunStinger.lockon * 28);
+
+		GlStateManager.pushMatrix();
+		Minecraft.getMinecraft().renderEngine.bindTexture(misc);
+		GlStateManager.disableBlend();
+		gui.drawTexturedModalRect(resolution.getScaledWidth() / 2 - 15, resolution.getScaledHeight() / 2  + 18, 146, 18, 30, 10);
+		gui.drawTexturedModalRect(resolution.getScaledWidth() / 2 - 14, resolution.getScaledHeight() / 2  + 19, 147, 29, progress, 8);
+		GlStateManager.popMatrix();
 		Minecraft.getMinecraft().renderEngine.bindTexture(Gui.ICONS);
 	}
 	
@@ -403,6 +414,49 @@ public class RenderScreenOverlay {
 		GuiIngameForge.left_height += 10;
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 	}
+
+	public static void renderScope(ScaledResolution res, ResourceLocation tex) {
+
+		GlStateManager.enableBlend();
+		//GlStateManager.disableDepth();
+		//GlStateManager.depthMask(false);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableAlpha();
+
+		Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+
+		double w = res.getScaledWidth_double();
+		double h = res.getScaledHeight_double();
+
+		double smallest = Math.min(w, h);
+		double divisor = smallest / (9D / 16D);
+		smallest = 9D / 16D;
+		double largest = Math.max(w, h) / divisor;
+
+		double hMin = h < w ? 0.5 - smallest / 2D : 0.5 - largest / 2D;
+		double hMax = h < w ? 0.5 + smallest / 2D : 0.5 + largest / 2D;
+		double wMin = w < h ? 0.5 - smallest / 2D : 0.5 - largest / 2D;
+		double wMax = w < h ? 0.5 + smallest / 2D : 0.5 + largest / 2D;
+
+		double depth = -300D;
+
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+		buffer.pos(0, h, depth).tex(wMin, hMax).endVertex();
+		buffer.pos(w, h, depth).tex(wMax, hMax).endVertex();
+		buffer.pos(w, 0, depth).tex(wMax, hMin).endVertex();
+		buffer.pos(0, 0, depth).tex(wMin, hMin).endVertex();
+
+		tessellator.draw();
+
+		GlStateManager.depthMask(true);
+		GlStateManager.enableDepth();
+		GlStateManager.enableAlpha();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+	}
 	
 	public enum Crosshair {
 		NONE(0, 0, 0),
@@ -414,6 +468,7 @@ public class RenderScreenOverlay {
 		SPLIT(19, 73, 16),
 		CLASSIC(37, 73, 16),
 		BOX(55, 73, 16),
+
 		L_CROSS(0, 90, 32),
 		L_KRUCK(32, 90, 32),
 		L_CLASSIC(64, 90, 32),
@@ -422,7 +477,9 @@ public class RenderScreenOverlay {
 		L_ARROWS(32, 122, 32),
 		L_BOX(64, 122, 32),
 		L_CIRCUMFLEX(96, 122, 32),
-		L_RAD(0, 154, 32);
+		L_RAD(0, 154, 32),
+		L_MODERN(32, 154, 32),
+		L_BOX_OUTLINE(64, 154, 32);
 		
 		public int x;
 		public int y;

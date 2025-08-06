@@ -5,6 +5,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.interfaces.IBulletHurtBehavior;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGunDart;
 import com.hbm.lib.HBMSoundHandler;
@@ -55,7 +56,7 @@ public class GunDartFactory {
 
 		BulletConfiguration bullet = BulletConfigFactory.standardBulletConfig();
 
-		bullet.ammo = ModItems.ammo_dart;
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_dart);
 		bullet.velocity = 5.0F;
 		bullet.spread = 0;
 		bullet.dmgMin = 1;

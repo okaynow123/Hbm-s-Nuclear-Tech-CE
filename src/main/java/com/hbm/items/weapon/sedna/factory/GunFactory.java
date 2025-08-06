@@ -1,61 +1,74 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.interfaces.IOrderedEnum;
+import com.hbm.items.ItemBakedBase;
+import com.hbm.items.ItemEnumMulti;
+import com.hbm.items.ModItems;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.GunConfig;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.Receiver;
+import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.main.MainRegistry;
+import com.hbm.particle.SpentCasing;
+import com.hbm.render.misc.RenderScreenOverlay;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 
 public class GunFactory {
-    //public static BulletConfig ammo_debug;
+    public static BulletConfig ammo_debug;
 
-    //public static SpentCasing CASING44 = new SpentCasing(CasingType.STRAIGHT).setScale(1.5F, 1.0F, 1.5F).setColor(SpentCasing.COLOR_CASE_44);
+    public static SpentCasing CASING44 = new SpentCasing(SpentCasing.CasingType.STRAIGHT).setScale(1.5F, 1.0F, 1.5F).setColor(SpentCasing.COLOR_CASE_44);
 
-    //public static void init() {
+    public static void init() {
 
-        /// BULLLET CFGS ///
-        //ammo_debug = new BulletConfig().setItem(ModItems.ammo_debug).setSpread(0.01F).setRicochetAngle(45).setCasing(CASING44.clone().register("DEBUG0"));
+        /// AMMO ITEMS ///
+        ModItems.ammo_debug = new ItemBakedBase("ammo_debug", "ammo_45");
+        ModItems.ammo_standard = new ItemEnumMulti("ammo_standard", EnumAmmo.class, true, true).setCreativeTab(MainRegistry.weaponTab);
+        //ModItems.ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true).setCreativeTab(null);
+
+        //// BULLLET CFGS ///
+        ammo_debug = new BulletConfig().setItem(ModItems.ammo_debug).setSpread(0.01F).setRicochetAngle(45).setCasing(CASING44.clone().register("DEBUG0"));
 
         /// GUNS ///
-//        ModItems.gun_debug = new ItemGunBaseNT(WeaponQuality.DEBUG, new GunConfig()
-//                .dura(600F).draw(15).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE).orchestra(Orchestras.DEBUG_ORCHESTRA)
-//                .rec(new Receiver(0)
-//                        .dmg(10F).delay(14).reload(46).jam(23).sound("hbm:weapon.44Shoot", 1.0F, 1.0F)
-//                        .mag(new MagazineFullReload(0, 12).addConfigs(ammo_debug))
-//                        .offset(0.75, -0.0625, -0.3125D)
-//                        .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_STANDARD_FIRE))
-//                .pp(Lego.LAMBDA_STANDARD_CLICK_PRIMARY).pr(Lego.LAMBDA_STAND ARD_RELOAD).pt(Lego.LAMBDA_TOGGLE_AIM)
-//                .decider(GunStateDecider.LAMBDA_STANDARD_DECIDER)
-//                .anim(Lego.LAMBDA_DEBUG_ANIMS)
-//        ).setUnlocalizedName("gun_debug");
+        ModItems.gun_debug = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_debug", new GunConfig()
+                .dura(600F).draw(15).inspect(23).crosshair(RenderScreenOverlay.Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE).orchestra(Orchestras.DEBUG_ORCHESTRA)
+                .rec(new Receiver(0)
+                        .dmg(10F).delay(14).reload(46).jam(23).sound(new SoundEvent(new ResourceLocation("hbm:weapon.44Shoot")), 1.0F, 1.0F)
+                        .mag(new MagazineFullReload(0, 12).addConfigs(ammo_debug))
+                        .offset(0.75, -0.0625, -0.3125D)
+                        .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_STANDARD_FIRE))
+                .pp(Lego.LAMBDA_STANDARD_CLICK_PRIMARY).pr(Lego.LAMBDA_STANDARD_RELOAD).pt(Lego.LAMBDA_TOGGLE_AIM)
+                .decider(GunStateDecider.LAMBDA_STANDARD_DECIDER)
+                .anim(Lego.LAMBDA_DEBUG_ANIMS)
+        );
 
-//        XFactoryBlackPowder.init();
-//        XFactory357.init();
-//        XFactory44.init();
-//        XFactory9mm.init();
-//        XFactory12ga.init();
-//        XFactory40mm.init();
-//        XFactory762mm.init();
-//        XFactory22lr.init();
-//        XFactoryFlamer.init();
-//        XFactoryRocket.init();
-//        XFactory556mm.init();
-//        XFactory50.init();
-//        XFactoryEnergy.init();
-//        XFactoryAccelerator.init();
-//        XFactoryCatapult.init();
-//        XFactory75Bolt.init();
-//        XFactoryFolly.init();
-//        XFactoryTurret.init();
-//        XFactory10ga.init();
-//        XFactory35800.init();
-//        XFactory45.init();
-//        XFactoryTool.init();
-//
-//        ModItems.weapon_mod_test = new ItemEnumMulti(EnumModTest.class, true, true).setUnlocalizedName("weapon_mod_test").setMaxStackSize(1);
-//        ModItems.weapon_mod_generic = new ItemEnumMulti(EnumModGeneric.class, true, true).setUnlocalizedName("weapon_mod_generic").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
-//        ModItems.weapon_mod_special = new ItemEnumMulti(EnumModSpecial.class, true, true).setUnlocalizedName("weapon_mod_special").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
-//        ModItems.weapon_mod_caliber = new ItemEnumMulti(EnumModCaliber.class, true, true).setUnlocalizedName("weapon_mod_caliber").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
-//
-//        /// PROXY BULLSHIT ///
-//        MainRegistry.proxy.registerGunCfg();
-    //}
+        /*XFactoryBlackPowder.init();
+        XFactory357.init();
+        XFactory44.init();
+        XFactory9mm.init();
+        XFactory12ga.init();
+        XFactory40mm.init();
+        XFactory762mm.init();
+        XFactory22lr.init();
+        XFactoryFlamer.init();
+        XFactoryRocket.init();
+        XFactory556mm.init();
+        XFactory50.init();
+        XFactoryEnergy.init();
+        XFactoryAccelerator.init();
+        XFactoryCatapult.init();
+        XFactory75Bolt.init();
+        XFactoryFolly.init();
+        XFactoryTurret.init();
+        XFactory10ga.init();
+        XFactory35800.init();
+        XFactory45.init();
+        XFactoryTool.init();*/
+
+        /// PROXY BULLSHIT ///
+        MainRegistry.proxy.registerGunCfg();
+    }
 
     public enum EnumAmmo implements IOrderedEnum<EnumAmmo> {
         STONE, STONE_AP, STONE_IRON, STONE_SHOT,
@@ -82,7 +95,7 @@ public class GunFactory {
         CT_HOOK, CT_MORTAR, CT_MORTAR_CHARGE,
         NUKE_BALEFIRE, BMG50_SM,
 
-        //ONLY ADD NEW ENTRIES AT THE BOTTOM TO AVOID SHIFTING!
+        // ONLY ADD NEW ENTRIES AT THE BOTTOM TO AVOID SHIFTING!
         ;
 
         /** used for creative tab order */

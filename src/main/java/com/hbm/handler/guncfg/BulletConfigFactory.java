@@ -11,6 +11,7 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IBulletImpactBehavior;
 import com.hbm.interfaces.IBulletUpdateBehavior;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -45,7 +46,7 @@ public class BulletConfigFactory {
 
 		BulletConfiguration bullet = new BulletConfiguration();
 
-		bullet.ammo = ModItems.ammo_standard;
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_standard);
 		bullet.velocity = 5.0F;
 		bullet.spread = 0.05F;
 		bullet.wear = 10;

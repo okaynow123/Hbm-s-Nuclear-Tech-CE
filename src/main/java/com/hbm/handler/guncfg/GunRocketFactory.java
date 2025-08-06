@@ -6,6 +6,7 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.interfaces.IBulletRicochetBehavior;
 import com.hbm.interfaces.IBulletUpdateBehavior;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.anim.BusAnimation;
@@ -171,7 +172,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 4F;
@@ -184,7 +185,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_he
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_he
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.wear = 15;
@@ -198,7 +199,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_incendiary
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_incendiary
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.wear = 15;
@@ -213,7 +214,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_emp
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_emp
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 2.5F;
@@ -227,7 +228,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_sleek
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_sleek
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 10F;
@@ -242,7 +243,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_shrapnel
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_shrapnel
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 4F;
@@ -256,7 +257,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_glare
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_glare
 		bullet.velocity = 5.0F;
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
@@ -272,7 +273,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_nuclear
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_nuclear
 		bullet.velocity = 1.5F;
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
@@ -289,7 +290,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_toxic
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_toxic
 		bullet.velocity = 1.5F;
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
@@ -305,7 +306,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_rpc
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_rpc
 		bullet.velocity = 3.0F;
 		bullet.dmgMin = 20;
 		bullet.dmgMax = 25;
@@ -339,7 +340,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = ModItems.nothing; //ammo_rocket_phosphorus
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_phosphorus
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.wear = 15;
@@ -356,7 +357,7 @@ public class GunRocketFactory {
 
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 
-		bullet.ammo = ModItems.nothing; //ammo_rocket_canister
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket_canister
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 2F;

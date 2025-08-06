@@ -149,6 +149,63 @@ public class InventoryUtil {
 
 		return stack1.getTagCompound().equals(stack2.getTagCompound());
 	}
+
+	public static int countAStackMatches(ItemStack[] inventory, AStack stack, boolean ignoreSize) {
+		int count = 0;
+
+		for(ItemStack itemStack : inventory) {
+			if(!itemStack.isEmpty()) {
+				if(stack.matchesRecipe(itemStack, true)) {
+					count += itemStack.getCount();
+				}
+			}
+		}
+		return ignoreSize ? count : count / stack.stacksize;
+	}
+
+	public static int countAStackMatches(EntityPlayer player, AStack stack, boolean ignoreSize) {
+		ItemStack[] inventoryArray = new ItemStack[player.inventory.mainInventory.size()];
+		for(int i = 0; i < player.inventory.mainInventory.size(); i++) {
+			inventoryArray[i] = player.inventory.mainInventory.get(i);
+		}
+		return countAStackMatches(inventoryArray, stack, ignoreSize);
+	}
+
+	public static boolean doesPlayerHaveAStack(EntityPlayer player, AStack stack, boolean shouldRemove, boolean ignoreSize) {
+		ItemStack[] inventoryArray = new ItemStack[player.inventory.mainInventory.size()];
+		for(int i = 0; i < player.inventory.mainInventory.size(); i++) {
+			inventoryArray[i] = player.inventory.mainInventory.get(i);
+		}
+		return doesInventoryHaveAStack(inventoryArray, stack, shouldRemove, ignoreSize);
+	}
+
+	public static boolean doesInventoryHaveAStack(ItemStack[] inventory, AStack stack, boolean shouldRemove, boolean ignoreSize) {
+		final int totalMatches;
+		int totalStacks = 0;
+		for(ItemStack itemStack : inventory) {
+			if(itemStack != null && stack.matchesRecipe(itemStack, ignoreSize))
+				totalStacks += itemStack.getCount();
+			if(!shouldRemove && ignoreSize && totalStacks > 0)
+				return true;
+		}
+
+		totalMatches = ignoreSize ? totalStacks : totalStacks / stack.stacksize;
+
+		if(shouldRemove) {
+			int consumedStacks = 0, requiredStacks = ignoreSize ? 1 : stack.stacksize;
+			for(ItemStack itemStack : inventory) {
+				if(consumedStacks > requiredStacks)
+					break;
+				if(itemStack != null && stack.matchesRecipe(itemStack, true)) {
+					int toConsume = Math.min(itemStack.getCount(), requiredStacks - consumedStacks);
+					itemStack.shrink(toConsume);
+					consumedStacks += toConsume;
+				}
+			}
+		}
+
+		return totalMatches > 0;
+	}
 	
 	/**
 	 * Checks if a player has matching item stacks in his inventory and removes them if so desired
