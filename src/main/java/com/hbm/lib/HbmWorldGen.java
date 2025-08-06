@@ -17,11 +17,14 @@ import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.AncientTomb;
+import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
 import com.hbm.world.feature.DepthDeposit;
 import com.hbm.world.feature.OilSpot;
 import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.generator.JungleDungeonStructure;
+import com.hbm.world.generator.MeteorDungeonStructure;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
@@ -569,7 +572,7 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
 				
-				CellularDungeonFactory.meteor.generate(world, x, 12, z, rand);
+				MeteorDungeonStructure.INSTANCE.generate(world, rand, new BlockPos(x, 12, z));
 				
 				if(GeneralConfig.enableDebugMode)
 					MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at x=" + x + " y=10 z=" + z);
@@ -610,9 +613,9 @@ public class HbmWorldGen implements IWorldGenerator {
 					int x = i + rand.nextInt(16);
 					int z = j + rand.nextInt(16);
 
-					CellularDungeonFactory.jungle.generate(world, x, 20, z, world.rand);
-					CellularDungeonFactory.jungle.generate(world, x, 24, z, world.rand);
-					CellularDungeonFactory.jungle.generate(world, x, 28, z, world.rand);
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 20, z));
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 24, z));
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 28, z));
 
 					if(GeneralConfig.enableDebugMode)
 						MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x=" + x + " y=10 z=" + z);
@@ -637,7 +640,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int x = i + rand.nextInt(16);
 					int z = j + rand.nextInt(16);
 					int y = 16 + rand.nextInt(32);
-					new ArcticVault().trySpawn(world, x, y, z);
+					ArcticVault.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 			if(biome.getDefaultTemperature() >= 1.8F){
@@ -647,7 +650,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int z = j + rand.nextInt(16);
 					int y = world.getHeight(x, z);
 					
-					new AncientTomb().build(world, rand, x, y, z);
+					AncientTombStructure.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 			

@@ -88,39 +88,7 @@ public class PhasedStructureGenerator implements IWorldGenerator {
 
     @Nullable
     private ReadyToGenerateStructure validate(World world, PendingValidationStructure pending) {
-        IPhasedStructure phasedStructure = pending.structure;
-        BlockPos originAtY0 = pending.origin;
-        List<BlockPos> validationPoints = phasedStructure.getValidationPoints(originAtY0);
-
-        if (validationPoints.isEmpty()) {
-            return new ReadyToGenerateStructure(pending, originAtY0);
-        } else {
-            if (GeneralConfig.enableDebugWorldGen) {
-                IChunkProvider chunkProvider = world.getChunkProvider();
-                for (BlockPos validationPoint : validationPoints) {
-                    int chunkX = validationPoint.getX() >> 4;
-                    int chunkZ = validationPoint.getZ() >> 4;
-                    if (!chunkProvider.isChunkGeneratedAt(chunkX, chunkZ)) {
-                        throw new IllegalStateException(String.format(
-                                "Structure %s attempted to validate in an ungenerated chunk at [%d, %d] (validation point: %s). " +
-                                        "This is a bug!",
-                                phasedStructure.getClass().getName(), chunkX, chunkZ, validationPoint
-                        ));
-                    }
-                }
-            }
-            int newY = validationPoints.stream()
-                    .mapToInt(p -> world.getHeight(p.getX(), p.getZ()))
-                    .min()
-                    .orElse(-1);
-
-            if (newY <= 0 || newY >= world.getHeight()) return null;
-            BlockPos realOrigin = new BlockPos(originAtY0.getX(), newY, originAtY0.getZ());
-            if (phasedStructure.checkSpawningConditions(world, realOrigin)) {
-                return new ReadyToGenerateStructure(pending, realOrigin);
-            }
-        }
-        return null;
+        return pending.structure.validate(world, pending).orElse(null);
     }
 
     private void generateValidated(World world, ReadyToGenerateStructure validated) {
@@ -135,6 +103,7 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             ChunkPos absoluteChunkPos = new ChunkPos(originChunkX + relativeChunkPos.x, originChunkZ + relativeChunkPos.z);
             phasedStructure.generateForChunk(world, structureRand, validated.finalOrigin, absoluteChunkPos, blocksForThisChunk);
         }
+        phasedStructure.postGenerate(world, structureRand, validated.finalOrigin);
     }
 
     public void forceGenerateStructure(World world, Random rand, BlockPos origin, IPhasedStructure structure, Map<ChunkPos, List<BlockInfo>> layout) {
@@ -146,17 +115,17 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         }
     }
 
-    private static class ReadyToGenerateStructure {
+    public static class ReadyToGenerateStructure {
         final PendingValidationStructure pending;
         final BlockPos finalOrigin;
-        ReadyToGenerateStructure(PendingValidationStructure pending, BlockPos finalOrigin) {
+        public ReadyToGenerateStructure(PendingValidationStructure pending, BlockPos finalOrigin) {
             this.pending = pending;
             this.finalOrigin = finalOrigin;
         }
     }
 
-    private static class PendingValidationStructure {
-        final BlockPos origin;
+    public static class PendingValidationStructure {
+        public final BlockPos origin;
         final IPhasedStructure structure;
         final Set<ChunkPos> requiredChunks;
         final Set<ChunkPos> chunksAwaitingGeneration;

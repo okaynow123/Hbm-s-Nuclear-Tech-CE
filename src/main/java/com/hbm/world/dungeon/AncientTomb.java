@@ -3,6 +3,7 @@ package com.hbm.world.dungeon;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.state.IBlockState;
@@ -18,17 +19,14 @@ import java.util.Random;
 public class AncientTomb {
 
 	
-	public void build(World world, Random rand, int x, int y, int z) {
+	public void build(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int yOff, int z) {
 
 		List<IBlockState> concrete = Arrays.asList(ModBlocks.brick_concrete.getDefaultState(),
 				ModBlocks.brick_concrete_broken.getDefaultState(),
 				ModBlocks.brick_concrete_cracked.getDefaultState());
 		
-		y = 20;
-		
-		/// PYRAMID Y LOCATION ///
-		int yOff = Math.max(world.getHeight(x, z), 35) - 5;
-		
+		int y = 20;
+
 		int pySize = 15;
 		
 		/// PRINT PYRAMID ///
@@ -71,25 +69,7 @@ public class AncientTomb {
 		DungeonToolbox.generateBox(world, x - 5, yOff + 2, z + 5, 1, 7, 1, ModBlocks.concrete_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
 		
 		/// PRINT SPIKES ///
-		int spikeCount = 36 + rand.nextInt(15);
-		
-		Vec3 vec = Vec3.createVectorHelper(20, 0, 0);
-		float rot = (float)Math.toRadians(360F / spikeCount);
-		
-		for(int i = 0; i < spikeCount; i++) {
-			
-			vec.rotateAroundY(rot);
-			
-			double variance = 1D + rand.nextDouble() * 0.4D;
-
-			int ix = (int) (x + vec.xCoord * variance);
-			int iz = (int) (z + vec.zCoord * variance);
-			int iy = world.getHeight(ix, iz) - 3;
-			
-			for(int j = iy; j < iy + 7; j++) {
-				world.setBlockState(new BlockPos(ix, j, iz), ModBlocks.deco_steel.getDefaultState());
-			}
-		}
+		// mlbv: moved to AncientTombStructure
 		
 		/// GENERATE TUNNEL ///
 		Vec3 sVec = Vec3.createVectorHelper(10, 0, 0);
