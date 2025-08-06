@@ -60,6 +60,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.hbm.items.ItemEnums.*;
