@@ -206,7 +206,7 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 
 		ItemStack stack = result.output.copy();
 
-		if(inventory.getStackInSlot(2) == null)
+		if(inventory.getStackInSlot(2).isEmpty())
 			inventory.setStackInSlot(2, stack);
 		else if(inventory.getStackInSlot(2).getCount() + stack.getCount() <= inventory.getStackInSlot(2).getMaxStackSize())
 			inventory.getStackInSlot(2).setCount(inventory.getStackInSlot(2).getCount() + stack.getCount());

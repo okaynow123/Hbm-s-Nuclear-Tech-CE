@@ -24,6 +24,7 @@ public class ContainerCrystallizer extends Container {
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 17, 54));
 		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 80, 18));
 		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 6, 98, 18));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 35, 72));
 
 		for(int i = 0; i < 3; i++)
 		{
