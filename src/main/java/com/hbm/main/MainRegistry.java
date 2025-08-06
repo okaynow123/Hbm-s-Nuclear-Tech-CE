@@ -390,7 +390,6 @@ public class MainRegistry {
         DamageResistanceHandler.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
-        CraftingManager.addBedrockOreSmelting();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();
         CentrifugeRecipes.register();
