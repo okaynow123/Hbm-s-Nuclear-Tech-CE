@@ -295,6 +295,9 @@ public class ResourceManager {
 	public static final IModelCustom pa_dipole = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/dipole.obj")).asVBO();
 	public static final IModelCustom pa_detector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/particleaccelerator/detector.obj")).asVBO();
 
+	//Exposure Chamber
+	public static final IModelCustom exposure_chamber = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/exposure_chamber.obj")).asVBO();
+
 	//RTG
 	public static final IModelCustom rtg = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/rtg.obj")).asVBO();
 	public static final IModelCustom rtg_connector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/rtg_connector.obj")).asVBO();
@@ -986,6 +989,9 @@ public class ResourceManager {
 	public static final ResourceLocation pa_quadrupole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/quadrupole.png");
 	public static final ResourceLocation pa_dipole_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/dipole.png");
 	public static final ResourceLocation pa_detector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/particleaccelerator/detector.png");
+
+	//Exposure Chamber
+	public static final ResourceLocation exposure_chamber_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/exposure_chamber.png");
 
 	//Waste Drum
 	public static final ResourceLocation waste_drum_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/drum_gray.png");

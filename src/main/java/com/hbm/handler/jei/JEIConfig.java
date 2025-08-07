@@ -2,15 +2,13 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.handler.jei.transfer.*;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
-import com.hbm.inventory.recipes.CentrifugeRecipes;
-import com.hbm.inventory.recipes.DFCRecipes;
-import com.hbm.inventory.recipes.ParticleAcceleratorRecipes;
-import com.hbm.inventory.recipes.ShredderRecipes;
+import com.hbm.inventory.recipes.*;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
@@ -22,6 +20,7 @@ import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -84,6 +83,7 @@ public class JEIConfig implements IModPlugin {
     public static final String WASTEDRUM = "hbm.waste_drum";
     static final String ORE_SLOPPER = "hbm.ore_slopper";
     static final String PA = "hbm.particle_accelerator";
+    public static final String EXPOSURE = "hbm.exposure_chamber";
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
@@ -104,6 +104,7 @@ public class JEIConfig implements IModPlugin {
     private SolidificationHandler solidificationHandler;
     private OreSlopperHandler oreSlopperHandler;
     private ParticleAcceleratorHandler particleAcceleratorHandler;
+    private ExposureChamberHandler exposureChamberHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -179,6 +180,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_ore_slopper), ORE_SLOPPER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_detector), PA);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_source), PA);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_exposure_chamber), EXPOSURE);
 
         registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
@@ -231,6 +233,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
         registry.addRecipes(oreSlopperHandler.getRecipes(), ORE_SLOPPER);
         registry.addRecipes(particleAcceleratorHandler.getRecipes(), PA);
+        registry.addRecipes(exposureChamberHandler.getRecipes(), EXPOSURE);
 
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
@@ -263,7 +266,10 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIPyroOven.class, 57, 48, 27, 11, PYROLYSIS);
         registry.addRecipeClickArea(GUIPADetector.class, 75, 35, 82-75, 43-35, PA);
         registry.addRecipeClickArea(GUIPASource.class, 75, 35, 82-75, 43-35, PA);
+        registry.addRecipeClickArea(GUIMachineExposureChamber.class, 36, 40, 76-36, 48-40, EXPOSURE);
 
+        IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
+        transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
         // Some things are even beyond my control...or are they?
@@ -343,6 +349,7 @@ public class JEIConfig implements IModPlugin {
                 solidificationHandler = new SolidificationHandler(help),
                 oreSlopperHandler = new OreSlopperHandler(help),
                 particleAcceleratorHandler = new ParticleAcceleratorHandler(help),
+                exposureChamberHandler = new ExposureChamberHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),

@@ -47,7 +47,7 @@ dependencies {
     compileOnly rfg.deobf("cofh:CoFHCore:1.12.2-${version_cofhcore}:universal")
 
     implementation rfg.deobf("curse.maven:opencomputers-223008:6608365")
-    implementation rfg.deobf('curse.maven:had-enough-items-557549:6463525')
+    implementation 'mezz:jei:4.29.1'
     implementation 'com.google.guava:guava:31.0.1-jre'
 
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:6344449")
