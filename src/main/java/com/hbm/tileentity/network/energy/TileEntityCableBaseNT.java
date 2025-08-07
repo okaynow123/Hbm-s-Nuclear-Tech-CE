@@ -152,7 +152,7 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 		if (capability == CapabilityEnergy.ENERGY && facing != null) {
 			ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
-			if (canConnect(dir)) {
+			if (canConnect(dir) && this.node != null && this.node.hasValidNet()) {
 				return true;
 			}
 		}
