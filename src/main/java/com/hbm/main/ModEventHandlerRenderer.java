@@ -124,7 +124,7 @@ public class ModEventHandlerRenderer {
 			event.setBlue(event.getBlue() * (1 - interp) + sootColor * interp);
 		}
 	}
-
+	// TODO it does literally NOTHING with hands at all
 	@SubscribeEvent
 	public void onRenderHeldGun(RenderPlayerEvent.Pre event) {
 
@@ -145,11 +145,7 @@ public class ModEventHandlerRenderer {
 			}
 		}
 	}
-	// Th3_Sl1ze: the funny thing is that this method is the ONLY thing that 'boots up' itemrenderweaponbase
-	// by default it doesn't want to render the model at all
-	// for now the real problem is that it sets the type to 'null' and I don't know how to fix that rn
-	// TODO
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onRenderHand(RenderHandEvent event) {
 
 		//can't use plaxer.getHeldItem() here because the item rendering persists for a few frames after hitting the switch key

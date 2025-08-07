@@ -59,10 +59,7 @@ import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
-import com.hbm.render.item.BakedModelCustom;
-import com.hbm.render.item.BakedModelNoGui;
-import com.hbm.render.item.TEISRBase;
-import com.hbm.render.item.TemplateBakedModel;
+import com.hbm.render.item.*;
 import com.hbm.render.item.weapon.*;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.misc.BeamPronter;
@@ -205,6 +202,16 @@ public class ModEventHandlerClient {
         if (render instanceof TEISRBase) {
             ((TEISRBase) render).itemModel = model;
             reg.putObject(loc, new BakedModelNoGui((TEISRBase) render));
+        }
+    }
+
+    public static void swapModelsNoFPV(Item item, IRegistry<ModelResourceLocation, IBakedModel> reg) {
+        ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
+        IBakedModel model = reg.getObject(loc);
+        TileEntityItemStackRenderer render = item.getTileEntityItemStackRenderer();
+        if (render instanceof TEISRBase) {
+            ((TEISRBase) render).itemModel = model;
+            reg.putObject(loc, new BakedModelNoFPV((TEISRBase) render));
         }
     }
 
@@ -514,6 +521,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.ammo_himars, reg);
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
+        swapModelsNoFPV(ModItems.gun_debug, reg);
 
         for (Item item : RBMKItemRenderers.itemRenderers.keySet()) {
             swapModels(item, reg);

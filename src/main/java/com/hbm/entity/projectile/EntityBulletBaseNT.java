@@ -58,9 +58,9 @@ import java.util.List;
 @AutoRegister(name = "entity_bullet_mk3", sendVelocityUpdates = false)
 public class EntityBulletBaseNT extends EntityThrowableInterp implements IBulletBase {
 
-    public static final DataParameter<Integer> STYLE = EntityDataManager.createKey(EntityBulletBase.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> TRAIL = EntityDataManager.createKey(EntityBulletBase.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> BULLETCONFIG = EntityDataManager.createKey(EntityBulletBase.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> STYLE = EntityDataManager.createKey(EntityBulletBaseNT.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> TRAIL = EntityDataManager.createKey(EntityBulletBaseNT.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> BULLETCONFIG = EntityDataManager.createKey(EntityBulletBaseNT.class, DataSerializers.VARINT);
 
     @Override public double prevX() { return prevRenderX; }
     @Override public double prevY() { return prevRenderY; }

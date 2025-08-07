@@ -2,9 +2,7 @@ package com.hbm.items.weapon.sedna;
 
 import com.hbm.handler.HbmKeybinds;
 import com.hbm.interfaces.IItemHUD;
-import com.hbm.items.IEquipReceiver;
-import com.hbm.items.IKeybindReceiver;
-import com.hbm.items.ItemBakedBase;
+import com.hbm.items.*;
 import com.hbm.items.weapon.sedna.hud.IHUDComponent;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
 import com.hbm.main.MainRegistry;
@@ -41,7 +39,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public class ItemGunBaseNT extends ItemBakedBase implements IKeybindReceiver, IEquipReceiver, IItemHUD {
+public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipReceiver, IItemHUD {
 
     /** Timestamp for rendering smoke nodes and muzzle flashes */
     public long[] lastShot;
@@ -106,13 +104,17 @@ public class ItemGunBaseNT extends ItemBakedBase implements IKeybindReceiver, IE
     }
 
     public ItemGunBaseNT(WeaponQuality quality, String s, GunConfig... cfg) {
-        super(s);
+        this.setTranslationKey(s);
+        this.setRegistryName(s);
+        this.setCreativeTab(MainRegistry.partsTab);
+
         this.setMaxStackSize(1);
         this.configs_DNA = cfg;
         this.quality = quality;
         this.lastShot = new long[cfg.length];
         if(quality == WeaponQuality.A_SIDE || quality == WeaponQuality.SPECIAL) this.setCreativeTab(MainRegistry.weaponTab);
         if(quality == WeaponQuality.LEGENDARY || quality == WeaponQuality.SECRET) this.secrets.add(this);
+        ModItems.ALL_ITEMS.add(this);
     }
 
     public static enum WeaponQuality {
