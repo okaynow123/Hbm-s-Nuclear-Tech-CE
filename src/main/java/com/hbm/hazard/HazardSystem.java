@@ -8,6 +8,7 @@ import com.hbm.config.RadiationConfig;
 import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.hazard.transformer.HazardTransformerBase;
 import com.hbm.hazard.type.HazardTypeBase;
+import com.hbm.interfaces.Untested;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
@@ -67,13 +68,13 @@ public class HazardSystem {
     private static final ConcurrentHashMap<ComparableStack, List<HazardEntry>> hazardCalculationCache = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<UUID, PlayerHazardData> playerHazardDataMap = new ConcurrentHashMap<>();
     private static final ExecutorService hazardScanExecutor = Executors.newFixedThreadPool(Math.max(1,
-            Runtime.getRuntime().availableProcessors() - 1),
+                    Runtime.getRuntime().availableProcessors() - 1),
             new ThreadFactoryBuilder().setNameFormat("HBM-Hazard-Scanner-%d").setDaemon(true).build());
     private static final Queue<InventoryDelta> inventoryDeltas = new ConcurrentLinkedQueue<>();
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
-    private static final float minRadRate = 0.000005F;
     private static CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
     private static long tickCounter = 0;
+    private static final float minRadRate = 0.000005F;
 
     /**
      * Schedules a full rescan for a player.
@@ -85,7 +86,7 @@ public class HazardSystem {
     }
 
     public static void onInventoryDelta(EntityPlayer player, int serverSlotIndex, ItemStack oldStack, ItemStack newStack) {
-        if (!ItemStack.areItemStacksEqual(oldStack, newStack)) {
+        if (isStackHazardous(oldStack) || isStackHazardous(newStack)) {
             inventoryDeltas.add(new InventoryDelta(player.getUniqueID(), serverSlotIndex, oldStack.copy(), newStack.copy()));
         }
     }
@@ -97,110 +98,56 @@ public class HazardSystem {
         if (event.phase != TickEvent.Phase.START) return;
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (server == null) return;
-
         tickCounter++;
-        if (tickCounter % RadiationConfig.hazardRate == 0) {
-            for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
-                if (player.isDead) continue;
-                PlayerHazardData phd = playerHazardDataMap.computeIfAbsent(player.getUniqueID(), uuid -> new PlayerHazardData(player));
-                if (phd.player != player) {
-                    if (GeneralConfig.enableExtendedLogging)
-                        MainRegistry.logger.debug("Player {} entity instance changed, re-initializing.", player.getName());
-                    phd.updatePlayerReference(player);
-                }
-                phd.applyActiveHazards();
+        if (tickCounter % RadiationConfig.hazardRate != 2) return;
+        processInventoryDeltas(server);
+        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
+            if (player.isDead) continue;
+            PlayerHazardData phd = playerHazardDataMap.get(player.getUniqueID());
+            if (phd == null || phd.player != player) {
+                if (GeneralConfig.enableExtendedLogging)
+                    MainRegistry.logger.debug("Player {} changed, probably respawned.", player.getName());
+                phd = new PlayerHazardData(player);
+                playerHazardDataMap.put(player.getUniqueID(), phd);
             }
+            phd.applyActiveHazards();
         }
-
-        if (scanFuture.isDone() && (!playersToUpdate.isEmpty() || !inventoryDeltas.isEmpty())) {
-            final List<EntityPlayer> playersForFullScan = new ArrayList<>();
-            playersToUpdate.removeIf(uuid -> {
+        if (scanFuture.isDone() && !playersToUpdate.isEmpty()) {
+            final List<EntityPlayer> playersForThisRun = new ArrayList<>();
+            Iterator<UUID> iterator = playersToUpdate.iterator();
+            while (iterator.hasNext()) {
+                UUID uuid = iterator.next();
                 EntityPlayer player = server.getPlayerList().getPlayerByUUID(uuid);
-                playersForFullScan.add(player);
-                return true;
-            });
-
-            final List<InventoryDelta> deltasForProcessing = new ArrayList<>();
-            InventoryDelta delta;
-            while ((delta = inventoryDeltas.poll()) != null) {
-                deltasForProcessing.add(delta);
+                playersForThisRun.add(player);
+                iterator.remove();
             }
 
-            if (!playersForFullScan.isEmpty() || !deltasForProcessing.isEmpty()) {
-                scanFuture =
-                        CompletableFuture.supplyAsync(() -> processHazardsAsync(playersForFullScan, deltasForProcessing), hazardScanExecutor).thenAcceptAsync(results -> {
-                    results.fullScanResults.forEach((uuid, result) -> {
+            if (!playersForThisRun.isEmpty()) {
+                scanFuture = CompletableFuture.runAsync(() -> {
+                    Map<UUID, PlayerHazardData.HazardScanResult> results =
+                            playersForThisRun.parallelStream().collect(Collectors.toConcurrentMap(EntityPlayer::getUniqueID,
+                                    PlayerHazardData::calculateHazardScanForPlayer));
+
+                    server.addScheduledTask(() -> results.forEach((uuid, result) -> {
                         PlayerHazardData phd = playerHazardDataMap.get(uuid);
-                        if (phd != null) phd.setScanResult(result);
-                    });
-                    results.deltaResults.forEach((uuid, result) -> {
-                        PlayerHazardData phd = playerHazardDataMap.get(uuid);
-                        if (phd != null) phd.applyDeltaResult(result);
-                    });
-                }, server::addScheduledTask);
+                        if (phd != null) {
+                            phd.setScanResult(result);
+                        }
+                    }));
+                }, hazardScanExecutor);
             }
         }
     }
 
-    private static HazardUpdateResult processHazardsAsync(List<EntityPlayer> playersForFullScan, List<InventoryDelta> deltas) {
-        Map<UUID, PlayerHazardData.HazardScanResult> fullScanResults =
-                playersForFullScan.parallelStream().collect(Collectors.toConcurrentMap(EntityPlayer::getUniqueID,
-                        PlayerHazardData::calculateHazardScanForPlayer));
-        Map<UUID, List<InventoryDelta>> deltasByPlayer =
-                deltas.stream().filter(d -> !fullScanResults.containsKey(d.playerUUID())).collect(Collectors.groupingBy(InventoryDelta::playerUUID));
-
-        Map<UUID, PlayerDeltaResult> deltaResults = deltasByPlayer.entrySet().parallelStream().collect(Collectors.toConcurrentMap(Map.Entry::getKey
-                , entry -> {
-            float totalNeutronDelta = 0;
-            Map<Integer, Optional<Consumer<EntityPlayer>>> finalApplicators = new HashMap<>();
-            for (InventoryDelta delta : entry.getValue()) {
-                DeltaUpdate update = calculateDeltaUpdate(delta);
-                totalNeutronDelta += update.neutronRadsDelta();
-                finalApplicators.put(delta.serverSlotIndex(), update.applicator());
-            }
-            return new PlayerDeltaResult(finalApplicators, totalNeutronDelta);
-        }));
-
-        return new HazardUpdateResult(fullScanResults, deltaResults);
-    }
-
-    /**
-     * Calculates the change for a single slot. Runs on a background thread.
-     */
-    private static DeltaUpdate calculateDeltaUpdate(InventoryDelta delta) {
-        ItemStack oldStack = delta.oldStack();
-        ItemStack newStack = delta.newStack();
-        boolean isOldStackHazardous = isStackHazardous(oldStack);
-        boolean isNewStackHazardous = isStackHazardous(newStack);
-
-        float neutronDelta = 0;
-        if (RadiationConfig.neutronActivation) {
-            if (!isOldStackHazardous) {
-                neutronDelta -= ContaminationUtil.getNeutronRads(oldStack);
-            }
-            if (!isNewStackHazardous) {
-                neutronDelta += ContaminationUtil.getNeutronRads(newStack);
+    private static void processInventoryDeltas(MinecraftServer server) {
+        InventoryDelta delta;
+        while ((delta = inventoryDeltas.poll()) != null) {
+            EntityPlayer player = server.getPlayerList().getPlayerByUUID(delta.playerUUID());
+            PlayerHazardData phd = playerHazardDataMap.get(player.getUniqueID());
+            if (phd != null) {
+                phd.updateSlot(delta.serverSlotIndex(), delta.oldStack(), delta.newStack());
             }
         }
-
-        if (!isNewStackHazardous) {
-            return new DeltaUpdate(Optional.empty(), neutronDelta);
-        }
-
-        final int slotIndex = delta.serverSlotIndex();
-        Consumer<EntityPlayer> applicator = p -> {
-            if (p.inventoryContainer == null || slotIndex >= p.inventoryContainer.inventorySlots.size()) return;
-            ItemStack liveStack = p.inventoryContainer.getSlot(slotIndex).getStack();
-            applyHazards(liveStack, p);
-        };
-        return new DeltaUpdate(Optional.of(applicator), neutronDelta);
-    }
-
-    public static void onPlayerLogout(EntityPlayer player) {
-        UUID uuid = player.getUniqueID();
-        playersToUpdate.remove(uuid);
-        playerHazardDataMap.remove(uuid);
-        inventoryDeltas.removeIf(delta -> delta.playerUUID().equals(uuid));
     }
 
     public static boolean isStackHazardous(@Nullable ItemStack stack) {
@@ -208,6 +155,12 @@ public class HazardSystem {
             return false;
         }
         return !getHazardsFromStack(stack).isEmpty();
+    }
+
+    public static void onPlayerLogout(EntityPlayer player) {
+        playersToUpdate.remove(player.getUniqueID());
+        playerHazardDataMap.remove(player.getUniqueID());
+        inventoryDeltas.removeIf(delta -> delta.playerUUID().equals(player.getUniqueID()));
     }
 
     public static void register(final Object o, final HazardData data) {
@@ -308,9 +261,7 @@ public class HazardSystem {
      * Will grab and iterate through all assigned hazards of the given stack and apply their effects to the holder.
      */
     public static void applyHazards(ItemStack stack, EntityLivingBase entity) {
-        if (stack.isEmpty()) return;
-        List<HazardEntry> hazards = getHazardsFromStack(stack);
-        for (HazardEntry hazard : hazards) {
+        for (HazardEntry hazard : getHazardsFromStack(stack)) {
             hazard.applyHazard(stack, entity);
         }
     }
@@ -342,8 +293,8 @@ public class HazardSystem {
     }
 
     private static class PlayerHazardData {
+        private final EntityPlayer player;
         private final Map<Integer, Consumer<EntityPlayer>> activeApplicators = new ConcurrentHashMap<>();
-        private EntityPlayer player;
         private float totalNeutronRads = 0f;
 
         PlayerHazardData(EntityPlayer player) {
@@ -355,13 +306,11 @@ public class HazardSystem {
             Map<Integer, Consumer<EntityPlayer>> applicators = new HashMap<>();
             float totalNeutronRads = 0f;
 
-            if (player.inventoryContainer == null) {
-                return new HazardScanResult(Collections.emptyMap(), 0f);
-            }
-
             for (int i = 0; i < player.inventoryContainer.inventorySlots.size(); i++) {
                 Slot slot = player.inventoryContainer.getSlot(i);
-                if (slot.inventory != player.inventory) continue;
+                if (slot.inventory != player.inventory) {
+                    continue;
+                }
 
                 ItemStack stack = slot.getStack();
                 if (stack.isEmpty()) continue;
@@ -370,9 +319,10 @@ public class HazardSystem {
                 if (!hazards.isEmpty()) {
                     final int slotIndex = i;
                     applicators.put(slotIndex, p -> {
-                        if (p.inventoryContainer == null || slotIndex >= p.inventoryContainer.inventorySlots.size()) return;
                         ItemStack liveStack = p.inventoryContainer.getSlot(slotIndex).getStack();
-                        applyHazards(liveStack, p);
+                        if (!liveStack.isEmpty()) {
+                            applyHazards(liveStack, p);
+                        }
                     });
                 }
                 if (RadiationConfig.neutronActivation && hazards.isEmpty()) {
@@ -382,34 +332,30 @@ public class HazardSystem {
             return new HazardScanResult(Collections.unmodifiableMap(applicators), totalNeutronRads);
         }
 
-        void updatePlayerReference(EntityPlayer player) {
-            this.player = player;
-            schedulePlayerUpdate(player);
+        void updateSlot(int serverSlotIndex, ItemStack oldStack, ItemStack newStack) {
+            if (isStackHazardous(oldStack)) {
+                activeApplicators.remove(serverSlotIndex);
+            } else if (RadiationConfig.neutronActivation) {
+                totalNeutronRads -= ContaminationUtil.getNeutronRads(oldStack);
+            }
+            if (isStackHazardous(newStack)) {
+                activeApplicators.put(serverSlotIndex, p -> {
+                    ItemStack liveStack = p.inventoryContainer.getSlot(serverSlotIndex).getStack();
+                    if (!liveStack.isEmpty()) applyHazards(liveStack, p);
+                });
+            } else if (RadiationConfig.neutronActivation) {
+                totalNeutronRads += ContaminationUtil.getNeutronRads(newStack);
+            }
+            if (totalNeutronRads < 0) totalNeutronRads = 0;
         }
 
         void setScanResult(HazardScanResult result) {
             this.activeApplicators.clear();
             this.activeApplicators.putAll(result.applicatorMap);
-            this.totalNeutronRads = Math.max(0f, result.totalNeutronRads);
-        }
-
-        void applyDeltaResult(PlayerDeltaResult result) {
-            for (Map.Entry<Integer, Optional<Consumer<EntityPlayer>>> entry : result.finalApplicators.entrySet()) {
-                Optional<Consumer<EntityPlayer>> applicatorOptional = entry.getValue();
-                Integer slotIndex = entry.getKey();
-                if (applicatorOptional.isPresent()) {
-                    activeApplicators.put(slotIndex, applicatorOptional.get());
-                } else {
-                    activeApplicators.remove(slotIndex);
-                }
-            }
-            this.totalNeutronRads += result.totalNeutronDelta;
-            if (this.totalNeutronRads < 0) this.totalNeutronRads = 0;
+            this.totalNeutronRads = result.totalNeutronRads;
         }
 
         void applyActiveHazards() {
-            if (player.isDead) return;
-
             if (!activeApplicators.isEmpty()) {
                 activeApplicators.values().forEach(applier -> applier.accept(this.player));
             }
@@ -445,17 +391,5 @@ public class HazardSystem {
 
     @Desugar
     private record InventoryDelta(UUID playerUUID, int serverSlotIndex, ItemStack oldStack, ItemStack newStack) {
-    }
-
-    @Desugar
-    private record DeltaUpdate(Optional<Consumer<EntityPlayer>> applicator, float neutronRadsDelta) {
-    }
-
-    @Desugar
-    private record PlayerDeltaResult(Map<Integer, Optional<Consumer<EntityPlayer>>> finalApplicators, float totalNeutronDelta) {
-    }
-
-    @Desugar
-    private record HazardUpdateResult(Map<UUID, PlayerHazardData.HazardScanResult> fullScanResults, Map<UUID, PlayerDeltaResult> deltaResults) {
     }
 }
