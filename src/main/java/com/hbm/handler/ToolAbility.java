@@ -339,8 +339,8 @@ public abstract class ToolAbility {
 
 			EnchantmentUtil.addEnchantment(stack, Enchantments.SILK_TOUCH, 1);
 			BlockPos pos = new BlockPos(x, y, z);
-			block.getBlock().harvestBlock(world, player, pos, block, world.getTileEntity(pos), stack);
-			
+			if (!player.isCreative())
+				block.getBlock().harvestBlock(world, player, pos, block, world.getTileEntity(pos), stack);
 			EnchantmentUtil.removeEnchantment(stack, Enchantments.SILK_TOUCH);
 
 			world.setBlockToAir(pos);
@@ -388,7 +388,8 @@ public abstract class ToolAbility {
 			
 			EnchantmentUtil.addEnchantment(stack, Enchantments.FORTUNE, luck);
 			BlockPos pos = new BlockPos(x, y, z);
-			block.getBlock().harvestBlock(world, player, pos, block, world.getTileEntity(pos), stack);
+			if (!player.isCreative())
+				block.getBlock().harvestBlock(world, player, pos, block, world.getTileEntity(pos), stack);
 			EnchantmentUtil.removeEnchantment(stack, Enchantments.FORTUNE);
 
 			world.setBlockToAir(pos);
