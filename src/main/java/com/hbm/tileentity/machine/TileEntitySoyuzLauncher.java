@@ -69,6 +69,11 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
     }
 
     @Override
+    public AudioWrapper createAudioLoop() {
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.soyuzReady, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F);
+    }
+
+    @Override
     public String getName() {
         return "container.soyuzLauncher";
     }
