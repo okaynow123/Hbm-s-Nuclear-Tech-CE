@@ -53,6 +53,9 @@ import com.hbm.particle.ParticleBatchRenderer;
 import com.hbm.particle.ParticleFirstPerson;
 import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.physics.ParticlePhysicsBlocks;
+import com.hbm.qmaw.GuiQMAW;
+import com.hbm.qmaw.QMAWLoader;
+import com.hbm.qmaw.QuickManualAndWiki;
 import com.hbm.render.LightRenderer;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.anim.HbmAnimations;
@@ -169,6 +172,8 @@ public class ModEventHandlerClient {
     public static TextureAtlasSprite debugFluid;
     private static long canneryTimestamp;
     private static ComparableStack lastCannery = null;
+    private static long qmawTimestamp;
+    private static QuickManualAndWiki lastQMAW = null;
     FloatBuffer MODELVIEW = GLAllocation.createDirectFloatBuffer(16);
     FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
     IntBuffer VIEWPORT = GLAllocation.createDirectIntBuffer(16);
@@ -986,6 +991,16 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 if (cannery != null) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiWorldInAJar(cannery.createScript(), cannery.getName(), cannery.getIcon(), cannery.seeAlso()));
                 }
+            }
+        }
+
+        if(Keyboard.isKeyDown(Keyboard.KEY_TAB) && Minecraft.getMinecraft().currentScreen != null) {
+
+            QuickManualAndWiki qmaw = qmawTimestamp > System.currentTimeMillis() - 100 ? lastQMAW : null;
+
+            if(qmaw != null) {
+                Minecraft.getMinecraft().player.closeScreen();
+                FMLCommonHandler.instance().showGuiScreen(new GuiQMAW(qmaw));
             }
         }
     }
@@ -1998,6 +2013,18 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         } catch (Exception ex) {
             list.add(TextFormatting.RED + "Error loading cannery: " + ex.getLocalizedMessage());
         }
+
+        try {
+            QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
+            if(qmaw != null) {
+                list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab"));
+                lastQMAW = qmaw;
+                qmawTimestamp = System.currentTimeMillis();
+            }
+        } catch(Exception ex) {
+            list.add(TextFormatting.RED + "Error loading QMAW: " + ex.getLocalizedMessage());
+        }
+
         /// NEUTRON RADS ///
         if (event.getFlags().isAdvanced()) {
             List<String> names = ItemStackUtil.getOreDictNames(stack);

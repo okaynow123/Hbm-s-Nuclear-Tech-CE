@@ -43,6 +43,7 @@ import com.hbm.particle_instanced.InstancedParticleRenderer;
 import com.hbm.particle_instanced.ParticleContrailInstanced;
 import com.hbm.particle_instanced.ParticleExSmokeInstanced;
 import com.hbm.particle_instanced.ParticleRocketFlameInstanced;
+import com.hbm.qmaw.QMAWLoader;
 import com.hbm.render.GLCompat;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
@@ -87,6 +88,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -196,6 +198,8 @@ public class ClientProxy extends ServerProxy {
 
         HbmKeybinds.register();
         Jars.initJars();
+
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
 
