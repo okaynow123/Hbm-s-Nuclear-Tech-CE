@@ -26,7 +26,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 		this.isLoaded = false;
 	}
 
-	public AudioWrapper createAudioLoop() { return null; }
+	public AudioWrapper createAudioLoop() { return null; } //Vidarin: Remember to override this if you use rebootAudio!!
 
 	public AudioWrapper rebootAudio(AudioWrapper wrapper) {
 		wrapper.stopSound();

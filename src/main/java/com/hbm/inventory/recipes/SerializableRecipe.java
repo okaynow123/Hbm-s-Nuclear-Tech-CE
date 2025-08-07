@@ -305,7 +305,7 @@ public abstract class SerializableRecipe {
         writer.setIndent("  ");
     }
 
-    protected static ItemStack readItemStack(JsonArray array) {
+    public static ItemStack readItemStack(JsonArray array) {
         try {
             Item item = Item.REGISTRY.getObject(new ResourceLocation(array.get(0).getAsString()));
             int stacksize = array.size() > 1 ? array.get(1).getAsInt() : 1;
