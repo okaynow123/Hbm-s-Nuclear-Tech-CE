@@ -161,7 +161,7 @@ public class AssemblerRecipes extends SerializableRecipe {
 		makeRecipe(new ComparableStack(ModItems.plate_schrabidium, 2), new AStack[] { new OreDictStack(SA326.ingot(), 3), }, 30);
 		makeRecipe(new ComparableStack(ModItems.plate_combine_steel, 2), new AStack[] { new OreDictStack(CMB.ingot(), 3), }, 30);
 		makeRecipe(new ComparableStack(ModItems.plate_saturnite, 2), new AStack[] { new OreDictStack(BIGMT.ingot(), 3), }, 30);
-		makeRecipe(new ComparableStack(ModItems.plate_mixed, 6), new AStack[] { new OreDictStack(ALLOY.plate(), 2), new OreDictStack(OreDictManager.getReflector(), 2), new OreDictStack(CMB.plate(), 1), new OreDictStack(PB.plate(), 4), }, 100);
+		makeRecipe(new ComparableStack(ModItems.plate_mixed, 6), new AStack[] { new OreDictStack(ALLOY.plate(), 2), new OreDictStack(OreDictManager.getReflector(), 2), new OreDictStack(BIGMT.plate(), 1), new OreDictStack(PB.plate(), 4), }, 100);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_ALUMINIUM.id), new AStack[] { new OreDictStack(AL.ingot(), 1), }, 20);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_COPPER.id), new AStack[] { new OreDictStack(CU.ingot(), 1), }, 20);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_TUNGSTEN.id), new AStack[] { new OreDictStack(W.ingot(), 1), }, 20);
