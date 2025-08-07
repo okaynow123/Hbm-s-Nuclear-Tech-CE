@@ -78,43 +78,81 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
      * */
     public static void agonyEngine() {
 
-
-        //I should stop accepting random PRs when in gym man...
-        for(FileResourcePack modResourcePack : modResourcePacks) {
-            File file;
-           try {
-               file = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, modResourcePack, "field_110597_b");
-           } catch (RuntimeException e){
-               MainRegistry.logger.error("[QMAWLoader] Failed to access private field for" + modResourcePack.getPackName() + ". THIS IS A BUG!");
-               continue;
-           }
-            dissectZip(file);
+        // I should stop accepting random PRs when in gym man...
+        for (FileResourcePack modResourcePack : modResourcePacks) {
+            try {
+                File file = ObfuscationReflectionHelper.getPrivateValue(
+                        AbstractResourcePack.class,
+                        modResourcePack,
+                        "field_110597_b" // Obfuscated name for 'resourcePackFile'
+                );
+                if (file != null) {
+                    dissectZip(file);
+                } else {
+                    MainRegistry.logger.warn("[QMAWLoader] resourcePackFile is null for " + modResourcePack.getPackName());
+                }
+            } catch (Exception e) {
+                MainRegistry.logger.error("[QMAWLoader] Failed to access private field for " + modResourcePack.getPackName() + ". THIS IS A BUG!", e);
+            }
         }
 
-        //Vidarin: i dont even know if this works in 1.12.2 but im not gonna touch it
-
-        File devEnvManualFolder = new File(Minecraft.getMinecraft().gameDir.getAbsolutePath().replace("/eclipse/.", "") + "/src/main/resources/assets/hbm/manual");
-        if(devEnvManualFolder.exists() && devEnvManualFolder.isDirectory()) {
-            MainRegistry.logger.info("[QMAW] Exploring " + devEnvManualFolder.getAbsolutePath());
-            dissectManualFolder(devEnvManualFolder);
+        // Vidarin: i dont even know if this works in 1.12.2 but im not gonna touch it
+        try {
+            File devEnvManualFolder = new File(Minecraft.getMinecraft().gameDir.getAbsolutePath().replace("/eclipse/.", "") + "/src/main/resources/assets/hbm/manual");
+            if (devEnvManualFolder.exists() && devEnvManualFolder.isDirectory()) {
+                MainRegistry.logger.info("[QMAW] Exploring " + devEnvManualFolder.getAbsolutePath());
+                dissectManualFolder(devEnvManualFolder);
+            }
+        } catch (Exception e) {
+            MainRegistry.logger.error("[QMAW] Failed to explore dev environment manual folder!", e);
         }
 
-        ResourcePackRepository repo = Minecraft.getMinecraft().getResourcePackRepository();
+        try {
+            ResourcePackRepository repo = Minecraft.getMinecraft().getResourcePackRepository();
 
-        for(ResourcePackRepository.Entry entry : repo.getRepositoryEntries()) {
-            IResourcePack pack = entry.getResourcePack();
+            for (ResourcePackRepository.Entry entry : repo.getRepositoryEntries()) {
+                IResourcePack pack = entry.getResourcePack();
+                logPackAttempt(pack.getPackName());
 
-            logPackAttempt(pack.getPackName());
+                if (pack instanceof FileResourcePack) {
+                    try {
+                        File file = ObfuscationReflectionHelper.getPrivateValue(
+                                AbstractResourcePack.class,
+                                (FileResourcePack) pack,
+                                "field_110597_b"
+                        );
+                        if (file != null) {
+                            dissectZip(file);
+                        } else {
+                            MainRegistry.logger.warn("[QMAWLoader] resourcePackFile is null for " + pack.getPackName());
+                        }
+                    } catch (Exception e) {
+                        MainRegistry.logger.error("[QMAWLoader] Failed to dissect FileResourcePack for " + pack.getPackName(), e);
+                    }
+                }
 
-            if(pack instanceof FileResourcePack) {
-                dissectZip(ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, ((FileResourcePack) pack), "resourcePackFile"));
+                if (pack instanceof FolderResourcePack) {
+                    try {
+                        File file = ObfuscationReflectionHelper.getPrivateValue(
+                                AbstractResourcePack.class,
+                                (FolderResourcePack) pack,
+                                "field_110597_b"
+                        );
+                        if (file != null) {
+                            dissectFolder(file);
+                        } else {
+                            MainRegistry.logger.warn("[QMAWLoader] resourcePackFile is null for " + pack.getPackName());
+                        }
+                    } catch (Exception e) {
+                        MainRegistry.logger.error("[QMAWLoader] Failed to dissect FolderResourcePack for " + pack.getPackName(), e);
+                    }
+                }
             }
-
-            if(pack instanceof FolderResourcePack) {
-                dissectFolder(ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, ((FolderResourcePack) pack), "resourcePackFile"));
-            }
+        } catch (Exception e) {
+            MainRegistry.logger.error("[QMAWLoader] Failed to process resource pack repository", e);
         }
     }
+
 
     public static void logPackAttempt(String name) { MainRegistry.logger.info("[QMAW] Dissecting resource " + name); }
     public static void logFoundManual(String name) { MainRegistry.logger.info("[QMAW] Found manual " + name); }
