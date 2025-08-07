@@ -62,7 +62,8 @@ public class NTMFlowers extends AbstractPhasedStructure {
 
     @Override
     public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        int iRad = 64;
+        // OffsetX = [-7, 7], OffsetY = [-3, 3], OffsetZ = [-7, 7]
+        int iRad = 7;
         return Arrays.asList(
                 origin.add(-iRad, 0, -iRad),
                 origin.add(iRad, 0, -iRad),

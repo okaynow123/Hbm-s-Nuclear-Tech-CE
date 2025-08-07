@@ -35,7 +35,7 @@ public class PhasedStructureGenerator implements IWorldGenerator {
     }
 
     public void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure, Map<ChunkPos, List<BlockInfo>> layout) {
-        if (layout.isEmpty()) {
+        if (layout.isEmpty() && !(!structure.getValidationPoints(BlockPos.ORIGIN).isEmpty() && structure instanceof AbstractPhasedStructure abstractPhased && !abstractPhased.isCacheable())) {
             if (GeneralConfig.enableDebugWorldGen)
                 MainRegistry.logger.warn("Skipping structure {} generation at {} due to empty layout.",
                         structure.getClass().getSimpleName(), origin);
