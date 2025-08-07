@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Ref;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @Spaghetti("everything here is a fucking mess")
 public class QMAWLoader implements ISelectiveResourceReloadListener {
@@ -76,9 +78,21 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
      * */
     public static void agonyEngine() {
 
-        for(FileResourcePack modResourcePack : modResourcePacks) dissectZip(ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, ((FileResourcePack) modResourcePack), "resourcePackFile"));
+
+        //I should stop accepting random PRs when in gym man...
+        for(FileResourcePack modResourcePack : modResourcePacks) {
+            File file;
+           try {
+               file = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, modResourcePack, "field_110597_b");
+           } catch (RuntimeException e){
+               MainRegistry.logger.error("[QMAWLoader] Failed to access private field for" + modResourcePack.getPackName() + ". THIS IS A BUG!");
+               continue;
+           }
+            dissectZip(file);
+        }
 
         //Vidarin: i dont even know if this works in 1.12.2 but im not gonna touch it
+
         File devEnvManualFolder = new File(Minecraft.getMinecraft().gameDir.getAbsolutePath().replace("/eclipse/.", "") + "/src/main/resources/assets/hbm/manual");
         if(devEnvManualFolder.exists() && devEnvManualFolder.isDirectory()) {
             MainRegistry.logger.info("[QMAW] Exploring " + devEnvManualFolder.getAbsolutePath());
@@ -197,7 +211,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
             ItemStack trigger = SerializableRecipe.readItemStack(element.getAsJsonArray());
             // items get renamed and removed all the time, so we add some more debug goodness for those cases
             if(trigger == null || trigger.getItem() == ModItems.nothing) {
-                MainRegistry.logger.info("[QMAW] Manual " + file + " references nonexistant trigger " + element.toString());
+                MainRegistry.logger.info("[QMAW] Manual " + file + " references nonexistant trigger " + element);
             } else {
                 QMAWLoader.triggers.put(new ComparableStack(trigger).makeSingular(), qmaw);
             }
