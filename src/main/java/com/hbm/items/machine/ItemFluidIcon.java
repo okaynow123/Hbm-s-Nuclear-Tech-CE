@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ItemFluidIcon extends Item {
 
-	public static final ModelResourceLocation fluidIconModel = new ModelResourceLocation(RefStrings.MODID + ":forge_fluid_identifier", "inventory");
+	public static final ModelResourceLocation fluidIconModel = new ModelResourceLocation(RefStrings.MODID + ":fluid_icon", "inventory");
 
 	public ItemFluidIcon(String s) {
 		this.setTranslationKey(s);

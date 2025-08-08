@@ -16,7 +16,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.CheckForNull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemRTGPellet extends ItemBase {
 	
@@ -25,6 +27,12 @@ public class ItemRTGPellet extends ItemBase {
 	private Item decayItem = null;
 	private long halflife = 0;
 	private long lifespan = 0;
+
+	/**
+	 * Are you looking for pelletList? Use this!
+	 * This is more elegant than 1.7's solution. Use keySet() and values().
+	 */
+	public static final Map<ItemRTGPellet, Item> pelletMap = new HashMap<>();
 
 	public ItemRTGPellet(int heatIn, String s) {
 		super(s);
@@ -56,6 +64,7 @@ public class ItemRTGPellet extends ItemBase {
 		this.decayItem = depleted;
 		this.halflife = halflife;
 		this.lifespan = halflife * halflifes;
+		pelletMap.put(this, decayItem);
 		return this;
 	}
 	

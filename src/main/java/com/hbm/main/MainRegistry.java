@@ -422,6 +422,9 @@ public class MainRegistry {
         NTMBatteryCapabilityHandler.initialize();
         MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
 
+        //has to register after cracking, and therefore after all serializable recipes
+        RadiolysisRecipes.registerRadiolysis();
+
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)
             World.MAX_ENTITY_RADIUS = 5;

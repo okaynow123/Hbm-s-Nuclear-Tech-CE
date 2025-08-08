@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CrackRecipes extends SerializableRecipe {
+public class CrackingRecipes extends SerializableRecipe {
 
 	//cracking in percent
 	public static final int oil_crack_oil = 80;

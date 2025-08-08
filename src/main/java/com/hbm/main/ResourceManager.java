@@ -347,6 +347,9 @@ public class ResourceManager {
 	//Belt
 	public static final IModelCustom arrow = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/arrow.obj")).asVBO();
 
+	//Radiolysis
+	public static final IModelCustom radiolysis = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/radiolysis.obj"));
+
 	//RotaryFurnace
 	public static final IModelCustom rotary_furnace = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/rotary_furnace.obj")).asVBO();
 
@@ -830,6 +833,9 @@ public class ResourceManager {
 	//ZIRNOX
 	public static final ResourceLocation zirnox_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/zirnox.png");
 	public static final ResourceLocation zirnox_destroyed_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/zirnox_destroyed.png");
+
+	//Radiolysis
+	public static final ResourceLocation radiolysis_tex = new ResourceLocation(RefStrings.MODID, "textures/models/radiolysis.png");
 
 	//Rotary Furnace
 	public static final ResourceLocation rotary_furnace_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rotary_furnace.png");

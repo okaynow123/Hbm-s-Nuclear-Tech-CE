@@ -7,7 +7,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import com.hbm.inventory.recipes.CrackRecipes;
+import com.hbm.inventory.recipes.CrackingRecipes;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -113,7 +113,7 @@ public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase impl
 
 	private void setupTanks() {
 
-		Tuple.Pair<FluidStack, FluidStack> quart = CrackRecipes.getCracking(tanks[0].getTankType());
+		Tuple.Pair<FluidStack, FluidStack> quart = CrackingRecipes.getCracking(tanks[0].getTankType());
 
 		if(quart != null) {
 			tanks[1].setTankType(Fluids.STEAM);
@@ -131,7 +131,7 @@ public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase impl
 
 	private void crack() {
 
-		Tuple.Pair<FluidStack, FluidStack> quart = CrackRecipes.getCracking(tanks[0].getTankType());
+		Tuple.Pair<FluidStack, FluidStack> quart = CrackingRecipes.getCracking(tanks[0].getTankType());
 
 		if(quart != null) {
 

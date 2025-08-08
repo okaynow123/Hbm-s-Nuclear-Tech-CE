@@ -592,6 +592,12 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
             return 0xFFFFFF;
         }, ModItems.forge_fluid_identifier);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                return ItemFluidIcon.getFluidType(stack).getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.fluid_icon);
         // mlbv: this is far easier than writing TEISR for each item. replace all color related rendering with this if applicable.
     }
 

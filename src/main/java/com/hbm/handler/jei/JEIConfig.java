@@ -84,6 +84,7 @@ public class JEIConfig implements IModPlugin {
     static final String ORE_SLOPPER = "hbm.ore_slopper";
     static final String PA = "hbm.particle_accelerator";
     public static final String EXPOSURE = "hbm.exposure_chamber";
+    public static final String RADIOLYSIS = "hbm.radiolysis";
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
@@ -181,6 +182,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_detector), PA);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_source), PA);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_exposure_chamber), EXPOSURE);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_radiolysis), RADIOLYSIS);
 
         registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
@@ -234,7 +236,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(oreSlopperHandler.getRecipes(), ORE_SLOPPER);
         registry.addRecipes(particleAcceleratorHandler.getRecipes(), PA);
         registry.addRecipes(exposureChamberHandler.getRecipes(), EXPOSURE);
-
+        registry.addRecipes(JeiRecipes.getRadiolysisRecipes(), RADIOLYSIS);
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
         registry.addRecipeClickArea(GUIMachineAssembler.class, 45, 83, 82, 30, ASSEMBLY);
@@ -267,6 +269,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIPADetector.class, 75, 35, 82-75, 43-35, PA);
         registry.addRecipeClickArea(GUIPASource.class, 75, 35, 82-75, 43-35, PA);
         registry.addRecipeClickArea(GUIMachineExposureChamber.class, 36, 40, 76-36, 48-40, EXPOSURE);
+        registry.addRecipeClickArea(GUIRadiolysis.class, 71, 35, 99-71, 50-35, RADIOLYSIS);
 
         IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
         transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
@@ -329,6 +332,7 @@ public class JEIConfig implements IModPlugin {
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),
+                new RadiolysisRecipeHandler(help),
                 arcFurnaceFluidHandler = new ArcFurnaceFluidHandler(help),
                 arcFurnaceSolidHandler = new ArcFurnaceSolidHandler(help),
                 arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),

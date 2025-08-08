@@ -7,7 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
-@AutoRegister(item = "fluid_icon")
+// handled in ColorHandlerEvent.Item
+//@AutoRegister(item = "fluid_icon")
 public class ItemRenderFluidIcon extends TEISRBase {
 
 	private static final double HALF_A_PIXEL = 0.03125;

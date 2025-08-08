@@ -1092,4 +1092,17 @@ public class JeiRecipes {
 			minecraft.fontRenderer.drawString(timeString, 112, 38, 0x404040);
 		}
 	}
+
+	public static List<RadiolysisRecipeHandler.RadiolysisRecipe> getRadiolysisRecipes() {
+		List<RadiolysisRecipeHandler.RadiolysisRecipe> jeiRecipes = new ArrayList<>();
+		Map<Object, Object[]> recipes = RadiolysisRecipes.getRecipesForNEI();
+
+		for (Map.Entry<Object, Object[]> entry : recipes.entrySet()) {
+			ItemStack input = (ItemStack) entry.getKey();
+			ItemStack output1 = (ItemStack) entry.getValue()[0];
+			ItemStack output2 = (ItemStack) entry.getValue()[1];
+			jeiRecipes.add(new RadiolysisRecipeHandler.RadiolysisRecipe(input, output1, output2));
+		}
+		return jeiRecipes;
+	}
 }
