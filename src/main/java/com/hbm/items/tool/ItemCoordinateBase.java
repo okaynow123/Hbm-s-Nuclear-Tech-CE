@@ -31,12 +31,14 @@ public abstract class ItemCoordinateBase extends Item {
 
             if(!worldIn.isRemote) {
                 BlockPos pos1 = this.getCoordinates(worldIn, pos);
+                ItemStack stack = player.getHeldItem(hand);
 
-                if(!getDefaultInstance().hasTagCompound()) getDefaultInstance().setTagCompound(new NBTTagCompound());
 
-                getDefaultInstance().getTagCompound().setInteger("posX", pos1.getX());
-                if(includeY()) getDefaultInstance().getTagCompound().setInteger("posY", pos1.getY());
-                getDefaultInstance().getTagCompound().setInteger("posZ", pos1.getZ());
+                if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+
+                stack.getTagCompound().setInteger("posX", pos1.getX());
+                if(includeY()) stack.getTagCompound().setInteger("posY", pos1.getY());
+                stack.getTagCompound().setInteger("posZ", pos1.getZ());
 
                 this.onTargetSet(worldIn, pos1, player);
             }
