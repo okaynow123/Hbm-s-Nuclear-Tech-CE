@@ -67,13 +67,6 @@ public class LoopedSoundPacket implements IMessage {
                 playUniqueSound(assembler, SoundLoopAssembler.list, () -> new SoundLoopAssembler(HBMSoundHandler.assemblerOperate, assembler));
             } else if (te instanceof TileEntityMachineTurbofan turbofan && turbofan.wasOn) {
                 playUniqueSound(turbofan, SoundLoopTurbofan.list, () -> new SoundLoopTurbofan(HBMSoundHandler.turbofanOperate, turbofan));
-            } else if (te instanceof TileEntityBroadcaster broadcaster) {
-                SoundEvent event = switch (Math.abs(te.getPos().hashCode()) % 3) {
-                    case 1 -> HBMSoundHandler.broadcast2;
-                    case 2 -> HBMSoundHandler.broadcast3;
-                    default -> HBMSoundHandler.broadcast1;
-                };
-                playUniqueSound(broadcaster, SoundLoopBroadcaster.list, () -> new SoundLoopBroadcaster(event, broadcaster));
             } else if (te instanceof TileEntityMachineCentrifuge centrifuge && centrifuge.isProgressing) {
                 playUniqueSound(centrifuge, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, centrifuge));
             } else if (te instanceof TileEntityMachineGasCent gasCent && gasCent.isProgressing) {
