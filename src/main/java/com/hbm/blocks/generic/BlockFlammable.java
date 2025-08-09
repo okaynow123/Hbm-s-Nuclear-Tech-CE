@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.lib.ForgeDirection;
+import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,12 @@ public class BlockFlammable extends BlockMeta {
 
     public BlockFlammable(Material m, String s, int en, int flam) {
         super(m, s);
+        this.encouragement = en;
+        this.flammability = flam;
+    }
+
+    public BlockFlammable(Material m, String s, int en, int flam, BlockBakeFrame... frames) {
+        super(m, s, frames);
         this.encouragement = en;
         this.flammability = flam;
     }

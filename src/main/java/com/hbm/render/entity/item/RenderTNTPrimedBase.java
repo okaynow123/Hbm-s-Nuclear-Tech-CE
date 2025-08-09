@@ -42,7 +42,7 @@ public class RenderTNTPrimedBase extends Render<EntityTNTPrimedBase> {
         this.bindEntityTexture(entity);
         GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(-0.5F, -0.5F, 0.5F);
-        blockrendererdispatcher.renderBlockBrightness(entity.state, entity.getBrightness());
+        blockrendererdispatcher.renderBlockBrightness(entity.getState(), entity.getBrightness());
         GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
         if (this.renderOutlines) {
@@ -59,7 +59,7 @@ public class RenderTNTPrimedBase extends Render<EntityTNTPrimedBase> {
             GlStateManager.color(1.0F, 1.0F, 1.0F, f2);
             GlStateManager.doPolygonOffset(-3.0F, -3.0F);
             GlStateManager.enablePolygonOffset();
-            blockrendererdispatcher.renderBlockBrightness(entity.state, 1.0F);
+            blockrendererdispatcher.renderBlockBrightness(entity.getState(), 1.0F);
             GlStateManager.doPolygonOffset(0.0F, 0.0F);
             GlStateManager.disablePolygonOffset();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

@@ -41,7 +41,12 @@ public class ExplosionVNT {
 	public ExplosionVNT(World world, double x, double y, double z, float size) {
 		this(world, x, y, z, size, null);
 	}
-	
+
+	//I am lazy
+	public ExplosionVNT(World world, BlockPos pos, float size) {
+		this(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, size, null);//Center of the block pos
+	}
+
 	public ExplosionVNT(World world, double x, double y, double z, float size, Entity exploder) {
 		this.world = world;
 		this.posX = x;

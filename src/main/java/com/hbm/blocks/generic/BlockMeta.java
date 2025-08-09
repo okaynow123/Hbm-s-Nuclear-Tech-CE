@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -63,6 +64,13 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         super(m, s);
         INSTANCES.add(this);
         META_COUNT = 15;
+    }
+
+    public BlockMeta(Material m, String s, BlockBakeFrame... frame) {
+        super(m, s);
+        INSTANCES.add(this);
+        blockFrames = frame;
+        META_COUNT = (short) frame.length;
     }
 
     public BlockMeta(Material mat, SoundType type, String s, short metaCount) {
@@ -153,10 +161,10 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         ForgeRegistries.ITEMS.register(itemBlock);
     }
 
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        int meta = stack.getMetadata();
-        world.setBlockState(pos, this.getStateFromMeta(meta), 3);
+
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
+                                            float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getDefaultState().withProperty(META, meta);
     }
 
     @Override

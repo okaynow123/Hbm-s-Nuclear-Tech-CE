@@ -69,10 +69,19 @@ public class BlockBakeFrame {
         return frames;
     }
 
-    public static BlockBakeFrame simpleSouthRotatable(String sides, String front){
+    public static BlockBakeFrame simpleSouthRotatable(String sides, String front) {
         return new BlockBakeFrame(FULL_CUSTOM, sides, sides, sides, front, sides, sides);
     }
 
+    public static int getYRotationForFacing(EnumFacing facing) {
+        return switch (facing) {
+            case SOUTH -> 0;
+            case WEST -> 90;
+            case NORTH -> 180;
+            case EAST -> 270;
+            default -> 0;
+        };
+    }
 
     public void registerBlockTextures(TextureMap map) {
         for (String texture : this.textureArray) {
@@ -96,8 +105,8 @@ public class BlockBakeFrame {
         for (String face : wraps) {
             textureMap.put(face, getSpriteLoc(counter.getAndIncrement()).toString());
         }
+        textureMap.put("particle", getSpriteLoc(0).toString());
     }
-
 
     public enum BlockForm {
         ALL("minecraft:block/cube_all", 1, new String[]{"all"}),
@@ -125,15 +134,5 @@ public class BlockBakeFrame {
             this.textureWrap = textureWrap;
         }
 
-    }
-
-    public  static  int getYRotationForFacing(EnumFacing facing) {
-        return switch (facing) {
-            case SOUTH -> 0;
-            case WEST -> 90;
-            case NORTH -> 180;
-            case EAST -> 270;
-            default -> 0;
-        };
     }
 }

@@ -1,8 +1,10 @@
 package com.hbm.entity.item;
 
 import com.hbm.api.block.IFuckingExplode;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -51,6 +53,8 @@ public class EntityTNTPrimedBase extends Entity {
         this.prevPosY = y;
         this.prevPosZ = z;
         this.tntPlacedBy = entity;
+        this.state = bomb;
+        setState(bomb);
     }
 
     @Override
@@ -110,12 +114,13 @@ public class EntityTNTPrimedBase extends Entity {
     }
 
     public IFuckingExplode getBomb() {
-        return (IFuckingExplode) getState();
+        return (IFuckingExplode)(getState().getBlock());
     }
 
     public IBlockState getState() {
-        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(dataManager.get(TILE))).getStateFromMeta(dataManager.get(META));
+        return  ForgeRegistries.BLOCKS.getValue(new ResourceLocation(dataManager.get(TILE))).getStateFromMeta(dataManager.get(META));
     }
+
 
     public void setState(IBlockState state) {
         dataManager.set(TILE, ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString());

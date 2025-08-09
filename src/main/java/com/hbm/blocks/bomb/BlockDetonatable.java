@@ -3,9 +3,13 @@ package com.hbm.blocks.bomb;
 import com.hbm.api.block.IFuckingExplode;
 import com.hbm.blocks.generic.BlockFlammable;
 import com.hbm.entity.item.EntityTNTPrimedBase;
+import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -14,6 +18,8 @@ public abstract class BlockDetonatable  extends BlockFlammable implements IFucki
     protected int popFuse; // A shorter fuse for when this explosive is dinked by another
     protected boolean detonateOnCollision;
     protected boolean detonateOnShot;
+    protected IBlockState stateCache; //block state right before explosion
+
 
     public BlockDetonatable(Material mat, String s, int en, int flam, int popFuse, boolean detonateOnCollision, boolean detonateOnShot) {
         super(mat, s, en, flam);
@@ -22,17 +28,30 @@ public abstract class BlockDetonatable  extends BlockFlammable implements IFucki
         this.detonateOnShot = detonateOnShot;
     }
 
+    public BlockDetonatable(Material mat, String s, int en, int flam, int popFuse, boolean detonateOnCollision, boolean detonateOnShot, BlockBakeFrame... frames) {
+        super(mat, s, en, flam, frames);
+        this.popFuse = popFuse;
+        this.detonateOnCollision = detonateOnCollision;
+        this.detonateOnShot = detonateOnShot;
+    }
+
     @Override
-    public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+    public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
+    {
+        stateCache = world.getBlockState(pos);
+        super.onBlockExploded(world, pos, explosion);
+    }
+
+    @Override
+    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion) {
         if (!world.isRemote) {
-            var currentState = world.getBlockState(pos); //Grabs state to ensure META can be transferred
             EntityTNTPrimedBase tntPrimed = new EntityTNTPrimedBase(
                     world,
                     pos.getX() + 0.5D,
                     pos.getY() + 0.5D,
                     pos.getZ() + 0.5D,
                     explosion.getExplosivePlacedBy(),
-                    currentState
+                    stateCache
             );
 
             tntPrimed.fuse = popFuse <= 0 ? 0 : world.rand.nextInt(popFuse) + popFuse / 2;
