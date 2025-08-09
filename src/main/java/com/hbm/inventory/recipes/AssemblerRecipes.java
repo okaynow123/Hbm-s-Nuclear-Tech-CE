@@ -193,6 +193,14 @@ public class AssemblerRecipes extends SerializableRecipe {
 				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BISMOID)
 		}, 200);
 
+		makeRecipe(new ComparableStack(ModBlocks.machine_compressor, 1), new AStack[] {
+				new OreDictStack(STEEL.plateCast(), 8),
+				new OreDictStack(CU.plate528(), 4),
+				new OreDictStack(STEEL.shell(), 2),
+				new ComparableStack(ModItems.motor, 3),
+				new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG)
+		}, 200);
+
 		makeRecipe(new ComparableStack(ModBlocks.machine_arc_furnace, 1), new AStack[] {
 				new OreDictStack(ANY_CONCRETE.any(), 12),
 				new OreDictStack(ANY_PLASTIC.ingot(), 8),
