@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class FluidNetMK2 extends NodeNet<IFluidReceiverMK2, IFluidProviderMK2, FluidNode> {
+public class FluidNetMK2 extends NodeNet<IFluidReceiverMK2, IFluidProviderMK2, FluidNode, FluidNetMK2> {
 
     public long fluidTracker = 0L;
 
@@ -123,7 +123,7 @@ public class FluidNetMK2 extends NodeNet<IFluidReceiverMK2, IFluidProviderMK2, F
         for(int p = 0; p <= IFluidUserMK2.HIGHEST_VALID_PRESSURE; p++) {
 
             int iterationsLeft = 100;
-            while(iterationsLeft > 0 && notAccountedFor[p] > 0 && providers[p].size() > 0) {
+            while(iterationsLeft > 0 && notAccountedFor[p] > 0 && !providers[p].isEmpty()) {
                 iterationsLeft--;
 
                 Pair<IFluidProviderMK2, Long> selected = providers[p].get(rand.nextInt(providers[p].size()));

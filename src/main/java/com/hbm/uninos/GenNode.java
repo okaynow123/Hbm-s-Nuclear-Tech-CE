@@ -3,8 +3,7 @@ package com.hbm.uninos;
 import com.hbm.lib.DirPos;
 import net.minecraft.util.math.BlockPos;
 
-@SuppressWarnings("rawtypes") //stfu intellij
-public class GenNode<N extends NodeNet> {
+public class GenNode<N extends NodeNet<?, ?, ? extends GenNode<N>, N>> {
 
     public BlockPos[] positions;
     public DirPos[] connections;
@@ -12,7 +11,7 @@ public class GenNode<N extends NodeNet> {
     public boolean expired = false;
     public boolean recentlyChanged = true;
     /** Used for distinguishing the node type when saving it to UNINOS' node map */
-    public INetworkProvider networkProvider;
+    public INetworkProvider<N> networkProvider;
 
     public GenNode(INetworkProvider<N> provider, BlockPos... positions) {
         this.networkProvider = provider;

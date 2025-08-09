@@ -1,6 +1,7 @@
 package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.IEnergyConductorMK2;
+import com.hbm.api.energymk2.IEnergyConnectorMK2;
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.api.energymk2.Nodespace.PowerNode;
 import com.hbm.api.energymk2.PowerNetMK2;
@@ -57,7 +58,7 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
 			EnumFacing facing = dir.toEnumFacing();
 
 			TileEntity te = world.getTileEntity(neighborPos);
-			if (te == null || te.isInvalid()) continue;
+			if (te == null || te.isInvalid() || te instanceof IEnergyConnectorMK2) continue;
 
 			EnumFacing opposite = facing.getOpposite();
 			if (te.hasCapability(CapabilityEnergy.ENERGY, opposite)) {

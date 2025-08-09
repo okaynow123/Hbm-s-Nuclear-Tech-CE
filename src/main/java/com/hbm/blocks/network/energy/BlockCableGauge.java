@@ -19,7 +19,6 @@ import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -50,12 +49,12 @@ public class BlockCableGauge extends BlockContainer implements ILookOverlay, ITo
 
 	@Override
 	protected BlockStateContainer createBlockState(){
-		return new BlockStateContainer(this, new IProperty[] { FACING });
+		return new BlockStateContainer(this, FACING);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return ((EnumFacing)state.getValue(FACING)).getIndex();
+		return state.getValue(FACING).getIndex();
 	}
 
 	@Override
@@ -69,12 +68,12 @@ public class BlockCableGauge extends BlockContainer implements ILookOverlay, ITo
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot){
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn){
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
 	}
 	
 	@Override
@@ -108,12 +107,10 @@ public class BlockCableGauge extends BlockContainer implements ILookOverlay, ITo
 	public void printHook(Pre event, World world, int x, int y, int z){
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 		
-		if(!(te instanceof TileEntityCableGauge))
+		if(!(te instanceof TileEntityCableGauge diode))
 			return;
-		
-		TileEntityCableGauge diode = (TileEntityCableGauge) te;
-		
-		List<String> text = new ArrayList();
+
+        List<String> text = new ArrayList<>();
 		text.add(Library.getShortNumber(diode.deltaLastSecond) + "HE/s");
 		
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);

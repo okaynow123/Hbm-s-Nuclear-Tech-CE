@@ -1,18 +1,11 @@
 package com.hbm.uninos;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import com.hbm.api.tile.ILoadedTile;
 import net.minecraft.tileentity.TileEntity;
 
-@SuppressWarnings({"rawtypes", "unchecked"}) //stfu intellij
-public abstract class NodeNet<R, P, L extends GenNode> {
+import java.util.*;
 
+public abstract class NodeNet<R, P, L extends GenNode<N>, N extends NodeNet<R, P, L, N>> {
     /** Global random for figuring things out like random leftover distribution */
     public static Random rand = new Random();
 
@@ -23,7 +16,6 @@ public abstract class NodeNet<R, P, L extends GenNode> {
     public HashMap<P, Long> providerEntries = new HashMap<>();
 
     public NodeNet() {
-        UniNodespace.activeNodeNets.add(this);
     }
 
     /// SUBSCRIBER HANDLING ///
@@ -37,30 +29,30 @@ public abstract class NodeNet<R, P, L extends GenNode> {
     public void removeProvider(P provider) { this.providerEntries.remove(provider); }
 
     /** Combines two networks into one */
-    public void joinNetworks(NodeNet network) {
-        if(network == this) return;
+    public void joinNetworks(NodeNet<R, P, L, N> network) {
+        if (network == this || !network.isValid()) return;
 
-        List<L> oldNodes = new ArrayList<>(network.links.size());
-        oldNodes.addAll(network.links);
+        List<L> oldNodes = new ArrayList<>(network.links);
 
-        for(L conductor : oldNodes) forceJoinLink(conductor);
+        for (L conductor : oldNodes) forceJoinLink(conductor);
         network.links.clear();
 
-        for(Object connector : network.receiverEntries.keySet()) this.addReceiver((R) connector);
-        for(Object connector : network.providerEntries.keySet()) this.addProvider((P) connector);
+        for (R connector : network.receiverEntries.keySet()) this.addReceiver(connector);
+        for (P connector : network.providerEntries.keySet()) this.addProvider(connector);
         network.destroy();
     }
 
     /** Adds the node as part of this network's links */
-    public NodeNet joinLink(L node) {
-        if(node.net != null) node.net.leaveLink(node);
+    public NodeNet<R, P, L, N> joinLink(L node) {
+        if (node.net != null) node.net.leaveLink(node);
         return forceJoinLink(node);
     }
 
     /** Adds the node as part of this network's links, skips the part about removing it from existing networks */
-    public NodeNet forceJoinLink(L node) {
+    public NodeNet<R, P, L, N> forceJoinLink(L node) {
         this.links.add(node);
-        node.setNet(this);
+        // noinspection unchecked
+        node.setNet((N) this);
         return this;
     }
 
@@ -68,24 +60,35 @@ public abstract class NodeNet<R, P, L extends GenNode> {
     public void leaveLink(L node) {
         node.setNet(null);
         this.links.remove(node);
+        if (this.links.isEmpty()) {
+            this.destroy(); // An empty network is invalid
+        }
     }
 
     /// GENERAL POWER NET CONTROL ///
-    public void invalidate() { this.valid = false; UniNodespace.activeNodeNets.remove(this); }
+    public void invalidate() {
+        if (!this.valid) return;
+        this.valid = false;
+        UniNodespace.removeActiveNet(this);
+    }
+
     public boolean isValid() { return this.valid; }
     public void resetTrackers() { }
     public abstract void update();
 
     public void destroy() {
         this.invalidate();
-        for(GenNode link : this.links) if(link.net == this) link.setNet(null);
+        Set<L> linksToClear = new HashSet<>(this.links);
+        for (GenNode<?> link : linksToClear) {
+            if (link.net == this) link.setNet(null);
+        }
         this.links.clear();
         this.receiverEntries.clear();
         this.providerEntries.clear();
     }
 
     public static boolean isBadLink(Object o) {
-        if(o instanceof ILoadedTile && !((ILoadedTile) o).isLoaded()) return true;
+        if (o instanceof ILoadedTile && !((ILoadedTile) o).isLoaded()) return true;
         return o instanceof TileEntity && ((TileEntity) o).isInvalid();
     }
 }

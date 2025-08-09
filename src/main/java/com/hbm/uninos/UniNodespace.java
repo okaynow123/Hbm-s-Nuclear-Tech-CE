@@ -1,17 +1,11 @@
 package com.hbm.uninos;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import com.hbm.lib.DirPos;
-import com.hbm.util.Tuple.Pair;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.*;
 
 /**
  * Unified Nodespace, a Nodespace for all applications.
@@ -19,121 +13,194 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * Instead of tile entities having to find each other which is costly and assumes the tiles are loaded, tiles simply create nodes at their
  * respective position in nodespace, the nodespace itself handles stuff like connections which can also happen in unloaded chunks.
  * A node is so to say the "soul" of a tile entity which can act independent of its "body".
+ * Edit: now every NodeNet have their own "dimension"
  * @author hbm
  */
-@SuppressWarnings({"rawtypes", "unchecked"}) //stfu intellij
-public class UniNodespace {
+public final class UniNodespace {
 
-    public static HashMap<World, UniNodeWorld> worlds = new HashMap<>();
-    public static Set<NodeNet> activeNodeNets = new HashSet<>();
+    private static final Map<INetworkProvider<?>, PerTypeNodeManager<?, ?, ?, ?>> managers = new HashMap<>();
 
-    public static GenNode getNode(World world, BlockPos pos, INetworkProvider type) {
-        UniNodeWorld nodeWorld = worlds.get(world);
-        if(nodeWorld != null) return nodeWorld.nodes.get(new Pair<>(pos, type));
-        return null;
+    private UniNodespace() {
     }
 
-    public static void createNode(World world, GenNode node) {
-        UniNodeWorld nodeWorld = worlds.get(world);
-        if(nodeWorld == null) {
-            nodeWorld = new UniNodeWorld();
-            worlds.put(world, nodeWorld);
-        }
-        nodeWorld.pushNode(node);
+    public static <N extends NodeNet<R, P, L, N>, L extends GenNode<N>, R, P> L getNode(World world, BlockPos pos, INetworkProvider<N> type) {
+        return getManagerFor(type).getNode(world, pos);
     }
 
-    public static void destroyNode(World world, BlockPos pos, INetworkProvider type) {
-        GenNode node = getNode(world, pos, type);
-        if(node != null) {
-            worlds.get(world).popNode(node);
-        }
+    public static <N extends NodeNet<R, P, L, N>, L extends GenNode<N>, R, P> void createNode(World world, L node) {
+        getManagerFor(node.networkProvider).createNode(world, node);
+    }
+
+    public static <N extends NodeNet<R, P, L, N>, L extends GenNode<N>, R, P> void destroyNode(World world, BlockPos pos, INetworkProvider<N> type) {
+        getManagerFor(type).destroyNode(world, pos);
     }
 
     public static void updateNodespace() {
-        for (World world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-            UniNodeWorld nodeWorld = worlds.get(world);
+        World[] currentWorlds = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
+        for (World world : currentWorlds) {
+            for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) {
+                manager.updateForWorld(world);
+            }
+        }
+        updateNetworks();
+    }
 
-            if(nodeWorld == null) continue;
+    static void removeActiveNet(NodeNet<?, ?, ?, ?> net) {
+        if (net.links.isEmpty()) {
+            for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) {
+                manager.removeActiveNet(net);
+            }
+            return;
+        }
+        GenNode<?> node = net.links.iterator().next();
+        PerTypeNodeManager<?, ?, ?, ?> manager = managers.get(node.networkProvider);
+        if (manager != null) manager.removeActiveNet(net);
+    }
 
-            for(Entry<Pair<BlockPos, INetworkProvider>, GenNode> entry : nodeWorld.nodes.entrySet()) {
-                GenNode node = entry.getValue();
-                INetworkProvider provider = entry.getKey().getValue();
-                if(!node.hasValidNet() || node.recentlyChanged) {
-                    checkNodeConnection(world, node, provider);
+    private static void updateNetworks() {
+        for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) {
+            manager.updateNetworks();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <R, P, L extends GenNode<N>, N extends NodeNet<R, P, L, N>> PerTypeNodeManager<R, P, L, N> getManagerFor(INetworkProvider<N> provider) {
+        PerTypeNodeManager<?, ?, ?, ?> manager = managers.get(provider);
+        if (manager == null) {
+            manager = new PerTypeNodeManager<>(provider);
+            managers.put(provider, manager);
+        }
+        return (PerTypeNodeManager<R, P, L, N>) manager;
+    }
+
+    private static class PerTypeNodeManager<R, P, L extends GenNode<N>, N extends NodeNet<R, P, L, N>> {
+
+        private final Map<World, UniNodeWorld<N, L>> worlds = new HashMap<>();
+        private final Set<N> activeNodeNets = new HashSet<>();
+        private final INetworkProvider<N> provider;
+
+        PerTypeNodeManager(INetworkProvider<N> provider) {
+            this.provider = provider;
+        }
+
+        private static boolean checkConnection(GenNode<?> connectsTo, DirPos connectFrom, boolean skipSideCheck) {
+            for (DirPos revCon : connectsTo.connections) {
+                if (revCon.getPos().getX() - revCon.getDir().offsetX == connectFrom.getPos().getX() && revCon.getPos().getY() - revCon.getDir().offsetY == connectFrom.getPos().getY() && revCon.getPos().getZ() - revCon.getDir().offsetZ == connectFrom.getPos().getZ() && (revCon.getDir() == connectFrom.getDir().getOpposite() || skipSideCheck)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private UniNodeWorld<N, L> getWorldManager(World world) {
+            return worlds.computeIfAbsent(world, k -> new UniNodeWorld<>());
+        }
+
+        L getNode(World world, BlockPos pos) {
+            UniNodeWorld<N, L> nodeWorld = worlds.get(world);
+            return nodeWorld != null ? nodeWorld.getNode(pos) : null;
+        }
+
+        void createNode(World world, L node) {
+            getWorldManager(world).pushNode(node);
+        }
+
+        void destroyNode(World world, BlockPos pos) {
+            L node = getNode(world, pos);
+            if (node != null) {
+                getWorldManager(world).popNode(node);
+            }
+        }
+
+        void addActiveNet(N net) {
+            activeNodeNets.add(net);
+        }
+
+        void removeActiveNet(Object net) {
+            activeNodeNets.remove(net);
+        }
+
+        void updateForWorld(World world) {
+            UniNodeWorld<N, L> nodeWorld = worlds.get(world);
+            if (nodeWorld == null) return;
+
+            for (L node : new HashSet<>(nodeWorld.getAllNodes())) {
+                if (node.expired) continue;
+                if (!node.hasValidNet() || node.recentlyChanged) {
+                    checkNodeConnection(world, node);
                     node.recentlyChanged = false;
                 }
             }
         }
 
-        updateNetworks();
-    }
+        void updateNetworks() {
+            Set<N> netsToUpdate = new HashSet<>(activeNodeNets);
+            for (N net : netsToUpdate) net.resetTrackers();
+            for (N net : netsToUpdate) {
+                if (net.isValid()) net.update();
+            }
+        }
 
-    private static void updateNetworks() {
-
-        for(NodeNet net : activeNodeNets) net.resetTrackers(); //reset has to be done before everything else
-        for(NodeNet net : activeNodeNets) net.update();
-    }
-
-    /** Goes over each connection point of the given node, tries to find neighbor nodes and to join networks with them */
-    private static void checkNodeConnection(World world, GenNode node, INetworkProvider provider) {
-
-        for(DirPos con : node.connections) {
-            GenNode conNode = getNode(world, con.getPos(), provider); // get whatever neighbor node intersects with that connection
-            if(conNode != null) { // if there is a node at that place
-                if(conNode.hasValidNet() && conNode.net == node.net) continue; // if the net is valid and both nodes have the same net, skip
-                if(checkConnection(conNode, con, false)) {
-                    connectToNode(node, conNode);
+        private void checkNodeConnection(World world, L node) {
+            for (DirPos con : node.connections) {
+                L conNode = getNode(world, con.getPos());
+                if (conNode != null) {
+                    if (conNode.hasValidNet() && conNode.net == node.net) continue;
+                    if (checkConnection(conNode, con, false)) {
+                        connectToNode(node, conNode);
+                    }
                 }
             }
-        }
-
-        if(node.net == null || !node.net.isValid()) provider.provideNetwork().joinLink(node);
-    }
-
-    /** Checks if the node can be connected to given the DirPos, skipSideCheck will ignore the DirPos' direction value */
-    public static boolean checkConnection(GenNode connectsTo, DirPos connectFrom, boolean skipSideCheck) {
-        for(DirPos revCon : connectsTo.connections) {
-            if(revCon.getPos().getX() - revCon.getDir().offsetX == connectFrom.getPos().getX() && revCon.getPos().getY() - revCon.getDir().offsetY == connectFrom.getPos().getY() && revCon.getPos().getZ() - revCon.getDir().offsetZ == connectFrom.getPos().getZ() && (revCon.getDir() == connectFrom.getDir().getOpposite() || skipSideCheck)) {
-                return true;
+            if (node.net == null || !node.net.isValid()) {
+                N newNet = provider.provideNetwork();
+                this.addActiveNet(newNet);
+                newNet.joinLink(node);
             }
         }
-        return false;
-    }
 
-    /** Links two nodes with different or potentially no networks */
-    private static void connectToNode(GenNode origin, GenNode connection) {
-
-        if(origin.hasValidNet() && connection.hasValidNet()) { // both nodes have nets, but the nets are different (previous assumption), join networks
-            if(origin.net.links.size() > connection.net.links.size()) {
-                origin.net.joinNetworks(connection.net);
-            } else {
-                connection.net.joinNetworks(origin.net);
+        private void connectToNode(L origin, L connection) {
+            if (origin.hasValidNet() && connection.hasValidNet()) { // both nodes have nets, but the nets are different (previous assumption), join networks
+                if (origin.net.links.size() > connection.net.links.size()) {
+                    origin.net.joinNetworks(connection.net);
+                } else {
+                    connection.net.joinNetworks(origin.net);
+                }
+            } else if (!origin.hasValidNet() && connection.hasValidNet()) { // origin has no net, connection does, have origin join connection's net
+                connection.net.joinLink(origin);
+            } else if (origin.hasValidNet() && !connection.hasValidNet()) { // ...and vice versa
+                origin.net.joinLink(connection);
             }
-        } else if(!origin.hasValidNet() && connection.hasValidNet()) { // origin has no net, connection does, have origin join connection's net
-            connection.net.joinLink(origin);
-        } else if(origin.hasValidNet() && !connection.hasValidNet()) { // ...and vice versa
-            origin.net.joinLink(connection);
         }
     }
 
-    public static class UniNodeWorld {
+    /**
+     * Holds all nodes of a single network type for a specific World.
+     */
+    private static class UniNodeWorld<N extends NodeNet<?, ?, L, N>, L extends GenNode<N>> {
+        private final Map<BlockPos, L> nodesByPosition = new LinkedHashMap<>();
 
-        public HashMap<Pair<BlockPos, INetworkProvider>, GenNode> nodes = new LinkedHashMap<>();
+        L getNode(BlockPos pos) {
+            return nodesByPosition.get(pos);
+        }
 
         /** Adds a node at all its positions to the nodespace */
-        public void pushNode(GenNode node) {
-            for(BlockPos pos : node.positions) {
-                nodes.put(new Pair<>(pos, node.networkProvider), node);
+        void pushNode(L node) {
+            for (BlockPos pos : node.positions) {
+                nodesByPosition.put(pos, node);
             }
         }
 
         /** Removes the specified node from all positions from nodespace */
-        public void popNode(GenNode node) {
-            if(node.net != null) node.net.destroy();
-            for(BlockPos pos : node.positions) {
-                nodes.remove(new Pair<>(pos, node.networkProvider));
+        void popNode(L node) {
+            if (node.net != null) node.net.destroy();
+            for (BlockPos pos : node.positions) {
+                nodesByPosition.remove(pos, node);
             }
             node.expired = true;
+        }
+
+        Set<L> getAllNodes() {
+            return new HashSet<>(nodesByPosition.values());
         }
     }
 }

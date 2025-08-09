@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @author hbm
  */
-public class PowerNetMK2 extends NodeNet<IEnergyReceiverMK2, IEnergyProviderMK2, Nodespace.PowerNode> {
+public class PowerNetMK2 extends NodeNet<IEnergyReceiverMK2, IEnergyProviderMK2, Nodespace.PowerNode, PowerNetMK2> {
 
     public long energyTracker = 0L;
 
