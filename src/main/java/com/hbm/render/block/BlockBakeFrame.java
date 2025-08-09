@@ -83,6 +83,14 @@ public class BlockBakeFrame {
         };
     }
 
+    public static int getXRotationForFacing(EnumFacing facing) {
+        return switch (facing) {
+            case UP -> 90;
+            case DOWN -> 270;
+            default -> 0;
+        };
+    }
+
     public void registerBlockTextures(TextureMap map) {
         for (String texture : this.textureArray) {
             ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture);

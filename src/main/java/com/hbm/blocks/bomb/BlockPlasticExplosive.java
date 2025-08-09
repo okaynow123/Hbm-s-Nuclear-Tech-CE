@@ -5,7 +5,6 @@ import com.hbm.entity.item.EntityTNTPrimedBase;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
 import com.hbm.interfaces.IBomb;
-import com.hbm.items.IDynamicModels;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.block.RotatableStateMapper;
 import net.minecraft.block.Block;
@@ -71,11 +70,11 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
                                             float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getDefaultState().withProperty(FACING, facing.getOpposite());
+        return this.getDefaultState().withProperty(FACING, facing);
     }
 
     @Override
-    public StateMapperBase getStateMapper(ResourceLocation loc){
+    public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new RotatableStateMapper(loc, FACING);
     }
 
@@ -99,29 +98,41 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
         var blockFrame = blockFrames[0];
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
-            ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
 
+            ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
             blockFrame.putTextures(textureMap);
+
             IModel retexturedModel = baseModel.retexture(textureMap.build());
             IBakedModel[] models = new IBakedModel[6];
-            for (int i = 0; i < EnumFacing.VALUES.length; i++) {
-                EnumFacing facing = EnumFacing.VALUES[i];
-                models[i] = retexturedModel.bake(
-                        ModelRotation.getModelRotation(0, BlockBakeFrame.getYRotationForFacing(facing)), DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
+
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                int xRot = BlockBakeFrame.getXRotationForFacing(facing);
+                int yRot = BlockBakeFrame.getYRotationForFacing(facing);
+
+                models[facing.ordinal()] = retexturedModel.bake(
+                        ModelRotation.getModelRotation(xRot, yRot),
+                        DefaultVertexFormats.BLOCK,
+                        ModelLoader.defaultTextureGetter()
                 );
             }
-            ModelResourceLocation modelLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");
-            event.getModelRegistry().putObject(modelLocation, models[2]);
-            for (int index = 0; index < models.length; index++) {
-                ModelResourceLocation worldLocation = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "facing=" + EnumFacing.VALUES[index].getName());
-                event.getModelRegistry().putObject(worldLocation, models[index]);
-            }
 
+            // Inventory model = UP-facing variant
+            ModelResourceLocation invLocation = new ModelResourceLocation(
+                    Objects.requireNonNull(getRegistryName()), "inventory");
+            event.getModelRegistry().putObject(invLocation, models[EnumFacing.UP.ordinal()]);
+
+            // World variants
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                ModelResourceLocation worldLoc = new ModelResourceLocation(
+                        Objects.requireNonNull(getRegistryName()),
+                        "facing=" + facing.getName()
+                );
+                event.getModelRegistry().putObject(worldLoc, models[facing.ordinal()]);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
