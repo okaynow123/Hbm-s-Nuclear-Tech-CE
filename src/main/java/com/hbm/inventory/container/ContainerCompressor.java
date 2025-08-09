@@ -2,6 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.items.machine.IItemFluidIdentifier;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineCompressorBase;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,7 +58,7 @@ public class ContainerCompressor extends Container {
                 }
             } else {
 
-                if(var3.getItem() instanceof IBatteryItem) {
+                if(Library.isItemBattery(var3)) {
                     if(!this.mergeItemStack(var5, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
