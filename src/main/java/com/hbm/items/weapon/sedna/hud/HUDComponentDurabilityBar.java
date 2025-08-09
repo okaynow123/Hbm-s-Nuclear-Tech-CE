@@ -39,12 +39,13 @@ public class HUDComponentDurabilityBar implements IHUDComponent {
         int pZ = resolution.getScaledHeight() - 21;
 
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
-        int dura = (int) (50 * gun.getWear(stack, gunIndex) / gun.getConfig(stack, gunIndex).getDurability(stack));
+        int dura = (int)(50 * gun.getWear(stack, gunIndex) / gun.getConfig(stack, gunIndex).getDurability(stack));
 
+        GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        mc.renderEngine.bindTexture(misc);
-        mc.ingameGUI.drawTexturedModalRect(pX, pZ + 16, 94, 0, 52, 3);
+        mc.getTextureManager().bindTexture(misc);
+        mc.ingameGUI.drawTexturedModalRect(pX,pZ + 16, 94, 0, 52,       3);
         mc.ingameGUI.drawTexturedModalRect(pX + 1, pZ + 16, 95, 3, 50 - dura, 3);
     }
 }

@@ -256,39 +256,52 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
     }
 
     public static void renderSmokeNodes(List<SmokeNode> nodes, double scale) {
+        if (nodes.size() <= 1) return;
+
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-        if(nodes.size() > 1) {
-            GlStateManager.enableBlend();
-            GlStateManager.disableTexture2D();
-            GlStateManager.disableCull();
-            GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            GlStateManager.depthMask(false);
 
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-            for(int i = 0; i < nodes.size() - 1; i++) {
-                SmokeNode node = nodes.get(i);
-                SmokeNode past = nodes.get(i + 1);
+        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
 
-                buffer.pos(node.forward, node.lift, node.side).color(1F, 1F, 1F, (float) node.alpha).endVertex();
-                buffer.pos(node.forward, node.lift, node.side + node.width * scale).color(1F, 1F, 1F, 0F).endVertex();
-                buffer.pos(past.forward, past.lift, past.side + past.width * scale).color(1F, 1F, 1F, 0F).endVertex();
-                buffer.pos(past.forward, past.lift, past.side).color(1F, 1F, 1F, (float) past.alpha).endVertex();
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableCull();
+        GlStateManager.depthMask(false);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.02F);
 
-                buffer.pos(node.forward, node.lift, node.side).color(1F, 1F, 1F, (float) node.alpha).endVertex();
-                buffer.pos(node.forward, node.lift, node.side - node.width * scale).color(1F, 1F, 1F, 0F).endVertex();
-                buffer.pos(past.forward, past.lift, past.side - past.width * scale).color(1F, 1F, 1F, 0F).endVertex();
-                buffer.pos(past.forward, past.lift, past.side).color(1F, 1F, 1F, (float) past.alpha).endVertex();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            SmokeNode a = nodes.get(i);
+            SmokeNode b = nodes.get(i + 1);
+
+            if (a.alpha < 0 || b.alpha < 0) {
+                continue;
             }
-            Tessellator.getInstance().draw();
 
-            GlStateManager.depthMask(true);
-            GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
-            GlStateManager.enableTexture2D();
-            GlStateManager.enableCull();
-            GlStateManager.disableBlend();
+            buffer.pos(a.forward, a.lift, a.side)                     .color(1F, 1F, 1F, (float)a.alpha).endVertex();
+            buffer.pos(a.forward, a.lift, a.side + a.width * scale)   .color(1F, 1F, 1F, 0F)             .endVertex();
+            buffer.pos(b.forward, b.lift, b.side + b.width * scale)   .color(1F, 1F, 1F, 0F)             .endVertex();
+            buffer.pos(b.forward, b.lift, b.side)                     .color(1F, 1F, 1F, (float)b.alpha).endVertex();
+
+            buffer.pos(a.forward, a.lift, a.side)                     .color(1F, 1F, 1F, (float)a.alpha).endVertex();
+            buffer.pos(a.forward, a.lift, a.side - a.width * scale)   .color(1F, 1F, 1F, 0F)             .endVertex();
+            buffer.pos(b.forward, b.lift, b.side - b.width * scale)   .color(1F, 1F, 1F, 0F)             .endVertex();
+            buffer.pos(b.forward, b.lift, b.side)                     .color(1F, 1F, 1F, (float)b.alpha).endVertex();
         }
+        Tessellator.getInstance().draw();
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableCull();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+
+        GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
     }
+
 
     public static void renderMuzzleFlash(long lastShot) {
         renderMuzzleFlash(lastShot, 75, 15);
@@ -296,23 +309,17 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
     public static void renderMuzzleFlash(long lastShot, int duration, double l) {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-        int flash = duration;
-        if(System.currentTimeMillis() - lastShot < flash) {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            GlStateManager.pushMatrix();
+        if(System.currentTimeMillis() - lastShot < duration) {
 
-            double fire = (System.currentTimeMillis() - lastShot) / (double) flash;
+            double fire = (System.currentTimeMillis() - lastShot) / (double) duration;
             double width = 6 * fire;
             double length = l * fire;
             double inset = 2;
 
             Minecraft.getMinecraft().getTextureManager().bindTexture(flash_plume);
+            beginFullbrightAdditive();
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.lightmap(240, 240);
-            buffer.normal(0F, 1F, 0F);
-            buffer.color(1F, 1F, 1F, 1F);
 
             buffer.pos(0, -width, -inset).tex(1, 1).endVertex();
             buffer.pos(0, width, -inset).tex(0, 1).endVertex();
@@ -336,8 +343,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
             Tessellator.getInstance().draw();
 
-            GlStateManager.popMatrix();
-            GlStateManager.disableBlend();
+            endFullbrightAdditive();
         }
     }
 
@@ -345,9 +351,6 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         int flash = 75;
         if(System.currentTimeMillis() - lastShot < flash) {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-            GlStateManager.pushMatrix();
 
             double fire = (System.currentTimeMillis() - lastShot) / (double) flash;
             double height = 4 * fire;
@@ -357,11 +360,9 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             double lengthOffset = 0.125;
 
             Minecraft.getMinecraft().getTextureManager().bindTexture(flash_plume);
+            beginFullbrightAdditive();
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.lightmap(240, 240);
-            buffer.normal(0F, 1F, 0F);
-            buffer.color(1F, 1F, 1F, 1F);
 
             buffer.pos(0, -height, -offset).tex(1, 1).endVertex();
             buffer.pos(0, height, -offset).tex(0, 1).endVertex();
@@ -385,8 +386,34 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
             Tessellator.getInstance().draw();
 
-            GlStateManager.popMatrix();
-            GlStateManager.disableBlend();
+            endFullbrightAdditive();
         }
+    }
+
+    private static void beginFullbrightAdditive() {
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+        GlStateManager.disableCull();
+
+        GlStateManager.disableLighting();
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
+    }
+
+    private static void endFullbrightAdditive() {
+        GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
+        GlStateManager.enableCull();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+
     }
 }

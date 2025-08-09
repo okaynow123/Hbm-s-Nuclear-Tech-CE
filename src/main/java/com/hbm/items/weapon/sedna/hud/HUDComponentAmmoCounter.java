@@ -49,18 +49,22 @@ public class HUDComponentAmmoCounter implements IHUDComponent {
 
         int pX = resolution.getScaledWidth() / 2 + (mirrored ? -(62 + 36 + 52) : (62 + 36)) + (noCounter ? 14 : 0);
         int pZ = resolution.getScaledHeight() - bottomOffset - 23;
+
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
         IMagazine mag = gun.getConfig(stack, gunIndex).getReceivers(stack)[this.receiver].getMagazine(stack);
 
-        if(!noCounter) mc.fontRenderer.drawString(mag.reportAmmoStateForHUD(stack, player), pX + 17, pZ + 6, 0xFFFFFF);
+        if (!noCounter) {
+            mc.fontRenderer.drawString(mag.reportAmmoStateForHUD(stack, player), pX + 17, pZ + 6, 0xFFFFFF);
+        }
 
-        GlStateManager.disableBlend();
-        GlStateManager.enableRescaleNormal();
-        RenderHelper.enableGUIStandardItemLighting();
-        //itemRenderer.renderItemAndEffectIntoGUI(player, mag.getIconForHUD(stack, player), pX, pZ);
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.enableAlpha();
-        GlStateManager.disableRescaleNormal();
-        mc.getTextureManager().bindTexture(misc);
+        ItemStack icon = mag.getIconForHUD(stack, player);
+        if (!icon.isEmpty()) {
+            GlStateManager.enableBlend();
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            RenderHelper.enableGUIStandardItemLighting();
+            mc.getRenderItem().renderItemAndEffectIntoGUI(icon, pX, pZ);
+            RenderHelper.disableStandardItemLighting();
+            mc.getTextureManager().bindTexture(misc);
+        }
     }
 }
