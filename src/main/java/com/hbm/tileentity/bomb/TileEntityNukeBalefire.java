@@ -9,6 +9,7 @@ import com.hbm.inventory.container.ContainerNukeBalefire;
 import com.hbm.inventory.gui.GUINukeBalefire;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -26,12 +27,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 @AutoRegister
 public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITickable, IGUIProvider {
 
 	public boolean loaded;
 	public boolean started;
 	public int timer;
+	public UUID placerID = null;
 
 	public TileEntityNukeBalefire() {
 		super(2);
@@ -135,6 +139,9 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 		bf.posY = pos.getY() + 0.5;
 		bf.posZ = pos.getZ() + 0.5;
 		bf.destructionRange = (int) 250;
+		if (ModContext.DETONATOR_CONTEXT.get() == null){
+			bf.detonator = placerID;
+		} else bf.setDetonator(ModContext.DETONATOR_CONTEXT.get());
 		world.spawnEntity(bf);
 		if(BombConfig.enableNukeClouds) {
 			EntityNukeTorex.statFacBale(world, pos.getX() + 0.5, pos.getY() + 5, pos.getZ() + 0.5, 250F);
@@ -165,6 +172,8 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	public void readFromNBT(NBTTagCompound compound) {
 		started = compound.getBoolean("started");
 		timer = compound.getInteger("timer");
+		if (compound.hasKey("placer"))
+			placerID = compound.getUniqueId("placer");
 		super.readFromNBT(compound);
 	}
 	
@@ -172,6 +181,8 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setBoolean("started", started);
 		compound.setInteger("timer", timer);
+		if (placerID != null)
+			compound.setUniqueId("placer", placerID);
 		return super.writeToNBT(compound);
 	}
 	

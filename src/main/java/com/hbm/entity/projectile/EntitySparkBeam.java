@@ -219,7 +219,7 @@ public class EntitySparkBeam extends Entity implements IProjectile {
         if (blockstate.getMaterial() != Material.AIR)
         {
         	if(!world.isRemote) {
-        		ExplosionLarge.explode(world, posX, posY, posZ, 50, true, true, true);
+        		ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 50, true, true, true);
         	}
     		this.setDead();
         }
@@ -351,7 +351,7 @@ public class EntitySparkBeam extends Entity implements IProjectile {
                             {
                             	RayTraceResult.entityHit.attackEntityFrom(damagesource, 25 + rand.nextInt(20));
                             	if(!world.isRemote) {
-                            		ExplosionLarge.explode(world, posX, posY, posZ, 50, true, true, true);
+                            		ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 50, true, true, true);
                             	}
                         		this.setDead();
                             }

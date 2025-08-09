@@ -40,7 +40,7 @@ public class EntityBooster extends EntityThrowable {
         {
     		if(!this.world.isRemote)
     		{
-    	    	ExplosionLarge.explodeFire(world, posX, posY, posZ, 10F, true, false, true);
+    	    	ExplosionLarge.explodeFire(world, thrower, posX, posY, posZ, 10F, true, false, true);
     		}
     		this.setDead();
         }

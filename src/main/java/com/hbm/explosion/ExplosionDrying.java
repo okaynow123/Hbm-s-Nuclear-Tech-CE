@@ -5,6 +5,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class ExplosionDrying
 {
 	public int posX;
@@ -22,6 +24,7 @@ public class ExplosionDrying
 	private int element;
 	public float explosionCoefficient = 1.0F;
 	public float explosionCoefficient2 = 1.0F;
+	public UUID detonator;
 	
 	public void saveToNbt(NBTTagCompound nbt, String name) {
 		nbt.setInteger(name + "posX", posX);

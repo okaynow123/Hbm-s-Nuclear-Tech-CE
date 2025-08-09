@@ -210,7 +210,7 @@ public class EntityRocket extends Entity implements IProjectile {
 
             if (!this.world.isRemote)
             {
-            	ExplosionLarge.explode(world, posX, posY, posZ, explosionSize, true, false, true);
+            	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, explosionSize, true, false, true);
             }
         	this.setDead();
         }
@@ -335,7 +335,7 @@ public class EntityRocket extends Entity implements IProjectile {
                         {
                             if (!this.world.isRemote)
                             {
-                            	ExplosionLarge.explode(world, posX, posY, posZ, explosionSize, true, false, true);
+                            	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, explosionSize, true, false, true);
                             }
                         	this.setDead();
                         }
@@ -344,7 +344,7 @@ public class EntityRocket extends Entity implements IProjectile {
                     {
                         if (!this.world.isRemote)
                         {
-                        	ExplosionLarge.explode(world, posX, posY, posZ, explosionSize, true, false, true);
+                        	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, explosionSize, true, false, true);
                         }
                     	this.setDead();
                     }

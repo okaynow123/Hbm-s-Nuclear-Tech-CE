@@ -37,7 +37,7 @@ public class EntityGrenadeNuclear extends EntityGrenadeBouncyBase {
         {
             this.setDead();
 
-            world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.nukaRadius, posX + 0.5, posY + 0.5, posZ + 0.5));
+            world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.nukaRadius, posX + 0.5, posY + 0.5, posZ + 0.5).setDetonator(thrower));
             if(rand.nextInt(100) == 0){
                 EntityNukeTorex.statFacBale(world, posX + 0.5, posY + 0.5, posZ + 0.5, BombConfig.nukaRadius);
             } else {

@@ -436,7 +436,7 @@ public class TileEntityMachineCyclotron extends TileEntityMachineBase implements
 	
 	private void explode() {
 
-		ExplosionLarge.explodeFire(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 25, true, false, true);
+		ExplosionLarge.explodeFire(world, null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 25, true, false, true);
 		int rand = world.rand.nextInt(10);
 
 		if(rand < 2) {

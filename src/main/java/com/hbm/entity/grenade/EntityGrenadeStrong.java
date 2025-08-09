@@ -32,7 +32,7 @@ public class EntityGrenadeStrong extends EntityGrenadeBouncyBase {
         if (!this.world.isRemote)
         {
             this.setDead();
-            ExplosionLarge.explode(world, posX, posY, posZ, 5.0F, true, false, false);
+            ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5.0F, true, false, false);
         }
     }
 

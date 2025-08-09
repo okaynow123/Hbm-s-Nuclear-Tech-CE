@@ -15,6 +15,7 @@ import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -48,7 +50,8 @@ public class ItemDrop extends Item {
 			}
 
 			ItemStack stack = entityItem.getItem();
-
+			@Nullable
+			EntityPlayerMP thrower = entityItem.world.getMinecraftServer().getPlayerList().getPlayerByUsername(entityItem.getThrower());
 			if(stack.getItem() != null && stack.getItem() == ModItems.detonator_deadman) {
 				if(!entityItem.world.isRemote) {
 
@@ -60,7 +63,7 @@ public class ItemDrop extends Item {
 
 						if(entityItem.world.getBlockState(new BlockPos(x, y, z)).getBlock() instanceof IBomb) {
 							if(!entityItem.world.isRemote) {
-								((IBomb) entityItem.world.getBlockState(new BlockPos(x, y, z)).getBlock()).explode(entityItem.world, new BlockPos(x, y, z));
+								((IBomb) entityItem.world.getBlockState(new BlockPos(x, y, z)).getBlock()).explode(entityItem.world, new BlockPos(x, y, z), thrower);
 
 								if(GeneralConfig.enableExtendedLogging)
 									MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by dead man's switch!");
@@ -87,7 +90,7 @@ public class ItemDrop extends Item {
 
 				if(stack.getItem() != null && stack.getItem() == ModItems.pellet_antimatter && WeaponConfig.dropCell) {
 					if(!entityItem.world.isRemote) {
-						ExplosionLarge.explodeFire(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, 100, true, true, true);
+						ExplosionLarge.explodeFire(entityItem.world, thrower, entityItem.posX, entityItem.posY, entityItem.posZ, 100, true, true, true);
 					}
 				}
 				if(stack.getItem() != null && stack.getItem() == ModItems.tiny_singularity && WeaponConfig.dropSing) {
@@ -190,13 +193,13 @@ public class ItemDrop extends Item {
 				}
 				if (stack.getItem() != null && stack.getItem() == ModItems.capsule_xen && WeaponConfig.dropCrys) {
 					if (!entityItem.world.isRemote) {
-						ExplosionChaos.floater(entityItem.world, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 3, 8);
+						ExplosionChaos.floater(entityItem.world, thrower, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 3, 8);
 						ExplosionChaos.move(entityItem.world, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 3, 0, 8, 0);
 					}
 				}
 				if (stack.getItem() != null && stack.getItem() == ModItems.crystal_xen && WeaponConfig.dropCrys) {
 					if (!entityItem.world.isRemote) {
-						ExplosionChaos.floater(entityItem.world, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 25, 75);
+						ExplosionChaos.floater(entityItem.world, thrower, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 25, 75);
 						ExplosionChaos.move(entityItem.world, (int)entityItem.posX, (int)entityItem.posY, (int)entityItem.posZ, 25, 0, 75, 0);
 					}
 				}

@@ -5,6 +5,7 @@ import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -50,7 +51,7 @@ public class SatCoordPacket implements IMessage {
 		@Override
 		public IMessage onMessage(SatCoordPacket m, MessageContext ctx) {
 			ctx.getServerHandler().player.getServer().addScheduledTask(() -> {
-				EntityPlayer p = ctx.getServerHandler().player;
+				EntityPlayerMP p = ctx.getServerHandler().player;
 				
 				if(p.getHeldItemMainhand().getItem() instanceof ISatChip) {
 					

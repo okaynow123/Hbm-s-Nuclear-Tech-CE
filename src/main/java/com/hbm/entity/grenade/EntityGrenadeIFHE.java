@@ -32,8 +32,8 @@ public class EntityGrenadeIFHE extends EntityGrenadeBouncyBase {
         {
             this.setDead();
     		
-    		ExplosionLarge.jolt(world, posX, posY, posZ, 7.5, 300, 0.25);
-    		ExplosionLarge.explode(world, posX, posY, posZ, 7, true, true, true);
+    		ExplosionLarge.jolt(world, thrower, posX, posY, posZ, 7.5, 300, 0.25);
+    		ExplosionLarge.explode(world, thrower, posX, posY, posZ, 7, true, true, true);
         }
     }
 

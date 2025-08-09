@@ -33,7 +33,7 @@ public abstract class EntityMissileTier1 extends EntityMissileBaseNT {
 		public EntityMissileGeneric(World world) { super(world); }
 		public EntityMissileGeneric(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact()  {
-			ExplosionLarge.explode(world, posX, posY, posZ, 15.0F, true, true, true);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 15.0F, true, true, true);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_generic_small); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_generic); }
@@ -53,7 +53,7 @@ public abstract class EntityMissileTier1 extends EntityMissileBaseNT {
 		public EntityMissileIncendiary(World world) { super(world); }
 		public EntityMissileIncendiary(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionLarge.explodeFire(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 15.0F, true, true, true);
+			ExplosionLarge.explodeFire(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 15.0F, true, true, true);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_incendiary_small); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_incendiary); }

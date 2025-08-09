@@ -445,9 +445,9 @@ public class EntityModBeam extends Entity implements IProjectile {
     	if(!world.isRemote) {
     		
     		if(mode == 0) {
-    			ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, false);
+    			ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 5, true, false, false);
     		} else if( mode == 1) {
-    			ExplosionLarge.explodeFire(world, posX, posY, posZ, 10, true, false, false);
+    			ExplosionLarge.explodeFire(world, shootingEntity, posX, posY, posZ, 10, true, false, false);
     		} else if(mode == 2) {
 				this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 100.0f, this.world.rand.nextFloat() * 0.1F + 0.9F);
 	
@@ -529,7 +529,7 @@ public class EntityModBeam extends Entity implements IProjectile {
     		} else {
 				this.world.playSound(null, this.posX, this.posY, this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 100.0f, this.world.rand.nextFloat() * 0.1F + 0.9F);
 	    		
-	    		this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.gadgetRadius, posX, posY, posZ));
+	    		this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.gadgetRadius, posX, posY, posZ).setDetonator(shootingEntity));
                 if(BombConfig.enableNukeClouds) {
                     EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.gadgetRadius);
                 }

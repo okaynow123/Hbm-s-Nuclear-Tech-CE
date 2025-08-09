@@ -17,6 +17,7 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -87,7 +88,7 @@ public class Landmine extends BlockContainer implements IBomb {
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (world.getStrongPower(pos) > 0) {
-            explode(world, pos);
+            explode(world, pos, null);
         }
 
         boolean unsupported =
@@ -102,7 +103,7 @@ public class Landmine extends BlockContainer implements IBomb {
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!safeMode) {
-            explode(worldIn, pos);
+            explode(worldIn, pos, null);
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -180,7 +181,7 @@ public class Landmine extends BlockContainer implements IBomb {
     }
 
     @Override
-    public BombReturnCode explode(World world, BlockPos pos) {
+    public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
         if (world.isRemote) return BombReturnCode.DETONATED;
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
         safeMode = true;
@@ -190,14 +191,14 @@ public class Landmine extends BlockContainer implements IBomb {
         String name = this.getRegistryName().getPath();
         switch (name) {
             case "mine_ap" -> {
-                ExplosionVNT vnt = new ExplosionVNT(world, x + .5, y + .5, z + .5, 3F);
+                ExplosionVNT vnt = new ExplosionVNT(world, x + .5, y + .5, z + .5, 3F, detonator);
                 vnt.setEntityProcessor(new EntityProcessorCrossSmooth(0.5, 10F).setupPiercing(5F, 0.2F));
                 vnt.setPlayerProcessor(new PlayerProcessorStandard());
                 vnt.setSFX(new ExplosionEffectWeapon(5, 1F, .5F));
                 vnt.explode();
             }
             case "mine_he" -> {
-                ExplosionVNT vnt = new ExplosionVNT(world, x + .5, y + .5, z + .5, 4F);
+                ExplosionVNT vnt = new ExplosionVNT(world, x + .5, y + .5, z + .5, 4F, detonator);
                 vnt.setBlockAllocator(new BlockAllocatorStandard());
                 vnt.setBlockProcessor(new BlockProcessorStandard());
                 vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, 35).setupPiercing(15F, 0.2F));
@@ -206,7 +207,7 @@ public class Landmine extends BlockContainer implements IBomb {
                 vnt.explode();
             }
             case "mine_shrap" -> {
-                ExplosionVNT vnt = new ExplosionVNT(world, x + 0.5, y + 0.5, z + 0.5, 3F);
+                ExplosionVNT vnt = new ExplosionVNT(world, x + 0.5, y + 0.5, z + 0.5, 3F, detonator);
                 vnt.setEntityProcessor(new EntityProcessorCrossSmooth(0.5, 7.5F));
                 vnt.setPlayerProcessor(new PlayerProcessorStandard());
                 vnt.setSFX(new ExplosionEffectWeapon(5, 1F, 0.5F));
@@ -215,7 +216,7 @@ public class Landmine extends BlockContainer implements IBomb {
                 ExplosionLarge.spawnShrapnels(world, x + 0.5, y + 0.5, z + 0.5, 5);
             }
             case "mine_fat" -> {
-                world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5));
+                world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5).setDetonator(detonator));
                 if (rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11) {
                     EntityNukeTorex.statFacBale(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
                 } else {

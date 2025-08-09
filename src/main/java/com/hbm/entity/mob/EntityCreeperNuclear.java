@@ -124,14 +124,14 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 			if (this.getPowered()) {
 				EntityNukeTorex.statFac(world, posX, posY, posZ, 70);
 				if (flag) {
-					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 70, posX, posY, posZ));
+					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 70, posX, posY, posZ).setDetonator(this));
 				} else {
 					ContaminationUtil.radiate(world, posX, posY + 0.5, posZ, 70, 1000, 0, 100, 500);
 				}
 			} else {
 				EntityNukeTorex.statFac(world, posX, posY, posZ, 20);
 				if (flag) {
-					world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, 20, posX, posY, posZ));
+					world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, 20, posX, posY, posZ).setDetonator(this));
 				} else {
 					ContaminationUtil.radiate(world, posX, posY + 0.5, posZ, 20, 1000, 0, 100, 500);
 				}

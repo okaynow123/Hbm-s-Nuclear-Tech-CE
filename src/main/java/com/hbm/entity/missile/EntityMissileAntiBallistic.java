@@ -94,7 +94,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 				        }
 
 				        this.setDead(); // Destroy the anti-missile
-				        ExplosionLarge.explode(world, posX, posY, posZ, 20F, true, false, false);
+				        ExplosionLarge.explode(world, thrower, posX, posY, posZ, 20F, true, false, false);
 				    }
 				}
 				if(this.tracking != null) {
@@ -158,7 +158,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 		if(delta.length() < 10 && activationTimer >= 40) {
 			System.out.println("I DIED HERE 1");
 			this.setDead();
-			ExplosionLarge.explode(world, posX, posY, posZ, 15F, true, false, false);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 15F, true, false, false);
 		}
 
 		this.motionX = motion.x * baseSpeed;
@@ -170,7 +170,7 @@ public class EntityMissileAntiBallistic extends EntityThrowableInterp implements
 	protected void onImpact(RayTraceResult mop) {
 		if(this.activationTimer >= 10) {
 			this.setDead();
-			ExplosionLarge.explode(world, posX, posY, posZ, 20F, true, false, false);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 20F, true, false, false);
 		}
 	}
 

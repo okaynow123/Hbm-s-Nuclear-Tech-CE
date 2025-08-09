@@ -17,6 +17,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
@@ -29,10 +30,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 @Spaghetti("why???")
@@ -56,6 +54,7 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 	//Extended Type
 	public int extType = 0;
 	private Ticket loaderTicket;
+	public UUID detonator = null;
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -68,7 +67,8 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 		did2 = nbt.getBoolean("did2");
 		waste = nbt.getBoolean("waste");
 		extType = nbt.getInteger("extType");
-		
+		if (nbt.hasKey("detonator"))
+			detonator = nbt.getUniqueId("detonator");
 		long time = nbt.getLong("milliTime");
 		
 		if(BombConfig.limitExplosionLifespan > 0 && System.currentTimeMillis() - time > BombConfig.limitExplosionLifespan * 1000)
@@ -78,23 +78,29 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
     	{
         	exp = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, 0);
 			exp.readFromNbt(nbt, "exp_");
+			exp.detonator = detonator;
     		wst = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, (int)(this.destructionRange * 1.8), this.coefficient, 2);
 			wst.readFromNbt(nbt, "wst_");
+			wst.detonator = detonator;
     		vap = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, (int)(this.destructionRange * 2.5), this.coefficient, 1);
 			vap.readFromNbt(nbt, "vap_");
+			vap.detonator = detonator;
     	} else {
 
     		if(extType == 0) {
     			expl = new ExplosionFleija((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
 				expl.readFromNbt(nbt, "expl_");
+				expl.detonator = detonator;
     		}
     		if(extType == 1) {
     			sol = new ExplosionSolinium((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
     			sol.readFromNbt(nbt, "sol_");
+				sol.detonator = detonator;
     		}
     		if(extType == 2) {
     			dry = new ExplosionDrying((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
     			dry.readFromNbt(nbt, "dry_");
+				dry.detonator = detonator;
     		}
     	}
     	
@@ -115,7 +121,8 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 		nbt.setInteger("extType", extType);
 		
 		nbt.setLong("milliTime", System.currentTimeMillis());
-    	
+		if (detonator != null)
+    		nbt.setUniqueId("detonator", detonator);
 		if(exp != null)
 			exp.saveToNbt(nbt, "exp_");
 		if(wst != null)
@@ -155,14 +162,23 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
             	exp = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, 0);
         		wst = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, (int)(this.destructionRange * 1.8), this.coefficient, 2);
         		vap = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, (int)(this.destructionRange * 2.5), this.coefficient, 1);
-        	} else {
-        		if(extType == 0)
-        			expl = new ExplosionFleija((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
-        		if(extType == 1)
-        			sol = new ExplosionSolinium((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
-        		if(extType == 2)
-        			dry = new ExplosionDrying((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
-        	}
+        		exp.detonator = detonator;
+				wst.detonator = detonator;
+				vap.detonator = detonator;
+			} else {
+        		if(extType == 0) {
+					expl = new ExplosionFleija((int) this.posX, (int) this.posY, (int) this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
+					expl.detonator = detonator;
+				}
+				if(extType == 1) {
+					sol = new ExplosionSolinium((int) this.posX, (int) this.posY, (int) this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
+					sol.detonator = detonator;
+				}
+				if(extType == 2) {
+					dry = new ExplosionDrying((int) this.posX, (int) this.posY, (int) this.posZ, this.world, this.destructionRange, this.coefficient, this.coefficient2);
+					dry.detonator = detonator;
+				}
+			}
         	
         	this.did = true;
         }
@@ -208,6 +224,7 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 				fallout.posX = this.posX;
 				fallout.posY = this.posY;
 				fallout.posZ = this.posZ;
+				fallout.detonator = detonator;
 				fallout.setScale((int)(this.destructionRange * 1.8), this.destructionRange+16);
 
 				this.world.spawnEntity(fallout);
@@ -369,6 +386,11 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 		}
 
 		return entity;
+	}
+
+	public void setDetonator(Entity detonator){
+		if(detonator instanceof EntityPlayerMP)
+			this.detonator = detonator.getUniqueID();
 	}
 
 	public static class ATEntry {

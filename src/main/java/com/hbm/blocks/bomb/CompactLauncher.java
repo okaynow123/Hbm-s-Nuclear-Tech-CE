@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -149,7 +150,7 @@ public class CompactLauncher extends BlockContainer implements IMultiBlock, IBom
 	}
 	
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		TileEntityCompactLauncher entity = (TileEntityCompactLauncher) world.getTileEntity(pos);
 		if(entity.canLaunch()) {
 			entity.launch();

@@ -86,7 +86,7 @@ public class ItemDetonator extends Item {
 				
 				if(!world.isRemote)
 				{
-					((IBomb)world.getBlockState(pos).getBlock()).explode(world, pos);
+					((IBomb)world.getBlockState(pos).getBlock()).explode(world, pos, player);
 		    		if(GeneralConfig.enableExtendedLogging)
 		    			MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by " + player.getDisplayName() + "!");
 				}

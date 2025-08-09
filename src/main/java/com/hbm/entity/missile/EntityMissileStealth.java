@@ -26,7 +26,7 @@ public class EntityMissileStealth extends EntityMissileBaseNT {
 	@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_stealth); }
 	@Override public boolean canBeSeenBy(Object radar) { return false; }
 	
-	@Override public void onImpact() { ExplosionLarge.explode(world, posX, posY, posZ, 20F, true, false, false); }
+	@Override public void onImpact() { ExplosionLarge.explode(world, thrower, posX, posY, posZ, 20F, true, false, false); }
 	@Override public ItemStack getDebrisRareDrop() { return DictFrame.fromOne(ModItems.powder_ash, EnumAshType.MISC); }
 
 }

@@ -246,8 +246,8 @@ public class EntitySchrab extends Entity implements IProjectile {
             {
             	BlockPos schrabPos = new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ);
             	this.world.createExplosion(this, this.posX, this.posY, this.posZ, 2.5F, true);
-            	ExplosionChaos.burn(this.world, schrabPos, 10);
-            	ExplosionChaos.flameDeath(this.world, schrabPos, 20);
+            	ExplosionChaos.burn(this.world, null, schrabPos, 10);
+            	ExplosionChaos.flameDeath(this.world, null, schrabPos, 20);
             	ExplosionNukeGeneric.wasteNoSchrab(this.world, schrabPos, 20);
             	ExplosionChaos.poison(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 20);
             }

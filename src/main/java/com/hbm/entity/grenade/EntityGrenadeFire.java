@@ -38,8 +38,8 @@ public class EntityGrenadeFire extends EntityGrenadeBouncyBase
         {
             this.setDead();
             ExplosionChaos.frag(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 100, true, this.shooter);
-            ExplosionChaos.burn(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
-            ExplosionChaos.flameDeath(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 15);
+            ExplosionChaos.burn(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
+            ExplosionChaos.flameDeath(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 15);
             this.world.playSound(null, (int)this.posX, (int)this.posY, (int)this.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
         }
     }

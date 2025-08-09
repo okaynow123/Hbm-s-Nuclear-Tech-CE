@@ -6,6 +6,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class ExplosionBalefire {
 
@@ -22,6 +25,8 @@ public class ExplosionBalefire {
 	private int shell;
 	private int leg;
 	private int element;
+	@Nullable
+	public UUID detonator = null;
 	
 	public void saveToNbt(NBTTagCompound nbt, String name) {
 		nbt.setInteger(name + "posX", posX);
@@ -36,6 +41,7 @@ public class ExplosionBalefire {
 		nbt.setInteger(name + "shell", shell);
 		nbt.setInteger(name + "leg", leg);
 		nbt.setInteger(name + "element", element);
+		nbt.setUniqueId(name + "detonator", detonator);
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt, String name) {
@@ -51,6 +57,7 @@ public class ExplosionBalefire {
 		shell = nbt.getInteger(name + "shell");
 		leg = nbt.getInteger(name + "leg");
 		element = nbt.getInteger(name + "element");
+		detonator = nbt.getUniqueId(name + "detonator");
 	}
 	
 	public ExplosionBalefire(int x, int y, int z, World world, int rad)

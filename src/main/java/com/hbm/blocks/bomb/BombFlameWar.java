@@ -6,6 +6,7 @@ import com.hbm.interfaces.IBomb;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -22,16 +23,16 @@ public class BombFlameWar extends Block implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if(worldIn.getStrongPower(pos) > 0){
-			explode(worldIn, pos);
+			explode(worldIn, pos, null);
 		}
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
-			ExplosionChaos.explode(world, pos.getX(), pos.getY(), pos.getZ(), 15);
-			ExplosionChaos.spawnExplosion(world, pos.getX(), pos.getY(), pos.getZ(), 75);
-			ExplosionChaos.flameDeath(world, pos, 100);
+			ExplosionChaos.explode(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 15);
+			ExplosionChaos.spawnExplosion(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 75);
+			ExplosionChaos.flameDeath(world, detonator, pos, 100);
 		}
 		return BombReturnCode.DETONATED;
 	}

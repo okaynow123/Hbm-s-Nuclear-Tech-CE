@@ -36,6 +36,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -531,7 +532,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
     public void receiveControl(NBTTagCompound data) { }
 
     @Override
-    public void receiveControl(EntityPlayer player, NBTTagCompound data) {
+    public void receiveControl(EntityPlayerMP player, NBTTagCompound data) {
 
         if(data.hasKey("sgm")) FMLNetworkHandler.openGui(player, MainRegistry.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
         if(data.hasKey("sgf")) FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());

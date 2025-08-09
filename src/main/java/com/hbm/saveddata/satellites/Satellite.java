@@ -1,7 +1,7 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.items.ModItems;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -105,10 +105,12 @@ public abstract class Satellite {
 	
 	/**
 	 * Called by the sat interface when clicking on the screen
-	 * @param x the x-coordinate translated from the on-screen coords to actual world coordinates
-	 * @param z ditto
+	 *
+	 * @param player
+	 * @param x      the x-coordinate translated from the on-screen coords to actual world coordinates
+	 * @param z      ditto
 	 */
-	public void onClick(World world, int x, int z) { }
+	public void onClick(World world, EntityPlayerMP player, int x, int z) { }
 	
 	/**
 	 * Called by the coord sat interface
@@ -116,7 +118,7 @@ public abstract class Satellite {
 	 * @param y ditto
 	 * @param z ditto
 	 */
-	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) { }
+	public void onCoordAction(World world, EntityPlayerMP player, int x, int y, int z) { }
 
 	public abstract float[] getColor();
 }

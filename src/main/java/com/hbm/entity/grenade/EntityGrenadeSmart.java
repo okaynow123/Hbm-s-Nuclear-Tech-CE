@@ -34,7 +34,7 @@ public class EntityGrenadeSmart extends EntityGrenadeBase {
             this.setDead();
             
             if(this.ticksExisted > 10)
-            	ExplosionLarge.explode(world, posX, posY, posZ, 5.0F, true, false, false);
+            	ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5.0F, true, false, false);
             else
             	world.spawnEntity(new EntityItem(world, posX, posY, posZ, new ItemStack(ModItems.grenade_smart)));
         }

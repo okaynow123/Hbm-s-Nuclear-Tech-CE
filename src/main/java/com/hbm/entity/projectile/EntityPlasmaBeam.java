@@ -234,8 +234,8 @@ public class EntityPlasmaBeam extends Entity implements IProjectile {
         if (blockstate.getMaterial() != Material.AIR)
         {
         	if(!world.isRemote) {
-        		ExplosionChaos.burn(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
-        		ExplosionChaos.flameDeath(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
+        		ExplosionChaos.burn(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
+        		ExplosionChaos.flameDeath(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
         		ExplosionThermo.scorchLight(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 3);
         	}
     		this.setDead();
@@ -371,8 +371,8 @@ public class EntityPlasmaBeam extends Entity implements IProjectile {
                             {
                             	RayTraceResult.entityHit.attackEntityFrom(damagesource, 25 + rand.nextInt(20));
                             	if(!world.isRemote) {
-                            		ExplosionChaos.burn(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
-                            		ExplosionChaos.flameDeath(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
+                            		ExplosionChaos.burn(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
+                            		ExplosionChaos.flameDeath(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
                             		ExplosionThermo.scorchLight(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 3);
                             	}
                         		this.setDead();
@@ -404,8 +404,8 @@ public class EntityPlasmaBeam extends Entity implements IProjectile {
             {
             	this.setDead();
             	if(!world.isRemote) {
-            		ExplosionChaos.burn(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
-            		ExplosionChaos.flameDeath(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
+            		ExplosionChaos.burn(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 2);
+            		ExplosionChaos.flameDeath(this.world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 5);
             		ExplosionThermo.scorchLight(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 3);
             	}
             }

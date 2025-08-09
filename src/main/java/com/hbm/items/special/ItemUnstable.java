@@ -10,6 +10,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +44,7 @@ public class ItemUnstable extends Item {
 		this.setTimer(stack, this.getTimer(stack) + 1);
 
 		if(this.getTimer(stack) == timer && !world.isRemote) {
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, radius, entity.posX, entity.posY, entity.posZ));
+			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, radius, entity.posX, entity.posY, entity.posZ).setDetonator(entity));
 
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, entity.posX, entity.posY, entity.posZ, radius);
@@ -61,7 +63,8 @@ public class ItemUnstable extends Item {
 		this.setTimer(itemEntity.getItem(), this.getTimer(itemEntity.getItem()) + 1);
 
 		if(this.getTimer(itemEntity.getItem()) == timer && !world.isRemote) {
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, radius, itemEntity.posX, itemEntity.posY, itemEntity.posZ));
+			EntityPlayerMP thrower = itemEntity.world.getMinecraftServer().getPlayerList().getPlayerByUsername(itemEntity.getThrower());
+			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, radius, itemEntity.posX, itemEntity.posY, itemEntity.posZ).setDetonator(thrower));
 
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, itemEntity.posX, itemEntity.posY, itemEntity.posZ, radius);

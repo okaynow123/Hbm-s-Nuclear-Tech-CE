@@ -3,13 +3,17 @@ package com.hbm.blocks.bomb;
 import com.hbm.blocks.machine.BlockMachineBase;
 import com.hbm.interfaces.IBomb;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.bomb.TileEntityNukeBalefire;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -31,6 +35,12 @@ public class NukeBalefire extends BlockMachineBase implements IBomb {
 	@Override
 	protected boolean rotatable() {
 		return true;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeBalefire balefire && placer instanceof EntityPlayerMP playerMP)
+			balefire.placerID = playerMP.getUniqueID();
 	}
 	
 	@Override
@@ -71,7 +81,7 @@ public class NukeBalefire extends BlockMachineBase implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (world.getStrongPower(pos) > 0) {
-			explode(world, pos);
+			explode(world, pos, null);
 		}
 	}
 
@@ -90,15 +100,19 @@ public class NukeBalefire extends BlockMachineBase implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
-			TileEntityNukeBalefire bomb = (TileEntityNukeBalefire) world.getTileEntity(pos);
-
-			if(bomb.isLoaded()){
-				bomb.explode();
-				return BombReturnCode.DETONATED;
+			if (world.getTileEntity(pos) instanceof TileEntityNukeBalefire bomb){
+				if (bomb.isLoaded()) {
+					ModContext.DETONATOR_CONTEXT.set(detonator);
+					try {
+						bomb.explode();
+					} finally {
+						ModContext.DETONATOR_CONTEXT.remove();
+					}
+					return BombReturnCode.DETONATED;
+				}
 			}
-
 			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
 

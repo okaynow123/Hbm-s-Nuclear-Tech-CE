@@ -65,7 +65,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileNuclear(World world) { super(world); }
 		public EntityMissileNuclear(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius, posX, posY, posZ));
+			this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius, posX, posY, posZ).setDetonator(thrower));
 			EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.missileRadius);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_nuclear); }
@@ -76,7 +76,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileMirv(World world) { super(world); }
 		public EntityMissileMirv(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius * 2, posX, posY, posZ));
+			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius * 2, posX, posY, posZ).setDetonator(thrower));
 			EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.missileRadius * 2);
 		}
 		@Override public List<ItemStack> getDebris() {
@@ -96,7 +96,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileVolcano(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
 			BlockPos pos = new BlockPos((int)Math.floor(posX), (int)Math.floor(posY), (int)Math.floor(posZ));
-			ExplosionLarge.explode(world, posX, posY, posZ, 10.0F, true, true, true);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 10.0F, true, true, true);
 			for(int x = -1; x <= 1; x++) for(int y = -1; y <= 1; y++) for(int z = -1; z <= 1; z++) world.setBlockState(pos, ModBlocks.volcanic_lava_block.getDefaultState());
 			world.setBlockState(pos, ModBlocks.volcano_core.getDefaultState());
 		}
@@ -108,7 +108,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileDoomsday(World world) { super(world); }
 		public EntityMissileDoomsday(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius * 2, posX, posY, posZ).moreFallout(100));
+			this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius * 2, posX, posY, posZ).moreFallout(100).setDetonator(thrower));
 			EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.missileRadius * 2);
 		}
 		@Override public List<ItemStack> getDebris() { return null; }
@@ -131,7 +131,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileN2(World world) { super(world); }
 		public EntityMissileN2(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			this.world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)(BombConfig.n2Radius/12) * 5, posX, posY, posZ));
+			this.world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)(BombConfig.n2Radius/12) * 5, posX, posY, posZ).setDetonator(thrower));
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, this.posX, this.posY, this.posZ, (int)(BombConfig.n2Radius/12) * 5);
 			}

@@ -18,6 +18,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -76,17 +77,21 @@ public class NukeGadget extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ());
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ());
 			}
 		}
 	}
 	
-	public boolean igniteTestBomb(World world, int x, int y, int z) {
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z) {
 		if (!world.isRemote) {
 			
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F); // x,y,z,sound,volume,pitch
-			
-	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.gadgetRadius, x + 0.5, y + 0.5, z + 0.5));
+			EntityNukeExplosionMK5 mk5 = EntityNukeExplosionMK5.statFac(world, BombConfig.gadgetRadius, x + 0.5, y + 0.5, z + 0.5);
+			if (detonator != null){
+				mk5.setDetonator(detonator);
+			} else if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeGadget gadget)
+				mk5.detonator = gadget.placerID;
+	    	world.spawnEntity(mk5);
 			if (BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.gadgetRadius);
 			}
@@ -101,7 +106,7 @@ public class NukeGadget extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityNukeGadget entity = (TileEntityNukeGadget) world.getTileEntity(pos);
 			// if (p_149695_1_.getStrongPower(x, y, z))
@@ -109,7 +114,7 @@ public class NukeGadget extends BlockContainer implements IBomb {
 					this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 					entity.clearSlots();
 					world.setBlockToAir(pos);
-					igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
+					igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ());
 					return BombReturnCode.DETONATED;
 				}
 

@@ -10,6 +10,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityDeathBlast extends Entity implements IConstantRenderer {
 
 	public static final int maxAge = 60;
+	public EntityPlayerMP detonator;
 	
 	public EntityDeathBlast(World worldIn) {
 		super(worldIn);
@@ -32,7 +34,7 @@ public class EntityDeathBlast extends Entity implements IConstantRenderer {
 			this.setDead();
 
 			if(CompatibilityConfig.isWarDim(world)){
-				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, 40, posX, posY, posZ));
+				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, 40, posX, posY, posZ).setDetonator(detonator));
 				
 				int count = 100;
 				for(int i = 0; i < count; i++) {
@@ -45,6 +47,7 @@ public class EntityDeathBlast extends Entity implements IConstantRenderer {
 					laser.motionX = vec.xCoord;
 					laser.motionZ = vec.zCoord;
 					laser.motionY = -0.01;
+					laser.shooter = detonator;
 					world.spawnEntity(laser);
 				}
 			}

@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.UUID;
+
 @AutoRegister
 public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 
@@ -29,12 +31,15 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 			markDirty();
 		};
 	};
-	private String customName;
+	public UUID placerID;
+    private String customName;
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		NBTTagCompound tag = inventory.serializeNBT();
 		compound.setTag("inventory", tag);
+		if (placerID != null)
+			compound.setUniqueId("placer", placerID);
 		return super.writeToNBT(compound);
 	}
 	
@@ -42,6 +47,8 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	public void readFromNBT(NBTTagCompound compound) {
 		if(compound.hasKey("inventory"))
 			inventory.deserializeNBT((NBTTagCompound) compound.getTag("inventory"));
+		if (compound.hasUniqueId("placer"))
+			placerID = compound.getUniqueId("placer");
 		super.readFromNBT(compound);
 	}
 	

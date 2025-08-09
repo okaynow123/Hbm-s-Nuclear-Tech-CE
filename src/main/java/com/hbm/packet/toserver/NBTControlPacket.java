@@ -4,6 +4,7 @@ import com.hbm.interfaces.IControlReceiver;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -69,7 +70,7 @@ public class NBTControlPacket implements IMessage {
 		public IMessage onMessage(NBTControlPacket m, MessageContext ctx) {
 
 			ctx.getServerHandler().player.server.addScheduledTask(() -> {
-				EntityPlayer p = ctx.getServerHandler().player;
+				EntityPlayerMP p = ctx.getServerHandler().player;
 				
 				if(p.world == null)
 					return;

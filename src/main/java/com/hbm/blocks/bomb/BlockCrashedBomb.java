@@ -16,6 +16,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -143,7 +144,7 @@ public class BlockCrashedBomb extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if (!world.isRemote) {
         	
         	world.setBlockToAir(pos);
@@ -152,6 +153,7 @@ public class BlockCrashedBomb extends BlockContainer implements IBomb {
 			bf.posY = pos.getY();
 			bf.posZ = pos.getZ();
 			bf.destructionRange = (int) (BombConfig.fatmanRadius * 1.25);
+			bf.setDetonator(detonator);
 			world.spawnEntity(bf);
 
 			if(BombConfig.enableNukeClouds) {

@@ -11,6 +11,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -187,7 +188,7 @@ public class BlockSeal extends Block implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 
 		if(!world.isRemote) {
 			int i = BlockSeal.getFrameSize(world, pos);

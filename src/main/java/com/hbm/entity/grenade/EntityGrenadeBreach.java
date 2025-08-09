@@ -30,7 +30,7 @@ public class EntityGrenadeBreach extends EntityGrenadeBase {
         {
         	if(rand.nextInt(10) == 0)
         		this.setDead();
-        	ExplosionLarge.explode(world, posX, posY, posZ, 2.5F, false, false, false);
+        	ExplosionLarge.explode(world, thrower, posX, posY, posZ, 2.5F, false, false, false);
         }
     }
 }

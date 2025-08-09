@@ -7,6 +7,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.missile.EntityMissileAntiBallistic;
+import com.hbm.entity.missile.EntityMissileBaseAdvanced;
 import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileStealth;
 import com.hbm.entity.missile.EntityMissileTier0.*;
@@ -14,6 +15,7 @@ import com.hbm.entity.missile.EntityMissileTier1.*;
 import com.hbm.entity.missile.EntityMissileTier2.*;
 import com.hbm.entity.missile.EntityMissileTier3.*;
 import com.hbm.entity.missile.EntityMissileTier4.*;
+import com.hbm.entity.projectile.EntityThrowableInterp;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IBomb.BombReturnCode;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
@@ -29,6 +31,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IRadarCommandReceiver;
@@ -41,6 +44,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
@@ -370,6 +374,13 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 	}
 	
 	public void finalizeLaunch(Entity missile) {
+		Entity detonatorEntity = ModContext.DETONATOR_CONTEXT.get();
+		if (detonatorEntity instanceof EntityLivingBase entityLivingBase){
+			if (missile instanceof EntityThrowableInterp throwableInterp)
+				throwableInterp.setThrower(entityLivingBase);
+			else if (missile instanceof EntityMissileBaseAdvanced missileBaseAdvanced)
+				missileBaseAdvanced.setThrower(entityLivingBase);
+		}
 		world.spawnEntity(missile);
 		TrackerUtil.setTrackingRange(world, missile, 500);
 		world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, HBMSoundHandler.missileTakeoff, SoundCategory.BLOCKS,  2.0F, 1.0F);

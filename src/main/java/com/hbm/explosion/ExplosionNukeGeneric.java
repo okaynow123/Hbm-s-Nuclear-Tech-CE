@@ -42,7 +42,7 @@ public class ExplosionNukeGeneric {
     private final static Random random = new Random();
     public static Map<Block, Block> soliniumConfig = new HashMap<>();
 
-    public static void empBlast(World world, int x, int y, int z, int bombStartStrength) {
+    public static void empBlast(World world, Entity detonator, int x, int y, int z, int bombStartStrength) {
         if (!CompatibilityConfig.isWarDim(world)) {
             return;
         }

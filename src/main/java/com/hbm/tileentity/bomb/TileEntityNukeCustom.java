@@ -27,12 +27,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 @AutoRegister
 public class TileEntityNukeCustom extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;
 	private String customName;
+	public UUID placerID;
 	
 	public TileEntityNukeCustom() {
 		inventory = new ItemStackHandler(27){

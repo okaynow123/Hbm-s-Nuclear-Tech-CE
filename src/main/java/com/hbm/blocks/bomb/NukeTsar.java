@@ -18,8 +18,10 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -78,22 +80,22 @@ public class NukeTsar extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius);
 			}else if(isStage1Filled) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/2);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/2);
 			}else if(isStage2Filled) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/3);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/3);
 			}else if(isReady) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/5);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius/5);
 			}			
 		}
 	}
@@ -101,13 +103,17 @@ public class NukeTsar extends BlockContainer implements IBomb {
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
+		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeTsar tsar && placer instanceof EntityPlayerMP playerMP)
+			tsar.placerID = placer.getUniqueID();
 	}
 
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r) {
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r) {
 		if(!world.isRemote) {
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F);
-
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, r, x + 0.5, y + 0.5, z + 0.5));
+			var mk5 = EntityNukeExplosionMK5.statFac(world, r, x + 0.5, y + 0.5, z + 0.5).setDetonator(detonator);
+			if (detonator == null && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeTsar tsar)
+				mk5.detonator = tsar.placerID;
+			world.spawnEntity(mk5);
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, r);
 			}
@@ -116,7 +122,7 @@ public class NukeTsar extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World worldIn, BlockPos pos) {
+	public BombReturnCode explode(World worldIn, BlockPos pos, Entity detonator) {
 		if(!worldIn.isRemote) {
 			TileEntityNukeTsar entity = (TileEntityNukeTsar) worldIn.getTileEntity(pos);
 			boolean isReady = entity.isReady();
@@ -127,25 +133,25 @@ public class NukeTsar extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius);
+				igniteTestBomb(worldIn, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius);
 				return BombReturnCode.DETONATED;
 			} else if (isStage1Filled) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 2);
+				igniteTestBomb(worldIn, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 2);
 				return BombReturnCode.DETONATED;
 			} else if (isStage2Filled) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 3);
+				igniteTestBomb(worldIn, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 3);
 				return BombReturnCode.DETONATED;
 			} else if (isReady) {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 5);
+				igniteTestBomb(worldIn, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.tsarRadius / 5);
 				return BombReturnCode.DETONATED;
 			}
 

@@ -41,6 +41,7 @@ public class ExplosionNukeRayBatched implements IExplosionRay {
 
 	private boolean isAusf3Complete = false;
 	private int rayCheckInterval = 100;
+	private UUID detonator;
 
 	public ExplosionNukeRayBatched(World world, int x, int y, int z, int strength, int radius) {
 		this.world = world;
@@ -199,6 +200,11 @@ public class ExplosionNukeRayBatched implements IExplosionRay {
 	@Override
 	public boolean isContained() {
 		return isContained;
+	}
+
+	@Override
+	public void setDetonator(UUID detonator) {
+		this.detonator = detonator;
 	}
 
 	/** little comparator for roughly sorting chunks by distance to the center */

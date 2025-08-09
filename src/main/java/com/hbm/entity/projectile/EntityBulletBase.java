@@ -528,7 +528,7 @@ public class EntityBulletBase extends Entity implements IProjectile {
 		}
 
 		if (config.emp > 0)
-			ExplosionNukeGeneric.empBlast(this.world, (int) (this.posX + 0.5D), (int) (this.posY + 0.5D), (int) (this.posZ + 0.5D), config.emp);
+			ExplosionNukeGeneric.empBlast(this.world, shooter, (int) (this.posX + 0.5D), (int) (this.posY + 0.5D), (int) (this.posZ + 0.5D), config.emp);
 
 		if (config.emp > 3) {
 			if (!this.world.isRemote) {
@@ -543,7 +543,7 @@ public class EntityBulletBase extends Entity implements IProjectile {
 		}
 
 		if (config.jolt > 0 && !world.isRemote)
-			ExplosionLarge.jolt(world, posX, posY, posZ, config.jolt, 150, 0.25);
+			ExplosionLarge.jolt(world, shooter, posX, posY, posZ, config.jolt, 150, 0.25);
 
 		if (config.explosive > 0 && !world.isRemote)
 			world.newExplosion(this, posX, posY, posZ, config.explosive, config.incendiary > 0, config.blockDamage);
@@ -578,7 +578,7 @@ public class EntityBulletBase extends Entity implements IProjectile {
 		}
 
 		if (config.nuke > 0 && !world.isRemote) {
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, config.nuke, posX, posY, posZ));
+			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, config.nuke, posX, posY, posZ).setDetonator(shooter));
 			
 			if(BombConfig.enableNukeClouds) {
 				if(MainRegistry.polaroidID == 11 || rand.nextInt(100) == 0){

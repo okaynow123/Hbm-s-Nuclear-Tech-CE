@@ -4,12 +4,14 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.IBomb;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.bomb.TileEntityLaunchPad;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -71,12 +73,19 @@ public class LaunchPad extends Block implements IBomb, ITileEntityProvider {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if (world.isRemote) return BombReturnCode.UNDEFINED;
 
 		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof TileEntityLaunchPad) {
-			return ((TileEntityLaunchPad) te).launchFromDesignator();
+		if (te instanceof TileEntityLaunchPad launchPad) {
+			ModContext.DETONATOR_CONTEXT.set(detonator);
+			BombReturnCode result;
+			try {
+				result = launchPad.launchFromDesignator();
+			} finally {
+				ModContext.DETONATOR_CONTEXT.remove();
+			}
+			return result;
 		}
 		return BombReturnCode.UNDEFINED;
 	}

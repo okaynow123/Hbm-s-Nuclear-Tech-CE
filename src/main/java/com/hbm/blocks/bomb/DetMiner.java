@@ -8,6 +8,7 @@ import com.hbm.interfaces.IBomb;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
@@ -32,11 +33,11 @@ public class DetMiner extends Block implements IBomb {
 	}
 	
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 
 			world.destroyBlock(pos, false);
-			ExplosionNT explosion = new ExplosionNT(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 4);
+			ExplosionNT explosion = new ExplosionNT(world, detonator, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 4);
 			explosion.atttributes.add(ExAttrib.ALLDROP);
 			explosion.atttributes.add(ExAttrib.NOHURT);
 			explosion.explode();
@@ -49,14 +50,14 @@ public class DetMiner extends Block implements IBomb {
 	
 	@Override
 	public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn) {
-		this.explode(worldIn, pos);
+		this.explode(worldIn, pos, explosionIn.exploder);
 	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (world.getStrongPower(pos) > 0)
         {
-        	this.explode(world, pos);
+        	this.explode(world, pos, null);
         }
 	}
 

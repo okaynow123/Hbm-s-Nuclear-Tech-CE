@@ -50,7 +50,7 @@ public class EntityMIRV extends EntityThrowable implements IChunkLoader, IConsta
 	
 
 	private void killMissile() {
-		ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+		ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5, true, false, true);
 		ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
 	}
 	public EntityMIRV(World worldIn) {
@@ -81,7 +81,7 @@ public class EntityMIRV extends EntityThrowable implements IChunkLoader, IConsta
         {
     		if(!this.world.isRemote)
     		{
-    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.mirvRadius, posX, posY, posZ));
+    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.mirvRadius, posX, posY, posZ).setDetonator(thrower));
     	    	if(BombConfig.enableNukeClouds) {
 					EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.mirvRadius);
 				}

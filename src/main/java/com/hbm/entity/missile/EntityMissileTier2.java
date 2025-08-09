@@ -44,7 +44,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		public EntityMissileStrong(World world) { super(world); }
 		public EntityMissileStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact()  {
-			ExplosionLarge.explode(world, posX, posY, posZ, 30.0F, true, true, true);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 30.0F, true, true, true);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_generic_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_strong); }
@@ -54,8 +54,8 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		public EntityMissileIncendiaryStrong(World world) { super(world); }
 		public EntityMissileIncendiaryStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionLarge.explodeFire(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 30.0F, true, true, true);
-			ExplosionChaos.flameDeath(this.world, new BlockPos((int)((float)this.posX + 0.5F), (int)((float)this.posY + 0.5F), (int)((float)this.posZ + 0.5F)), 25);
+			ExplosionLarge.explodeFire(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 30.0F, true, true, true);
+			ExplosionChaos.flameDeath(this.world, thrower, new BlockPos((int)((float)this.posX + 0.5F), (int)((float)this.posY + 0.5F), (int)((float)this.posZ + 0.5F)), 25);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_incendiary_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_incendiary_strong); }
@@ -65,7 +65,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		public EntityMissileClusterStrong(World world) { super(world); }
 		public EntityMissileClusterStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); this.isCluster = true; }
 		@Override public void onImpact() {
-			ExplosionLarge.explode(world, this.posX, this.posY, this.posZ, 15F, true, false, false);
+			ExplosionLarge.explode(world, thrower, this.posX, this.posY, this.posZ, 15F, true, false, false);
 			ExplosionChaos.cluster(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 50, 100);
 		}
 		@Override public void cluster() { this.onImpact(); }
@@ -77,7 +77,7 @@ public abstract class EntityMissileTier2 extends EntityMissileBaseNT {
 		public EntityMissileBusterStrong(World world) { super(world); }
 		public EntityMissileBusterStrong(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionLarge.buster(world, this.posX, this.posY, this.posZ, new Vec3d(motionX, motionY, motionZ), 25, 20);
+			ExplosionLarge.buster(world, thrower, this.posX, this.posY, this.posZ, new Vec3d(motionX, motionY, motionZ), 25, 20);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_buster_medium); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_buster_strong); }

@@ -18,8 +18,10 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -75,7 +77,7 @@ public class NukeN2 extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
 			}
 		}
 	}
@@ -83,15 +85,20 @@ public class NukeN2 extends BlockContainer implements IBomb {
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
+		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeN2 n2 && placer instanceof EntityPlayerMP) {
+			n2.placerID = placer.getUniqueID();
+		}
 	}
 	
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r)
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r)
 	{
 		if (!world.isRemote)
 		{
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F);
-
-	    	world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, r, x + 0.5, y + 0.5, z + 0.5));
+			var mk5 = EntityNukeExplosionMK5.statFacNoRad(world, r, x + 0.5, y + 0.5, z + 0.5).setDetonator(detonator);
+			if (detonator == null && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeN2 n2)
+				mk5.detonator = n2.placerID;
+	    	world.spawnEntity(mk5);
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, r);
 			}
@@ -101,7 +108,7 @@ public class NukeN2 extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityNukeN2 entity = (TileEntityNukeN2) world.getTileEntity(pos);
 			int charges = entity.countCharges();
@@ -109,7 +116,7 @@ public class NukeN2 extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
+				igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), (int)(BombConfig.n2Radius*charges/12F));
 				return BombReturnCode.DETONATED;
 			}
 

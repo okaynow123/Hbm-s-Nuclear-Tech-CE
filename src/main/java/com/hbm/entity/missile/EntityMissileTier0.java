@@ -48,7 +48,7 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
 			if (!this.world.isRemote)
 			{
 
-				this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ));
+				this.world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ).setDetonator(thrower));
 
 				if(MainRegistry.polaroidID == 11 || rand.nextInt(100) == 0){
 					EntityNukeTorex.statFacBale(world, this.posX, this.posY, this.posZ, BombConfig.fatmanRadius);
@@ -127,7 +127,7 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
 		public EntityMissileEMP(World world) { super(world); }
 		public EntityMissileEMP(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionNukeGeneric.empBlast(world, (int)posX, (int)posY, (int)posZ, 50);
+			ExplosionNukeGeneric.empBlast(world, null, (int)posX, (int)posY, (int)posZ, 50);
 			EntityEMPBlast wave = new EntityEMPBlast(world, 50);
 			wave.posX = posX;
 			wave.posY = posY;

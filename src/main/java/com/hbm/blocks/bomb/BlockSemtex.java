@@ -11,6 +11,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -40,20 +41,20 @@ public class BlockSemtex extends Block implements IBomb {
 
 	@Override
 	public void onExplosionDestroy(World worldIn, BlockPos pos, Explosion explosionIn){
-		this.explode(worldIn, pos);
+		this.explode(worldIn, pos, explosionIn.exploder);
 	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos){
 		if(worldIn.getStrongPower(pos) > 0){
-			this.explode(worldIn, pos);
+			this.explode(worldIn, pos, null);
 		}
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
-			new ExplosionNT(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 50).overrideResolution(64).explode();
+			new ExplosionNT(world, detonator, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 50).overrideResolution(64).explode();
 			ExplosionLarge.spawnParticles(world, pos.getX(), pos.getY(), pos.getZ(), ExplosionLarge.cloudFunction(15));
 
 			return BombReturnCode.DETONATED;

@@ -62,7 +62,7 @@ public class TileEntityLandmine extends TileEntity implements ITickable {
 			} else {
 				if (entity instanceof EntityLivingBase) {
 					if (isPrimed) {
-						landmine.explode(world, pos);
+						landmine.explode(world, pos, entity);
 
 						if (entity instanceof EntityPlayer) {
 							//((EntityPlayer) entity).addStat(MainRegistry.statMines, 1); //FIXME Unsure what this is

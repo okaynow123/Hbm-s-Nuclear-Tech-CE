@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ExplosionThermo {
 
-	public static void freeze(World world, int x, int y, int z, int bombStartStrength) {
+	public static void freeze(World world, Entity detonator, int x, int y, int z, int bombStartStrength) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -52,7 +52,7 @@ public class ExplosionThermo {
 		}
 	}
 
-	public static void scorch(World world, int x, int y, int z, int bombStartStrength) {
+	public static void scorch(World world, Entity detonator, int x, int y, int z, int bombStartStrength) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -346,7 +346,7 @@ public class ExplosionThermo {
 			world.setBlockState(pos, Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.values()[world.rand.nextInt(16)]));
 		}
 	}
-	public static void snow(World world, int x, int y, int z, int bound) {
+	public static void snow(World world, Entity detonator, int x, int y, int z, int bound) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}

@@ -258,7 +258,7 @@ public class EntityDischarge extends Entity implements IProjectile {
 				this.world.spawnEntity(cloud);
 			}
 			
-			ExplosionNukeGeneric.empBlast(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 10);
+			ExplosionNukeGeneric.empBlast(this.world, shootingEntity, (int)this.posX, (int)this.posY, (int)this.posZ, 10);
         }
         else
         {
@@ -456,7 +456,7 @@ public class EntityDischarge extends Entity implements IProjectile {
 				this.world.spawnEntity(cloud);
 			}
 			
-			ExplosionNukeGeneric.empBlast(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 10);
+			ExplosionNukeGeneric.empBlast(this.world, shootingEntity, (int)this.posX, (int)this.posY, (int)this.posZ, 10);
 			
 			this.setDead();
 		}

@@ -219,7 +219,7 @@ public class EntityRocketHoming extends Entity implements IProjectile {
         {
             if (!this.world.isRemote)
             {
-            	ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+            	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 5, true, false, true);
             }
         	this.setDead();
         }
@@ -345,7 +345,7 @@ public class EntityRocketHoming extends Entity implements IProjectile {
                             if (!this.world.isRemote)
                             {
                             	//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2.5F, true);
-                            	ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+                            	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 5, true, false, true);
                             }
                         	this.setDead();
                         }
@@ -355,7 +355,7 @@ public class EntityRocketHoming extends Entity implements IProjectile {
                         if (!this.world.isRemote)
                         {
                         	//this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2.5F, true);
-                        	ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+                        	ExplosionLarge.explode(world, shootingEntity, posX, posY, posZ, 5, true, false, true);
                         }
                     	this.setDead();
                     }

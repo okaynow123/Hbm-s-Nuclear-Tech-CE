@@ -18,8 +18,10 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -74,7 +76,7 @@ public class NukeSolinium extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
 			}
 		}
 	}
@@ -82,9 +84,11 @@ public class NukeSolinium extends BlockContainer implements IBomb {
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
+		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeSolinium solinium && placer instanceof EntityPlayerMP playerMP)
+			solinium.placerID = playerMP.getUniqueID();
 	}
 
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r) {
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r) {
 		if(!world.isRemote) {
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F);
 
@@ -97,7 +101,10 @@ public class NukeSolinium extends BlockContainer implements IBomb {
 			entity.coefficient = 1.0F;
 			entity.waste = false;
 			entity.extType = 1;
-
+			if (detonator != null)
+				entity.setDetonator(detonator);
+			else if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeSolinium solinium)
+				entity.detonator = solinium.placerID;
 			world.spawnEntity(entity);
 
 			EntityCloudSolinium cloud = new EntityCloudSolinium(world, r);
@@ -111,14 +118,14 @@ public class NukeSolinium extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityNukeSolinium entity = (TileEntityNukeSolinium) world.getTileEntity(pos);
 			if (entity.isReady()) {
 				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
+				igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.soliniumRadius);
 				return BombReturnCode.DETONATED;
 			}
 

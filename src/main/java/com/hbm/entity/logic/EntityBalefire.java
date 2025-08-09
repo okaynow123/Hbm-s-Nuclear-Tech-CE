@@ -7,6 +7,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
@@ -16,9 +17,12 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @AutoRegister(name = "entity_balefire", trackingRange = 1000)
 public class EntityBalefire extends Entity implements IChunkLoader {
 
@@ -28,6 +32,8 @@ public class EntityBalefire extends Entity implements IChunkLoader {
 	public int speed = 1;
 	public boolean did = false;
 	private Ticket loaderTicket;
+	@Nullable
+	public UUID detonator = null;
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -71,7 +77,7 @@ public class EntityBalefire extends Entity implements IChunkLoader {
     			MainRegistry.logger.log(Level.INFO, "[NUKE] Initialized BF explosion at " + posX + " / " + posY + " / " + posZ + " with strength " + destructionRange + "!");
     		
         	exp = new ExplosionBalefire((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange);
-        	
+        	exp.detonator = detonator;
         	this.did = true;
         }
         
@@ -123,6 +129,11 @@ public class EntityBalefire extends Entity implements IChunkLoader {
                 ForgeChunkManager.forceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ));
             }
         }
+	}
+
+	public void setDetonator(Entity detonator){
+		if (detonator instanceof EntityPlayerMP)
+			this.detonator = detonator.getUniqueID();
 	}
 
 	List<ChunkPos> loadedChunks = new ArrayList<ChunkPos>();

@@ -297,7 +297,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.world, (int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z, 30);
             ExplosionChaos.burn(
                 rocket.world,
-                new BlockPos((int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z),
+                    null, new BlockPos((int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z),
                 20);
             int radius = 30;
             List<Entity> hit =

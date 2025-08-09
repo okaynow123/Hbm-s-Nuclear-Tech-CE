@@ -59,11 +59,11 @@ public class EntityDuchessGambit extends EntityThrowable {
 	    			e.attackEntityFrom(ModDamageSource.boat, 1000);
 	    		}
 
-        		ExplosionLarge.explode(world, posX, posY, posZ - 6, 2, true, false, false);
-        		ExplosionLarge.explode(world, posX, posY, posZ - 3, 2, true, false, false);
-        		ExplosionLarge.explode(world, posX, posY, posZ, 2, true, false, false);
-        		ExplosionLarge.explode(world, posX, posY, posZ + 3, 2, true, false, false);
-        		ExplosionLarge.explode(world, posX, posY, posZ + 6, 2, true, false, false);
+        		ExplosionLarge.explode(world, thrower, posX, posY, posZ - 6, 2, true, false, false);
+        		ExplosionLarge.explode(world, thrower, posX, posY, posZ - 3, 2, true, false, false);
+        		ExplosionLarge.explode(world, thrower, posX, posY, posZ, 2, true, false, false);
+        		ExplosionLarge.explode(world, thrower, posX, posY, posZ + 3, 2, true, false, false);
+        		ExplosionLarge.explode(world, thrower, posX, posY, posZ + 6, 2, true, false, false);
         		
     			world.setBlockState(new BlockPos((int)(this.posX - 0.5), (int)(this.posY + 0.5), (int)(this.posZ - 0.5)), ModBlocks.boat.getDefaultState());
     		}

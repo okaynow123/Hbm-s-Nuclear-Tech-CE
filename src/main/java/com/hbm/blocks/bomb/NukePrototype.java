@@ -19,6 +19,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -67,7 +68,7 @@ public class NukePrototype extends BlockContainer implements IBomb {
         		this.onPlayerDestroy(world, pos, world.getBlockState(pos));
             	entity.clearSlots();
             	world.setBlockToAir(pos);
-            	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
+            	igniteTestBomb(world, player, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
 			}
 			return true;
 		} else if(!player.isSneaking())
@@ -89,7 +90,7 @@ public class NukePrototype extends BlockContainer implements IBomb {
         		this.onPlayerDestroy(worldIn, pos, worldIn.getBlockState(pos));
             	entity.clearSlots();
             	worldIn.setBlockToAir(pos);
-            	igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
+            	igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
         	}
         }
 	}
@@ -99,7 +100,7 @@ public class NukePrototype extends BlockContainer implements IBomb {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
 	}
 	
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r)
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r)
 	{
 		if (!world.isRemote)
 		{
@@ -109,6 +110,10 @@ public class NukePrototype extends BlockContainer implements IBomb {
 			entity.posX = x;
     		entity.posY = y;
     		entity.posZ = z;
+			if(detonator != null)
+				entity.setDetonator(detonator);
+			else if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukePrototype prototype)
+				entity.detonator = prototype.placerID;
 			if(!EntityNukeExplosionMK3.isJammed(world, entity)){
 	    		entity.destructionRange = r;
 	    		entity.speed = BombConfig.blastSpeed;
@@ -129,7 +134,7 @@ public class NukePrototype extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 		TileEntityNukePrototype entity = (TileEntityNukePrototype) world.getTileEntity(pos);
         //if (world.getStrongPower(x, y, z))
@@ -138,7 +143,7 @@ public class NukePrototype extends BlockContainer implements IBomb {
         		this.onPlayerDestroy(world, pos, world.getBlockState(pos));
             	entity.clearSlots();
             	world.setBlockToAir(pos);
-            	igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
+            	igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.prototypeRadius);
 				return BombReturnCode.DETONATED;
 			}
 

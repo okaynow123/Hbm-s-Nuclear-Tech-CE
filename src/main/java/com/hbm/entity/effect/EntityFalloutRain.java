@@ -48,6 +48,7 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 	private final Map<ChunkPos, BitSet> drainMap = new HashMap<>();
 	private final List<ChunkPos> orderedDrainChunks = new ArrayList<>();
 	private List<BlockPos> drainedList = new ArrayList<>();
+	public UUID detonator;
 
 	public EntityFalloutRain(World world) {
 		super(world);
@@ -445,6 +446,8 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 		doFlood = nbt.getBoolean("doFlood");
 		stompingDone = nbt.getBoolean("stompingDone");
 		drainFinished = nbt.getBoolean("drainFinished");
+		if (nbt.hasKey("detonator"))
+			detonator = nbt.getUniqueId("detonator");
 		if (stompingDone && !drainFinished) {
 			if (nbt.hasKey("drainMap", Constants.NBT.TAG_LIST)) {
 				NBTTagList list = nbt.getTagList("drainMap", Constants.NBT.TAG_COMPOUND);
@@ -499,6 +502,8 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 		nbt.setIntArray("chunks", writeChunksToIntArray(chunksToProcess));
 		nbt.setIntArray("outerChunks", writeChunksToIntArray(outerChunksToProcess));
 
+		if (detonator != null)
+			nbt.setUniqueId("detonator", detonator);
 		if (stompingDone && !drainFinished) {
 			if (!this.drainMap.isEmpty()) {
 				NBTTagList list = new NBTTagList();

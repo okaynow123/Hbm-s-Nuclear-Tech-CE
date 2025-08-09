@@ -268,7 +268,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
     protected void killMissile() {
         if (!this.isDead) {
             this.setDead();
-            ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+            ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5, true, false, true);
             ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
             ExplosionLarge.spawnMissileDebris(world, posX, posY, posZ, motionX, motionY, motionZ, 0.25, getDebris(), getDebrisRareDrop());
         }

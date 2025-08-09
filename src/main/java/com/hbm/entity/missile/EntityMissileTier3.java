@@ -61,7 +61,7 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 		public EntityMissileBurst(World world) { super(world); }
 		public EntityMissileBurst(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact()  {
-			ExplosionLarge.explode(world, posX, posY, posZ, 50.0F, true, true, true);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 50.0F, true, true, true);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_generic_large); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_burst); }
@@ -71,9 +71,9 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 		public EntityMissileInferno(World world) { super(world); }
 		public EntityMissileInferno(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			ExplosionLarge.explodeFire(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 50.0F, true, true, true);
-			ExplosionChaos.burn(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 10);
-			ExplosionChaos.flameDeath(this.world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 25);
+			ExplosionLarge.explodeFire(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 50.0F, true, true, true);
+			ExplosionChaos.burn(this.world, thrower, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 10);
+			ExplosionChaos.flameDeath(this.world, thrower, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 25);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_incendiary_large); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_inferno); }
@@ -103,7 +103,7 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 			}
 			ExplosionLarge.spawnParticles(world, this.posX, this.posY, this.posZ, 25);
 			ExplosionLarge.spawnShrapnels(world, this.posX, this.posY, this.posZ, 12);
-			ExplosionLarge.jolt(world, this.posX, this.posY, this.posZ, 10, 50, 1);
+			ExplosionLarge.jolt(world, thrower, this.posX, this.posY, this.posZ, 10, 50, 1);
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_buster_large); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_drill); }
@@ -114,7 +114,7 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 		public EntityMissileEndo(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override
 		public void onImpact() {
-			ExplosionThermo.freeze(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 30);
+			ExplosionThermo.freeze(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, 30);
 			ExplosionThermo.freezer(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 40);
 		}
 		@Override
@@ -130,7 +130,7 @@ public abstract class EntityMissileTier3 extends EntityMissileBaseNT {
 		public EntityMissileExo(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override
 		public void onImpact() {
-			ExplosionThermo.scorch(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 30);
+			ExplosionThermo.scorch(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, 30);
 			ExplosionThermo.setEntitiesOnFire(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, 40);
 		}
 		@Override

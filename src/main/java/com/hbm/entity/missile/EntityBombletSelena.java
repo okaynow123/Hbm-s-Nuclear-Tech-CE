@@ -46,8 +46,8 @@ public class EntityBombletSelena extends EntityThrowable {
         {
     		if(!this.world.isRemote)
     		{
-    			ExplosionLarge.explodeFire(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 20.0F, true, true, true);
-    			ExplosionChaos.flameDeath(this.world, new BlockPos((int)((float)this.posX + 0.5F), (int)((float)this.posY + 0.5F), (int)((float)this.posZ + 0.5F)), 25);
+    			ExplosionLarge.explodeFire(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 20.0F, true, true, true);
+    			ExplosionChaos.flameDeath(this.world, thrower, new BlockPos((int)((float)this.posX + 0.5F), (int)((float)this.posY + 0.5F), (int)((float)this.posZ + 0.5F)), 25);
     		}
     		this.setDead();
         }

@@ -38,7 +38,7 @@ public class EntityBurningFOEQ extends EntityThrowable implements IConstantRende
         {
     		if(!this.world.isRemote && CompatibilityConfig.isWarDim(world)) {
     			for(int i = 0; i < 25; i++)
-    				ExplosionLarge.explode(world, this.posX + 0.5F + rand.nextGaussian() * 5, this.posY + 0.5F + rand.nextGaussian() * 5, this.posZ + 0.5F + rand.nextGaussian() * 5, 10.0F, rand.nextBoolean(), false, false);
+    				ExplosionLarge.explode(world, thrower, this.posX + 0.5F + rand.nextGaussian() * 5, this.posY + 0.5F + rand.nextGaussian() * 5, this.posZ + 0.5F + rand.nextGaussian() * 5, 10.0F, rand.nextBoolean(), false, false);
     			ExplosionNukeGeneric.waste(world, (int)this.posX, (int)this.posY, (int)this.posZ, 35);
     		}
     		this.setDead();

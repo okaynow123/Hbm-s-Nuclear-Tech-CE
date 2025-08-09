@@ -98,7 +98,7 @@ public class ItemMultiDetonator extends Item {
 					if (world.getBlockState(pos).getBlock() instanceof IBomb) {
 						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 						if (!world.isRemote) {
-							((IBomb) world.getBlockState(pos).getBlock()).explode(world, pos);
+							((IBomb) world.getBlockState(pos).getBlock()).explode(world, pos, player);
 
 				    		if(GeneralConfig.enableExtendedLogging)
 				    			MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by " + player.getDisplayName() + "!");

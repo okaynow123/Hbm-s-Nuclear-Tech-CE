@@ -68,7 +68,7 @@ public class EntityMinerRocket extends Entity {
 			posY = (int)posY;
 		} else if(!world.isRemote && !world.isAirBlock(new BlockPos((int)(posX - 0.5), (int)(posY + 1), (int)(posZ - 0.5))) && this.getDataManager().get(TIMER) != 1) {
 			this.setDead();
-			ExplosionLarge.explodeFire(world, posX - 0.5, posY, posZ - 0.5, 10F, true, false, true);
+			ExplosionLarge.explodeFire(world, null, posX - 0.5, posY, posZ - 0.5, 10F, true, false, true);
 		}
 		
 		if(this.getDataManager().get(TIMER) == 1) {

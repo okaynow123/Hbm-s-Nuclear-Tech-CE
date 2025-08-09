@@ -273,7 +273,7 @@ public class ItemAmmoArty extends Item {
             public void onImpact(EntityArtilleryShell shell, RayTraceResult mop) {
                 standardExplosion(shell, mop, 10F, 3F, false);
                 ExplosionLarge.spawnShrapnels(shell.world, (int) mop.hitVec.x, (int) mop.hitVec.y, (int) mop.hitVec.z, 15);
-                ExplosionChaos.burn(shell.world, new BlockPos(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z), 12);
+                ExplosionChaos.burn(shell.world, null, new BlockPos(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z), 12);
                 int radius = 15;
                 List<Entity> hit = shell.world.getEntitiesWithinAABBExcludingEntity(shell, new AxisAlignedBB(shell.posX - radius, shell.posY - radius, shell.posZ - radius, shell.posX + radius, shell.posY + radius, shell.posZ + radius));
                 for(Entity e : hit) {

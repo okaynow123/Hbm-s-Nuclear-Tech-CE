@@ -9,6 +9,7 @@ import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -28,22 +29,22 @@ public class BombFloat extends Block implements IBomb {
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (worldIn.getStrongPower(pos) > 0)
         {
-        	explode(worldIn, pos);
+        	explode(worldIn, pos, null);
         }
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.sparkShoot, SoundCategory.BLOCKS, 5.0f, world.rand.nextFloat() * 0.2F + 0.9F);
 		
 		if(!world.isRemote) {
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
     		if(this == ModBlocks.float_bomb) {
-            	ExplosionChaos.floater(world, pos, 15, 50);
+            	ExplosionChaos.floater(world, detonator, pos, 15, 50);
             	ExplosionChaos.move(world, pos, 15, 0, 50, 0);
     		}
     		if(this == ModBlocks.emp_bomb) {
-    			ExplosionNukeGeneric.empBlast(world, pos.getX(), pos.getY(), pos.getZ(), 50);
+    			ExplosionNukeGeneric.empBlast(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 50);
     			EntityEMPBlast wave = new EntityEMPBlast(world, 50);
     			wave.posX = pos.getX() + 0.5;
     			wave.posY = pos.getY() + 0.5;

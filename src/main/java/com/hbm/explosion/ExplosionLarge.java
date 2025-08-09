@@ -11,6 +11,7 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -102,7 +103,7 @@ public class ExplosionLarge {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void jolt(World world, double posX, double posY, double posZ, double strength, int count, double vel) {
+	public static void jolt(World world, Entity detonator, double posX, double posY, double posZ, double strength, int count, double vel) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -211,9 +212,9 @@ public class ExplosionLarge {
 		}
 	}
 
-	public static void explode(World world, double x, double y, double z, float strength, boolean cloud, boolean rubble, boolean shrapnel) {
+	public static void explode(World world, Entity detonator, double x, double y, double z, float strength, boolean cloud, boolean rubble, boolean shrapnel) {
 		if(CompatibilityConfig.isWarDim(world)){
-			world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)strength, x, y, z));
+			world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)strength, x, y, z).setDetonator(detonator));
 		
 			ContaminationUtil.radiate(world, x, y, z, strength, 0, 0, 0, strength*15F);
 		}
@@ -238,9 +239,9 @@ public class ExplosionLarge {
 		return i / 3;
 	}
 	
-	public static void explodeFire(World world, double x, double y, double z, float strength, boolean cloud, boolean rubble, boolean shrapnel) {
+	public static void explodeFire(World world, Entity detonator, double x, double y, double z, float strength, boolean cloud, boolean rubble, boolean shrapnel) {
 		if(CompatibilityConfig.isWarDim(world)){
-			world.spawnEntity(EntityNukeExplosionMK5.statFacNoRadFire(world, (int)strength, x, y, z));
+			world.spawnEntity(EntityNukeExplosionMK5.statFacNoRadFire(world, (int)strength, x, y, z).setDetonator(detonator));
 			
 			ContaminationUtil.radiate(world, x, y, z, strength, 0, 0, strength*20F, strength*5F);
 		}
@@ -266,14 +267,14 @@ public class ExplosionLarge {
 		}
 	}
 	
-	public static void buster(World world, double x, double y, double z, Vec3d vector, float strength, float depth) {
+	public static void buster(World world, Entity detonator, double x, double y, double z, Vec3d vector, float strength, float depth) {
 		
 		vector = vector.normalize();
 		if(CompatibilityConfig.isWarDim(world)){
 			for(int i = 0; i <= depth; i += 3) {
 				
 				ContaminationUtil.radiate(world, x + vector.x * i, y + vector.y * i, z + vector.z * i, strength, 0, 0, 0, strength*10F);
-				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)strength, x + vector.x * i, y + vector.y * i, z + vector.z * i));
+				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)strength, x + vector.x * i, y + vector.y * i, z + vector.z * i).setDetonator(detonator));
 			}
 		}
 		spawnParticles(world, x, y+2, z, cloudFunction((int)strength));

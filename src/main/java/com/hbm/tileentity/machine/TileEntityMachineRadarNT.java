@@ -39,6 +39,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -441,7 +442,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 	@Override public void receiveControl(NBTTagCompound data) { }
 
 	@Override
-	public void receiveControl(EntityPlayer player, NBTTagCompound data) {
+	public void receiveControl(EntityPlayerMP player, NBTTagCompound data) {
 
 		if(data.hasKey("missiles")) this.scanMissiles = !this.scanMissiles;
 		if(data.hasKey("shells")) this.scanShells = !this.scanShells;
@@ -465,7 +466,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 						int x = data.getInteger("launchPosX");
 						int z = data.getInteger("launchPosZ");
 						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
-						sat.onClick(world, x, z);
+						sat.onClick(world, player, x, z);
 					}
 				}
 				if(sat instanceof SatelliteHorizons) {

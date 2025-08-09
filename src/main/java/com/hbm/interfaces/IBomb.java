@@ -1,5 +1,6 @@
 package com.hbm.interfaces;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -14,7 +15,7 @@ public interface IBomb {
 	
 	//Drillgon200: Months later (probably) I found this joke and don't understand it. Probably another reference...
 
-	BombReturnCode explode(World world, BlockPos pos);
+	BombReturnCode explode(World world, BlockPos pos, Entity detonator);
 
 	enum BombReturnCode {
 		UNDEFINED(false, ""),										//non-null type for passing to clients that don't process the return code

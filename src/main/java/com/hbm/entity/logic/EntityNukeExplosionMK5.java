@@ -13,6 +13,7 @@ import com.hbm.interfaces.IExplosionRay;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Biomes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +27,8 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @AutoRegister(name = "entity_nuke_mk5", trackingRange = 1000)
 public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
     //Strength of the blast
@@ -46,6 +49,8 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
     private Ticket loaderTicket;
     private long explosionStart = 0;
     private ChunkPos mainChunk;
+
+    public UUID detonator;
 
     public EntityNukeExplosionMK5(World world) {
         super(world);
@@ -138,6 +143,7 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
             if (BombConfig.explosionAlgorithm == 1 || BombConfig.explosionAlgorithm == 2)
                 explosion = new ExplosionNukeRayParallelized(world, posX, posY, posZ, strength, radius, algorithm);
             else explosion = new ExplosionNukeRayBatched(world, (int) posX, (int) posY, (int) posZ, strength, radius);
+            explosion.setDetonator(detonator);
             initialized = true;
         }
 
@@ -177,6 +183,13 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
             unloadMainChunk();
             this.setDead();
         }
+    }
+
+    public EntityNukeExplosionMK5 setDetonator(Entity detonator){
+        if (detonator instanceof EntityPlayerMP){
+            this.detonator = detonator.getUniqueID();
+        }
+        return this;
     }
 
     @Override
@@ -252,11 +265,14 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         floodPlease = nbt.getBoolean("floodPlease");
         spawnFire = nbt.getBoolean("spawnFire");
         algorithm = nbt.getInteger("algorithm");
+        if (nbt.hasKey("detonator"))
+            nbt.getUniqueId("detonator");
         if (!initialized) {
             if (algorithm == 1 || algorithm == 2)
                 explosion = new ExplosionNukeRayParallelized(world, this.posX, this.posY, this.posZ, this.strength, this.radius);
             else
                 explosion = new ExplosionNukeRayBatched(world, (int) this.posX, (int) this.posY, (int) this.posZ, this.strength, this.radius);
+            explosion.setDetonator(this.detonator);
         }
         explosion.readEntityFromNBT(nbt);
         initialized = true;
@@ -271,6 +287,8 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         nbt.setBoolean("floodPlease", floodPlease);
         nbt.setBoolean("spawnFire", spawnFire);
         nbt.setInteger("algorithm", algorithm);
+        if (detonator != null)
+            nbt.setUniqueId("detonator", detonator);
         if (explosion != null) {
             explosion.writeEntityToNBT(nbt);
         }

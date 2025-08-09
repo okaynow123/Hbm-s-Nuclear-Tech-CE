@@ -262,7 +262,7 @@ public class EntityMiniMIRV extends Entity implements IProjectile {
         {
             if (!this.world.isRemote)
             {
-    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ));
+    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ).setDetonator(shootingEntity));
         	    
                 if(rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11){
                     EntityNukeTorex.statFacBale(world, posX, posY, posZ, BombConfig.fatmanRadius);
@@ -393,7 +393,7 @@ public class EntityMiniMIRV extends Entity implements IProjectile {
                         {
                             if (!this.world.isRemote)
                             {
-                    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ));
+                    	    	world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, posX, posY, posZ).setDetonator(shootingEntity));
                     	    
                                 if(rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11){
                                     EntityNukeTorex.statFacBale(world, posX, posY, posZ, BombConfig.fatmanRadius);

@@ -56,13 +56,13 @@ public class EntityBombletZeta extends EntityThrowable implements IConstantRende
     		if(!this.world.isRemote)
     		{
     			if(type == 0) {
-    				ExplosionLarge.explode(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 5.0F, true, false, false);
+    				ExplosionLarge.explode(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 5.0F, true, false, false);
     	        	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.bombDet, SoundCategory.HOSTILE, 25.0F, 0.8F + rand.nextFloat() * 0.4F, true);
     			}
     			if(type == 1) {
-    				ExplosionLarge.explode(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 2.5F, false, false, false);
-    				ExplosionChaos.burn(world, pos, 9);
-    				ExplosionChaos.flameDeath(world, pos, 14);
+    				ExplosionLarge.explode(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 2.5F, false, false, false);
+    				ExplosionChaos.burn(world, thrower, pos, 9);
+    				ExplosionChaos.flameDeath(world, thrower, pos, 14);
     	        	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.bombDet, SoundCategory.HOSTILE, 25.0F, 1.0F, true);
     	        	
     	        	for(int i = 0; i < 5; i++)
@@ -73,7 +73,7 @@ public class EntityBombletZeta extends EntityThrowable implements IConstantRende
     				ExplosionChaos.spawnChlorine(world, this.posX + 0.5F - motionX, this.posY + 0.5F - motionY, this.posZ + 0.5F - motionZ, 75, 2, 0);
     			}
     			if(type == 4) {
-    				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int) (BombConfig.fatmanRadius * 1.5), posX, posY, posZ));
+    				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int) (BombConfig.fatmanRadius * 1.5), posX, posY, posZ).setDetonator(thrower));
     				
     				if(BombConfig.enableNukeClouds) {
 						EntityNukeTorex.statFac(world, this.posX, this.posY, this.posZ, (int) (BombConfig.fatmanRadius * 1.5));

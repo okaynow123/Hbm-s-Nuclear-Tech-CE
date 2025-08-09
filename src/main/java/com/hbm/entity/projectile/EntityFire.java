@@ -165,8 +165,8 @@ public class EntityFire extends Entity implements IProjectile {
         	this.setDead();
         	int i = 3;
         	if(!world.isRemote) {
-        		ExplosionChaos.burn(world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), i);
-        		ExplosionChaos.flameDeath(world, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), i * 2);
+        		ExplosionChaos.burn(world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), i);
+        		ExplosionChaos.flameDeath(world, null, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), i * 2);
         	}
         }
         else

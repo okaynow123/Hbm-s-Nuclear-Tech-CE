@@ -250,8 +250,8 @@ public class EntityLN2 extends Entity implements IProjectile {
         	this.setDead();
         	int i = 3;
         	if(!world.isRemote) {
-        		ExplosionThermo.freeze(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, i);
-        		ExplosionThermo.snow(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, i);
+        		ExplosionThermo.freeze(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, i);
+        		ExplosionThermo.snow(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, i);
         	}
         }
         else
@@ -413,8 +413,8 @@ public class EntityLN2 extends Entity implements IProjectile {
             if (this.isInWater())
             {
             	int j = 3;
-        		ExplosionThermo.freeze(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, j);
-        		ExplosionThermo.snow(this.world, (int)this.posX, (int)this.posY, (int)this.posZ, j);
+        		ExplosionThermo.freeze(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, j);
+        		ExplosionThermo.snow(this.world, null, (int)this.posX, (int)this.posY, (int)this.posZ, j);
                 this.setDead();
             }
 

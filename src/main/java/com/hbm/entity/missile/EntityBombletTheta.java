@@ -59,7 +59,7 @@ public class EntityBombletTheta extends EntityThrowable {
         {
     		if(!this.world.isRemote)
     		{
-    			ExplosionLarge.explodeFire(world, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 50.0F, true, true, true);
+    			ExplosionLarge.explodeFire(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 50.0F, true, true, true);
     		}
     		this.setDead();
         }

@@ -17,6 +17,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -99,12 +100,12 @@ public class NukeFleija extends BlockContainer implements IBomb {
         		this.onPlayerDestroy(worldIn, pos, state);
             	entity.clearSlots();
             	worldIn.setBlockToAir(pos);
-            	igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
+            	igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
         	}
         }
 	}
 	
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r)
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r)
 	{
 		if (!world.isRemote)
 		{
@@ -115,6 +116,10 @@ public class NukeFleija extends BlockContainer implements IBomb {
 			entity.posX = x;
 			entity.posY = y;
 			entity.posZ = z;
+			if (detonator != null)
+				entity.setDetonator(detonator);
+			else if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeFleija fleija)
+				entity.detonator = fleija.placerID;
 			if(!EntityNukeExplosionMK3.isJammed(world, entity)){
 	    		entity.destructionRange = r;
 	    		entity.speed = BombConfig.blastSpeed;
@@ -184,10 +189,12 @@ public class NukeFleija extends BlockContainer implements IBomb {
 		{
 			world.setBlockState(pos, this.getDefaultState().withProperty(FACING, 2), 2);
 		}
+		if (world.getTileEntity(pos) instanceof TileEntityNukeFleija fleija)
+			fleija.placerID = player.getUniqueID();
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityNukeFleija entity = (TileEntityNukeFleija) world.getTileEntity(pos);
 			//if (p_149695_1_.getStrongPower(x, y, z))
@@ -195,7 +202,7 @@ public class NukeFleija extends BlockContainer implements IBomb {
 					this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 					entity.clearSlots();
 					world.setBlockToAir(pos);
-					igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
+					igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.fleijaRadius);
 					return BombReturnCode.DETONATED;
 				}
 

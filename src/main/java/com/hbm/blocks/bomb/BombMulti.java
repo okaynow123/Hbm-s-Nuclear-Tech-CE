@@ -16,6 +16,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -74,7 +75,7 @@ public class BombMulti extends BlockContainer implements IBomb {
         	if(/*entity.getExplosionType() != 0*/entity.isLoaded())
         	{
         		this.onPlayerDestroy(worldIn, pos, state);
-            	igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ());
+            	igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ());
         	}
         }
 	}
@@ -90,7 +91,7 @@ public class BombMulti extends BlockContainer implements IBomb {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
 	}
 	
-	public boolean igniteTestBomb(World world, int x, int y, int z)
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z)
 	{
 		BlockPos pos = new BlockPos(x, y, z);
     	TileEntityBombMulti entity = (TileEntityBombMulti) world.getTileEntity(pos);
@@ -143,7 +144,7 @@ public class BombMulti extends BlockContainer implements IBomb {
         		entity.clearSlots();
             	world.setBlockToAir(pos);
             	//world.createExplosion(null, x , y , z , this.explosionValue, true);
-            	ExplosionLarge.explode(world, x, y, z, explosionValue, true, true, true);
+            	ExplosionLarge.explode(world, detonator, x, y, z, explosionValue, true, true, true);
             	this.explosionValue = 0;
         		
         		if(this.clusterCount > 0)
@@ -153,7 +154,7 @@ public class BombMulti extends BlockContainer implements IBomb {
         		
         		if(this.fireRadius > 0)
         		{
-                	ExplosionChaos.burn(world, pos, this.fireRadius);
+                	ExplosionChaos.burn(world, null, pos, this.fireRadius);
         		}
         		
         		if(this.poisonRadius > 0)
@@ -183,12 +184,12 @@ public class BombMulti extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityBombMulti entity = (TileEntityBombMulti) world.getTileEntity(pos);
 			if (/*entity.getExplosionType() != 0*/entity.isLoaded()) {
 				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
+				igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}

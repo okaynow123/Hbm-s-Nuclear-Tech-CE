@@ -11,6 +11,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityMissileBaseAdvanced extends Entity implements IChunkLoader, IConstantRenderer, IRadarDetectable {
 
@@ -51,6 +53,7 @@ public abstract class EntityMissileBaseAdvanced extends Entity implements IChunk
 	public static double acceleration = 1; 
 	private Ticket loaderTicket;
 	public int health = 50;
+	public UUID thrower = null;
 
 	public EntityMissileBaseAdvanced(World worldIn) {
 		super(worldIn);
@@ -107,7 +110,7 @@ public abstract class EntityMissileBaseAdvanced extends Entity implements IChunk
 	}
 
 	private void killMissile() {
-		ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+		ExplosionLarge.explode(world, null, posX, posY, posZ, 5, true, false, true);
 		ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
 		if(WeaponConfig.dropMissileParts)
 			ExplosionLarge.spawnMissileDebris(world, posX, posY, posZ, motionX, motionY, motionZ, 0.25, getDebris(), getDebrisRareDrop());
@@ -204,6 +207,8 @@ public abstract class EntityMissileBaseAdvanced extends Entity implements IChunk
 		startX = nbt.getInteger("sX");
 		startZ = nbt.getInteger("sZ");
 		velocity = nbt.getDouble("veloc");
+		if (nbt.hasKey("thrower"))
+			thrower = nbt.getUniqueId("thrower");
 	}
 
 	@Override
@@ -221,7 +226,8 @@ public abstract class EntityMissileBaseAdvanced extends Entity implements IChunk
 		nbt.setInteger("sX", startX);
 		nbt.setInteger("sZ", startZ);
 		nbt.setDouble("veloc", velocity);
-
+		if (thrower != null)
+			nbt.setUniqueId("thrower", thrower);
 	}
 
 	@Override
@@ -300,6 +306,10 @@ public abstract class EntityMissileBaseAdvanced extends Entity implements IChunk
 		}
 	}
 
+	public void setThrower(Entity entity) {
+		if (entity instanceof EntityPlayerMP playerMP)
+			this.thrower = playerMP.getUniqueID();
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

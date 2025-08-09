@@ -88,7 +88,7 @@ public class EntityBomber extends Entity implements IChunkLoader, IConstantRende
 	}
 	
 	private void killBomber() {
-        ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+        ExplosionLarge.explode(world, this, posX, posY, posZ, 5, true, false, true);
     	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.planeShotDown, SoundCategory.HOSTILE, 25.0F, 1.0F, false);
     }
 	
@@ -129,7 +129,7 @@ public class EntityBomber extends Entity implements IChunkLoader, IConstantRende
 			if(world.getBlockState(new BlockPos((int)posX, (int)posY, (int)posZ)).isNormalCube() && !world.isRemote) {
 				this.setDead();
 				
-				ExplosionLarge.explodeFire(world, posX, posY, posZ, 25, true, false, true);
+				ExplosionLarge.explodeFire(world, this, posX, posY, posZ, 25, true, false, true);
 		    	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.planeCrash, SoundCategory.HOSTILE, 10.0F, 1.0F, true);
 				
 				return;

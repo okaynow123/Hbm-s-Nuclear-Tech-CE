@@ -78,7 +78,7 @@ public class RedBarrel extends BaseBarrel {
 
             p_149695_1_.newExplosion(null, x + 0.5F, y + 0.5F, z + 0.5F, 1F, false, false);
 
-            ExplosionThermo.freeze(p_149695_1_, x, y, z, 7);
+            ExplosionThermo.freeze(p_149695_1_, null, x, y, z, 7);
         }
 
         if (this == ModBlocks.taint_barrel) {

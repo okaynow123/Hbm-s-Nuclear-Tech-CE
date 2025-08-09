@@ -511,7 +511,7 @@ public class TileEntityCompactLauncher extends TileEntityMachineBase implements 
 	public Object[] launch(Context context, Arguments args) {
 		Block b = world.getBlockState(pos).getBlock();
 		if(b instanceof IBomb){
-			((IBomb)b).explode(world, pos);
+			((IBomb)b).explode(world, pos, null);
 		}
 		return new Object[] {null};
 	}

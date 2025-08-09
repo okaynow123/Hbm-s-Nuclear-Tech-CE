@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -34,13 +35,13 @@ public class DetCord extends Block implements IBomb {
 	
 	@Override
 	public void onExplosionDestroy(World world, BlockPos pos, Explosion explosionIn) {
-		this.explode(world, pos);
+		this.explode(world, pos, explosionIn.exploder);
 	}
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if(worldIn.getStrongPower(pos) > 0){
-			explode(worldIn, pos);
+			explode(worldIn, pos, null);
 		}
 	}
 	
@@ -50,24 +51,24 @@ public class DetCord extends Block implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			if(this == ModBlocks.det_cord) {
-				world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.5F, true);
+				world.createExplosion(detonator, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1.5F, true);
 			}
 			if(this == ModBlocks.det_charge) {
-				ExplosionLarge.explode(world, pos.getX(), pos.getY(), pos.getZ(), 20, true, false, false);
+				ExplosionLarge.explode(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 20, true, false, false);
 			}
 			if(this == ModBlocks.det_n2) {
-				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)(BombConfig.n2Radius/12) * 5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)(BombConfig.n2Radius/12) * 5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).setDetonator(detonator));
 				if(BombConfig.enableNukeClouds) {
 					EntityNukeTorex.statFac(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, (int)(BombConfig.n2Radius/12) * 5);
 				}
 			}
 			if(this == ModBlocks.det_nuke) {
-				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.missileRadius, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).setDetonator(detonator));
 				if(BombConfig.enableNukeClouds) {
 					EntityNukeTorex.statFac(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, BombConfig.missileRadius);
 				}
@@ -78,6 +79,7 @@ public class DetCord extends Block implements IBomb {
 				bf.posY = pos.getY() + 0.5;
 				bf.posZ = pos.getZ() + 0.5;
 				bf.destructionRange = (int) 130;
+				bf.setDetonator(detonator);
 				world.spawnEntity(bf);
 				if(BombConfig.enableNukeClouds) {
 					EntityNukeTorex.statFacBale(world, pos.getX() + 0.5, pos.getY() + 5, pos.getZ() + 0.5, 130F);

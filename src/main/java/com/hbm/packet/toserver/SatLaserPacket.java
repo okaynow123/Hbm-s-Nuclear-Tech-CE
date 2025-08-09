@@ -62,7 +62,7 @@ public class SatLaserPacket implements IMessage {
 					    Satellite sat = SatelliteSavedData.getData(p.world).getSatFromFreq(m.freq);
 					    
 					    if(sat != null)
-					    	sat.onClick(p.world, m.x, m.z);
+					    	sat.onClick(p.world, ctx.getServerHandler().player, m.x, m.z);
 					}
 				}
 			});

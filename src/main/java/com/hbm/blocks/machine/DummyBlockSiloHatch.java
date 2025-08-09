@@ -14,6 +14,7 @@ import micdoodle8.mods.galacticraft.api.block.IPartialSealableBlock;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -106,7 +107,7 @@ public class DummyBlockSiloHatch extends BlockContainer implements IDummy, IBomb
 	}
 	
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if (!world.isRemote) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te != null && te instanceof TileEntityDummy) {

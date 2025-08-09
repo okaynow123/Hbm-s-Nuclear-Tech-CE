@@ -3,6 +3,7 @@ package com.hbm.saveddata.satellites;
 import com.hbm.entity.projectile.EntityTom;
 import com.hbm.main.AdvancementManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -34,7 +35,7 @@ public class SatelliteHorizons extends Satellite {
 		lastOp = nbt.getLong("lastOp");
 	}
 	
-	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) {
+	public void onCoordAction(World world, EntityPlayerMP player, int x, int y, int z) {
 		if(used)
 			return;
 		used = true;

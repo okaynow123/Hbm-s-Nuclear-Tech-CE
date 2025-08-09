@@ -3,11 +3,14 @@ package com.hbm.blocks.bomb;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.interfaces.IBomb;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.TileEntityProxyCombo;
+import com.hbm.tileentity.bomb.TileEntityLaunchPadBase;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadLarge;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -48,15 +51,22 @@ public class LaunchPadLarge extends BlockDummyable implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		
 		if(!world.isRemote) {
 			
 			int[] corePos = findCore(world, pos.getX(), pos.getY(), pos.getZ());
 			BlockPos cPos = new BlockPos(corePos[0], corePos[1], corePos[2]);
 			TileEntity core = world.getTileEntity(cPos);
-			if(core instanceof TileEntityLaunchPadLarge entity){
-                return entity.launchFromDesignator();
+			if(core instanceof TileEntityLaunchPadLarge launchPadLarge){
+				ModContext.DETONATOR_CONTEXT.set(detonator);
+				BombReturnCode result;
+				try {
+					result = launchPadLarge.launchFromDesignator();
+				} finally {
+					ModContext.DETONATOR_CONTEXT.remove();
+				}
+				return result;
 			}
 		}
 		

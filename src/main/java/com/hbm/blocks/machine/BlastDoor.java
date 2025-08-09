@@ -18,6 +18,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -78,7 +79,7 @@ public class BlastDoor extends BlockContainer implements IBomb, IMultiBlock, IPa
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 
 		if(!world.isRemote) {
 			TileEntityBlastDoor entity = (TileEntityBlastDoor) world.getTileEntity(pos);

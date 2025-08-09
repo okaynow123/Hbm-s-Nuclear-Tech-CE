@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.IMultiBlock;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.ModContext;
 import com.hbm.tileentity.bomb.TileEntityLaunchTable;
 import com.hbm.tileentity.machine.TileEntityDummy;
 import net.minecraft.block.Block;
@@ -14,6 +15,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -220,13 +222,18 @@ public class LaunchTable extends BlockContainer implements IMultiBlock, IBomb {
 
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if (!world.isRemote) {
-			TileEntityLaunchTable entity = (TileEntityLaunchTable) world.getTileEntity(pos);
-
-			if (entity.canLaunch()) {
-				entity.launch();
-				return BombReturnCode.LAUNCHED;
+			if (world.getTileEntity(pos) instanceof TileEntityLaunchTable launchTable){
+				if (launchTable.canLaunch()) {
+					ModContext.DETONATOR_CONTEXT.set(detonator);
+					try {
+						launchTable.launch();
+					} finally {
+						ModContext.DETONATOR_CONTEXT.remove();
+					}
+					return BombReturnCode.LAUNCHED;
+				}
 			}
 
 			return BombReturnCode.ERROR_MISSING_COMPONENT;

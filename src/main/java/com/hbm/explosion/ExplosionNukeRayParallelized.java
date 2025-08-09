@@ -94,6 +94,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private int algorithm;
     private int rayCount;
     private ForkJoinPool pool;
+    private UUID detonator;
     private volatile List<Vec3d> directions;
     private volatile boolean collectFinished = false;
     private volatile boolean consolidationFinished = false;
@@ -388,6 +389,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     @Override
     public boolean isContained() {
         return isContained;
+    }
+
+    @Override
+    public void setDetonator(UUID detonator) {
+        this.detonator = detonator;
     }
 
     @Override

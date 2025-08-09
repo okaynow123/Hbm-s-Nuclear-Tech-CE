@@ -20,6 +20,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.ModContext;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEMissileMultipartPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -32,6 +33,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
@@ -223,6 +225,8 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
         int tZ = inventory.getStackInSlot(1).getTagCompound().getInteger("zCoord");
 
         EntityMissileCustom missile = new EntityMissileCustom(world, pos.getX() + 0.5F, pos.getY() + 1.5F, pos.getZ() + 0.5F, tX, tZ, getStruct(inventory.getStackInSlot(0)));
+        if (ModContext.DETONATOR_CONTEXT.get() instanceof EntityLivingBase entityLivingBase)
+            missile.setThrower(entityLivingBase);
         world.spawnEntity(missile);
 
         subtractFuel();

@@ -44,7 +44,7 @@ public class ExplosionChaos {
 	private final static Random random = new Random();
 	private static Random rand = new Random();
 
-	public static void explode(World world, int x, int y, int z, int bombStartStrength) {
+	public static void explode(World world, Entity detonator, int x, int y, int z, int bombStartStrength) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -62,14 +62,14 @@ public class ExplosionChaos {
 					int Z = zz + z;
 					int ZZ = YY + zz * zz;
 					if(ZZ < r22) {
-						destruction(world, pos.setPos(X, Y, Z));
+						destruction(world, detonator, pos.setPos(X, Y, Z));
 					}
 				}
 			}
 		}
 	}
 
-	public static void destruction(World world, BlockPos pos) {
+	private static void destruction(World world, Entity detonator, BlockPos pos) {
 
 		Block b = world.getBlockState(pos).getBlock();
 		if(b == Blocks.BEDROCK || b == ModBlocks.reinforced_brick || b == ModBlocks.reinforced_sand || b == ModBlocks.reinforced_glass || b == ModBlocks.reinforced_lamp_on || b == ModBlocks.reinforced_lamp_off || b.getExplosionResistance(null) > 2_000_000) {
@@ -79,7 +79,7 @@ public class ExplosionChaos {
 		}
 	}
 
-	public static void spawnExplosion(World world, int x, int y, int z, int bound) {
+	public static void spawnExplosion(World world, Entity detonator, int x, int y, int z, int bound) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -93,7 +93,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x + randX, y + randY, z + randZ, 10.0F, true);
+			world.createExplosion(detonator, x + randX, y + randY, z + randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x + randX, y + randY, z + randZ,
 			// 5);
 
@@ -101,7 +101,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x + randX, y - randY, z + randZ, 10.0F, true);
+			world.createExplosion(detonator, x + randX, y - randY, z + randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x - randX, y + randY, z + randZ,
 			// 5);
 
@@ -109,7 +109,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x + randX, y + randY, z - randZ, 10.0F, true);
+			world.createExplosion(detonator, x + randX, y + randY, z - randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x + randX, y - randY, z + randZ,
 			// 5);
 
@@ -117,14 +117,14 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x - randX, y + randY, z + randZ, 10.0F, true);
+			world.createExplosion(detonator, x - randX, y + randY, z + randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x + randX, y + randY, z - randZ,
 			// 5);
 			randX = random.nextInt(bound);
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x - randX, y - randY, z + randZ, 10.0F, true);
+			world.createExplosion(detonator, x - randX, y - randY, z + randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x - randX, y - randY, z + randZ,
 			// 5);
 
@@ -132,7 +132,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x - randX, y + randY, z - randZ, 10.0F, true);
+			world.createExplosion(detonator, x - randX, y + randY, z - randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x - randX, y + randY, z - randZ,
 			// 5);
 
@@ -140,7 +140,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x + randX, y - randY, z - randZ, 10.0F, true);
+			world.createExplosion(detonator, x + randX, y - randY, z - randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x + randX, y - randY, z - randZ,
 			// 5);
 
@@ -148,7 +148,7 @@ public class ExplosionChaos {
 			randY = random.nextInt(bound);
 			randZ = random.nextInt(bound);
 
-			world.createExplosion(null, x - randX, y - randY, z - randZ, 10.0F, true);
+			world.createExplosion(detonator, x - randX, y - randY, z - randZ, 10.0F, true);
 			// ExplosionChaos.explode(world, x - randX, y - randY, z - randZ,
 			// 5);
 		}
@@ -223,14 +223,15 @@ public class ExplosionChaos {
 
 	/**
 	 * Sets all flammable blocks on fire
-	 * 
-	 * @param world
+	 *
 	 * @param x
 	 * @param y
 	 * @param z
+	 * @param world
+	 * @param detonator
 	 * @param bound
 	 */
-	public static void flameDeath(World world, BlockPos pos, int bound) {
+	public static void flameDeath(World world, Entity detonator, BlockPos pos, int bound) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -264,14 +265,15 @@ public class ExplosionChaos {
 
 	/**
 	 * Sets all blocks on fire
-	 * 
-	 * @param world
+	 *
 	 * @param x
 	 * @param y
 	 * @param z
+	 * @param world
+	 * @param detonator
 	 * @param bound
 	 */
-	public static void burn(World world, BlockPos pos, int bound) {
+	public static void burn(World world, Entity detonator, BlockPos pos, int bound) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}
@@ -802,11 +804,11 @@ public class ExplosionChaos {
 		}
 	}
 
-	public static void floater(World world, BlockPos pos, int radi, int height) {
-		floater(world, pos.getX(), pos.getY(), pos.getZ(), radi, height);
+	public static void floater(World world, Entity detonator, BlockPos pos, int radi, int height) {
+		floater(world, detonator, pos.getX(), pos.getY(), pos.getZ(), radi, height);
 	}
 
-	public static void floater(World world, int x, int y, int z, int radi, int height) {
+	public static void floater(World world, Entity detonator, int x, int y, int z, int radi, int height) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			return;
 		}

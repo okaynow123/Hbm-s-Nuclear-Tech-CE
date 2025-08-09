@@ -1,6 +1,5 @@
 package com.hbm.saveddata.satellites;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
@@ -13,7 +12,7 @@ public class SatelliteResonator extends Satellite {
 		this.satIface = Interfaces.SAT_COORD;
 	}
 	
-	public void onCoordAction(World world, EntityPlayer player, int x, int y, int z) {
+	public void onCoordAction(World world, EntityPlayerMP player, int x, int y, int z) {
 
 		if(!(player instanceof EntityPlayerMP))
 

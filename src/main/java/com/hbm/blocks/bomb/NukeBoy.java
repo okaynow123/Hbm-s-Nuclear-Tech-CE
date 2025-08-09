@@ -7,6 +7,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.interfaces.IBomb;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.bomb.TileEntityNukeBalefire;
 import com.hbm.tileentity.bomb.TileEntityNukeBoy;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
@@ -18,8 +19,10 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -74,16 +77,21 @@ public class NukeBoy extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ());
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ());
 			}
 		}
 	}
 
-	public boolean igniteTestBomb(World world, int x, int y, int z) {
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z) {
 		if(!world.isRemote) {
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F); // x,y,z,sound,volume,pitch
-
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.boyRadius, x + 0.5, y + 0.5, z + 0.5));
+			EntityNukeExplosionMK5 explosionMK5 = EntityNukeExplosionMK5.statFac(world, BombConfig.boyRadius, x + 0.5, y + 0.5, z + 0.5);
+			if (detonator != null){
+				explosionMK5.setDetonator(detonator);
+			} else if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeBoy boy){
+				explosionMK5.detonator = boy.placerID;
+			}
+			world.spawnEntity(explosionMK5);
 
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, x, y, z, BombConfig.boyRadius);
@@ -95,20 +103,22 @@ public class NukeBoy extends BlockContainer implements IBomb {
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()));
+		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeBoy boy && placer instanceof EntityPlayerMP playerMP)
+			boy.placerID = playerMP.getUniqueID();
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
-			TileEntityNukeBoy entity = (TileEntityNukeBoy) world.getTileEntity(pos);
-			if (entity.isReady()) {
-				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
-				entity.clearSlots();
-				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ());
-				return BombReturnCode.DETONATED;
+			if (world.getTileEntity(pos) instanceof TileEntityNukeBoy entity) {
+				if (entity.isReady()) {
+					this.onPlayerDestroy(world, pos, world.getBlockState(pos));
+					entity.clearSlots();
+					world.setBlockToAir(pos);
+					igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ());
+					return BombReturnCode.DETONATED;
+				}
 			}
-
 			return BombReturnCode.ERROR_MISSING_COMPONENT;
 		}
 

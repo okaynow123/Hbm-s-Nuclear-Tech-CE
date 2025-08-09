@@ -2,6 +2,9 @@ package com.hbm.entity.projectile;
 
 import com.hbm.blocks.bomb.NukeCustom;
 import com.hbm.interfaces.AutoRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
@@ -13,6 +16,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
+
 @AutoRegister(name = "entity_falling_bomb", trackingRange = 1000)
 public class EntityFallingNuke extends EntityThrowable {
 
@@ -32,7 +39,7 @@ public class EntityFallingNuke extends EntityThrowable {
 		this.ignoreFrustumCheck = true;
 	}
 	
-	public EntityFallingNuke(World p_i1582_1_, float tnt, float nuke, float hydro, float bale, float dirty, float schrab, float sol, float euph) {
+	public EntityFallingNuke(World p_i1582_1_, Entity detonator, float tnt, float nuke, float hydro, float bale, float dirty, float schrab, float sol, float euph) {
 		super(p_i1582_1_);
 		this.ignoreFrustumCheck = true;
 		
@@ -46,6 +53,8 @@ public class EntityFallingNuke extends EntityThrowable {
 		this.euph = euph;
         this.prevRotationYaw = this.rotationYaw = 90;
         this.prevRotationPitch = this.rotationPitch = 90;
+		if (detonator instanceof EntityLivingBase entityLivingBase)
+			this.thrower = entityLivingBase;
 	}
 	
 	@Override
@@ -81,7 +90,7 @@ public class EntityFallingNuke extends EntityThrowable {
         {
     		if(!this.world.isRemote)
     		{
-				NukeCustom.explodeCustom(world, posX, posY, posZ, tnt, nuke, hydro, bale, dirty, schrab, sol, euph);
+				NukeCustom.explodeCustom(world, thrower, posX, posY, posZ, tnt, nuke, hydro, bale, dirty, schrab, sol, euph);
 	    		this.setDead();
     		}
         }

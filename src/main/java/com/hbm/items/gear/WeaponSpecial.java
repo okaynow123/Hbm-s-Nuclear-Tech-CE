@@ -140,7 +140,7 @@ public class WeaponSpecial extends ItemSword {
 			
 			if(attacker.fallDistance >= 20 && !((EntityPlayer)attacker).capabilities.isCreativeMode) {
 				if(!world.isRemote) {
-					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 100, target.posX, target.posY, target.posZ));
+					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 100, target.posX, target.posY, target.posZ).setDetonator(attacker));
 					if(BombConfig.enableNukeClouds) {
 						EntityNukeTorex.statFac(world, target.posX, target.posY, target.posZ, 100);
 					}

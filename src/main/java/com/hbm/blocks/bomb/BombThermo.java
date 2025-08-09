@@ -6,6 +6,7 @@ import com.hbm.interfaces.IBomb;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,13 +28,13 @@ public class BombThermo extends Block implements IBomb {
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
         	if(this == ModBlocks.therm_endo)
         	{
-        		ExplosionThermo.freeze(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15);
+        		ExplosionThermo.freeze(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), 15);
         		ExplosionThermo.freezer(worldIn, pos.getX(), pos.getY(), pos.getZ(), 20);
         	}
 
         	if(this == ModBlocks.therm_exo)
         	{
-        		ExplosionThermo.scorch(worldIn, pos.getX(), pos.getY(), pos.getZ(), 15);
+        		ExplosionThermo.scorch(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), 15);
         		ExplosionThermo.setEntitiesOnFire(worldIn, pos.getX(), pos.getY(), pos.getZ(), 20);
         	}
         	
@@ -44,21 +45,21 @@ public class BombThermo extends Block implements IBomb {
 	
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		world.setBlockState(pos, Blocks.AIR.getDefaultState());
     	if(this == ModBlocks.therm_endo)
     	{
-    		ExplosionThermo.freeze(world, pos.getX(), pos.getY(), pos.getZ(), 15);
+    		ExplosionThermo.freeze(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 15);
     		ExplosionThermo.freezer(world, pos.getX(), pos.getY(), pos.getZ(), 20);
     	}
 
     	if(this == ModBlocks.therm_exo)
     	{
-    		ExplosionThermo.scorch(world, pos.getX(), pos.getY(), pos.getZ(), 15);
+    		ExplosionThermo.scorch(world, detonator, pos.getX(), pos.getY(), pos.getZ(), 15);
     		ExplosionThermo.setEntitiesOnFire(world, pos.getX(), pos.getY(), pos.getZ(), 20);
     	}
     	
-    	world.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 5.0F, true);
+    	world.createExplosion(detonator, pos.getX(), pos.getY(), pos.getZ(), 5.0F, true);
 		return BombReturnCode.DETONATED;
 	}
 

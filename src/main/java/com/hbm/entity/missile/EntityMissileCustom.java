@@ -81,7 +81,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 	protected void killMissile() {
 		if(!this.isDead) {
 			this.setDead();
-			ExplosionLarge.explode(world, posX, posY, posZ, 5, true, false, true);
+			ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5, true, false, true);
 			ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
 		}
 	}
@@ -175,21 +175,21 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 
 		switch(type) {
 			case HE:
-				ExplosionLarge.explode(world, posX, posY, posZ, strength, true, false, true);
-				ExplosionLarge.jolt(world, posX, posY, posZ, strength, (int) (strength * 50), 0.25);
+				ExplosionLarge.explode(world, thrower, posX, posY, posZ, strength, true, false, true);
+				ExplosionLarge.jolt(world, thrower, posX, posY, posZ, strength, (int) (strength * 50), 0.25);
 				break;
 			case INC:
-				ExplosionLarge.explodeFire(world, posX, posY, posZ, strength, true, false, true);
-				ExplosionLarge.jolt(world, posX, posY, posZ, strength * 1.5, (int) (strength * 50), 0.25);
+				ExplosionLarge.explodeFire(world, thrower, posX, posY, posZ, strength, true, false, true);
+				ExplosionLarge.jolt(world, thrower, posX, posY, posZ, strength * 1.5, (int) (strength * 50), 0.25);
 				break;
 			case CLUSTER:
 				break;
 			case BUSTER:
-				ExplosionLarge.buster(world, posX, posY, posZ, new Vec3d(motionX, motionY, motionZ), strength, strength * 4);
+				ExplosionLarge.buster(world, thrower, posX, posY, posZ, new Vec3d(motionX, motionY, motionZ), strength, strength * 4);
 				break;
 			case NUCLEAR:
 			case TX:
-				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int) strength, posX, posY, posZ));
+				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, (int) strength, posX, posY, posZ).setDetonator(thrower));
 				EntityNukeTorex.statFac(world, posX, posY, posZ, strength);
 				break;
 			case BALEFIRE:
@@ -197,12 +197,13 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 				bf.posX = this.posX;
 				bf.posY = this.posY;
 				bf.posZ = this.posZ;
+				bf.setDetonator(thrower);
 				bf.destructionRange = (int) strength;
 				world.spawnEntity(bf);
 				EntityNukeTorex.statFacBale(world, posX, posY, posZ, strength);
 				break;
 			case N2:
-				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int) strength, posX, posY, posZ));
+				world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int) strength, posX, posY, posZ).setDetonator(thrower));
 				EntityNukeTorex.statFac(world, posX, posY, posZ, strength);
 				break;
 			case TAINT:
@@ -222,7 +223,7 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 				ExplosionChaos.spawnChlorine(world, posX - motionX, posY - motionY, posZ - motionZ, 750, 2.5, 2);
 				break;
 			case TURBINE:
-				ExplosionLarge.explode(world, posX, posY, posZ, 10, true, false, true);
+				ExplosionLarge.explode(world, thrower, posX, posY, posZ, 10, true, false, true);
 				/*
 				int count = (int) strength;
 				Vec3d vec = new Vec3d(0.5, 0, 0);

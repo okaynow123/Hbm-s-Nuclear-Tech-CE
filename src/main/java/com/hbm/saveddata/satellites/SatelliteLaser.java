@@ -1,6 +1,7 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.entity.logic.EntityDeathBlast;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -23,7 +24,7 @@ public class SatelliteLaser extends Satellite {
 		lastOp = nbt.getLong("lastOp");
 	}
 	
-	public void onClick(World world, int x, int z) {
+	public void onClick(World world, EntityPlayerMP player, int x, int z) {
 		
 		if(lastOp + 10000 < System.currentTimeMillis()) {
     		lastOp = System.currentTimeMillis();
@@ -34,7 +35,7 @@ public class SatelliteLaser extends Satellite {
     		blast.posX = x;
     		blast.posY = y;
     		blast.posZ = z;
-    		
+    		blast.detonator = player;
     		world.spawnEntity(blast);
     	}
 	}

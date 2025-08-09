@@ -18,6 +18,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -79,23 +80,25 @@ public class NukeMike extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
 			}
 
 			if(entity.isFilled()) {
 				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();
 				worldIn.setBlockToAir(pos);
-				igniteTestBomb(worldIn, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
+				igniteTestBomb(worldIn, null, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
 			}
 		}
 	}
 
-	public boolean igniteTestBomb(World world, int x, int y, int z, int r) {
+	public boolean igniteTestBomb(World world, Entity detonator, int x, int y, int z, int r) {
 		if(!world.isRemote) {
 			world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.1F + 0.9F);
-
-			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, r, x + 0.5, y + 0.5, z + 0.5));
+			var mk5 = EntityNukeExplosionMK5.statFac(world, r, x + 0.5, y + 0.5, z + 0.5).setDetonator(detonator);
+			if (detonator == null && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityNukeMike mike)
+				mk5.detonator = mike.placerID;
+			world.spawnEntity(mk5);
 			if(BombConfig.enableNukeClouds) {
 				EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, r);
 			}
@@ -105,14 +108,14 @@ public class NukeMike extends BlockContainer implements IBomb {
 	}
 
 	@Override
-	public BombReturnCode explode(World world, BlockPos pos) {
+	public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 		if(!world.isRemote) {
 			TileEntityNukeMike entity = (TileEntityNukeMike) world.getTileEntity(pos);
 			if (entity.isReady() && !entity.isFilled()) {
 				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
+				igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.manRadius);
 				return BombReturnCode.DETONATED;
 			}
 
@@ -120,7 +123,7 @@ public class NukeMike extends BlockContainer implements IBomb {
 				this.onPlayerDestroy(world, pos, world.getBlockState(pos));
 				entity.clearSlots();
 				world.setBlockToAir(pos);
-				igniteTestBomb(world, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
+				igniteTestBomb(world, detonator, pos.getX(), pos.getY(), pos.getZ(), BombConfig.mikeRadius);
 				return BombReturnCode.DETONATED;
 			}
 
