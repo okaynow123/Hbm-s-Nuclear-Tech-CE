@@ -2,16 +2,14 @@ package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.IEnergyConductorMK2;
 import com.hbm.api.energymk2.Nodespace;
+import com.hbm.api.energymk2.Nodespace.PowerNode;
 import com.hbm.api.energymk2.PowerNetMK2;
 import com.hbm.capability.NTMCableEnergyCapabilityWrapper;
 import com.hbm.config.GeneralConfig;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.packet.toclient.BufPacket;
-import com.hbm.tileentity.IBufPacketReceiver;
-import io.netty.buffer.ByteBuf;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -19,29 +17,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-// Th3_Sl1ze: okay, since none of the fixes on the current fe layer compat properly worked, I rewrote it.
-// The only problem is that FE <-> FE doesn't work via NTM cables. Probably need to use virtual fe providers/receivers again..
-// Everything else works fine tho, so let's leave it for now I guess?..
-// TODO: Fix FE <-> FE (somehow)
 @AutoRegister
-public class TileEntityCableBaseNT extends TileEntity implements IBufPacketReceiver, ITickable, IEnergyConductorMK2 {
-	
-	protected Nodespace.PowerNode node;
+public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEnergyConductorMK2, ITickable {
+	protected PowerNode node;
 
 	@Override
 	public void update() {
+		if (!world.isRemote) {
 
-		if(!world.isRemote) {
+			if (this.node == null || this.node.expired) {
 
-			if(this.node == null || this.node.expired) {
-
-				if(this.shouldCreateNode()) {
+				if (this.shouldCreateNode()) {
 					this.node = Nodespace.getNode(world, pos);
 
-					if(this.node == null || this.node.expired) {
+					if (this.node == null || this.node.expired) {
 						this.node = this.createNode();
 						Nodespace.createNode(world, this.node);
 					}
@@ -50,7 +41,7 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 
 			if (this.node != null && this.node.hasValidNet()) {
 				PowerNetMK2 net = this.node.net;
-				handleFETransfers(net);
+				this.handleFETransfers(net);
 			}
 		}
 	}
@@ -105,16 +96,8 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 		}
 	}
 
-	public boolean canUpdate() {
-		return (this.node == null || !this.node.hasValidNet()) && !this.isInvalid();
-	}
-
 	public boolean shouldCreateNode() {
 		return true;
-	}
-
-	public void onNodeDestroyedCallback() {
-		this.node = null;
 	}
 
 	@Override
@@ -128,24 +111,9 @@ public class TileEntityCableBaseNT extends TileEntity implements IBufPacketRecei
 		}
 	}
 
-	public void networkPackNT(int range) {
-		if (!world.isRemote)
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
-
 	@Override
 	public boolean canConnect(ForgeDirection dir) {
 		return dir != ForgeDirection.UNKNOWN;
-	}
-
-	@Override
-	public void serialize(ByteBuf buf) {
-
-	}
-
-	@Override
-	public void deserialize(ByteBuf buf) {
-
 	}
 
 	@Override
