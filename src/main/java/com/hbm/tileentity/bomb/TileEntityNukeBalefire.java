@@ -91,8 +91,8 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	@Override
 	public void deserialize(ByteBuf buf) {
 		timer = buf.readInt();
-		started = buf.readBoolean();
 		loaded = buf.readBoolean();
+		started = buf.readBoolean();
 	}
 	
 	public boolean isLoaded() {
