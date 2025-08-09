@@ -82,6 +82,9 @@ public class PressRecipes {
 		addRecipe(StampType.PLATE, new OreDictStack(SA326.ingot()), new ItemStack(ModItems.plate_schrabidium));
 		addRecipe(StampType.PLATE, new OreDictStack(CMB.ingot()), new ItemStack(ModItems.plate_combine_steel));
 		addRecipe(StampType.PLATE, new OreDictStack(BIGMT.ingot()), new ItemStack(ModItems.plate_saturnite));
+		addRecipe(StampType.PLATE, new OreDictStack(DURA.ingot()), new ItemStack(ModItems.plate_dura_steel));
+		addRecipe(StampType.PLATE, new OreDictStack(GUNMETAL.ingot()), new ItemStack(ModItems.plate_gunmetal));
+		addRecipe(StampType.PLATE, new OreDictStack(WEAPONSTEEL.ingot()), new ItemStack(ModItems.plate_weaponsteel));
 
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.WIRE) && OreDictionary.doesOreNameExist(MaterialShapes.INGOT.make(mat))) {
