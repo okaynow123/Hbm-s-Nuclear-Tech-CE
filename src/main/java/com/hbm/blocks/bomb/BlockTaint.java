@@ -119,7 +119,7 @@ public class BlockTaint extends Block {
     		}
     	}
     	
-    	if(entity instanceof EntityCreeper) {
+    	if(entity instanceof EntityCreeper && !(entity instanceof EntityCreeperTainted)) {
     		EntityCreeperTainted creep = new EntityCreeperTainted(world);
     		creep.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
 
