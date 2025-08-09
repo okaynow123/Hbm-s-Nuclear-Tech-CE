@@ -6,11 +6,15 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public interface IFuckingExplode {
+//Original name: IFuckingExplode
+//Changed it to be more professional
+public interface IExploder {
 
-    //Prevents stack overflows apparently
+    //Prevents stack overflows
     public void explodeEntity(World world, double x, double y, double z, @Nullable EntityTNTPrimedBase entity);
-    public default void explodeEntity(World world, BlockPos pos, @Nullable EntityTNTPrimedBase entity){
+
+    public default void explodeEntity(World world, BlockPos pos, @Nullable EntityTNTPrimedBase entity) {
         explodeEntity(world, pos.getX(), pos.getY(), pos.getZ(), entity);
-    };
+    }
+
 }

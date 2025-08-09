@@ -1,20 +1,17 @@
 package com.hbm.blocks.bomb;
 
-import com.hbm.api.block.IFuckingExplode;
+import com.hbm.api.block.IExploder;
 import com.hbm.blocks.generic.BlockFlammable;
 import com.hbm.entity.item.EntityTNTPrimedBase;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public abstract class BlockDetonatable  extends BlockFlammable implements IFuckingExplode {
+public abstract class BlockDetonatable  extends BlockFlammable implements IExploder {
     protected int popFuse; // A shorter fuse for when this explosive is dinked by another
     protected boolean detonateOnCollision;
     protected boolean detonateOnShot;
@@ -79,7 +76,7 @@ public abstract class BlockDetonatable  extends BlockFlammable implements IFucki
         if (!detonateOnShot) return;
 
         world.setBlockToAir(pos);
-        explodeEntity(world, pos, null); // insta-explod
+        explodeEntity(world, pos, null); // insta-explode
     }
 
 }

@@ -63,6 +63,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable, IPl
         return FULL_BLOCK_AABB;
     }
 
+
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         EnumTallPlantType type = values()[state.getValue(META)];

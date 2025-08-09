@@ -1,10 +1,8 @@
 package com.hbm.entity.item;
 
-import com.hbm.api.block.IFuckingExplode;
-import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.api.block.IExploder;
 import com.hbm.interfaces.AutoRegister;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -113,8 +111,8 @@ public class EntityTNTPrimedBase extends Entity {
         this.getBomb().explodeEntity(world, posX, posY, posZ, this);
     }
 
-    public IFuckingExplode getBomb() {
-        return (IFuckingExplode)(getState().getBlock());
+    public IExploder getBomb() {
+        return (IExploder)(getState().getBlock());
     }
 
     public IBlockState getState() {
