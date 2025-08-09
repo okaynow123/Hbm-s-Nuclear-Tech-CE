@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -79,7 +80,7 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
     }
 
     @Override
-    public BombReturnCode explode(World world, BlockPos pos) {
+    public BombReturnCode explode(World world, BlockPos pos, Entity detonator) {
 
         if (!world.isRemote) {
             new ExplosionVNT(world, pos, 20).makeStandard().setBlockProcessor(new BlockProcessorStandard().setNoDrop()).explode();
@@ -90,7 +91,7 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
 
     @Override
     public void explodeEntity(World world, double x, double y, double z, EntityTNTPrimedBase entity) {
-        explode(world, new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)));
+        explode(world, new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)), entity);//FIXME: This loses track of original detonator
     }
 
     @Override
