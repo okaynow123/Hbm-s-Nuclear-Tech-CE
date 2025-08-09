@@ -128,7 +128,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
                 gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
 
                 if(world.rand.nextDouble() < DunadrainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getExtendedState(state, world, pos), 3);
+                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
                 }
             } else if(meta == SolarSystem.Body.LAYTHE.ordinal()) {
                 tanks[0].setTankType(Fluids.OIL_DS);
@@ -137,7 +137,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
                 gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
 
                 if(world.rand.nextDouble() < drainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getExtendedState(state, world, pos), 3);
+                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
                 }
             } else {
                 tanks[0].setTankType(Fluids.OIL);
@@ -146,7 +146,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
                 gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
 
                 if(world.rand.nextDouble() < drainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getExtendedState(state, world, pos), 3);
+                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
                 }
             }
         }

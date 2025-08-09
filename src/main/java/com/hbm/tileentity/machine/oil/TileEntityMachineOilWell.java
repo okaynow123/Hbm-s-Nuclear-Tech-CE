@@ -124,7 +124,7 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 				if(this.tanks[1].getFill() > this.tanks[1].getMaxFill()) this.tanks[1].setFill(tanks[1].getMaxFill());
 
 				if(world.rand.nextDouble() < drainChanceDuna) {
-					world.setBlockState(pos, ModBlocks.ore_oil_empty.getExtendedState(state, world, pos), 3);
+					world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
 				}
 			} else {
 				this.tanks[0].setFill(this.tanks[0].getFill() + oilPerDeposit);
@@ -133,7 +133,7 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 				if(this.tanks[1].getFill() > this.tanks[1].getMaxFill()) this.tanks[1].setFill(tanks[1].getMaxFill());
 
 				if(world.rand.nextDouble() < drainChance) {
-					world.setBlockState(pos, ModBlocks.ore_oil_empty.getExtendedState(state, world, pos), 3);
+					world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
 				}
 			}
 		}
@@ -148,7 +148,7 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 			if(tanks[1].getFill() > tanks[1].getMaxFill()) tanks[1].setFill(tanks[1].getMaxFill());
 
 			if(world.rand.nextDouble() < drainChance) {
-				world.setBlockState(pos, ModBlocks.ore_gas_empty.getExtendedState(state, world, pos), 3);
+				world.setBlockState(pos, ModBlocks.ore_gas_empty.getDefaultState(), 3);
 			}
 		}
 	}
