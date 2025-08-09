@@ -1,6 +1,8 @@
 package com.hbm.hazard;
 
 import com.github.bsideup.jabel.Desugar;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.GeneralConfig;
@@ -22,6 +24,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -30,8 +33,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import static com.hbm.util.ContaminationUtil.NTM_NEUTRON_NBT_KEY;
 
 /**
  * This logic was heavily refactored to be threaded and event-driven. Do not aim for upstream parity.
@@ -63,8 +69,15 @@ public class HazardSystem {
      * List of hazard transformers, called in order before and after unrolling all the HazardEntries.
      */
     public static final List<HazardTransformerBase> trafos = new ArrayList<>();
-
-    private static final ConcurrentHashMap<ComparableStack, List<HazardEntry>> hazardCalculationCache = new ConcurrentHashMap<>();
+    private static final int VOLATILITY_THRESHOLD = 16;
+    private static final int VOLATILITY_WINDOW_SECONDS = 30;
+    private static final int FINAL_HAZARD_CACHE_SIZE = 2048;
+    private static final ConcurrentHashMap<ComparableStack, List<HazardData>> hazardDataChronologyCache = new ConcurrentHashMap<>();
+    private static final Cache<NbtSensitiveCacheKey, List<HazardEntry>> finalHazardEntryCache =
+            CacheBuilder.newBuilder().maximumSize(FINAL_HAZARD_CACHE_SIZE).build();
+    private static final Cache<ComparableStack, AtomicInteger> volatilityTracker =
+            CacheBuilder.newBuilder().expireAfterWrite(VOLATILITY_WINDOW_SECONDS, TimeUnit.SECONDS).build();
+    private static final Set<ComparableStack> volatileItemsBlacklist = ConcurrentHashMap.newKeySet();
     private static final ConcurrentHashMap<UUID, PlayerHazardData> playerHazardDataMap = new ConcurrentHashMap<>();
     private static final ExecutorService hazardScanExecutor = Executors.newFixedThreadPool(Math.max(1,
             Runtime.getRuntime().availableProcessors() - 1),
@@ -202,6 +215,17 @@ public class HazardSystem {
         inventoryDeltas.removeIf(delta -> delta.playerUUID().equals(uuid));
     }
 
+    /**
+     * Call when doing hot reload. Currently unused.
+     */
+    public static void clearCaches() {
+        MainRegistry.logger.info("Clearing HBM hazard calculation caches.");
+        hazardDataChronologyCache.clear();
+        finalHazardEntryCache.invalidateAll();
+        volatilityTracker.invalidateAll();
+        volatileItemsBlacklist.clear();
+    }
+
     public static boolean isStackHazardous(@Nullable ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return false;
@@ -252,39 +276,83 @@ public class HazardSystem {
         if (stack.isEmpty() || isItemBlacklisted(stack)) {
             return Collections.emptyList();
         }
-        return hazardCalculationCache.computeIfAbsent(ItemStackUtil.comparableStackFrom(stack).makeSingular(), compStack -> {
-            final List<HazardData> chronological = new ArrayList<>();
-            final int[] ids = OreDictionary.getOreIDs(stack);
+
+        final ComparableStack compStack = ItemStackUtil.comparableStackFrom(stack).makeSingular();
+
+        if (volatileItemsBlacklist.contains(compStack)) {
+            return computeHazards(stack, compStack);
+        }
+
+        int nbtHash = 0;
+        if (stack.hasTagCompound()) {
+            NBTTagCompound sanitizedNbt = stack.getTagCompound().copy();
+            sanitizedNbt.removeTag(NTM_NEUTRON_NBT_KEY);
+            if (!sanitizedNbt.isEmpty()) {
+                nbtHash = sanitizedNbt.hashCode();
+            }
+        }
+
+        final NbtSensitiveCacheKey nbtKey = new NbtSensitiveCacheKey(compStack, nbtHash);
+
+        try {
+            return finalHazardEntryCache.get(nbtKey, () -> {
+                AtomicInteger missCount = volatilityTracker.get(compStack, AtomicInteger::new);
+                if (missCount.incrementAndGet() > VOLATILITY_THRESHOLD) {
+                    volatileItemsBlacklist.add(compStack);
+                    volatilityTracker.invalidate(compStack);
+                }
+                return computeHazards(stack, compStack);
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error calculating hazard entries for stack: " + stack, e.getCause());
+        }
+    }
+
+    private static List<HazardEntry> computeHazards(ItemStack stack, ComparableStack compStack) {
+        // Get NBT-agnostic base data
+        List<HazardData> chronological = hazardDataChronologyCache.computeIfAbsent(compStack, cs -> {
+            final List<HazardData> data = new ArrayList<>();
+            final int[] ids = OreDictionary.getOreIDs(new ItemStack(cs.item, 1, cs.meta));
             for (final int id : ids) {
                 final String name = OreDictionary.getOreName(id);
                 final HazardData hazardData = oreMap.get(name);
-                if (hazardData != null) chronological.add(hazardData);
+                if (hazardData != null) data.add(hazardData);
             }
-            final HazardData itemHazardData = itemMap.get(stack.getItem());
-            if (itemHazardData != null) chronological.add(itemHazardData);
-            final HazardData stackHazardData = stackMap.get(compStack);
-            if (stackHazardData != null) chronological.add(stackHazardData);
-            final List<HazardEntry> entries = new ArrayList<>();
-            for (final HazardTransformerBase trafo : trafos) trafo.transformPre(stack, entries);
-            int mutex = 0;
-            for (final HazardData data : chronological) {
-                if (data.doesOverride) entries.clear();
-                if ((data.getMutex() & mutex) == 0) {
-                    entries.addAll(data.entries);
-                    mutex |= data.getMutex();
-                }
-            }
-            for (final HazardTransformerBase trafo : trafos) trafo.transformPost(stack, entries);
-            return Collections.unmodifiableList(entries);
+            final HazardData itemHazardData = itemMap.get(cs.item);
+            if (itemHazardData != null) data.add(itemHazardData);
+            final HazardData stackHazardData = stackMap.get(cs);
+            if (stackHazardData != null) data.add(stackHazardData);
+            return Collections.unmodifiableList(data);
         });
+
+        if (chronological.isEmpty() && trafos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Apply NBT-sensitive transformers and build the final list
+        final List<HazardEntry> entries = new ArrayList<>();
+        for (final HazardTransformerBase trafo : trafos) {
+            trafo.transformPre(stack, entries);
+        }
+
+        int mutex = 0;
+        for (final HazardData data : chronological) {
+            if (data.doesOverride) entries.clear();
+            if ((data.getMutex() & mutex) == 0) {
+                entries.addAll(data.entries);
+                mutex |= data.getMutex();
+            }
+        }
+
+        for (final HazardTransformerBase trafo : trafos) {
+            trafo.transformPost(stack, entries);
+        }
+
+        return Collections.unmodifiableList(entries);
     }
 
     public static float getHazardLevelFromStack(ItemStack stack, HazardTypeBase hazard) {
-        return getHazardsFromStack(stack).stream()
-                .filter(entry -> entry.type == hazard)
-                .findFirst()
-                .map(entry -> HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods))
-                .orElse(0F);
+        return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0F);
     }
 
     public static float getRawRadsFromBlock(Block b) {
@@ -440,6 +508,10 @@ public class HazardSystem {
         @Desugar
         record HazardScanResult(Map<Integer, Consumer<EntityPlayer>> applicatorMap, float totalNeutronRads) {
         }
+    }
+
+    @Desugar
+    private record NbtSensitiveCacheKey(ComparableStack stack, int nbtHash) {
     }
 
     @Desugar
