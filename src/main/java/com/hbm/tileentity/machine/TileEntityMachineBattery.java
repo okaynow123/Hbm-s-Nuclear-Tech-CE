@@ -13,6 +13,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -193,24 +194,46 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 
 			int mode = this.getRelevantMode(false);
 
-			if(this.node == null || this.node.expired) {
-
-				this.node = Nodespace.getNode(world, pos);
-
-				if(this.node == null || this.node.expired) {
-					this.node = this.createNode();
-					Nodespace.createNode(world, this.node);
-				}
-			}
-
 			long prevPower = this.power;
 
 			power = Library.chargeItemsFromTE(inventory, 2, power, getMaxPower());
 
-			if(mode == mode_output || mode == mode_buffer) {
-				this.tryProvide(world, pos.getX(), pos.getY(), pos.getZ(), ForgeDirection.UNKNOWN);
+			// In buffer mode, becomes a cable block and provides power to itself
+			// otherwise, acts like a regular power providing/accepting machine
+			if(mode == mode_buffer) {
+				if(this.node == null || this.node.expired) {
+
+					this.node = UniNodespace.getNode(world, pos, Nodespace.THE_POWER_PROVIDER);
+
+					if(this.node == null || this.node.expired) {
+						this.node = this.createNode();
+						UniNodespace.createNode(world, this.node);
+					}
+				}
+
+				this.tryProvide(world, pos, ForgeDirection.UNKNOWN);
+				if(node != null && node.hasValidNet()) node.net.addReceiver(this);
 			} else {
-				if(node != null && node.hasValidNet()) node.net.removeProvider(this);
+				if(this.node != null) {
+					UniNodespace.destroyNode(world, pos, Nodespace.THE_POWER_PROVIDER);
+					this.node = null;
+				}
+
+				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+					Nodespace.PowerNode dirNode = UniNodespace.getNode(world, pos.add(dir.offsetX, dir.offsetY, dir.offsetZ), Nodespace.THE_POWER_PROVIDER);
+
+					if(mode == mode_output) {
+						tryProvide(world, pos.add(dir.offsetX, dir.offsetY, dir.offsetZ), dir);
+					} else {
+						if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeProvider(this);
+					}
+
+					if(mode == mode_input) {
+						if(dirNode != null && dirNode.hasValidNet()) dirNode.net.addReceiver(this);
+					} else {
+						if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeReceiver(this);
+					}
+				}
 			}
 
 			byte comp = this.getComparatorPower();
@@ -218,12 +241,6 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 			if(comp != this.lastRedstone)
 				this.markDirty();
 			this.lastRedstone = comp;
-
-			if(mode == mode_input || mode == mode_buffer) {
-				if(node != null && node.hasValidNet()) node.net.addReceiver(this);
-			} else {
-				if(node != null && node.hasValidNet()) node.net.removeReceiver(this);
-			}
 
 			power = Library.chargeTEFromItems(inventory, 0, power, getMaxPower());
 

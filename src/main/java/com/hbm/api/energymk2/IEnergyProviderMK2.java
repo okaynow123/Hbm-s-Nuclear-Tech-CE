@@ -4,7 +4,6 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.util.Compat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -41,94 +40,80 @@ public interface IEnergyProviderMK2 extends IEnergyHandlerMK2 {
     }
 
     /**
-     * Attempts to provide energy to a neighboring tile entity.
-     * Checks if the neighboring tile entity is an energy conductor or receiver.
-     * If it's a conductor, adds this provider to the conductor's network.
-     * If it's a receiver or has {@link CapabilityEnergy#ENERGY} and can receive FE, transfers energy to the receiver.
+     * Attempts to provide energy to a target tile entity at specific coordinates.
+     * It checks for HBM's native energy interfaces first, and then checks for Forge Energy capability
      *
-     * @param world The game world in which the operation takes place.
-     * @param x     The x-coordinate of the current tile entity.
-     * @param y     The y-coordinate of the current tile entity.
-     * @param z     The z-coordinate of the current tile entity.
-     * @param dir   The direction from this provider to the neighboring tile entity.
+     * @param world The game world.
+     * @param x     The x-coordinate of the <b>target tile entity</b> (the potential receiver).
+     * @param y     The y-coordinate of the <b>target tile entity</b>.
+     * @param z     The z-coordinate of the <b>target tile entity</b>.
+     * @param dir   The {@link ForgeDirection} from this provider to the target tile entity.
      */
     default void tryProvide(World world, int x, int y, int z, ForgeDirection dir) {
-        boolean red = false;
+        BlockPos targetPos = new BlockPos(x, y, z);
+        TileEntity targetTE = world.getTileEntity(targetPos);
 
-        if (Compat.getTileStandard(world, x, y, z) instanceof IEnergyConductorMK2 con) {
+        if (targetTE == null) return;
+
+        boolean connectedToNetwork = false;
+        boolean powerTransferred = false;
+
+        if (targetTE instanceof IEnergyConductorMK2 con) {
             if (con.canConnect(dir.getOpposite())) {
-
-                Nodespace.PowerNode node = Nodespace.getNode(world, new BlockPos(x, y, z));
-
+                Nodespace.PowerNode node = Nodespace.getNode(world, targetPos);
                 if (node != null && node.net != null) {
                     node.net.addProvider(this);
-                    red = true;
+                    connectedToNetwork = true;
                 }
             }
         }
 
-        BlockPos providerPos = new BlockPos(x, y, z);
-        ForgeDirection[] directionsToCheck;
-        if (dir == ForgeDirection.UNKNOWN) {
-            directionsToCheck = ForgeDirection.VALID_DIRECTIONS;
-        } else {
-            directionsToCheck = new ForgeDirection[]{dir};
-        }
+        if (targetTE instanceof IEnergyReceiverMK2 rec && targetTE != this) {
+            if (rec.canConnect(dir.getOpposite())) {
+                long canProvide = Math.min(this.getPower(), this.getProviderSpeed());
+                long canReceive = Math.min(rec.getMaxPower() - rec.getPower(), rec.getReceiverSpeed());
+                long toTransfer = Math.min(canProvide, canReceive);
 
-        for (ForgeDirection checkDir : directionsToCheck) {
-            if (checkDir == null || checkDir == ForgeDirection.UNKNOWN) {
-                continue;
-            }
-
-            BlockPos neighborPos = providerPos.offset(checkDir.toEnumFacing());
-            TileEntity neighborTE = world.getTileEntity(neighborPos);
-
-            if (neighborTE == null || neighborTE == this) {
-                continue;
-            }
-
-            if (neighborTE instanceof IEnergyReceiverMK2 rec) {
-                if (rec.canConnect(checkDir.getOpposite())) {
-                    long provides = Math.min(this.getPower(), this.getProviderSpeed());
-                    long receives = Math.min(rec.getMaxPower() - rec.getPower(), rec.getReceiverSpeed());
-                    long toTransfer = Math.min(provides, receives);
-                    toTransfer -= rec.transferPower(toTransfer, false);
-                    this.usePower(toTransfer);
+                if (toTransfer > 0) {
+                    long rejected = rec.transferPower(toTransfer, false);
+                    long accepted = toTransfer - rejected;
+                    if (accepted > 0) {
+                        this.usePower(accepted);
+                        powerTransferred = true;
+                    }
                 }
-            } else {
-                EnumFacing neighborFace = checkDir.getOpposite().toEnumFacing();
-                if (neighborFace != null && neighborTE.hasCapability(CapabilityEnergy.ENERGY, neighborFace)) {
-                    IEnergyStorage cap = neighborTE.getCapability(CapabilityEnergy.ENERGY, neighborFace);
-                    boolean ready = cap != null && cap.canReceive() && GeneralConfig.conversionRateHeToRF > 0 && this.getPower() > 0 && this.getProviderSpeed() > 0;
-                    if (ready) {
-                        long heBudget = Math.min(this.getPower(), this.getProviderSpeed());
-                        long feBudget = (long) Math.floor(heBudget * GeneralConfig.conversionRateHeToRF);
-                        if (feBudget > 0) {
-                            int freeSpaceFE = cap.receiveEnergy(Integer.MAX_VALUE, true);
-                            if (freeSpaceFE > 0) {
-                                int feToSend = (int) Math.min(Math.min(feBudget, freeSpaceFE), Integer.MAX_VALUE);
-                                int feAccepted = cap.receiveEnergy(feToSend, false);
-                                if (feAccepted > 0) {
-                                    long heAccepted = Math.round(feAccepted / GeneralConfig.conversionRateHeToRF);
-                                    this.usePower(heAccepted);
-                                }
-                            }
+            }
+        } else if (targetTE != this) {
+            EnumFacing targetFace = dir.getOpposite().toEnumFacing();
+            if (targetTE.hasCapability(CapabilityEnergy.ENERGY, targetFace)) {
+                IEnergyStorage cap = targetTE.getCapability(CapabilityEnergy.ENERGY, targetFace);
+                boolean ready = cap != null && cap.canReceive() && GeneralConfig.conversionRateHeToRF > 0 && this.getPower() > 0 && this.getProviderSpeed() > 0;
+                if (ready) {
+                    long heBudget = Math.min(this.getPower(), this.getProviderSpeed());
+                    long feBudget = (long) Math.floor(heBudget * GeneralConfig.conversionRateHeToRF);
+                    if (feBudget > 0) {
+                        int feToSend = (int) Math.min(feBudget, Integer.MAX_VALUE);
+                        int feAccepted = cap.receiveEnergy(feToSend, false);
+                        if (feAccepted > 0) {
+                            long heDrained = (long) Math.ceil(feAccepted / GeneralConfig.conversionRateHeToRF);
+                            this.usePower(heDrained);
+                            powerTransferred = true;
                         }
                     }
                 }
             }
         }
 
-        if (particleDebug) {
+        if (particleDebug && (connectedToNetwork || powerTransferred)) {
             NBTTagCompound data = new NBTTagCompound();
             data.setString("type", "network");
             data.setString("mode", "power");
             double posX = x + 0.5 - dir.offsetX * 0.5 + world.rand.nextDouble() * 0.5 - 0.25;
             double posY = y + 0.5 - dir.offsetY * 0.5 + world.rand.nextDouble() * 0.5 - 0.25;
             double posZ = z + 0.5 - dir.offsetZ * 0.5 + world.rand.nextDouble() * 0.5 - 0.25;
-            data.setDouble("mX", dir.offsetX * (red ? 0.025 : 0.1));
-            data.setDouble("mY", dir.offsetY * (red ? 0.025 : 0.1));
-            data.setDouble("mZ", dir.offsetZ * (red ? 0.025 : 0.1));
+            data.setDouble("mX", dir.offsetX * (connectedToNetwork ? 0.025 : 0.1));
+            data.setDouble("mY", dir.offsetY * (connectedToNetwork ? 0.025 : 0.1));
+            data.setDouble("mZ", dir.offsetZ * (connectedToNetwork ? 0.025 : 0.1));
             PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY, posZ), new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 25));
         }
     }
