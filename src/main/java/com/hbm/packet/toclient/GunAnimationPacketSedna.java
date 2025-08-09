@@ -72,7 +72,7 @@ public class GunAnimationPacketSedna implements IMessage {
                 ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
                 int slot = player.inventory.currentItem;
 
-                if(stack == null)
+                if(stack.isEmpty())
                     return null;
 
                 if(stack.getItem() instanceof ItemGunBaseNT) {

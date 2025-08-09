@@ -25,41 +25,41 @@ public class LegoClient {
         renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xFFBF00, 0xFFFFFF, length, false);
     };
 
-    /*public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLECHETTE_BULLET = (bullet, interp) -> {
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLECHETTE_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0x8C8C8C, 0xCACACA, length, false);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x8C8C8C, 0xCACACA, length, false);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_AP_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0xFF6A00, 0xFFE28D, length, false);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xFF6A00, 0xFFE28D, length, false);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_EXPRESS_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0x9E082E, 0xFF8A79, length, false);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x9E082E, 0xFF8A79, length, false);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_DU_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0x5CCD41, 0xE9FF8D, length, false);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x5CCD41, 0xE9FF8D, length, false);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_TRACER_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0x9E082E, 0xFF8A79, length, true);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x9E082E, 0xFF8A79, length, true);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_LEGENDARY_BULLET = (bullet, interp) -> {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
-        renderBulletStandard(Tessellator.instance, 0x7F006E, 0xFF7FED, length, true);
-    };*/
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x7F006E, 0xFF7FED, length, true);
+    };
 
     public static void renderBulletStandard(BufferBuilder buffer, int dark, int light, double length, boolean fullbright) {
         renderBulletStandard(buffer, dark, light, length, 0.03125D, 0.03125D * 0.25D, fullbright);

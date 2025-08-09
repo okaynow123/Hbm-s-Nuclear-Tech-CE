@@ -9,7 +9,6 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.Map;
 //Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
 //https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
 public class ViewModelPositonDebugger {
-    static boolean debug = true;
+    static boolean debug = false;
     static boolean blockInput = false;
     public Map<TransformType, offset> offsetMap;
     protected int debugIndex = 0;
@@ -93,7 +92,11 @@ public class ViewModelPositonDebugger {
             tickDebug();
     }
     protected void tickDebug() {
-        boolean[] inputs = new boolean[]{Keyboard.isKeyDown(Keyboard.KEY_UP),Keyboard.isKeyDown(Keyboard.KEY_LEFT),Keyboard.isKeyDown(Keyboard.KEY_DOWN),Keyboard.isKeyDown(Keyboard.KEY_RIGHT),Keyboard.isKeyDown(Keyboard.KEY_I),Keyboard.isKeyDown(Keyboard.KEY_J),Keyboard.isKeyDown(Keyboard.KEY_K),Keyboard.isKeyDown(Keyboard.KEY_L),Keyboard.isKeyDown(Keyboard.KEY_SPACE),Keyboard.isKeyDown(Keyboard.KEY_RSHIFT),Keyboard.isKeyDown(Keyboard.KEY_RCONTROL),Keyboard.isKeyDown(Keyboard.KEY_LBRACKET),Keyboard.isKeyDown(Keyboard.KEY_RBRACKET)};
+        boolean[] inputs = new boolean[]{Keyboard.isKeyDown(Keyboard.KEY_UP),Keyboard.isKeyDown(Keyboard.KEY_LEFT),Keyboard.isKeyDown(Keyboard.KEY_DOWN),
+                Keyboard.isKeyDown(Keyboard.KEY_RIGHT),Keyboard.isKeyDown(Keyboard.KEY_I),Keyboard.isKeyDown(Keyboard.KEY_J),
+                Keyboard.isKeyDown(Keyboard.KEY_K),Keyboard.isKeyDown(Keyboard.KEY_L),Keyboard.isKeyDown(Keyboard.KEY_SPACE),
+                Keyboard.isKeyDown(Keyboard.KEY_RSHIFT),Keyboard.isKeyDown(Keyboard.KEY_RCONTROL),Keyboard.isKeyDown(Keyboard.KEY_LBRACKET),
+                Keyboard.isKeyDown(Keyboard.KEY_RBRACKET),Keyboard.isKeyDown(Keyboard.KEY_COMMA),Keyboard.isKeyDown(Keyboard.KEY_PERIOD)};
         boolean doUnblock = true;
         for (boolean input : inputs) {
             if (input) {
@@ -152,6 +155,12 @@ public class ViewModelPositonDebugger {
                     offset.rotation = offset.rotation.add(0,damn ? 0 : -incrementAngle,damn ? incrementAngle : 0);
                 if (inputs[7])
                     offset.rotation = offset.rotation.add(0,damn ? 0 : incrementAngle,damn ? -incrementAngle : 0);
+            }
+            {
+                if (inputs[13])
+                    offset.position = offset.position.add(0,0,-increment);
+                if (inputs[14])
+                    offset.position = offset.position.add(0,0,increment);
             }
         }
     }

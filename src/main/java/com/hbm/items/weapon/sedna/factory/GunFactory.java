@@ -43,10 +43,10 @@ public class GunFactory {
                 .anim(Lego.LAMBDA_DEBUG_ANIMS)
         );
 
+        XFactory9mm.init();
         /*XFactoryBlackPowder.init();
         XFactory357.init();
         XFactory44.init();
-        XFactory9mm.init();
         XFactory12ga.init();
         XFactory40mm.init();
         XFactory762mm.init();

@@ -1799,6 +1799,7 @@ public class ModItems {
     //Gun ammo
     public static final Item assembly_nuke = new ItemBase("assembly_nuke").setCreativeTab(MainRegistry.partsTab);
     public static Item gun_debug;
+    public static Item gun_greasegun;
     public static Item ammo_debug;
     public static Item ammo_standard;
     public static final Item ammo_shell = new ItemAmmo("ammo_shell").setCreativeTab(MainRegistry.weaponTab);

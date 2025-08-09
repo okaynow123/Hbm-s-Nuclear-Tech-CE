@@ -21,6 +21,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Method;
@@ -76,9 +78,11 @@ public class EntityDamageUtil {
         }
         DamageResistanceHandler.setup(pierceDT, pierce);
         living.attackEntityFrom(source, 0F);
-        boolean ret = attackEntityFromNTInternal(living, source, amount, ignoreIFrame, allowSpecialCancel, knockbackMultiplier);
-        DamageResistanceHandler.reset();
-        return ret;
+        try {
+            return attackEntityFromNTInternal(living, source, amount, ignoreIFrame, allowSpecialCancel, knockbackMultiplier);
+        } finally {
+            DamageResistanceHandler.reset();
+        }
     }
 
     public static void setBeenAttacked(EntityLivingBase living) {
@@ -156,7 +160,7 @@ public class EntityDamageUtil {
     }
 
     private static boolean attackEntityFromNTInternal(EntityLivingBase living, DamageSource source, float amount, boolean ignoreIFrame, boolean allowSpecialCancel, double knockbackMultiplier) {
-        if (ForgeHooks.onLivingAttack(living, source, amount) && allowSpecialCancel) return false;
+        if (MinecraftForge.EVENT_BUS.post(new LivingAttackEvent(living, source, amount)) && allowSpecialCancel) return false;
         if (living.isEntityInvulnerable(source)) return false;
         if (living.world.isRemote) return false;
         if (living instanceof EntityPlayer && ((EntityPlayer) living).capabilities.disableDamage && !source.canHarmInCreative())

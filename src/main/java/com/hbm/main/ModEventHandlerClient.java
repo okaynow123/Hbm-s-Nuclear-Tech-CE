@@ -6,6 +6,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.capability.HbmCapability;
+import com.hbm.config.ClientConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.entity.siege.SiegeTier;
@@ -216,7 +217,7 @@ public class ModEventHandlerClient {
         TileEntityItemStackRenderer render = item.getTileEntityItemStackRenderer();
         if (render instanceof TEISRBase) {
             ((TEISRBase) render).itemModel = model;
-            reg.putObject(loc, new BakedModelNoFPV((TEISRBase) render));
+            reg.putObject(loc, new BakedModelNoFPV((TEISRBase) render, model));
         }
     }
 
@@ -527,6 +528,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
         swapModelsNoFPV(ModItems.gun_debug, reg);
+        swapModelsNoFPV(ModItems.gun_greasegun, reg);
 
         for (Item item : RBMKItemRenderers.itemRenderers.keySet()) {
             swapModels(item, reg);
@@ -965,6 +967,27 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 boolean isHooked = player.getHeldItemMainhand().getItem() == ModItems.gun_supershotgun && ItemGunShotty.hasHookedEntity(player.world, player.getHeldItemMainhand());
                 if (isHooked)
                     player.distanceWalkedModified = player.prevDistanceWalkedModified; //Stops the held shotgun from bobbing when hooked
+                if(ClientConfig.GUN_VISUAL_RECOIL.get()) {
+                    ItemGunBaseNT.offsetVertical += ItemGunBaseNT.recoilVertical;
+                    ItemGunBaseNT.offsetHorizontal += ItemGunBaseNT.recoilHorizontal;
+                    player.rotationPitch -= ItemGunBaseNT.recoilVertical;
+                    player.rotationYaw -= ItemGunBaseNT.recoilHorizontal;
+
+                    ItemGunBaseNT.recoilVertical *= ItemGunBaseNT.recoilDecay;
+                    ItemGunBaseNT.recoilHorizontal *= ItemGunBaseNT.recoilDecay;
+                    float dV = ItemGunBaseNT.offsetVertical * ItemGunBaseNT.recoilRebound;
+                    float dH = ItemGunBaseNT.offsetHorizontal * ItemGunBaseNT.recoilRebound;
+
+                    ItemGunBaseNT.offsetVertical -= dV;
+                    ItemGunBaseNT.offsetHorizontal -= dH;
+                    player.rotationPitch += dV;
+                    player.rotationYaw += dH;
+                } else {
+                    ItemGunBaseNT.offsetVertical = 0;
+                    ItemGunBaseNT.offsetHorizontal = 0;
+                    ItemGunBaseNT.recoilVertical = 0;
+                    ItemGunBaseNT.recoilHorizontal = 0;
+                }
             }
         } else {
 
@@ -1727,6 +1750,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
         ModelPlayer renderer = evt.getRenderer().getMainModel();
 
+        if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
+            renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
+        }
+
         if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IHoldableWeapon) {
             renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
             // renderer.getMainModel().bipedLeftArm.rotateAngleY = 90;
@@ -1757,6 +1784,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
             ModelBiped renderer = (ModelBiped) event.getRenderer().getMainModel();
 
+            if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
+                renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
+            }
             if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IHoldableWeapon) {
                 renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
             }

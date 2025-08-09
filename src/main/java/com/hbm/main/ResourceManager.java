@@ -678,6 +678,7 @@ public class ResourceManager {
 	public static final IModelCustom boltgun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/boltgun.obj")).asVBO();
 
 	public static final IModelCustom lilmac = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/lilmac.obj")).asVBO();
+	public static final IModelCustom greasegun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/greasegun.obj")).asVBO();
 
 	public static final HashMap<String, BusAnimationSedna> python_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/python.json"));
 	public static final HashMap<String, BusAnimationSedna> cursed_anim = AnimationLoader.load(new ResourceLocation(RefStrings.MODID, "models/weapons/animations/cursed.json"));
@@ -1151,6 +1152,7 @@ public class ResourceManager {
 	public static final ResourceLocation hf_sword_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/hf_sword.png");
 
 	public static final ResourceLocation debug_gun_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/debug_gun.png");
+	public static final ResourceLocation greasegun_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/greasegun.png");
 	
 	public static final ResourceLocation brimstone_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/brimstone.png");
 	public static final ResourceLocation hk69_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/hk69.png");

@@ -9,6 +9,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import java.util.function.BiConsumer;
 
 import static com.hbm.items.weapon.sedna.factory.GunFactory.ammo_debug;
+import static com.hbm.items.weapon.sedna.factory.XFactory9mm.*;
 
 // TODO: make this shit auto-register itself
 public class GunFactoryClient {
@@ -92,14 +93,14 @@ public class GunFactoryClient {
         p22_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p22_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p22_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
-        p22_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
+        p22_ap.setRenderer(LegoClient.RENDER_AP_BULLET);*/
 
         p9_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p9_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p9_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p9_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
 
-        r556_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
+        /*r556_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r556_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r556_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r556_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
@@ -177,11 +178,11 @@ public class GunFactoryClient {
 
         //HUDS
         ((ItemGunBaseNT) ModItems.gun_debug)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_greasegun)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         /*((ItemGunBaseNT) ModItems.gun_pepperbox)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_light_revolver)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_light_revolver_atlas)			.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_henry)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_greasegun)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_maresleg)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_maresleg_broken)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_flaregun)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);

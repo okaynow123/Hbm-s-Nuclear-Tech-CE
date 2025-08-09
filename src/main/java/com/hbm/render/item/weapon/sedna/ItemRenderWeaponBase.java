@@ -5,6 +5,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.SmokeNode;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.item.TEISRBase;
+import com.hbm.render.util.ViewModelPositonDebugger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +23,15 @@ import org.lwjgl.util.glu.Project;
 import java.util.List;
 
 public abstract class ItemRenderWeaponBase extends TEISRBase {
+
+    ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
+            .get(ItemCameraTransforms.TransformType.GUI)
+            .setScale(0.06f).setPosition(0.00, 16.5, -9.25).setRotation(186, -182, 0).getHelper()
+            .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
+            .setScale(0.5f).setPosition(-1.15, 0.9, -1.4).setRotation(-25, 101, 5).getHelper()
+            .get(ItemCameraTransforms.TransformType.GROUND)
+            .setScale(0.85f).setPosition(-0.5, 0.6, -0.5).getHelper();
+
     public static final ResourceLocation flash_plume = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/lilmac_plume.png");
     public static float interp;
 
@@ -35,6 +46,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
     public void renderByItem(ItemStack stack, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.enableCull();
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
         ItemCameraTransforms.TransformType currentType = this.type;
 
@@ -48,16 +60,21 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
                 renderFirstPerson(stack);
             }
             case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND -> {
+                offsets.apply(type);
                 setupThirdPerson(stack);
                 renderEquipped(stack);
             }
             case GROUND -> {
+                offsets.apply(type);
                 setupEntity(stack);
                 renderEntity(stack);
             }
             case GUI -> {
+                offsets.apply(type);
+                GlStateManager.disableCull();
                 setupInv(stack);
                 renderInv(stack);
+                GlStateManager.enableCull();
             }
             default -> {
                 if (!doNullTransform()) {
@@ -65,6 +82,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
                 }
             }
         }
+        GL11.glPopAttrib();
         GlStateManager.popMatrix();
     }
 
@@ -77,6 +95,10 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         this.interp = interp;
         Minecraft mc = Minecraft.getMinecraft();
         EntityRenderer entityRenderer = mc.entityRenderer;
+        ItemCameraTransforms.TransformType prev = this.type;
+        this.type = mc.player.getPrimaryHand() == EnumHandSide.RIGHT
+                ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
+                : ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
         float farPlaneDistance = mc.gameSettings.renderDistanceChunks * 16;
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
@@ -85,12 +107,16 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         GlStateManager.loadIdentity();
         GlStateManager.pushMatrix();
-        if(mc.gameSettings.thirdPersonView == 0 && !mc.gameSettings.hideGUI) {
-            entityRenderer.enableLightmap();
-            this.setupTransformsAndRender(stack);
-            entityRenderer.disableLightmap();
+        try {
+            if (mc.gameSettings.thirdPersonView == 0 && !mc.gameSettings.hideGUI) {
+                entityRenderer.enableLightmap();
+                this.setupTransformsAndRender(stack);
+                entityRenderer.disableLightmap();
+            }
+        } finally {
+            GlStateManager.popMatrix();
+            this.type = prev; // ОБЯЗАТЕЛЬНО откатываем
         }
-        GlStateManager.popMatrix();
         if(mc.gameSettings.thirdPersonView == 0) {
             entityRenderer.itemRenderer.renderOverlays(interp);
         }
