@@ -273,6 +273,7 @@ public class OreDictManager {
     public static final DictFrame INFERNAL = new DictFrame("InfernalCoal");
     public static final DictFrame BAUXITE = new DictFrame("Bauxite");
     public static final DictFrame CRYOLITE = new DictFrame("Cryolite");
+    public static final DictFrame ALEXANDRITE = new DictFrame("Alexandrite");
     /*
      * HAZARDS, MISC
      */
@@ -525,6 +526,7 @@ public class OreDictManager {
         CHLOROCALCITE.dust(powder_chlorocalcite);
         MOLYSITE.dust(powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
         SODALITE.gem(gem_sodalite);
+        ALEXANDRITE.gem(gem_alexandrite);
 
         VOLCANIC.gem(gem_volcanic).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.GEM));
         HEMATITE.ore(fromOne(stone_resource, EnumStoneType.HEMATITE));

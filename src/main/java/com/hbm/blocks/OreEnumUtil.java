@@ -99,6 +99,7 @@ public class OreEnumUtil {
         RARE_EARTHS(new ItemStack(rare_earth_chunk), OreEnumUtil::vanillaFortune),
         BLOCK_METEOR(OreEnumUtil::blockMeteorDrop, OreEnumUtil::vanillaFortune),
         CINNABAR(new ItemStack(cinnabar), OreEnumUtil::base1Rand2Fortune),
+        ALEXANDRITE(new ItemStack(gem_alexandrite), OreEnumUtil::base1Rand2Fortune),
         COLTAN(new ItemStack(fragment_coltan), OreEnumUtil::vanillaFortune),
         RAD_GEM(new ItemStack(gem_rad), OreEnumUtil::vanillaFortune),
         WASTE_TRINITE(new ItemStack(trinitite), OreEnumUtil::vanillaFortune),

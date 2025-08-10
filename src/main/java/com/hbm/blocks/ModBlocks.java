@@ -242,6 +242,7 @@ public class ModBlocks {
 	public static final Block ore_depth_cinnabar = new BlockDepthOre("ore_depth_cinnabar", OreEnum.CINNABAR).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block ore_depth_zirconium = new BlockDepthOre("ore_depth_zirconium", OreEnum.ZIRCON).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block ore_depth_borax = new BlockDepthOre("ore_depth_borax", null).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block ore_alexandrite = new BlockDepthOre("ore_alexandrite", OreEnum.ALEXANDRITE).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block cluster_depth_iron = new BlockDepthOre("cluster_depth_iron", OreEnum.CLUSTER_IRON).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block cluster_depth_titanium = new BlockDepthOre("cluster_depth_titanium", OreEnum.CLUSTER_TITANIUM).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block cluster_depth_tungsten = new BlockDepthOre("cluster_depth_tungsten", OreEnum.CLUSTER_TUNGSTEN).setCreativeTab(MainRegistry.resourceTab);
@@ -256,6 +257,9 @@ public class ModBlocks {
 	public static final Block ore_oil_sand = new BlockFallingBase(Material.SAND, "ore_oil_sand", SoundType.SAND).setCreativeTab(MainRegistry.resourceTab).setHardness(0.5F).setResistance(1.0F);
 
 	public static final Block stone_gneiss = new BlockBase(Material.ROCK, "stone_gneiss").setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block gneiss_brick = new BlockBase(Material.ROCK, "gneiss_brick").setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block gneiss_tile = new BlockBase(Material.ROCK, "gneiss_tile").setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
+	public static final Block gneiss_chiseled = new BlockBase(Material.ROCK, "gneiss_chiseled").setCreativeTab(MainRegistry.blockTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_iron = new BlockNTMOre("ore_gneiss_iron", 1).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_gold = new BlockNTMOre("ore_gneiss_gold", 2).setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ore_gneiss_uranium = new BlockOutgas(true, 20, true, "ore_gneiss_uranium").setCreativeTab(MainRegistry.resourceTab).setHardness(1.5F).setResistance(10.0F);

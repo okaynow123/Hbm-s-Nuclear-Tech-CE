@@ -39,7 +39,7 @@ public class GunEnergyFactory {
 		config.allowsInfinity = true;
 		config.crosshair = Crosshair.NONE;
 		config.durability = 12000;
-		config.reloadSound = GunConfiguration.RSOUND_MAG; //MetalloloM: i'll add a new sounds for it later
+		config.reloadSound = GunConfiguration.RSOUND_MAG; //MetalloloM: i'll add new sounds for it later
 		config.firingSound = HBMSoundHandler.hksShoot;
 		config.reloadSoundEnd = false;
 
