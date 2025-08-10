@@ -57,7 +57,7 @@ public class FluidType {
 	/** How hot this fluid is. Simple enough. */
 	public int temperature = ROOM_TEMPERATURE;
 	
-	public HashMap<Class, Object> containers = new HashMap<>();
+	public HashMap<Class<?>, Object> containers = new HashMap<>();
 	public HashMap<Class<? extends FluidTrait>, FluidTrait> traits = new HashMap<>();
 	//public List<EnumFluidTrait> enumTraits = new ArrayList();
 	

@@ -44,8 +44,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -116,20 +116,22 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     	}
 	}
 
+	@Nullable
 	public BlockPos findCore(IBlockAccess world, BlockPos pos) {
     	positions.clear();
     	int[] p = findCoreRec(world, pos.getX(), pos.getY(), pos.getZ());
     	if(p == null) return null;
     	return new BlockPos(p[0], p[1], p[2]);
     }
-	
-	public int[] findCore(IBlockAccess world, int x, int y, int z) {
+
+	public int @Nullable [] findCore(IBlockAccess world, int x, int y, int z) {
     	positions.clear();
     	return findCoreRec(world, x, y, z);
     }
     
     List<BlockPos> positions = new ArrayList<BlockPos>();
-    public int[] findCoreRec(IBlockAccess world, int x, int y, int z) {
+
+	private int @Nullable [] findCoreRec(IBlockAccess world, int x, int y, int z) {
     	
     	BlockPos pos = new BlockPos(x, y, z);
     	IBlockState state = world.getBlockState(pos);

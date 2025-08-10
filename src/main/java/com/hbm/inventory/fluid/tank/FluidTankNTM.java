@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FluidTankNTM implements IFluidHandler, IFluidTank {
+public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
 
     public static final List<IFluidLoadingHandler> loadingHandlers = new ArrayList<>();
     public static final Set<Item> noDualUnload = new HashSet<>();
@@ -423,5 +423,14 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         FluidStack drained = new FluidStack(getTankTypeFF(), toDrain);
         if (doDrain) setFill(getFill() - toDrain);
         return drained;
+    }
+
+    @Override
+    public FluidTankNTM clone() {
+        try {
+            return (FluidTankNTM) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

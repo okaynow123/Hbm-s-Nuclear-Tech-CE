@@ -418,6 +418,8 @@ public class ResourceManager {
 	//Industrial Boiler
 	public static final IModelCustom boiler_industrial = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/industrial_boiler.obj")).asVBO();
 
+	public static final IModelCustom hephaestus = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/hephaestus.obj")).asVBO();
+
 	//IGen
 	public static final IModelCustom igen = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/igen.obj")).asVBO();
 
@@ -641,6 +643,8 @@ public class ResourceManager {
 
 	//Industrial Boiler
 	public static final ResourceLocation boiler_industrial_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/industrial_boiler.png");
+
+	public static final ResourceLocation hephaestus_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/hephaestus.png");
 
 	//FENSU
 	public static final ResourceLocation[] fensu_tex = new ResourceLocation[] { 
