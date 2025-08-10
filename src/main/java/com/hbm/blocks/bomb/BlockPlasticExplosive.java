@@ -39,6 +39,8 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
@@ -74,6 +76,7 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new RotatableStateMapper(loc, FACING);
     }
@@ -94,6 +97,7 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
         var blockFrame = blockFrames[0];
         try {
