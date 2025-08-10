@@ -39,6 +39,7 @@ public class NukeBalefire extends BlockMachineBase implements IBomb {
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		if (worldIn.getTileEntity(pos) instanceof TileEntityNukeBalefire balefire && placer instanceof EntityPlayerMP playerMP)
 			balefire.placerID = playerMP.getUniqueID();
 	}
