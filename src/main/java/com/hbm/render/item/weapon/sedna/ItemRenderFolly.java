@@ -111,13 +111,11 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 			}
 
 			GlStateManager.pushMatrix();
-			GlStateManager.pushAttrib();
+			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-			OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			float variance = 0.85F + player.getRNG().nextFloat() * 0.15F;
 
@@ -129,6 +127,7 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 				GlStateManager.translate((font.getStringWidth(msg) / 2) * crosshairSize + 2, 1F + font.FONT_HEIGHT * crosshairSize / 2F, -2.75F);
 				GlStateManager.scale(crosshairSize, -crosshairSize, crosshairSize);
 				GlStateManager.rotate(180D, 0, 1, 0);
+				GlStateManager.glNormal3f(0.0F, 0.0F, -1.0F * crosshairSize);
 				font.drawString(msg, 0, 0, new Color(variance, variance * 0.5F, 0F).getRGB());
 				GlStateManager.popMatrix();
 			}
@@ -138,6 +137,7 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 			GlStateManager.translate((font.getStringWidth(splash) / 2) * splashSize + 2, 1F + font.FONT_HEIGHT * splashSize / 2F, -2.75F);
 			GlStateManager.scale(splashSize, -splashSize, splashSize);
 			GlStateManager.rotate(180D, 0, 1, 0);
+			GlStateManager.glNormal3f(0.0F, 0.0F, -1.0F * splashSize);
 			font.drawString(splash, 0, 0, new Color(variance, variance * 0.5F, 0F).getRGB());
 			GlStateManager.popMatrix();
 
@@ -148,9 +148,10 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 				GlStateManager.translate(2.5F, 1.375F, -2.75F);
 				GlStateManager.scale(fontSize, -fontSize, fontSize);
 				GlStateManager.rotate(180D, 0, 1, 0);
+				GlStateManager.glNormal3f(0.0F, 0.0F, -1.0F * fontSize);
 				for(String line : tty) {
 					font.drawString(line, 0, 0, new Color(variance, variance * 0.5F, 0F).getRGB());
-					GlStateManager.translate(0, (font.FONT_HEIGHT + 2), 0);
+					GL11.glTranslated(0, (font.FONT_HEIGHT + 2), 0);
 				}
 				GlStateManager.popMatrix();
 			}
@@ -166,7 +167,6 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 			int j = brightness % 65536;
 			int k = brightness / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
-			OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 		} else {
 			jingle = false;
 		}
