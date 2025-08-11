@@ -1,7 +1,9 @@
 package com.hbm.blocks.machine;
 
+import com.hbm.api.fluid.IFluidConnectorBlock;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.interfaces.IFluidVisualConnectable;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.lib.ForgeDirection;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -13,10 +15,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 
-public class BlockReactor extends Block implements IFluidVisualConnectable {
+public class BlockReactor extends Block implements IFluidConnectorBlock {
 
 	public static final PropertyBool ACTIVATED = PropertyBool.create("activated");
 
@@ -65,8 +67,7 @@ public class BlockReactor extends Block implements IFluidVisualConnectable {
 	}
 
 	@Override
-	public boolean shouldConnect(Fluid f) {
+	public boolean canConnect(FluidType type, IBlockAccess world, int x, int y, int z, ForgeDirection dir) {
 		return false;
 	}
-
 }
