@@ -37,7 +37,8 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
     public EntityBulletBeamBase(World world) {
         super(world);
         this.ignoreFrustumCheck = true;
-        setRenderDistanceWeight(10.0D);
+        if(world.isRemote)
+            setRenderDistanceWeight(10.0D);
         this.setSize(0.5F, 0.5F);
         this.isImmuneToFire = true;
     }

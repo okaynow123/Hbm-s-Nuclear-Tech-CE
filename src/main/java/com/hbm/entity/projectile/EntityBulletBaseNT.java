@@ -84,7 +84,8 @@ public class EntityBulletBaseNT extends EntityThrowableInterp implements IBullet
 
     public EntityBulletBaseNT(World world) {
         super(world);
-        this.setRenderDistanceWeight(10.0D);
+        if(world.isRemote)
+            setRenderDistanceWeight(10.0D);
         this.setSize(0.5F, 0.5F);
     }
 
@@ -98,7 +99,8 @@ public class EntityBulletBaseNT extends EntityThrowableInterp implements IBullet
         }
         this.getDataManager().set(STYLE, this.config.style);
         this.getDataManager().set(TRAIL, this.config.trail);
-        this.setRenderDistanceWeight(10.0D);
+        if(world.isRemote)
+            setRenderDistanceWeight(10.0D);
 
         if(this.config == null) {
             this.setDead();
@@ -174,8 +176,8 @@ public class EntityBulletBaseNT extends EntityThrowableInterp implements IBullet
         this.getDataManager().set(STYLE, this.config.style);
         this.getDataManager().set(TRAIL, this.config.trail);
         this.thrower = entity;
-
-        this.setRenderDistanceWeight(10.0D);
+        if(world.isRemote)
+            setRenderDistanceWeight(10.0D);
         this.setSize(0.5F, 0.5F);
 
         this.posY = entity.posY + entity.getEyeHeight() - 0.10000000149011612D;

@@ -35,7 +35,8 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
 
     public EntityBulletBaseMK4(World world) {
         super(world);
-        setRenderDistanceWeight(10.0D);
+        if(world.isRemote)
+            setRenderDistanceWeight(10.0D);
         this.setSize(0.5F, 0.5F);
         this.isImmuneToFire = true;
     }
