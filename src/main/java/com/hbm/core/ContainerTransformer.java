@@ -10,7 +10,68 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class ContainerTransformer implements IClassTransformer {
     private static final ObfSafeName DETECT_AND_SEND_CHANGES = new ObfSafeName("detectAndSendChanges", "func_75142_b");
-    private static final ObfSafeName ARE_ITEM_STACKS_EQUAL = new ObfSafeName("areItemStacksEqual", "func_77989_b");
+
+    /**
+     * Made safe against Spigot's patch.
+     * @see <a href="https://github.com/Luohuayu/CatServer/blob/1.12.2/patches/net/minecraft/inventory/Container.java.patch">Container.java.patch</a>
+     */
+    private static void injectHook(MethodNode method) {
+        boolean injected = false;
+
+        for (AbstractInsnNode insn : method.instructions.toArray()) {
+            if (!(insn instanceof MethodInsnNode mi)) continue;
+
+            boolean isSet = "set".equals(mi.name) && "(ILjava/lang/Object;)Ljava/lang/Object;".equals(mi.desc) &&
+                            (mi.getOpcode() == INVOKEVIRTUAL || mi.getOpcode() == INVOKEINTERFACE) &&
+                            ("net/minecraft/util/NonNullList".equals(mi.owner) || "java/util/List".equals(mi.owner));
+
+            if (!isSet) continue;
+
+            AbstractInsnNode maybePop = mi.getNext();
+            if (maybePop == null || maybePop.getOpcode() != POP) {
+                continue;
+            }
+
+            int localList = method.maxLocals;
+            int localIndex = localList + 1;
+            int localNew = localList + 2;
+            int localPrev = localList + 3;
+            method.maxLocals += 4;
+
+            InsnList patch = new InsnList();
+
+            patch.add(new VarInsnNode(ASTORE, localNew));   // pop newItem
+            patch.add(new VarInsnNode(ISTORE, localIndex)); // pop index
+            patch.add(new VarInsnNode(ASTORE, localList));  // pop list
+
+            // Replay the set(list, index, newItem) and capture the previous value
+            patch.add(new VarInsnNode(ALOAD, localList));
+            patch.add(new VarInsnNode(ILOAD, localIndex));
+            patch.add(new VarInsnNode(ALOAD, localNew));
+            patch.add(new MethodInsnNode(mi.getOpcode(), mi.owner, mi.name, mi.desc, (mi.getOpcode() == INVOKEINTERFACE)));
+            patch.add(new TypeInsnNode(CHECKCAST, "net/minecraft/item/ItemStack"));
+            patch.add(new VarInsnNode(ASTORE, localPrev));
+
+            patch.add(new VarInsnNode(ALOAD, 0));            // this (Container)
+            patch.add(new VarInsnNode(ILOAD, localIndex));       // index
+            patch.add(new VarInsnNode(ALOAD, localPrev));        // previous ItemStack
+            patch.add(new VarInsnNode(ALOAD, localNew));         // new ItemStack
+            patch.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/InventoryHook", "onContainerChange",
+                    "(Lnet/minecraft/inventory/Container;" + "ILnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)V", false));
+
+            method.instructions.insertBefore(mi, patch);
+            method.instructions.remove(maybePop);
+            method.instructions.remove(mi);
+
+            injected = true;
+            coreLogger.info("Injected hook at NonNullList#set site");
+            break;
+        }
+
+        if (!injected) {
+            throw new RuntimeException("Failed to find NonNullList#set call in detectAndSendChanges");
+        }
+    }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
@@ -37,38 +98,6 @@ public class ContainerTransformer implements IClassTransformer {
         } catch (Exception e) {
             coreLogger.fatal("Error transforming Container", e);
             return basicClass;
-        }
-    }
-
-    private void injectHook(MethodNode method) {
-        AbstractInsnNode targetNode = null;
-        // ALOAD, ALOAD, INVOKESTATIC, IFNE
-        for (AbstractInsnNode instruction : method.instructions.toArray()) {
-            if (instruction.getOpcode() == INVOKESTATIC) {
-                MethodInsnNode methodInsn = (MethodInsnNode) instruction;
-                if (methodInsn.owner.equals("net/minecraft/item/ItemStack") && ARE_ITEM_STACKS_EQUAL.matches(methodInsn.name)) {
-                    targetNode = instruction.getNext().getNext(); // instruction -> IFNE -> LabelNode
-                    break;
-                }
-            }
-        }
-
-        if (targetNode != null) {
-            InsnList toInject = new InsnList();
-            toInject.add(new VarInsnNode(ALOAD, 0)); // this
-            toInject.add(new VarInsnNode(ILOAD, 1)); // index
-            toInject.add(new VarInsnNode(ALOAD, 3)); // previousStack
-            toInject.add(new VarInsnNode(ALOAD, 2)); // newStack
-            toInject.add(new MethodInsnNode(INVOKESTATIC,
-                    "com/hbm/core/InventoryHook",
-                    "onContainerChange",
-                    "(Lnet/minecraft/inventory/Container;ILnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)V",
-                    false));
-
-            method.instructions.insert(targetNode, toInject);
-            coreLogger.info("Successfully injected hook into Container.detectAndSendChanges");
-        } else {
-            coreLogger.error("Failed to find injection point in Container.detectAndSendChanges!");
         }
     }
 }
