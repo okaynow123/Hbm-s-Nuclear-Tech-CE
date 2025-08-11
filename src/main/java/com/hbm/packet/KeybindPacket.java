@@ -6,7 +6,7 @@ import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.HbmKeybindsServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -49,8 +49,9 @@ public class KeybindPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(KeybindPacket m, MessageContext ctx) {
-			EntityPlayer p = ctx.getServerHandler().player;
-			HbmKeybindsServer.onPressedServer(p, EnumKeybind.values()[m.key], m.pressed);
+			EntityPlayerMP p = ctx.getServerHandler().player;
+			if (p.getServer() == null) return null;
+			p.getServer().addScheduledTask(() -> HbmKeybindsServer.onPressedServer(p, EnumKeybind.values()[m.key], m.pressed));
 			return null;
 		}
 		
