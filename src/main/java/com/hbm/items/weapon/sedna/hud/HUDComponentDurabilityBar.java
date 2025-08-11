@@ -34,8 +34,9 @@ public class HUDComponentDurabilityBar implements IHUDComponent {
         if(type != type.HOTBAR) return;
         ScaledResolution resolution = event.getResolution();
         Minecraft mc = Minecraft.getMinecraft();
+        boolean left = !player.getHeldItemOffhand().isEmpty();
 
-        int pX = resolution.getScaledWidth() / 2 + (mirrored ? -(62 + 36 + 52) : (62 + 36));
+        int pX = resolution.getScaledWidth() / 2 + (mirrored ? -(62 + 36 + 52 + (left ? 29 : 0)) : (62 + 36));
         int pZ = resolution.getScaledHeight() - 21;
 
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();

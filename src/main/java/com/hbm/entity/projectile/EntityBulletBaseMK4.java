@@ -60,6 +60,7 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
         this.motionZ = motionZ;
 
         this.shoot(this.motionX, this.motionY, this.motionZ, 1.0F, this.config.spread + gunSpread);
+        alignRotationWithMotion();
     }
 
     /**
@@ -89,6 +90,7 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
         this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
 
         this.shoot(this.motionX, this.motionY, this.motionZ, 1.0F, gunSpread);
+        alignRotationWithMotion();
     }
 
     /**
@@ -107,6 +109,7 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
         this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
         this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
         this.shoot(this.motionX, this.motionY, this.motionZ, 1.0F, gunSpread);
+        alignRotationWithMotion();
     }
 
     @Override
@@ -203,6 +206,20 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
             if (this.config.onRicochet != null) this.config.onRicochet.accept(this, mop);
             if (this.config.onEntityHit != null) this.config.onEntityHit.accept(this, mop);
         }
+    }
+
+    private void alignRotationWithMotion() {
+        double dx = this.motionX;
+        double dy = this.motionY;
+        double dz = this.motionZ;
+        float yaw = (float)(Math.atan2(dx, dz) * 180.0D / Math.PI);
+        float hyp = MathHelper.sqrt(dx * dx + dz * dz);
+        float pitch = (float)(Math.atan2(dy, (double) hyp) * 180.0D / Math.PI);
+
+        this.rotationYaw = yaw;
+        this.rotationPitch = pitch;
+        this.prevRotationYaw = yaw;
+        this.prevRotationPitch = pitch;
     }
 
     @Override

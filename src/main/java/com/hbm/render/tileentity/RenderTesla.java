@@ -53,7 +53,7 @@ public class RenderTesla extends TileEntitySpecialRenderer<TileEntityTesla>
                   + Math.pow(target[2] - sz, 2));
 
       BeamPronter.prontBeam(
-          Vec3.createVectorHelper(-target[0] + sx, target[1] - sy, -target[2] + sz),
+          Vec3.createVectorHelper(-target[0] + sx, target[1] - sy, -target[2] + sz).toVec3d(),
           EnumWaveType.RANDOM,
           EnumBeamType.SOLID,
           0x0051C4,

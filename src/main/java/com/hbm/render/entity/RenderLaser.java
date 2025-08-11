@@ -3,7 +3,6 @@ package com.hbm.render.entity;
 import com.hbm.entity.projectile.EntityLaser;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
 import com.hbm.render.misc.BeamPronter.EnumWaveType;
@@ -14,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(factory = "FACTORY")
 public class RenderLaser extends Render<EntityLaser> {
@@ -40,7 +40,7 @@ public class RenderLaser extends Render<EntityLaser> {
 			
 			RayTraceResult pos = Library.rayTrace(player, 100, 1);
 			
-			Vec3 skeleton = Vec3.createVectorHelper(pos.hitVec.x - player.posX, pos.hitVec.y - player.posY - player.getEyeHeight(), pos.hitVec.z - player.posZ);
+			Vec3d skeleton = new Vec3d(pos.hitVec.x - player.posX, pos.hitVec.y - player.posY - player.getEyeHeight(), pos.hitVec.z - player.posZ);
 			int init = (int) -(System.currentTimeMillis() % 360);
 			
 			//BeamPronter.prontHelix(skeleton, 0, 0, 0, EnumWaveType.SPIRAL, EnumBeamType.LINE, 0x0000ff, 0x8080ff, 0, (int)(skeleton.length() * 5), 0.2F);

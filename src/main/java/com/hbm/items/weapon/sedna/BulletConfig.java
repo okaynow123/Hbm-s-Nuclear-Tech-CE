@@ -225,12 +225,7 @@ public class BulletConfig implements Cloneable {
             case PHYSICAL -> dmg.setProjectile();
             case FIRE -> dmg.setFireDamage();
             case EXPLOSIVE -> dmg.setExplosion();
-            case ELECTRIC -> {
-            }
-            case LASER -> {
-            }
-            case SUBATOMIC -> {
-            }
+            case ELECTRIC, LASER, SUBATOMIC -> {}
         }
 
         return dmg;
@@ -276,7 +271,7 @@ public class BulletConfig implements Cloneable {
     }
 
     public BulletConfig setItem(GunFactory.EnumAmmoSecret ammo) {
-        //this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_secret, 1, ammo.ordinal());//FIXME
+        this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_secret, 1, ammo.ordinal());
         return this;
     }
 

@@ -52,8 +52,11 @@ import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.entity.ElectricityRenderer;
-import com.hbm.render.item.*;
+import com.hbm.render.item.ItemRenderMissile;
+import com.hbm.render.item.ItemRenderMissileGeneric;
 import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
+import com.hbm.render.item.ItemRenderMissilePart;
+import com.hbm.render.item.weapon.sedna.*;
 import com.hbm.render.misc.MissilePart;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.tileentity.IItemRendererProvider;
@@ -149,7 +152,7 @@ public class ClientProxy extends ServerProxy {
     public static boolean renderingConstant = false;
     public static int boxcarCalllist;
     public RenderInfoSystemLegacy theInfoSystem = new RenderInfoSystemLegacy();
-    private HashMap<Integer, Long> vanished = new HashMap<>();
+    private static HashMap<Integer, Long> vanished = new HashMap<>();
 
     public static void registerItemRenderer(Item i, TileEntityItemStackRenderer render, IRegistry<ModelResourceLocation, IBakedModel> reg) {
         i.setTileEntityItemStackRenderer(render);
@@ -298,6 +301,26 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_custom, new ItemRenderMissile(), reg);
 
         ItemRenderMissileGeneric.init();
+
+        // GUNS
+        registerItemRenderer(ModItems.gun_light_revolver, new ItemRenderAtlas(ResourceManager.bio_revolver_tex), reg);
+        registerItemRenderer(ModItems.gun_light_revolver_atlas, new ItemRenderAtlas(ResourceManager.bio_revolver_atlas_tex), reg);
+        registerItemRenderer(ModItems.gun_double_barrel, new ItemRenderDoubleBarrel(ResourceManager.double_barrel_tex), reg);
+        registerItemRenderer(ModItems.gun_double_barrel_sacred_dragon, new ItemRenderDoubleBarrel(ResourceManager.double_barrel_sacred_dragon_tex), reg);
+        registerItemRenderer(ModItems.gun_flamer, new ItemRenderFlamer(ResourceManager.flamethrower_tex), reg);
+        registerItemRenderer(ModItems.gun_flamer_topaz, new ItemRenderFlamer(ResourceManager.flamethrower_topaz_tex), reg);
+        registerItemRenderer(ModItems.gun_flamer_daybreaker, new ItemRenderFlamer(ResourceManager.flamethrower_daybreaker_tex), reg);
+        registerItemRenderer(ModItems.gun_heavy_revolver, new ItemRenderHeavyRevolver(ResourceManager.heavy_revolver_tex), reg);
+        registerItemRenderer(ModItems.gun_heavy_revolver_lilmac, new ItemRenderHeavyRevolver(ResourceManager.lilmac_tex), reg);
+        registerItemRenderer(ModItems.gun_heavy_revolver_protege, new ItemRenderHeavyRevolver(ResourceManager.heavy_revolver_protege_tex), reg);
+        registerItemRenderer(ModItems.gun_maresleg, new ItemRenderMaresleg(ResourceManager.maresleg_tex), reg);
+        registerItemRenderer(ModItems.gun_maresleg_broken, new ItemRenderMaresleg(ResourceManager.maresleg_broken_tex), reg);
+        registerItemRenderer(ModItems.gun_minigun, new ItemRenderMinigun(ResourceManager.minigun_tex), reg);
+        registerItemRenderer(ModItems.gun_minigun_lacunae, new ItemRenderMinigun(ResourceManager.minigun_lacunae_tex), reg);
+        registerItemRenderer(ModItems.gun_autoshotgun, new ItemRenderShredder(ResourceManager.shredder_tex), reg);
+        registerItemRenderer(ModItems.gun_autoshotgun_shredder, new ItemRenderShredder(ResourceManager.shredder_orig_tex), reg);
+        registerItemRenderer(ModItems.gun_autoshotgun_sexy, new ItemRenderShredder(ResourceManager.sexy_tex), reg);
+        //
         registerItemRenderer(ModItems.missile_taint, new ItemRenderMissileGeneric(RenderMissileType.TYPE_TIER0), reg);
         registerItemRenderer(ModItems.missile_micro, new ItemRenderMissileGeneric(RenderMissileType.TYPE_TIER0), reg);
         registerItemRenderer(ModItems.missile_bhole, new ItemRenderMissileGeneric(RenderMissileType.TYPE_TIER0), reg);
@@ -1459,7 +1482,7 @@ public class ClientProxy extends ServerProxy {
         }
     }
 
-    public void vanish(int ent) {
+    public static void vanish(int ent) {
         vanished.put(ent, System.currentTimeMillis() + 2000);
     }
 

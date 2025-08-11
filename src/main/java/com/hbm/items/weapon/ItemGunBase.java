@@ -746,14 +746,14 @@ public class ItemGunBase extends Item implements IHoldableWeapon, IItemHUD {
 				}
 			}
 		}
-		if(event.getType() == ElementType.CROSSHAIRS && GeneralConfig.enableCrosshairs && !(hand == EnumHand.OFF_HAND && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IHoldableWeapon)){
+		if(event.getType() == ElementType.CROSSHAIRS && GeneralConfig.enableCrosshairs && player.getHeldItemMainhand().getItem() instanceof IHoldableWeapon){
 		
 			event.setCanceled(true);
-			if(((IHoldableWeapon) player.getHeldItem(hand).getItem()).hasCustomHudElement()){
-				((IHoldableWeapon) player.getHeldItem(hand).getItem()).renderHud(event.getResolution(), Minecraft.getMinecraft().ingameGUI, player.getHeldItemMainhand(), event.getPartialTicks());
+			if(((IHoldableWeapon) player.getHeldItemMainhand().getItem()).hasCustomHudElement()){
+				((IHoldableWeapon) player.getHeldItemMainhand().getItem()).renderHud(event.getResolution(), Minecraft.getMinecraft().ingameGUI, player.getHeldItemMainhand(), event.getPartialTicks());
 			} else {
 				if(!(gcfg.hasSights && player.isSneaking()))
-					RenderScreenOverlay.renderCustomCrosshairs(event.getResolution(), Minecraft.getMinecraft().ingameGUI, ((IHoldableWeapon) player.getHeldItem(hand).getItem()).getCrosshair());
+					RenderScreenOverlay.renderCustomCrosshairs(event.getResolution(), Minecraft.getMinecraft().ingameGUI, ((IHoldableWeapon) player.getHeldItemMainhand().getItem()).getCrosshair());
 				else
 					RenderScreenOverlay.renderCustomCrosshairs(event.getResolution(), Minecraft.getMinecraft().ingameGUI, Crosshair.NONE);
 			}

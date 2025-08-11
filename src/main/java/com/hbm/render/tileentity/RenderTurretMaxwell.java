@@ -82,7 +82,7 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
       // // int color = 0xff0000;
 
       BeamPronter.prontBeam(
-          Vec3.createVectorHelper(length, 0, 0),
+          Vec3.createVectorHelper(length, 0, 0).toVec3d(),
           EnumWaveType.RANDOM,
           EnumBeamType.SOLID,
           0x00487F,
@@ -94,7 +94,7 @@ public class RenderTurretMaxwell extends RenderTurretBase<TileEntityTurretMaxwel
           0.0625F);
       GlStateManager.translate(offset, 0, 0);
       BeamPronter.prontBeam(
-          Vec3.createVectorHelper(length - offset, 0, 0),
+          Vec3.createVectorHelper(length - offset, 0, 0).toVec3d(),
           EnumWaveType.STRAIGHT,
           EnumBeamType.SOLID,
           0x002038,

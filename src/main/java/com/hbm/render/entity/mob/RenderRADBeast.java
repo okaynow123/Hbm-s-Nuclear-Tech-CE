@@ -3,7 +3,6 @@ package com.hbm.render.entity.mob;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
 import com.hbm.render.misc.BeamPronter.EnumWaveType;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(entity = EntityRADBeast.class, factory = "FACTORY")
 public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
@@ -50,7 +50,7 @@ public class RenderRADBeast extends RenderLiving<EntityRADBeast> {
 	        	tY -= 1.5;
 	        
 	    	double length = Math.sqrt(Math.pow(tX - sx, 2) + Math.pow(tY - sy, 2) + Math.pow(tZ - sz, 2));
-	        BeamPronter.prontBeam(Vec3.createVectorHelper(tX - sx, tY - sy, tZ - sz), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x004000, 0x004000, (int) (entity.world.getTotalWorldTime() % 1000 + 1), (int) (length * 5), 0.125F, 2, 0.03125F);
+	        BeamPronter.prontBeam(new Vec3d(tX - sx, tY - sy, tZ - sz), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x004000, 0x004000, (int) (entity.world.getTotalWorldTime() % 1000 + 1), (int) (length * 5), 0.125F, 2, 0.03125F);
 			
 	        GlStateManager.popMatrix();
 		}

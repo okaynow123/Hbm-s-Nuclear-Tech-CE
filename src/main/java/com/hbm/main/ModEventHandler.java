@@ -1,7 +1,6 @@
 package com.hbm.main;
 
 import com.google.common.collect.Multimap;
-import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
@@ -16,8 +15,8 @@ import com.hbm.dim.WorldGeneratorCelestial;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.logic.IChunkLoader;
-import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.mob.EntityCreeperTainted;
+import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.forgefluid.FFPipeNetwork;
@@ -48,6 +47,7 @@ import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -58,6 +58,7 @@ import com.hbm.util.EnchantmentUtil;
 import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.ParticleUtil;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -737,8 +738,49 @@ public class ModEventHandler {
                 }
             }
         }
+
+        if (player.world.isRemote && event.phase == TickEvent.Phase.START) {
+            ItemStack main = player.getHeldItemMainhand();
+            ItemStack off  = player.getHeldItemOffhand();
+
+            if (player.capabilities != null && player.capabilities.isCreativeMode) {
+                if (isGhost(off)) {
+                    player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+                }
+            } else {
+                if (isAkimbo(main)) {
+                    if (off.isEmpty() || isGhost(off)) {
+                        ItemStack ghost = makeGhostCopy(main);
+                        player.inventory.offHandInventory.set(0, ghost);
+                    }
+                } else {
+                    if (isGhost(off)) {
+                        player.inventory.offHandInventory.set(0, ItemStack.EMPTY);
+                    }
+                }
+            }
+        }
+
         if (event.phase == Phase.END) {
             JetpackHandler.postPlayerTick(event.player);
+            if(!event.player.world.isRemote){
+                ItemStack main = player.getHeldItemMainhand();
+                ItemStack off  = player.getHeldItemOffhand();
+
+                if (!off.isEmpty() && isAkimbo(off)) {
+                    player.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
+                    if (!player.inventory.addItemStackToInventory(off)) {
+                        player.dropItem(off, false);
+                    }
+                }
+
+                if (isAkimbo(main) && !off.isEmpty()) {
+                    player.setHeldItem(EnumHand.OFF_HAND, ItemStack.EMPTY);
+                    if (!player.inventory.addItemStackToInventory(off)) {
+                        player.dropItem(off, false);
+                    }
+                }
+            }
         }
     }
 
@@ -1317,5 +1359,34 @@ public class ModEventHandler {
             }
         } else changed = false;
         event.setCanceled(changed);
+    }
+
+    private static final String NBT_AKIMBO = "AkimboGhost";
+
+    private boolean isAkimbo(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        TileEntityItemStackRenderer renderer = stack.getItem().getTileEntityItemStackRenderer();
+        if (renderer instanceof ItemRenderWeaponBase weaponBase) {
+            return weaponBase.isAkimbo();
+        }
+        return false;
+    }
+
+    private static boolean isGhost(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return false;
+        NBTTagCompound tag = stack.getTagCompound();
+        return tag != null && tag.getBoolean(NBT_AKIMBO);
+    }
+
+    private static ItemStack makeGhostCopy(ItemStack source) {
+        ItemStack copy = source.copy();
+        copy.setCount(1);
+        NBTTagCompound tag = copy.getTagCompound();
+        if (tag == null) tag = new NBTTagCompound();
+        tag.setBoolean(NBT_AKIMBO, true);
+        copy.setTagCompound(tag);
+        return copy;
     }
 }

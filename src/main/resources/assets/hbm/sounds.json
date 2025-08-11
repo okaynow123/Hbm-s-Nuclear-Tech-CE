@@ -271,6 +271,12 @@
     "weapon.reload.screw": {"category": "player", "sounds": ["hbm:weapon/reload/screw"]},
 	
 	"weapon.44Shoot": {"category": "player", "sounds": [{"name": "hbm:weapon/44shoot", "stream": false}]},
+    "weapon.glReload": {"category": "player", "sounds": [{"name": "hbm:weapon/glReload", "stream": false}]},
+    "weapon.glShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/glShoot", "stream": false}]},
+    "weapon.glOpen": {"category": "player", "sounds": [{"name": "hbm:weapon/glOpen", "stream": false}]},
+    "weapon.glClose": {"category": "player", "sounds": [{"name": "hbm:weapon/glClose", "stream": false}]},
+    "weapon.coilgunReload": {"category": "player", "sounds": [{"name": "hbm:weapon/coilgunReload", "stream": false}]},
+    "weapon.coilgunShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/coilgunShoot", "stream": false}]},
 
 	"turret.chekhov_fire": {"category": "block", "sounds": [{"name": "hbm:turret/chekhov_fire", "stream": false}]},
     "turret.jeremy_fire": {"category": "block", "sounds": ["hbm:turret/jeremy_fire1", "hbm:turret/jeremy_fire2", "hbm:turret/jeremy_fire3", "hbm:turret/jeremy_fire4", "hbm:turret/jeremy_fire5"]},

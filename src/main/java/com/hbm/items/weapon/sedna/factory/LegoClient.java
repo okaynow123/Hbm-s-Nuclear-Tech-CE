@@ -1,12 +1,20 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
+import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.items.weapon.sedna.hud.HUDComponentAmmoCounter;
 import com.hbm.items.weapon.sedna.hud.HUDComponentDurabilityBar;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
+import com.hbm.lib.RefStrings;
+import com.hbm.main.ResourceManager;
+import com.hbm.render.misc.BeamPronter;
+import com.hbm.render.tileentity.RenderArcFurnace;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 import java.util.function.BiConsumer;
@@ -115,7 +123,7 @@ public class LegoClient {
         GlStateManager.enableTexture2D();
     }
 
-    /*public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE = (bullet, interp) -> { renderFlare(bullet, interp, 1F, 0.5F, 0.5F); };
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE = (bullet, interp) -> { renderFlare(bullet, interp, 1F, 0.5F, 0.5F); };
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE_SUPPLY = (bullet, interp) -> { renderFlare(bullet, interp, 0.5F, 0.5F, 1F); };
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE_WEAPON = (bullet, interp) -> { renderFlare(bullet, interp, 0.5F, 1F, 0.5F); };
 
@@ -132,51 +140,57 @@ public class LegoClient {
     }
     public static void renderFlareSprite(Entity bullet, float interp, float r, float g, float b, double scale, float outerAlpha, float innerAlpha) {
 
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glDepthMask(false);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
+        GlStateManager.disableAlpha();
+        GlStateManager.depthMask(false);
         RenderHelper.disableStandardItemLighting();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(flare);
 
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-        float f1 = ActiveRenderInfo.rotationX;
-        float f2 = ActiveRenderInfo.rotationZ;
-        float f3 = ActiveRenderInfo.rotationYZ;
-        float f4 = ActiveRenderInfo.rotationXY;
-        float f5 = ActiveRenderInfo.rotationXZ;
+        float f1 = ActiveRenderInfo.getRotationX();
+        float f2 = ActiveRenderInfo.getRotationZ();
+        float f3 = ActiveRenderInfo.getRotationYZ();
+        float f4 = ActiveRenderInfo.getRotationXY();
+        float f5 = ActiveRenderInfo.getRotationXZ();
 
-        double posX = 0;
-        double posY = 0;
-        double posZ = 0;
+        double posX = 0.0D;
+        double posY = 0.0D;
+        double posZ = 0.0D;
 
-        tess.setColorRGBA_F(r, g, b, outerAlpha);
-        tess.addVertexWithUV((double) (posX - f1 * scale - f3 * scale), (double) (posY - f5 * scale), (double) (posZ - f2 * scale - f4 * scale), 1, 1);
-        tess.addVertexWithUV((double) (posX - f1 * scale + f3 * scale), (double) (posY + f5 * scale), (double) (posZ - f2 * scale + f4 * scale), 1, 0);
-        tess.addVertexWithUV((double) (posX + f1 * scale + f3 * scale), (double) (posY + f5 * scale), (double) (posZ + f2 * scale + f4 * scale), 0, 0);
-        tess.addVertexWithUV((double) (posX + f1 * scale - f3 * scale), (double) (posY - f5 * scale), (double) (posZ + f2 * scale - f4 * scale), 0, 1);
+        int or = (int) (r * 255.0F);
+        int og = (int) (g * 255.0F);
+        int ob = (int) (b * 255.0F);
+        int oa = (int) (outerAlpha * 255.0F);
+
+        buffer.pos(posX - f1 * scale - f3 * scale, posY - f5 * scale, posZ - f2 * scale - f4 * scale).tex(1.0D, 1.0D).color(or, og, ob, oa).endVertex();
+        buffer.pos(posX - f1 * scale + f3 * scale, posY + f5 * scale, posZ - f2 * scale + f4 * scale).tex(1.0D, 0.0D).color(or, og, ob, oa).endVertex();
+        buffer.pos(posX + f1 * scale + f3 * scale, posY + f5 * scale, posZ + f2 * scale + f4 * scale).tex(0.0D, 0.0D).color(or, og, ob, oa).endVertex();
+        buffer.pos(posX + f1 * scale - f3 * scale, posY - f5 * scale, posZ + f2 * scale - f4 * scale).tex(0.0D, 1.0D).color(or, og, ob, oa).endVertex();
 
         scale *= 0.5D;
 
-        tess.setColorRGBA_F(1F, 1F, 1F, innerAlpha);
-        tess.addVertexWithUV((double) (posX - f1 * scale - f3 * scale), (double) (posY - f5 * scale), (double) (posZ - f2 * scale - f4 * scale), 1, 1);
-        tess.addVertexWithUV((double) (posX - f1 * scale + f3 * scale), (double) (posY + f5 * scale), (double) (posZ - f2 * scale + f4 * scale), 1, 0);
-        tess.addVertexWithUV((double) (posX + f1 * scale + f3 * scale), (double) (posY + f5 * scale), (double) (posZ + f2 * scale + f4 * scale), 0, 0);
-        tess.addVertexWithUV((double) (posX + f1 * scale - f3 * scale), (double) (posY - f5 * scale), (double) (posZ + f2 * scale - f4 * scale), 0, 1);
+        int ia = (int) (innerAlpha * 255.0F);
 
-        tess.draw();
+        buffer.pos(posX - f1 * scale - f3 * scale, posY - f5 * scale, posZ - f2 * scale - f4 * scale).tex(1.0D, 1.0D).color(255, 255, 255, ia).endVertex();
+        buffer.pos(posX - f1 * scale + f3 * scale, posY + f5 * scale, posZ - f2 * scale + f4 * scale).tex(1.0D, 0.0D).color(255, 255, 255, ia).endVertex();
+        buffer.pos(posX + f1 * scale + f3 * scale, posY + f5 * scale, posZ + f2 * scale + f4 * scale).tex(0.0D, 0.0D).color(255, 255, 255, ia).endVertex();
+        buffer.pos(posX + f1 * scale - f3 * scale, posY - f5 * scale, posZ + f2 * scale - f4 * scale).tex(0.0D, 1.0D).color(255, 255, 255, ia).endVertex();
 
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        tessellator.draw();
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableAlpha();
         RenderHelper.enableStandardItemLighting();
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_GRENADE = (bullet, interp) -> {
@@ -211,7 +225,7 @@ public class LegoClient {
 
         GL11.glTranslatef(0.375F, 0, 0);
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
-        if(length > 0) renderBulletStandard(Tessellator.instance, 0x808080, 0xFFF2A7, length * 2, true);
+        if(length > 0) renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x808080, 0xFFF2A7, length * 2, true);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_QD = (bullet, interp) -> {
@@ -226,7 +240,7 @@ public class LegoClient {
 
         GL11.glTranslatef(0.375F, 0, 0);
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
-        if(length > 0) renderBulletStandard(Tessellator.instance, 0x808080, 0xFFF2A7, length * 2, true);
+        if(length > 0) renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x808080, 0xFFF2A7, length * 2, true);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_ML = (bullet, interp) -> {
@@ -243,7 +257,7 @@ public class LegoClient {
 
         GL11.glTranslatef(0.375F, 0, 0);
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
-        if(length > 0) renderBulletStandard(Tessellator.instance, 0x808080, 0xFFF2A7, length * 2, true);
+        if(length > 0) renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x808080, 0xFFF2A7, length * 2, true);
     };
 
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_LIGHTNING = (bullet, interp) -> {
@@ -252,8 +266,8 @@ public class LegoClient {
         GL11.glPushMatrix();
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
         GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
-        Vec3 delta = Vec3.createVectorHelper(0, bullet.beamLength, 0);
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        Vec3d delta = new Vec3d(0, bullet.beamLength, 0);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
         GL11.glScaled(age / 2 + 0.5, 1, age / 2 + 0.5);
         double scale = 0.075D;
         int colorInner = ((int)(0x20 * age) << 16) | ((int)(0x20 * age) << 8) | (int) (0x40 * age);
@@ -268,14 +282,14 @@ public class LegoClient {
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_TAU = (bullet, interp) -> {
 
         RenderArcFurnace.fullbright(true);
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
 
         GL11.glPushMatrix();
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
         GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
 
         GL11.glPushMatrix();
-        Vec3 delta = Vec3.createVectorHelper(0, bullet.beamLength, 0);
+        Vec3d delta = new Vec3d(0, bullet.beamLength, 0);
         GL11.glScaled(age / 2 + 0.5, 1, age / 2 + 0.5);
         double scale = 0.075D;
         int colorInner = ((int)(0x30 * age) << 16) | ((int)(0x25 * age) << 8) | (int) (0x10 * age);
@@ -285,7 +299,7 @@ public class LegoClient {
         GL11.glScaled(age * 2, 1, age * 2);
         GL11.glTranslated(0, bullet.beamLength, 0);
         GL11.glRotatef(-90, 0, 0, 1);
-        renderBulletStandard(Tessellator.instance, 0xFFBF00, 0xFFFFFF, bullet.beamLength, true);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xFFBF00, 0xFFFFFF, bullet.beamLength, true);
 
         GL11.glPopMatrix();
         RenderArcFurnace.fullbright(false);
@@ -294,14 +308,14 @@ public class LegoClient {
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_TAU_CHARGE = (bullet, interp) -> {
 
         RenderArcFurnace.fullbright(true);
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
 
         GL11.glPushMatrix();
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
         GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
 
         GL11.glPushMatrix();
-        Vec3 delta = Vec3.createVectorHelper(0, bullet.beamLength, 0);
+        Vec3d delta = new Vec3d(0, bullet.beamLength, 0);
         GL11.glScaled(age / 2 + 0.5, 1, age / 2 + 0.5);
         double scale = 0.075D;
         int colorInner = ((int)(0x60 * age) << 16) | ((int)(0x50 * age) << 8) | (int) (0x30 * age);
@@ -311,7 +325,7 @@ public class LegoClient {
         GL11.glScaled(age * 2, 1, age * 2);
         GL11.glTranslated(0, bullet.beamLength, 0);
         GL11.glRotatef(-90, 0, 0, 1);
-        renderBulletStandard(Tessellator.instance, 0xFFF0A0, 0xFFFFFF, bullet.beamLength, true);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xFFF0A0, 0xFFFFFF, bullet.beamLength, true);
 
         GL11.glPopMatrix();
         RenderArcFurnace.fullbright(false);
@@ -320,7 +334,7 @@ public class LegoClient {
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_CRACKLE = (bullet, interp) -> {
 
         RenderArcFurnace.fullbright(true);
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
 
         GL11.glPushMatrix();
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
@@ -330,7 +344,7 @@ public class LegoClient {
         GL11.glScaled(age * scale, 1, age * scale);
         GL11.glTranslated(0, bullet.beamLength, 0);
         GL11.glRotatef(-90, 0, 0, 1);
-        renderBulletStandard(Tessellator.instance, 0xE3D692, 0xffffff, bullet.beamLength, true);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xE3D692, 0xffffff, bullet.beamLength, true);
 
         GL11.glPopMatrix();
         RenderArcFurnace.fullbright(false);
@@ -355,8 +369,8 @@ public class LegoClient {
         GL11.glPushMatrix();
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
         GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
-        Vec3 delta = Vec3.createVectorHelper(0, bullet.beamLength, 0);
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        Vec3d delta = new Vec3d(0, bullet.beamLength, 0);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
         GL11.glScaled(age / 2 + 0.5, 1, age / 2 + 0.5);
         int colorInner = ((int)(r * age) << 16) | ((int)(g * age) << 8) | (int) (b * age);
         BeamPronter.prontBeam(delta, BeamPronter.EnumWaveType.RANDOM, BeamPronter.EnumBeamType.SOLID, colorInner, colorInner, bullet.ticksExisted / 3, (int)(bullet.beamLength / 2 + 1), 0F, 8, 0.0625F);
@@ -366,7 +380,7 @@ public class LegoClient {
 
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_FOLLY = (bullet, interp) -> {
 
-        double age = MathHelper.clamp_double(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
         RenderArcFurnace.fullbright(true);
 
         GL11.glPushMatrix();
@@ -378,7 +392,7 @@ public class LegoClient {
         GL11.glAlphaFunc(GL11.GL_GREATER, 0);
         GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
         GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
-        Vec3 delta = Vec3.createVectorHelper(0, bullet.beamLength, 0);
+        Vec3d delta = new Vec3d(0, bullet.beamLength, 0);
         GL11.glScaled((1 - age) * 25 + 2.5, 1, (1 - age) * 25 + 2.5);
         int colorInner = ((int)(0x20 * age) << 16) | ((int)(0x20 * age) << 8) | (int) (0x20 * age);
         BeamPronter.prontBeam(delta, BeamPronter.EnumWaveType.RANDOM, BeamPronter.EnumBeamType.SOLID, colorInner, colorInner, bullet.ticksExisted / 3, (int)(bullet.beamLength / 2 + 1), 0F, 8, 0.0625F);
@@ -413,5 +427,5 @@ public class LegoClient {
         ResourceManager.panzerschreck.renderPart("Rocket");
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glPopMatrix();
-    };*/
+    };
 }

@@ -82,7 +82,7 @@ public class RenderOrbus extends TileEntitySpecialRenderer<TileEntityMachineOrbu
             GlStateManager.translate(0, 1, 0);
 
             BeamPronter.prontBeam(
-                    Vec3.createVectorHelper(0, 3, 0),
+                    Vec3.createVectorHelper(0, 3, 0).toVec3d(),
                     EnumWaveType.SPIRAL,
                     EnumBeamType.SOLID,
                     0x101020,
@@ -93,7 +93,7 @@ public class RenderOrbus extends TileEntitySpecialRenderer<TileEntityMachineOrbu
                     6,
                     (float) scale * 0.5F);
             BeamPronter.prontBeam(
-                    Vec3.createVectorHelper(0, 3, 0),
+                    Vec3.createVectorHelper(0, 3, 0).toVec3d(),
                     EnumWaveType.RANDOM,
                     EnumBeamType.SOLID,
                     0x202060,
@@ -104,7 +104,7 @@ public class RenderOrbus extends TileEntitySpecialRenderer<TileEntityMachineOrbu
                     2,
                     0.0625F * (float) scale);
             BeamPronter.prontBeam(
-                    Vec3.createVectorHelper(0, 3, 0),
+                    Vec3.createVectorHelper(0, 3, 0).toVec3d(),
                     EnumWaveType.RANDOM,
                     EnumBeamType.SOLID,
                     0x202060,

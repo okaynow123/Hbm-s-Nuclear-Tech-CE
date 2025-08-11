@@ -38,8 +38,8 @@ public class RenderVortexBeam extends Render<EntityBeamBase> {
 			Vec3 skeleton = Vec3.createVectorHelper(pos.hitVec.x - player.posX, pos.hitVec.y - player.posY - player.getEyeHeight(), pos.hitVec.z - player.posZ);
 			int init = (int) -(System.currentTimeMillis() % 360);
 
-	        BeamPronter.prontBeam(skeleton, EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x000040, 0x2020d0, init, 1, 0F, 4, 0.005F);
-	        BeamPronter.prontBeam(skeleton, EnumWaveType.RANDOM, EnumBeamType.LINE, 0x8080ff, 0x8080ff, init, (int)skeleton.length() * 3 + 1, 0.01F, 1, 0.01F);
+	        BeamPronter.prontBeam(skeleton.toVec3d(), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x000040, 0x2020d0, init, 1, 0F, 4, 0.005F);
+	        BeamPronter.prontBeam(skeleton.toVec3d(), EnumWaveType.RANDOM, EnumBeamType.LINE, 0x8080ff, 0x8080ff, init, (int)skeleton.length() * 3 + 1, 0.01F, 1, 0.01F);
 		}
 
 		GlStateManager.popMatrix();

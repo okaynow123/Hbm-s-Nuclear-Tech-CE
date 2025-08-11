@@ -1,6 +1,7 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.config.ClientConfig;
+import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.impl.ItemGunStinger;
@@ -876,7 +877,7 @@ public class Orchestras {
         }
     };
 
-    /*public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_SHREDDER_SEXY = (stack, ctx) -> {
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_SHREDDER_SEXY = (stack, ctx) -> {
         EntityPlayer entity = ctx.getPlayer();
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
@@ -899,7 +900,7 @@ public class Orchestras {
             if(timer == 2) entity.world.playSound(null, entity.getPosition(), new SoundEvent(new ResourceLocation("hbm:weapon.reload.magRemove")), SoundCategory.PLAYERS, 1F, 1F);
             if(timer == 28) entity.world.playSound(null, entity.getPosition(), new SoundEvent(new ResourceLocation("hbm:weapon.reload.magInsert")), SoundCategory.PLAYERS, 1F, 1F);
         }
-    };*/
+    };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_QUADRO = (stack, ctx) -> {
         EntityPlayer entity = ctx.getPlayer();
@@ -1282,7 +1283,7 @@ public class Orchestras {
         }
     };
 
-    /*public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_ABERRATOR = (stack, ctx) -> {
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_ABERRATOR = (stack, ctx) -> {
         EntityPlayer entity = ctx.getPlayer();
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
@@ -1307,7 +1308,7 @@ public class Orchestras {
             if(timer == 1) entity.world.playSound(null, entity.getPosition(), new SoundEvent(new ResourceLocation("hbm:weapon.reload.dryFireClick")), SoundCategory.PLAYERS, 1F, 0.75F);
             if(timer == 9) entity.world.playSound(null, entity.getPosition(), new SoundEvent(new ResourceLocation("hbm:weapon.reload.pistolCock")), SoundCategory.PLAYERS, 1F, 0.75F);
         }
-    };*/
+    };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MAS36 = (stack, ctx) -> {
         EntityPlayer entity = ctx.getPlayer();

@@ -51,8 +51,8 @@ public abstract class MagazineSingleTypeBase implements IMagazine<BulletConfig> 
     @Override
     public ItemStack getIconForHUD(ItemStack stack, EntityPlayer player) {
         BulletConfig config = this.getType(stack, player.inventory);
-        if(config != null) return config.ammo.toStack();
-        return null;
+        if(config != null) return config.ammo != null ? config.ammo.toStack() : ItemStack.EMPTY;
+        return ItemStack.EMPTY;
     }
 
     @Override

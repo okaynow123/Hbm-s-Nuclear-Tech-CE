@@ -41,6 +41,8 @@ import java.util.function.BiConsumer;
 
 public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipReceiver, IItemHUD {
 
+    public static List<ItemGunBaseNT> INSTANCES = new ArrayList<>();
+
     /** Timestamp for rendering smoke nodes and muzzle flashes */
     public long[] lastShot;
     /** [0;1] randomized every shot for various rendering applications */
@@ -106,7 +108,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     public ItemGunBaseNT(WeaponQuality quality, String s, GunConfig... cfg) {
         this.setTranslationKey(s);
         this.setRegistryName(s);
-        this.setCreativeTab(MainRegistry.partsTab);
+        this.setCreativeTab(MainRegistry.weaponTab);
 
         this.setMaxStackSize(1);
         this.configs_DNA = cfg;
@@ -115,6 +117,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
         if(quality == WeaponQuality.A_SIDE || quality == WeaponQuality.SPECIAL) this.setCreativeTab(MainRegistry.weaponTab);
         if(quality == WeaponQuality.LEGENDARY || quality == WeaponQuality.SECRET) this.secrets.add(this);
         ModItems.ALL_ITEMS.add(this);
+        INSTANCES.add(this);
     }
 
     public static enum WeaponQuality {

@@ -3,7 +3,6 @@ package com.hbm.render.misc;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -14,7 +13,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -33,13 +32,13 @@ public class BeamPronter {
 		LINE
 	}
 
-	public static void prontBeam(Vec3 skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float spinRadius, int layers, float thickness) {
+	public static void prontBeam(Vec3d skeleton, EnumWaveType wave, EnumBeamType beam, int outerColor, int innerColor, int start, int segments, float spinRadius, int layers, float thickness) {
 
 		GlStateManager.pushMatrix();
 
-		float sYaw = (float)(Math.atan2(skeleton.xCoord, skeleton.zCoord) * 180F / Math.PI);
-		float sqrt = MathHelper.sqrt(skeleton.xCoord * skeleton.xCoord + skeleton.zCoord * skeleton.zCoord);
-		float sPitch = (float)(Math.atan2(skeleton.yCoord, (double)sqrt) * 180F / Math.PI);
+		float sYaw = (float)(Math.atan2(skeleton.x, skeleton.z) * 180F / Math.PI);
+		float sqrt = MathHelper.sqrt(skeleton.x * skeleton.x + skeleton.z * skeleton.z);
+		float sPitch = (float)(Math.atan2(skeleton.y, (double)sqrt) * 180F / Math.PI);
 
 
 		GlStateManager.rotate(180, 0, 1F, 0);

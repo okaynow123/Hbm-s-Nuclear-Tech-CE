@@ -71,7 +71,7 @@ public class RenderFEL extends TileEntitySpecialRenderer<TileEntityFEL>
             GlStateManager.depthMask(true);
             GlStateManager.enableDepth();
             BeamPronter.prontBeam(
-                    Vec3.createVectorHelper(0, 0, -length - 1),
+                    Vec3.createVectorHelper(0, 0, -length - 1).toVec3d(),
                     EnumWaveType.STRAIGHT,
                     EnumBeamType.SOLID,
                     color,

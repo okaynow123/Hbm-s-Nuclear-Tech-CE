@@ -67,7 +67,7 @@ public class RenderTurretTauon extends RenderTurretBase<TileEntityTurretTauon>
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
       GlStateManager.translate(0, 1.5D, 0);
       BeamPronter.prontBeam(
-          new Vec3(new Vec3d(turret.lastDist, 0, 0)),
+          new Vec3(new Vec3d(turret.lastDist, 0, 0)).toVec3d(),
           EnumWaveType.RANDOM,
           EnumBeamType.LINE,
           0xffa200,

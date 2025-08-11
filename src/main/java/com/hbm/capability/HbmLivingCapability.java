@@ -51,6 +51,12 @@ public class HbmLivingCapability {
 		int getOil();
 		void setOil(int time);
 
+		int getPhosphorus();
+		void setPhosphorus(int time);
+
+		int getFire();
+		void setFire(int time);
+
 		List<HbmLivingProps.ContaminationEffect> getContaminationEffectList();
 
 		void saveNBTData(NBTTagCompound tag);
@@ -73,6 +79,8 @@ public class HbmLivingCapability {
 		private int bombTimer;
 		private int contagion;
 		private int oil;
+		public int phosphorus;
+		public int fire;
 		private final List<HbmLivingProps.ContaminationEffect> contamination = new ArrayList<>();
 
 		@Override
@@ -189,6 +197,14 @@ public class HbmLivingCapability {
 		public int getOil() { return oil; }
 
 		@Override public void setOil(int time) { this.oil = time; }
+		@Override
+		public int getPhosphorus() { return phosphorus; }
+
+		@Override public void setPhosphorus(int phosphorus) { this.phosphorus = phosphorus; }
+		@Override
+		public int getFire() { return fire; }
+
+		@Override public void setFire(int time) { this.fire = time; }
 
 
 		@Override
@@ -208,6 +224,8 @@ public class HbmLivingCapability {
 			tag.setInteger("bombtimer", bombTimer);
 			tag.setInteger("contagion", contagion);
 			tag.setInteger("oil", getOil());
+			tag.setInteger("fire", getFire());
+			tag.setInteger("phosphorus", getPhosphorus());
 			tag.setInteger("conteffectsize", contamination.size());
 			for(int i = 0; i < contamination.size(); i ++){
 				contamination.get(i).save(tag, i);
@@ -226,6 +244,8 @@ public class HbmLivingCapability {
 			setBombTimer(tag.getInteger("bombtimer"));
 			setContagion(tag.getInteger("contagion"));
 			setOil(tag.getInteger("oil"));
+			setFire(tag.getInteger("fire"));
+			setPhosphorus(tag.getInteger("phosphorus"));
 			contamination.clear();
 			for(int i = 0; i < tag.getInteger("conteffectsize"); i ++){
 				contamination.add(HbmLivingProps.ContaminationEffect.load(tag, i));
@@ -343,6 +363,14 @@ public class HbmLivingCapability {
 			public int getOil(){ return 0; }
 			@Override
 			public void setOil(int cont){ }
+			@Override
+			public int getPhosphorus(){ return 0; }
+			@Override
+			public void setPhosphorus(int phos){ }
+			@Override
+			public int getFire(){ return 0; }
+			@Override
+			public void setFire(int time){ }
 		};
 		
 		@CapabilityInject(IEntityHbmProps.class)

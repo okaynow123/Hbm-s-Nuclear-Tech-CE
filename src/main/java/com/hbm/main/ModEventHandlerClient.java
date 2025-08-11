@@ -527,8 +527,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.ammo_himars, reg);
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
-        swapModelsNoFPV(ModItems.gun_debug, reg);
-        swapModelsNoFPV(ModItems.gun_greasegun, reg);
+
+        for(Item item: ItemGunBaseNT.INSTANCES) {
+            swapModelsNoFPV(item, reg);
+        }
 
         for (Item item : RBMKItemRenderers.itemRenderers.keySet()) {
             swapModels(item, reg);
@@ -1570,12 +1572,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             GlStateManager.disableBlend();
         }
         /// HANDLE GUN AND AMMO OVERLAYS ///
-        if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IItemHUD) {
-            ((IItemHUD) player.getHeldItem(EnumHand.MAIN_HAND).getItem()).renderHUD(event, event.getType(), player, player.getHeldItem(EnumHand.MAIN_HAND), EnumHand.MAIN_HAND);
-        }
-
-        if (player.getHeldItem(EnumHand.OFF_HAND) != null && player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof IItemHUD) {
-            ((IItemHUD) player.getHeldItem(EnumHand.OFF_HAND).getItem()).renderHUD(event, event.getType(), player, player.getHeldItem(EnumHand.OFF_HAND), EnumHand.OFF_HAND);
+        if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof IItemHUD) {
+            ((IItemHUD) player.getHeldItemMainhand().getItem()).renderHUD(event, event.getType(), player, player.getHeldItemMainhand(), EnumHand.MAIN_HAND);
+        } else if (!player.getHeldItemOffhand().isEmpty() && player.getHeldItemOffhand().getItem() instanceof IItemHUD) {
+            ((IItemHUD) player.getHeldItemOffhand().getItem()).renderHUD(event, event.getType(), player, player.getHeldItemOffhand(), EnumHand.OFF_HAND);
         }
 
         /// HANDLE GEIGER COUNTER AND JETPACK HUD ///
@@ -1645,19 +1645,21 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
         }
 
-        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT && ItemGunBaseNT.aimingProgress == ItemGunBaseNT.prevAimingProgress && ItemGunBaseNT.aimingProgress == 1F && event.getType() == ElementType.HOTBAR)  {
-            ItemGunBaseNT gun = (ItemGunBaseNT) held.getItem();
+        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT gun && ItemGunBaseNT.aimingProgress == ItemGunBaseNT.prevAimingProgress && ItemGunBaseNT.aimingProgress == 1F && event.getType() == ElementType.HOTBAR)  {
             GunConfig cfg = gun.getConfig(held, 0);
             if(cfg.getScopeTexture(held) != null) {
                 ScaledResolution resolution = event.getResolution();
                 RenderScreenOverlay.renderScope(resolution, cfg.getScopeTexture(held));
             }
         }
-
+        Minecraft mc = Minecraft.getMinecraft();
         //prevents NBT changes (read: every fucking tick) on guns from bringing up the item's name over the hotbar
-        ItemStack highlightedItem = ObfuscationReflectionHelper.getPrivateValue(GuiIngame.class, Minecraft.getMinecraft().ingameGUI, "field_92016_l");
-        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT && !highlightedItem.isEmpty() && highlightedItem.getItem() == held.getItem()) {
-            ObfuscationReflectionHelper.setPrivateValue(GuiIngame.class, Minecraft.getMinecraft().ingameGUI, held, "field_92016_l");
+        ItemStack highlightedItem = ObfuscationReflectionHelper.getPrivateValue(GuiIngame.class, mc.ingameGUI, "highlightingItemStack", "field_92016_l");
+        if (!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT) {
+            if (highlightedItem != null && !highlightedItem.isEmpty()
+                    && highlightedItem.getItem() == held.getItem()) {
+                ObfuscationReflectionHelper.setPrivateValue(GuiIngame.class, mc.ingameGUI, held, "highlightingItemStack", "field_92016_l");
+            }
         }
 
         /// HANDLE ANIMATION BUSES ///
@@ -1752,6 +1754,9 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
         if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
             renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
+        }
+        if (player.getHeldItem(EnumHand.OFF_HAND) != null && player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemGunBaseNT) {
+            renderer.leftArmPose = ArmPose.BOW_AND_ARROW;
         }
 
         if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof IHoldableWeapon) {

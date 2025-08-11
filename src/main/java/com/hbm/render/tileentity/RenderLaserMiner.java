@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 @AutoRegister
 public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachineMiningLaser>
     implements IItemRendererProvider {
@@ -89,7 +89,7 @@ public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachin
       GlStateManager.translate(nVec.xCoord, nVec.yCoord - 1, nVec.zCoord);
       int range = (int) Math.ceil(length * 0.5);
       BeamPronter.prontBeam(
-          vec, EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0xa00000, 0xFFFFFF, 0, 1, 0, 3, 0.09F);
+          vec.toVec3d(), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0xa00000, 0xFFFFFF, 0, 1, 0, 3, 0.09F);
     }
 
     GlStateManager.popMatrix();

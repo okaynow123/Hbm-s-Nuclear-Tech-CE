@@ -2,12 +2,10 @@ package com.hbm.particle;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class ParticleRotating extends Particle {
@@ -75,7 +73,6 @@ public class ParticleRotating extends Particle {
     double y04 = y4 * cosTh + (nZ * x4 - nX * z4) * sinTh;
     double z04 = z4 * cosTh + (nX * y4 - nY * x4) * sinTh;
 
-    buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
     buffer
         .pos(pX + x01, pY + y01, pZ + z01)
         .tex(particleTexture.getMaxU(), particleTexture.getMaxV())
@@ -100,5 +97,17 @@ public class ParticleRotating extends Particle {
         .color(particleRed, particleGreen, particleBlue, particleAlpha)
         .lightmap(240, 0)
         .endVertex();
+  }
+
+  public double getPosX(){
+    return this.posX;
+  }
+
+  public double getPosY(){
+    return this.posY;
+  }
+
+  public double getPosZ(){
+    return this.posZ;
   }
 }

@@ -7,17 +7,21 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.HbmLivingProps.ContaminationEffect;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
+import com.hbm.handler.HbmKeybinds.EnumKeybind;
+import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IArmorModDash;
 import com.hbm.interfaces.Untested;
 import com.hbm.items.gear.ArmorFSB;
+import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.toclient.ExtPropPacket;
 import com.hbm.packet.toclient.HbmCapabilityPacket;
-import com.hbm.handler.HbmKeybinds.EnumKeybind;
+import com.hbm.particle.helper.FlameCreator;
+import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ArmorRegistry;
@@ -33,11 +37,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -86,6 +92,8 @@ public class EntityEffectHandler {
 		handleDigamma(entity);
 		handleLungDisease(entity);
 		handleOil(entity);
+		handlePollution(entity);
+		handleTemperature(entity);
 
 		handleDashing(entity);
 		handlePlinking(entity);
@@ -446,6 +454,91 @@ public class EntityEffectHandler {
 				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(nbt, 0, 0, 0), new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 25));
 			}
 		}
+	}
+
+	private static void handlePollution(EntityLivingBase entity) {
+
+		if(!RadiationConfig.enablePollution) return;
+
+		if(RadiationConfig.enablePoison && !ArmorRegistry.hasProtection(entity, EntityEquipmentSlot.HEAD, ArmorRegistry.HazardClass.GAS_CORROSIVE) && entity.ticksExisted % 60 == 0) {
+
+			float poison = PollutionHandler.getPollution(entity.world, new BlockPos((int) Math.floor(entity.posX), (int) Math.floor(entity.posY + entity.getEyeHeight()), (int) Math.floor(entity.posZ)), PollutionHandler.PollutionType.POISON);
+
+			if(poison > 10) {
+
+				if(poison < 25) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 100, 0));
+				} else if(poison < 50) {
+					entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 100, 1));
+				} else {
+					entity.addPotionEffect(new PotionEffect(MobEffects.WITHER, 100, 2));
+				}
+			}
+		}
+
+		if(RadiationConfig.enableLeadPoisoning && !ArmorRegistry.hasProtection(entity, EntityEquipmentSlot.HEAD, ArmorRegistry.HazardClass.PARTICLE_FINE) && entity.ticksExisted % 60 == 0) {
+
+			float poison = PollutionHandler.getPollution(entity.world, new BlockPos((int) Math.floor(entity.posX), (int) Math.floor(entity.posY + entity.getEyeHeight()), (int) Math.floor(entity.posZ)), PollutionHandler.PollutionType.HEAVYMETAL);
+
+			if(poison > 25) {
+
+				if(poison < 50) {
+					entity.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 0));
+				} else if(poison < 75) {
+					entity.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 2));
+				} else {
+					entity.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 2));
+				}
+			}
+		}
+	}
+
+	private static void handleTemperature(Entity entity) {
+
+		if(!(entity instanceof EntityLivingBase)) return;
+		if(entity.world.isRemote) return;
+
+		EntityLivingBase living = (EntityLivingBase) entity;
+		IEntityHbmProps props = HbmLivingProps.getData(living);
+		Random rand = living.getRNG();
+
+		if(!entity.isEntityAlive()) return;
+
+		if(living.isImmuneToFire()) {
+			props.setPhosphorus(0);
+		}
+
+		double x = living.posX;
+		double y = living.posY;
+		double z = living.posZ;
+
+		/*if(living.isInWater() || living.isWet()) props.fire = 0;
+
+		if(props.fire > 0) {
+			props.fire--;
+			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.worldObj.playSoundEffect(living.posX, living.posY + living.height / 2, living.posZ, "random.fizz", 1F, 1.5F + rand.nextFloat() * 0.5F);
+			if((living.ticksExisted + living.getEntityId()) % 40 == 0) living.attackEntityFrom(DamageSource.onFire, 2F);
+			FlameCreator.composeEffect(entity.worldObj, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_FIRE);
+		}*/
+
+		if(props.getPhosphorus() > 0) {
+			props.setPhosphorus(props.getPhosphorus() - 1);
+			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.world.playSound(null, living.posX, living.posY + living.height / 2, living.posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.NEUTRAL, 1F, 1.5F + rand.nextFloat() * 0.5F);
+			if((living.ticksExisted + living.getEntityId()) % 40 == 0) living.attackEntityFrom(DamageSource.ON_FIRE, 5F);
+			FlameCreator.composeEffect(entity.world, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_FIRE);
+		}
+
+		/*if(props.balefire > 0) {
+			props.balefire--;
+			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.worldObj.playSoundEffect(living.posX, living.posY + living.height / 2, living.posZ, "random.fizz", 1F, 1.5F + rand.nextFloat() * 0.5F);
+			ContaminationUtil.contaminate(living, HazardType.RADIATION, ContaminationType.CREATIVE, 5F);
+			if((living.ticksExisted + living.getEntityId()) % 20 == 0) living.attackEntityFrom(DamageSource.onFire, 5F);
+			FlameCreator.composeEffect(entity.worldObj, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_BALEFIRE);
+		}*/
+
+		if(//props.fire > 0 ||
+				//props.balefire > 0 ||
+				props.getPhosphorus() > 0) if(!entity.isEntityAlive()) ConfettiUtil.decideConfetti(living, DamageSource.ON_FIRE);
 	}
 
 	private static void handleDashing(EntityLivingBase entity) {

@@ -390,7 +390,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         }
     }
 
-    private static void beginFullbrightAdditive() {
+    public static void beginFullbrightAdditive() {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -407,7 +407,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
     }
 
-    private static void endFullbrightAdditive() {
+    public static void endFullbrightAdditive() {
         GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
         GlStateManager.enableCull();
         GlStateManager.disableBlend();

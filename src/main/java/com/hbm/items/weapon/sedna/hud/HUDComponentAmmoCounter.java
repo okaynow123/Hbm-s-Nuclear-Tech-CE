@@ -46,8 +46,9 @@ public class HUDComponentAmmoCounter implements IHUDComponent {
         if(type != type.HOTBAR) return;
         ScaledResolution resolution = event.getResolution();
         Minecraft mc = Minecraft.getMinecraft();
+        boolean left = !player.getHeldItemOffhand().isEmpty();
 
-        int pX = resolution.getScaledWidth() / 2 + (mirrored ? -(62 + 36 + 52) : (62 + 36)) + (noCounter ? 14 : 0);
+        int pX = resolution.getScaledWidth() / 2 + (mirrored ? -(62 + 36 + 52 + (left ? 29 : 0)) : (62 + 36)) + (noCounter ? 14 : 0);
         int pZ = resolution.getScaledHeight() - bottomOffset - 23;
 
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();

@@ -3,7 +3,6 @@ package com.hbm.render.entity.mob;
 import com.hbm.entity.mob.EntityUFO;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
 import com.hbm.render.misc.BeamPronter.EnumWaveType;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import org.lwjgl.opengl.GL11;
 @AutoRegister(factory = "FACTORY")
@@ -64,9 +64,9 @@ public class RenderUFO extends Render<EntityUFO> {
 			double length = ufo.posY - iy;
 			
 			if(length > 0) {
-				BeamPronter.prontBeam(Vec3.createVectorHelper(0, -length, 0), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x101020, 0x101020, 0, (int)(length + 1), 0F, 6, (float)scale * 0.75F);
-				BeamPronter.prontBeam(Vec3.createVectorHelper(0, -length, 0), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x202060, 0x202060, ufo.ticksExisted / 2, (int)(length / 2 + 1), (float)scale * 1.5F, 2, 0.0625F);
-				BeamPronter.prontBeam(Vec3.createVectorHelper(0, -length, 0), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x202060, 0x202060, ufo.ticksExisted / 4, (int)(length / 2 + 1), (float)scale * 1.5F, 2, 0.0625F);
+				BeamPronter.prontBeam(new Vec3d(0, -length, 0), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x101020, 0x101020, 0, (int)(length + 1), 0F, 6, (float)scale * 0.75F);
+				BeamPronter.prontBeam(new Vec3d(0, -length, 0), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x202060, 0x202060, ufo.ticksExisted / 2, (int)(length / 2 + 1), (float)scale * 1.5F, 2, 0.0625F);
+				BeamPronter.prontBeam(new Vec3d(0, -length, 0), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x202060, 0x202060, ufo.ticksExisted / 4, (int)(length / 2 + 1), (float)scale * 1.5F, 2, 0.0625F);
 			}
 		}
 		

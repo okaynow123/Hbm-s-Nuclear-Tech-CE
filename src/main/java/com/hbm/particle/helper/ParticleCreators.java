@@ -8,7 +8,10 @@ public class ParticleCreators {
 
     static {
         particleCreators.put("casingNT", new CasingCreator());
+        particleCreators.put("flamethrower", new FlameCreator());
         particleCreators.put("explosionSmall", new ExplosionSmallCreator());
         particleCreators.put("explosionLarge", new ExplosionCreator());
+        particleCreators.put("ashes", new AshesCreator());
+        particleCreators.put("skeleton", new SkeletonCreator());
     }
 }

@@ -25,7 +25,7 @@ public class GunFactory {
         /// AMMO ITEMS ///
         ModItems.ammo_debug = new ItemBakedBase("ammo_debug", "ammo_45");
         ModItems.ammo_standard = new ItemEnumMulti("ammo_standard", EnumAmmo.class, true, true).setCreativeTab(MainRegistry.weaponTab);
-        //ModItems.ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true).setCreativeTab(null);
+        ModItems.ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true).setCreativeTab(null);
 
         //// BULLLET CFGS ///
         ammo_debug = new BulletConfig().setItem(ModItems.ammo_debug).setSpread(0.01F).setRicochetAngle(45).setCasing(CASING44.clone().register("DEBUG0"));
@@ -43,10 +43,10 @@ public class GunFactory {
                 .anim(Lego.LAMBDA_DEBUG_ANIMS)
         );
 
-        XFactory9mm.init();
-        /*XFactoryBlackPowder.init();
+        XFactoryBlackPowder.init();
         XFactory357.init();
         XFactory44.init();
+        XFactory9mm.init();
         XFactory12ga.init();
         XFactory40mm.init();
         XFactory762mm.init();
@@ -60,11 +60,10 @@ public class GunFactory {
         XFactoryCatapult.init();
         XFactory75Bolt.init();
         XFactoryFolly.init();
-        XFactoryTurret.init();
+        // maybe one day..
+        //XFactoryTurret.init();
         XFactory10ga.init();
         XFactory35800.init();
-        XFactory45.init();
-        XFactoryTool.init();*/
 
         /// PROXY BULLSHIT ///
         MainRegistry.proxy.registerGunCfg();
@@ -136,7 +135,7 @@ public class GunFactory {
 
     public enum EnumModTest {
         FIRERATE, DAMAGE, MULTI,
-        OVERRIDE_2_5, OVERRIDE_5, OVERRIDE_7_5, OVERRIDE_10, OVERRIDE_12_5, OVERRIDE_15, OVERRIDE_20;
+        OVERRIDE_2_5, OVERRIDE_5, OVERRIDE_7_5, OVERRIDE_10, OVERRIDE_12_5, OVERRIDE_15, OVERRIDE_20
     }
 
     public enum EnumModGeneric {

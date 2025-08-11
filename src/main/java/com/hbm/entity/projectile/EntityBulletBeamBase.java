@@ -32,7 +32,7 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
     public double headingZ;
     public double beamLength;
     private static final DataParameter<Integer> BULLET_CONFIG_ID =
-            EntityDataManager.createKey(EntityBulletBaseMK4.class, DataSerializers.VARINT);
+            EntityDataManager.createKey(EntityBulletBeamBase.class, DataSerializers.VARINT);
 
     public EntityBulletBeamBase(World world) {
         super(world);
@@ -54,7 +54,7 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
         this.setLocationAndAngles(thrower.posX, thrower.posY + thrower.getEyeHeight(), thrower.posZ, thrower.rotationYaw + (float) rand.nextGaussian() * angularInaccuracy, thrower.rotationPitch + (float) rand.nextGaussian() * angularInaccuracy);
 
         Vec3NT offset = new Vec3NT(sideOffset, heightOffset, frontOffset);
-        offset.rotateAroundXRad(-this.rotationPitch / 180F * (float) Math.PI);
+        offset.rotateAroundXRad(this.rotationPitch / 180F * (float) Math.PI);
         offset.rotateAroundYRad(-this.rotationYaw / 180F * (float) Math.PI);
 
         this.posX += offset.x;
@@ -128,29 +128,28 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
         if (!this.world.isRemote && this.doesImpactEntities()) {
 
             Entity hitEntity = null;
-            List list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getCollisionBoundingBox().offset(this.headingX, this.headingY, this.headingZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().offset(this.headingX, this.headingY, this.headingZ).expand(1.0D, 1.0D, 1.0D));
             double nearest = 0.0D;
             RayTraceResult nonPenImpact = null;
 
-            for (int j = 0; j < list.size(); ++j) {
-                Entity entity = (Entity) list.get(j);
+            for (Entity value : list) {
 
-                if (entity.canBeCollidedWith() && entity != thrower) {
+                if (value.canBeCollidedWith() && value != thrower) {
                     double hitbox = 0.3F;
-                    AxisAlignedBB aabb = entity.getCollisionBoundingBox().expand(hitbox, hitbox, hitbox);
+                    AxisAlignedBB aabb = value.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
                     RayTraceResult hitMop = aabb.calculateIntercept(pos, nextPos);
 
                     if (hitMop != null) {
 
                         // if penetration is enabled, run impact for all intersecting entities
                         if (this.doesPenetrate()) {
-                            this.onImpact(new RayTraceResult(entity, hitMop.hitVec));
+                            this.onImpact(new RayTraceResult(value, hitMop.hitVec));
                         } else {
 
                             double dist = pos.distanceTo(hitMop.hitVec);
 
                             if (dist < nearest || nearest == 0.0D) {
-                                hitEntity = entity;
+                                hitEntity = value;
                                 nearest = dist;
                                 nonPenImpact = hitMop;
                             }

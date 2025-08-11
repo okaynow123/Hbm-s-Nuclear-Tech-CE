@@ -5,7 +5,6 @@ import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
@@ -19,7 +18,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.Vec3d;
+
 @AutoRegister
 public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMachineBase> implements IItemRendererProvider {
 
@@ -79,9 +79,9 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
             int range = ((TileEntityCoreStabilizer) tileEntity).beam;
 
             if (range > 0) {
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x002333, 0x7F7F7F, 0, 1, 0F, 2, 0.125F);
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x002333, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -8 % 360, range * 3, 0.125F, 2, 0.04F);
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x003C56, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -8 % 360 + 180, range * 3, 0.125F, 2, 0.04F);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x002333, 0x7F7F7F, 0, 1, 0F, 2, 0.125F);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x002333, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -8 % 360, range * 3, 0.125F, 2, 0.04F);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, 0x003C56, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -8 % 360 + 180, range * 3, 0.125F, 2, 0.04F);
             }
         }
 
@@ -91,9 +91,9 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
 
             if (range > 0) {
                 float width = (float) Math.max(1, Math.log10(((TileEntityCoreEmitter) tileEntity).prev) - 6) / 8F;
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x401500, 0x7F7F7F, 0, 1, 0F, 2, width);
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x401500, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() % 1000, (int) (0.3F * range / width), width * 0.75F, 2, width * 0.5F);
-                BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x5B1D00, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() % 1000 + 1, (int) (0.3F * range / width), width * 0.75F, 2, width * 0.5F);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x401500, 0x7F7F7F, 0, 1, 0F, 2, width);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x401500, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() % 1000, (int) (0.3F * range / width), width * 0.75F, 2, width * 0.5F);
+                BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.RANDOM, EnumBeamType.SOLID, 0x5B1D00, 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() % 1000 + 1, (int) (0.3F * range / width), width * 0.75F, 2, width * 0.5F);
             }
         }
 
@@ -105,9 +105,9 @@ public class RenderCoreComponent extends TileEntitySpecialRenderer<TileEntityMac
             if (range > 0) {
                 NTMRenderHelper.bindBlockTexture();
                 if (injector.tanks[0].getFluidAmount() > 0)
-                    BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, ModForgeFluids.getFluidColor(injector.tanks[0].getFluid().getFluid()), 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -2 % 360, range, 0.09F, 3, 0.0625F);
+                    BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, ModForgeFluids.getFluidColor(injector.tanks[0].getFluid().getFluid()), 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -2 % 360, range, 0.09F, 3, 0.0625F);
                 if (injector.tanks[1].getFluidAmount() > 0)
-                    BeamPronter.prontBeam(Vec3.createVectorHelper(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, ModForgeFluids.getFluidColor(injector.tanks[1].getFluid().getFluid()), 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -2 % 360 + 180, range, 0.09F, 3, 0.0625F);
+                    BeamPronter.prontBeam(new Vec3d(0, 0, range), EnumWaveType.SPIRAL, EnumBeamType.SOLID, ModForgeFluids.getFluidColor(injector.tanks[1].getFluid().getFluid()), 0x7F7F7F, (int) tileEntity.getWorld().getTotalWorldTime() * -2 % 360 + 180, range, 0.09F, 3, 0.0625F);
             }
         }
 
