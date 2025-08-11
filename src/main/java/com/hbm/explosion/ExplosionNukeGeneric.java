@@ -8,15 +8,23 @@ import com.hbm.blocks.generic.WasteLog;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.VersatileConfig;
 import com.hbm.entity.effect.EntityBlackHole;
+import com.hbm.entity.grenade.EntityGrenadeASchrab;
+import com.hbm.entity.grenade.EntityGrenadeNuclear;
+import com.hbm.entity.projectile.EntityBulletBaseNT;
+import com.hbm.entity.projectile.EntityExplosiveBeam;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
+import com.hbm.lib.Library;
+import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -25,6 +33,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -66,6 +75,59 @@ public class ExplosionNukeGeneric {
                 }
             }
         }
+    }
+
+    public static void dealDamage(World world, double x, double y, double z, double radius) {
+        dealDamage(world, x, y, z, radius, 250F);
+    }
+
+    public static void dealDamage(World world, double x, double y, double z, double radius, float maxDamage) {
+
+        AxisAlignedBB aabb = new AxisAlignedBB(x, y, z, x, y, z).grow(radius);
+        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, aabb);
+
+        for (Entity e : list) {
+            double dist = e.getDistance(x, y, z);
+
+            if (dist <= radius) {
+
+                double entX = e.posX;
+                double entY = e.posY + e.getEyeHeight();
+                double entZ = e.posZ;
+
+                if (!isExplosionExempt(e) && !Library.isObstructed(world, x, y, z, entX, entY, entZ)) {
+
+                    double damage = maxDamage * (radius - dist) / radius;
+                    e.attackEntityFrom(ModDamageSource.nuclearBlast, (float) damage);
+                    e.setFire(5);
+
+                    Vec3d knock = new Vec3d(e.posX - x, e.posY + e.getEyeHeight() - y, e.posZ - z).normalize();
+                    e.motionX += knock.x * 0.2D;
+                    e.motionY += knock.y * 0.2D;
+                    e.motionZ += knock.z * 0.2D;
+                }
+            }
+        }
+    }
+
+    @Spaghetti("just look at it")
+    private static boolean isExplosionExempt(Entity e) {
+
+        if (e instanceof EntityOcelot ||
+            e instanceof EntityGrenadeASchrab ||
+            e instanceof EntityGrenadeNuclear ||
+            e instanceof EntityExplosiveBeam ||
+            e instanceof EntityBulletBaseNT ||
+            e instanceof EntityPlayer &&
+            ArmorUtil.checkArmor((EntityPlayer) e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+            return true;
+        }
+
+        if (e instanceof EntityPlayerMP && ((EntityPlayerMP)e).interactionManager.isCreative()) {
+            return true;
+        }
+
+        return false;
     }
 
     public static void succ(World world, int x, int y, int z, int radius) {

@@ -640,6 +640,12 @@ public class ModBlocks {
 	public static final Block mine_shrap = new Landmine(Material.IRON, "mine_shrap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 	public static final Block mine_fat = new Landmine(Material.IRON, "mine_fat", 2.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 
+	public static final Block dynamite = new BlockDynamite("dynamite").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
+	public static final Block tnt = new BlockTNT("tnt_ntm").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
+	public static final Block semtex = new BlockSemtex("semtex").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
+	public static final Block c4 = new BlockC4("c4").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
+	public static final Block fissure_bomb = new BlockFissureBomb("fissure_bomb").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
+
 	public static final Block flame_war = new BombFlameWar(Material.IRON, "flame_war").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);
 	public static final Block float_bomb = new BombFloat(Material.IRON, "float_bomb").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);
 	public static final Block emp_bomb = new BombFloat(Material.IRON, "emp_bomb").setCreativeTab(MainRegistry.nukeTab).setHardness(5.0F).setResistance(6000.0F);

@@ -304,4 +304,9 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         falloutAdd = fallout;
         return this;
     }
+
+    public EntityNukeExplosionMK5 forceSpawn() {
+        this.forceSpawn = true;
+        return this;
+    }
 }

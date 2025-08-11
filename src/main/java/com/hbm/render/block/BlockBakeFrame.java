@@ -103,6 +103,10 @@ public class BlockBakeFrame {
                 ResourceLocation(RefStrings.MODID, ROOT_PATH + textureArray[index]);
     }
 
+    public static BlockBakeFrame bottomTop(String side, String top, String bottom) {
+        return new BlockBakeFrame(FULL_CUSTOM, top, bottom, side, side, side, side);
+    }
+
     public String getBaseModel() {
         return this.blockForm.baseBakedModel;
     }
