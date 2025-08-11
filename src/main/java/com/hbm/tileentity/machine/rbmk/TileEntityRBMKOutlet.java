@@ -31,8 +31,7 @@ public class TileEntityRBMKOutlet extends TileEntityLoadedBase implements ITicka
     @Override
     public void update() {
         if (!world.isRemote) {
-
-            for (int i = 2; i < 6; i++) {
+            if(RBMKDials.getReasimBoilers(world)) for (int i = 2; i < 6; i++) {
                 ForgeDirection dir = ForgeDirection.getOrientation(i);
                 Block b = world.getBlockState(new BlockPos(pos.getX() + dir.offsetX, pos.getY(), pos.getZ() + dir.offsetZ)).getBlock();
 
@@ -42,8 +41,7 @@ public class TileEntityRBMKOutlet extends TileEntityLoadedBase implements ITicka
                     if (pos != null) {
                         TileEntity te = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
 
-                        if (te instanceof TileEntityRBMKBase) {
-                            TileEntityRBMKBase rbmk = (TileEntityRBMKBase) te;
+                        if (te instanceof TileEntityRBMKBase rbmk) {
 
                             int prov = Math.min(steam.getMaxFill() - steam.getFill(), rbmk.reasimSteam);
                             rbmk.reasimSteam -= prov;

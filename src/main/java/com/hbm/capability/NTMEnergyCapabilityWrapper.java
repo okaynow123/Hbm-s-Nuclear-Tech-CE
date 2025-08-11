@@ -26,7 +26,7 @@ public class NTMEnergyCapabilityWrapper implements IEnergyStorage {
     }
 
     public static NTMEnergyCapabilityWrapper from(TileEntity handler) {
-        if (!(handler instanceof IEnergyHandlerMK2 energyHandlerMK2)) throw new IllegalArgumentException("Handler must implement energyHandlerMK2");
+        if (!(handler instanceof IEnergyHandlerMK2 energyHandlerMK2)) throw new IllegalArgumentException("Handler must implement EnergyHandlerMK2");
         return new NTMEnergyCapabilityWrapper(energyHandlerMK2);
     }
 

@@ -1,8 +1,7 @@
 package com.hbm.capability;
 
-import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.api.fluid.IFluidStandardSender;
-import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.IFluidStandardReceiverMK2;
+import com.hbm.api.fluidmk2.IFluidStandardSenderMK2;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,15 +34,14 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
     public static NTMFluidHandlerWrapper from(TileEntity user) {
         FluidTankNTM[] fillable = null;
         FluidTankNTM[] drainable = null;
-        if (user instanceof IFluidStandardTransceiver transceiver) {
-            fillable = transceiver.getReceivingTanks();
-            drainable = transceiver.getSendingTanks();
-        } else if (user instanceof IFluidStandardReceiver receiver) {
+        if (user instanceof IFluidStandardReceiverMK2 receiver) {
             fillable = receiver.getReceivingTanks();
-        } else if (user instanceof IFluidStandardSender sender) {
+        }
+        if (user instanceof IFluidStandardSenderMK2 sender) {
             drainable = sender.getSendingTanks();
-        } else
-            throw new IllegalArgumentException("Fluid user must implement IFluidStandardTransceiver, IFluidStandardReceiver or IFluidStandardSender");
+        }
+        if (fillable == null && drainable == null)
+            throw new IllegalArgumentException("Fluid user must implement IFluidStandardReceiverMK2 or IFluidStandardSenderMK2");
         return new NTMFluidHandlerWrapper(fillable, drainable);
     }
 
