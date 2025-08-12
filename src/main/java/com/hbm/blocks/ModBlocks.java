@@ -77,6 +77,9 @@ public class ModBlocks {
 	public static final Block cmb_brick = new BlockBase(Material.IRON, "cmb_brick").setCreativeTab(MainRegistry.blockTab).setHardness(25.0F).setResistance(5000.0F);
 	public static final Block cmb_brick_reinforced = new BlockRadResistant(Material.IRON, "cmb_brick_reinforced").setCreativeTab(MainRegistry.blockTab).setHardness(25.0F).setResistance(50000.0F);
 
+	public static final Block vinyl_tile_small = new BlockBase(Material.ROCK, "vinyl_tile_small").setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(60.0F);
+	public static final Block vinyl_tile_large = new BlockBase(Material.ROCK, "vinyl_tile_large").setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(60.0F);
+
 	public static final Block concrete = new BlockBase(Material.ROCK, "concrete").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
 	public static final Block concrete_smooth = new BlockBase(Material.ROCK, "concrete_smooth").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
 	public static final Block concrete_white = new BlockBase(Material.ROCK, "concrete_white").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);

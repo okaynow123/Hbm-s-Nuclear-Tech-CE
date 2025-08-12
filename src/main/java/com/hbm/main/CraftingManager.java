@@ -750,6 +750,9 @@ public class CraftingManager {
 
 		addRecipeAuto(new ItemStack(ModBlocks.reinforced_stone, 4), new Object[] { "FBF", "BFB", "FBF", 'F', Blocks.COBBLESTONE, 'B', Blocks.STONE });
 		addRecipeAuto(new ItemStack(ModBlocks.brick_light, 4), new Object[] { "FBF", "BFB", "FBF", 'F', "fenceWood", 'B', Blocks.BRICK_BLOCK });
+		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile_large, 4), new Object[] { " I ", "IBI", " I ", 'I', ModItems.plate_polymer, 'B', ModBlocks.brick_light });
+		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile_small, 4), new Object[] { "TT ", "TT ", 'T', ModBlocks.vinyl_tile_large });
+
 		addRecipeAuto(new ItemStack(ModBlocks.brick_asbestos, 2), new Object[] { " A ", "ABA", " A ", 'B', ModBlocks.brick_light, 'A', ASBESTOS.ingot() });
 		addRecipeAuto(new ItemStack(ModBlocks.concrete, 4), new Object[] { "CC", "CC", 'C', ModBlocks.concrete_smooth });
 
