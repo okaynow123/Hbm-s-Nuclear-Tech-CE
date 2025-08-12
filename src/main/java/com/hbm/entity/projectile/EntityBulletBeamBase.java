@@ -128,7 +128,7 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
         if (!this.world.isRemote && this.doesImpactEntities()) {
 
             Entity hitEntity = null;
-            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().offset(this.headingX, this.headingY, this.headingZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.headingX, this.headingY, this.headingZ).grow(1.0D, 1.0D, 1.0D));
             double nearest = 0.0D;
             RayTraceResult nonPenImpact = null;
 
@@ -136,7 +136,7 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
 
                 if (value.canBeCollidedWith() && value != thrower) {
                     double hitbox = 0.3F;
-                    AxisAlignedBB aabb = value.getEntityBoundingBox().expand(hitbox, hitbox, hitbox);
+                    AxisAlignedBB aabb = value.getEntityBoundingBox().grow(hitbox, hitbox, hitbox);
                     RayTraceResult hitMop = aabb.calculateIntercept(pos, nextPos);
 
                     if (hitMop != null) {
@@ -165,7 +165,7 @@ public class EntityBulletBeamBase extends Entity implements IEntityAdditionalSpa
         }
 
         if (mop != null) {
-            if (mop.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(mop.getBlockPos()) == Blocks.PORTAL) {
+            if (mop.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(mop.getBlockPos()).getBlock() == Blocks.PORTAL) {
                 this.setPortal(mop.getBlockPos());
             } else {
                 this.onImpact(mop);
