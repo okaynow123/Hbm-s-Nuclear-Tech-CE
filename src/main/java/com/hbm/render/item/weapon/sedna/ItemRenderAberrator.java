@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -129,8 +130,8 @@ public class ItemRenderAberrator extends ItemRenderWeaponBase {
 		this.renderFireball(gun.lastShot[0]);
 		GlStateManager.popMatrix();
 
-		TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks()
-				.getAtlasSprite(Items.GOLDEN_SWORD.getRegistryName().toString());
+		IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(Items.GOLDEN_SWORD), null, null);
+		TextureAtlasSprite icon = !model.getQuads(null, null, 0).isEmpty() ? model.getQuads(null, null, 0).get(0).getSprite() : model.getParticleTexture();
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
