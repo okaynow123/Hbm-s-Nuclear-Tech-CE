@@ -122,6 +122,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import paulscode.sound.SoundSystemConfig;
@@ -1501,34 +1502,22 @@ public class ClientProxy extends ServerProxy {
     @Override
     public boolean getIsKeyPressed(EnumKeybind key) {
 
-        switch (key) {
-            case JETPACK:
-                return Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
-            case TOGGLE_JETPACK:
-                return HbmKeybinds.jetpackKey.isKeyDown();
-            case TOGGLE_HEAD:
-                return HbmKeybinds.hudKey.isKeyDown();
-            case RELOAD:
-                return HbmKeybinds.reloadKey.isKeyDown();
-            case CRANE_UP:
-                return HbmKeybinds.craneUpKey.isKeyDown();
-            case CRANE_DOWN:
-                return HbmKeybinds.craneDownKey.isKeyDown();
-            case CRANE_LEFT:
-                return HbmKeybinds.craneLeftKey.isKeyDown();
-            case CRANE_RIGHT:
-                return HbmKeybinds.craneRightKey.isKeyDown();
-            case CRANE_LOAD:
-                return HbmKeybinds.craneLoadKey.isKeyDown();
-            case GUN_PRIMARY:
-                return org.lwjgl.input.Mouse.isButtonDown(0);
-            case GUN_SECONDARY:
-                return org.lwjgl.input.Mouse.isButtonDown(1);
-            case GUN_TERTIARY:
-                return org.lwjgl.input.Mouse.isButtonDown(2);
-        }
+        return switch (key) {
+            case JETPACK -> Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown();
+            case TOGGLE_JETPACK -> HbmKeybinds.jetpackKey.isKeyDown();
+            case TOGGLE_HEAD -> HbmKeybinds.hudKey.isKeyDown();
+            case RELOAD -> HbmKeybinds.reloadKey.isKeyDown();
+            case DASH -> HbmKeybinds.dashKey.isKeyDown();
+            case CRANE_UP -> HbmKeybinds.craneUpKey.isKeyDown();
+            case CRANE_DOWN -> HbmKeybinds.craneDownKey.isKeyDown();
+            case CRANE_LEFT -> HbmKeybinds.craneLeftKey.isKeyDown();
+            case CRANE_RIGHT -> HbmKeybinds.craneRightKey.isKeyDown();
+            case CRANE_LOAD -> HbmKeybinds.craneLoadKey.isKeyDown();
+            case GUN_PRIMARY -> Mouse.isButtonDown(0);
+            case GUN_SECONDARY -> Mouse.isButtonDown(1);
+            case GUN_TERTIARY -> Mouse.isButtonDown(2);
+        };
 
-        return false;
     }
 
     @Override
