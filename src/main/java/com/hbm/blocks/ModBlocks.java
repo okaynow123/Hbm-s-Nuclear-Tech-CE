@@ -635,6 +635,11 @@ public class ModBlocks {
 	public static final Block crashed_balefire = new BlockCrashedBomb(Material.IRON, "crashed_bomb").setCreativeTab(MainRegistry.nukeTab).setBlockUnbreakable().setResistance(100.0F);
 	public static final Block fireworks = new BlockFireworks(Material.IRON, "fireworks").setCreativeTab(MainRegistry.nukeTab).setResistance(5.0F);
 
+	public static final Block charge_dynamite = new BlockChargeDynamite("charge_dynamite").setCreativeTab(MainRegistry.nukeTab).setResistance(1.0F);
+	public static final Block charge_miner = new BlockChargeMiner("charge_miner").setCreativeTab(MainRegistry.nukeTab).setResistance(1.0F);
+	public static final Block charge_c4 = new BlockChargeC4("charge_c4").setCreativeTab(MainRegistry.nukeTab).setResistance(1.0F);
+	public static final Block charge_semtex = new BlockChargeSemtex("charge_semtex").setCreativeTab(MainRegistry.nukeTab).setResistance(1.0F);
+
 	public static final Block mine_ap = new Landmine(Material.IRON, "mine_ap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 	public static final Block mine_he = new Landmine(Material.IRON, "mine_he", 2D, 5D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 	public static final Block mine_shrap = new Landmine(Material.IRON, "mine_shrap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);

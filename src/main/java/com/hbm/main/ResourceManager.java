@@ -628,7 +628,10 @@ public class ResourceManager {
 	public static final IModelCustom rbmk_debris = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/debris.obj")).asVBO();
 	public static final ResourceLocation rbmk_console_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rbmk_control.png");
 	public static final IModelCustom anvil = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/anvil.obj")).asVBO();
-	
+
+	public static final IModelCustom charge_dynamite = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/charge_dynamite.obj")).asVBO();
+	public static final IModelCustom charge_c4 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/charge_c4.obj")).asVBO();
+
 	//RBMK DEBRIS
 	public static final IModelCustom deb_blank = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/projectiles/deb_blank.obj")).asVBO();
 	public static final IModelCustom deb_element = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/projectiles/deb_element.obj")).asVBO();

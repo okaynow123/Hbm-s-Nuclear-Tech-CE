@@ -334,9 +334,12 @@ public class ModEventHandlerClient {
                 ModelLoader.setCustomModelResourceLocation(item, i,
                         new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
             }
+            return;
         }
-        if (item instanceof IModelRegister)
+        if (item instanceof IModelRegister) {
             ((IModelRegister) item).registerModels();
+            return;
+        }
 
         if (item == ModItems.chemistry_icon) {
             for (int i : ChemplantRecipes.recipeNames.keySet()) {
