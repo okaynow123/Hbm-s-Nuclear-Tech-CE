@@ -24,7 +24,7 @@ import java.util.List;
 
 public abstract class ItemRenderWeaponBase extends TEISRBase {
 
-    ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
+    protected ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
             .get(ItemCameraTransforms.TransformType.GUI)
             .setScale(0.06f).setPosition(0.00, 16.5, -9.25).setRotation(186, -182, 0).getHelper()
             .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)

@@ -73,7 +73,6 @@ public class ParticleAshes extends ParticleRotating {
             int i = this.getBrightnessForRender(partialTicks);
             int j = (i >> 16) & 65535;
             int k = i & 65535;
-            // note: I highly dount particleAngle will suffice but idk how to get rotationPitch
             Vec3NT vec = new Vec3NT(this.particleScale, 0, this.particleScale).rotateAroundYDeg(this.particleAngle);
 
             buffer.pos(pX + vec.x, pY + 0.05, pZ + vec.z).tex(maxU, maxV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();

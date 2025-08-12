@@ -505,6 +505,7 @@ public class EntityEffectHandler {
 		if(!entity.isEntityAlive()) return;
 
 		if(living.isImmuneToFire()) {
+			props.setFire(0);
 			props.setPhosphorus(0);
 		}
 
@@ -512,14 +513,14 @@ public class EntityEffectHandler {
 		double y = living.posY;
 		double z = living.posZ;
 
-		/*if(living.isInWater() || living.isWet()) props.fire = 0;
+		if(living.isInWater() || living.isWet()) props.setFire(0);
 
-		if(props.fire > 0) {
-			props.fire--;
-			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.worldObj.playSoundEffect(living.posX, living.posY + living.height / 2, living.posZ, "random.fizz", 1F, 1.5F + rand.nextFloat() * 0.5F);
-			if((living.ticksExisted + living.getEntityId()) % 40 == 0) living.attackEntityFrom(DamageSource.onFire, 2F);
-			FlameCreator.composeEffect(entity.worldObj, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_FIRE);
-		}*/
+		if(props.getFire() > 0) {
+			props.setFire(props.getFire() - 1);
+			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.world.playSound(null, living.posX, living.posY + living.height / 2, living.posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.HOSTILE, 1F, 1.5F + rand.nextFloat() * 0.5F);
+			if((living.ticksExisted + living.getEntityId()) % 40 == 0) living.attackEntityFrom(DamageSource.ON_FIRE, 2F);
+			FlameCreator.composeEffect(entity.world, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_FIRE);
+		}
 
 		if(props.getPhosphorus() > 0) {
 			props.setPhosphorus(props.getPhosphorus() - 1);
@@ -536,7 +537,7 @@ public class EntityEffectHandler {
 			FlameCreator.composeEffect(entity.worldObj, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_BALEFIRE);
 		}*/
 
-		if(//props.fire > 0 ||
+		if(props.getFire() > 0 ||
 				//props.balefire > 0 ||
 				props.getPhosphorus() > 0) if(!entity.isEntityAlive()) ConfettiUtil.decideConfetti(living, DamageSource.ON_FIRE);
 	}

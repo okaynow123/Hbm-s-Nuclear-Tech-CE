@@ -6,10 +6,13 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 @AutoRegister(item = "gun_lag")
 public class ItemRenderLAG extends ItemRenderWeaponBase {
+
+    public ItemRenderLAG() { offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(3, 15.75, -15).getHelper(); }
 
     @Override
     protected float getTurnMagnitude(ItemStack stack) { return ItemGunBaseNT.getIsAiming(stack) ? 2.5F : -0.25F; }

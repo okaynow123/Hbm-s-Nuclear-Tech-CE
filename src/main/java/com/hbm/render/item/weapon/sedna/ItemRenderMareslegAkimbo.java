@@ -6,10 +6,13 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 @AutoRegister(item = "gun_maresleg_akimbo")
 public class ItemRenderMareslegAkimbo extends ItemRenderWeaponBase {
+
+	public ItemRenderMareslegAkimbo() { offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -5.5).getHelper(); }
 
 	@Override
 	public boolean isAkimbo() { return true; }
@@ -156,14 +159,13 @@ public class ItemRenderMareslegAkimbo extends ItemRenderWeaponBase {
 		ResourceManager.maresleg.renderPart("Lever");
 		GlStateManager.popMatrix();
 
-		GlStateManager.translate(0, 0, 5);
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(225, 0, 0, 1);
-		GlStateManager.rotate(-90, 0, 1, 0);
-		GlStateManager.rotate(-90, 1, 0, 0);
+		GlStateManager.rotate(-225, 0, 0, 1);
+		GlStateManager.rotate(90, 0, 1, 0);
 		GlStateManager.rotate(25, 1, 0, 0);
-		GlStateManager.rotate(-45, 0, 1, 0);
-		GlStateManager.translate(1, 0, 0);
+		GlStateManager.rotate(45, 0, 1, 0);
+		GlStateManager.rotate(180, 0, 1, 0);
+		GlStateManager.translate(1.2, 2.25, 0);
 		ResourceManager.maresleg.renderPart("Gun");
 		ResourceManager.maresleg.renderPart("Lever");
 		GlStateManager.popMatrix();

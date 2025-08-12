@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@AutoRegister(name = "entity_fire_lingering")
+@AutoRegister(name = "entity_fire_lingering", sendVelocityUpdates = false)
 public class EntityFireLingering extends Entity {
     public static int TYPE_DIESEL = 0;
     public static int TYPE_BALEFIRE = 1;

@@ -8,12 +8,15 @@ import com.hbm.particle.SpentCasing;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 @AutoRegister(item = "gun_spas12")
 public class ItemRenderSPAS12 extends ItemRenderWeaponBase {
+
+	public ItemRenderSPAS12() { offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 14.75, -21.5).getHelper(); }
 
 	@Override
 	protected float getTurnMagnitude(ItemStack stack) {

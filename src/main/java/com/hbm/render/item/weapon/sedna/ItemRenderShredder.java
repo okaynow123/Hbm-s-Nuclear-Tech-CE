@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +23,7 @@ public class ItemRenderShredder extends ItemRenderWeaponBase {
 
 	public ItemRenderShredder(ResourceLocation texture) {
 		this.texture = texture;
+		offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -7.25).getHelper();
 	}
 
 	@Override

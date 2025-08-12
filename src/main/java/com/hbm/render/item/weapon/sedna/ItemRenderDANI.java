@@ -148,14 +148,13 @@ public class ItemRenderDANI extends ItemRenderWeaponBase {
 		ResourceManager.bio_revolver.renderAll();
 		GlStateManager.popMatrix();
 
-		GlStateManager.translate(0, 0, 5);
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(225F, 0, 0, 1);
-		GlStateManager.rotate(-90F, 0, 1, 0);
-		GlStateManager.rotate(-90F, 1, 0, 0);
-		GlStateManager.rotate(25F, 1, 0, 0);
-		GlStateManager.rotate(-45F, 0, 1, 0);
-		GlStateManager.translate(-2, 0, 0);
+		GlStateManager.rotate(-225, 0, 0, 1);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.rotate(25, 1, 0, 0);
+		GlStateManager.rotate(45, 0, 1, 0);
+		GlStateManager.rotate(180, 0, 1, 0);
+		GlStateManager.translate(2, 0, 0);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.dani_lunar_tex);
 		ResourceManager.bio_revolver.renderAll();
 		GlStateManager.popMatrix();

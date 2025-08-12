@@ -6,6 +6,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -16,6 +17,7 @@ public class ItemRenderDoubleBarrel extends ItemRenderWeaponBase {
 
 	public ItemRenderDoubleBarrel(ResourceLocation texture) {
 		this.texture = texture;
+		if(texture == ResourceManager.double_barrel_sacred_dragon_tex) offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 18.25, -3.75).getHelper();
 	}
 
 	@Override

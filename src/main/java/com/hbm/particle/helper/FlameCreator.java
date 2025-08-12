@@ -17,8 +17,6 @@ public class FlameCreator implements IParticleCreator {
   public static int META_FIRE = 0;
   public static int META_BALEFIRE = 1;
   public static int META_DIGAMMA = 2;
-  public static int META_OXY = 3;
-  public static int META_BLACK = 4;
 
   public static void composeEffect(World world, double x, double y, double z, int meta) {
     NBTTagCompound data = new NBTTagCompound();
@@ -39,17 +37,8 @@ public class FlameCreator implements IParticleCreator {
 
   @Override
   @SideOnly(Side.CLIENT)
-  public void makeParticle(
-      World world,
-      EntityPlayer player,
-      TextureManager texman,
-      Random rand,
-      double x,
-      double y,
-      double z,
-      NBTTagCompound data) {
-    ParticleFlamethrower particle =
-        new ParticleFlamethrower(world, x, y, z, data.getInteger("meta"));
+  public void makeParticle(World world, EntityPlayer player, TextureManager texman, Random rand, double x, double y, double z, NBTTagCompound data) {
+    ParticleFlamethrower particle = new ParticleFlamethrower(world, x, y, z, data.getInteger("meta"));
     Minecraft.getMinecraft().effectRenderer.addEffect(particle);
   }
 }

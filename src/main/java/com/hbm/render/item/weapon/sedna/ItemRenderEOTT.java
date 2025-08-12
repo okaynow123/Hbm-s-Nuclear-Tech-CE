@@ -3,6 +3,7 @@ package com.hbm.render.item.weapon.sedna;
 import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 
@@ -15,6 +16,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 @AutoRegister(item = "gun_aberrator_eott")
 public class ItemRenderEOTT extends ItemRenderWeaponBase {
+
+	public ItemRenderEOTT() { offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -7.25).getHelper(); }
 
 	@Override
 	public boolean isAkimbo() { return true; }
@@ -188,14 +191,13 @@ public class ItemRenderEOTT extends ItemRenderWeaponBase {
 		ResourceManager.aberrator.renderPart("Sight");
 		GlStateManager.popMatrix();
 
-		GlStateManager.translate(0, 0, 5);
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(225F, 0, 0, 1);
-		GlStateManager.rotate(-90F, 0, 1, 0);
-		GlStateManager.rotate(-90F, 1, 0, 0);
-		GlStateManager.rotate(25F, 1, 0, 0);
-		GlStateManager.rotate(-45F, 0, 1, 0);
-		GlStateManager.translate(1, 0, 0);
+		GlStateManager.rotate(-225, 0, 0, 1);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.rotate(25, 1, 0, 0);
+		GlStateManager.rotate(45, 0, 1, 0);
+		GlStateManager.rotate(180, 0, 1, 0);
+		GlStateManager.translate(1, 3, 0);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.eott_tex);
 		ResourceManager.aberrator.renderPart("Gun");
 		ResourceManager.aberrator.renderPart("Hammer");

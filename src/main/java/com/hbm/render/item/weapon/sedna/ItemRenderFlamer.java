@@ -8,6 +8,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -18,6 +19,7 @@ public class ItemRenderFlamer extends ItemRenderWeaponBase {
 
 	public ItemRenderFlamer(ResourceLocation texture) {
 		this.texture = texture;
+		offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -7.5).getHelper();
 	}
 
 	@Override

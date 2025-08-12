@@ -6,10 +6,13 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 @AutoRegister(item = "gun_m2")
 public class ItemRenderM2 extends ItemRenderWeaponBase {
+
+	public ItemRenderM2() { offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -11.5).getHelper(); }
 
 	@Override
 	protected float getTurnMagnitude(ItemStack stack) {
