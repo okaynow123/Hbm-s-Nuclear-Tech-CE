@@ -529,17 +529,15 @@ public class EntityEffectHandler {
 			FlameCreator.composeEffect(entity.world, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_FIRE);
 		}
 
-		/*if(props.balefire > 0) {
-			props.balefire--;
-			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.worldObj.playSoundEffect(living.posX, living.posY + living.height / 2, living.posZ, "random.fizz", 1F, 1.5F + rand.nextFloat() * 0.5F);
+		if(props.getBalefire() > 0) {
+			props.setBalefire(props.getBalefire() - 1);
+			if((living.ticksExisted + living.getEntityId()) % 15 == 0) living.world.playSound(null, living.posX, living.posY + living.height / 2, living.posZ, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.NEUTRAL, 1F, 1.5F + rand.nextFloat() * 0.5F);
 			ContaminationUtil.contaminate(living, HazardType.RADIATION, ContaminationType.CREATIVE, 5F);
-			if((living.ticksExisted + living.getEntityId()) % 20 == 0) living.attackEntityFrom(DamageSource.onFire, 5F);
-			FlameCreator.composeEffect(entity.worldObj, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_BALEFIRE);
-		}*/
+			if((living.ticksExisted + living.getEntityId()) % 20 == 0) living.attackEntityFrom(DamageSource.ON_FIRE, 5F);
+			FlameCreator.composeEffect(entity.world, x - living.width / 2 + living.width * rand.nextDouble(), y + rand.nextDouble() * living.height, z - living.width / 2 + living.width * rand.nextDouble(), FlameCreator.META_BALEFIRE);
+		}
 
-		if(props.getFire() > 0 ||
-				//props.balefire > 0 ||
-				props.getPhosphorus() > 0) if(!entity.isEntityAlive()) ConfettiUtil.decideConfetti(living, DamageSource.ON_FIRE);
+		if(props.getFire() > 0 || props.getBalefire() > 0 || props.getPhosphorus() > 0) if(!entity.isEntityAlive()) ConfettiUtil.decideConfetti(living, DamageSource.ON_FIRE);
 	}
 
 	private static void handleDashing(EntityLivingBase entity) {

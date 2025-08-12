@@ -57,6 +57,9 @@ public class HbmLivingCapability {
 		int getFire();
 		void setFire(int time);
 
+		int getBalefire();
+		void setBalefire(int time);
+
 		List<HbmLivingProps.ContaminationEffect> getContaminationEffectList();
 
 		void saveNBTData(NBTTagCompound tag);
@@ -81,6 +84,7 @@ public class HbmLivingCapability {
 		private int oil;
 		public int phosphorus;
 		public int fire;
+		public int balefire;
 		private final List<HbmLivingProps.ContaminationEffect> contamination = new ArrayList<>();
 
 		@Override
@@ -205,6 +209,10 @@ public class HbmLivingCapability {
 		public int getFire() { return fire; }
 
 		@Override public void setFire(int time) { this.fire = time; }
+		@Override
+		public int getBalefire() { return balefire; }
+
+		@Override public void setBalefire(int time) { this.balefire = time; }
 
 
 		@Override
@@ -226,6 +234,7 @@ public class HbmLivingCapability {
 			tag.setInteger("oil", getOil());
 			tag.setInteger("fire", getFire());
 			tag.setInteger("phosphorus", getPhosphorus());
+			tag.setInteger("balefire", getBalefire());
 			tag.setInteger("conteffectsize", contamination.size());
 			for(int i = 0; i < contamination.size(); i ++){
 				contamination.get(i).save(tag, i);
@@ -246,6 +255,7 @@ public class HbmLivingCapability {
 			setOil(tag.getInteger("oil"));
 			setFire(tag.getInteger("fire"));
 			setPhosphorus(tag.getInteger("phosphorus"));
+			setBalefire(tag.getInteger("balefire"));
 			contamination.clear();
 			for(int i = 0; i < tag.getInteger("conteffectsize"); i ++){
 				contamination.add(HbmLivingProps.ContaminationEffect.load(tag, i));
@@ -371,6 +381,10 @@ public class HbmLivingCapability {
 			public int getFire(){ return 0; }
 			@Override
 			public void setFire(int time){ }
+			@Override
+			public int getBalefire(){ return 0; }
+			@Override
+			public void setBalefire(int time){ }
 		};
 		
 		@CapabilityInject(IEntityHbmProps.class)

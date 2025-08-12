@@ -46,9 +46,9 @@ public class EntityFireLingering extends Entity {
 
     @Override
     protected void entityInit() {
-        this.getDataManager().register(TYPE, new Integer(0));
-        this.getDataManager().register(WIDTH, new Float(0));
-        this.getDataManager().register(HEIGHT, new Float(0));
+        this.getDataManager().register(TYPE, 0);
+        this.getDataManager().register(WIDTH, (float) 0);
+        this.getDataManager().register(HEIGHT, (float) 0);
     }
 
     public EntityFireLingering setType(int type) {
@@ -76,12 +76,11 @@ public class EntityFireLingering extends Entity {
             List<Entity> affected = world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(posX - width / 2, posY, posZ - width / 2, posX + width / 2, posY + height, posZ + width / 2));
 
             for(Entity e : affected) {
-                if(e instanceof EntityLivingBase) {
-                    EntityLivingBase livng = (EntityLivingBase) e;
+                if(e instanceof EntityLivingBase livng) {
                     HbmLivingCapability.IEntityHbmProps props = HbmLivingProps.getData(livng);
                     if(this.getType() == this.TYPE_DIESEL) if(props.getFire() < 60) props.setFire(60);
                     if(this.getType() == this.TYPE_PHOSPHORUS) if(props.getFire() < 300) props.setFire(300);
-                    //if(this.getType() == this.TYPE_BALEFIRE) if(props.balefire < 100) props.balefire = 100;
+                    if(this.getType() == this.TYPE_BALEFIRE) if(props.getBalefire() < 100) props.setBalefire(100);
                 } else {
                     e.setFire(4);
                 }

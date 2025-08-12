@@ -72,8 +72,7 @@ public class XFactoryFlamer {
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_IGNITE_BALEFIRE = (bullet, mop) -> {
         if(mop.entityHit instanceof EntityLivingBase) {
             HbmLivingCapability.IEntityHbmProps props = HbmLivingProps.getData((EntityLivingBase) mop.entityHit);
-            // TODO
-            // if(props.balefire < 200) props.balefire = 200;
+            if(props.getBalefire() < 200) props.setBalefire(200);
         }
     };
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_LINGER_DIESEL = (bullet, mop) -> { if(!igniteIfPossible(bullet, mop)) spawnFire(bullet, mop, 2F, 1F, 100, EntityFireLingering.TYPE_DIESEL); };
