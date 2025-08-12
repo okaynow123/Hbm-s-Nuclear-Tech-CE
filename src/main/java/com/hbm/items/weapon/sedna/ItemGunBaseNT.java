@@ -108,7 +108,6 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     public ItemGunBaseNT(WeaponQuality quality, String s, GunConfig... cfg) {
         this.setTranslationKey(s);
         this.setRegistryName(s);
-        this.setCreativeTab(MainRegistry.weaponTab);
 
         this.setMaxStackSize(1);
         this.configs_DNA = cfg;

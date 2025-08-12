@@ -15,6 +15,7 @@ import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.MainRegistry;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
@@ -279,6 +280,9 @@ public class JEIConfig implements IModPlugin {
         transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 
+        for(Item item : ItemGunBaseNT.secrets) {
+            blacklist.addIngredientToBlacklist(new ItemStack(item));
+        }
         // Some things are even beyond my control...or are they?
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.memory));
 
