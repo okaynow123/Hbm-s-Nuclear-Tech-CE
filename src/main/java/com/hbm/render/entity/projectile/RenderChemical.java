@@ -26,12 +26,11 @@ public class RenderChemical extends Render<EntityChemical> {
     }
 
     @Override
-    public void doRender(EntityChemical entity, double x, double y, double z, float f0, float f1) {
+    public void doRender(EntityChemical chem, double x, double y, double z, float f0, float f1) {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
 
-        EntityChemical chem = (EntityChemical) entity;
         EntityChemical.ChemicalStyle style = chem.getStyle();
 
         if(style == EntityChemical.ChemicalStyle.AMAT || style == EntityChemical.ChemicalStyle.LIGHTNING)
@@ -59,7 +58,7 @@ public class RenderChemical extends Render<EntityChemical> {
         GlStateManager.enableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GlStateManager.disableAlpha();
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
         GlStateManager.depthMask(false);
 
         GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);

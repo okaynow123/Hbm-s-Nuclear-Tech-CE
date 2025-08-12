@@ -1016,6 +1016,12 @@ public class ClientProxy extends ServerProxy {
                         fx = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
                         fx.setMaxAge(10 + rand.nextInt(20));
                     }
+                    case "colordust" -> {
+                        int id = Block.getStateId(Blocks.WOOL.getDefaultState());
+                        fx = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
+                        fx.setRBGColorF(data.getFloat("r"), data.getFloat("g"), data.getFloat("b"));
+                        fx.setMaxAge(10 + rand.nextInt(20));
+                    }
                 }
 
                 if (fx != null)
