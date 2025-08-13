@@ -753,6 +753,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile_large, 4), new Object[] { " I ", "IBI", " I ", 'I', ModItems.plate_polymer, 'B', ModBlocks.brick_light });
 		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile_small, 4), new Object[] { "TT ", "TT ", 'T', ModBlocks.vinyl_tile_large });
 
+        addRecipeAuto(new ItemStack(ModBlocks.machine_drain, 1), new Object[] { "PPP", "T  ", "PPP", 'P', STEEL.plateCast(), 'T', ModItems.tank_steel });
+
 		addRecipeAuto(new ItemStack(ModBlocks.brick_asbestos, 2), new Object[] { " A ", "ABA", " A ", 'B', ModBlocks.brick_light, 'A', ASBESTOS.ingot() });
 		addRecipeAuto(new ItemStack(ModBlocks.concrete, 4), new Object[] { "CC", "CC", 'C', ModBlocks.concrete_smooth });
 
