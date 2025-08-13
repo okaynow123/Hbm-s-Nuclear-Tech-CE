@@ -66,6 +66,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new SolidificationRecipes());
         recipeHandlers.add(new ParticleAcceleratorRecipes());
         recipeHandlers.add(new ExposureChamberRecipes());
+        recipeHandlers.add(new CombinationRecipes());
     }
 
     public static void initialize() {

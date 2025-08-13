@@ -486,8 +486,12 @@ public class ResourceManager {
 	public static final IModelCustom heater_oilburner = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/oilburner.obj")).asVBO();
 	public static final IModelCustom heater_electric = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/electric_heater.obj")).asVBO();
 	public static final IModelCustom heater_heatex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/heatex.obj")).asVBO();
+
+	//Furnaces
 	public static final IModelCustom furnace_iron = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/furnace_iron.obj")).asVBO();
 	public static final IModelCustom furnace_steel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/furnace_steel.obj")).asVBO();
+	public static final IModelCustom combination_oven = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/combination_oven.obj")).asVBO();
+
 	public static final IModelCustom crucible_heat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/crucible.obj")).asVBO();
 	public static final IModelCustom heat_boiler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/boiler.obj")).asVBO();
 	//Heat-Based Machines
@@ -952,8 +956,12 @@ public class ResourceManager {
 	public static final ResourceLocation heat_boiler_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/boiler.png");
 	public static final ResourceLocation heater_electric_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/electric_heater.png");
 	public static final ResourceLocation heater_heatex_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/heater_heatex.png");
+
+	//Furnaces
 	public static final ResourceLocation furnace_iron_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/furnace_iron.png");
 	public static final ResourceLocation furnace_steel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/furnace_steel.png");
+	public static final ResourceLocation combination_oven_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/combination_oven.png");
+
 	//Selenium Engine
 	public static final ResourceLocation selenium_body_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/selenium_engine_body.png");
 	public static final ResourceLocation selenium_piston_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/selenium_engine_piston.png");

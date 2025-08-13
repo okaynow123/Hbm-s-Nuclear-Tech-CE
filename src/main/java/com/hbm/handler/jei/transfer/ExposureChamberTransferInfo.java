@@ -29,7 +29,7 @@ public class ExposureChamberTransferInfo implements IRecipeTransferInfo<Containe
     @Override
     public List<Slot> getInventorySlots(ContainerMachineExposureChamber container) {
         List<Slot> slots = new ArrayList<>();
-        for (int i = 7; i < 7 + 36; i++) {
+        for (int i = 8; i < 8 + 36; i++) {
             slots.add(container.getSlot(i));
         }
         return slots;

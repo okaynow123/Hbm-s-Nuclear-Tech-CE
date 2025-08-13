@@ -5,6 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.jei.transfer.*;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.container.ContainerFurnaceCombo;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
@@ -87,6 +88,7 @@ public class JEIConfig implements IModPlugin {
     static final String PA = "hbm.particle_accelerator";
     public static final String EXPOSURE = "hbm.exposure_chamber";
     public static final String RADIOLYSIS = "hbm.radiolysis";
+    public static final String COMBINATION = "hbm.combination";
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
@@ -109,6 +111,7 @@ public class JEIConfig implements IModPlugin {
     private OreSlopperHandler oreSlopperHandler;
     private ParticleAcceleratorHandler particleAcceleratorHandler;
     private ExposureChamberHandler exposureChamberHandler;
+    private CombinationHandler combinationHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -187,6 +190,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.pa_source), PA);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_exposure_chamber), EXPOSURE);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_radiolysis), RADIOLYSIS);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.furnace_combination), COMBINATION);
 
         registry.addRecipes(JeiRecipes.getAssemblerRecipes(), ASSEMBLY);
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
@@ -242,6 +246,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(particleAcceleratorHandler.getRecipes(), PA);
         registry.addRecipes(exposureChamberHandler.getRecipes(), EXPOSURE);
         registry.addRecipes(JeiRecipes.getRadiolysisRecipes(), RADIOLYSIS);
+        registry.addRecipes(combinationHandler.getRecipes(), COMBINATION);
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
         registry.addRecipeClickArea(GUIMachineAssembler.class, 45, 83, 82, 30, ASSEMBLY);
@@ -275,11 +280,13 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIPASource.class, 75, 35, 82-75, 43-35, PA);
         registry.addRecipeClickArea(GUIMachineExposureChamber.class, 36, 40, 76-36, 48-40, EXPOSURE);
         registry.addRecipeClickArea(GUIRadiolysis.class, 71, 35, 99-71, 50-35, RADIOLYSIS);
+        registry.addRecipeClickArea(GUIFurnaceCombo.class, 49, 44, 18, 18, JEIConfig.COMBINATION);
 
         IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
         transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
-        IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
+        transferRegistry.addRecipeTransferHandler(ContainerFurnaceCombo.class, COMBINATION, 0, 1, 4, 36);
 
+        IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
         for(Item item : ItemGunBaseNT.secrets) {
             blacklist.addIngredientToBlacklist(new ItemStack(item));
         }
@@ -363,6 +370,7 @@ public class JEIConfig implements IModPlugin {
                 oreSlopperHandler = new OreSlopperHandler(help),
                 particleAcceleratorHandler = new ParticleAcceleratorHandler(help),
                 exposureChamberHandler = new ExposureChamberHandler(help),
+                combinationHandler = new CombinationHandler(help),
                 new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
