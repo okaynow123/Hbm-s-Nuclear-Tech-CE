@@ -3,7 +3,6 @@ package com.hbm.items;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.EnumUtil;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -28,7 +27,7 @@ import java.util.Locale;
 public class ItemEnumMulti extends ItemBase implements IDynamicModels {
 
     public static final String ROOT_PATH = "items/";
-    protected final String[] textures;
+    protected String[] textures;
     //hell yes, now we're thinking with enums!
     protected Class<? extends Enum<?>> theEnum;
     protected boolean multiName;

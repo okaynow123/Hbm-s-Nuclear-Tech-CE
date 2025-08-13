@@ -1063,6 +1063,8 @@ public class ModItems {
     public static final Item powder_radspice = new ItemCustomLore("powder_radspice").setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_radspice_tiny = new ItemCustomLore("powder_radspice_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item sulfur = new ItemBase("sulfur").setCreativeTab(MainRegistry.partsTab);
+    public static final Item nitra = new ItemBakedBase("nitra").setCreativeTab(MainRegistry.partsTab);
+    public static final Item nitra_small = new ItemBakedBase("nitra_small").setCreativeTab(MainRegistry.partsTab);
     public static final Item niter = new ItemBase("niter").setCreativeTab(MainRegistry.partsTab);
     public static final Item fluorite = new ItemBase("fluorite").setCreativeTab(MainRegistry.partsTab);
     public static final Item lithium = new ItemCustomLore("lithium").setCreativeTab(MainRegistry.partsTab);
@@ -1857,14 +1859,10 @@ public class ModItems {
     public static Item ammo_debug;
     public static Item ammo_standard;
     public static Item ammo_secret;
-    public static final Item ammo_shell = new ItemAmmo("ammo_shell").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_shell_explosive = new ItemAmmo("ammo_shell_explosive").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_shell_apfsds_t = new ItemAmmo("ammo_shell_apfsds_t").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_shell_apfsds_du = new ItemAmmo("ammo_shell_apfsds_du").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_shell_w9 = new ItemAmmo("ammo_shell_w9").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_dgk = new ItemAmmo("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item ammo_cell = new ItemAmmo("ammo_cell").setCreativeTab(MainRegistry.weaponTab).setMaxStackSize(16);
-    public static final Item ammo_dart = new ItemAmmo("ammo_dart").setCreativeTab(MainRegistry.weaponTab).setMaxStackSize(16);
+    public static final ItemEnumMulti ammo_shell = (ItemEnumMulti) new ItemAmmo("ammo_shell", ItemAmmoEnums.Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab);
+    public static final Item ammo_dgk = new ItemCustomLore("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
+    //public static final ItemEnumMulti ammo_fireext = (ItemEnumMulti) new ItemAmmo("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
+    public static final ItemEnumMulti ammo_misc = new ItemAmmo("ammo_misc", ItemAmmoEnums.AmmoMisc.class);
     public static final Item ammo_arty = new ItemAmmoArty("ammo_arty");
     public static final Item ammo_himars = new ItemAmmoHIMARS("ammo_himars");
     public static final Item gun_b92_ammo = new GunB92Cell("gun_b92_ammo").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
@@ -2781,6 +2779,7 @@ public class ModItems {
     public static final Item mysteryshovel = new ItemMS("mysteryshovel").setFull3D().setMaxStackSize(1).setCreativeTab(CreativeTabs.TOOLS);
     public static final Item memory = new ItemBattery(Long.MAX_VALUE / 100L, 100000000000000L, 100000000000000L, "memory").setMaxStackSize(1).setCreativeTab(null);
     public static final Item part_generic = new ItemEnumMulti("part_generic", EnumPartType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item item_secret = new ItemEnumMulti("item_secret", EnumSecretType.class, true, true).setCreativeTab(null);
     public static ToolMaterial enumToolMaterialElecTerra = EnumHelper.addToolMaterial(RefStrings.MODID + ":ELECTERRA", 4, 0, 20.0F, 12.0F, 2);
     public static final Item drax = new ItemToolAbilityPower(15F, -2.8F, -0.05, enumToolMaterialElecTerra, EnumToolType.MINER, 500000000, 100000, 5000, "drax")
             .addBreakAbility(new ToolAbility.SmelterAbility())

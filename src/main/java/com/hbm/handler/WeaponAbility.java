@@ -1,9 +1,7 @@
 package com.hbm.handler;
 
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemCell;
 import com.hbm.items.tool.IItemAbility;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -11,7 +9,6 @@ import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
-import com.hbm.util.WeightedRandomObject;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -30,12 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Arrays;
 
 public abstract class WeaponAbility {
 	
@@ -181,41 +175,11 @@ public abstract class WeaponAbility {
 
 				if(living.getHealth() <= 0.0F) {
 
-					WeightedRandomObject[] ammo = new WeightedRandomObject[] {
-							/*
-							new WeightedRandomObject(ModItems.ammo_12gauge, 10),
-							new WeightedRandomObject(ModItems.ammo_12gauge_shrapnel, 5),
-							new WeightedRandomObject(ModItems.ammo_12gauge_du, 3),
-							new WeightedRandomObject(ModItems.ammo_20gauge, 10),
-							new WeightedRandomObject(ModItems.ammo_20gauge_flechette, 5),
-							new WeightedRandomObject(ModItems.ammo_20gauge_slug, 5),
-							new WeightedRandomObject(ModItems.ammo_9mm, 10),
-							new WeightedRandomObject(ModItems.ammo_9mm_ap, 5),
-							new WeightedRandomObject(ModItems.ammo_5mm, 10),
-							new WeightedRandomObject(ModItems.ammo_5mm_du, 3),
-							new WeightedRandomObject(ModItems.ammo_556, 10),
-							new WeightedRandomObject(ModItems.ammo_556_phosphorus, 5),
-							new WeightedRandomObject(ModItems.ammo_556_flechette, 10),
-							new WeightedRandomObject(ModItems.ammo_556_flechette_phosphorus, 5),
-							new WeightedRandomObject(ModItems.ammo_50bmg, 10),
-							new WeightedRandomObject(ModItems.ammo_50bmg_incendiary, 5),
-							new WeightedRandomObject(ModItems.ammo_50bmg_ap, 5),
-							new WeightedRandomObject(ModItems.ammo_grenade, 5),
-							new WeightedRandomObject(ModItems.ammo_grenade_concussion, 3),
-							new WeightedRandomObject(ModItems.ammo_grenade_phosphorus, 3),
-							new WeightedRandomObject(ModItems.ammo_rocket, 5),
-							new WeightedRandomObject(ModItems.ammo_rocket_glare, 5),
-							new WeightedRandomObject(ModItems.ammo_rocket_phosphorus, 5),
-							new WeightedRandomObject(ModItems.ammo_rocket_rpc, 1),
-							 */
-							new WeightedRandomObject(ModItems.syringe_metal_stimpak, 25),
-					};
-
 					int count = Math.min((int)Math.ceil(living.getMaxHealth() / divider), 250); //safeguard to prevent funnies from bosses with obscene health
 
 					for(int i = 0; i < count; i++) {
 
-						living.dropItem(WeightedRandom.getRandomItem(living.getRNG(), Arrays.asList(ammo)).asItem(), 1);
+						living.entityDropItem(new ItemStack(ModItems.nitra_small), 1);
 						world.spawnEntity(new EntityXPOrb(world, living.posX, living.posY, living.posZ, 1));
 					}
 
@@ -257,7 +221,8 @@ public abstract class WeaponAbility {
 				if(living instanceof EntitySkeleton) {
 					living.entityDropItem(new ItemStack(Items.SKULL, 1, 0), 0.0F);
 				} else if(living instanceof EntityWitherSkeleton){
-					living.entityDropItem(ItemCell.getFullCell(Fluids.AMAT), 0.0F);
+					if(world.rand.nextInt(20) == 0) living.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
+					else living.entityDropItem(new ItemStack(Items.COAL, 3), 0.0F);
 				} else if(living instanceof EntityZombie) {
 					living.entityDropItem(new ItemStack(Items.SKULL, 1, 2), 0.0F);
 				} else if(living instanceof EntityCreeper) {
@@ -266,7 +231,7 @@ public abstract class WeaponAbility {
 
 					ItemStack head = new ItemStack(Items.SKULL, 1, 3);
 					head.setTagCompound(new NBTTagCompound());
-					head.getTagCompound().setString("SkullOwner", ((EntityPlayer) living).getDisplayName().getUnformattedText());
+					head.getTagCompound().setString("SkullOwner", living.getDisplayName().getUnformattedText());
 					living.entityDropItem(head, 0.0F);
 				} else {
 					living.entityDropItem(new ItemStack(Items.ROTTEN_FLESH, 3, 0), 0.0F);

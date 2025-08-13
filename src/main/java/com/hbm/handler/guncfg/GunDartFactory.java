@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 
@@ -56,7 +57,7 @@ public class GunDartFactory {
 
 		BulletConfiguration bullet = BulletConfigFactory.standardBulletConfig();
 
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_dart);
+		bullet.ammo = new RecipesCommon.ComparableStack(ItemStack.EMPTY); //new RecipesCommon.ComparableStack(ModItems.ammo_dart);
 		bullet.velocity = 5.0F;
 		bullet.spread = 0;
 		bullet.dmgMin = 1;

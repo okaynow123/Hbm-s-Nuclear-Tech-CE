@@ -52,6 +52,7 @@ public class BobmazonOfferFactory {
 		materials.add(new Offer(new ItemStack(ModItems.ingot_desh), Requirement.OIL, 16 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.ingot_saturnite), Requirement.STEEL, 8 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.lithium), Requirement.CHEMICS, 6 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.nitra, 4), Requirement.CHEMICS, 16 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.solid_fuel), Requirement.OIL, 4 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.lignite), Requirement.STEEL, 2 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.OIL.getID()), Requirement.OIL, 4 * inflation));

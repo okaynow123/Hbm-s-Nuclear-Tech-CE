@@ -4,8 +4,8 @@ import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.interfaces.IBulletImpactBehavior;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.items.ItemAmmoEnums;
 import com.hbm.items.ModItems;
-
 public class GunCannonFactory {
 
 public static BulletConfiguration getShellConfig() {
@@ -25,7 +25,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_explosive);
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.EXPLOSIVE));
 		bullet.dmgMin = 35;
 		bullet.dmgMax = 45;
 		bullet.explosive = 4F;
@@ -38,7 +38,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_apfsds_t);
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_T));
 		bullet.dmgMin = 50;
 		bullet.dmgMax = 55;
 		bullet.doesPenetrate = true;
@@ -51,7 +51,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_apfsds_du);
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_DU));
 		bullet.dmgMin = 70;
 		bullet.dmgMax = 80;
 		bullet.doesPenetrate = true;
@@ -64,7 +64,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell_w9);
+		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.W9));
 		bullet.dmgMin = 100;
 		bullet.dmgMax = 150;
 		
