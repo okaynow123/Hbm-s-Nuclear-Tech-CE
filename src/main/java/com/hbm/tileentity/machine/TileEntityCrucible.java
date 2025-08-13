@@ -54,8 +54,8 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
     public int heat;
     public int progress;
 
-    public List<Mats.MaterialStack> recipeStack = new ArrayList<>();
-    public List<Mats.MaterialStack> wasteStack = new ArrayList<>();
+    public volatile List<Mats.MaterialStack> recipeStack = new ArrayList<>();
+    public volatile List<Mats.MaterialStack> wasteStack = new ArrayList<>();
 
     /* CONFIGURABLE CONSTANTS */
     //because eclipse's auto complete is dumb as a fucking rock, it's now called "ZCapacity" so it's listed AFTER the actual stacks in the auto complete list.
@@ -256,24 +256,22 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
         progress = buf.readInt();
         heat = buf.readInt();
 
-        recipeStack.clear();
-        wasteStack.clear();
-
-        int mats = buf.readShort();
-        for(int i = 0; i < mats; i++) {
-            int id = buf.readInt();
-            if (id == -1)
-                continue;
-            recipeStack.add(new Mats.MaterialStack(Mats.matById.get(id), buf.readInt()));
+        int rLen = buf.readShort() & 0xFFFF;
+        List<Mats.MaterialStack> newRecipe = new ArrayList<>(rLen);
+        for (int i = 0; i < rLen; i++) {
+            int id  = buf.readInt();
+            int amt = buf.readInt();
+            if (id >= 0) newRecipe.add(new Mats.MaterialStack(Mats.matById.get(id), amt));
         }
-
-        mats = buf.readShort();
-        for(int i = 0; i < mats; i++) {
-            int id = buf.readInt();
-            if (id == -1)
-                continue;
-            wasteStack.add(new Mats.MaterialStack(Mats.matById.get(id), buf.readInt()));
+        int wLen = buf.readShort() & 0xFFFF;
+        List<Mats.MaterialStack> newWaste = new ArrayList<>(wLen);
+        for (int i = 0; i < wLen; i++) {
+            int id  = buf.readInt();
+            int amt = buf.readInt();
+            if (id >= 0) newWaste.add(new Mats.MaterialStack(Mats.matById.get(id), amt));
         }
+        this.recipeStack = newRecipe;
+        this.wasteStack = newWaste;
     }
 
     @Override

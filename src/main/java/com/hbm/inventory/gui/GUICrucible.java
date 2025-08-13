@@ -17,7 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class GUICrucible extends GuiInfoContainer {
 
@@ -67,13 +67,11 @@ public class GUICrucible extends GuiInfoContainer {
 
     protected void drawStackInfo(List<Mats.MaterialStack> stack, int mouseX, int mouseY, int x, int y) {
         List<String> tempList = new ArrayList<>();
-        List<Mats.MaterialStack> stackCopy = new ArrayList<>(stack); //I had some concurrent modification crashes
-
 
         if (stack.isEmpty())
             tempList.add(ChatFormatting.RED + "Empty");
 
-        for (Mats.MaterialStack sta : stackCopy) {
+        for (Mats.MaterialStack sta : stack) {
             tempList.add(ChatFormatting.YELLOW + I18nUtil.resolveKey(sta.material.getTranslationKey()) + ": " + Mats.formatAmount(sta.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
         }
 
@@ -89,8 +87,7 @@ public class GUICrucible extends GuiInfoContainer {
         int lastQuant = 0;
 
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        List<Mats.MaterialStack> copy = new ArrayList<>(stack);
-        for(Mats.MaterialStack sta : copy) {
+        for(Mats.MaterialStack sta : stack) {
 
             int targetHeight = (lastQuant + sta.amount) * 79 / capacity;
 
