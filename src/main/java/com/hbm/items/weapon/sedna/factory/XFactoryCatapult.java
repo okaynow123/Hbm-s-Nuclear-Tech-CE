@@ -1,5 +1,6 @@
 package com.hbm.items.weapon.sedna.factory;
 
+import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
@@ -13,22 +14,18 @@ import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.Random;
 import java.util.function.BiConsumer;
@@ -90,10 +87,8 @@ public class XFactoryCatapult {
 
     public static void spawnMush(EntityBulletBaseMK4 bullet, RayTraceResult mop) {
         bullet.world.playSound(null, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
-        NBTTagCompound data = new NBTTagCompound();
-        data.setString("type", "muke");
-        data.setBoolean("balefire", MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0);
-        PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z), new NetworkRegistry.TargetPoint(bullet.dimension, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 250));
+        if(MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0) EntityNukeTorex.statFacBale(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.3F);
+        else EntityNukeTorex.statFac(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.4F);
     }
 
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_NUKE_TINYTOT = (bullet, mop) -> {
@@ -108,10 +103,8 @@ public class XFactoryCatapult {
 
         incrementRad(bullet.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 0.25F);
         bullet.world.playSound(null, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
-        NBTTagCompound data = new NBTTagCompound();
-        data.setString("type", "tinytot");
-        data.setBoolean("balefire", MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0);
-        PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z), new NetworkRegistry.TargetPoint(bullet.dimension, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 250));
+        if(MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0) EntityNukeTorex.statFacBale(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.25F);
+        else EntityNukeTorex.statFac(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.25F);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_NUKE_HIVE = (bullet, mop) -> {
