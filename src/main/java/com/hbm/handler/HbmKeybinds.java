@@ -5,9 +5,9 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -40,7 +40,7 @@ public class HbmKeybinds {
 	}
 
 	@SubscribeEvent
-	public void mouseEvent(InputEvent.MouseInputEvent event) {
+	public void mouseEvent(MouseEvent event) {
 		HbmCapability.IHBMData props = HbmCapability.getData(MainRegistry.proxy.me());
 
 		for(EnumKeybind key : EnumKeybind.values()) {
