@@ -1,14 +1,15 @@
 package com.hbm.render.util;
 
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.wiaj.WorldInAJar;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,6 +18,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -419,5 +421,76 @@ public class RenderOverhead {
 			this.label = label;
 			return this;
 		}
+	}
+
+	private static WorldInAJar actionPreviewWorld;
+	private static int offsetX;
+	private static int offsetY;
+	private static int offsetZ;
+	private static boolean actionPreviewSuccess;
+	private static boolean clearPreview;
+
+	public static void setActionPreview(WorldInAJar wiaj, BlockPos pos, boolean canAction) {
+		actionPreviewWorld = wiaj;
+		offsetX = pos.getX();
+		offsetY = pos.getY();
+		offsetZ = pos.getZ();
+		actionPreviewSuccess = canAction;
+		clearPreview = false;
+	}
+
+	public static void clearActionPreview() {
+		clearPreview = true;
+	}
+
+	public static void renderActionPreview(float partialTicks) {
+		if (clearPreview) {
+			actionPreviewWorld = null;
+			clearPreview = false;
+		}
+
+		if (actionPreviewWorld == null) return;
+
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer player = mc.player;
+		if (player == null) return;
+		double pX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+		double pY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+		double pZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.pushMatrix();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		if (actionPreviewSuccess) { // FIXME: This isn't working at all
+			GlStateManager.color(0.5F, 1.0F, 1.0F, 0.6F);
+		} else {
+			GlStateManager.color(1.0F, 0.5F, 0.5F, 0.6F);
+		}
+		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		buffer.setTranslation(offsetX - pX, offsetY - pY, offsetZ - pZ);
+		for (int ix = 0; ix < actionPreviewWorld.sizeX; ix++) {
+			for (int iy = 0; iy < actionPreviewWorld.sizeY; iy++) {
+				for (int iz = 0; iz < actionPreviewWorld.sizeZ; iz++) {
+					BlockPos pos = new BlockPos(ix, iy, iz);
+					IBlockState state = actionPreviewWorld.getBlockState(pos);
+					if (state.getRenderType() != EnumBlockRenderType.INVISIBLE) {
+						try {
+							dispatcher.renderBlock(state, pos, actionPreviewWorld, buffer);
+						} catch (Exception ignored) {
+						}
+					}
+				}
+			}
+		}
+
+		buffer.setTranslation(0, 0, 0);
+		tessellator.draw();
+		GlStateManager.disableBlend();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.popMatrix();
 	}
 }

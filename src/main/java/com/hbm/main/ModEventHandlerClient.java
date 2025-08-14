@@ -36,6 +36,7 @@ import com.hbm.items.machine.ItemCassette.TrackType;
 import com.hbm.items.special.*;
 import com.hbm.items.special.weapon.GunB92;
 import com.hbm.items.tool.ItemCanister;
+import com.hbm.items.tool.ItemConveyorWand;
 import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.*;
@@ -306,6 +307,16 @@ public class ModEventHandlerClient {
         IDynamicModels.registerModels();
         IDynamicModels.registerCustomStateMappers();
         IMetaItemTesr.redirectModels();
+
+        ModelLoader.setCustomModelResourceLocation(ModItems.conveyor_wand, 0, new ModelResourceLocation(ModBlocks.conveyor.getRegistryName(),
+                "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ModItems.conveyor_wand, 1, new ModelResourceLocation(ModBlocks.conveyor_express.getRegistryName(),
+                "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ModItems.conveyor_wand, 2, new ModelResourceLocation(ModBlocks.conveyor_double.getRegistryName(),
+                "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ModItems.conveyor_wand, 3, new ModelResourceLocation(ModBlocks.conveyor_triple.getRegistryName(),
+                "inventory"));
+
         //FIXME: this is a dogshit solution
 
 
@@ -2118,6 +2129,11 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             tess.draw();
             GlStateManager.enableLighting();
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        RenderOverhead.renderActionPreview(event.getPartialTicks());
     }
 
     private void wrapModel(ModelBakeEvent event, ModelResourceLocation location) {

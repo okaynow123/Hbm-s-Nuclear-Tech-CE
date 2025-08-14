@@ -1,13 +1,18 @@
 package com.hbm.blocks.network;
 
+import com.hbm.items.ModItems;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlockConveyorTriple extends BlockConveyor {
+import java.util.Random;
+
+public class BlockConveyorTriple extends BlockConveyorBendable {
 
     public BlockConveyorTriple(Material materialIn, String s) {
         super(materialIn, s);
@@ -34,5 +39,16 @@ public class BlockConveyorTriple extends BlockConveyor {
         }
 
         return new Vec3d(xCenter, pos.getY() + 0.25, zCenter);
+    }
+
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return ModItems.conveyor_wand;
+    }
+
+    @Override
+    public int damageDropped(IBlockState state) {
+        return 3;
     }
 }

@@ -2,17 +2,21 @@ package com.hbm.blocks.network;
 
 import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.conveyor.IEnterableBlock;
+import com.hbm.blocks.ModBlocks;
+import com.hbm.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -20,28 +24,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockConveyorChute extends BlockConveyor {
+import java.util.Random;
+
+public class BlockConveyorChute extends BlockConveyorBase {
     public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 2); //Bottom 0, Middle 1, Input 2
 
     public BlockConveyorChute(Material materialIn, String s) {
         super(materialIn, s);
-    }
-
-    @Override
-    public void onEntityCollision(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Entity entity) {
-        super.onEntityCollision(world, pos, state, entity);
-
-        Block belowBlock = world.getBlockState(pos.down()).getBlock();
-
-        if (belowBlock instanceof IConveyorBelt || belowBlock instanceof IEnterableBlock) {
-            entity.motionX *= 4.0;
-            entity.motionY *= 4.0;
-            entity.motionZ *= 4.0;
-        } else if (entity.posY > pos.getY() + 0.25) {
-            entity.motionX *= 3.0;
-            entity.motionY *= 3.0;
-            entity.motionZ *= 3.0;
-        }
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TYPE, 0));
     }
 
     @Override
@@ -50,12 +40,32 @@ public class BlockConveyorChute extends BlockConveyor {
         Block belowBlock = world.getBlockState(pos.down()).getBlock();
 
         if (belowBlock instanceof IConveyorBelt || belowBlock instanceof IEnterableBlock) {
-            speed *= 4.0;
+            speed *= 5;
         } else if (itemPos.y > pos.getY() + 0.25) {
-            speed *= 3.0;
+            speed *= 3;
         }
 
         return super.getTravelLocation(world, x, y, z, itemPos, speed);
+    }
+
+    @Override
+    public EnumFacing getInputDirection(World world, BlockPos pos) {
+        return world.getBlockState(pos).getValue(FACING);
+    }
+
+    @Override
+    public EnumFacing getOutputDirection(World world, BlockPos pos) {
+        return EnumFacing.DOWN;
+    }
+
+    @Override
+    public Vec3d getClosestSnappingPosition(World world, BlockPos pos, Vec3d itemPos) {
+        Block below = world.getBlockState(pos.down()).getBlock();
+        if (below instanceof IConveyorBelt || below instanceof IEnterableBlock || itemPos.y > pos.getY() + 0.25) {
+            return new Vec3d(pos.getX() + 0.5, itemPos.y, pos.getZ() + 0.5);
+        } else {
+            return super.getClosestSnappingPosition(world, pos, itemPos);
+        }
     }
 
     @Override
@@ -70,27 +80,51 @@ public class BlockConveyorChute extends BlockConveyor {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(TYPE, getUpdatedType(worldIn, pos, placer.getHorizontalFacing().getOpposite())));
+    public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand,
+                           ToolType tool) {
+        if (tool != ToolType.SCREWDRIVER) {
+            return false;
+        }
+
+        BlockPos pos = new BlockPos(x, y, z);
+        IBlockState state = world.getBlockState(pos);
+
+        if (!player.isSneaking()) {
+            world.setBlockState(pos, state.withRotation(Rotation.CLOCKWISE_90), 3);
+        } else {
+            IBlockState conveyorState = ModBlocks.conveyor.getDefaultState().withProperty(FACING, state.getValue(FACING))
+                                                          .withProperty(BlockConveyorBendable.CURVE, BlockConveyorBendable.CurveType.STRAIGHT);
+            world.setBlockState(pos, conveyorState, 3);
+        }
+        return true;
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos){
-        world.setBlockState(pos, state.withProperty(TYPE, getUpdatedType(world, pos)));
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return ModItems.conveyor_wand;
     }
 
-    public int getUpdatedType(World world, BlockPos pos){
+    @Override
+    public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
+        EnumFacing facing = placer.getHorizontalFacing().getOpposite();
+        worldIn.setBlockState(pos, state.withProperty(FACING, facing).withProperty(TYPE, getUpdatedType(worldIn, pos, facing)), 2);
+    }
+
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        world.setBlockState(pos, state.withProperty(TYPE, getUpdatedType(world, pos)), 2);
+    }
+
+    public int getUpdatedType(World world, BlockPos pos) {
         return getUpdatedType(world, pos, world.getBlockState(pos).getValue(FACING));
     }
 
-    public int getUpdatedType(World world, BlockPos pos, EnumFacing side){
+    public int getUpdatedType(World world, BlockPos pos, EnumFacing facing) {
         boolean hasChuteBelow = world.getBlockState(pos.down()).getBlock() instanceof BlockConveyorChute;
-        boolean hasInputBelt = false;
-        Block inputBlock = world.getBlockState(pos.offset(side, 1)).getBlock();
-        if (inputBlock instanceof IConveyorBelt || inputBlock instanceof IEnterableBlock) {
-            hasInputBelt = true;
-        }
-        if(hasChuteBelow){
+        Block inputBlock = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
+        boolean hasInputBelt = (inputBlock instanceof IConveyorBelt || inputBlock instanceof IEnterableBlock);
+
+        if (hasChuteBelow) {
             return hasInputBelt ? 2 : 1;
         }
         return 0;
@@ -123,17 +157,20 @@ public class BlockConveyorChute extends BlockConveyor {
 
     @Override
     public @NotNull BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{FACING, TYPE});
+        return new BlockStateContainer(this, FACING, TYPE);
     }
 
-    @Override //0-3 NSEW (T0) 4-7 NSEW (T1) 8-11 NSEW (T2)
+    @Override
     public int getMetaFromState(IBlockState state) {
-        return ((EnumFacing)state.getValue(FACING)).getIndex() - 2 + (state.getValue(TYPE)<<2);
+        int horizontalIndex = state.getValue(FACING).getHorizontalIndex();
+        int type = state.getValue(TYPE);
+        return horizontalIndex + (type << 2);
     }
 
     @Override
     public @NotNull IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.values()[((meta % 4)+2)];
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, meta>>2);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(meta & 3);
+        int type = (meta >> 2) & 3;
+        return this.getDefaultState().withProperty(FACING, facing).withProperty(TYPE, Math.min(type, 2));
     }
 }

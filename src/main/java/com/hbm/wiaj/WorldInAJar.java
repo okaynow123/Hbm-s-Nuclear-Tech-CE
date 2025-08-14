@@ -74,6 +74,10 @@ public class WorldInAJar implements IBlockAccess {
 		this.blocks[x][y][z] = b;
 	}
 
+	public void setBlockState(BlockPos pos, IBlockState state) {
+		setBlock(pos.getX(), pos.getY(), pos.getZ(), state);
+	}
+
 	//shaky, we may kick tile entities entirely and rely on outside-the-world tile actors for rendering
 	//might still come in handy for manipulating things using dummy tiles, like cable connections
 	@Override
