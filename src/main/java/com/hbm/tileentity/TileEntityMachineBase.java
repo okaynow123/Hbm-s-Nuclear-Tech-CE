@@ -86,6 +86,11 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         markDirty();
     }
 
+    /** The "chunks is modified, pls don't forget to save me" effect of markDirty, minus the block updates */
+    public void markChanged() {
+        this.world.markChunkDirty(this.pos, this);
+    }
+
     public String getInventoryName() {
         return this.hasCustomInventoryName() ? this.customName : getName();
     }

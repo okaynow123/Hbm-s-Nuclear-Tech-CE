@@ -865,6 +865,8 @@ public class ModBlocks {
 
 	public static final Block machine_press = new MachinePress(Material.IRON, "machine_press").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_epress = new MachineEPress(Material.IRON, "machine_epress").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_conveyor_press = new MachineConveyorPress(Material.IRON, "machine_conveyor_press").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+
 	//Th3_Sl1ze: I changed the registry name cuz let's be honest, old fuel is deleted, old reactor is reworked, it'll be easier for the player to simply craft a new reactor
 	public static final Block reactor_research = new ReactorResearch(Material.IRON, "machine_reactor_small_new").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_reactor_breeding = new MachineReactorBreeding(Material.IRON, "machine_reactor_breeding").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

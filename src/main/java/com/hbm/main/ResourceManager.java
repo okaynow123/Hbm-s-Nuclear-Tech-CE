@@ -37,6 +37,7 @@ public class ResourceManager {
 	public static final IModelCustom press_head = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/press_head.obj")).asVBO();
 	public static final IModelCustom epress_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/epress_body.obj")).asVBO();
 	public static final IModelCustom epress_head = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/epress_head.obj")).asVBO();
+	public static final IModelCustom conveyor_press = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/conveyor_press.obj")).asVBO();
 	public static final IModelCustom ammo_press = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/ammo_press.obj")).asVBO();
 
 	public static final IModelCustom bm_box_lever = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/bm_box_lever.obj")).asVBO();
@@ -972,6 +973,8 @@ public class ResourceManager {
 	public static final ResourceLocation press_head_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/press_head.png");
 	public static final ResourceLocation epress_body_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/epress_body.png");
 	public static final ResourceLocation epress_head_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/epress_head.png");
+	public static final ResourceLocation conveyor_press_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_press.png");
+	public static final ResourceLocation conveyor_press_belt_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_press_belt.png");
 	public static final ResourceLocation ammo_press_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ammo_press.png");
 
 	public static final ResourceLocation bm_box_lever_tex = new ResourceLocation(RefStrings.MODID, "textures/models/turrets/bm_box_lever.png");
