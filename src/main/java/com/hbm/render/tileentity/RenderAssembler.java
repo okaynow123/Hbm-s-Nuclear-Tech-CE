@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
@@ -192,6 +193,26 @@ public class RenderAssembler extends TileEntitySpecialRenderer<TileEntityMachine
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
+    }
+
+    @Override
+    public void correctRotation(TileEntity te){
+        GlStateManager.translate(te.getPos().getX() + 0.5D, te.getPos().getY(), te.getPos().getZ() + 0.5D);
+        GlStateManager.rotate(180, 0F, 1F, 0F);
+        switch (te.getBlockMetadata()) {
+            case 14:
+                GlStateManager.rotate(180, 0F, 1F, 0F);
+                break;
+            case 13:
+                GlStateManager.rotate(270, 0F, 1F, 0F);
+                break;
+            case 15:
+                GlStateManager.rotate(0, 0F, 1F, 0F);
+                break;
+            case 12:
+                GlStateManager.rotate(90, 0F, 1F, 0F);
+                break;
+        }
     }
 
     @Override

@@ -241,7 +241,7 @@ public class MachineStrandCaster extends BlockDummyable
   }
 
   @Override
-  protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+  public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
     x += dir.offsetX * o;
     z += dir.offsetZ * o;
 

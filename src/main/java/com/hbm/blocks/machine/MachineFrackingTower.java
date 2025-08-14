@@ -119,7 +119,7 @@ public class MachineFrackingTower extends BlockDummyable {
 
 
     @Override
-    protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+    public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 
         if(!MultiblockHandlerXR.checkSpace(world, x, y + 2, z, new int[] {1, 0, 3, 3, 3, 3}, x, y, z, dir)) return false;
 

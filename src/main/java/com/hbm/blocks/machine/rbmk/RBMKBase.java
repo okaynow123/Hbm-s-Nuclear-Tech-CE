@@ -133,7 +133,7 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 	}
 	
 	@Override
-	protected ForgeDirection getDirModified(ForgeDirection dir) {
+	public ForgeDirection getDirModified(ForgeDirection dir) {
 		return DIR_NO_LID;
 	}
 	

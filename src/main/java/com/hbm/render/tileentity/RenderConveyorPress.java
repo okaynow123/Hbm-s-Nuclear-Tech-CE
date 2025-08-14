@@ -2,6 +2,7 @@ package com.hbm.render.tileentity;
 
 import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.blocks.BlockDummyable;
@@ -23,12 +24,7 @@ public class RenderConveyorPress extends TileEntitySpecialRenderer<TileEntityCon
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
 
-        switch (te.getBlockMetadata() - BlockDummyable.offset) {
-            case 2: GlStateManager.rotate(90F, 0F, 1F, 0F); break;
-            case 4: GlStateManager.rotate(180F, 0F, 1F, 0F); break;
-            case 3: GlStateManager.rotate(270F, 0F, 1F, 0F); break;
-            case 5: GlStateManager.rotate(0F, 0F, 1F, 0F); break;
-        }
+        correctRotation(te);
 
         bindTexture(ResourceManager.conveyor_press_tex);
         ResourceManager.conveyor_press.renderPart("Press");
@@ -43,7 +39,8 @@ public class RenderConveyorPress extends TileEntitySpecialRenderer<TileEntityCon
         try {
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.loadIdentity();
-            long time = te.getWorld().getTotalWorldTime();
+            long time = 0L;
+            if(te.getWorld() != null) time = te.getWorld().getTotalWorldTime();
             int ticks = (int) (time % 16L) - 2;
             GlStateManager.translate(0D, ticks / 16D, 0D);
         } finally {
@@ -56,6 +53,16 @@ public class RenderConveyorPress extends TileEntitySpecialRenderer<TileEntityCon
         GlStateManager.loadIdentity();
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         GlStateManager.popMatrix();
+    }
+
+    @Override
+    public void correctRotation(TileEntity te) {
+        switch (te.getBlockMetadata() - BlockDummyable.offset) {
+            case 2: GlStateManager.rotate(90F, 0F, 1F, 0F); break;
+            case 4: GlStateManager.rotate(180F, 0F, 1F, 0F); break;
+            case 3: GlStateManager.rotate(270F, 0F, 1F, 0F); break;
+            case 5: GlStateManager.rotate(0F, 0F, 1F, 0F); break;
+        }
     }
 
     @Override

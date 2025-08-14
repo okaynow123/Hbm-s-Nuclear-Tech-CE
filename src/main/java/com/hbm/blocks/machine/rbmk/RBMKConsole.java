@@ -2,7 +2,6 @@ package com.hbm.blocks.machine.rbmk;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ITooltipProvider;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.BossSpawnHandler;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.items.ModItems;
@@ -161,7 +160,7 @@ public class RBMKConsole extends BlockDummyable implements ITooltipProvider {
 	}
 
 	@Override
-	protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+	public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		if(!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {0, 0, 0, 1, 2, 2}, x, y, z, dir))
 			return false;
 

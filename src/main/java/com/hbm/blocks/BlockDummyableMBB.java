@@ -22,7 +22,7 @@ public abstract class BlockDummyableMBB extends BlockDummyable {
 	}
 	
 	@Override
-	protected boolean checkRequirement(World world, int xx, int yy, int zz, ForgeDirection dir, int o) {
+	public boolean checkRequirement(World world, int xx, int yy, int zz, ForgeDirection dir, int o) {
 		MultiblockBounds b = MultiblockBBHandler.REGISTRY.get(this);
 		Map<BlockPos, List<AxisAlignedBB>> blocks = new HashMap<>();
 		for(AxisAlignedBB unrotatedBox : b.boxes){

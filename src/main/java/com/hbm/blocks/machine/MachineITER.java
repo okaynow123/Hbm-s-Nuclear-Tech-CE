@@ -162,7 +162,7 @@ public class MachineITER extends BlockDummyable {
 	}
 	
 	@Override
-	protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+	public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		x = x + dir.offsetX * o;
 		z = z + dir.offsetZ * o;
 

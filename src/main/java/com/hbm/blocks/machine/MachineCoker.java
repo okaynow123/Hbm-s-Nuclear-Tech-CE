@@ -50,7 +50,7 @@ public class MachineCoker extends BlockDummyable implements ITooltipProvider {
     }
 
     @Override
-    protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+    public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
         if(super.checkRequirement(world, x, y, z, dir, o)) {
 
             x += dir.offsetX * o;

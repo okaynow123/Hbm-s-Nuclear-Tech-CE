@@ -255,7 +255,7 @@ public class CraneSplitter extends BlockDummyable implements IConveyorBelt, IEnt
     }
 
     @Override
-    protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+    public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
         return super.checkRequirement(world, x, y, z, dir, o);
     }
 

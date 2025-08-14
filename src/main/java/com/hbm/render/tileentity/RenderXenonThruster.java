@@ -47,8 +47,8 @@ public class RenderXenonThruster extends TileEntitySpecialRenderer<TileEntityXen
       }
 
       GlStateManager.translate(0, 0, -0.5);
-
-      float trailStretch = te.getWorld().rand.nextFloat();
+      float trailStretch = 0;
+      if (te.getWorld() != null) trailStretch = te.getWorld().rand.nextFloat();
       trailStretch = 1.2F - (trailStretch * trailStretch * 0.2F);
       trailStretch *= te.thrustAmount;
 

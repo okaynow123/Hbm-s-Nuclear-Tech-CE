@@ -62,9 +62,9 @@ public class RadiolysisRecipeHandler implements IRecipeCategory<RadiolysisRecipe
     @Override
     public void setRecipe(@NotNull IRecipeLayout recipeLayout, @NotNull RadiolysisRecipe recipeWrapper, @NotNull IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-        guiItemStacks.init(0, true, 34, 25);
-        guiItemStacks.init(1, false, 118, 16);
-        guiItemStacks.init(2, false, 118, 34);
+        guiItemStacks.init(0, true, 33, 24);
+        guiItemStacks.init(1, false, 117, 15);
+        guiItemStacks.init(2, false, 117, 33);
         guiItemStacks.set(ingredients);
     }
 

@@ -238,7 +238,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			return true;
 		}
 	}
-    protected ForgeDirection getDirModified(ForgeDirection dir) {
+    public ForgeDirection getDirModified(ForgeDirection dir) {
 		return dir;
 	}
 
@@ -246,7 +246,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		return dir;
 	}
 
-    protected boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+    public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
 		return MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o, getDimensions(), x, y, z, dir);
 	}
 	
