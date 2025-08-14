@@ -48,6 +48,9 @@ public class JEIConfig implements IModPlugin {
     public static final String COKER = "hbm.coker";
     public static final String COMPRESSING = "hbm.compressor";
     public static final String CRACKING = "hbm.cracking";
+    public static final String CRUCIBLE_ALLOY = "hbm.crucible_alloy";
+    public static final String CRUCIBLE_CAST = "hbm.crucible_foundry";
+    public static final String CRUCIBLE_SMELT = "hbm.crucible_smelt";
     public static final String CRYSTALLIZER = "hbm.crystallizer";
     public static final String CYCLOTRON = "hbm.cyclotron";
     public static final String DFC = "hbm.dfc";
@@ -95,6 +98,9 @@ public class JEIConfig implements IModPlugin {
     private CokingRecipeHandler cokingHandler;
     private CompressingRecipeHandler compressingHandler;
     private CrackingHandler crackingHandler;
+    private CrucibleAlloyingHandler crucibleAlloyingHandler;
+    private CrucibleCastingHandler crucibleCastingHandler;
+    private CrucibleSmeltingHandler crucibleSmeltingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
     private ElectrolyserFluidHandler electrolyserFluidHandler;
     private ElectrolyserMetalHandler electrolyserMetalHandler;
@@ -136,6 +142,11 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_SOLID);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemplant), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemfac), CHEMPLANT);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crucible), CRUCIBLE_ALLOY);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.foundry_basin), CRUCIBLE_CAST);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.foundry_mold), CRUCIBLE_CAST);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_strand_caster), CRUCIBLE_CAST);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crucible), CRUCIBLE_SMELT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_cyclotron), CYCLOTRON);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_schrabidium_transmutator), TRANSMUTATION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_press), PRESS);
@@ -208,6 +219,9 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(arcFurnaceSolidHandler.getRecipes(), ARC_FURNACE_SOLID);
         registry.addRecipes(crackingHandler.getRecipes(), CRACKING);
         registry.addRecipes(compressingHandler.getRecipes(), COMPRESSING);
+        registry.addRecipes(crucibleAlloyingHandler.getRecipes(), CRUCIBLE_ALLOY);
+        registry.addRecipes(crucibleCastingHandler.getRecipes(), CRUCIBLE_CAST);
+        registry.addRecipes(crucibleSmeltingHandler.getRecipes(), CRUCIBLE_SMELT);
         registry.addRecipes(fractioningHandler.getRecipes(), FRACTIONING);
         registry.addRecipes(hydrotreatHandler.getRecipes(), HYDROTREATING);
         registry.addRecipes(liquefactHandler.getRecipes(), LIQUEFACTION);
@@ -354,6 +368,9 @@ public class JEIConfig implements IModPlugin {
                 cokingHandler = new CokingRecipeHandler(help),
                 compressingHandler = new CompressingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),
+                crucibleAlloyingHandler = new CrucibleAlloyingHandler(help),
+                crucibleCastingHandler = new CrucibleCastingHandler(help),
+                crucibleSmeltingHandler = new CrucibleSmeltingHandler(help),
                 crystallizerHandler = new CrystallizerRecipeHandler(help),
                 electrolyserFluidHandler = new ElectrolyserFluidHandler(help),
                 electrolyserMetalHandler = new ElectrolyserMetalHandler(help),

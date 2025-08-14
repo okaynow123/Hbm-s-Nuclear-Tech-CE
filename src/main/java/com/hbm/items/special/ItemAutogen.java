@@ -5,6 +5,7 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
@@ -143,7 +144,8 @@ public class ItemAutogen extends Item {
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
         IItemColor handler = new ItemAutogen.AutogenColorHandler();
         for (ItemAutogen item : INSTANCES) {
-            itemColors.registerItemColorHandler(handler, item);
+            if (item == ModItems.scraps) itemColors.registerItemColorHandler(ItemScraps.SCRAPS_COLOR_HANDLER, item);
+            else itemColors.registerItemColorHandler(handler, item);
         }
     }
 

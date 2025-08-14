@@ -10,8 +10,10 @@ import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemScraps extends ItemAutogen {
@@ -62,19 +65,25 @@ public class ItemScraps extends ItemAutogen {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (NTMMaterial mat : Mats.orderedList) {
-                if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE || mat.smeltable == NTMMaterial.SmeltingBehavior.ADDITIVE) {
+                if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE
+                        || mat.smeltable == NTMMaterial.SmeltingBehavior.ADDITIVE) {
                     String pathIn = getTexturePath(mat);
                     ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, pathIn);
-                    IModel retexturedModel = baseModel.retexture(
-                            ImmutableMap.of(
-                                    "layer0", spriteLoc.toString()
-                            )
-
-                    );
+                    IModel retexturedModel = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
                     IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-                    ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, pathIn), "inventory");
+                    ModelResourceLocation bakedModelLocation =
+                            new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, pathIn), "inventory");
                     event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
                 }
+            }
+
+            for (String extra : new String[] { "items/scraps_liquid", "items/scraps_additive" }) {
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, extra);
+                IModel retexturedModel = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
+                IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+                ModelResourceLocation bakedModelLocation =
+                        new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, extra), "inventory");
+                event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,15 +93,38 @@ public class ItemScraps extends ItemAutogen {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels() {
+        List<ResourceLocation> variants = new ArrayList<>();
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/scraps-stone"), "inventory"));
         for (NTMMaterial mat : Mats.orderedList) {
-            if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE || mat.smeltable == NTMMaterial.SmeltingBehavior.ADDITIVE) {
-                String texturePath = getTexturePath(mat);
-                ModelResourceLocation location = new ModelResourceLocation(
-                        RefStrings.MODID + ":" + texturePath, "inventory"
-                );
-                ModelLoader.setCustomModelResourceLocation(this, mat.id, location);
+            if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE
+                    || mat.smeltable == NTMMaterial.SmeltingBehavior.ADDITIVE) {
+                variants.add(new ResourceLocation(RefStrings.MODID, getTexturePath(mat))); // items/<reg>-<matname>
             }
         }
+
+        variants.add(new ResourceLocation(RefStrings.MODID, "items/scraps_liquid"));
+        variants.add(new ResourceLocation(RefStrings.MODID, "items/scraps_additive"));
+        ModelBakery.registerItemVariants(this, variants.toArray(new ResourceLocation[0]));
+
+        final ModelResourceLocation LIQUID_MRL =
+                new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/scraps_liquid"), "inventory");
+        final ModelResourceLocation ADDITIVE_MRL =
+                new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/scraps_additive"), "inventory");
+
+        ModelLoader.setCustomMeshDefinition(this, stack -> {
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
+                NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+                if (mat != null) {
+                    return mat.smeltable == NTMMaterial.SmeltingBehavior.ADDITIVE ? ADDITIVE_MRL : LIQUID_MRL;
+                }
+            }
+            NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+            if (mat != null) {
+                String path = ItemScraps.this.getTexturePath(mat);
+                return new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, path), "inventory");
+            }
+            return LIQUID_MRL;
+        });
     }
 
     @Override
@@ -123,6 +155,19 @@ public class ItemScraps extends ItemAutogen {
             }
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    public static final IItemColor SCRAPS_COLOR_HANDLER = (stack, tintIndex) -> {
+        if (tintIndex != 0) return 0xFFFFFF;
+
+        if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
+            NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+            if (mat != null) {
+                return mat.moltenColor;
+            }
+        }
+        return 0xFFFFFF;
+    };
 
     public static Mats.MaterialStack getMats(ItemStack stack) {
 
