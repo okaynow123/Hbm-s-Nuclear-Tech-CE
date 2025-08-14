@@ -55,7 +55,6 @@ public class RenderICF extends TileEntitySpecialRenderer<TileEntityICF> implemen
             @Override
             public void renderCommon() {
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
-                GlStateManager.translate(0.5, 0.5, 0.5);
                 GlStateManager.rotate(90, 0F, 1F, 0F);
                 GlStateManager.shadeModel(GL11.GL_SMOOTH);
                 bindTexture(ResourceManager.icf_tex);

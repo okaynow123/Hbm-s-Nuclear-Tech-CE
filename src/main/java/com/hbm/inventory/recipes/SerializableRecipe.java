@@ -45,6 +45,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new ArcWelderRecipes());
         recipeHandlers.add(new BlastFurnaceRecipes());
         recipeHandlers.add(new BreederRecipes());
+        recipeHandlers.add(new CentrifugeRecipes());
         recipeHandlers.add(new ChemplantRecipes());
         recipeHandlers.add(new CokerRecipes());
         recipeHandlers.add(new CompressorRecipes());
@@ -182,7 +183,7 @@ public abstract class SerializableRecipe {
      * A routine called after registering all recipes, whether it's a template or not. Good for IMC
      * functionality.
      */
-    private void registerPost() {
+    public void registerPost() {
     }
 
     /**

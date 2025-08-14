@@ -392,7 +392,6 @@ public class MainRegistry {
         BedrockOreRegistry.registerBedrockOres();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();
-        CentrifugeRecipes.register();
         PressRecipes.registerOverrides();
         ExplosionNukeGeneric.loadSoliniumFromFile();
         CyclotronRecipes.register();

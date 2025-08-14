@@ -95,6 +95,7 @@ public class JEIConfig implements IModPlugin {
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
+    private CentrifugeRecipeHandler centrifugeRecipeHandler;
     private CokingRecipeHandler cokingHandler;
     private CompressingRecipeHandler compressingHandler;
     private CrackingHandler crackingHandler;
@@ -209,7 +210,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getTransmutationRecipes(), TRANSMUTATION);
         registry.addRecipes(JeiRecipes.getPressRecipes(), PRESS);
         registry.addRecipes(JeiRecipes.getAlloyRecipes(), ALLOY);
-        registry.addRecipes(CentrifugeRecipes.getCentrifugeRecipes(), CENTRIFUGE);
+        registry.addRecipes(centrifugeRecipeHandler.getRecipes(), CENTRIFUGE);
         registry.addRecipes(JeiRecipes.getCMBRecipes(), CMB);
         registry.addRecipes(JeiRecipes.getGasCentrifugeRecipes(), GAS_CENT);
         registry.addRecipes(JeiRecipes.getWasteDrumRecipes(), WASTEDRUM);
@@ -365,6 +366,7 @@ public class JEIConfig implements IModPlugin {
                 arcFurnaceFluidHandler = new ArcFurnaceFluidHandler(help),
                 arcFurnaceSolidHandler = new ArcFurnaceSolidHandler(help),
                 arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
+                centrifugeRecipeHandler = new CentrifugeRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
                 compressingHandler = new CompressingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),
@@ -388,7 +390,6 @@ public class JEIConfig implements IModPlugin {
                 particleAcceleratorHandler = new ParticleAcceleratorHandler(help),
                 exposureChamberHandler = new ExposureChamberHandler(help),
                 combinationHandler = new CombinationHandler(help),
-                new CentrifugeRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
                 new CyclotronRecipeHandler(help),
