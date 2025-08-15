@@ -24,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
@@ -140,12 +141,11 @@ public class ItemAutogen extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerColorHandlers() {
-        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+    public static void registerColorHandlers(ColorHandlerEvent.Item evt) {
+        ItemColors itemColors = evt.getItemColors();
         IItemColor handler = new ItemAutogen.AutogenColorHandler();
         for (ItemAutogen item : INSTANCES) {
-            if (item == ModItems.scraps) itemColors.registerItemColorHandler(ItemScraps.SCRAPS_COLOR_HANDLER, item);
-            else itemColors.registerItemColorHandler(handler, item);
+            if (item != ModItems.scraps) itemColors.registerItemColorHandler(handler, item);
         }
     }
 

@@ -5,6 +5,7 @@ import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
+import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.ClientConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
@@ -21,6 +22,8 @@ import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIArmorTable;
+import com.hbm.inventory.material.Mats;
+import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.IDynamicModels;
@@ -103,6 +106,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -563,14 +567,16 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
     @SubscribeEvent
     public void itemColorsEvent(ColorHandlerEvent.Item evt) {
+        IItemColor fluidMetaHandler = (stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return Fluids.fromID(stack.getMetadata()).getColor();
+            }
+            return 0xFFFFFF;
+        };
         evt.getItemColors().registerItemColorHandler((ItemStack stack, int tintIndex) -> {
             if (tintIndex == 1) {
                 int j = TrackType.getEnum(stack.getItemDamage()).getColor();
-
-                if (j < 0) {
-                    j = 0xFFFFFF;
-                }
-
+                if (j < 0) j = 0xFFFFFF;
                 return j;
             }
             return 0xFFFFFF;
@@ -586,37 +592,38 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
             return 0xFFFFFF;
         }, ModItems.icf_pellet);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                return Fluids.fromID(stack.getMetadata()).getColor();
-            }
-            return 0xFFFFFF;
-        }, ModItems.fluid_tank_full);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                return Fluids.fromID(stack.getMetadata()).getColor();
-            }
-            return 0xFFFFFF;
-        }, ModItems.fluid_tank_lead_full);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                return Fluids.fromID(stack.getMetadata()).getColor();
-            }
-            return 0xFFFFFF;
-        }, ModItems.fluid_barrel_full);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                return Fluids.fromID(stack.getMetadata()).getColor();
-            }
-            return 0xFFFFFF;
-        }, ModItems.forge_fluid_identifier);
+        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_full);
+        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_lead_full);
+        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_barrel_full);
+        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.forge_fluid_identifier);
         evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             if (tintIndex == 0) {
                 return ItemFluidIcon.getFluidType(stack).getColor();
             }
             return 0xFFFFFF;
         }, ModItems.fluid_icon);
-        // mlbv: this is far easier than writing TEISR for each item. replace all color related rendering with this if applicable.
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex != 0) return 0xFFFFFF;
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
+                NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+                if (mat != null) {
+                    return mat.moltenColor;
+                }
+            }
+            return 0xFFFFFF;
+        }, ModItems.scraps);
+        //TODO: Move to IDynamicModels
+        ItemDepletedFuel.registerColorHandlers(evt);
+        ItemBedrockOreNew.registerColorHandlers(evt);
+        ItemFFFluidDuct.registerColorHandlers(evt);
+        ItemGasCanister.registerColorHandler(evt);
+        ItemAutogen.registerColorHandlers(evt);
+        IDynamicModels.registerColorHandlers(evt);
+    }
+
+    @SubscribeEvent
+    public void blockColorsEvent(ColorHandlerEvent.Block evt) {
+        FluidDuctBox.registerColorHandler(evt);
     }
 
     @SubscribeEvent

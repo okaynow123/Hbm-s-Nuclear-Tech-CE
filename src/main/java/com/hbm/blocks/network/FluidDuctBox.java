@@ -44,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -393,38 +394,34 @@ public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILoo
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerColorHandler() {
-        IBlockColor ductColorHandler = new IBlockColor() {
-            @Override
-            public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-                if (tintIndex != 0) {
-                    return 0xFFFFFF;
-                }
-
-                if (worldIn == null || pos == null) {
-                    return 0xFFFFFF;
-                }
-
-                TileEntity te = worldIn.getTileEntity(pos);
-                if (!(te instanceof TileEntityPipeBaseNT)) {
-                    return 0xFFFFFF;
-                }
-
-                TileEntityPipeBaseNT pipe = (TileEntityPipeBaseNT) te;
-                FluidType type = pipe.getType();
-
-                int meta = state.getBlock().getMetaFromState(state);
-                int color = type.getColor();
-
-                if (meta % 3 == 2) {
-                    color = ColorUtil.lightenColor(color, 0.25D);
-                } else return 0xFFFFFF;
-
-                return color;
+    public static void registerColorHandler(ColorHandlerEvent.Block evt) {
+        IBlockColor ductColorHandler = (state, worldIn, pos, tintIndex) -> {
+            if (tintIndex != 0) {
+                return 0xFFFFFF;
             }
+
+            if (worldIn == null || pos == null) {
+                return 0xFFFFFF;
+            }
+
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (!(te instanceof TileEntityPipeBaseNT pipe)) {
+                return 0xFFFFFF;
+            }
+
+            FluidType type = pipe.getType();
+
+            int meta = state.getBlock().getMetaFromState(state);
+            int color = type.getColor();
+
+            if (meta % 3 == 2) {
+                color = ColorUtil.lightenColor(color, 0.25D);
+            } else return 0xFFFFFF;
+
+            return color;
         };
 
-        BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
+        BlockColors blockColors = evt.getBlockColors();
         blockColors.registerBlockColorHandler(ductColorHandler, ModBlocks.fluid_duct_box);
     }
 }

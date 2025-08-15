@@ -167,15 +167,8 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void init(FMLInitializationEvent evt) {
-        //TODO: Move to IDynamicModels
-        ItemDepletedFuel.registerColorHandlers();
-        ItemBedrockOreNew.registerColorHandlers();
-        ItemFFFluidDuct.registerColorHandlers();
-        ItemGasCanister.registerColorHandler();
-        ItemAutogen.registerColorHandlers();
-        FluidDuctBox.registerColorHandler();
-
-        IDynamicModels.registerColorHandlers();
+        // All previous color handler registrations here have been moved to ModEventHandlerClient#itemColorsEvent
+        // and ModEventHandlerClient#blockColorsEvent
     }
 
     @Override

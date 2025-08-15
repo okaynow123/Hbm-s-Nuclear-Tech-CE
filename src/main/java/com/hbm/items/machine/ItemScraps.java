@@ -156,19 +156,6 @@ public class ItemScraps extends ItemAutogen {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static final IItemColor SCRAPS_COLOR_HANDLER = (stack, tintIndex) -> {
-        if (tintIndex != 0) return 0xFFFFFF;
-
-        if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
-            NTMMaterial mat = Mats.matById.get(stack.getMetadata());
-            if (mat != null) {
-                return mat.moltenColor;
-            }
-        }
-        return 0xFFFFFF;
-    };
-
     public static Mats.MaterialStack getMats(ItemStack stack) {
 
         if(stack.getItem() != ModItems.scraps) return null;

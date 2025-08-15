@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,8 +53,8 @@ public class ItemGasCanister extends Item {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerColorHandler() {
-		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+	public static void registerColorHandler(ColorHandlerEvent.Item evt) {
+		ItemColors itemColors = evt.getItemColors();
 		IItemColor handler = new ItemGasCanister.GasCanisterColorHandler();
 		itemColors.registerItemColorHandler(handler, ModItems.gas_full);
 	}

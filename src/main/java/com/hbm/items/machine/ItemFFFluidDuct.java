@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -57,8 +58,8 @@ public class ItemFFFluidDuct extends Item {
 
 
 	@SideOnly(Side.CLIENT)
-	public static void registerColorHandlers() {
-		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+	public static void registerColorHandlers(ColorHandlerEvent.Item evt) {
+		ItemColors itemColors = evt.getItemColors();
 		IItemColor handler = new ItemFFFluidDuct.FluidDuctColorHandler();
 
 		for (ItemFFFluidDuct item : INSTANCES) {

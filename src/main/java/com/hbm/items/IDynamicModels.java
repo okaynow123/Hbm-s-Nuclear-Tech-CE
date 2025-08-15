@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,14 +57,14 @@ public interface IDynamicModels {
     }
 
     @SideOnly(Side.CLIENT)
-    static void registerColorHandlers() {
+    static void registerColorHandlers(ColorHandlerEvent.Item evt) {
         for (IDynamicModels model : INSTANCES) {
             IItemColor colorHandler = model.getColorHandler();
             Object self = model.getSelf();
 
             if (colorHandler == null || !(self instanceof Item item)) continue;
 
-            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(colorHandler, item);
+            evt.getItemColors().registerItemColorHandler(colorHandler, item);
         }
     }
 

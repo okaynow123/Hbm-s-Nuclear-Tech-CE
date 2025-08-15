@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,8 +55,8 @@ public class ItemDepletedFuel extends ItemNuclearWaste {
 
     @SideOnly(Side.CLIENT)
     @Deprecated //Should be moved to IDynamicModels Implementation
-    public static void registerColorHandlers() {
-        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+    public static void registerColorHandlers(ColorHandlerEvent.Item evt) {
+        ItemColors itemColors = evt.getItemColors();
         IItemColor handler = new ColorHandler();
 
         for (ItemDepletedFuel item : INSTANCES) {
