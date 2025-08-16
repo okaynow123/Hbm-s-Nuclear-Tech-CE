@@ -134,6 +134,7 @@ public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKBase>
 	}
 
 	private void renderLid(TileEntityRBMKBase control, int offset) {
+		GlStateManager.enableAlpha();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, offset + control.jumpheight, 0);
 

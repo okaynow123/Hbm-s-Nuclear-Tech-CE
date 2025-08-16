@@ -28,6 +28,7 @@ public class RenderCrystallizer extends TileEntitySpecialRenderer<TileEntityMach
       float partialTicks,
       int destroyStage,
       float alpha) {
+    GlStateManager.enableAlpha();
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
