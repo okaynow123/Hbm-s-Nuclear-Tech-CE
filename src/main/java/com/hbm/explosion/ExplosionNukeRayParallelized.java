@@ -51,6 +51,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final int LUT_DISTANCE_BINS = 256;
     private static final float LUT_MAX_RESISTANCE = 100.0F;
     private static final float[][] ENERGY_LOSS_LUT = new float[LUT_RESISTANCE_BINS][LUT_DISTANCE_BINS];
+    private static final float DAMAGE_PER_BLOCK = 0.50F; // fallback for low resistance blocks
+    private static final float DAMAGE_THRESHOLD_MULT = 1.00F;
+    private static final float LOW_R_BOUND = 0.25F;
+    private static final float LOW_R_PASS_LENGTH_BREAK = 0.75F;
+
     private static final String TAG_ALGORITHM = "algorithm";
     private static final String TAG_RAY_COUNT = "rayCount";
     private static final String TAG_IS_CONTAINED = "isContained";
@@ -83,6 +88,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private final int radius;
     private final ConcurrentMap<ChunkPos, ConcurrentBitSet> destructionMap;
     private final ConcurrentMap<ChunkPos, ConcurrentMap<Integer, DoubleAdder>> damageMap;
+    private final ConcurrentMap<ChunkPos, ConcurrentMap<Integer, DoubleAdder>> passLengthMap;
     private final ConcurrentMap<SubChunkKey, SubChunkSnapshot> snapshots;
     private final ConcurrentMap<SubChunkKey, ConcurrentLinkedQueue<RayTracerTask>> waitingRoom;
     private final List<ChunkPos> orderedChunks;
@@ -128,6 +134,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.reactiveSnapQueue = new LinkedBlockingQueue<>();
             this.destructionMap = new ConcurrentHashMap<>();
             this.damageMap = new ConcurrentHashMap<>();
+            this.passLengthMap = new ConcurrentHashMap<>();
             this.snapshots = new ConcurrentHashMap<>();
             this.waitingRoom = new ConcurrentHashMap<>();
             this.orderedChunks = new ArrayList<>();
@@ -145,6 +152,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         int initialChunkCapacity = (int) sortedSubChunks.stream().map(SubChunkKey::getPos).distinct().count();
         this.destructionMap = new ConcurrentHashMap<>(initialChunkCapacity);
         this.damageMap = new ConcurrentHashMap<>(initialChunkCapacity);
+        this.passLengthMap = new ConcurrentHashMap<>(initialChunkCapacity);
 
         int subChunkCount = sortedSubChunks.size();
         this.snapshots = new ConcurrentHashMap<>(subChunkCount);
@@ -417,6 +425,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
         if (this.destructionMap != null) this.destructionMap.clear();
         if (this.damageMap != null) this.damageMap.clear();
+        if (this.passLengthMap != null) this.passLengthMap.clear();
         if (this.snapshots != null) this.snapshots.clear();
         if (this.orderedChunks != null) this.orderedChunks.clear();
     }
@@ -440,22 +449,30 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     private void runConsolidation() {
         damageMap.forEach((cp, innerDamageMap) -> {
-            if (innerDamageMap.isEmpty()) {
+            ConcurrentMap<Integer, DoubleAdder> innerLenMap = passLengthMap.get(cp);
+            boolean dmgEmpty = (innerDamageMap == null || innerDamageMap.isEmpty());
+            boolean lenEmpty = (innerLenMap == null || innerLenMap.isEmpty());
+            if (dmgEmpty && lenEmpty) {
                 damageMap.remove(cp);
+                if (innerLenMap != null) passLengthMap.remove(cp);
                 return;
             }
             ConcurrentBitSet chunkDestructionBitSet = destructionMap.computeIfAbsent(cp, k -> new ConcurrentBitSet(BITSET_SIZE));
 
-            Iterator<Map.Entry<Integer, DoubleAdder>> iterator = innerDamageMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, DoubleAdder> entry = iterator.next();
-                int bitIndex = entry.getKey();
-                DoubleAdder accumulatedDamageAdder = entry.getValue();
+            HashSet<Integer> keys = new HashSet<>();
+            if (innerDamageMap != null) keys.addAll(innerDamageMap.keySet());
+            if (innerLenMap != null) keys.addAll(innerLenMap.keySet());
 
-                float accumulatedDamage = (float) accumulatedDamageAdder.sum();
-                if (accumulatedDamage <= 0.0f) {
-                    iterator.remove();
-                    continue;
+            for (int bitIndex : keys) {
+                double accumulatedDamage = 0.0;
+                if (innerDamageMap != null) {
+                    DoubleAdder dmgAdder = innerDamageMap.get(bitIndex);
+                    if (dmgAdder != null) accumulatedDamage = dmgAdder.sum();
+                }
+                double passLen = 0.0;
+                if (innerLenMap != null) {
+                    DoubleAdder lenAdder = innerLenMap.get(bitIndex);
+                    if (lenAdder != null) passLen = lenAdder.sum();
                 }
                 int yGlobal = WORLD_HEIGHT - 1 - (bitIndex >>> 8);
 
@@ -467,13 +484,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 } else {
                     int subY = yGlobal >> 4;
                     if (subY < 0) {
-                        iterator.remove();
                         continue;
                     }
                     SubChunkKey snapshotKey = new SubChunkKey(cp, subY);
                     SubChunkSnapshot snap = snapshots.get(snapshotKey);
                     if (snap == null || snap == SubChunkSnapshot.EMPTY) {
-                        iterator.remove();
                         continue;
                     }
                     int xLocal = (bitIndex >>> 4) & 0xF;
@@ -482,18 +497,23 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 }
 
                 if (originalBlock == Blocks.AIR) {
-                    iterator.remove();
                     continue;
                 }
                 float resistance = getNukeResistance(originalBlock);
-                if (accumulatedDamage >= resistance * RESOLUTION_FACTOR) {
-                    chunkDestructionBitSet.set(bitIndex);
+
+                boolean destroy = false;
+                if (accumulatedDamage >= (resistance * DAMAGE_THRESHOLD_MULT)) {
+                    destroy = true;
+                } else if (resistance <= LOW_R_BOUND && passLen >= LOW_R_PASS_LENGTH_BREAK) {
+                    destroy = true;
                 }
-                iterator.remove();
+                if (destroy) chunkDestructionBitSet.set(bitIndex);
             }
-            if (innerDamageMap.isEmpty()) damageMap.remove(cp);
+            damageMap.remove(cp);
+            if (innerLenMap != null) passLengthMap.remove(cp);
         });
         damageMap.clear();
+        passLengthMap.clear();
         consolidationFinished = true;
     }
 
@@ -591,6 +611,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         private static final float MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC = 0.01f;
         private final int start, end;
         private Map<ChunkPos, Map<Integer, Double>> localDamageMap;
+        private Map<ChunkPos, Map<Integer, Double>> localLenMap;
 
         RayTracerTask(int start, int end) {
             this.start = start;
@@ -605,6 +626,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
             if (end - start <= THRESHOLD) {
                 this.localDamageMap = (algorithm == 2) ? new HashMap<>() : null;
+                this.localLenMap    = (algorithm == 2) ? new HashMap<>() : null;
 
                 for (int i = start; i < end; i++) {
                     if (Thread.currentThread().isInterrupted()) return;
@@ -618,6 +640,15 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
                         for (Map.Entry<Integer, Double> damageEntry : chunkEntry.getValue().entrySet()) {
                             globalChunkDamage.computeIfAbsent(damageEntry.getKey(), k -> new DoubleAdder()).add(damageEntry.getValue());
+                        }
+                    }
+                }
+                if (localLenMap != null && !localLenMap.isEmpty()) {
+                    for (Map.Entry<ChunkPos, Map<Integer, Double>> chunkEntry : localLenMap.entrySet()) {
+                        ChunkPos cp = chunkEntry.getKey();
+                        ConcurrentMap<Integer, DoubleAdder> globalChunkLen = passLengthMap.computeIfAbsent(cp, k -> new ConcurrentHashMap<>());
+                        for (Map.Entry<Integer, Double> lenEntry : chunkEntry.getValue().entrySet()) {
+                            globalChunkLen.computeIfAbsent(lenEntry.getKey(), k -> new DoubleAdder()).add(lenEntry.getValue());
                         }
                     }
                 }
@@ -720,15 +751,21 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                         if (resistance >= NUKE_RESISTANCE_CUTOFF) {
                             energy = 0;
                         } else {
-                            double energyLossFactor = getEnergyLossFactor(resistance, currentRayPosition);
-                            float damageDealt = (float) (energyLossFactor * segmentLenForProcessing);
-                            energy -= damageDealt;
+                            double distFrac = Math.max(currentRayPosition, MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC) / radius;
+                            double energyLoss = getEnergyLossFactor(resistance, distFrac) * segmentLenForProcessing;
+                            if (energyLoss > 0) energy -= (float) energyLoss;
 
-                            if (damageDealt > 0) {
-                                int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
-                                if (algorithm == 2) {
-                                    localDamageMap.computeIfAbsent(chunkPos, k -> new HashMap<>()).merge(bitIndex, (double) damageDealt, Double::sum);
-                                } else if (energy > 0) {
+                            int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
+                            if (algorithm == 2) {
+                                double damageInc = Math.max(DAMAGE_PER_BLOCK * segmentLenForProcessing, energyLoss) * INITIAL_ENERGY_FACTOR;
+                                if (damageInc > 0) {
+                                    localDamageMap.computeIfAbsent(chunkPos, k -> new HashMap<>())
+                                                  .merge(bitIndex, damageInc, Double::sum);
+                                }
+                                localLenMap.computeIfAbsent(chunkPos, k -> new HashMap<>())
+                                           .merge(bitIndex, segmentLenForProcessing, Double::sum);
+                            } else if (energy > 0) {
+                                if (energyLoss > 0) {
                                     destructionMap.computeIfAbsent(chunkPos, posKey -> new ConcurrentBitSet(BITSET_SIZE)).set(bitIndex);
                                 }
                             }
@@ -763,9 +800,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
 
-        private double getEnergyLossFactor(float resistance, double currentRayPosition) {
-            double effectiveDist = Math.max(currentRayPosition, MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC);
-            double distFrac = effectiveDist / radius;
+        private double getEnergyLossFactor(float resistance, double distFrac) {
             if (resistance >= NUKE_RESISTANCE_CUTOFF) return resistance;
             if (resistance <= 0) return 0.0;
             if (resistance > LUT_MAX_RESISTANCE) return Math.pow(resistance + 1.0, 3.0 * distFrac) - 1.0;
