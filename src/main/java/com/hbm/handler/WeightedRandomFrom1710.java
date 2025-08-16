@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class WeightedRandomFrom1710 {
-    private static final String __OBFID = "CL_00001503";
 
     /**
      * Returns the total weight of all items in a collection.
@@ -142,7 +141,6 @@ public class WeightedRandomFrom1710 {
     {
         /** The Weight is how often the item is chosen(higher number is higher chance(lower is lower)) */
         public int itemWeight;
-        private static final String __OBFID = "CL_00001504";
 
         public Item(int p_i1556_1_)
         {
