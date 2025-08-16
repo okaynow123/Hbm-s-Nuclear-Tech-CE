@@ -10,7 +10,6 @@ import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.TrappedBrick;
 import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
-import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.*;
 import com.hbm.entity.particle.*;
@@ -19,15 +18,9 @@ import com.hbm.entity.projectile.EntityDischarge;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
-import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
-import com.hbm.items.machine.ItemFFFluidDuct;
 import com.hbm.items.machine.ItemFluidIDMulti;
-import com.hbm.items.special.ItemAutogen;
-import com.hbm.items.special.ItemBedrockOreNew;
-import com.hbm.items.special.ItemDepletedFuel;
-import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
@@ -1162,6 +1155,40 @@ public class ClientProxy extends ServerProxy {
                             iz - oz, p.motionX + moX * 3, p.motionY + moY * 3, p.motionZ + moZ * 3));
                 }
             }
+
+            case "bf" -> {
+                ParticleMukeCloud cloud = new ParticleMukeCloudBF(world, x, y, z, 0, 0, 0);
+                Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
+            }
+            case "chlorinefx" -> {
+                double mX = data.getDouble("moX");
+                double mY = data.getDouble("moY");
+                double mZ = data.getDouble("moZ");
+                EntityChlorineFX eff = new EntityChlorineFX(world, x, y, z, mX, mY, mZ);
+                Minecraft.getMinecraft().effectRenderer.addEffect(eff);
+            }
+            case "cloudfx" -> {
+                double mX = data.getDouble("moX");
+                double mY = data.getDouble("moY");
+                double mZ = data.getDouble("moZ");
+                EntityCloudFX eff = new EntityCloudFX(world, x, y, z, mX, mY, mZ);
+                Minecraft.getMinecraft().effectRenderer.addEffect(eff);
+            }
+            case "orangefx" -> {
+                double mX = data.getDouble("moX");
+                double mY = data.getDouble("moY");
+                double mZ = data.getDouble("moZ");
+                EntityOrangeFX eff = new EntityOrangeFX(world, x, y, z, mX, mY, mZ);
+                Minecraft.getMinecraft().effectRenderer.addEffect(eff);
+            }
+            case "pinkcloudfx" -> {
+                double mX = data.getDouble("moX");
+                double mY = data.getDouble("moY");
+                double mZ = data.getDouble("moZ");
+                EntityPinkCloudFX eff = new EntityPinkCloudFX(world, x, y, z, mX, mY, mZ);
+                Minecraft.getMinecraft().effectRenderer.addEffect(eff);
+            }
+
             case "bimpact" -> {
                 Type hitType = Type.values()[data.getByte("hitType")];
                 Vec3d normal = new Vec3d(data.getFloat("nX"), data.getFloat("nY"), data.getFloat("nZ"));

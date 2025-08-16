@@ -4,11 +4,12 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.grenade.EntityGrenadeTau;
 import com.hbm.entity.grenade.EntityGrenadeZOMG;
-import com.hbm.entity.particle.*;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ArmorRegistry.HazardClass;
@@ -27,6 +28,7 @@ import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -35,6 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 import java.util.Random;
@@ -311,22 +314,25 @@ public class ExplosionChaos {
 		}
 		for(int i = 0; i < count; i++) {
 
-			EntityModFX fx = null;
-
+			NBTTagCompound data = new NBTTagCompound();
+			data.setDouble("moX", rand.nextGaussian() * speed);
+			data.setDouble("moY", rand.nextGaussian() * speed);
+			data.setDouble("moZ", rand.nextGaussian() * speed);
+			// Th3_Sl1ze: let's be honest, I don't know what range I should set so I'm going with 128
 			if(type == 0) {
-				fx = new EntityChlorineFX(world, x, y, z, 0.0, 0.0, 0.0);
+				data.setString("type", "chlorinefx");
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
 			} else if(type == 1) {
-				fx = new EntityCloudFX(world, x, y, z, 0.0, 0.0, 0.0);
+				data.setString("type", "cloudfx");
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
 			} else if(type == 2) {
-				fx = new EntityPinkCloudFX(world, x, y, z, 0.0, 0.0, 0.0);
+				data.setString("type", "pinkcloudfx");
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
 			} else {
-				fx = new EntityOrangeFX(world, x, y, z, 0.0, 0.0, 0.0);
+				data.setString("type", "orangefx");
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
 			}
 
-			fx.motionY = rand.nextGaussian() * speed;
-			fx.motionX = rand.nextGaussian() * speed;
-			fx.motionZ = rand.nextGaussian() * speed;
-			world.spawnEntity(fx);
 		}
 	}
 	// Alcater: pc for pinkCouldPoisoning
@@ -793,14 +799,13 @@ public class ExplosionChaos {
 		}
 		for(int i = 0; i < count; i++) {
 
-			EntityModFX fx = new EntityOrangeFX(world, x, y, z, 0.0, 0.0, 0.0);
+			NBTTagCompound data = new NBTTagCompound();
+			data.setDouble("moX", rand.nextGaussian() * speed);
+			data.setDouble("moY", rand.nextGaussian() * speed * 7.5D);
+			data.setDouble("moZ", rand.nextGaussian() * speed);
 
-			fx.motionX = rand.nextGaussian() * speed;
-			fx.motionZ = rand.nextGaussian() * speed;
-
-			fx.motionY = rand.nextDouble() * speed * 7.5D;
-
-			world.spawnEntity(fx);
+			data.setString("type", "orangefx");
+			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 50));
 		}
 	}
 

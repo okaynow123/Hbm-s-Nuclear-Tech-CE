@@ -5,7 +5,6 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.logic.IChunkLoader;
-import com.hbm.entity.particle.EntitySmokeFX;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
@@ -89,8 +88,6 @@ public class EntityMIRV extends EntityThrowable implements IChunkLoader, IConsta
     		this.setDead();
     		ForgeChunkManager.unforceChunk(loaderTicket, new ChunkPos(chunkCoordX, chunkCoordZ));
         }
-        
-        this.world.spawnEntity(new EntitySmokeFX(this.world, this.posX, this.posY, this.posZ, 0.0, 0.0, 0.0));
 	}
 	
 	protected void rotation() {

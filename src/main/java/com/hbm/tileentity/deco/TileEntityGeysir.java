@@ -2,21 +2,24 @@ package com.hbm.tileentity.deco;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockGeysir;
-import com.hbm.entity.particle.EntityGasFlameFX;
-import com.hbm.entity.particle.EntityOrangeFX;
 import com.hbm.entity.projectile.EntityShrapnel;
 import com.hbm.entity.projectile.EntityWaterSplash;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.List;
 import java.util.Random;
@@ -70,13 +73,12 @@ public class TileEntityGeysir extends TileEntity implements ITickable {
 		int particleCount = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).grow(range, range, range)).size();
 		if(particleCount < 25){
 			for(int i = 0; i < 3; i++) {
-				EntityOrangeFX fx = new EntityOrangeFX(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
-		
-				fx.motionX = world.rand.nextGaussian() * 0.45;
-				fx.motionZ = world.rand.nextGaussian() * 0.45;
-				fx.motionY = timer * 0.3;
-				
-				world.spawnEntity(fx);
+				NBTTagCompound data = new NBTTagCompound();
+				data.setDouble("moX", world.rand.nextGaussian() * 0.45);
+				data.setDouble("moY", timer * 0.3);
+				data.setDouble("moZ", world.rand.nextGaussian() * 0.45);
+				data.setString("type", "orangefx");
+				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 128));
 			}
 		}
 	}
@@ -112,8 +114,14 @@ public class TileEntityGeysir extends TileEntity implements ITickable {
 				world.spawnEntity(fx);
 			}
 
-			if(timer % 2 == 0) //TODO: replace with actual particle
-				world.spawnEntity(new EntityGasFlameFX(world, pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F, world.rand.nextGaussian() * 0.05, 0.2, world.rand.nextGaussian() * 0.05));
+			if(timer % 2 == 0) {
+				NBTTagCompound data = new NBTTagCompound();
+				data.setString("type", "gasfire");
+				data.setDouble("mX", world.rand.nextGaussian() * 0.05);
+				data.setDouble("mY", 0.2);
+				data.setDouble("mZ", world.rand.nextGaussian() * 0.05);
+				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, pos.getX() + 0.5F, pos.getY() + 1.1F, pos.getZ() + 0.5F), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 75));
+			}
 		}
 	}
 

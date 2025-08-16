@@ -546,7 +546,7 @@ public class ExplosionNukeGeneric {
                 return;
             }
 
-            if (b.getBlock() == Blocks.GRASS || b.getBlock() == Blocks.DIRT || b.getBlock() == Blocks.MYCELIUM || b.getBlock() == ModBlocks.waste_earth || b.getBlock() == ModBlocks.waste_dirt || b.getBlock() == ModBlocks.waste_mycelium) {
+            if (b.getBlock() == Blocks.GRASS || b.getBlock() == Blocks.MYCELIUM || b.getBlock() == ModBlocks.waste_earth || b.getBlock() == ModBlocks.waste_dirt || b.getBlock() == ModBlocks.waste_mycelium) {
                 if (random.nextInt(5) < 2) world.setBlockState(pos, Blocks.DIRT.getStateFromMeta(1));
                 else world.setBlockState(pos, Blocks.DIRT.getDefaultState());
                 return;

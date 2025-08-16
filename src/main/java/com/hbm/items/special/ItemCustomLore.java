@@ -278,10 +278,6 @@ public class ItemCustomLore extends Item {
 		if(this == ModItems.billet_mox_fuel) {
 			list.add(TextFormatting.ITALIC + "Pocket-Moxie!");
 		}
-		if(this == ModItems.factory_core_titanium || this == ModItems.factory_core_advanced)
-		{
-			list.add("Used in factories to make the speed change");
-		}
 		if(this == ModItems.undefined && world != null) {
 			
 			if(world.rand.nextInt(10) == 0) {

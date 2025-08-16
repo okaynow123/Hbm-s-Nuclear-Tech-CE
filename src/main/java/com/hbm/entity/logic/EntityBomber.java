@@ -2,19 +2,19 @@ package com.hbm.entity.logic;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.particle.EntityGasFlameFX;
 import com.hbm.entity.projectile.EntityBombletZeta;
 import com.hbm.entity.projectile.EntityBoxcar;
-import com.hbm.entity.projectile.EntityRocketHoming;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.LoopedEntitySoundPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.LoopedEntitySoundPacket;
+import com.hbm.util.ParticleUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -122,14 +122,13 @@ public class EntityBomber extends Entity implements IChunkLoader, IConstantRende
 			if(!CompatibilityConfig.isWarDim(world)){
 				this.setDead();
 				return;
-			}	
-        	for(int i = 0; i < 10; i++)
-        		this.world.spawnEntity(new EntityGasFlameFX(this.world, this.posX + rand.nextGaussian() * 0.5 - motionX * 2, this.posY + rand.nextGaussian() * 0.5 - motionY * 2, this.posZ + rand.nextGaussian() * 0.5 - motionZ * 2, 0.0, 0.1, 0.0));
+			}
+			for(int i = 0; i < 10; i++) ParticleUtil.spawnGasFlame(this.world, this.posX + rand.nextGaussian() * 0.5 - motionX * 2, this.posY + rand.nextGaussian() * 0.5 - motionY * 2, this.posZ + rand.nextGaussian() * 0.5 - motionZ * 2, 0.0, 0.1, 0.0);
 			
 			if(world.getBlockState(new BlockPos((int)posX, (int)posY, (int)posZ)).isNormalCube() && !world.isRemote) {
 				this.setDead();
-				
-				ExplosionLarge.explodeFire(world, this, posX, posY, posZ, 25, true, false, true);
+
+				new ExplosionVNT(world, posX, posY, posZ, 15F).makeStandard().explode();
 		    	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.planeCrash, SoundCategory.HOSTILE, 10.0F, 1.0F, true);
 				
 				return;
@@ -148,24 +147,6 @@ public class EntityBomber extends Entity implements IChunkLoader, IConstantRende
 	        	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.HOSTILE, 5.0F, 2.6F + (rand.nextFloat() - rand.nextFloat()) * 0.8F, true);
 				ExplosionChaos.spawnChlorine(world, this.posX, this.posY - 1F, this.posZ, 10, 0.5, 3);
 				
-			} else if(type == 5) {
-				
-	        	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.missileTakeoff, SoundCategory.HOSTILE, 10.0F, 0.9F + rand.nextFloat() * 0.2F, true);
-	        	EntityRocketHoming rocket = new EntityRocketHoming(world);
-	        	rocket.setIsCritical(true);
-	        	//rocket.motionX = motionX;
-	        	//rocket.motionZ = motionZ;
-	        	rocket.motionY = -1;
-	        	rocket.shootingEntity = this;
-	        	rocket.homingRadius = 50;
-	        	rocket.homingMod = 5;
-				
-	        	rocket.posX = posX + rand.nextDouble() - 0.5;
-	        	rocket.posY = posY - rand.nextDouble();
-	        	rocket.posZ = posZ + rand.nextDouble() - 0.5;
-	        	
-				world.spawnEntity(rocket);
-	        	
 			} else if(type == 6) {
 				
 	        	world.playSound((double)(posX + 0.5F), (double)(posY + 0.5F), (double)(posZ + 0.5F), HBMSoundHandler.missileTakeoff, SoundCategory.HOSTILE, 10.0F, 0.9F + rand.nextFloat() * 0.2F, true);

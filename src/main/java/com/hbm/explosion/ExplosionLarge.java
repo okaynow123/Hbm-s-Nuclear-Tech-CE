@@ -2,13 +2,12 @@ package com.hbm.explosion;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
-import com.hbm.entity.particle.EntityGasFlameFX;
-import com.hbm.entity.projectile.EntityOilSpill;
 import com.hbm.entity.projectile.EntityRubble;
 import com.hbm.entity.projectile.EntityShrapnel;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
+import com.hbm.util.ParticleUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -52,11 +51,7 @@ public class ExplosionLarge {
 		vec = vec.rotateYaw(rand.nextInt(360));
 		
 		for(int i = 0; i < count; i++) {
-			EntityGasFlameFX fx = new EntityGasFlameFX(world, x, y, z, 0.0, 0.0, 0.0);
-			fx.motionY = 0;
-			fx.motionX = vec.x;
-			fx.motionZ = vec.z;
-			world.spawnEntity(fx);
+			ParticleUtil.spawnGasFlame(world, x, y, z, vec.x, 0.0, vec.z);
 			
 			vec = vec.rotateYaw(360 / count);
 		}
@@ -251,20 +246,6 @@ public class ExplosionLarge {
 			spawnRubble(world, x, y+2, z, rubbleFunction((int)strength));
 		if(shrapnel)
 			spawnShrapnels(world, x, y+2, z, shrapnelFunction((int)strength));
-	}
-	
-	public static void spawnOilSpills(World world, double x, double y, double z, int count) {
-		
-		for(int i = 0; i < count; i++) {
-			EntityOilSpill shrapnel = new EntityOilSpill(world);
-			shrapnel.posX = x;
-			shrapnel.posY = y;
-			shrapnel.posZ = z;
-			shrapnel.motionY = ((rand.nextFloat() * 0.5) + 0.5) * (1 + (count / (15 + rand.nextInt(21)))) + (rand.nextFloat() / 50 * count) * 0.25F;
-			shrapnel.motionX = rand.nextGaussian() * 1	* (1 + (count / 50)) * 0.15F;
-			shrapnel.motionZ = rand.nextGaussian() * 1	* (1 + (count / 50)) * 0.15F;
-			world.spawnEntity(shrapnel);
-		}
 	}
 	
 	public static void buster(World world, Entity detonator, double x, double y, double z, Vec3d vector, float strength, float depth) {

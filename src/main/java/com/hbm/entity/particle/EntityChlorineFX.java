@@ -1,100 +1,128 @@
 package com.hbm.entity.particle;
 
-import com.hbm.explosion.ExplosionChaos;
-import com.hbm.interfaces.AutoRegister;
+import com.hbm.items.ModItems;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.ModFXCollidePacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-@AutoRegister(name = "entity_chlorine_fx", trackingRange = 1000)
-public class EntityChlorineFX extends EntityModFX {
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class EntityChlorineFX extends Particle {
+
+    private static final Item[] TEXTURE_ITEMS = new Item[]{
+            ModItems.chlorine1, ModItems.chlorine2, ModItems.chlorine3, ModItems.chlorine4,
+            ModItems.chlorine5, ModItems.chlorine6, ModItems.chlorine7, ModItems.chlorine8
+    };
+    private final int meta;
+    private int lastStage = -1;
 
     public EntityChlorineFX(World world) {
-        super(world, 0, 0, 0);
+        this(world, 0, 0, 0, 0, 0, 0);
     }
 
-    public EntityChlorineFX(World p_i1225_1_, double p_i1225_2_, double p_i1225_4_, double p_i1225_6_,
-                            double p_i1225_8_, double p_i1225_10_, double p_i1225_12_) {
-        this(p_i1225_1_, p_i1225_2_, p_i1225_4_, p_i1225_6_, p_i1225_8_, p_i1225_10_, p_i1225_12_, 1.0F);
+    public EntityChlorineFX(World world, double x, double y, double z, double mx, double my, double mz) {
+        this(world, x, y, z, mx, my, mz, 1.0F, 0);
     }
 
-    public EntityChlorineFX(World p_i1226_1_, double p_i1226_2_, double p_i1226_4_, double p_i1226_6_,
-                            double p_i1226_8_, double p_i1226_10_, double p_i1226_12_, float p_i1226_14_) {
-        super(p_i1226_1_, p_i1226_2_, p_i1226_4_, p_i1226_6_, 0.0D, 0.0D, 0.0D);
+    public EntityChlorineFX(World world, double x, double y, double z, double mx, double my, double mz, float scale) {
+        this(world, x, y, z, mx, my, mz, scale, 0);
+    }
+
+    public EntityChlorineFX(World world, double x, double y, double z, double mx, double my, double mz, float scale, int meta) {
+        super(world, x, y, z, 0.0D, 0.0D, 0.0D);
+
+        this.meta = meta;
+
         this.motionX *= 0.10000000149011612D;
         this.motionY *= 0.10000000149011612D;
         this.motionZ *= 0.10000000149011612D;
-        this.motionX += p_i1226_8_;
-        this.motionY += p_i1226_10_;
-        this.motionZ += p_i1226_12_;
-        this.particleRed = this.particleGreen = this.particleBlue = (float) (Math.random() * 0.30000001192092896D);
-        this.particleScale *= 0.75F;
-        this.particleScale *= p_i1226_14_;
-        this.smokeParticleScale = this.particleScale;
-        // this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
-        // this.particleMaxAge = (int)((float)this.particleMaxAge *
-        // p_i1226_14_);
-        this.noClip = false;
-    }
+        this.motionX += mx;
+        this.motionY += my;
+        this.motionZ += mz;
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+        this.particleRed = this.particleGreen = this.particleBlue = 1 - (float) (Math.random() * 0.3D);
+        this.setSize(0.2F, 0.2F);
+        this.particleScale = (this.rand.nextFloat() * 0.5F + 0.5F) * 15.0F * 0.75F * scale;
+
+        this.particleMaxAge = this.rand.nextInt(101) + 700;
+
+        this.canCollide = true;
+
+        updateSprite();
+    }
 
     @Override
     public void onUpdate() {
-
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (maxAge < 700) {
-            maxAge = rand.nextInt(101) + 700;
+        if (this.rand.nextInt(50) == 0 && this.world.isRemote) {
+            BlockPos p = new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ);
+            PacketDispatcher.wrapper.sendToServer(new ModFXCollidePacket(ModFXCollidePacket.Action.EXPLOSION_POISON, p, 2));
         }
 
-        if (rand.nextInt(50) == 0)
-            ExplosionChaos.poison(world, (int) posX, (int) posY, (int) posZ, 2);
-
         this.particleAge++;
+        if (this.particleAge >= this.particleMaxAge) {
+            this.setExpired();
+            return;
+        }
 
-        if (this.particleAge >= maxAge) {
-            this.setDead();
+        if (this.world.isRaining() && this.world.canBlockSeeSky(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper.floor(this.posZ)))) {
+            this.motionY -= 0.01D;
         }
 
         this.motionX *= 0.7599999785423279D;
         this.motionY *= 0.7599999785423279D;
         this.motionZ *= 0.7599999785423279D;
 
+        this.move(this.motionX, this.motionY, this.motionZ);
+
         if (this.onGround) {
             this.motionX *= 0.699999988079071D;
             this.motionZ *= 0.699999988079071D;
         }
 
-        if (world.isRaining() && world.canBlockSeeSky(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY), MathHelper.floor(this.posZ)))) {
-            this.motionY -= 0.01;
-        }
-
-        double subdivisions = 4;
-
-        for (int i = 0; i < subdivisions; i++) {
-
-            this.posX += this.motionX / subdivisions;
-            this.posY += this.motionY / subdivisions;
-            this.posZ += this.motionZ / subdivisions;
-            BlockPos pos = new BlockPos((int) posX, (int) posY, (int) posZ);
-
-            if (world.getBlockState(pos).isNormalCube()) {
-
-                if (rand.nextInt(5) != 0)
-                    this.setDead();
-
-                this.posX -= this.motionX / subdivisions;
-                this.posY -= this.motionY / subdivisions;
-                this.posZ -= this.motionZ / subdivisions;
-
-                this.motionX = 0;
-                this.motionY = 0;
-                this.motionZ = 0;
+        BlockPos pos = new BlockPos((int) this.posX, (int) this.posY, (int) this.posZ);
+        if (this.world.getBlockState(pos).isNormalCube()) {
+            if (this.rand.nextInt(5) != 0) {
+                this.setExpired();
             }
+            this.motionX = 0.0D;
+            this.motionY = 0.0D;
+            this.motionZ = 0.0D;
         }
+
+        updateSprite();
+    }
+
+    private void updateSprite() {
+        if (this.particleMaxAge <= 0) return;
+        int stage = this.particleAge * 8 / this.particleMaxAge;
+        if (stage < 0) stage = 0;
+        if (stage > 7) stage = 7;
+
+        if (stage != this.lastStage) {
+            Item item = TEXTURE_ITEMS[stage];
+            TextureAtlasSprite tas = Minecraft.getMinecraft()
+                    .getRenderItem()
+                    .getItemModelWithOverrides(new ItemStack(item, 1, this.meta), null, null)
+                    .getParticleTexture();
+            this.setParticleTexture(tas);
+            this.lastStage = stage;
+        }
+    }
+
+    @Override
+    public int getFXLayer() {
+        return 1;
     }
 }

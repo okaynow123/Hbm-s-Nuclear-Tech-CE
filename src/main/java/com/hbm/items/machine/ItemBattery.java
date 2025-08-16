@@ -63,7 +63,7 @@ public class ItemBattery extends Item implements IBatteryItem {
         if (stack.hasTagCompound()) charge = getCharge(stack);
 
 
-        if (stack.getItem() != ModItems.fusion_core && stack.getItem() != ModItems.factory_core_titanium && stack.getItem() != ModItems.factory_core_advanced && stack.getItem() != ModItems.energy_core) {
+        if (stack.getItem() != ModItems.fusion_core && stack.getItem() != ModItems.energy_core) {
             list.add("§6" + I18nUtil.resolveKey("desc.energystore") + " " + Library.getShortNumber(charge) + "/" + Library.getShortNumber(maxCharge) + "HE§r");
         } else {
             String charge1 = Library.getShortNumber((charge * 100) / this.maxCharge);
@@ -82,7 +82,7 @@ public class ItemBattery extends Item implements IBatteryItem {
             return EnumRarity.RARE;
         }
 
-        if (this == ModItems.fusion_core || this == ModItems.factory_core_titanium || this == ModItems.factory_core_advanced || this == ModItems.energy_core) {
+        if (this == ModItems.fusion_core || this == ModItems.energy_core) {
             return EnumRarity.UNCOMMON;
         }
 

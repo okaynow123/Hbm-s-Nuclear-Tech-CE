@@ -117,6 +117,7 @@ public class PacketDispatcher {
 		wrapper.registerMessage(HbmCapabilityPacket.Handler.class, HbmCapabilityPacket.class, i++, Side.CLIENT);
 		wrapper.registerMessage(SerializableRecipePacket.Handler.class, SerializableRecipePacket.class, i++, Side.CLIENT);
 		wrapper.registerMessage(PlayerSoundPacket.Handler.class, PlayerSoundPacket.class, i++, Side.CLIENT);
+		wrapper.registerMessage(ModFXCollidePacket.Handler.class, ModFXCollidePacket.class, i++, Side.SERVER);
 	}
 	
 	public static void sendTo(IMessage message, EntityPlayerMP player){

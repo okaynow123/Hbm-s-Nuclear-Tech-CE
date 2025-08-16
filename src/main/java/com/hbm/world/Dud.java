@@ -19,7 +19,6 @@ public class Dud extends WorldGenerator
 {
 	Block Block1 = ModBlocks.steel_scaffold;
 	Block Block2 = ModBlocks.machine_difurnace_off;
-	Block Block3 = ModBlocks.factory_titanium_core;
 	Block Block4 = ModBlocks.steel_wall;
 	Block Block5 = ModBlocks.reinforced_light;
 	

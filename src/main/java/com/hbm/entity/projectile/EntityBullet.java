@@ -5,11 +5,9 @@ import com.hbm.blocks.generic.RedBarrel;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.grenade.EntityGrenadeTau;
 import com.hbm.entity.mob.EntityCreeperNuclear;
-import com.hbm.entity.particle.EntityBSmokeFX;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.ParticleBurstPacket;
@@ -80,7 +78,6 @@ public class EntityBullet extends Entity implements IProjectile {
 	private boolean instakill = false;
 	private boolean rad = false;
 	public boolean antidote = false;
-	public boolean pip = false;
 	public boolean fire = false;
 
 	public EntityBullet(World worldIn) {
@@ -482,23 +479,6 @@ public class EntityBullet extends Entity implements IProjectile {
 
 								if (this.shootingEntity != null && RayTraceResult.entityHit != this.shootingEntity && RayTraceResult.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP) {
 									((EntityPlayerMP) this.shootingEntity).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
-								}
-								if (this.pip) {
-									if (!world.isRemote) {
-										EntityBoxcar pippo = new EntityBoxcar(world);
-										pippo.posX = RayTraceResult.entityHit.posX;
-										pippo.posY = RayTraceResult.entityHit.posY + 50;
-										pippo.posZ = RayTraceResult.entityHit.posZ;
-										for (int j = 0; j < 50; j++) {
-											EntityBSmokeFX fx = new EntityBSmokeFX(world, pippo.posX + (rand.nextDouble() - 0.5) * 4, pippo.posY + (rand.nextDouble() - 0.5) * 12, pippo.posZ + (rand.nextDouble() - 0.5) * 4, 0, 0, 0);
-											world.spawnEntity(fx);
-										}
-
-										world.spawnEntity(pippo);
-										
-										world.playSound(null, RayTraceResult.entityHit.posX, RayTraceResult.entityHit.posY + 50, RayTraceResult.entityHit.posZ, HBMSoundHandler.trainHorn, SoundCategory.HOSTILE, 10000F, 1F);
-									}
-									
 								}
 							}
 

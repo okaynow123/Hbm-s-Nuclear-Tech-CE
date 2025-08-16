@@ -2,8 +2,6 @@ package com.hbm.items.tool;
 
 import com.hbm.items.ModItems;
 import com.hbm.util.I18nUtil;
-import com.hbm.world.FactoryAdvanced;
-import com.hbm.world.FactoryTitanium;
 import com.hbm.world.ParticleAccelerator;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -74,17 +72,6 @@ public class ItemWandS extends Item {
 			switch(stack.getTagCompound().getInteger("building"))
 			{
 			case 0:
-				new FactoryTitanium().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 2 : pos.getY(), pos.getZ()));
-				//world.setBlock(x, y + 1, z, Blocks.chest, 2, 3);
-				//if(world.getBlock(x, y + 1, z) == Blocks.chest)
-				//{
-				//	WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(x, y + 1, z), 10);
-				//}
-				break;
-			case 1:
-				new FactoryAdvanced().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY() - 2 : pos.getY(), pos.getZ()));
-				break;
-			case 2:
 				new ParticleAccelerator().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY()-5 : pos.getY(), pos.getZ()));
 				break;
 			}

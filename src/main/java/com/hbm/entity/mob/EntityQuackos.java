@@ -1,12 +1,14 @@
 package com.hbm.entity.mob;
 
-import com.hbm.entity.particle.EntityBSmokeFX;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
@@ -14,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  *  BOW
@@ -138,9 +141,13 @@ public class EntityQuackos extends EntityDuck {
 	public void despawn() {
 		if(!world.isRemote) {
 			for(int i = 0; i < 150; i++) {
-				EntityBSmokeFX fx = new EntityBSmokeFX(world);
-				fx.setPositionAndRotation(posX + rand.nextDouble() * 20 - 10, posY + rand.nextDouble() * 25, posZ + rand.nextDouble() * 20 - 10, 0, 0);
-				world.spawnEntity(fx);
+				NBTTagCompound data = new NBTTagCompound();
+				data.setString("type", "bf");
+				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data,
+								posX + rand.nextDouble() * 20 - 10,
+								posY + rand.nextDouble() * 25,
+								posZ + rand.nextDouble() * 20 - 10),
+						new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 150));
 			}
 		}
 		this.isDead = true;

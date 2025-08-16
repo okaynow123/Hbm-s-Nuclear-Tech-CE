@@ -1,6 +1,5 @@
 package com.hbm.entity.mob;
 
-import com.hbm.entity.particle.EntitySmokeFX;
 import com.hbm.entity.projectile.EntityBullet;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.interfaces.AutoRegister;
@@ -10,6 +9,8 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
@@ -17,6 +18,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -28,6 +30,7 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -263,8 +266,16 @@ public class EntityHunterChopper extends EntityFlying implements IMob, IRadiatio
 			{
 		    	this.world.createExplosion(this, this.posX, this.posY, this.posZ, 5F, true);
 			}
-			
-			this.world.spawnEntity(new EntitySmokeFX(world, this.posX, this.posY, this.posZ, 0, 0, 0));
+
+			if(!world.isRemote) {
+
+				NBTTagCompound data = new NBTTagCompound();
+				data.setString("type", "exhaust");
+				data.setString("mode", "meteor");
+				data.setInteger("count", 10);
+				data.setDouble("width", 1);
+				PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, posX, posY, posZ),  new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 100));
+			}
 			
 			rotationYaw += 20;
 			
