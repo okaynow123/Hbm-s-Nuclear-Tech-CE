@@ -123,12 +123,10 @@ public class Lego {
             int mode = ItemGunBaseNT.getMode(stack, 0);
             ItemGunBaseNT.setMode(stack, index, 1 - mode);
             if(mode == 0) {
-                if (entity instanceof EntityPlayer player)
-                    player.world.playSound(player, player.getPosition(), HBMSoundHandler.switchmode1, SoundCategory.PLAYERS, 1F, 1F);
+                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundHandler.switchmode1, SoundCategory.PLAYERS, 1F, 1F);
             }
             else {
-                if (entity instanceof EntityPlayer player)
-                    player.world.playSound(player, player.getPosition(), HBMSoundHandler.switchmode2, SoundCategory.PLAYERS, 1F, 1F);
+                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundHandler.switchmode2, SoundCategory.PLAYERS, 1F, 1F);
             }
         }
     };
