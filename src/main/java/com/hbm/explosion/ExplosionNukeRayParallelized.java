@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumSkyBlock;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.DoubleAdder;
+import java.util.function.BiConsumer;
 
 /**
  * Threaded DDA raytracer for mk5 explosion.
@@ -71,6 +73,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final String TAG_POS_X = "pX";
     private static final String TAG_POS_Y = "pY";
     private static final String TAG_POS_Z = "pZ";
+    private static final ThreadLocal<MutableBlockPos> TL_POS = ThreadLocal.withInitial(MutableBlockPos::new);
+    private static final ThreadLocal<LocalAgg> TL_LOCAL_AGG = ThreadLocal.withInitial(LocalAgg::new);
 
     static {
         for (int r = 0; r < LUT_RESISTANCE_BINS; r++) {
@@ -95,13 +99,13 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private final BlockingQueue<SubChunkKey> reactiveSnapQueue;
     private final Iterator<SubChunkKey> proactiveSnapIterator;
     private final int strength;
-    private final CompletableFuture<List<Vec3d>> directionsFuture;
+    private final CompletableFuture<Vec3d[]> directionsFuture;
+    private volatile Vec3d[] directions;
     private List<BlockPos> destroyedList;
     private int algorithm;
     private int rayCount;
     private ForkJoinPool pool;
     private UUID detonator;
-    private volatile List<Vec3d> directions;
     private volatile boolean collectFinished = false;
     private volatile boolean consolidationFinished = false;
     private volatile boolean destroyFinished = false;
@@ -139,7 +143,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.waitingRoom = new ConcurrentHashMap<>();
             this.orderedChunks = new ArrayList<>();
             this.destroyedList = new ArrayList<>();
-            this.directionsFuture = CompletableFuture.completedFuture(Collections.emptyList());
+            this.directionsFuture = CompletableFuture.completedFuture(new Vec3d[0]);
             this.pool = null;
             return;
         }
@@ -149,7 +153,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         this.proactiveSnapIterator = sortedSubChunks.iterator();
         this.reactiveSnapQueue = new LinkedBlockingQueue<>();
 
-        int initialChunkCapacity = (int) sortedSubChunks.stream().map(SubChunkKey::getPos).distinct().count();
+        int initialChunkCapacity = (int) distinctChunkCount(sortedSubChunks);
         this.destructionMap = new ConcurrentHashMap<>(initialChunkCapacity);
         this.damageMap = new ConcurrentHashMap<>(initialChunkCapacity);
         this.passLengthMap = new ConcurrentHashMap<>(initialChunkCapacity);
@@ -163,12 +167,35 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         this.directionsFuture = CompletableFuture.supplyAsync(() -> generateSphereRays(rayCount));
     }
 
+    private static long distinctChunkCount(List<SubChunkKey> keys) {
+        final HashSet<Long> seen = new HashSet<>();
+        for (SubChunkKey k : keys) {
+            long packed = (((long) k.getChunkXPos()) << 32) ^ (k.getChunkZPos() & 0xFFFFFFFFL);
+            seen.add(packed);
+        }
+        return seen.size();
+    }
+
     @SuppressWarnings({"DataFlowIssue", "deprecation"})
     private static float getNukeResistance(Block b) {
         if (b.getDefaultState().getMaterial().isLiquid()) return 0.1F;
         if (b == Blocks.SANDSTONE) return 4.0F;
         if (b == Blocks.OBSIDIAN) return 18.0F;
         return b.getExplosionResistance(null);
+    }
+
+    private static Vec3d[] generateSphereRays(int count) {
+        if (count <= 0) return new Vec3d[0];
+        if (count == 1) return new Vec3d[]{new Vec3d(1, 0, 0)};
+        Vec3d[] arr = new Vec3d[count];
+        double phi = Math.PI * (3.0 - Math.sqrt(5.0));
+        for (int i = 0; i < count; i++) {
+            double y = 1.0 - (i / (double) (count - 1)) * 2.0;
+            double r = Math.sqrt(1.0 - y * y);
+            double t = phi * i;
+            arr[i] = new Vec3d(Math.cos(t) * r, y, Math.sin(t) * r);
+        }
+        return arr;
     }
 
     private void initializeAndStartWorkers() {
@@ -181,12 +208,10 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         int workers = BombConfig.maxThreads <= 0 ? Math.max(1, processors + BombConfig.maxThreads) : Math.min(BombConfig.maxThreads, processors);
         this.pool = new ForkJoinPool(workers);
 
-        RayTracerTask mainTask = new RayTracerTask(0, rayCount);
+        final RayTracerTask mainTask = new RayTracerTask(0, rayCount);
 
         CompletableFuture.runAsync(() -> pool.invoke(mainTask), pool).whenComplete((v, ex) -> {
-            if (ex != null) {
-                MainRegistry.logger.error("Nuke ray-tracing failed catastrophically.", ex);
-            }
+            if (ex != null) MainRegistry.logger.error("Nuke ray-tracing failed catastrophically.", ex);
             collectFinished = true;
             if (algorithm == 2) {
                 pool.submit(this::runConsolidation);
@@ -222,12 +247,17 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 }
             }
         }
-        keys.sort(Comparator.comparingInt(key -> {
-            int distCX = key.getChunkXPos() - (originX >> 4);
-            int distCZ = key.getChunkZPos() - (originZ >> 4);
-            int distSubY = key.getSubY() - originSubY;
-            return distCX * distCX + distCZ * distCZ + distSubY * distSubY;
-        }));
+        keys.sort((a, b) -> {
+            int distCXa = a.getChunkXPos() - (originX >> 4);
+            int distCZa = a.getChunkZPos() - (originZ >> 4);
+            int distSubYa = a.getSubY() - (originY >> 4);
+            int da = distCXa * distCXa + distCZa * distCZa + distSubYa * distSubYa;
+            int distCXb = b.getChunkXPos() - (originX >> 4);
+            int distCZb = b.getChunkZPos() - (originZ >> 4);
+            int distSubYb = b.getSubY() - (originY >> 4);
+            int db = distCXb * distCXb + distCZb * distCZb + distSubYb * distSubYb;
+            return da - db;
+        });
         return keys;
     }
 
@@ -265,7 +295,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
         if (orderedChunks.isEmpty() && !destructionMap.isEmpty()) {
             orderedChunks.addAll(destructionMap.keySet());
-            orderedChunks.sort(Comparator.comparingInt(c -> Math.abs((originX >> 4) - c.x) + Math.abs((originZ >> 4) - c.z)));
+            orderedChunks.sort((a, b) -> {
+                int da = Math.abs((originX >> 4) - a.x) + Math.abs((originZ >> 4) - a.z);
+                int db = Math.abs((originX >> 4) - b.x) + Math.abs((originZ >> 4) - b.z);
+                return da - db;
+            });
         }
 
         Iterator<ChunkPos> it = orderedChunks.iterator();
@@ -324,8 +358,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     bs.clear(startBit, endBit + 1);
 
                     double sendRange = this.radius * 2.0;
-                    NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimension(), explosionX, explosionY,
-                            explosionZ, sendRange);
+                    NetworkRegistry.TargetPoint target =
+                            new NetworkRegistry.TargetPoint(world.provider.getDimension(), explosionX, explosionY, explosionZ, sendRange);
                     PacketDispatcher.wrapper.sendToAllAround(new SetSubChunkAirPacket(cp.x, cp.z, subY), target);
 
                     continue;
@@ -388,7 +422,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         destroyedList = null;
     }
 
-
     @Override
     public boolean isComplete() {
         return collectFinished && consolidationFinished && destroyFinished;
@@ -430,91 +463,86 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         if (this.orderedChunks != null) this.orderedChunks.clear();
     }
 
-    private List<Vec3d> generateSphereRays(int count) {
-        List<Vec3d> list = new ArrayList<>(count);
-        if (count == 0) return list;
-        if (count == 1) {
-            list.add(new Vec3d(1, 0, 0));
-            return list;
-        }
-        double phi = Math.PI * (3.0 - Math.sqrt(5.0));
-        for (int i = 0; i < count; i++) {
-            double y = 1.0 - (i / (double) (count - 1)) * 2.0;
-            double r = Math.sqrt(1.0 - y * y);
-            double t = phi * i;
-            list.add(new Vec3d(Math.cos(t) * r, y, Math.sin(t) * r));
-        }
-        return list;
-    }
-
     private void runConsolidation() {
-        damageMap.forEach((cp, innerDamageMap) -> {
-            ConcurrentMap<Integer, DoubleAdder> innerLenMap = passLengthMap.get(cp);
-            boolean dmgEmpty = (innerDamageMap == null || innerDamageMap.isEmpty());
-            boolean lenEmpty = (innerLenMap == null || innerLenMap.isEmpty());
-            if (dmgEmpty && lenEmpty) {
-                damageMap.remove(cp);
-                if (innerLenMap != null) passLengthMap.remove(cp);
-                return;
-            }
-            ConcurrentBitSet chunkDestructionBitSet = destructionMap.computeIfAbsent(cp, k -> new ConcurrentBitSet(BITSET_SIZE));
-
-            HashSet<Integer> keys = new HashSet<>();
-            if (innerDamageMap != null) keys.addAll(innerDamageMap.keySet());
-            if (innerLenMap != null) keys.addAll(innerLenMap.keySet());
-
-            for (int bitIndex : keys) {
-                double accumulatedDamage = 0.0;
-                if (innerDamageMap != null) {
-                    DoubleAdder dmgAdder = innerDamageMap.get(bitIndex);
-                    if (dmgAdder != null) accumulatedDamage = dmgAdder.sum();
-                }
-                double passLen = 0.0;
-                if (innerLenMap != null) {
-                    DoubleAdder lenAdder = innerLenMap.get(bitIndex);
-                    if (lenAdder != null) passLen = lenAdder.sum();
-                }
-                int yGlobal = WORLD_HEIGHT - 1 - (bitIndex >>> 8);
-
-                Block originalBlock;
-                if (unsafeAccess) {
-                    int xGlobal = (cp.x << 4) | ((bitIndex >>> 4) & 0xF);
-                    int zGlobal = (cp.z << 4) | (bitIndex & 0xF);
-                    originalBlock = world.getBlockState(new BlockPos(xGlobal, yGlobal, zGlobal)).getBlock();
-                } else {
-                    int subY = yGlobal >> 4;
-                    if (subY < 0) {
-                        continue;
-                    }
-                    SubChunkKey snapshotKey = new SubChunkKey(cp, subY);
-                    SubChunkSnapshot snap = snapshots.get(snapshotKey);
-                    if (snap == null || snap == SubChunkSnapshot.EMPTY) {
-                        continue;
-                    }
-                    int xLocal = (bitIndex >>> 4) & 0xF;
-                    int zLocal = bitIndex & 0xF;
-                    originalBlock = snap.getBlock(xLocal, yGlobal & 0xF, zLocal);
-                }
-
-                if (originalBlock == Blocks.AIR) {
-                    continue;
-                }
-                float resistance = getNukeResistance(originalBlock);
-
-                boolean destroy = false;
-                if (accumulatedDamage >= (resistance * DAMAGE_THRESHOLD_MULT)) {
-                    destroy = true;
-                } else if (resistance <= LOW_R_BOUND && passLen >= LOW_R_PASS_LENGTH_BREAK) {
-                    destroy = true;
-                }
-                if (destroy) chunkDestructionBitSet.set(bitIndex);
-            }
+        for (Map.Entry<ChunkPos, ConcurrentMap<Integer, DoubleAdder>> e : damageMap.entrySet()) {
+            ChunkPos cp = e.getKey();
+            ConcurrentMap<Integer, DoubleAdder> dmg = e.getValue();
+            ConcurrentMap<Integer, DoubleAdder> len = passLengthMap.get(cp);
+            processConsolidationForChunk(cp, dmg, len);
             damageMap.remove(cp);
-            if (innerLenMap != null) passLengthMap.remove(cp);
-        });
+            if (len != null) passLengthMap.remove(cp);
+        }
+        for (Map.Entry<ChunkPos, ConcurrentMap<Integer, DoubleAdder>> e : passLengthMap.entrySet()) {
+            ChunkPos cp = e.getKey();
+            ConcurrentMap<Integer, DoubleAdder> len = e.getValue();
+            processConsolidationForChunk(cp, null, len);
+        }
+
         damageMap.clear();
         passLengthMap.clear();
         consolidationFinished = true;
+    }
+
+    private void processConsolidationForChunk(ChunkPos cp, ConcurrentMap<Integer, DoubleAdder> dmg, ConcurrentMap<Integer, DoubleAdder> len) {
+        ConcurrentBitSet bitset = destructionMap.get(cp);
+        if (bitset == null) {
+            ConcurrentBitSet nb = new ConcurrentBitSet(BITSET_SIZE);
+            ConcurrentBitSet prev = destructionMap.putIfAbsent(cp, nb);
+            bitset = (prev != null) ? prev : nb;
+        }
+        if (dmg != null && !dmg.isEmpty()) {
+            for (Map.Entry<Integer, DoubleAdder> de : dmg.entrySet()) {
+                int bitIndex = de.getKey();
+                double accumulatedDamage = de.getValue().sum();
+                double passLen = 0.0;
+                if (len != null) {
+                    DoubleAdder la = len.get(bitIndex);
+                    if (la != null) passLen = la.sum();
+                }
+                evaluateAndMaybeSet(cp, bitIndex, accumulatedDamage, passLen, bitset);
+            }
+        }
+        if (len != null && !len.isEmpty()) {
+            for (Map.Entry<Integer, DoubleAdder> le : len.entrySet()) {
+                int bitIndex = le.getKey();
+                if (dmg != null && dmg.containsKey(bitIndex)) continue;
+                double passLen = le.getValue().sum();
+                evaluateAndMaybeSet(cp, bitIndex, 0.0, passLen, bitset);
+            }
+        }
+    }
+
+    private void evaluateAndMaybeSet(ChunkPos cp, int bitIndex, double accumulatedDamage, double passLen, ConcurrentBitSet outBits) {
+        int yGlobal = WORLD_HEIGHT - 1 - (bitIndex >>> 8);
+
+        Block originalBlock;
+        if (unsafeAccess) {
+            int xGlobal = (cp.x << 4) | ((bitIndex >>> 4) & 0xF);
+            int zGlobal = (cp.z << 4) | (bitIndex & 0xF);
+            MutableBlockPos pos = TL_POS.get();
+            pos.setPos(xGlobal, yGlobal, zGlobal);
+            originalBlock = world.getBlockState(pos).getBlock();
+        } else {
+            int subY = yGlobal >> 4;
+            if (subY < 0) return;
+            SubChunkKey snapshotKey = new SubChunkKey(cp, subY);
+            SubChunkSnapshot snap = snapshots.get(snapshotKey);
+            if (snap == null || snap == SubChunkSnapshot.EMPTY) return;
+            int xLocal = (bitIndex >>> 4) & 0xF;
+            int zLocal = bitIndex & 0xF;
+            originalBlock = snap.getBlock(xLocal, yGlobal & 0xF, zLocal);
+        }
+
+        if (originalBlock == Blocks.AIR) return;
+        float resistance = getNukeResistance(originalBlock);
+
+        boolean destroy = false;
+        if (accumulatedDamage >= (resistance * DAMAGE_THRESHOLD_MULT)) {
+            destroy = true;
+        } else if (resistance <= LOW_R_BOUND && passLen >= LOW_R_PASS_LENGTH_BREAK) {
+            destroy = true;
+        }
+        if (destroy) outBits.set(bitIndex);
     }
 
     @Override
@@ -583,24 +611,130 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
         if (!this.orderedChunks.isEmpty()) {
             NBTTagList list = new NBTTagList();
-            this.orderedChunks.forEach(pos -> {
+            for (ChunkPos pos : orderedChunks) {
                 NBTTagCompound nbt1 = new NBTTagCompound();
                 nbt1.setInteger(TAG_CHUNK_X, pos.x);
                 nbt1.setInteger(TAG_CHUNK_Z, pos.z);
                 list.appendTag(nbt1);
-            });
+            }
             nbt.setTag(TAG_ORDERED_CHUNKS, list);
         }
         if (this.destroyedList != null && !this.destroyedList.isEmpty()) {
             NBTTagList list = new NBTTagList();
-            this.destroyedList.forEach(pos -> {
+            for (BlockPos pos : destroyedList) {
                 NBTTagCompound nbt1 = new NBTTagCompound();
                 nbt1.setInteger(TAG_POS_X, pos.getX());
                 nbt1.setInteger(TAG_POS_Y, pos.getY());
                 nbt1.setInteger(TAG_POS_Z, pos.getZ());
                 list.appendTag(nbt1);
-            });
+            }
             nbt.setTag(TAG_DESTROYED_LIST, list);
+        }
+    }
+
+    private static final class IntDoubleAccumulator {
+        private static final int EMPTY = Integer.MIN_VALUE;
+        private int[] keys;
+        private double[] vals;
+        private int mask;
+        private int size;
+        private int resizeThreshold;
+
+        IntDoubleAccumulator() {
+            this(64);
+        }
+
+        IntDoubleAccumulator(int expected) {
+            init(capFor(expected));
+        }
+
+        private static int capFor(int n) {
+            int c = 1;
+            while (c < n) c <<= 1;
+            return Math.max(16, c);
+        }
+
+        private void init(int capacity) {
+            keys = new int[capacity];
+            Arrays.fill(keys, EMPTY);
+            vals = new double[capacity];
+            mask = capacity - 1;
+            size = 0;
+            resizeThreshold = (int) (capacity * 0.67);
+        }
+
+        void clear() {
+            Arrays.fill(keys, EMPTY);
+            Arrays.fill(vals, 0.0);
+            size = 0;
+        }
+
+        void add(int key, double delta) {
+            int idx = key & mask;
+            while (true) {
+                int k = keys[idx];
+                if (k == EMPTY) {
+                    keys[idx] = key;
+                    vals[idx] = delta;
+                    if (++size >= resizeThreshold) rehash();
+                    return;
+                } else if (k == key) {
+                    vals[idx] += delta;
+                    return;
+                }
+                idx = (idx + 1) & mask;
+            }
+        }
+
+        void forEach(BiConsumer<Integer, Double> c) {
+            for (int i = 0; i < keys.length; i++) {
+                int k = keys[i];
+                if (k != EMPTY) c.accept(k, vals[i]);
+            }
+        }
+
+        private void rehash() {
+            int[] oldK = keys;
+            double[] oldV = vals;
+            init(oldK.length << 1);
+            for (int i = 0; i < oldK.length; i++) {
+                int k = oldK[i];
+                if (k != EMPTY) add(k, oldV[i]);
+            }
+        }
+    }
+
+    private static final class LocalAgg {
+        final HashMap<ChunkPos, IntDoubleAccumulator> localDamageMap = new HashMap<>(16);
+        final HashMap<ChunkPos, IntDoubleAccumulator> localLenMap = new HashMap<>(16);
+
+        void clear() {
+            if (!localDamageMap.isEmpty()) {
+                for (IntDoubleAccumulator acc : localDamageMap.values()) acc.clear();
+                localDamageMap.clear();
+            }
+            if (!localLenMap.isEmpty()) {
+                for (IntDoubleAccumulator acc : localLenMap.values()) acc.clear();
+                localLenMap.clear();
+            }
+        }
+
+        IntDoubleAccumulator getDamageAcc(ChunkPos cp) {
+            IntDoubleAccumulator acc = localDamageMap.get(cp);
+            if (acc == null) {
+                acc = new IntDoubleAccumulator();
+                localDamageMap.put(cp, acc);
+            }
+            return acc;
+        }
+
+        IntDoubleAccumulator getLenAcc(ChunkPos cp) {
+            IntDoubleAccumulator acc = localLenMap.get(cp);
+            if (acc == null) {
+                acc = new IntDoubleAccumulator();
+                localLenMap.put(cp, acc);
+            }
+            return acc;
         }
     }
 
@@ -610,8 +744,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         private static final double PROCESSING_EPSILON = 1e-9;
         private static final float MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC = 0.01f;
         private final int start, end;
-        private Map<ChunkPos, Map<Integer, Double>> localDamageMap;
-        private Map<ChunkPos, Map<Integer, Double>> localLenMap;
 
         RayTracerTask(int start, int end) {
             this.start = start;
@@ -620,35 +752,63 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
         @Override
         protected void compute() {
-            if (directions == null) {
-                directions = directionsFuture.join();
-            }
+            if (directions == null) directions = directionsFuture.join();
 
             if (end - start <= THRESHOLD) {
-                this.localDamageMap = (algorithm == 2) ? new HashMap<>() : null;
-                this.localLenMap    = (algorithm == 2) ? new HashMap<>() : null;
+                LocalAgg agg = TL_LOCAL_AGG.get();
+                agg.clear();
 
                 for (int i = start; i < end; i++) {
                     if (Thread.currentThread().isInterrupted()) return;
-                    trace(i);
+                    trace(i, agg);
                 }
+                if (algorithm == 2) {
+                    if (!agg.localDamageMap.isEmpty()) {
+                        for (Map.Entry<ChunkPos, IntDoubleAccumulator> entry : agg.localDamageMap.entrySet()) {
+                            ChunkPos cp = entry.getKey();
+                            IntDoubleAccumulator acc = entry.getValue();
 
-                if (localDamageMap != null && !localDamageMap.isEmpty()) {
-                    for (Map.Entry<ChunkPos, Map<Integer, Double>> chunkEntry : localDamageMap.entrySet()) {
-                        ChunkPos cp = chunkEntry.getKey();
-                        ConcurrentMap<Integer, DoubleAdder> globalChunkDamage = damageMap.computeIfAbsent(cp, k -> new ConcurrentHashMap<>());
+                            ConcurrentMap<Integer, DoubleAdder> globalChunkDamage = damageMap.get(cp);
+                            if (globalChunkDamage == null) {
+                                ConcurrentMap<Integer, DoubleAdder> created = new ConcurrentHashMap<>();
+                                ConcurrentMap<Integer, DoubleAdder> existed = damageMap.putIfAbsent(cp, created);
+                                globalChunkDamage = (existed != null) ? existed : created;
+                            }
 
-                        for (Map.Entry<Integer, Double> damageEntry : chunkEntry.getValue().entrySet()) {
-                            globalChunkDamage.computeIfAbsent(damageEntry.getKey(), k -> new DoubleAdder()).add(damageEntry.getValue());
+                            ConcurrentMap<Integer, DoubleAdder> finalGlobalChunkDamage = globalChunkDamage;
+                            acc.forEach((bit, val) -> {
+                                DoubleAdder ad = finalGlobalChunkDamage.get(bit);
+                                if (ad == null) {
+                                    DoubleAdder na = new DoubleAdder();
+                                    DoubleAdder prev = finalGlobalChunkDamage.putIfAbsent(bit, na);
+                                    ad = (prev != null) ? prev : na;
+                                }
+                                ad.add(val);
+                            });
                         }
                     }
-                }
-                if (localLenMap != null && !localLenMap.isEmpty()) {
-                    for (Map.Entry<ChunkPos, Map<Integer, Double>> chunkEntry : localLenMap.entrySet()) {
-                        ChunkPos cp = chunkEntry.getKey();
-                        ConcurrentMap<Integer, DoubleAdder> globalChunkLen = passLengthMap.computeIfAbsent(cp, k -> new ConcurrentHashMap<>());
-                        for (Map.Entry<Integer, Double> lenEntry : chunkEntry.getValue().entrySet()) {
-                            globalChunkLen.computeIfAbsent(lenEntry.getKey(), k -> new DoubleAdder()).add(lenEntry.getValue());
+                    if (!agg.localLenMap.isEmpty()) {
+                        for (Map.Entry<ChunkPos, IntDoubleAccumulator> entry : agg.localLenMap.entrySet()) {
+                            ChunkPos cp = entry.getKey();
+                            IntDoubleAccumulator acc = entry.getValue();
+
+                            ConcurrentMap<Integer, DoubleAdder> globalChunkLen = passLengthMap.get(cp);
+                            if (globalChunkLen == null) {
+                                ConcurrentMap<Integer, DoubleAdder> created = new ConcurrentHashMap<>();
+                                ConcurrentMap<Integer, DoubleAdder> existed = passLengthMap.putIfAbsent(cp, created);
+                                globalChunkLen = (existed != null) ? existed : created;
+                            }
+
+                            ConcurrentMap<Integer, DoubleAdder> finalGlobalChunkLen = globalChunkLen;
+                            acc.forEach((bit, val) -> {
+                                DoubleAdder ad = finalGlobalChunkLen.get(bit);
+                                if (ad == null) {
+                                    DoubleAdder na = new DoubleAdder();
+                                    DoubleAdder prev = finalGlobalChunkLen.putIfAbsent(bit, na);
+                                    ad = (prev != null) ? prev : na;
+                                }
+                                ad.add(val);
+                            });
                         }
                     }
                 }
@@ -658,8 +818,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
 
-        void trace(int dirIndex) {
-            Vec3d dir = directions.get(dirIndex);
+        void trace(int dirIndex, LocalAgg agg) {
+            Vec3d dir = directions[dirIndex];
             float energy = strength * INITIAL_ENERGY_FACTOR;
             double px = explosionX;
             double py = explosionY;
@@ -690,6 +850,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
             int lastCX = Integer.MIN_VALUE, lastCZ = Integer.MIN_VALUE, lastSubY = Integer.MIN_VALUE;
             SubChunkKey currentSubChunkKey = null;
+            int cachedCX = Integer.MIN_VALUE, cachedCZ = Integer.MIN_VALUE;
+            ChunkPos cachedCP = null;
 
             try {
                 if (energy <= 0) return;
@@ -698,13 +860,20 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     if (y < 0 || y >= WORLD_HEIGHT || Thread.currentThread().isInterrupted()) break;
                     if (currentRayPosition >= radius - PROCESSING_EPSILON) break;
                     Block block;
-                    ChunkPos chunkPos;
+
                     int cx = x >> 4;
                     int cz = z >> 4;
 
-                    if (unsafeAccess && world instanceof WorldServer server && server.getChunkProvider().chunkExists(cx, cz)) {
-                        block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-                        chunkPos = new ChunkPos(cx, cz);
+                    if (cx != cachedCX || cz != cachedCZ) {
+                        cachedCX = cx;
+                        cachedCZ = cz;
+                        cachedCP = new ChunkPos(cx, cz);
+                    }
+
+                    if (unsafeAccess && world instanceof WorldServer && ((WorldServer) world).getChunkProvider().chunkExists(cx, cz)) {
+                        MutableBlockPos pos = TL_POS.get();
+                        pos.setPos(x, y, z);
+                        block = world.getBlockState(pos).getBlock();
                     } else {
                         int subY = y >> 4;
                         if (cx != lastCX || cz != lastCZ || subY != lastSubY) {
@@ -715,23 +884,24 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                         }
                         SubChunkSnapshot snap = snapshots.get(currentSubChunkKey);
                         if (snap == null) {
-                            final boolean[] amFirst = {false};
-                            ConcurrentLinkedQueue<RayTracerTask> waiters = waitingRoom.computeIfAbsent(currentSubChunkKey, k -> {
-                                amFirst[0] = true;
-                                return new ConcurrentLinkedQueue<>();
-                            });
+                            final boolean[] amFirst = new boolean[]{false};
+                            ConcurrentLinkedQueue<RayTracerTask> waiters = waitingRoom.get(currentSubChunkKey);
+                            if (waiters == null) {
+                                ConcurrentLinkedQueue<RayTracerTask> created = new ConcurrentLinkedQueue<>();
+                                ConcurrentLinkedQueue<RayTracerTask> prev = waitingRoom.putIfAbsent(currentSubChunkKey, created);
+                                waiters = (prev != null) ? prev : created;
+                                amFirst[0] = (prev == null);
+                            }
                             if (amFirst[0]) reactiveSnapQueue.add(currentSubChunkKey);
 
                             waiters.add(new RayTracerTask(dirIndex, dirIndex + 1));
                             return;
                         }
-
                         if (snap == SubChunkSnapshot.EMPTY) {
                             block = Blocks.AIR;
                         } else {
                             block = snap.getBlock(x & 0xF, y & 0xF, z & 0xF);
                         }
-                        chunkPos = currentSubChunkKey.getPos();
                     }
 
                     double t_exit_voxel = Math.min(tMaxX, Math.min(tMaxY, tMaxZ));
@@ -759,14 +929,20 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                             if (algorithm == 2) {
                                 double damageInc = Math.max(DAMAGE_PER_BLOCK * segmentLenForProcessing, energyLoss) * INITIAL_ENERGY_FACTOR;
                                 if (damageInc > 0) {
-                                    localDamageMap.computeIfAbsent(chunkPos, k -> new HashMap<>())
-                                                  .merge(bitIndex, damageInc, Double::sum);
+                                    IntDoubleAccumulator acc = agg.getDamageAcc(cachedCP);
+                                    acc.add(bitIndex, damageInc);
                                 }
-                                localLenMap.computeIfAbsent(chunkPos, k -> new HashMap<>())
-                                           .merge(bitIndex, segmentLenForProcessing, Double::sum);
+                                IntDoubleAccumulator lenAcc = agg.getLenAcc(cachedCP);
+                                lenAcc.add(bitIndex, segmentLenForProcessing);
                             } else if (energy > 0) {
                                 if (energyLoss > 0) {
-                                    destructionMap.computeIfAbsent(chunkPos, posKey -> new ConcurrentBitSet(BITSET_SIZE)).set(bitIndex);
+                                    ConcurrentBitSet bs = destructionMap.get(cachedCP);
+                                    if (bs == null) {
+                                        ConcurrentBitSet nbs = new ConcurrentBitSet(BITSET_SIZE);
+                                        ConcurrentBitSet prev = destructionMap.putIfAbsent(cachedCP, nbs);
+                                        bs = (prev != null) ? prev : nbs;
+                                    }
+                                    bs.set(bitIndex);
                                 }
                             }
                         }
