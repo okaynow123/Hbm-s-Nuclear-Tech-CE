@@ -82,6 +82,7 @@ public class GUIPASource extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
+        this.drawDefaultBackground();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
