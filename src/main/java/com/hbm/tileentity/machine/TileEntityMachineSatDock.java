@@ -1,29 +1,26 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.missile.EntityMinerRocket;
+import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineSatDock;
 import com.hbm.inventory.gui.GUIMachineSatDock;
+import com.hbm.itempool.ItemPool;
 import com.hbm.items.ISatChip;
-import com.hbm.items.ModItems;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteHorizons;
 import com.hbm.saveddata.satellites.SatelliteMiner;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.util.WeightedRandomObject;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,7 +29,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -122,12 +118,8 @@ public class TileEntityMachineSatDock extends TileEntityMachineBase implements I
 					EntityMinerRocket rocket = (EntityMinerRocket)e;
 
 					if(rocket.getDataManager().get(EntityMinerRocket.TIMER) == 1 && rocket.timer == 50) {
-						byte type = rocket.getRocketType();
-						if(type == 0){
-							unloadCargo();
-						} else if(type == 1){
-							unloadGeraldCargo();
-						}
+						Satellite sat = data.getSatFromFreq(ISatChip.getFreqS(inventory.getStackInSlot(15)));
+						unloadCargo((SatelliteMiner) sat);
 					}
 				}
 			}
@@ -141,64 +133,15 @@ public class TileEntityMachineSatDock extends TileEntityMachineBase implements I
 
 	private static Random rand = new Random();
 
-	private void unloadCargo(){
-		unloadTheCargo(cargo);
-	}
+	private void unloadCargo(SatelliteMiner satellite) {
+		int itemAmount = world.rand.nextInt(6) + 10;
 
-	private void unloadGeraldCargo(){
-		unloadTheCargo(cargoGerald);
-	}
+		WeightedRandomChestContentFrom1710[] cargo = ItemPool.getPool(satellite.getCargo());
 
-	private void unloadTheCargo(WeightedRandomObject[] cargo){
-
-		int items = rand.nextInt(6) + 10;
-
-		rand = new Random();
-
-		for(int i = 0; i < items; i++) {
-			ItemStack stack = ((WeightedRandomObject)WeightedRandom.getRandomItem(rand, Arrays.asList(cargo))).asStack();
-			addToInv(stack);
+		for(int i = 0; i < itemAmount; i++) {
+			addToInv(ItemPool.getStack(cargo, world.rand));
 		}
 	}
-
-	private WeightedRandomObject[] cargo = new WeightedRandomObject[] { 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_aluminium, 3), 10), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_iron, 3), 10), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_titanium, 2), 8), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_coal, 4), 15), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_uranium, 2), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_plutonium, 1), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_thorium, 2), 7), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_desh_mix, 3), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_diamond, 2), 7), 
-		new WeightedRandomObject(new ItemStack(Items.REDSTONE, 5), 15), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_nitan_mix, 2), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_power, 2), 5),
-		new WeightedRandomObject(new ItemStack(ModItems.powder_copper, 5), 15), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_lead, 3), 10), 
-		new WeightedRandomObject(new ItemStack(ModItems.fluorite, 4), 15), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_lapis, 4), 10), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_combine_steel, 1), 1), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_aluminium, 1), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_gold, 1), 5), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_phosphorus, 1), 10), 
-		new WeightedRandomObject(new ItemStack(ModBlocks.gravel_diamond, 1), 3), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_uranium, 1), 3), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_plutonium, 1), 3), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_trixite, 1), 1), 
-		new WeightedRandomObject(new ItemStack(ModItems.crystal_starmetal, 1), 1)
-	};
-
-	private WeightedRandomObject[] cargoGerald = new WeightedRandomObject[] { 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_meteorite, 12), 128),
-		new WeightedRandomObject(new ItemStack(ModItems.powder_plutonium, 4), 64), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_combine_steel, 6), 64), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_tektite, 16), 32), 
-		new WeightedRandomObject(new ItemStack(ModItems.powder_tantalium, 1), 16),
-		new WeightedRandomObject(new ItemStack(ModItems.powder_schrabidium, 1), 8),
-		new WeightedRandomObject(new ItemStack(ModItems.powder_bismuth, 1), 4),
-		new WeightedRandomObject(new ItemStack(ModItems.powder_radspice, 1), 1)
-	};
 
 	private void addToInv(ItemStack stack){
 

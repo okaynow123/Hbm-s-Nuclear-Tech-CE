@@ -3,6 +3,9 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsComponent;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -394,7 +397,7 @@ public class Silo extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 18, y + -20, z + 10), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 19, y + -20, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 20, y + -20, z + 10), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 11), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -20, z + 11), Blocks.AIR.getDefaultState(), 3);
@@ -859,7 +862,7 @@ public class Silo extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + -17, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -17, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(7), chest, random.nextInt(2) + 6));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsComponent.POOL_SILO), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 10, y + -17, z + 2), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -17, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -17, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1640,7 +1643,7 @@ public class Silo extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + -9, z + 5), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -9, z + 5), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 8, y + -10, z + 5), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockHalfStoneSlab.HALF, EnumBlockHalf.TOP).withProperty(BlockHalfStoneSlab.VARIANT, EnumType.STONE), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -9, z + 5), Blocks.PLANKS.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -9, z + 5), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.WEST), 3);

@@ -4,6 +4,8 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.GeigerCounter;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -302,7 +304,7 @@ public class Bunker extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 1, y + -24, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + -24, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				((worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6)));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, random.nextInt(2) + 6)));
 		world.setBlockState(pos.setPos(x + 2, y + -23, z + 1), ModBlocks.geiger.getDefaultState().withProperty(GeigerCounter.FACING, EnumFacing.SOUTH), 3);
         world.setBlockState(pos.setPos(x + 3, y + -24, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -24, z + 1), Block1.getDefaultState(), 3);
@@ -310,19 +312,19 @@ public class Bunker extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 2), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
         world.setBlockState(pos.setPos(x + 3, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
         world.setBlockState(pos.setPos(x + 4, y + -24, z + 2), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 2), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1),chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC),chest, 8));
         world.setBlockState(pos.setPos(x + 3, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
         world.setBlockState(pos.setPos(x + 4, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -24, z + 3), Block1.getDefaultState(), 3);
@@ -807,7 +809,7 @@ public class Bunker extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 1), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -20, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_ANTENNA), chest, 12));
         world.setBlockState(pos.setPos(x + 8, y + -20, z + 1), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -20, z + 1), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -20, z + 1), Block4.getDefaultState(), 3);

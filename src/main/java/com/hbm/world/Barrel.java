@@ -3,7 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
@@ -168,7 +169,7 @@ public class Barrel extends AbstractPhasedStructure {
 
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 2), ModBlocks.crate_steel.getDefaultState(),
 				((worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 16)));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 16)));
 		world.setBlockState(pos.setPos(x + 3, y + 1, z + 2), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 1, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 3), Library.getRandomConcrete().getDefaultState(), 3);

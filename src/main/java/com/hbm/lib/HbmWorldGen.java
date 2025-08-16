@@ -8,6 +8,8 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsSingle;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.TomSaveData;
@@ -30,10 +32,8 @@ import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +43,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
@@ -507,40 +506,34 @@ public class HbmWorldGen implements IWorldGenerator {
 
                         if (set) {
                             switch (rand.nextInt(10)) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(10),
-                                            (TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(4) + 3);
+                                case 0, 1, 2, 3 -> {
+                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_VAULT_RUSTY),
+                                            world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(4) + 3);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setPins(rand.nextInt(999) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setMod(1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).lock();
-                                    break;
-                                case 4:
-                                case 5:
-                                case 6:
-                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(11),
-                                            (TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(3) + 2);
+                                }
+                                case 4, 5, 6 -> {
+                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_VAULT_STANDARD),
+                                            world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(3) + 2);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setPins(rand.nextInt(999) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setMod(0.1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).lock();
-                                    break;
-                                case 7:
-                                case 8:
-                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(12),
-                                            (TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(3) + 1);
+                                }
+                                case 7, 8 -> {
+                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_VAULT_REINFORCED),
+                                            world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(3) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setPins(rand.nextInt(999) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setMod(0.02);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).lock();
-                                    break;
-                                case 9:
-                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(13),
-                                            (TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(2) + 1);
+                                }
+                                case 9 -> {
+                                    WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_VAULT_UNBREAKABLE),
+                                            world.getTileEntity(new BlockPos(x, y, z)), rand.nextInt(2) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setPins(rand.nextInt(999) + 1);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).setMod(0.0);
                                     ((TileEntitySafe) world.getTileEntity(new BlockPos(x, y, z))).lock();
-                                    break;
+                                }
                             }
 
                             if (GeneralConfig.enableDebugMode)
@@ -663,8 +656,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(10000, 250, 10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(10000, 250, 10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(10000, 250, 10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(10000, 250, 10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(10000, 250, 10000)), 29);
                     }
                 }
             }
@@ -672,8 +665,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(0, 250, 10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(0, 250, 10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(0, 250, 10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(0, 250, 10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(0, 250, 10000)), 29);
                     }
                 }
             }
@@ -681,8 +674,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(-10000, 250, 10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(-10000, 250, 10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(-10000, 250, 10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(-10000, 250, 10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(-10000, 250, 10000)), 29);
                     }
                 }
             }
@@ -690,8 +683,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(10000, 250, 0)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(10000, 250, 0), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(10000, 250, 0)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(10000, 250, 0)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(10000, 250, 0)), 29);
                     }
                 }
             }
@@ -699,8 +692,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(-10000, 250, 0)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(-10000, 250, 0), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(-10000, 250, 0)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(-10000, 250, 0)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(-10000, 250, 0)), 29);
                     }
                 }
             }
@@ -708,8 +701,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(10000, 250, -10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(10000, 250, -10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(10000, 250, -10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(10000, 250, -10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(10000, 250, -10000)), 29);
                     }
                 }
             }
@@ -717,8 +710,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(0, 250, -10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(0, 250, -10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(0, 250, -10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(0, 250, -10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(0, 250, -10000)), 29);
                     }
                 }
             }
@@ -726,8 +719,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 if (world.getBlockState(new BlockPos(-10000, 250, -10000)).getBlock() == Blocks.AIR) {
                     world.setBlockState(new BlockPos(-10000, 250, -10000), Blocks.CHEST.getDefaultState());
                     if (world.getBlockState(new BlockPos(-10000, 250, -10000)).getBlock() == Blocks.CHEST) {
-                        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(9),
-                                (TileEntityChest) world.getTileEntity(new BlockPos(-10000, 250, -10000)), 29);
+                        WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsSingle.POOL_POWDER),
+                                world.getTileEntity(new BlockPos(-10000, 250, -10000)), 29);
                     }
                 }
             }

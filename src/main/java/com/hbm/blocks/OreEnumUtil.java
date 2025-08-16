@@ -1,13 +1,14 @@
 package com.hbm.blocks;
 
+import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsSingle;
 import com.hbm.lib.TriFunction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
 
@@ -20,37 +21,6 @@ import static com.hbm.items.ModItems.*;
  * @author MrNorwood
  */
 public class OreEnumUtil {
-    static final List<Item> METEOR_TREASURE_ITEMS = Arrays.asList(
-            coil_advanced_alloy,
-            plate_advanced_alloy,
-            powder_desh_mix,
-            ingot_desh,
-            battery_advanced,
-            battery_lithium_cell,
-            battery_advanced_cell,
-            nugget_schrabidium,
-            ingot_plutonium,
-            ingot_thorium_fuel,
-            ingot_u233,
-            turbine_tungsten,
-            ingot_dura_steel,
-            ingot_polymer,
-            ingot_tungsten,
-            ingot_combine_steel,
-            ingot_lanthanium,
-            ingot_actinium,
-            Item.getItemFromBlock(ModBlocks.block_meteor),
-            Item.getItemFromBlock(ModBlocks.fusion_heater),
-            Item.getItemFromBlock(ModBlocks.fusion_core),
-            Item.getItemFromBlock(ModBlocks.watz_element),
-            Item.getItemFromBlock(ModBlocks.ore_rare),
-            Item.getItemFromBlock(ModBlocks.fusion_conductor),
-            Item.getItemFromBlock(ModBlocks.machine_diesel),
-            Item.getItemFromBlock(ModBlocks.machine_rtg_grey),
-            pellet_rtg,
-            pellet_rtg_weak,
-            rtg_unit
-    );
 
     public static int base2Rand3Fortune(IBlockState state, int fortune, Random rand) { return 2 + rand.nextInt(3) + fortune; }
     public static int base2Rand2Fortune(IBlockState state, int fortune, Random rand) { return 2 + rand.nextInt(2) + fortune; }
@@ -65,8 +35,8 @@ public class OreEnumUtil {
     // --- Drop Functions ---
 
     public static ItemStack getMeteorTreasure(IBlockState state, Random rand) {
-        int index = rand.nextInt(METEOR_TREASURE_ITEMS.size());
-        return new ItemStack(METEOR_TREASURE_ITEMS.get(index));
+        WeightedRandomChestContentFrom1710[] pool = ItemPool.getPool(ItemPoolsSingle.POOL_METEORITE_TREASURE);
+        return ItemPool.getStack(pool, rand);
     }
 
 

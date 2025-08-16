@@ -3,7 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.NukeMan;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
@@ -221,7 +222,7 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 8, y + -4, z + 14), Blocks.WATER.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(5), chest, 10));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_NUKE_MISC), chest, 10));
         world.setBlockState(pos.setPos(x + 10, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -4, z + 15), Library.getRandomConcrete().getDefaultState(), 3);

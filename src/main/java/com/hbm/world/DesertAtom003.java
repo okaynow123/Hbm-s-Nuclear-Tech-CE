@@ -8,6 +8,8 @@ import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.blocks.machine.MachineElectricFurnace;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -424,7 +426,7 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 35, y + 5, z + 9), ModBlocks.geiger.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 36, y + 4, z + 9), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(5), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_NUKE_MISC), chest, 12));
         world.setBlockState(pos.setPos(x + 37, y + 4, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 40, y + 4, z + 9), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 10), Block5.getDefaultState(), 3);

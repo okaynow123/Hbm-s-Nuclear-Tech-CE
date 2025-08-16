@@ -3,6 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
@@ -658,7 +660,7 @@ public class Relay extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 10), Blocks.BRICK_BLOCK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 10), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) -> {
-					WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8);
+					WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8);
 					if(worldIn.rand.nextInt(5) == 0) {
 						((TileEntityCrateIron)chest).inventory.setStackInSlot(11, new ItemStack(ModItems.morning_glory));
 					}
@@ -1281,7 +1283,7 @@ public class Relay extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 6), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 14, z + 6), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_ANTENNA), chest, 8));
 		world.setBlockState(pos.setPos(x + 9, y + 14, z + 6), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 14, z + 6), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 14, z + 7), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1501,7 +1503,7 @@ public class Relay extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 5, y + 32, z + 2), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 32, z + 2), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 8));
 		world.setBlockState(pos.setPos(x + 7, y + 32, z + 2), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 32, z + 3), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 32, z + 3), Block2.getDefaultState(), 3);

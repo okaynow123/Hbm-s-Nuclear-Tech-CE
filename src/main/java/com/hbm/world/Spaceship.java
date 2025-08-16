@@ -3,8 +3,9 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HbmChestContents;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -468,12 +469,12 @@ public class Spaceship extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 25), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(8), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_SPACESHIP), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsLegacy.POOL_SPACESHIP), chest, 12));
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 25), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -2, z + 25), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
@@ -484,12 +485,12 @@ public class Spaceship extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsLegacy.POOL_SPACESHIP), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsLegacy.POOL_SPACESHIP), chest, 12));
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
@@ -620,7 +621,7 @@ public class Spaceship extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 38), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -2, z + 38), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) -> {
-					WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 12);
+					WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 12);
 					if(worldIn.rand.nextInt(10) == 0){
 						IItemHandlerModifiable handle = (IItemHandlerModifiable)chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 						handle.setStackInSlot(random.nextInt(handle.getSlots()), new ItemStack(ModItems.gun_vortex));

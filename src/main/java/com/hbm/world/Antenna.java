@@ -3,7 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -91,7 +92,7 @@ public class Antenna extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 2), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 2), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
-				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_ANTENNA), chest, 8));
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 0), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 0), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 0), Blocks.AIR.getDefaultState(), 3);

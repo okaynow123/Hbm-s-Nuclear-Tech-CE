@@ -38,7 +38,6 @@ import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.*;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemDepletedFuel;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.HbmWorld;
@@ -420,6 +419,8 @@ public class MainRegistry {
 
         //has to register after cracking, and therefore after all serializable recipes
         RadiolysisRecipes.registerRadiolysis();
+
+        ItemPoolConfigJSON.initialize();
 
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)

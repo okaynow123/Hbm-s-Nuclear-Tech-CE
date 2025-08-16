@@ -2,6 +2,8 @@ package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -501,7 +503,7 @@ public class Radio01 extends AbstractPhasedStructure
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 11), Blocks.FLOWER_POT.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 11), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
-				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 11), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
@@ -652,7 +654,7 @@ public class Radio01 extends AbstractPhasedStructure
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 24), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
-				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_ANTENNA), chest, 8));
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 24), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1605,7 +1607,7 @@ public class Radio01 extends AbstractPhasedStructure
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 6), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 6), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 4, z + 6), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
-				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
 		world.setBlockState(pos.setPos(x + 8, y + 4, z + 6), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 4, z + 6), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 4, z + 6), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1695,7 +1697,7 @@ public class Radio01 extends AbstractPhasedStructure
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 14), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 14), ModBlocks.tape_recorder.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 4, z + 14), Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.WEST), 3);
@@ -2815,7 +2817,7 @@ public class Radio01 extends AbstractPhasedStructure
         WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(x + 5, y + 8, z + 11), 16);*/
 		
 		world.setBlockState(pos.setPos(x + 5, y + 8, z + 11), ModBlocks.crate_steel.getDefaultState(),
-				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 16));
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 16));
 		world.setBlockState(pos.setPos(x + 6, y + 8, z + 11), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 8, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 8, z + 11), Blocks.AIR.getDefaultState(), 3);

@@ -4,7 +4,8 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -164,7 +165,7 @@ public class CrashedVertibird extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 3, y + 4 - yOffset, z + 7), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4 - yOffset, z + 7), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(6), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_VERTIBIRD), chest, 8));
 		world.setBlockState(pos.setPos(x + 7, y + 4 - yOffset, z + 7), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4 - yOffset, z + 8), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 4 - yOffset, z + 8), Block1.getDefaultState(), 3);
@@ -291,7 +292,7 @@ public class CrashedVertibird extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 4, y + 8 - yOffset, z + 6), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 8 - yOffset, z + 6), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 8));
 		world.setBlockState(pos.setPos(x + 6, y + 8 - yOffset, z + 6), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 8 - yOffset, z + 6), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 8 - yOffset, z + 6), Block1.getDefaultState(), 3);

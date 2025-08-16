@@ -4,7 +4,8 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.DecoPoleSatelliteReceiver;
 import com.hbm.blocks.machine.MachineNukeFurnace;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
@@ -1162,7 +1163,7 @@ public class DesertAtom002
 		world.setBlockState(pos.setPos(x + 33, y + 0, z + 12), Blocks.VINE.getDefaultState().withProperty(BlockVine.NORTH, true), 3);
 		world.setBlockState(pos.setPos(x + 36, y + 0, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
         world.setBlockState(pos.setPos(x + 37, y + 0, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 40, y + 0, z + 12), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 13), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1181,7 +1182,7 @@ public class DesertAtom002
 		world.setBlockState(pos.setPos(x + 19, y + 0, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 22, y + 0, z + 13), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
 		world.setBlockState(pos.setPos(x + 23, y + 0, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 24, y + 0, z + 13), Block8.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.byIndex(5).rotateYCCW()), 3);
 		world.setBlockState(pos.setPos(x + 30, y + 0, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1371,7 +1372,7 @@ public class DesertAtom002
 		world.setBlockState(pos.setPos(x + 21, y + 0, z + 26), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 24, y + 0, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(4), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_NUKE_TRASH), chest, 8));
 		world.setBlockState(pos.setPos(x + 25, y + 0, z + 26), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 30, y + 0, z + 26), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 35, y + 0, z + 26), Block2.getDefaultState(), 3);
@@ -1748,7 +1749,7 @@ public class DesertAtom002
 
 		world.setBlockState(pos.setPos(x + 18, y + 1, z + 16), ModBlocks.crate_steel.getDefaultState(),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 12));
 		world.setBlockState(pos.setPos(x + 19, y + 1, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 20, y + 1, z + 16), Blocks.VINE.getDefaultState().withProperty(BlockVine.WEST, true), 3);
 		world.setBlockState(pos.setPos(x + 22, y + 1, z + 16), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.EAST), 3);

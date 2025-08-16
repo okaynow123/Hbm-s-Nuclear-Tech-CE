@@ -3,6 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -999,7 +1001,7 @@ public class Satellite extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 19), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 14, z + 19), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8));
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 19), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 20, y + 14, z + 19), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 21, y + 14, z + 19), Block2.getDefaultState(), 3);
@@ -1028,7 +1030,7 @@ public class Satellite extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 27), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 16, y + 14, z + 27), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_ANTENNA), chest, 8));
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 27), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 14, z + 28), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 14, z + 28), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1446,7 +1448,7 @@ public class Satellite extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 18, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 19, y + 19, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 12));
 		world.setBlockState(pos.setPos(x + 20, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 21, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 17, y + 19, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
@@ -2463,7 +2465,7 @@ public class Satellite extends AbstractPhasedStructure {
 		//world.setBlockState(pos.setPos(x + 5, y + 39, z + 12), Block7.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 39, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), chest, 12));
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + 39, z + 12), Block7.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 39, z + 12), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 39, z + 12), Block4.getDefaultState(), 3);

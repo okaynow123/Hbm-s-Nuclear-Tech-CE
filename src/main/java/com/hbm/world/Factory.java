@@ -3,6 +3,8 @@ package com.hbm.world;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
+import com.hbm.itempool.ItemPool;
+import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
@@ -601,7 +603,7 @@ public class Factory extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 4), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 4), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 4), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 4), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 5), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -634,7 +636,7 @@ public class Factory extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 10), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 10), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 10), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 11), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -667,7 +669,7 @@ public class Factory extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 16), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 16), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 16), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 16), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 17), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -727,7 +729,7 @@ public class Factory extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 3, y + 0, z + 25), Blocks.LAVA.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]),
 				(worldIn, random, blockPos, chest) ->
-						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6));
+						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 5, y + 0, z + 25), Blocks.LAVA.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 25), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 25), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.WEST), 3);
