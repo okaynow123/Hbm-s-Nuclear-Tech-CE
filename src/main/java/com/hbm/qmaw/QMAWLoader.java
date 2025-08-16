@@ -1,28 +1,11 @@
 package com.hbm.qmaw;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.*;
 import net.minecraft.item.ItemStack;
@@ -30,6 +13,16 @@ import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 @Spaghetti("everything here is a fucking mess")
 public class QMAWLoader implements ISelectiveResourceReloadListener {
@@ -173,7 +166,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
                 String name = entry.getName();
                 if(name.startsWith("assets/hbm/manual/") && name.endsWith(".json")) {
                     InputStream fileStream = zip.getInputStream(entry);
-                    InputStreamReader reader = new InputStreamReader(fileStream);
+                    InputStreamReader reader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
                     try {
                         JsonObject obj = (JsonObject) parser.parse(reader);
                         String manName = name.replace("assets/hbm/manual/", "");
@@ -209,7 +202,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
             String name = file.getName();
             if(file.isFile() && name.endsWith(".json")) {
                 try {
-                    FileReader reader = new FileReader(file);
+                    Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                     JsonObject obj = (JsonObject) parser.parse(reader);
                     registerJson(name, obj);
                     logFoundManual(name);
