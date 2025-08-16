@@ -694,7 +694,7 @@ public class ModEventHandler {
             }
         }
 
-        if (!player.world.isRemote && event.phase == TickEvent.Phase.START) {
+        if (!player.world.isRemote && event.phase == Phase.START) {
 
             /// GHOST FIX START ///
 
@@ -1366,14 +1366,19 @@ public class ModEventHandler {
     private static final String NBT_AKIMBO = "AkimboGhost";
 
     private boolean isAkimbo(ItemStack stack) {
-        if (stack.isEmpty()) {
+        if (stack.isEmpty() || stack.getItem().getRegistryName() == null) {
             return false;
         }
-        TileEntityItemStackRenderer renderer = stack.getItem().getTileEntityItemStackRenderer();
-        if (renderer instanceof ItemRenderWeaponBase weaponBase) {
-            return weaponBase.isAkimbo();
-        }
-        return false;
+        return switch (stack.getItem().getRegistryName().getPath()){
+            case "gun_light_revolver_dani", "gun_aberrator_eott", "gun_maresleg_akimbo", "gun_uzi_akimbo" -> true;
+            default -> false;
+        };
+        // TileEntityItemStackRenderer is client only. I'll comment them out for now.
+        // TODO: move the isAkimbo() to the GunConfig
+//        TileEntityItemStackRenderer renderer = stack.getItem().getTileEntityItemStackRenderer();
+//        if (renderer instanceof ItemRenderWeaponBase weaponBase) {
+//            return weaponBase.isAkimbo();
+//        }
     }
 
     private static boolean isGhost(ItemStack stack) {
