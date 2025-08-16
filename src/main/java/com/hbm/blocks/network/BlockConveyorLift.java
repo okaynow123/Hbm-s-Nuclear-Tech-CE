@@ -75,14 +75,13 @@ public class BlockConveyorLift extends BlockConveyorChute {
 
     @Override
     public int getUpdatedType(World world, BlockPos pos, EnumFacing facing) {
-        boolean isBottom = !(world.getBlockState(pos.down()).getBlock() instanceof BlockConveyorLift);
-
-        if (isBottom) {
+        boolean hasLiftBelow = world.getBlockState(pos.down()).getBlock() instanceof BlockConveyorLift;
+        boolean hasLiftAbove = world.getBlockState(pos.up()).getBlock() instanceof BlockConveyorLift;
+        if (!hasLiftBelow) {
             Block inputBlock = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
             boolean isFed = (inputBlock instanceof IConveyorBelt || inputBlock instanceof IEnterableBlock);
             return isFed ? 2 : 0;
-        } else {
-            return 1;
         }
+        return hasLiftAbove ? 1 : 2;
     }
 }

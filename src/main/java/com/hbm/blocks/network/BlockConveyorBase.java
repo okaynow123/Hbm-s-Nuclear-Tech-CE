@@ -48,10 +48,26 @@ public abstract class BlockConveyorBase extends Block implements IConveyorBelt, 
         BlockPos pos = new BlockPos(x, y, z);
         EnumFacing dir = this.getTravelDirection(world, pos, itemPos);
         Vec3d snap = this.getClosestSnappingPosition(world, pos, itemPos);
-        Vec3d dest = new Vec3d(snap.x - dir.getXOffset() * speed, snap.y - dir.getYOffset() * speed, snap.z - dir.getZOffset() * speed);
-        Vec3d motion = new Vec3d(dest.x - itemPos.x, dest.y - itemPos.y, dest.z - itemPos.z);
-        double len = motion.length();
-        return new Vec3d(itemPos.x + motion.x / len * speed, itemPos.y + motion.y / len * speed, itemPos.z + motion.z / len * speed);
+        Vec3d dest = new Vec3d(
+                snap.x - dir.getXOffset() * speed,
+                snap.y - dir.getYOffset() * speed,
+                snap.z - dir.getZOffset() * speed
+        );
+        Vec3d delta = dest.subtract(itemPos);
+        double d2 = delta.lengthSquared();
+        if (d2 < 1.0e-12) {
+            return new Vec3d(
+                    itemPos.x - dir.getXOffset() * speed,
+                    itemPos.y - dir.getYOffset() * speed,
+                    itemPos.z - dir.getZOffset() * speed
+            );
+        }
+        double inv = speed / Math.sqrt(d2);
+        return new Vec3d(
+                itemPos.x + delta.x * inv,
+                itemPos.y + delta.y * inv,
+                itemPos.z + delta.z * inv
+        );
     }
 
     public EnumFacing getInputDirection(World world, BlockPos pos) {

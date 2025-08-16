@@ -107,12 +107,12 @@ public class BlockConveyorChute extends BlockConveyorBase {
     @Override
     public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
         EnumFacing facing = placer.getHorizontalFacing().getOpposite();
-        worldIn.setBlockState(pos, state.withProperty(FACING, facing).withProperty(TYPE, getUpdatedType(worldIn, pos, facing)), 2);
+        worldIn.setBlockState(pos, state.withProperty(FACING, facing).withProperty(TYPE, getUpdatedType(worldIn, pos, facing)), 3);
     }
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        world.setBlockState(pos, state.withProperty(TYPE, getUpdatedType(world, pos)), 2);
+        world.setBlockState(pos, state.withProperty(TYPE, getUpdatedType(world, pos)), 3);
     }
 
     public int getUpdatedType(World world, BlockPos pos) {
@@ -121,12 +121,9 @@ public class BlockConveyorChute extends BlockConveyorBase {
 
     public int getUpdatedType(World world, BlockPos pos, EnumFacing facing) {
         boolean hasChuteBelow = world.getBlockState(pos.down()).getBlock() instanceof BlockConveyorChute;
-        Block inputBlock = world.getBlockState(pos.offset(facing.getOpposite())).getBlock();
+        Block inputBlock = world.getBlockState(pos.offset(facing)).getBlock();
         boolean hasInputBelt = (inputBlock instanceof IConveyorBelt || inputBlock instanceof IEnterableBlock);
-
-        if (hasChuteBelow) {
-            return hasInputBelt ? 2 : 1;
-        }
+        if (hasChuteBelow) return hasInputBelt ? 2 : 1;
         return 0;
     }
 
