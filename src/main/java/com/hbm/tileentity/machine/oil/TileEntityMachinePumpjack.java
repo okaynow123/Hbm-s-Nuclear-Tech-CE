@@ -73,6 +73,7 @@ public class TileEntityMachinePumpjack extends TileEntityOilDrillBase {
 	public void onDrill(int y) {
 		Block b = world.getBlockState(new BlockPos(pos.getX(), y, pos.getZ())).getBlock();
 		ItemStack stack = new ItemStack(b);
+		if (stack.isEmpty()) return;
 		int[] ids = OreDictionary.getOreIDs(stack);
 		for(Integer i : ids) {
 			String name = OreDictionary.getOreName(i);
