@@ -3,13 +3,15 @@ package com.hbm.tileentity.network.energy;
 import com.hbm.api.energymk2.Nodespace;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.ColorUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,7 +21,8 @@ import java.util.List;
 
 public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 	
-	public List<int[]> connected = new ArrayList<int[]>();
+	public List<int[]> connected = new ArrayList<>();
+	public int color;
 
 	public static int canConnect(TileEntityPylonBase first, TileEntityPylonBase second) {
 
@@ -31,21 +34,36 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 
 		double len = Math.min(first.getMaxWireLength(), second.getMaxWireLength());
 
-		Vec3 firstPos = first.getConnectionPoint();
-		Vec3 secondPos = second.getConnectionPoint();
+		Vec3d firstPos = first.getConnectionPoint();
+		Vec3d secondPos = second.getConnectionPoint();
 
-		Vec3 delta = Vec3.createVectorHelper(
-				(secondPos.xCoord) - (firstPos.xCoord),
-				(secondPos.yCoord) - (firstPos.yCoord),
-				(secondPos.zCoord) - (firstPos.zCoord)
+		Vec3d delta = new Vec3d(
+				(secondPos.x) - (firstPos.x),
+				(secondPos.y) - (firstPos.y),
+				(secondPos.z) - (firstPos.z)
 		);
 
 		return len >= delta.length() ? 0 : 3;
 	}
 
+	public boolean setColor(ItemStack stack) {
+		if(stack == ItemStack.EMPTY) return false;
+		int color = ColorUtil.getColorFromDye(stack);
+		if(color == 0 || color == this.color) return false;
+		stack.shrink(1);
+		this.color = color;
+
+		this.markDirty();
+		if (world instanceof WorldServer server) {
+			server.notifyBlockUpdate(pos, server.getBlockState(pos), world.getBlockState(pos), 3);
+		}
+
+		return true;
+	}
+
 	@Override
 	public Nodespace.PowerNode createNode() {
-		TileEntity tile = (TileEntity) this;
+		TileEntity tile = this;
 		Nodespace.PowerNode node = new Nodespace.PowerNode(new BlockPos(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ())).setConnections(new DirPos(pos.getX(), pos.getY(), pos.getZ(), ForgeDirection.UNKNOWN));
 		for(int[] pos : this.connected) node.addConnection(new DirPos(pos[0], pos[1], pos[2], ForgeDirection.UNKNOWN));
 		return node;
@@ -62,9 +80,8 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 
 		this.markDirty();
 
-		if(world instanceof WorldServer) {
-			WorldServer worldS = (WorldServer) world;
-			worldS.notifyBlockUpdate(pos, worldS.getBlockState(pos), world.getBlockState(pos), 3);
+		if(world instanceof WorldServer server) {
+			server.notifyBlockUpdate(pos, server.getBlockState(pos), world.getBlockState(pos), 3);
 		}
 	}
 
@@ -81,8 +98,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 			if(te == this)
 				continue;
 
-			if(te instanceof TileEntityPylonBase) {
-				TileEntityPylonBase pylon = (TileEntityPylonBase) te;
+			if(te instanceof TileEntityPylonBase pylon) {
 				Nodespace.destroyNode(world, new BlockPos(pos[0], pos[1], pos[2]));
 
 				for(int i = 0; i < pylon.connected.size(); i++) {
@@ -96,8 +112,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 
 				pylon.markDirty();
 
-				if(world instanceof WorldServer) {
-					WorldServer worldS = (WorldServer) world;
+				if(world instanceof WorldServer worldS) {
 					worldS.notifyBlockUpdate(pylon.pos, worldS.getBlockState(pylon.pos), world.getBlockState(pylon.pos), 3);
 				}
 			}
@@ -107,14 +122,14 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 	}
 
 	public abstract ConnectionType getConnectionType();
-	public abstract Vec3[] getMountPos();
+	public abstract Vec3d[] getMountPos();
 	public abstract double getMaxWireLength();
 
-	public Vec3 getConnectionPoint() {
-		Vec3[] mounts = this.getMountPos();
+	public Vec3d getConnectionPoint() {
+		Vec3d[] mounts = this.getMountPos();
 
 		if(mounts == null || mounts.length == 0)
-			return Vec3.createVectorHelper(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+			return new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
 		return mounts[0].add(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -124,6 +139,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("conCount", connected.size());
+		nbt.setInteger("color", color);
 
 		for(int i = 0; i < connected.size(); i++) {
 			nbt.setIntArray("con" + i, connected.get(i));
@@ -136,6 +152,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 		super.readFromNBT(nbt);
 
 		int count = nbt.getInteger("conCount");
+		this.color = nbt.getInteger("color");
 
 		this.connected.clear();
 
@@ -167,7 +184,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 		this.readFromNBT(pkt.getNbtCompound());
 	}
 
-	public static enum ConnectionType {
+	public enum ConnectionType {
 		SINGLE,
 		TRIPLE,
 		QUAD

@@ -4,12 +4,11 @@ import com.hbm.api.energymk2.Nodespace;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.lib.ForgeDirection;
-
 import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 @AutoRegister
 public class TileEntityPylonMedium extends TileEntityPylonBase {
@@ -20,15 +19,15 @@ public class TileEntityPylonMedium extends TileEntityPylonBase {
 	}
 
 	@Override
-	public Vec3[] getMountPos() {
+	public Vec3d[] getMountPos() {
 		
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 		double height = 7.5D;
 		
-		return new Vec3[] {
-				Vec3.createVectorHelper(0.5, height, 0.5),
-				Vec3.createVectorHelper(0.5 + dir.offsetX, height, 0.5 + dir.offsetZ),
-				Vec3.createVectorHelper(0.5 + dir.offsetX * 2, height, 0.5 + dir.offsetZ * 2),
+		return new Vec3d[] {
+				new Vec3d(0.5, height, 0.5),
+				new Vec3d(0.5 + dir.offsetX, height, 0.5 + dir.offsetZ),
+				new Vec3d(0.5 + dir.offsetX * 2, height, 0.5 + dir.offsetZ * 2),
 		};
 	}
 

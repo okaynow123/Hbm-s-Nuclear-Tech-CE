@@ -5,9 +5,9 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 @AutoRegister
 public class TileEntityPylon extends TileEntityPylonBase {
@@ -18,8 +18,8 @@ public class TileEntityPylon extends TileEntityPylonBase {
 	}
 
 	@Override
-	public Vec3[] getMountPos() {
-		return new Vec3[]{Vec3.createVectorHelper(0.5D, 5.4D, 0.5D)};
+	public Vec3d[] getMountPos() {
+		return new Vec3d[]{new Vec3d(0.5D, 5.4D, 0.5D)};
 	}
 
 	@Override

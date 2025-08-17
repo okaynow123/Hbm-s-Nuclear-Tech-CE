@@ -5,35 +5,22 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
+import com.hbm.tileentity.network.energy.TileEntityPylonBase;
 import com.hbm.tileentity.network.energy.TileEntitySubstation;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
-@AutoRegister
-public class RenderSubstation extends TileEntitySpecialRenderer<TileEntitySubstation>
-    implements IItemRendererProvider {
+@AutoRegister(tileentity = TileEntitySubstation.class)
+public class RenderSubstation extends RenderPylonBase implements IItemRendererProvider {
 
   @Override
-  public void render(
-      TileEntitySubstation sub,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
+  public void render(TileEntityPylonBase tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    if(!(tile instanceof TileEntitySubstation sub)) return;
     GlStateManager.pushMatrix();
     GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
     switch (sub.getBlockMetadata() - BlockDummyable.offset) {
-      case 4:
-      case 5:
-        GlStateManager.rotate(0, 0F, 1F, 0F);
-        break;
-      case 2:
-      case 3:
-        GlStateManager.rotate(90, 0F, 1F, 0F);
-        break;
+      case 4, 5 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+      case 2, 3 -> GlStateManager.rotate(90, 0F, 1F, 0F);
     }
     GlStateManager.enableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -43,7 +30,9 @@ public class RenderSubstation extends TileEntitySpecialRenderer<TileEntitySubsta
 
     GlStateManager.popMatrix();
 
-    RenderPylon.renderPowerLines(sub, x, y, z);
+    GlStateManager.pushMatrix();
+    this.renderLinesGeneric(sub, x, y, z);
+    GlStateManager.popMatrix();
   }
 
   @Override

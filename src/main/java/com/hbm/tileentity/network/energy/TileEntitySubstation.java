@@ -6,9 +6,9 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 @AutoRegister
 public class TileEntitySubstation extends TileEntityPylonBase {
@@ -19,29 +19,29 @@ public class TileEntitySubstation extends TileEntityPylonBase {
 	}
 
 	@Override
-	public Vec3[] getMountPos() {
-		
-		double topOff = 5.25D;
-		Vec3 vec = Vec3.createVectorHelper(1, 0, 0);
+	public Vec3d[] getMountPos() {
 
-		switch(getBlockMetadata() - BlockDummyable.offset) {
-		case 2: vec.rotateAroundY((float) Math.PI * 0.0F); break;
-		case 4: vec.rotateAroundY((float) Math.PI * 0.5F); break;
-		case 3: vec.rotateAroundY((float) Math.PI * 0.0F); break;
-		case 5: vec.rotateAroundY((float) Math.PI * 0.5F); break;
+		double topOff = 5.25D;
+		Vec3d vec = new Vec3d(1, 0, 0);
+
+		switch (getBlockMetadata() - BlockDummyable.offset) {
+			case 2 -> vec.rotateYaw((float) Math.PI * 0.0F);
+			case 4 -> vec.rotateYaw((float) Math.PI * 0.5F);
+			case 3 -> vec.rotateYaw((float) Math.PI * 0.0F);
+			case 5 -> vec.rotateYaw((float) Math.PI * 0.5F);
 		}
-		
-		return new Vec3[] {
-				new Vec3(0.5D + vec.xCoord * 0.5D, topOff, 0.5D + vec.zCoord * 0.5D),
-				new Vec3(0.5D + vec.xCoord * 1.5D, topOff, 0.5D + vec.zCoord * 1.5D),
-				new Vec3(0.5D - vec.xCoord * 0.5D, topOff, 0.5D - vec.zCoord * 0.5D),
-				new Vec3(0.5D - vec.xCoord * 1.5D, topOff, 0.5D - vec.zCoord * 1.5D),
+
+		return new Vec3d[] {
+				new Vec3d(0.5D + vec.x * 0.5D, topOff, 0.5D + vec.z * 0.5D),
+				new Vec3d(0.5D + vec.x * 1.5D, topOff, 0.5D + vec.z * 1.5D),
+				new Vec3d(0.5D - vec.x * 0.5D, topOff, 0.5D - vec.z * 0.5D),
+				new Vec3d(0.5D - vec.x * 1.5D, topOff, 0.5D - vec.z * 1.5D),
 		};
 	}
 
 	@Override
-	public Vec3 getConnectionPoint() {
-		return Vec3.createVectorHelper(pos.getX() + 0.5, pos.getY() + 5.25, pos.getZ() + 0.5);
+	public Vec3d getConnectionPoint() {
+		return new Vec3d(pos.getX() + 0.5, pos.getY() + 5.25, pos.getZ() + 0.5);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class TileEntitySubstation extends TileEntityPylonBase {
 
 	@Override
 	public Nodespace.PowerNode createNode() {
-		TileEntity tile = (TileEntity) this;
+		TileEntity tile = this;
 		Nodespace.PowerNode node = new Nodespace.PowerNode(new BlockPos(tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ()),
 				new BlockPos(tile.getPos().getX() + 1, tile.getPos().getY(), tile.getPos().getZ() + 1),
 				new BlockPos(tile.getPos().getX() + 1, tile.getPos().getY(), tile.getPos().getZ() - 1),
