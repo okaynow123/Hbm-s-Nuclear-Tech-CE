@@ -621,7 +621,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModBlocks.red_wire_sealed, 1), new Object[] { ModBlocks.red_wire_coated, ModBlocks.brick_compound });
 		addRecipeAuto(new ItemStack(ModBlocks.cable_switch, 1), new Object[] { "S", "W", 'S', Blocks.LEVER, 'W', ModBlocks.red_wire_coated });
 		addRecipeAuto(new ItemStack(ModBlocks.cable_detector, 1), new Object[] { "S", "W", 'S', REDSTONE.dust(), 'W', ModBlocks.red_wire_coated });
-		addRecipeAuto(new ItemStack(ModBlocks.cable_diode, 1), new Object[] { " Q ", "CAC", " Q ", 'Q', NETHERQUARTZ.gem(), 'C', ModBlocks.red_cable, 'A', AL.ingot() });
+		addRecipeAuto(new ItemStack(ModBlocks.cable_diode, 1), new Object[] { " Q ", "CAC", " Q ", 'Q', SI.nugget(), 'C', ModBlocks.red_cable, 'A', AL.ingot() });
 		addShapelessAuto(new ItemStack(ModBlocks.red_cable_gauge), new Object[] { ModBlocks.red_wire_coated, STEEL.ingot(), DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) });
 		addRecipeAuto(new ItemStack(ModBlocks.radio_torch_sender, 4), new Object[] { "G", "R", "I", 'G', "dustGlowstone", 'R', Blocks.REDSTONE_TORCH, 'I', NETHERQUARTZ.gem() });
 		addRecipeAuto(new ItemStack(ModBlocks.radio_torch_receiver, 4), new Object[] { "G", "R", "I", 'G', "dustGlowstone", 'R', Blocks.REDSTONE_TORCH, 'I', IRON.ingot() });
@@ -1183,6 +1183,11 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.security_plate, 1), new Object[] { "KWK", "IKI", "WKW", 'K', ModItems.plate_kevlar, 'I', POLYMER.ingot(), 'W', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE) });
 		addRecipeAuto(new ItemStack(ModItems.security_legs, 1), new Object[] { "IWI", "K K", "W W", 'K', ModItems.plate_kevlar, 'I', POLYMER.ingot(), 'W', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE) });
 		addRecipeAuto(new ItemStack(ModItems.security_boots, 1), new Object[] { "P P", "I I", 'P', STEEL.plate(), 'I', ModItems.plate_kevlar });
+		addRecipeAuto(new ItemStack(ModItems.robes_helmet, 1), new Object[] { "E E", "R R", 'E', ModItems.rag, 'R', ANY_RUBBER.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.robes_plate, 1), new Object[] { "E E", "EEE", "EEE", 'E', ModItems.rag });
+		addRecipeAuto(new ItemStack(ModItems.robes_legs, 1), new Object[] { "EEE", "E E", "E E", 'E', ModItems.rag });
+		addRecipeAuto(new ItemStack(ModItems.robes_boots, 1), new Object[] { "E E", "E E", 'E', ModItems.rag });
+		addRecipeAuto(new ItemStack(ModItems.zirconium_legs, 1), new Object[] { "EEE", "E E", "E E", 'E', ZR.ingot() });
 
 		addRecipeAuto(new ItemStack(ModItems.jetpack_boost, 1), new Object[] { "PCP", "DJD", "PAP", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'P', BIGMT.plate(), 'D', DESH.ingot(), 'J', ModItems.jetpack_vector, 'A', CU.plateCast() });
 		addRecipeAuto(new ItemStack(ModItems.jetpack_fly, 1), new Object[] { "ACA", "TLT", "D D", 'A', AL.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), 'T', ModItems.tank_steel, 'L', Items.LEATHER, 'D', ModItems.thruster_small });
@@ -1653,6 +1658,25 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.bj_plate_jetpack, 1), new Object[] { "NFN", "TPT", "ICI", 'N', ModItems.plate_armor_lunar, 'F', ModItems.fins_quad_titanium, 'T', ItemFluidTank.getFullTank(Fluids.XENON), 'P', ModItems.bj_plate, 'I', ModItems.mp_thruster_10_xenon, 'C', P_RED.crystal() });
 		addRecipeAuto(new ItemStack(ModItems.bj_legs, 1), new Object[] { "NBN", "MSM", "N N", 'N', ModItems.plate_armor_lunar, 'M', ModItems.motor_desh, 'S', ModItems.starmetal_legs, 'B', STAR.block() });
 		addRecipeAuto(new ItemStack(ModItems.bj_boots, 1), new Object[] { "N N", "BSB", 'N', ModItems.plate_armor_lunar, 'S', ModItems.starmetal_boots, 'B', STAR.block() });
+		addRecipeAuto(new ItemStack(ModItems.steamsuit_helmet, 1), new Object[] { "DCD", "CXC", " F ", 'D', DESH.ingot(), 'C', CU.plate(), 'X', ModItems.steel_helmet, 'F', ModItems.gas_mask_filter });
+		addRecipeAuto(new ItemStack(ModItems.steamsuit_plate, 1), new Object[] { "C C", "DXD", "CFC", 'D', DESH.ingot(), 'C', CU.plate(), 'X', ModItems.steel_plate, 'F', ModItems.tank_steel });
+		addRecipeAuto(new ItemStack(ModItems.steamsuit_legs, 1), new Object[] { "CCC", "DXD", "C C", 'D', DESH.ingot(), 'C', CU.plate(), 'X', ModItems.steel_legs });
+		addRecipeAuto(new ItemStack(ModItems.steamsuit_boots, 1), new Object[] { "C C", "DXD", 'D', DESH.ingot(), 'C', CU.plate(), 'X', ModItems.steel_boots });
+		addRecipeAuto(new ItemStack(ModItems.dieselsuit_helmet, 1), new Object[] { "W W", "W W", "SCS", 'W', new ItemStack(Blocks.WOOL, 1, 14), 'S', STEEL.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG) });
+		addRecipeAuto(new ItemStack(ModItems.dieselsuit_plate, 1), new Object[] { "W W", "CDC", "SWS", 'W', new ItemStack(Blocks.WOOL, 1, 14), 'S', STEEL.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'D', ModBlocks.machine_diesel });
+		addRecipeAuto(new ItemStack(ModItems.dieselsuit_legs, 1), new Object[] { "M M", "S S", "W W", 'W', new ItemStack(Blocks.WOOL, 1, 14), 'S', STEEL.ingot(), 'M', ModItems.motor });
+		addRecipeAuto(new ItemStack(ModItems.dieselsuit_boots, 1), new Object[] { "W W", "S S", 'W', new ItemStack(Blocks.WOOL, 1, 14), 'S', STEEL.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.envsuit_helmet, 1), new Object[] { "TCT", "TGT", "RRR", 'T', TI.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP), 'G', KEY_ANYPANE, 'R', RUBBER.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.envsuit_plate, 1), new Object[] { "T T", "TCT", "RRR", 'T', TI.plate(), 'C', TI.plateCast(), 'R', RUBBER.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.envsuit_legs, 1), new Object[] { "TCT", "R R", "T T", 'T', TI.plate(), 'C', TI.plateCast(), 'R', RUBBER.ingot() });
+		addRecipeAuto(new ItemStack(ModItems.envsuit_boots, 1), new Object[] { "R R", "T T", 'T', TI.plate(), 'R', RUBBER.ingot() });
+
+		//Bob: Bismuth fursui- I mean armor                                                                              TODO: add bismuth plates for this "armor"
+//		addRecipeAuto(new ItemStack(ModItems.bismuth_helmet, 1), new Object[] { "GPP", "P  ", "FPP", 'G', Items.GOLD_INGOT, 'P', ModItems.plate_bismuth, 'F', ModItems.rag });
+//		addRecipeAuto(new ItemStack(ModItems.bismuth_plate, 1), new Object[] { "RWR", "PCP", "SFS", 'R', ModItems.crystal_rare, 'W', GOLD.wireFine(), 'P', ModItems.plate_bismuth, 'C', ModItems.laser_crystal_bismuth, 'S', ModItems.ring_starmetal, 'F', ModItems.rag });
+//		addRecipeAuto(new ItemStack(ModItems.bismuth_legs, 1), new Object[] { "FSF", "   ", "FSF", 'F', ModItems.rag, 'S', ModItems.ring_starmetal });
+//		addRecipeAuto(new ItemStack(ModItems.bismuth_boots, 1), new Object[] { "W W", "P P", 'W', GOLD.wireFine(), 'P', ModItems.plate_bismuth });
+
 		addRecipeAuto(new ItemStack(ModItems.gear_large, 1, 0), "III", "ICI", "III", 'I', IRON.plate(), 'C', CU.ingot());
 		addRecipeAuto(new ItemStack(ModItems.gear_large, 1, 1), "III", "ICI", "III", 'I', STEEL.plate(), 'C', TI.ingot());
 
