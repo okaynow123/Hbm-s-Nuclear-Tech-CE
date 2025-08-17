@@ -110,8 +110,10 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 
 				if(shouldEvaporate) { // Make both steam and water evaporate during firestorms and in vacuums
 					tanks[1].setFill(tanks[1].getFill() - convert);
+					postConvert(convert);
 				} else {
 					tanks[1].setFill(tanks[1].getFill() + convert);
+					postConvert(convert);
 				}
 			}
 
@@ -122,7 +124,9 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 		}
 	}
 
+	public void packExtra(NBTTagCompound data) { }
 	public boolean extraCondition(int convert) { return true; }
+	public void postConvert(int convert) { }
 
 	@Override
 	public void serialize(ByteBuf buf) {
