@@ -30,8 +30,6 @@ import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.CrucibleUtil;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -49,13 +47,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.util.Random;
+
 @AutoRegister
-public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
-    implements IFluidStandardTransceiver,
-        IGUIProvider,
-        IFluidCopiable,
-        IConfigurableMachine,
-        ITickable {
+public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IConfigurableMachine, ITickable {
 
   public FluidTankNTM[] tanks;
   public boolean isProgressing;
@@ -72,8 +68,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
   public int lastAnim;
 
   /** Given this has no heat, the heat mod instead affects the progress per fuel * */
-  public static ModuleBurnTime burnModule =
-      new ModuleBurnTime()
+  public static ModuleBurnTime burnModule = new ModuleBurnTime()
           .setCokeTimeMod(1.25)
           .setRocketTimeMod(1.5)
           .setSolidTimeMod(1.5)
@@ -106,57 +101,23 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
       tanks[0].setType(3, inventory);
 
       for (DirPos dirPos : getSteamPos()) {
-        this.trySubscribe(
-            tanks[1].getTankType(),
-            world,
-            dirPos.getPos().getX(),
-            dirPos.getPos().getY(),
-            dirPos.getPos().getZ(),
-            dirPos.getDir());
+        this.trySubscribe(tanks[1].getTankType(), world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
         if (tanks[2].getFill() > 0)
-          this.sendFluid(
-              tanks[2],
-              world,
-              dirPos.getPos().getX(),
-              dirPos.getPos().getY(),
-              dirPos.getPos().getZ(),
-              dirPos.getDir());
+          this.sendFluid(tanks[2], world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
       }
       if (tanks[0].getTankType() != Fluids.NONE)
         for (DirPos dirPos : getFluidPos()) {
-          this.trySubscribe(
-              tanks[0].getTankType(),
-              world,
-              dirPos.getPos().getX(),
-              dirPos.getPos().getY(),
-              dirPos.getPos().getZ(),
-              dirPos.getDir());
+          this.trySubscribe(tanks[0].getTankType(), world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
         }
 
       if (smoke.getFill() > 0)
-        this.sendFluid(
-            smoke,
-            world,
-            pos.getX() + rot.offsetX,
-            pos.getY() + 5,
-            pos.getZ() + rot.offsetZ,
-            Library.POS_Y);
+        this.sendFluid(smoke, world, pos.getX() + rot.offsetX, pos.getY() + 5, pos.getZ() + rot.offsetZ, Library.POS_Y);
 
       if (this.output != null) {
 
         int prev = this.output.amount;
         Vec3d impact = new Vec3d(0, 0, 0);
-        MaterialStack leftover =
-            CrucibleUtil.pourSingleStack(
-                world,
-                pos.getX() + 0.5D + rot.offsetX * 2.875D,
-                pos.getY() + 1.25D,
-                pos.getZ() + 0.5D + rot.offsetZ * 2.875D,
-                6,
-                true,
-                this.output,
-                MaterialShapes.INGOT.q(1),
-                impact);
+        MaterialStack leftover = CrucibleUtil.pourSingleStack(world, pos.getX() + 0.5D + rot.offsetX * 2.875D, pos.getY() + 1.25D, pos.getZ() + 0.5D + rot.offsetZ * 2.875D, 6, true, this.output, MaterialShapes.INGOT.q(1), impact);
         this.output = leftover;
 
         if (prev != this.output.amount) {
@@ -166,40 +127,21 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
           data.setByte("dir", (byte) rot.ordinal());
           data.setFloat("off", 0.625F);
           data.setFloat("base", 0.625F);
-          data.setFloat(
-              "len", Math.max(1F, pos.getY() + 1 - (float) (Math.ceil(impact.y) - 1.125)));
-          PacketThreading.createAllAroundThreadedPacket(
-              new AuxParticlePacketNT(
-                  data,
-                  pos.getX() + 0.5D + rot.offsetX * 2.875D,
-                  pos.getY() + 0.75,
-                  pos.getZ() + 0.5D + rot.offsetZ * 2.875D),
-              new TargetPoint(
-                  world.provider.getDimension(),
-                  pos.getX() + 0.5,
-                  pos.getY() + 1,
-                  pos.getZ() + 0.5,
-                  50));
+          data.setFloat("len", Math.max(1F, pos.getY() + 1 - (float) (Math.ceil(impact.y) - 1.125)));
+          PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5D + rot.offsetX * 2.875D, pos.getY() + 0.75, pos.getZ() + 0.5D + rot.offsetZ * 2.875D), new TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
         }
 
         if (output.amount <= 0) this.output = null;
       }
 
-      RotaryFurnaceRecipe recipe =
-          RotaryFurnaceRecipes.getRecipe(
-              inventory.getStackInSlot(0),
-              inventory.getStackInSlot(1),
-              inventory.getStackInSlot(2));
+      RotaryFurnaceRecipe recipe = RotaryFurnaceRecipes.getRecipe(inventory.getStackInSlot(0), inventory.getStackInSlot(1), inventory.getStackInSlot(2));
       this.isProgressing = false;
 
       if (recipe != null) {
 
-        if (this.burnTime <= 0
-            && !inventory.getStackInSlot(4).isEmpty()
-            && TileEntityFurnace.isItemFuel(inventory.getStackInSlot(4))) {
+        if (this.burnTime <= 0 && !inventory.getStackInSlot(4).isEmpty() && TileEntityFurnace.isItemFuel(inventory.getStackInSlot(4))) {
           this.burnHeat = burnModule.getMod(inventory.getStackInSlot(4), burnModule.getModHeat());
-          this.maxBurnTime =
-              this.burnTime = burnModule.getBurnTime(inventory.getStackInSlot(4)) / 2;
+          this.maxBurnTime = this.burnTime = burnModule.getBurnTime(inventory.getStackInSlot(4)) / 2;
           inventory.getStackInSlot(4).shrink(1);
           markDirty();
         }
@@ -252,17 +194,9 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
 
     } else {
 
-      if (this.burnTime > 0
-          && MainRegistry.proxy.me().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 25) {
+      if (this.burnTime > 0 && MainRegistry.proxy.me().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 25) {
         Random rand = world.rand;
-        world.spawnParticle(
-            EnumParticleTypes.FLAME,
-            pos.getX() + 0.5 + dir.offsetX * 0.5 + rot.offsetX + rand.nextGaussian() * 0.25,
-            pos.getY() + 0.375,
-            pos.getZ() + 0.5 + dir.offsetZ * 0.5 + rot.offsetZ + rand.nextGaussian() * 0.25,
-            0,
-            0,
-            0);
+        world.spawnParticle(EnumParticleTypes.FLAME, pos.getX() + 0.5 + dir.offsetX * 0.5 + rot.offsetX + rand.nextGaussian() * 0.25, pos.getY() + 0.375, pos.getZ() + 0.5 + dir.offsetZ * 0.5 + rot.offsetZ + rand.nextGaussian() * 0.25, 0, 0, 0);
       }
 
       if (isVenting && world.getTotalWorldTime() % 2 == 0) {
@@ -281,10 +215,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
       }
       this.lastAnim = this.anim;
       if (this.isProgressing) {
-        this.anim +=
-            (int)
-                Math.max(
-                    burnModule.getMod(inventory.getStackInSlot(4), burnModule.getModHeat()), 1);
+        this.anim += (int) Math.max(burnModule.getMod(inventory.getStackInSlot(4), burnModule.getModHeat()), 1);
       }
     }
   }
@@ -367,16 +298,8 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
     ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 
     return new DirPos[] {
-      new DirPos(
-          pos.getX() - dir.offsetX * 2 - rot.offsetX * 2,
-          pos.getY(),
-          pos.getZ() - dir.offsetZ * 2 - rot.offsetZ * 2,
-          dir.getOpposite()),
-      new DirPos(
-          pos.getX() - dir.offsetX * 2 - rot.offsetX,
-          pos.getY(),
-          pos.getZ() - dir.offsetZ * 2 - rot.offsetZ,
-          dir.getOpposite())
+      new DirPos(pos.getX() - dir.offsetX * 2 - rot.offsetX * 2, pos.getY(), pos.getZ() - dir.offsetZ * 2 - rot.offsetZ * 2, dir.getOpposite()),
+      new DirPos(pos.getX() - dir.offsetX * 2 - rot.offsetX, pos.getY(), pos.getZ() - dir.offsetZ * 2 - rot.offsetZ, dir.getOpposite())
     };
   }
 
@@ -385,16 +308,8 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
     ForgeDirection rot = dir.getRotation(ForgeDirection.DOWN);
 
     return new DirPos[] {
-      new DirPos(
-          pos.getX() + dir.offsetX + rot.offsetX * 3,
-          pos.getY(),
-          pos.getZ() + dir.offsetZ + rot.offsetZ * 3,
-          rot),
-      new DirPos(
-          pos.getX() - dir.offsetX + rot.offsetX * 3,
-          pos.getY(),
-          pos.getZ() - dir.offsetZ + rot.offsetZ * 3,
-          rot)
+      new DirPos(pos.getX() + dir.offsetX + rot.offsetX * 3, pos.getY(), pos.getZ() + dir.offsetZ + rot.offsetZ * 3, rot),
+      new DirPos(pos.getX() - dir.offsetX + rot.offsetX * 3, pos.getY(), pos.getZ() - dir.offsetZ + rot.offsetZ * 3, rot)
     };
   }
 
@@ -442,9 +357,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting
   @Override
   public void pollute(PollutionType type, float amount) {
     FluidTankNTM tank =
-        type == PollutionType.SOOT
-            ? smoke
-            : type == PollutionType.HEAVYMETAL ? smoke_leaded : smoke_poison;
+        type == PollutionType.SOOT ? smoke : type == PollutionType.HEAVYMETAL ? smoke_leaded : smoke_poison;
 
     int fluidAmount = (int) Math.ceil(amount * 100);
     tank.setFill(tank.getFill() + fluidAmount);

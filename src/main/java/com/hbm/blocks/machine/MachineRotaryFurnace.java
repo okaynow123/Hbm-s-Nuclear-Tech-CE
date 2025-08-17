@@ -6,7 +6,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineRotaryFurnace;
 import com.hbm.util.I18nUtil;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import org.jetbrains.annotations.NotNull;
@@ -35,16 +35,7 @@ public class MachineRotaryFurnace extends BlockDummyable implements ILookOverlay
   }
 
   @Override
-  public boolean onBlockActivated(
-      @NotNull World world,
-      BlockPos pos,
-      @NotNull IBlockState state,
-      @NotNull EntityPlayer player,
-      @NotNull EnumHand hand,
-      @NotNull EnumFacing facing,
-      float hitX,
-      float hitY,
-      float hitZ) {
+  public boolean onBlockActivated(@NotNull World world, BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
     return this.standardOpenBehavior(world, pos.getX(), pos.getY(), pos.getZ(), player, 0);
   }
 
@@ -68,8 +59,7 @@ public class MachineRotaryFurnace extends BlockDummyable implements ILookOverlay
 
     // back
     for (int i = -2; i <= 2; i++) {
-      this.makeExtra(
-          world, x - dir.offsetX + rot.offsetX * i, y, z - dir.offsetZ + rot.offsetZ * i);
+      this.makeExtra(world, x - dir.offsetX + rot.offsetX * i, y, z - dir.offsetZ + rot.offsetZ * i);
     }
     // side fluid
     this.makeExtra(world, x + dir.offsetX + rot.offsetX * 2, y, z + dir.offsetZ + rot.offsetZ * 2);
@@ -94,51 +84,26 @@ public class MachineRotaryFurnace extends BlockDummyable implements ILookOverlay
     List<String> text = new ArrayList<>();
 
     // steam
-    if (hitCheck(dir, pos[0], pos[1], pos[2], -1, -1, 0, x, y, z)
-        || hitCheck(dir, pos[0], pos[1], pos[2], -1, -2, 0, x, y, z)) {
-      text.add(
-          ChatFormatting.GREEN
-              + "-> "
-              + ChatFormatting.RESET
-              + furnace.tanks[1].getTankType().getLocalizedName());
-      text.add(
-          ChatFormatting.RED
-              + "<- "
-              + ChatFormatting.RESET
-              + furnace.tanks[2].getTankType().getLocalizedName());
+    if (hitCheck(dir, pos[0], pos[1], pos[2], -1, -1, 0, x, y, z) || hitCheck(dir, pos[0], pos[1], pos[2], -1, -2, 0, x, y, z)) {
+      text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + furnace.tanks[1].getTankType().getLocalizedName());
+      text.add(TextFormatting.RED + "<- " + TextFormatting.RESET + furnace.tanks[2].getTankType().getLocalizedName());
     }
 
     // fluids
-    if (hitCheck(dir, pos[0], pos[1], pos[2], 1, 2, 0, x, y, z)
-        || hitCheck(dir, pos[0], pos[1], pos[2], -1, 2, 0, x, y, z)) {
-      text.add(
-          ChatFormatting.GREEN
-              + "-> "
-              + ChatFormatting.RESET
-              + furnace.tanks[0].getTankType().getLocalizedName());
+    if (hitCheck(dir, pos[0], pos[1], pos[2], 1, 2, 0, x, y, z) || hitCheck(dir, pos[0], pos[1], pos[2], -1, 2, 0, x, y, z)) {
+      text.add(TextFormatting.GREEN + "-> " + TextFormatting.RESET + furnace.tanks[0].getTankType().getLocalizedName());
     }
 
     if (hitCheck(dir, pos[0], pos[1], pos[2], 1, 1, 0, x, y, z)) {
-      text.add(ChatFormatting.YELLOW + "-> " + ChatFormatting.RESET + "Fuel");
+      text.add(TextFormatting.YELLOW + "-> " + TextFormatting.RESET + "Fuel");
     }
 
     if (!text.isEmpty()) {
-      ILookOverlay.printGeneric(
-          event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
+      ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }
   }
 
-  protected boolean hitCheck(
-      ForgeDirection dir,
-      int coreX,
-      int coreY,
-      int coreZ,
-      int exDir,
-      int exRot,
-      int exY,
-      int hitX,
-      int hitY,
-      int hitZ) {
+  protected boolean hitCheck(ForgeDirection dir, int coreX, int coreY, int coreZ, int exDir, int exRot, int exY, int hitX, int hitY, int hitZ) {
 
     ForgeDirection turn = dir.getRotation(ForgeDirection.DOWN);
 

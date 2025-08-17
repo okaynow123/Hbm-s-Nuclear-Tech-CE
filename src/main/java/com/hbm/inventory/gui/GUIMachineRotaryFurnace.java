@@ -5,15 +5,15 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineRotaryFurnace;
 import com.hbm.util.I18nUtil;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.List;
@@ -47,16 +47,11 @@ public class GUIMachineRotaryFurnace extends GuiInfoContainer {
     }
 
     if (furnace.output == null) {
-      String[] text = new String[] {ChatFormatting.RED + "Empty"};
+      String[] text = new String[] {TextFormatting.RED + "Empty"};
       this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 98, guiTop + 18, 16, 52, mouseX, mouseY, text);
     } else {
       String[] text =
-          new String[] {
-            ChatFormatting.YELLOW
-                + I18nUtil.resolveKey(furnace.output.material.getTranslationKey())
-                + ": "
-                + Mats.formatAmount(furnace.output.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-          };
+          new String[] {TextFormatting.YELLOW + I18nUtil.resolveKey(furnace.output.material.getTranslationKey()) + ": " + Mats.formatAmount(furnace.output.amount, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))};
       this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 98, guiTop + 18, 16, 52, mouseX, mouseY, text);
     }
 

@@ -874,6 +874,7 @@ public class ModBlocks {
 
 	public static final Block reactor_zirnox = new ReactorZirnox(Material.IRON, "machine_zirnox").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block zirnox_destroyed = new ZirnoxDestroyed(Material.IRON, "zirnox_destroyed").setHardness(100.0F).setResistance(800.0F).setCreativeTab(null);
+	public static final Block machine_controller = new MachineReactorControl("machine_controller").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
 	public static final Block machine_difurnace_on = new MachineDiFurnace(Material.IRON, "machine_difurnace_on", true).setHardness(5.0F).setResistance(10.0F).setLightLevel(1.0F).setCreativeTab(null);
 	public static final Block machine_difurnace_off = new MachineDiFurnace(Material.IRON, "machine_difurnace_off", false).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

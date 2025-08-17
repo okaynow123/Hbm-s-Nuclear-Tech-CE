@@ -15,33 +15,17 @@ import org.lwjgl.opengl.GL11;
 public class RenderRotaryFurnace extends TileEntitySpecialRenderer<TileEntityMachineRotaryFurnace> implements IItemRendererProvider {
 
   @Override
-  public void render(
-      TileEntityMachineRotaryFurnace furnace,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
-
+  public void render(TileEntityMachineRotaryFurnace furnace, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5, y, z + 0.5);
     GlStateManager.enableLighting();
     GlStateManager.enableCull();
 
     switch (furnace.getBlockMetadata() - BlockDummyable.offset) {
-      case 2:
-        GlStateManager.rotate(90, 0F, 1F, 0F);
-        break;
-      case 4:
-        GlStateManager.rotate(180, 0F, 1F, 0F);
-        break;
-      case 3:
-        GlStateManager.rotate(270, 0F, 1F, 0F);
-        break;
-      case 5:
-        GlStateManager.rotate(0, 0F, 1F, 0F);
-        break;
+      case 2 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+      case 4 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+      case 3 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+      case 5 -> GlStateManager.rotate(0, 0F, 1F, 0F);
     }
 
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
