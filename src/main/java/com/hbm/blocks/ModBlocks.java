@@ -944,9 +944,12 @@ public class ModBlocks {
 	public static final Block machine_deuterium_extractor = new MachineDeuteriumExtractor(Material.IRON, "machine_deuterium_extractor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_deuterium_tower = new DeuteriumTower(Material.IRON, "machine_deuterium_tower").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 
-	public static final Block machine_compressor = new MachineCompressor("machine_compressor").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_liquefactor = new MachineLiquefactor("machine_liquefactor").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_solidifier = new MachineSolidifier("machine_solidifier").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_intake = new MachineIntake("machine_intake").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_compressor = new MachineCompressor("machine_compressor").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_compressor_compact = new MachineCompressorCompact("machine_compressor_compact").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
+
 	public static final Block machine_electrolyser = new MachineElectrolyser("machine_electrolyser").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 
 

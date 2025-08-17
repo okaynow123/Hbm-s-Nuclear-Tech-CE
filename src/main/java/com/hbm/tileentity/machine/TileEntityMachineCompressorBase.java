@@ -52,7 +52,7 @@ public abstract class TileEntityMachineCompressorBase extends TileEntityMachineB
     public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
 
     public TileEntityMachineCompressorBase() {
-        super(4);
+        super(4, true, true);
         this.tanks = new FluidTankNTM[2];
         this.tanks[0] = new FluidTankNTM(Fluids.NONE, 16_000);
         this.tanks[1] = new FluidTankNTM(Fluids.NONE, 16_000).withPressure(1);
