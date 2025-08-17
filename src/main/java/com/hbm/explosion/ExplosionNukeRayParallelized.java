@@ -30,7 +30,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.DoubleAdder;
-import java.util.function.BiConsumer;
 
 /**
  * Threaded DDA raytracer for mk5 explosion.
@@ -105,7 +104,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private int algorithm;
     private int rayCount;
     private ForkJoinPool pool;
-    private UUID detonator;
+    private volatile UUID detonator;
     private volatile boolean collectFinished = false;
     private volatile boolean consolidationFinished = false;
     private volatile boolean destroyFinished = false;
@@ -230,7 +229,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         int maxCZ = (originZ >> 4) + cr;
         int minSubY = Math.max(0, (originY - radius) >> 4);
         int maxSubY = Math.min(SUBCHUNK_PER_CHUNK - 1, (originY + radius) >> 4);
-        int originSubY = originY >> 4;
 
         for (int cx = minCX; cx <= maxCX; cx++) {
             for (int cz = minCZ; cz <= maxCZ; cz++) {
@@ -686,10 +684,18 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
 
-        void forEach(BiConsumer<Integer, Double> c) {
+        void accumulate(ConcurrentMap<Integer, DoubleAdder> map) {
             for (int i = 0; i < keys.length; i++) {
                 int k = keys[i];
-                if (k != EMPTY) c.accept(k, vals[i]);
+                if (k != EMPTY) {
+                    DoubleAdder ad = map.get(k);
+                    if (ad == null) {
+                        DoubleAdder na = new DoubleAdder();
+                        DoubleAdder prev = map.putIfAbsent(k, na);
+                        ad = (prev != null) ? prev : na;
+                    }
+                    ad.add(vals[i]);
+                }
             }
         }
 
@@ -774,17 +780,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                                 ConcurrentMap<Integer, DoubleAdder> existed = damageMap.putIfAbsent(cp, created);
                                 globalChunkDamage = (existed != null) ? existed : created;
                             }
-
-                            ConcurrentMap<Integer, DoubleAdder> finalGlobalChunkDamage = globalChunkDamage;
-                            acc.forEach((bit, val) -> {
-                                DoubleAdder ad = finalGlobalChunkDamage.get(bit);
-                                if (ad == null) {
-                                    DoubleAdder na = new DoubleAdder();
-                                    DoubleAdder prev = finalGlobalChunkDamage.putIfAbsent(bit, na);
-                                    ad = (prev != null) ? prev : na;
-                                }
-                                ad.add(val);
-                            });
+                            acc.accumulate(globalChunkDamage);
                         }
                     }
                     if (!agg.localLenMap.isEmpty()) {
@@ -798,17 +794,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                                 ConcurrentMap<Integer, DoubleAdder> existed = passLengthMap.putIfAbsent(cp, created);
                                 globalChunkLen = (existed != null) ? existed : created;
                             }
-
-                            ConcurrentMap<Integer, DoubleAdder> finalGlobalChunkLen = globalChunkLen;
-                            acc.forEach((bit, val) -> {
-                                DoubleAdder ad = finalGlobalChunkLen.get(bit);
-                                if (ad == null) {
-                                    DoubleAdder na = new DoubleAdder();
-                                    DoubleAdder prev = finalGlobalChunkLen.putIfAbsent(bit, na);
-                                    ad = (prev != null) ? prev : na;
-                                }
-                                ad.add(val);
-                            });
+                            acc.accumulate(globalChunkLen);
                         }
                     }
                 }
@@ -976,7 +962,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
 
-        private double getEnergyLossFactor(float resistance, double distFrac) {
+        private static double getEnergyLossFactor(float resistance, double distFrac) {
             if (resistance >= NUKE_RESISTANCE_CUTOFF) return resistance;
             if (resistance <= 0) return 0.0;
             if (resistance > LUT_MAX_RESISTANCE) return Math.pow(resistance + 1.0, 3.0 * distFrac) - 1.0;
