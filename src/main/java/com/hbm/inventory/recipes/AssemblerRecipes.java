@@ -729,6 +729,24 @@ public class AssemblerRecipes extends SerializableRecipe {
 		makeRecipe(new ComparableStack(ModBlocks.machine_refinery, 1), new AStack[] {new OreDictStack(STEEL.plateWelded(), 3), new OreDictStack(CU.plate528(), 16), new OreDictStack(STEEL.shell(), 6), new OreDictStack(STEEL.pipe(), 12), new ComparableStack(ModItems.plate_polymer, 8), new ComparableStack(ModItems.circuit, 3, EnumCircuitType.ANALOG) },350);
 		makeRecipe(new ComparableStack(ModBlocks.machine_epress, 1), new AStack[] {new OreDictStack(STEEL.plate(), 8), new OreDictStack(ANY_RUBBER.ingot(), 4), new ComparableStack(ModItems.part_generic, 2, EnumPartType.PISTON_HYDRAULIC.ordinal()), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BASIC) }, 100);
 		makeRecipe(new ComparableStack(ModBlocks.machine_chemplant, 1), new AStack[] {new OreDictStack(STEEL.ingot(), 8), new OreDictStack(CU.pipe(), 2), new ComparableStack(ModItems.plate_polymer, 16), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.coil_tungsten, 2), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG) }, 200);
+		makeRecipe(new ComparableStack(ModBlocks.machine_exposure_chamber, 1), new AStack[] {
+				!exp ? new OreDictStack(AL.plateCast(), 12) : new OreDictStack(AL.heavyComp(), 1),
+				new OreDictStack(ANY_RESISTANTALLOY.ingot(), 4),
+				new OreDictStack(ANY_HARDPLASTIC.ingot(), 12),
+				new OreDictStack(ALLOY.wireDense(), 32),
+				new ComparableStack(ModItems.motor_desh, 2),
+				new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BISMOID),
+				new ComparableStack(ModBlocks.capacitor_tantalium, 1),
+				new ComparableStack(ModBlocks.glass_quartz, 16)
+		}, 200);
+		makeRecipe(new ComparableStack(ModBlocks.machine_radiolysis), new AStack[] {
+				new OreDictStack(ANY_RESISTANTALLOY.ingot(), 4),
+				new OreDictStack(RUBBER.ingot(), 8),
+				new OreDictStack(PB.plate528(), 12),
+				new OreDictStack(CU.plateCast(), 4),
+				new OreDictStack(STEEL.shell(), 2),
+				new ComparableStack(ModItems.thermo_element, 8)
+		}, 200);
 		makeRecipe(new ComparableStack(ModBlocks.machine_assemfac, 1), new AStack[] {
 				!exp ? new OreDictStack(STEEL.ingot(), 48) : new OreDictStack(STEEL.heavyComp(), 2),
 				new OreDictStack(ANY_RESISTANTALLOY.ingot(), 8),
