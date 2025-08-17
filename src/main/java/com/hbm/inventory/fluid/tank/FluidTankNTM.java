@@ -226,7 +226,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(type.getTexture());
 
-        int i = (fluid * height) / maxFluid;
+        int i = maxFluid != 0 ? (fluid * height) / maxFluid : 0;
 
         double minX = x;
         double maxX = x;
