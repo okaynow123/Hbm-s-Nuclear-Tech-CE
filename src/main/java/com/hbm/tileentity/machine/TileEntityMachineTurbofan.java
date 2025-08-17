@@ -2,12 +2,13 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.UpgradeManager;
+import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMachineTurbofan;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -22,6 +23,8 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IUpgradeInfoProvider;
+import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
@@ -36,6 +39,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -48,10 +52,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 
 @AutoRegister
-public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IFFtoNTMF {
+public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IUpgradeInfoProvider, IGUIProvider, IFluidCopiable, IFFtoNTMF {
 
 	public long power;
 	public static final long maxPower = 1_000_000;
@@ -69,7 +74,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	public float lastSpin;
 	public int momentum = 0;
 
-	private final UpgradeManager upgradeManager;
+	private final UpgradeManagerNT upgradeManager;
 
 	//private static final int[] slots_top = new int[] { 0 };
 	//private static final int[] slots_bottom = new int[] { 0, 0 };
@@ -77,16 +82,15 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 	public AudioWrapper audio;
 
-	private Fluid oldFluid =Fluids.NONE.getFF();;
-	private static boolean converted = false;
+	private Fluid oldFluid =Fluids.NONE.getFF();
+    private static boolean converted = false;
 
 	public TileEntityMachineTurbofan() {
 		super(5, 150);
 		tankOld = new FluidTank(64000);
 		tank = new FluidTankNTM(Fluids.KEROSENE, 24000);
 		blood = new FluidTankNTM(Fluids.BLOOD, 24000);
-		upgradeManager = new UpgradeManager();
-
+		upgradeManager = new UpgradeManagerNT(this);
 		converted = true;
 	}
 	@Override
@@ -165,7 +169,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 			this.wasOn = false;
 
-			upgradeManager.eval(inventory, 2, 2);
+			upgradeManager.checkSlots(2, 2);
 			this.afterburner = upgradeManager.getLevel(ItemMachineUpgrade.UpgradeType.AFTERBURN);
 
 			if(!inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(2).getItem() == ModItems.flame_pony)
@@ -173,23 +177,33 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 			long burnValue = 0;
 			int amount = 1 + this.afterburner;
-
-			if(tank.getTankType().hasTrait(FT_Combustible.class) && tank.getTankType().getTrait(FT_Combustible.class).getGrade() == FT_Combustible.FuelGrade.AERO) {
-				burnValue = tank.getTankType().getTrait(FT_Combustible.class).getCombustionEnergy() / 1_000;
-			}
-
 			int amountToBurn = breatheAir(this.tank.getFill() > 0 ? amount : 0) ? Math.min(amount, this.tank.getFill()) : 0;
 
-			if(amountToBurn > 0) {
-				this.wasOn = true;
-				this.tank.setFill(this.tank.getFill() - amountToBurn);
-				this.output = (int) (burnValue * amountToBurn * (1 + Math.min(this.afterburner / 3D, 4)));
-				this.power += this.output;
-				this.consumption = amountToBurn;
-
-				if(world.getTotalWorldTime() % 20 == 0) super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, amountToBurn * 5);;
+			boolean redstone = false;
+			for(DirPos pos : getConPos()) {
+				if(this.world.isBlockPowered(pos.getPos())) {
+					redstone = true;
+					break;
+				}
 			}
 
+			if(!redstone) {
+
+				if (tank.getTankType().hasTrait(FT_Combustible.class) &&
+					tank.getTankType().getTrait(FT_Combustible.class).getGrade() == FT_Combustible.FuelGrade.AERO) {
+					burnValue = tank.getTankType().getTrait(FT_Combustible.class).getCombustionEnergy() / 1_000;
+				}
+				if (amountToBurn > 0) {
+					this.wasOn = true;
+					this.tank.setFill(this.tank.getFill() - amountToBurn);
+					this.output = (int) (burnValue * amountToBurn * (1 + Math.min(this.afterburner / 3D, 4)));
+					this.power += this.output;
+					this.consumption = amountToBurn;
+
+					if (world.getTotalWorldTime() % 20 == 0)
+						super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, amountToBurn * 5);
+				}
+			}
 			power = Library.chargeItemsFromTE(inventory, 3, power, power);
 
 			for(DirPos pos : getConPos()) {
@@ -493,6 +507,27 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachineTurbofan(player.inventory, this);
+	}
+
+	@Override
+	public boolean canProvideInfo(ItemMachineUpgrade.UpgradeType type, int level, boolean extendedInfo) {
+		return type == ItemMachineUpgrade.UpgradeType.AFTERBURN;
+	}
+
+	@Override
+	public void provideInfo(ItemMachineUpgrade.UpgradeType type, int level, List<String> info, boolean extendedInfo) {
+		info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.machine_turbofan));
+		if(type == ItemMachineUpgrade.UpgradeType.AFTERBURN) {
+			info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_EFFICIENCY, "+" + (int)(level * 100 * (1 + Math.min(level / 3D, 4D))) + "%"));
+			info.add(TextFormatting.RED + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "+" + (level * 100) + "%"));
+		}
+	}
+
+	@Override
+	public HashMap<ItemMachineUpgrade.UpgradeType, Integer> getValidUpgrades() {
+		HashMap<ItemMachineUpgrade.UpgradeType, Integer> upgrades = new HashMap<>();
+		upgrades.put(ItemMachineUpgrade.UpgradeType.AFTERBURN, 3);
+		return upgrades;
 	}
 
 	@Override
