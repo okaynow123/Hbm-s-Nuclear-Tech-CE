@@ -18,6 +18,7 @@ import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
+import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.handler.*;
@@ -47,7 +48,6 @@ import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -59,7 +59,6 @@ import com.hbm.util.EnchantmentUtil;
 import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.ParticleUtil;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -173,6 +172,7 @@ public class ModEventHandler {
                 itr.remove();
             }
         }
+        ClimbableRegistry.clearDimension(e.getWorld());
     }
 
     @SubscribeEvent
@@ -1361,6 +1361,13 @@ public class ModEventHandler {
             }
         } else changed = false;
         event.setCanceled(changed);
+    }
+
+    @SubscribeEvent
+    public void onCheckLadder(CheckLadderEvent evt) {
+        if (ClimbableRegistry.isEntityOnAny(evt.getWorld(), evt.getEntity())) {
+            evt.setResult(Result.ALLOW);
+        }
     }
 
     private static final String NBT_AKIMBO = "AkimboGhost";
