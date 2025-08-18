@@ -20,6 +20,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -534,9 +535,10 @@ public class CentrifugeRecipes extends SerializableRecipe {
 		}
 	}
 
-	public static ItemStack[] getOutput(ItemStack stack) {
+	@Nullable
+	public static ItemStack[] getOutput(@Nullable ItemStack stack) {
 
-		if(stack == null || stack.getItem() == null)
+		if(stack == null || stack.isEmpty())
 			return null;
 
 		ComparableStack comp = new ComparableStack(stack).makeSingular();

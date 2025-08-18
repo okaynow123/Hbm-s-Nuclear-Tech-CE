@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Deprecated
 @Spaghetti("Changing all machiines to use TileEntityMachineBase will reduce the total chaos in this class")
 public class AuxGaugePacket implements IMessage {
 

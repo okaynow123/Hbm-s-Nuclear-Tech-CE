@@ -11,13 +11,12 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.AuxElectricityPacket;
 import com.hbm.packet.toclient.AuxGaugePacket;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.RailgunRotationPacket;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -33,7 +32,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -156,10 +154,22 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 			}
 			updateConnections();
 			power = Library.chargeTEFromItems(inventory, 0, power, RadiationConfig.railgunBuffer);
-			
-			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
-			PacketDispatcher.wrapper.sendToAllAround(new RailgunRotationPacket(pos.getX(), pos.getY(), pos.getZ(), pitch, yaw), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
+			networkPackNT(100);
 		}
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		buf.writeFloat(pitch);
+		buf.writeFloat(yaw);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		power = buf.readLong();
+		pitch = buf.readFloat();
+		yaw = buf.readFloat();
 	}
 
 	private void updateConnections() {
