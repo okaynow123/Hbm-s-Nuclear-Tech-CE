@@ -73,7 +73,7 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			@Override
 			public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 				if(slot == 0)
-					return stack.getItem() == ModItems.forge_fluid_identifier;
+					return stack.getItem() == ModItems.fluid_identifier;
 				if(slot == 4)
 					return Library.isItemBattery(stack);
 

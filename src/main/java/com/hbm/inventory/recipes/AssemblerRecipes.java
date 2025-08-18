@@ -22,7 +22,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFluidTank;
 import com.hbm.items.machine.ItemPACoil;
-import com.hbm.items.machine.ItemPistons;
 import com.hbm.items.special.ItemCell;
 import com.hbm.items.weapon.ItemAmmoHIMARS.RocketType;
 import com.hbm.main.MainRegistry;
@@ -313,9 +312,9 @@ public class AssemblerRecipes extends SerializableRecipe {
 		makeRecipe(new ComparableStack(ModItems.missile_stealth, 1), new AStack[] { new OreDictStack(TI.plate(), 20), new OreDictStack(AL.plate(), 20), new OreDictStack(CU.plate(), 10), new OreDictStack(KEY_BLACK, 16), new OreDictStack(ANY_HARDPLASTIC.ingot(), 16), new OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 4), new ComparableStack(ModItems.circuit, 4, EnumCircuitType.ADVANCED.ordinal()), new OreDictStack(STEEL.bolt(), 32) },1200);
 		makeRecipe(new ComparableStack(ModItems.warhead_thermo_endo, 1), new AStack[] { new ComparableStack(ModBlocks.therm_endo, 2), new OreDictStack(TI.plate(), 12), new OreDictStack(STEEL.plate(), 6), }, 300);
 		makeRecipe(new ComparableStack(ModItems.warhead_thermo_exo, 1), new AStack[] { new ComparableStack(ModBlocks.therm_exo, 2), new OreDictStack(TI.plate(), 12), new OreDictStack(STEEL.plate(), 6), }, 300);
-		makeRecipe(new ComparableStack(ModItems.fuel_tank_small, 1), new AStack[] { new ComparableStack(ModItems.canister_generic, 6, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 6), new OreDictStack(STEEL.plate(), 2), }, 100);
-		makeRecipe(new ComparableStack(ModItems.fuel_tank_medium, 1), new AStack[] { new ComparableStack(ModItems.canister_generic, 8, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 12), new OreDictStack(STEEL.plate(), 4), }, 150);
-		makeRecipe(new ComparableStack(ModItems.fuel_tank_large, 1), new AStack[] { new ComparableStack(ModItems.canister_generic, 12, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 24), new OreDictStack(STEEL.plate(), 8), }, 200);
+		makeRecipe(new ComparableStack(ModItems.fuel_tank_small, 1), new AStack[] { new ComparableStack(ModItems.canister_full, 6, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 6), new OreDictStack(STEEL.plate(), 2), }, 100);
+		makeRecipe(new ComparableStack(ModItems.fuel_tank_medium, 1), new AStack[] { new ComparableStack(ModItems.canister_full, 8, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 12), new OreDictStack(STEEL.plate(), 4), }, 150);
+		makeRecipe(new ComparableStack(ModItems.fuel_tank_large, 1), new AStack[] { new ComparableStack(ModItems.canister_full, 12, Fluids.KEROSENE.getID()), new OreDictStack(TI.plate(), 24), new OreDictStack(STEEL.plate(), 8), }, 200);
 		makeRecipe(new ComparableStack(ModItems.thruster_small, 1), new AStack[] { new OreDictStack(STEEL.plate(), 4), new OreDictStack(W.ingot(), 4), new ComparableStack(ModItems.wire_fine, 4, Mats.MAT_ALUMINIUM.id), }, 100);
 		makeRecipe(new ComparableStack(ModItems.thruster_medium, 1), new AStack[] { new OreDictStack(STEEL.plate(), 8), new OreDictStack(W.ingot(), 8), new ComparableStack(ModItems.motor, 1), new ComparableStack(ModItems.wire_fine, 16, Mats.MAT_COPPER.id), }, 150);
 //		makeRecipe(new ComparableStack(ModItems.thruster_large, 1), new AStack[] { new OreDictStack(DURA.ingot(), 16), new OreDictStack(W.ingot(), 16), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.wire_fine, 32, Mats.MAT_GOLD.id), new ComparableStack(ModItems.circuit_red_copper, 1), }, 200);
@@ -1004,7 +1003,6 @@ public class AssemblerRecipes extends SerializableRecipe {
 		}, 200);
 
 		makeRecipe(new ComparableStack(ModItems.pellet_chlorophyte, 2), new AStack[] { new ComparableStack(ModItems.powder_chlorophyte, 1), new OreDictStack(PB.nugget(), 12), }, 50);
-		makeRecipe(new ComparableStack(ModItems.pellet_mercury, 2), new AStack[] { new ComparableStack(ModItems.nugget_mercury, 1), new OreDictStack(PB.nugget(), 12), }, 50);
 		makeRecipe(new ComparableStack(ModItems.pellet_meteorite, 2), new AStack[] { new ComparableStack(ModItems.powder_meteorite, 1), new OreDictStack(PB.nugget(), 12), }, 50);
 		makeRecipe(new ComparableStack(ModItems.pellet_canister, 2), new AStack[] { new OreDictStack(IRON.ingot(), 3), }, 50);
 
