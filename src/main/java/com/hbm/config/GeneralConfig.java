@@ -55,7 +55,6 @@ public class GeneralConfig {
 	public static boolean useShaders2 = false;
 	public static boolean bloom = true;
 	public static boolean heatDistortion = true;
-	public static boolean enableBabyMode = false;
 	public static boolean recipes = true;
 	public static boolean shapeless = true;
 	public static boolean oredict = true;
@@ -169,7 +168,6 @@ public class GeneralConfig {
 		flowingDecalAmountMax = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.25_flowing_decal_max", "The maximum number of 'flowing' decals that can exist at once (eg blood that can flow down walls)", 20);
 		
 		callListModels = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.26_callListModels", "Enables call lists for a few models, making them render extremely fast", true);
-		enableBabyMode = config.get(CATEGORY_GENERAL, "1.27_enableBabyMode", false).getBoolean(false);
 		enableReflectorCompat = config.get(CATEGORY_GENERAL, "1.24_enableReflectorCompat", false).getBoolean(false);
 		
 		enableCoal = config.get(CATEGORY_GENERAL, "1.26_enableCoalDust", true).getBoolean(true);

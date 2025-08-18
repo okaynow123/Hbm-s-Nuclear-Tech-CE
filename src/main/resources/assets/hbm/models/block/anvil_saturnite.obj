@@ -1,9 +1,9 @@
 # Blender v2.79 (sub 0) OBJ File: 'anvil_cut.blend'
 # www.blender.org
-mtllib anvil_meteorite.mtl
+mtllib anvil_saturnite.mtl
 
-o anvil_meteorite
-g anvil_meteorite
+o anvil_saturnite
+g anvil_saturnite
 usemtl AnvilMTL
 
 o Back

@@ -1,9 +1,9 @@
 # Blender v2.79 (sub 0) OBJ File: 'anvil_cut.blend'
 # www.blender.org
-mtllib anvil_starmetal.mtl
+mtllib anvil_bismuth_bronze.mtl
 
-o anvil_starmetal
-g anvil_starmetal
+o anvil_bismuth_bronze
+g anvil_bismuth_bronze
 usemtl AnvilMTL
 
 o Back

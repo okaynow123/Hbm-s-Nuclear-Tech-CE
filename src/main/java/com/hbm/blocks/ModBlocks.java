@@ -946,16 +946,17 @@ public class ModBlocks {
 
 	public static final Block machine_autocrafter = new MachineAutocrafter(Material.IRON, "machine_autocrafter").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 
-	public static final Block anvil_iron = new NTMAnvil(Material.IRON, 1, "anvil_iron").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_lead = new NTMAnvil(Material.IRON, 1, "anvil_lead").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_steel = new NTMAnvil(Material.IRON, 2, "anvil_steel").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_meteorite = new NTMAnvil(Material.IRON, 3, "anvil_meteorite").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_starmetal = new NTMAnvil(Material.IRON, 3, "anvil_starmetal").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_ferrouranium = new NTMAnvil(Material.IRON, 4, "anvil_ferrouranium").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_bismuth = new NTMAnvil(Material.IRON, 5, "anvil_bismuth").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_schrabidate = new NTMAnvil(Material.IRON, 6, "anvil_schrabidate").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_dnt = new NTMAnvil(Material.IRON, 7, "anvil_dnt").setCreativeTab(MainRegistry.machineTab);
-	public static final Block anvil_osmiridium = new NTMAnvil(Material.IRON, 8, "anvil_osmiridium").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_iron = new NTMAnvil(Material.IRON, NTMAnvil.TIER_IRON, "anvil_iron").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_lead = new NTMAnvil(Material.IRON, NTMAnvil.TIER_IRON, "anvil_lead").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_steel = new NTMAnvil(Material.IRON, NTMAnvil.TIER_STEEL, "anvil_steel").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_desh = new NTMAnvil(Material.IRON, NTMAnvil.TIER_OIL, "anvil_desh").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_ferrouranium = new NTMAnvil(Material.IRON, NTMAnvil.TIER_NUCLEAR, "anvil_ferrouranium").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_saturnite = new NTMAnvil(Material.IRON, NTMAnvil.TIER_RBMK, "anvil_saturnite").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_bismuth_bronze = new NTMAnvil(Material.IRON, NTMAnvil.TIER_RBMK, "anvil_bismuth_bronze").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_arsenic_bronze = new NTMAnvil(Material.IRON, NTMAnvil.TIER_RBMK, "anvil_arsenic_bronze").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_schrabidate = new NTMAnvil(Material.IRON, NTMAnvil.TIER_FUSION, "anvil_schrabidate").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_dnt = new NTMAnvil(Material.IRON, NTMAnvil.TIER_PARTICLE, "anvil_dnt").setCreativeTab(MainRegistry.machineTab);
+	public static final Block anvil_osmiridium = new NTMAnvil(Material.IRON, NTMAnvil.TIER_GERALD, "anvil_osmiridium").setCreativeTab(MainRegistry.machineTab);
 	public static final Block anvil_murky = new NTMAnvil(Material.IRON, 1916169, "anvil_murky").setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block conveyor = new BlockConveyor(Material.IRON, "conveyor").setHardness(3.0F).setResistance(2.0F).setCreativeTab(MainRegistry.machineTab);

@@ -36,7 +36,7 @@ public class CentrifugeRecipes extends SerializableRecipe {
 	@Override
 	public void registerDefaults() {
 
-		boolean lbs = GeneralConfig.enableLBSM && GeneralConfig.enableBabyMode; // GeneralConfig.enableLBSMSimpleCentrifuge
+		boolean lbs = GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleCentrifuge;
 
 		recipes.put(new ComparableStack(ModItems.waste_natural_uranium), new ItemStack[] {
 				new ItemStack(ModItems.nugget_u238, 1),

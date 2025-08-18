@@ -1,9 +1,9 @@
 # Blender v2.79 (sub 0) OBJ File: 'anvil_cut.blend'
 # www.blender.org
-mtllib anvil_bismuth.mtl
+mtllib anvil_desh.mtl
 
-o anvil_bismuth
-g anvil_bismuth
+o anvil_desh
+g anvil_desh
 usemtl AnvilMTL
 
 o Back
