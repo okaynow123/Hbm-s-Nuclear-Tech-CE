@@ -584,7 +584,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if (ladderAABB == null){
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-			ladderAABB = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 2.875, pos.getZ() + 1.0)
+			ladderAABB = new AxisAlignedBB(pos, pos.add(1, 3, 1))
 					.offset(dir.offsetX * 0.5 - rot.offsetX * 2.25, 0, dir.offsetZ * 0.5 - rot.offsetZ * 2.25);
 		}
 		return ladderAABB;
