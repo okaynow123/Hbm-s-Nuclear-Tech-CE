@@ -19,14 +19,10 @@ public class PacketDispatcher {
 		wrapper.registerMessage(SurveyPacket.Handler.class, SurveyPacket.class, i++, Side.CLIENT);
 		//Packet for rendering of rubble
 		wrapper.registerMessage(ParticleBurstPacket.Handler.class, ParticleBurstPacket.class, i++, Side.CLIENT);
-		//Updates electricity data
-		wrapper.registerMessage(AuxElectricityPacket.Handler.class, AuxElectricityPacket.class, i++, Side.CLIENT);
 		//Sounds packets
 		wrapper.registerMessage(LoopedSoundPacket.Handler.class, LoopedSoundPacket.class, i++, Side.CLIENT);
 		//Particle packet
 		wrapper.registerMessage(AuxParticlePacket.Handler.class, AuxParticlePacket.class, i++, Side.CLIENT);
-		//Universal package for machine gauges and states
-		wrapper.registerMessage(AuxGaugePacket.Handler.class, AuxGaugePacket.class, i++, Side.CLIENT);
 		//Universal package for machine gauges and states but for longs
 		wrapper.registerMessage(AuxLongPacket.Handler.class, AuxLongPacket.class, i++, Side.CLIENT);
 		//Universal button packet

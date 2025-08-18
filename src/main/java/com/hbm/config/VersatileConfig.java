@@ -29,6 +29,10 @@ public class VersatileConfig {
 		return entity.isPotionActive(HbmPotion.potionsickness);
 	}
 
+	public static boolean rtgDecay() {
+		return GeneralConfig.enable528 || MachineConfig.doRTGsDecay;
+	}
+
 	static int minute = 60 * 20;
 	static int hour = 60 * minute;
 	

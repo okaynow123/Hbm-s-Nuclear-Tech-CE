@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerCentrifuge;
 import com.hbm.inventory.gui.GUIMachineCentrifuge;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+@AutoRegister
 public class TileEntityMachineCentrifuge extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider, IUpgradeInfoProvider
 		, IConfigurableMachine {
 
