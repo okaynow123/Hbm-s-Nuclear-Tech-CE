@@ -35,13 +35,13 @@ public class ItemModInsert extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn){
 		if(damageMod != 1F)
-			list.add(TextFormatting.RED + (damageMod < 1 ? "-" : "+") + Math.abs(Math.round((1F - damageMod) * 100)) + "% Damage");
+			list.add(TextFormatting.GREEN + (damageMod < 1 ? "-" : "+") + Math.abs(Math.round((1F - damageMod) * 100)) + "% Damage");
 		if(projectileMod != 1F)
-			list.add(TextFormatting.YELLOW + "-" + Math.round((1F - projectileMod) * 100) + "% Projectile Damage");
+			list.add(TextFormatting.GREEN + "-" + Math.round((1F - projectileMod) * 100) + "% Projectile Damage");
 		if(explosionMod != 1F)
-			list.add(TextFormatting.YELLOW + "-" + Math.round((1F - explosionMod) * 100) + "% Explosion Damage");
+			list.add(TextFormatting.GREEN + "-" + Math.round((1F - explosionMod) * 100) + "% Explosion Damage");
 		if(speed != 1F)
-			list.add(TextFormatting.BLUE + "-" + Math.round((1F - speed) * 100) + "% Speed");
+			list.add(TextFormatting.RED + "-" + Math.round((1F - speed) * 100) + "% Speed");
 		
 		list.add("Durability: "+(stack.getMaxDamage() - stack.getItemDamage()) + "/" + stack.getMaxDamage());
 		
