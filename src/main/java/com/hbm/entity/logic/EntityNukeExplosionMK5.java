@@ -293,7 +293,7 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         spawnFire = nbt.getBoolean("spawnFire");
         algorithm = nbt.getInteger("algorithm");
         if (nbt.hasKey("detonator"))
-            nbt.getUniqueId("detonator");
+            detonator = nbt.getUniqueId("detonator");
         if (!initialized) {
             if (algorithm == 1 || algorithm == 2)
                 explosion = new ExplosionNukeRayParallelized(world, this.posX, this.posY, this.posZ, this.strength, this.radius);
