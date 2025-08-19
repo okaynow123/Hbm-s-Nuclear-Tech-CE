@@ -1046,7 +1046,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_TAB) && Minecraft.getMinecraft().currentScreen != null) {
+        if(Keyboard.isKeyDown(HbmKeybinds.qmaw.getKeyCode()) && Minecraft.getMinecraft().currentScreen != null) {
 
             QuickManualAndWiki qmaw = qmawTimestamp > System.currentTimeMillis() - 100 ? lastQMAW : null;
 
@@ -2086,7 +2086,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         try {
             QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
             if(qmaw != null) {
-                list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab"));
+                list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab", Keyboard.getKeyName(HbmKeybinds.qmaw.getKeyCode())));
                 lastQMAW = qmaw;
                 qmawTimestamp = System.currentTimeMillis();
             }
