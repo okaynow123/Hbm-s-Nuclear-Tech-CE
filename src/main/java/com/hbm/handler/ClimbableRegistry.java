@@ -34,7 +34,7 @@ public final class ClimbableRegistry {
      * Register a climbable across all chunks overlapped by its climb AABB
      */
     public static void register(@NotNull IClimbable c) {
-        final World w = c.getWorld();
+        final World w = c.world();
         final int dim = w.provider.getDimension();
 
         final IdentityHashMap<IClimbable, Entry> rev = reverse(w);
@@ -46,7 +46,7 @@ public final class ClimbableRegistry {
         final Entry entry = new Entry(dim);
 
         if (aabb == null) {
-            final long key = chunkKey(c.getPos());
+            final long key = chunkKey(c.pos());
             addToChunk(w, dim, key, c);
             entry.keys.add(key);
         } else {
@@ -71,7 +71,7 @@ public final class ClimbableRegistry {
      * Remove a climbable from every chunk it was registered to (safe if not present).
      */
     public static void unregister(@NotNull IClimbable c) {
-        final World w = c.getWorld();
+        final World w = c.world();
         final IdentityHashMap<IClimbable, Entry> rev = reverse(w);
         final Entry e = rev.remove(c);
         if (e == null) return;
@@ -130,7 +130,7 @@ public final class ClimbableRegistry {
 
                 for (IClimbable c : list) {
                     if (c == null) continue;
-                    if (c.getWorld() != w) continue; // side/world guard
+                    if (c.world() != w) continue; // side/world guard
                     if (c.isEntityInClimbAABB(e)) return true;
                 }
             }
@@ -196,7 +196,7 @@ public final class ClimbableRegistry {
             if (idx != null) {
                 return !idx.intersects(q);
             }
-            BlockPos p = c.getPos();
+            BlockPos p = c.pos();
             AxisAlignedBB anchor = new AxisAlignedBB(p);
             return !anchor.intersects(q);
         });
