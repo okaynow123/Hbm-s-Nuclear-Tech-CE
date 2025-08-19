@@ -76,6 +76,7 @@ public class GeneralConfig {
 	public static boolean enableReEval = true;
 	public static boolean enableSteamParticles = true;
 	public static boolean enableServerRecipeSync = true;
+	public static boolean enableExpensiveMode = false;
 	
 	public static boolean enable528 = false;
 	public static boolean enable528ReasimBoilers = true;
@@ -232,6 +233,7 @@ public class GeneralConfig {
 		enableThreadedAtmospheres = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.39_threadedAtmospheres", "If enabled, will run atmosphere blobbing in a separate thread for performance", true);
 		enableHardcoreDarkness = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.40_hardcoreDarkness", "If enabled, sets night-time minimum fog to zero, to complement hardcore darkness mods", false);
 		enableKeybindOverlap = config.get(CATEGORY_GENERAL, "1.41_enableKeybindOverlap", true, "If enabled, will handle keybinds that would otherwise be ignored due to overlapping.").getBoolean(true);
+		enableExpensiveMode = config.get(CATEGORY_GENERAL, "1.99_enableExpensiveMode", false, "It does what the name implies.").getBoolean(false);
 
 		final String CATEGORY_528 = "528";
 

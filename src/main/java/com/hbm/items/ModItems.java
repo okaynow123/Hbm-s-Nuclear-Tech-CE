@@ -61,13 +61,16 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.hbm.items.ItemEnums.*;
 
 public class ModItems {
 
-    public static final List<Item> ALL_ITEMS = new ArrayList<Item>();
+    public static HashSet<Item> excludeNEI = new HashSet<>();
+
+    public static final List<Item> ALL_ITEMS = new ArrayList<>();
 
     public static final Item redstone_sword = new RedstoneSword(ToolMaterial.STONE, "redstone_sword").setCreativeTab(CreativeTabs.COMBAT);
     public static final Item big_sword = new BigSword(ToolMaterial.DIAMOND, "big_sword").setCreativeTab(CreativeTabs.COMBAT);
@@ -390,6 +393,8 @@ public class ModItems {
     public static final Item upgrade_stack_2 = new ItemMachineUpgrade("upgrade_stack_2", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item upgrade_stack_3 = new ItemMachineUpgrade("upgrade_stack_3", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     //Fluid handling items
+    public static final Item fuel_additive = new ItemEnumMulti("fuel_additive", ItemEnums.EnumFuelAdditive.class, true, true).setCreativeTab(MainRegistry.controlTab);
+
     public static final Item canister_empty = new ItemBakedBase("canister_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item canister_full = new ItemCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
     public static final Item canister_napalm = new ItemCustomLore("canister_napalm").setCreativeTab(MainRegistry.controlTab);
@@ -1722,6 +1727,8 @@ public class ModItems {
     public static final Item meteorite_sword_warped = new ItemSwordMeteorite(110F, 0, MainRegistry.matMeteorite, "meteorite_sword_warped");
     public static final Item meteorite_sword_demonic = new ItemSwordMeteorite(400F, 0, MainRegistry.matMeteorite, "meteorite_sword_demonic");
     //Templates
+    public static final Item blueprints = new ItemBlueprints("blueprints").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
+    public static final Item blueprint_folder = new ItemBlueprintFolder("blueprint_folder").setCreativeTab(MainRegistry.templateTab);
     public static final Item template_folder = new ItemTemplateFolder("template_folder").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
     // TODO: implment this
     public static final Item journal_pip = new ItemTemplateFolder("journal_pip").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
@@ -2902,6 +2909,7 @@ public class ModItems {
 
     public static void preInit() {
         GunFactory.init();
+        excludeNEI.add(item_secret);
         for (Item item : ALL_ITEMS) {
             ForgeRegistries.ITEMS.register(item);
         }

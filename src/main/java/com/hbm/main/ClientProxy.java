@@ -1682,11 +1682,21 @@ public class ClientProxy extends ServerProxy {
             }
         }
     }
-
+    @Deprecated
     @Override
     public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float pitch) {
-        AudioWrapperClient audio = new AudioWrapperClient(sound, cat);
+        AudioWrapperClient audio = new AudioWrapperClient(sound, cat, false);
         audio.updatePosition(x, y, z);
+        return audio;
+    }
+
+    @Override
+    public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float range, float pitch, int keepAlive) {
+        AudioWrapperClient audio = new AudioWrapperClient(sound, cat, true);
+        audio.updatePosition(x, y, z);
+        audio.updateVolume(volume);
+        audio.updateRange(range);
+        audio.setKeepAlive(keepAlive);
         return audio;
     }
 

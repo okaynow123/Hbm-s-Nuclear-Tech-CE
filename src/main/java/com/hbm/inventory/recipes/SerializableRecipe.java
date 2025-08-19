@@ -71,6 +71,9 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new ExposureChamberRecipes());
         recipeHandlers.add(new CombinationRecipes());
         recipeHandlers.add(new WasteDrumRecipes());
+
+        //GENERIC
+        recipeHandlers.add(ChemicalPlantRecipes.INSTANCE);
     }
 
     public static void initialize() {
@@ -91,6 +94,8 @@ public abstract class SerializableRecipe {
         }
 
         MainRegistry.logger.info("Starting recipe init!");
+
+        GenericRecipes.clearPools();
 
         for (SerializableRecipe recipe : recipeHandlers) {
 
