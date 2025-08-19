@@ -200,7 +200,7 @@ public interface IToolHarvestAbility extends IBaseAbility {
         @Override
         public void onHarvestBlock(int level, World world, int x, int y, int z, EntityPlayer player, Block block, int meta) {
             // a band-aid on a gaping wound
-            // if(block == Blocks.lit_redstone_ore) block = Blocks.redstone_ore;
+            if(block == Blocks.LIT_REDSTONE_ORE) block = Blocks.REDSTONE_ORE;
 
             ItemStack stack = new ItemStack(block, 1, meta);
             ItemStack result = ShredderRecipes.getShredderResult(stack);
@@ -234,7 +234,7 @@ public interface IToolHarvestAbility extends IBaseAbility {
         @Override
         public void onHarvestBlock(int level, World world, int x, int y, int z, EntityPlayer player, Block block, int meta) {
             // a band-aid on a gaping wound
-            // if(block == Blocks.lit_redstone_ore) block = Blocks.redstone_ore;
+            if(block == Blocks.LIT_REDSTONE_ORE) block = Blocks.REDSTONE_ORE;
 
             ItemStack stack = new ItemStack(block, 1, meta);
             ItemStack[] result = CentrifugeRecipes.getOutput(stack);
@@ -272,7 +272,7 @@ public interface IToolHarvestAbility extends IBaseAbility {
         @Override
         public void onHarvestBlock(int level, World world, int x, int y, int z, EntityPlayer player, Block block, int meta) {
             // a band-aid on a gaping wound
-            //if(block == Blocks.lit_redstone_ore) block = Blocks.redstone_ore;
+            if(block == Blocks.LIT_REDSTONE_ORE) block = Blocks.REDSTONE_ORE;
 
             ItemStack stack = new ItemStack(block, 1, meta);
             CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(stack, Fluids.PEROXIDE);
@@ -306,8 +306,7 @@ public interface IToolHarvestAbility extends IBaseAbility {
         @Override
         public void onHarvestBlock(int level, World world, int x, int y, int z, EntityPlayer player, Block block, int meta) {
             // a band-aid on a gaping wound
-            // TODO: lit_redstone_ore
-            //if(block == Blocks.lit_redstone_ore) block = Blocks.redstone_ore;
+            if(block == Blocks.LIT_REDSTONE_ORE) block = Blocks.REDSTONE_ORE;
 
             int mercury = 0;
 
