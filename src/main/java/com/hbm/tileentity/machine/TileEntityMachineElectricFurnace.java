@@ -17,6 +17,7 @@ import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -25,6 +26,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -263,5 +265,13 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
         upgrades.put(UpgradeType.SPEED, 3);
         upgrades.put(UpgradeType.POWER, 3);
         return upgrades;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        boolean isSwapBetweenVariants = (oldState.getBlock() == ModBlocks.machine_electric_furnace_off && newState.getBlock() == ModBlocks.machine_electric_furnace_on) ||
+                (oldState.getBlock() == ModBlocks.machine_electric_furnace_on  && newState.getBlock() == ModBlocks.machine_electric_furnace_off);
+        if (isSwapBetweenVariants) return false;
+        return super.shouldRefresh(world, pos, oldState, newState);
     }
 }
