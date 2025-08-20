@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
 import static com.hbm.inventory.OreDictManager.*;
@@ -214,8 +215,14 @@ public class MineralRecipes {
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.ingot_mercury, 2), new ItemStack(ModItems.pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.MERCURY.ordinal()) );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_neptunium, 3), new ItemStack(ModItems.pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.NEPTUNIUM.ordinal()) );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_zirconium, 3), new ItemStack(ModItems.pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.ZIRCONIUM.ordinal()) );
-        if(OreDictionary.doesOreNameExist("ingotNickel"))
-            CraftingManager.addShapelessAuto(new ItemStack(OreDictionary.getOres("ingotNickel").get(0).getItem(), 2), new ItemStack(ModItems.pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.NICKEL.ordinal()) );
+        if (OreDictionary.doesOreNameExist("ingotNickel")) {
+            NonNullList<ItemStack> ores = OreDictionary.getOres("ingotNickel");
+            if (!ores.isEmpty()) {
+                ItemStack out = ores.get(0).copy();
+                out.setCount(2);
+                CraftingManager.addShapelessAuto(out, new ItemStack(ModItems.pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.NICKEL.ordinal()));
+            }
+        }
 
         CraftingManager.addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.block_copper), 1), "###", "###", "###", '#', ModItems.ingot_copper );
         CraftingManager.addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.block_fluorite), 1), "###", "###", "###", '#', ModItems.fluorite );
