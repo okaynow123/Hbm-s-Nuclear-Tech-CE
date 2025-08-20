@@ -1480,6 +1480,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         if (!(Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof IPostRender || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof IPostRender)) {
             HbmShaderManager2.postProcess();
         }
+        RenderOverhead.renderActionPreview(evt.getPartialTicks());
     }
 
     @SubscribeEvent
@@ -2154,11 +2155,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         if(event.phase == event.phase.END) {
             ItemCustomLore.updateSystem();
         }
-    }
-
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        RenderOverhead.renderActionPreview(event.getPartialTicks());
     }
 
     private void wrapModel(ModelBakeEvent event, ModelResourceLocation location) {
