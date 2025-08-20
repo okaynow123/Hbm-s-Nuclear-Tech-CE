@@ -58,7 +58,7 @@ public class RenderHeatBoiler extends TileEntitySpecialRenderer<TileEntityHeatBo
 
   @Override
   public Item getItemForRenderer() {
-    return Item.getItemFromBlock(ModBlocks.heat_boiler);
+    return Item.getItemFromBlock(ModBlocks.machine_boiler);
   }
 
   @Override

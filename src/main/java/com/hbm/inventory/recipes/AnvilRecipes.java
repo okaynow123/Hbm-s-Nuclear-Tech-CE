@@ -291,6 +291,15 @@ public class AnvilRecipes extends SerializableRecipe {
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
+						new ComparableStack(ModItems.rtg_unit, 5),
+						new OreDictStack(getReflector(), 8),
+						new OreDictStack(CU.ingot(), 16),
+						new OreDictStack(TCALLOY.ingot(), 6),
+						new OreDictStack(STEEL.plate(), 8),
+				}, new AnvilOutput(new ItemStack(ModBlocks.heater_rt))).setTier(4));
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
 						new ComparableStack(Blocks.STONEBRICK, 16),
 						new OreDictStack(IRON.ingot(), 4),
 						new OreDictStack(STEEL.plate(), 16),
@@ -356,13 +365,13 @@ public class AnvilRecipes extends SerializableRecipe {
 						new OreDictStack(CU.ingot(), 8),
 						new OreDictStack(STEEL.plate(), 8)
 				}, new AnvilOutput(new ItemStack(ModBlocks.machine_crucible))).setTier(2));
-		// TODO: port machine_boiler
-		/*constructionRecipes.add(new AnvilConstructionRecipe(
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new OreDictStack(STEEL.ingot(), 4),
 						new OreDictStack(CU.plate528(), 16),
 						new ComparableStack(ModItems.plate_polymer, 8)
-				}, new AnvilOutput(new ItemStack(ModBlocks.machine_boiler))).setTier(2));*/
+				}, new AnvilOutput(new ItemStack(ModBlocks.machine_boiler))).setTier(2));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
@@ -395,7 +404,7 @@ public class AnvilRecipes extends SerializableRecipe {
 						new ComparableStack(ModItems.circuit, 2, EnumCircuitType.VACUUM_TUBE.ordinal()),
 						new ComparableStack(ModItems.sawblade)
 				}, new AnvilOutput(new ItemStack(ModBlocks.machine_autosaw))).setTier(2));
-
+		// TODO
 		/*constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new OreDictStack(STEEL.ingot(), 6),
@@ -974,6 +983,7 @@ public class AnvilRecipes extends SerializableRecipe {
 				new AnvilOutput(new ItemStack(ModItems.plate_lead, 2)),
 				new AnvilOutput(new ItemStack(ModItems.nuclear_waste_vitrified, 10))
 		}).setTier(3));
+
 		// TODO: glyphids
 		/*constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModItems.egg_glyphid), new AnvilOutput[] {

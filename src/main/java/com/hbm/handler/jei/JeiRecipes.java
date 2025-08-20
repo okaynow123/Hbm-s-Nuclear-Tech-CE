@@ -9,9 +9,6 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.recipes.*;
-import com.hbm.inventory.recipes.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.recipes.AnvilRecipes.AnvilOutput;
-import com.hbm.inventory.recipes.AnvilRecipes.OverlayType;
 import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
@@ -56,8 +53,6 @@ public class JeiRecipes {
 	private static List<HadronRecipe> hadronRecipes = null;
 	private static List<SILEXRecipe> silexRecipes = null;
 	private static final Map<EnumWavelengths, List<SILEXRecipe>> waveSilexRecipes = new HashMap<>();
-	private static List<SmithingRecipe> smithingRecipes = null;
-	private static List<AnvilRecipe> anvilRecipes = null;
 	private static List<AssemblerRecipeWrapper> assemblerRecipes = null;
 	private static List<TransmutationRecipe> transmutationRecipes = null;
 	
@@ -478,54 +473,6 @@ public class JeiRecipes {
 			String wavelength = (this.laserStrength == EnumWavelengths.NULL) ? TextFormatting.WHITE + "N/A" : this.laserStrength.textColor + I18nUtil.resolveKey(this.laserStrength.name);
 			fontRenderer.drawString(wavelength, (35 - fontRenderer.getStringWidth(wavelength) / 2), 17, 0x404040);
 		}
-	}
-	
-	public static class AnvilRecipe implements IRecipeWrapper {
-
-		List<List<ItemStack>> inputs;
-		List<ItemStack> outputs;
-		List<Float> chances;
-		int tierLower;
-		int tierUpper;
-		OverlayType overlay;
-		
-		public AnvilRecipe(List<List<ItemStack>> inp, List<ItemStack> otp, List<Float> chance, int tL, int tU, OverlayType ovl){
-			inputs = inp;
-			outputs = otp;
-			chances = chance;
-			tierLower = tL;
-			tierUpper = tU;
-			overlay = ovl;
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients){
-			ingredients.setInputLists(VanillaTypes.ITEM, inputs);
-			ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-		}
-		
-	}
-	
-	public static class SmithingRecipe implements IRecipeWrapper {
-
-		List<List<ItemStack>> inputs;
-		ItemStack output;
-		int tier;
-		
-		public SmithingRecipe(List<ItemStack> left, List<ItemStack> right, ItemStack out, int tier){
-			inputs = new ArrayList<>(2);
-			inputs.add(left);
-			inputs.add(right);
-			output = out;
-			this.tier = tier;
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients){
-			ingredients.setInputLists(VanillaTypes.ITEM, inputs);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
-		}
-		
 	}
 
 	public static class JeiUniversalRecipe implements IRecipeWrapper {
@@ -978,36 +925,6 @@ public class JeiRecipes {
 			silexRecipes.add(new SILEXRecipe(e.getKey(), chances, outputs, (double)out.fluidProduced/out.fluidConsumed, out.laserStrength));
 		}
 		return silexRecipes;
-	}
-	
-	public static List<SmithingRecipe> getSmithingRecipes(){
-		if(smithingRecipes != null)
-			return smithingRecipes;
-		smithingRecipes = new ArrayList<>();
-		for(AnvilSmithingRecipe r : AnvilRecipes.getSmithing()){
-			smithingRecipes.add(new SmithingRecipe(r.getLeft(), r.getRight(), r.getSimpleOutput(), r.tier));
-		}
-		return smithingRecipes;
-	}
-	
-	public static List<AnvilRecipe> getAnvilRecipes(){
-		if(anvilRecipes != null)
-			return anvilRecipes;
-		anvilRecipes = new ArrayList<>();
-		for(AnvilConstructionRecipe r : AnvilRecipes.getConstruction()){
-			List<List<ItemStack>> inputs = new ArrayList<>(r.input.size());
-			List<ItemStack> outputs = new ArrayList<>(r.output.size());
-			List<Float> chances = new ArrayList<>(r.output.size());
-			for(AStack sta : r.input){
-				inputs.add(sta.getStackList());
-			}
-			for(AnvilOutput sta : r.output){
-				outputs.add(sta.stack.copy());
-				chances.add(sta.chance);
-			}
-			anvilRecipes.add(new AnvilRecipe(inputs, outputs, chances, r.tierLower, r.tierUpper, r.getOverlay()));
- 		}
-		return anvilRecipes;
 	}
 
 	public static class AssemblerRecipeWrapper implements IRecipeWrapper {

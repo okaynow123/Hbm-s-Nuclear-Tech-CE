@@ -6,7 +6,6 @@ import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.machine.IItemFluidIdentifier;
-import com.hbm.items.machine.ItemForgeFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityHeatBoiler;
@@ -57,12 +56,12 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(ModBlocks.heat_boiler);
+        return Item.getItemFromBlock(ModBlocks.machine_boiler);
     }
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(ModBlocks.heat_boiler);
+        return new ItemStack(ModBlocks.machine_boiler);
     }
 
     @Override

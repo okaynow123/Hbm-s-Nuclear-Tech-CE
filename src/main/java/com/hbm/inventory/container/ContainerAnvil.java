@@ -28,7 +28,7 @@ public class ContainerAnvil extends Container {
 				ItemStack left = ContainerAnvil.this.input.getStackInSlot(0);
 				ItemStack right = ContainerAnvil.this.input.getStackInSlot(1);
 				
-				if(left == null || right == null) {
+				if(left.isEmpty() || right.isEmpty()) {
 					return stack;
 				}
 				
@@ -69,7 +69,7 @@ public class ContainerAnvil extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int par2) {
 		ItemStack var3 = ItemStack.EMPTY;
-		Slot var4 = (Slot) this.inventorySlots.get(par2);
+		Slot var4 = this.inventorySlots.get(par2);
 		
 		if(var4 != null && var4.getHasStack()) {
 			ItemStack var5 = var4.getStack();
@@ -114,7 +114,7 @@ public class ContainerAnvil extends Container {
 			for(int i = 0; i < this.input.getSizeInventory(); ++i) {
 				ItemStack itemstack = this.input.getStackInSlot(i);
 				
-				if(itemstack != null) {
+				if(!itemstack.isEmpty()) {
 					player.dropItem(itemstack, false);
 				}
 			}
@@ -139,7 +139,6 @@ public class ContainerAnvil extends Container {
 		
 		@Override
 		public ItemStack onTake(EntityPlayer player, ItemStack stack) {
-			;
 			ContainerAnvil.this.updateSmithing();
 			return super.onTake(player, stack);
 		}
@@ -150,8 +149,8 @@ public class ContainerAnvil extends Container {
 		ItemStack left = this.input.getStackInSlot(0);
 		ItemStack right = this.input.getStackInSlot(1);
 		
-		if(left == null || right == null) {
-			this.output.setInventorySlotContents(0, null);
+		if(left.isEmpty() || right.isEmpty()) {
+			this.output.setInventorySlotContents(0, ItemStack.EMPTY);
 			return;
 		}
 		
