@@ -6,6 +6,7 @@ import com.hbm.handler.JetpackHandler;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.armor.ItemArmorMod;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -27,6 +28,7 @@ public class JetpackGlider extends ItemArmorMod implements IFillableItem {
 	public JetpackGlider(ArmorMaterial enumArmorMaterialSteel, int i, EntityEquipmentSlot chest, int capacity, String s) {
 		super(ArmorModHandler.plate_only, false, true, false, false, s);
 		this.capacity = capacity;
+		IDynamicModels.INSTANCES.remove(this);
 	}
 
 	public FluidTankNTM getTank(ItemStack stack){

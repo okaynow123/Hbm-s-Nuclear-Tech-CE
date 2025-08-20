@@ -540,7 +540,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.fluid_tank_lead_full, reg);
 
         swapModels(ModItems.ammo_himars, reg);
-        swapModels(ModItems.jetpack_glider, reg); // FIXME: somehow isn't working
+        swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
 
         for(Item item: ItemGunBaseNT.INSTANCES) {
