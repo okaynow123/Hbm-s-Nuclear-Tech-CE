@@ -24,12 +24,4 @@ public class BlockClean extends BlockBase {
         tooltip.add(" §b" + I18nUtil.resolveKey("trait.cleanroom.desc"));
         super.addInformation(stack, player, tooltip, advanced);
     }
-
-    public static void getUsed(Block b, BlockPos pos, World world) {
-        if (b == ModBlocks.tile_lab && world.rand.nextInt(2000) == 0) {
-            world.setBlockState(pos, ModBlocks.tile_lab_cracked.getDefaultState());
-        } else if (b == ModBlocks.tile_lab_cracked && world.rand.nextInt(10000) == 0) {
-            world.setBlockState(pos, ModBlocks.tile_lab_broken.getDefaultState());
-        }
-    }
 }
