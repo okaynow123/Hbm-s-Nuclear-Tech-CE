@@ -59,6 +59,9 @@ public class BufPacket extends PrecompiledPacket {
 
             if(te instanceof IBufPacketReceiver) {
                 try {
+                    // mlbv: In case anyone found this: Yes it happens on the network thread, not the main thread.
+                    // To avoid List CME, new a newList in deserialize and do someList = newList
+                    // don't forget to mark someList as volatile
                     ((IBufPacketReceiver) te).deserialize(m.buf);
                 }  catch(Exception e) { // just in case I fucked up
                     MainRegistry.logger.warn("A ByteBuf packet failed to be read and has thrown an error. This normally means that there was a buffer underflow and more data was read than was actually in the packet.");

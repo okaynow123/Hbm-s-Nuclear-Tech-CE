@@ -46,7 +46,7 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
         return this.getMaxPower();
     }
 
-    public default void trySubscribe(World world, DirPos pos) { trySubscribe(world, pos.getPos(), pos.getDir()); }
+    default void trySubscribe(World world, DirPos pos) { trySubscribe(world, pos.getPos(), pos.getDir()); }
 
     default void trySubscribe(World world, BlockPos pos, ForgeDirection dir) {
         trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir);

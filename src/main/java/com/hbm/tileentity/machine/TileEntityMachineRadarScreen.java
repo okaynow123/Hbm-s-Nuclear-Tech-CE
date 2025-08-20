@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-// FIXME: sometimes causes CME just because
+
 @AutoRegister
 public class TileEntityMachineRadarScreen extends TileEntityLoadedBase implements ITickable, IBufPacketReceiver {
 
-    public List<RadarEntry> entries = new ArrayList<>();
+    public volatile List<RadarEntry> entries = new ArrayList<>();
     public int refX;
     public int refY;
     public int refZ;
@@ -52,13 +52,15 @@ public class TileEntityMachineRadarScreen extends TileEntityLoadedBase implement
         refZ = buf.readInt();
         range = buf.readInt();
         int count = buf.readInt();
-        this.entries.clear();
+        List<RadarEntry> newEntries = new ArrayList<>();
         for(int i = 0; i < count; i++) {
             RadarEntry entry = new RadarEntry();
             entry.fromBytes(buf);
-            this.entries.add(entry);
+            newEntries.add(entry);
         }
+        this.entries = newEntries;
     }
+
     // fuck it, I'll make sure the data is actually SENT even after reconnecting to the world
     @Override
     public void readFromNBT(NBTTagCompound nbt) {

@@ -6,6 +6,7 @@ import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.items.ModItems;
 import com.hbm.items.gear.JetpackGlider;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ClientProxy;
@@ -60,7 +61,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
-// TODO: completely delete it
+
 public class JetpackHandler {
 
 	public static final String JETPACK_NBT = "hbmJetpackAdvanced";
@@ -85,7 +86,7 @@ public class JetpackHandler {
 	public static boolean hasJetpack(EntityPlayer p){
 		ItemStack chest = p.inventory.armorInventory.get(2);
 		ItemStack stack = ArmorModHandler.pryMod(chest, 1);
-        return false;
+        return stack.getItem() == ModItems.jetpack_glider;
     }
 	
 	public static FluidTankNTM getTank(EntityPlayer p){

@@ -2,6 +2,10 @@ package com.hbm.tileentity;
 
 import com.hbm.interfaces.AutoRegister;
 import net.minecraft.util.math.BlockPos;
+
+// mlbv: This sucks, switch to CapabilityContextProvider
+// I'll make proxycombo use the context provider for HBM energy/fluid IO later
+@Deprecated
 @AutoRegister
 public class TileEntityProxyDyn extends TileEntityProxyCombo {
 
