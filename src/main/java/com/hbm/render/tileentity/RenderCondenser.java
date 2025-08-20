@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.interfaces.AutoRegister;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -11,6 +12,7 @@ import com.hbm.tileentity.machine.TileEntityCondenserPowered;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 
+@AutoRegister
 public class RenderCondenser extends TileEntitySpecialRenderer<TileEntityCondenserPowered> implements IItemRendererProvider {
 
 	@Override
@@ -64,9 +66,6 @@ public class RenderCondenser extends TileEntitySpecialRenderer<TileEntityCondens
 	@Override
 	public ItemRenderBase getRenderer(Item item) {
 		return new ItemRenderBase() {
-			public void renderNonInv() {
-				GlStateManager.scale(0.75, 0.75, 0.75);
-			}
 
 			public void renderInventory() {
 				GlStateManager.translate(-1, -1, 0);
@@ -74,11 +73,11 @@ public class RenderCondenser extends TileEntitySpecialRenderer<TileEntityCondens
 			}
 
 			public void renderCommon() {
+				GlStateManager.scale(0.75, 0.75, 0.75);
+				GlStateManager.translate(0.5, 0, 0);
 				GlStateManager.shadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.condenser_tex);
-				ResourceManager.condenser.renderPart("Condenser");
-				ResourceManager.condenser.renderPart("Fan1");
-				ResourceManager.condenser.renderPart("Fan2");
+				ResourceManager.condenser.renderAll();
 				GlStateManager.shadeModel(GL11.GL_FLAT);
 			}
 		};
