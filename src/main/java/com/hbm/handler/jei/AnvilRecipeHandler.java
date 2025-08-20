@@ -131,7 +131,6 @@ public class AnvilRecipeHandler implements IRecipeCategory<AnvilRecipeHandler.An
 		// Anvil slot (as an extra input)
 		int anvilSlotIndex = slotIndex;
 		guiItemStacks.init(anvilSlotIndex, true, anvX - 1, anvY - 1);
-		guiItemStacks.setBackground(anvilSlotIndex, slotDrawable);
 		slotIndex++;
 
 		// Output slots
