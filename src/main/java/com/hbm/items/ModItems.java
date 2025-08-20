@@ -1112,11 +1112,6 @@ public class ModItems {
     public static final Item nuclear_waste_vitrified = new ItemCustomLore("nuclear_waste_vitrified").setCreativeTab(MainRegistry.partsTab);
     public static final Item nuclear_waste_vitrified_tiny = new ItemCustomLore("nuclear_waste_vitrified_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item scrap_plastic = new ItemEnumMulti("scrap_plastic", ScrapType.class, false, "scrap_plastic").setCreativeTab(null);
-    public static final Item waste_uranium_hot = new ItemCustomLore("waste_uranium_hot").setCreativeTab(MainRegistry.partsTab);
-    public static final Item waste_thorium_hot = new ItemCustomLore("waste_thorium_hot").setCreativeTab(MainRegistry.partsTab);
-    public static final Item waste_plutonium_hot = new ItemCustomLore("waste_plutonium_hot").setCreativeTab(MainRegistry.partsTab);
-    public static final Item waste_mox_hot = new ItemCustomLore("waste_mox_hot").setCreativeTab(MainRegistry.partsTab);
-    public static final Item waste_schrabidium_hot = new ItemCustomLore("waste_schrabidium_hot").setCreativeTab(MainRegistry.partsTab);
     public static final Item scrap = new ItemBase("scrap").setCreativeTab(MainRegistry.partsTab);
     public static final Item scrap_oil = new ItemBase("scrap_oil").setCreativeTab(MainRegistry.partsTab);
     public static final Item dust = new ItemBase("dust").setCreativeTab(MainRegistry.partsTab);
