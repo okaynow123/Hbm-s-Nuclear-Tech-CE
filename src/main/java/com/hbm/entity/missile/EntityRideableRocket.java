@@ -81,7 +81,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	private boolean sizeSet = false;
 
 	private AudioWrapper audio;
-	protected DataWatcher dataWatcher;
+	protected final DataWatcher dataWatcher = new DataWatcher(this);
 
 	private RocketState lastState = RocketState.AWAITING;
 
@@ -112,9 +112,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 	public EntityRideableRocket(World world, float x, float y, float z, ItemStack stack) {
 		super(world, x, y, z, (int)x + 10000, (int)z);
-		this.dataWatcher = new DataWatcher(this);
-		this.dataWatcher.addObject(0, Byte.valueOf((byte)0));
-		this.dataWatcher.addObject(1, Short.valueOf((short)300));
+		this.dataWatcher.addObject(0, (byte) 0);
+		this.dataWatcher.addObject(1, (short) 300);
 		RocketStruct rocket = ItemCustomRocket.get(stack);
 		satFreq = ISatChip.getFreqS(stack);
 

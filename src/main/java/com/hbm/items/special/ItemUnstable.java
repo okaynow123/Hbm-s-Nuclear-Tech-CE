@@ -17,6 +17,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 
@@ -39,6 +41,8 @@ public class ItemUnstable extends ItemBakedBase {
 		this.setTimer(stack, this.getTimer(stack) + 1);
 
 		if(this.getTimer(stack) == timer && !world.isRemote) {
+			IItemHandler handler = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if (handler != null) handler.extractItem(itemSlot, stack.getCount(), false);
 			world.spawnEntity(EntityNukeExplosionMK5.statFac(world, radius, entity.posX, entity.posY, entity.posZ).setDetonator(entity));
 
 			if(BombConfig.enableNukeClouds) {
