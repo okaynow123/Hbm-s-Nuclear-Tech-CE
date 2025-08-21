@@ -77,7 +77,7 @@ public class TileEntityRBMKOutlet extends TileEntityLoadedBase implements ITicka
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(null, getSendingTanks()));
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this));
         }
         return super.getCapability(capability, facing);
     }

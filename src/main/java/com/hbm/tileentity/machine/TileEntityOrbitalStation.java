@@ -2,7 +2,6 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.OrbitalStation;
@@ -24,13 +23,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
@@ -54,7 +50,7 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 	public float prevRot;
 
 	public TileEntityOrbitalStation() {
-		super(16);
+		super(16, true, false);
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.HYDROGEN, 16_000);
 		tanks[1] = new FluidTankNTM(Fluids.OXYGEN, 16_000);
@@ -358,23 +354,5 @@ public class TileEntityOrbitalStation extends TileEntityMachineBase implements I
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
 		return tanks;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 }

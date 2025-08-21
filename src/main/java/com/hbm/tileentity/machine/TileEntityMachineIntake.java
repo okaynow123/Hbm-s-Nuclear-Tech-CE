@@ -228,7 +228,7 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements ITi
         }
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(null, this.getSendingTanks())
+                    new NTMFluidHandlerWrapper(this)
             );
         }
         return super.getCapability(capability, facing);

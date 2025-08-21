@@ -2,8 +2,6 @@ package com.hbm.tileentity.bomb;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.handler.MissileStruct;
 import com.hbm.interfaces.AutoRegister;
@@ -40,19 +38,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -80,7 +73,7 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     private ItemStack lastMissileStack = ItemStack.EMPTY;
 
     public TileEntityLaunchTable() {
-        super(8);
+        super(8, true, true);
         tanks = new FluidTankNTM[2];
         tanks[0] = new FluidTankNTM(Fluids.NONE, 100000);
         tanks[1] = new FluidTankNTM(Fluids.NONE, 100000);
@@ -388,28 +381,6 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     @Override
     public FluidTankNTM[] getAllTanks() {
         return this.tanks;
-    }
-
-    @Override
-    public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
-        }
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(getReceivingTanks(), null));
-        }
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this));
-        }
-        return super.getCapability(capability, facing);
     }
 
     public boolean setCoords(int x, int z) {

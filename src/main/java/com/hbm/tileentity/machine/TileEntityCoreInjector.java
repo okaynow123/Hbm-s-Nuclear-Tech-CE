@@ -1,7 +1,6 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCoreInjector;
@@ -21,13 +20,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,7 +38,7 @@ public class TileEntityCoreInjector extends TileEntityMachineBase implements ITi
     public int beam;
 
     public TileEntityCoreInjector() {
-        super(4);
+        super(4, true, true);
         tanks = new FluidTankNTM[2];
         tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 128000);
         tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 128000);
@@ -161,19 +157,6 @@ public class TileEntityCoreInjector extends TileEntityMachineBase implements ITi
         tanks[0].writeToNBT(compound, "fuel1");
         tanks[1].writeToNBT(compound, "fuel2");
         return super.writeToNBT(compound);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(getReceivingTanks(), null));
-        }
-        return super.getCapability(capability, facing);
     }
 
     @Override

@@ -197,7 +197,7 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
+                    new NTMFluidHandlerWrapper(this)
             );
         }
         return super.getCapability(capability, facing);

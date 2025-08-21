@@ -1,9 +1,9 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.energymk2.IEnergyProviderMK2;
-import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.api.energymk2.IEnergyProviderMK2;
+import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -302,7 +302,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
   public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
     if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
       return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-              new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+              new NTMFluidHandlerWrapper(this)
       );
     }
     if (capability == CapabilityEnergy.ENERGY) {

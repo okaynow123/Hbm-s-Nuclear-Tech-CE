@@ -224,7 +224,7 @@ public class TileEntityMachineCatalyticCracker extends TileEntityLoadedBase impl
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+					new NTMFluidHandlerWrapper(this)
 			);
 		}
 		return super.getCapability(capability, facing);

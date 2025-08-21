@@ -103,7 +103,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
             if (facing == EnumFacing.UP) {
                 return CapabilityFluidHandler.
                         FLUID_HANDLER_CAPABILITY.
-                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                        cast(new NTMFluidHandlerWrapper(this) {
                                  @Override
                                  public int fill(FluidStack resource, boolean doFill) {
                                      if (mode == 0 || mode == 1)
@@ -127,7 +127,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
                 return CapabilityFluidHandler.
                         FLUID_HANDLER_CAPABILITY.
-                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                        cast(new NTMFluidHandlerWrapper(this) {
                                  @Override
                                  public int fill(FluidStack resource, boolean doFill) {
                                      return 0;
@@ -154,7 +154,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
                 return CapabilityFluidHandler.
                         FLUID_HANDLER_CAPABILITY.
-                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                        cast(new NTMFluidHandlerWrapper(this) {
                                  @Override
                                  public int fill(FluidStack resource, boolean doFill) {
                                      if (mode == 0 || mode == 1)

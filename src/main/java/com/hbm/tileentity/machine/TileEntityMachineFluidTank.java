@@ -120,7 +120,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this) {
 				@Override
 				public int fill(FluidStack resource, boolean doFill) {
 					if (mode == 0 || mode == 1) {

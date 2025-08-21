@@ -3,8 +3,6 @@ package com.hbm.tileentity.machine.oil;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.UpgradeManagerNT;
@@ -40,14 +38,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,7 +65,7 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
     public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
 
     public TileEntityMachinePyroOven() {
-        super(6, 50);
+        super(6, 50, true, true);
         inventory = this.getNewInventory(6);
         tanks = new FluidTankNTM[2];
         tanks[0] = new FluidTankNTM(Fluids.NONE, 24_000);
@@ -416,28 +410,5 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
         upgrades.put(ItemMachineUpgrade.UpgradeType.POWER, 3);
         upgrades.put(ItemMachineUpgrade.UpgradeType.OVERDRIVE, 3);
         return upgrades;
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
-            );
-        }
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(
-                    new NTMEnergyCapabilityWrapper(this)
-            );
-        }
-        return super.getCapability(capability, facing);
     }
 }

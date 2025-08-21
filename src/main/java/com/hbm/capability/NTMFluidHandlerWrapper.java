@@ -1,75 +1,58 @@
 package com.hbm.capability;
 
-import com.hbm.api.fluidmk2.IFluidStandardReceiverMK2;
-import com.hbm.api.fluidmk2.IFluidStandardSenderMK2;
+import com.hbm.api.fluidmk2.IFluidProviderMK2;
+import com.hbm.api.fluidmk2.IFluidReceiverMK2;
+import com.hbm.api.fluidmk2.IFluidUserMK2;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static com.hbm.capability.NTMFluidCapabilityHandler.getFluidType;
 
 public class NTMFluidHandlerWrapper implements IFluidHandler {
-    private final List<FluidTankNTM> inputTanks;
-    private final List<FluidTankNTM> outputTanks;
-    /**
-     * Tanks that can be both filled and drained.
-     */
-    private final List<FluidTankNTM> allTanks;
+    @Nullable
+    private final IFluidReceiverMK2 receiver;
+    @Nullable
+    private final IFluidProviderMK2 provider;
+    @NotNull
+    private final IFluidUserMK2 user;
+    @Nullable
+    private final BlockPos accessor;
 
-    public NTMFluidHandlerWrapper(@Nullable Collection<FluidTankNTM> fillableTanks, @Nullable Collection<FluidTankNTM> drainableTanks) {
-        this.inputTanks = (fillableTanks != null) ? new ArrayList<>(fillableTanks) : new ArrayList<>();
-        this.outputTanks = (drainableTanks != null) ? new ArrayList<>(drainableTanks) : new ArrayList<>();
-        Set<FluidTankNTM> uniqueTanks = new LinkedHashSet<>(this.inputTanks);
-        uniqueTanks.addAll(this.outputTanks);
-        this.allTanks = new ArrayList<>(uniqueTanks);
+    public NTMFluidHandlerWrapper(@NotNull TileEntity handler, @Nullable BlockPos pos) {
+        if (handler instanceof IFluidProviderMK2 providerMK2) this.provider = providerMK2;
+        else provider = null;
+        if (handler instanceof IFluidReceiverMK2 receiverMK2) this.receiver = receiverMK2;
+        else receiver = null;
+        if (receiver == null && provider == null)
+            throw new IllegalArgumentException("TileEntity must implement IFluidReceiverMK2 or IFluidProviderMK2");
+        user = (IFluidUserMK2) handler;
+        this.accessor = pos;
     }
 
-    public NTMFluidHandlerWrapper(@Nullable FluidTankNTM[] fillableTanks, @Nullable FluidTankNTM[] drainableTanks) {
-        this(fillableTanks == null ? null : Arrays.asList(fillableTanks), drainableTanks == null ? null : Arrays.asList(drainableTanks));
+    public NTMFluidHandlerWrapper(@NotNull TileEntity handler) {
+        this(handler, null);
     }
 
-    public static NTMFluidHandlerWrapper from(TileEntity user) {
-        FluidTankNTM[] fillable = null;
-        FluidTankNTM[] drainable = null;
-        if (user instanceof IFluidStandardReceiverMK2 receiver) {
-            fillable = receiver.getReceivingTanks();
-        }
-        if (user instanceof IFluidStandardSenderMK2 sender) {
-            drainable = sender.getSendingTanks();
-        }
-        if (fillable == null && drainable == null)
-            throw new IllegalArgumentException("Fluid user must implement IFluidStandardReceiverMK2 or IFluidStandardSenderMK2");
-        return new NTMFluidHandlerWrapper(fillable, drainable);
-    }
-
-    /**
-     * @param dualPurposeTanks Tanks that can be used for both filling and draining.
-     */
-    public NTMFluidHandlerWrapper(Collection<FluidTankNTM> dualPurposeTanks) {
-        this(dualPurposeTanks, dualPurposeTanks);
-    }
-
-    /**
-     * @param dualPurposeTanks Tanks that can be used for both filling and draining.
-     */
-    public NTMFluidHandlerWrapper(FluidTankNTM[] dualPurposeTanks) {
-        this(dualPurposeTanks, dualPurposeTanks);
-    }
-
-    /**
-     * @param dualPurposeTank Tank that can be used for both filling and draining.
-     */
-    public NTMFluidHandlerWrapper(FluidTankNTM dualPurposeTank) {
-        this(Collections.singletonList(dualPurposeTank), Collections.singletonList(dualPurposeTank));
+    private static int clampToInt(long v) {
+        if (v <= 0) return 0;
+        return v > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) v;
     }
 
     @Override
     public IFluidTankProperties[] getTankProperties() {
         List<IFluidTankProperties> properties = new ArrayList<>();
-        for (FluidTankNTM tank : allTanks) {
+        for (FluidTankNTM tank : user.getAllTanks()) {
             Collections.addAll(properties, tank.getTankProperties());
         }
         return properties.toArray(new IFluidTankProperties[0]);
@@ -77,58 +60,48 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        if (resource == null || resource.amount <= 0 || inputTanks.isEmpty()) {
-            return 0;
-        }
-
-        int totalFilled = 0;
-        FluidStack resourceLeftToFill = resource.copy();
-        for (FluidTankNTM tank : inputTanks) {
-            int filled = tank.fill(resourceLeftToFill, doFill);
-            if (filled > 0) {
-                totalFilled += filled;
-                resourceLeftToFill.amount -= filled;
-                if (resourceLeftToFill.amount <= 0) break;
-            }
-        }
-        return totalFilled;
+        if (resource == null || resource.amount <= 0 || receiver == null) return 0;
+        FluidType type = getFluidType(resource.getFluid());
+        if (type == null) return 0;
+        long demand = receiver.getDemand(type, 0);
+        if (demand <= 0) return 0;
+        int offer = Math.min(resource.amount, clampToInt(demand));
+        if (!doFill) return offer;
+        int remainder = (int) receiver.transferFluid(type, 0, offer);
+        return offer - remainder;
     }
 
     @Nullable
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (resource == null || resource.amount <= 0 || outputTanks.isEmpty()) {
-            return null;
-        }
-
-        FluidStack totalDrained = null;
-        FluidStack resourceLeftToDrain = resource.copy();
-        for (FluidTankNTM tank : outputTanks) {
-            FluidStack drained = tank.drain(resourceLeftToDrain, doDrain);
-            if (drained != null && drained.amount > 0) {
-                if (totalDrained == null) {
-                    totalDrained = drained.copy();
-                } else {
-                    totalDrained.amount += drained.amount;
-                }
-                resourceLeftToDrain.amount -= drained.amount;
-                if (resourceLeftToDrain.amount <= 0) break;
-            }
-        }
-        return totalDrained;
+        if (resource == null || resource.amount <= 0 || provider == null) return null;
+        FluidType type = getFluidType(resource.getFluid());
+        if (type == null) return null;
+        long available = provider.getFluidAvailable(type, 0);
+        if (available <= 0) return null;
+        int toDrain = Math.min(resource.amount, clampToInt(available));
+        if (toDrain <= 0) return null;
+        if (doDrain) provider.useUpFluid(type, 0, toDrain);
+        FluidStack out = resource.copy();
+        out.amount = toDrain;
+        return out;
     }
 
     @Nullable
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        if (maxDrain <= 0 || outputTanks.isEmpty()) {
-            return null;
-        }
-        for (FluidTankNTM tank : outputTanks) {
-            FluidStack drained = tank.drain(maxDrain, doDrain);
-            if (drained != null && drained.amount > 0) {
-                return drained;
-            }
+        if (maxDrain <= 0 || provider == null) return null;
+        for (FluidTankNTM tank : provider.getAllTanks()) {
+            FluidType type = tank.getTankType();
+            long available = provider.getFluidAvailable(type, 0);
+            if (available <= 0) continue;
+            int toDrain = Math.min(maxDrain, clampToInt(available));
+            if (toDrain <= 0) continue;
+            FluidStack exemplar = tank.drain(toDrain, false);
+            if (exemplar == null || exemplar.getFluid() == null) continue;
+            exemplar.amount = toDrain;
+            if (doDrain) provider.useUpFluid(type, 0, toDrain);
+            return exemplar;
         }
         return null;
     }

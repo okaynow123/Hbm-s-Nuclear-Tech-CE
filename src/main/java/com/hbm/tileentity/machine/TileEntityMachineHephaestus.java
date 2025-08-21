@@ -308,7 +308,7 @@ public class TileEntityMachineHephaestus extends TileEntityLoadedBase implements
     @Override
     public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks()));
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this));
         }
         return super.getCapability(capability, facing);
     }

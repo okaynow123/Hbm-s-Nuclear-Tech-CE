@@ -134,7 +134,7 @@ public abstract class TileEntityChimneyBase extends TileEntityLoadedBase impleme
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(getAllTanks())
+                    new NTMFluidHandlerWrapper(this)
             );
         }
         return super.getCapability(capability, facing);

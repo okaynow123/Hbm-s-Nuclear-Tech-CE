@@ -310,7 +310,7 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+					new NTMFluidHandlerWrapper(this)
 			);
 		}
 		if (capability == CapabilityEnergy.ENERGY) {

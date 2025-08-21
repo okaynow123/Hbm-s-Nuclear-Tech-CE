@@ -2,7 +2,6 @@ package com.hbm.tileentity.machine.oil;
 
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineCoker;
 import com.hbm.inventory.fluid.FluidStack;
@@ -28,13 +27,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 @AutoRegister
 public class TileEntityMachineCoker extends TileEntityMachineBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable {
@@ -50,7 +45,7 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     public FluidTankNTM[] tanks;
 
     public TileEntityMachineCoker() {
-        super(2);
+        super(2, true, false);
         tanks = new FluidTankNTM[2];
         tanks[0] = new FluidTankNTM(Fluids.HEAVYOIL, 16_000);
         tanks[1] = new FluidTankNTM(Fluids.OIL_COKER, 8_000);
@@ -298,23 +293,5 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIMachineCoker(player.inventory, this);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
-            );
-        }
-        return super.getCapability(capability, facing);
     }
 }

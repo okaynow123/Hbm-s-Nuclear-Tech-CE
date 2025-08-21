@@ -1,17 +1,16 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
-import com.hbm.inventory.recipes.SILEXRecipes;
-import com.hbm.inventory.recipes.SILEXRecipes.SILEXRecipe;
 import com.hbm.inventory.container.ContainerSILEX;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUISILEX;
+import com.hbm.inventory.recipes.SILEXRecipes;
+import com.hbm.inventory.recipes.SILEXRecipes.SILEXRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.ForgeDirection;
@@ -31,15 +30,12 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 @AutoRegister
@@ -62,7 +58,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	//5-10: Queue
 
 	public TileEntitySILEX() {
-		super(11);
+		super(11, true, false);
 		//acid
 		tank = new FluidTank(16000);
 		tankNew = new FluidTankNTM(Fluids.PEROXIDE, 16000);
@@ -367,25 +363,6 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	public double getMaxRenderDistanceSquared()
 	{
 		return 65536.0D;
-	}
-
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 
 	@Override

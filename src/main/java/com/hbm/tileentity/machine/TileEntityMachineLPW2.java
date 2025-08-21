@@ -3,7 +3,6 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.api.tile.IPropulsion;
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.interfaces.AutoRegister;
@@ -20,18 +19,14 @@ import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 @AutoRegister
@@ -51,7 +46,7 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 	private int fuelCost;
 
 	public TileEntityMachineLPW2() {
-		super(0);
+		super(0, true, false);
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.KEROSENE_REFORM, 256_000);
 		tanks[1] = new FluidTankNTM(Fluids.OXYGEN, 256_000);
@@ -292,24 +287,5 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
 		return tanks;
-	}
-
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 }

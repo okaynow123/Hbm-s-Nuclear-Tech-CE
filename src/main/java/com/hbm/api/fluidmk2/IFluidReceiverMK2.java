@@ -14,12 +14,24 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.jetbrains.annotations.Contract;
 
 public interface IFluidReceiverMK2 extends IFluidUserMK2 {
 
-    /** Sends fluid of the desired type and pressure to the receiver, returns the remainder */
+    /**
+     * {@inheritDoc}
+     * Sends fluid of the desired type and pressure to the receiver, returns the remainder<br>
+     * Contract: null, _, _ -> param3<br>
+     */
+    @Contract(value = "null, _, _ -> param3", mutates = "this")
     long transferFluid(FluidType type, int pressure, long amount);
     default long getReceiverSpeed(FluidType type, int pressure) { return 1_000_000_000; }
+
+    /**
+     * {@inheritDoc}
+     * Contract: null, _ -> 0<br>
+     */
+    @Contract(pure = true)
     long getDemand(FluidType type, int pressure);
 
     default int[] getReceivingPressureRange(FluidType type) { return DEFAULT_PRESSURE_RANGE; }

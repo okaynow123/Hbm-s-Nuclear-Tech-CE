@@ -62,7 +62,7 @@ public class NTMFluidCapabilityHandler {
     }
 
     @Nullable
-    public static FluidType getFluidType(Fluid forgeFluid) {
+    public static FluidType getFluidType(@NotNull Fluid forgeFluid) {
         return FF_TO_NTMF_MAP.get(forgeFluid.getName());
     }
 
