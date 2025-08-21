@@ -3,7 +3,6 @@ package com.hbm.packet.toserver;
 import com.hbm.interfaces.IControlReceiver;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -57,11 +56,13 @@ public class NBTControlPacket implements IMessage {
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
-		
-		if (buffer == null) {
-			buffer = new PacketBuffer(Unpooled.buffer());
+
+		if (buffer == null) buffer = new PacketBuffer(Unpooled.buffer());
+		try {
+			buf.writeBytes(buffer);
+		} finally {
+			buffer.release();
 		}
-		buf.writeBytes(buffer);
 	}
 
 	public static class Handler implements IMessageHandler<NBTControlPacket, IMessage> {
@@ -95,6 +96,8 @@ public class NBTControlPacket implements IMessage {
 					
 				} catch (IOException e) {
 					e.printStackTrace();
+				} finally {
+					m.buffer.release();
 				}
 			});
 			

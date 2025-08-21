@@ -70,7 +70,6 @@ public class ItemRBMKTool extends Item {
 				int ty = stack.getTagCompound().getInteger("posY");
 				int tz = stack.getTagCompound().getInteger("posZ");
 				console.setTarget(tx, ty, tz);
-				console.setupDisplays();
 				console.markDirty();
 				player.sendMessage(new TextComponentTranslation(this.getTranslationKey() + ".set").setStyle(new Style().setColor(TextFormatting.YELLOW)));
 			}
