@@ -49,7 +49,7 @@ public class TileEntityProxyEnergy extends TileEntityProxyBase implements IEnerg
 
 	@Override
 	public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
-		if (getTE() instanceof IEnergyReceiverMK2 && capability == CapabilityEnergy.ENERGY) {
+		if (capability == CapabilityEnergy.ENERGY) {
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -57,9 +57,9 @@ public class TileEntityProxyEnergy extends TileEntityProxyBase implements IEnerg
 
 	@Override
 	public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY && getTE() instanceof IEnergyReceiverMK2 te) {
+		if (capability == CapabilityEnergy.ENERGY) {
 			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(te)
+					new NTMEnergyCapabilityWrapper(this)
 			);
 		}
 		return super.getCapability(capability, facing);

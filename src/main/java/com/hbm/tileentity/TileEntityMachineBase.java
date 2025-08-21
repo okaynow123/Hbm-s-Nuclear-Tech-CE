@@ -210,7 +210,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) {
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this));
         } else if(capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) {
-            return CapabilityEnergy.ENERGY.cast(NTMEnergyCapabilityWrapper.from(this));
+            return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this));
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null)
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);

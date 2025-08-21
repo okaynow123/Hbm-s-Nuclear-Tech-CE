@@ -5,8 +5,10 @@ import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.config.GeneralConfig;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is a wrapper for {@link IEnergyHandlerMK2}, exposing it as {@link IEnergyStorage} for Forge Energy compatibility.
@@ -15,19 +17,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NTMEnergyCapabilityWrapper implements IEnergyStorage {
 
+    @NotNull
     private final IEnergyHandlerMK2 handler;
+    @Nullable
     private final IEnergyReceiverMK2 receiver;
+    @Nullable
     private final IEnergyProviderMK2 provider;
+    @Nullable
+    private final BlockPos accessor;
 
-    public NTMEnergyCapabilityWrapper(@NotNull IEnergyHandlerMK2 handler) {
-        this.handler = handler;
+    public NTMEnergyCapabilityWrapper(@NotNull TileEntity handler, @Nullable BlockPos pos) {
+        if (handler instanceof IEnergyHandlerMK2 energyHandlerMK2) this.handler = energyHandlerMK2;
+        else throw new IllegalArgumentException("Handler must implement EnergyHandlerMK2");
         this.receiver = handler instanceof IEnergyReceiverMK2 ? (IEnergyReceiverMK2) handler : null;
         this.provider = handler instanceof IEnergyProviderMK2 ? (IEnergyProviderMK2) handler : null;
+        this.accessor = pos;
     }
 
-    public static NTMEnergyCapabilityWrapper from(TileEntity handler) {
-        if (!(handler instanceof IEnergyHandlerMK2 energyHandlerMK2)) throw new IllegalArgumentException("Handler must implement EnergyHandlerMK2");
-        return new NTMEnergyCapabilityWrapper(energyHandlerMK2);
+    public NTMEnergyCapabilityWrapper(@NotNull TileEntity handler){
+        this(handler, null);
     }
 
     @Override
