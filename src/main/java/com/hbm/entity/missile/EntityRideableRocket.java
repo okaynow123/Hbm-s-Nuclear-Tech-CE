@@ -428,7 +428,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	@Override
     public AxisAlignedBB getEntityBoundingBox() {
 		if(motionMult() > 0) return null;
-        return this.getEntityBoundingBox();
+        return super.getEntityBoundingBox();
     }
 
 	@Override
