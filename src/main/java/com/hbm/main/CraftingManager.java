@@ -1,7 +1,9 @@
 package com.hbm.main;
 
+import com.hbm.blocks.BlockEnums.LightstoneType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
+import com.hbm.blocks.generic.BlockConcreteColoredExt.EnumConcreteType;
 import com.hbm.config.GeneralConfig;
 import com.hbm.crafting.*;
 import com.hbm.crafting.handlers.*;
@@ -11,9 +13,9 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums;
+import com.hbm.items.ItemEnums.CircuitComponentType;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ItemEnums.EnumPartType;
-import com.hbm.items.ItemEnums.CircuitComponentType;
 import com.hbm.items.ItemEnums.ScrapType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemArcElectrode;
@@ -29,6 +31,7 @@ import com.hbm.lib.RefStrings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -40,6 +43,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -93,22 +97,8 @@ public class CraftingManager {
 		addSlabStair(ModBlocks.cmb_brick_reinforced_slab, ModBlocks.cmb_brick_reinforced_stairs, ModBlocks.cmb_brick_reinforced);
 		addSlabStair(ModBlocks.concrete_slab, ModBlocks.concrete_stairs, ModBlocks.concrete);
 		addSlabStair(ModBlocks.concrete_smooth_slab, ModBlocks.concrete_smooth_stairs, ModBlocks.concrete_smooth);
-		addSlabStair(ModBlocks.concrete_white_slab, ModBlocks.concrete_white_stairs, ModBlocks.concrete_white);
-		addSlabStair(ModBlocks.concrete_orange_slab, ModBlocks.concrete_orange_stairs, ModBlocks.concrete_orange);
-		addSlabStair(ModBlocks.concrete_magenta_slab, ModBlocks.concrete_magenta_stairs, ModBlocks.concrete_magenta);
-		addSlabStair(ModBlocks.concrete_light_blue_slab, ModBlocks.concrete_light_blue_stairs, ModBlocks.concrete_light_blue);
-		addSlabStair(ModBlocks.concrete_yellow_slab, ModBlocks.concrete_yellow_stairs, ModBlocks.concrete_yellow);
-		addSlabStair(ModBlocks.concrete_lime_slab, ModBlocks.concrete_lime_stairs, ModBlocks.concrete_lime);
-		addSlabStair(ModBlocks.concrete_pink_slab, ModBlocks.concrete_pink_stairs, ModBlocks.concrete_pink);
-		addSlabStair(ModBlocks.concrete_gray_slab, ModBlocks.concrete_gray_stairs, ModBlocks.concrete_gray);
-		addSlabStair(ModBlocks.concrete_silver_slab, ModBlocks.concrete_silver_stairs, ModBlocks.concrete_silver);
-		addSlabStair(ModBlocks.concrete_cyan_slab, ModBlocks.concrete_cyan_stairs, ModBlocks.concrete_cyan);
-		addSlabStair(ModBlocks.concrete_purple_slab, ModBlocks.concrete_purple_stairs, ModBlocks.concrete_purple);
-		addSlabStair(ModBlocks.concrete_blue_slab, ModBlocks.concrete_blue_stairs, ModBlocks.concrete_blue);
-		addSlabStair(ModBlocks.concrete_brown_slab, ModBlocks.concrete_brown_stairs, ModBlocks.concrete_brown);
-		addSlabStair(ModBlocks.concrete_green_slab, ModBlocks.concrete_green_stairs, ModBlocks.concrete_green);
-		addSlabStair(ModBlocks.concrete_red_slab, ModBlocks.concrete_red_stairs, ModBlocks.concrete_red);
-		addSlabStair(ModBlocks.concrete_black_slab, ModBlocks.concrete_black_stairs, ModBlocks.concrete_black);
+		addSlabStairColConcrete(ModBlocks.concrete_colored_stairs, ModBlocks.concrete_colored);
+		addStairColorExt(ModBlocks.concrete_colored_ext_stairs, ModBlocks.concrete_colored_ext);
 		addSlabStair(ModBlocks.concrete_asbestos_slab, ModBlocks.concrete_asbestos_stairs, ModBlocks.concrete_asbestos);
 		addSlabStair(ModBlocks.ducrete_smooth_slab, ModBlocks.ducrete_smooth_stairs, ModBlocks.ducrete_smooth);
 		addSlabStair(ModBlocks.ducrete_slab, ModBlocks.ducrete_stairs, ModBlocks.ducrete);
@@ -406,13 +396,12 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.tile_lab, 4), "CBC", "CBC", "CBC", 'C', Items.BRICK, 'B', ASBESTOS.ingot() );
 		addRecipeAuto(new ItemStack(ModBlocks.tile_lab_cracked, 6), " C " , "C C", " C ", 'C', ModBlocks.tile_lab );
 		addRecipeAuto(new ItemStack(ModBlocks.tile_lab_broken, 6), " C " , "C C", " C ", 'C', ModBlocks.tile_lab_cracked );
-		// TODO: proper asphalt
-		//addShapelessAuto(new ItemStack(ModBlocks.asphalt_light, 1), ModBlocks.asphalt, Items.GLOWSTONE_DUST );
-		//addShapelessAuto(new ItemStack(ModBlocks.asphalt, 1), ModBlocks.asphalt_light );
+		addShapelessAuto(new ItemStack(ModBlocks.asphalt_light, 1), ModBlocks.asphalt, Items.GLOWSTONE_DUST );
+		addShapelessAuto(new ItemStack(ModBlocks.asphalt, 1), ModBlocks.asphalt_light );
 
 		String[] dyes = { "Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White" };
-		// TODO: colored concrete
-		/*for(int i = 0; i < 16; i++) {
+
+		for(int i = 0; i < 16; i++) {
 			String dyeName = "dye" + dyes[15 - i];
 			addRecipeAuto(new ItemStack(ModBlocks.concrete_colored, 8, i), "CCC", "CDC", "CCC", 'C', ModBlocks.concrete_smooth, 'D', dyeName );
 		}
@@ -426,7 +415,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.PINK.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_PINK, '2', KEY_RED );
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.HAZARD.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_YELLOW, '2', KEY_BLACK );
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.SAND.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_YELLOW, '2', KEY_GRAY );
-		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.BRONZE.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_ORANGE, '2', KEY_BROWN );*/
+		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.BRONZE.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_ORANGE, '2', KEY_BROWN );
 
 		addRecipeAuto(new ItemStack(ModBlocks.gneiss_tile, 4), "CC", "CC", 'C', ModBlocks.stone_gneiss );
 		addRecipeAuto(new ItemStack(ModBlocks.gneiss_brick, 4), "CC", "CC", 'C', ModBlocks.gneiss_tile );
@@ -438,12 +427,11 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_polished, 4), "CC", "CC", 'C', ModBlocks.basalt_smooth );
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_brick, 4), "CC", "CC", 'C', ModBlocks.basalt_polished );
 		addRecipeAuto(new ItemStack(ModBlocks.basalt_tiles, 4), "CC", "CC", 'C', ModBlocks.basalt_brick );
-		// TODO: lightstone
-		/*addShapelessAuto(new ItemStack(ModBlocks.lightstone, 4), Blocks.STONE, Blocks.STONE, Blocks.STONE, ModItems.powder_limestone );
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 4), Blocks.STONE, Blocks.STONE, Blocks.STONE, ModItems.powder_limestone );
 		addRecipeAuto(new ItemStack(ModBlocks.lightstone, 4, LightstoneType.TILE.ordinal()), "CC", "CC", 'C', new ItemStack(ModBlocks.lightstone, 1, 0) );
 		addRecipeAuto(new ItemStack(ModBlocks.lightstone, 4, LightstoneType.BRICKS.ordinal()), "CC", "CC", 'C', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.TILE.ordinal()) );
 		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS_CHISELED.ordinal()), new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()) );
-		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.CHISELED.ordinal()), ModBlocks.lightstone );*/
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.CHISELED.ordinal()), ModBlocks.lightstone );
 
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.reinforced_brick), 4), "FBF", "BFB", "FBF", 'F', Blocks.IRON_BARS, 'B', ModBlocks.brick_concrete );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.brick_compound), 4), "FBF", "BTB", "FBF", 'F', STEEL.bolt(), 'B', ModBlocks.reinforced_brick, 'T', ANY_TAR.any() );
@@ -469,8 +457,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.barbed_wire_acid, 8), "BBB", "BIB", "BBB", 'B', ModBlocks.barbed_wire, 'I', new ItemStack(ModItems.fluid_tank_full, 1, Fluids.PEROXIDE.getID()) );
 		addRecipeAuto(new ItemStack(ModBlocks.barbed_wire_wither, 8), "BBB", "BIB", "BBB", 'B', ModBlocks.barbed_wire, 'I', new ItemStack(Items.SKULL, 1, 1) );
 		addRecipeAuto(new ItemStack(ModBlocks.barbed_wire_ultradeath, 4), "BCB", "CIC", "BCB", 'B', ModBlocks.barbed_wire, 'C', ModItems.powder_yellowcake, 'I', ModItems.nuclear_waste );
-		// TODO
-		//addShapelessAuto(new ItemStack(ModBlocks.sandbags, 4), ModItems.plate_polymer, KEY_SAND, KEY_SAND, KEY_SAND );
+		addShapelessAuto(new ItemStack(ModBlocks.sandbags, 4), ModItems.plate_polymer, KEY_SAND, KEY_SAND, KEY_SAND );
 
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.tape_recorder), 4), "TST", "SSS", 'T', W.ingot(), 'S', STEEL.ingot() );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_poles), 16), "S S", "SSS", "S S", 'S', STEEL.ingot() );
@@ -484,10 +471,9 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_beam), 8), "S", "S", "S", 'S', ModBlocks.steel_scaffold );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.chain), 8), "S", "S", "S", 'S', ModBlocks.steel_beam );
 		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_grate), 4), "SS", "SS", 'S', ModBlocks.steel_beam );
-		// TODO: wide steel grates, rebar
-		/*addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_grate_wide), 4), "SS", 'S', ModBlocks.steel_grate );
-		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_grate), 1), "SS", 'S', ModBlocks.steel_grate_wide );*/
-		//addRecipeAuto(new ItemStack(ModBlocks.rebar, 8), "BB", "BB", 'B', STEEL.bolt() );
+		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_grate_wide), 4), "SS", 'S', ModBlocks.steel_grate );
+		addRecipeAuto(new ItemStack(Item.getItemFromBlock(ModBlocks.steel_grate), 1), "SS", 'S', ModBlocks.steel_grate_wide );
+		//addRecipeAuto(new ItemStack(ModBlocks.rebar, 8), "BB", "BB", 'B', STEEL.bolt() ); // TODO: rebar
 
 		addRecipeAuto(new ItemStack(ModBlocks.steel_scaffold, 8, 0), "SSS", "SDS", "SSS", 'S', ModBlocks.steel_scaffold, 'D', "dyeGray" );
 		addRecipeAuto(new ItemStack(ModBlocks.steel_scaffold, 8, 1), "SSS", "SDS", "SSS", 'S', ModBlocks.steel_scaffold, 'D', "dyeRed" );
@@ -556,9 +542,8 @@ public class CraftingManager {
 		addRecipeAuto(ItemBattery.getFullBattery(ModItems.energy_core), "PCW", "TDR", "PCW", 'P', ALLOY.plate(), 'C', ModItems.coil_advanced_alloy, 'W', ALLOY.wireFine(), 'R', new ItemStack(ModItems.cell, 1, Fluids.TRITIUM.getID()), 'D', new ItemStack(ModItems.cell, 1, Fluids.DEUTERIUM.getID()), 'T', W.ingot() );
 		addRecipeAuto(new ItemStack(ModItems.hev_battery, 4), " W ", "IEI", "ICI", 'W', GOLD.wireFine(), 'I', ModItems.plate_polymer, 'E', REDSTONE.dust(), 'C', CO.dust() );
 		addRecipeAuto(new ItemStack(ModItems.hev_battery, 4), " W ", "ICI", "IEI", 'W', GOLD.wireFine(), 'I', ModItems.plate_polymer, 'E', REDSTONE.dust(), 'C', CO.dust() );
-		// TODO: hev battery blocks
-		/*addShapelessAuto(new ItemStack(ModItems.hev_battery, 1), ModBlocks.hev_battery );
-		addShapelessAuto(new ItemStack(ModBlocks.hev_battery, 1), ModItems.hev_battery );*/
+		addShapelessAuto(new ItemStack(ModItems.hev_battery, 1), ModBlocks.hev_battery );
+		addShapelessAuto(new ItemStack(ModBlocks.hev_battery, 1), ModItems.hev_battery );
 
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_red_cell), "WBW", "PBP", "WBW", 'W', AL.wireFine(), 'P', AL.plate(), 'B', ItemBattery.getEmptyBattery(ModItems.battery_generic) );
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_advanced_cell), "WBW", "PBP", "WBW", 'W', MINGRADE.wireFine(), 'P', CU.plate(), 'B', ItemBattery.getEmptyBattery(ModItems.battery_advanced) );
@@ -1216,6 +1201,26 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(block, 3), stair, stair, stair, stair );
 		addRecipeAuto(new ItemStack(stair, 4), "#  ","## ","###", '#', slab );
 		addShapelessAuto(new ItemStack(block, 1), slab, slab );
+	}
+
+	public static void addSlabStairColConcrete(Block stair, Block block){
+		for(int meta = 0; meta < 16; meta++) {
+			Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("hbm", "concrete_" + EnumDyeColor.byMetadata(meta).getName() + "_slab"));
+			if(slab != null){
+				addRecipeAuto(new ItemStack(slab, 6, meta), "###", '#', new ItemStack(block, 1, meta));			addRecipeAuto(new ItemStack(stair, 4, meta), "#  ", "## ", "###", '#', new ItemStack(slab, 1, meta));
+				addShapelessAuto(new ItemStack(block, 1, meta), new ItemStack(slab, 1, meta), new ItemStack(slab, 1, meta));
+			}
+			addRecipeAuto(new ItemStack(stair, 8, meta), "#  ", "## ", "###", '#', new ItemStack(block, 1, meta));
+			addShapelessAuto(new ItemStack(block, 3, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta));
+
+		}
+	}
+
+	public static void addStairColorExt(Block stair, Block block){
+		for(int meta = 0; meta < 8; meta++) {
+			addRecipeAuto(new ItemStack(stair, 8, meta), "#  ", "## ", "###", '#', new ItemStack(block, 1, meta));
+			addShapelessAuto(new ItemStack(block, 3, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta), new ItemStack(stair, 1, meta));
+		}
 	}
 
 	public static void addBillet(Item billet, Item nugget, String... ore){

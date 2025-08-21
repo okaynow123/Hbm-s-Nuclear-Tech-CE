@@ -408,7 +408,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		if(z > maxZ) maxZ = z;
 		
 		if(this.enableWalling) {
-			world.setBlockState(drillPos, ModBlocks.barricade.getDefaultState());
+			world.setBlockState(drillPos, ModBlocks.sandbags.getDefaultState());
 		}
 	}
 
@@ -417,7 +417,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 		NonNullList<ItemStack> items = NonNullList.create();
   		b.getDrops(items, world, drillPos, bState, this.getFortuneLevel());
 		
-		if(b == ModBlocks.barricade){
+		if(b == ModBlocks.sandbags){
 			items.clear();
 		} else {
 			if(this.canSilkTouch()) {
@@ -482,7 +482,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 				if(x == pos.getX() - ring || x == pos.getX() + ring || z == pos.getZ() - ring || z == pos.getZ() + ring) {
 					
 					if(bState.getBlock().isReplaceable(world, wallPos) && (wallEverything || bState.getMaterial().isLiquid())) {
-						world.setBlockState(wallPos, ModBlocks.barricade.getDefaultState());
+						world.setBlockState(wallPos, ModBlocks.sandbags.getDefaultState());
 					}
 				} else {
 					

@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.google.common.collect.Multimap;
+import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
@@ -86,6 +87,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -740,6 +742,17 @@ public class ModEventHandler {
                 if (Math.abs(player.motionX) > 1 || Math.abs(player.motionY) > 1 || Math.abs(player.motionZ) > 1) {
                     ParticleUtil.spawnGasFlame(player.world, player.posX - 1 + vec.xCoord, player.posY + vec.yCoord, player.posZ + vec.zCoord, 0, 0, 0);
                 }
+            }
+        }
+
+        if(event.phase == TickEvent.Phase.START) {
+            int x = MathHelper.floor(player.posX);
+            int y = MathHelper.floor(player.posY - 1);
+            int z = MathHelper.floor(player.posZ);
+            Block b = player.world.getBlockState(new BlockPos(x, y, z)).getBlock();
+
+            if(b instanceof IStepTickReceiver step && !player.capabilities.isFlying && player.onGround) {
+                step.onPlayerStep(player.world, x, y, z, player);
             }
         }
 

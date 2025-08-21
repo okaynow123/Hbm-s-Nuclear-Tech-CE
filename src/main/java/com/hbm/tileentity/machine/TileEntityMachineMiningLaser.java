@@ -247,7 +247,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	private void placeBags(BlockPos wallPos){
 		IBlockState bState = world.getBlockState(wallPos);
 		if(bState.getBlock().isReplaceable(world, wallPos) && bState.getMaterial().isLiquid())
-			world.setBlockState(wallPos, ModBlocks.barricade.getDefaultState());
+			world.setBlockState(wallPos, ModBlocks.sandbags.getDefaultState());
 	}
 
 	private void tryFillContainer(int x, int y, int z) {

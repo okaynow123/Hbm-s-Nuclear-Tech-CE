@@ -1,0 +1,12 @@
+{
+	"variants": {
+		"height=0": { "model": "hbm:steel_grate_wide0" },
+		"height=1": { "model": "hbm:steel_grate_wide1" },
+		"height=2": { "model": "hbm:steel_grate_wide2" },
+		"height=3": { "model": "hbm:steel_grate_wide3" },
+		"height=4": { "model": "hbm:steel_grate_wide4" },
+		"height=5": { "model": "hbm:steel_grate_wide5" },
+		"height=6": { "model": "hbm:steel_grate_wide6" },
+		"height=7": { "model": "hbm:steel_grate_wide7" }
+	}
+}
