@@ -208,9 +208,11 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this));
-        } else if(capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) {
-            return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this));
+            BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this, accessorPos));
+        } else if (capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) {
+            BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
+            return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this, accessorPos));
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null)
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);

@@ -5,6 +5,7 @@ import com.hbm.api.fluidmk2.IFluidReceiverMK2;
 import com.hbm.api.fluidmk2.IFluidUserMK2;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.lib.CapabilityContextProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
@@ -51,6 +52,18 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
 
     @Override
     public IFluidTankProperties[] getTankProperties() {
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                List<IFluidTankProperties> properties = new ArrayList<>();
+                for (FluidTankNTM tank : user.getAllTanks()) {
+                    Collections.addAll(properties, tank.getTankProperties());
+                }
+                return properties.toArray(new IFluidTankProperties[0]);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
         List<IFluidTankProperties> properties = new ArrayList<>();
         for (FluidTankNTM tank : user.getAllTanks()) {
             Collections.addAll(properties, tank.getTankProperties());
@@ -61,6 +74,18 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
     @Override
     public int fill(FluidStack resource, boolean doFill) {
         if (resource == null || resource.amount <= 0 || receiver == null) return 0;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return fillInternal(resource, doFill);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return fillInternal(resource, doFill);
+    }
+
+    private int fillInternal(FluidStack resource, boolean doFill) {
         FluidType type = getFluidType(resource.getFluid());
         if (type == null) return 0;
         long demand = receiver.getDemand(type, 0);
@@ -71,10 +96,22 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
         return offer - remainder;
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
+    public @Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
         if (resource == null || resource.amount <= 0 || provider == null) return null;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return drainInternal(resource, doDrain);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return drainInternal(resource, doDrain);
+    }
+
+    @Nullable
+    private FluidStack drainInternal(FluidStack resource, boolean doDrain) {
         FluidType type = getFluidType(resource.getFluid());
         if (type == null) return null;
         long available = provider.getFluidAvailable(type, 0);
@@ -87,10 +124,22 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
         return out;
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
+    public @Nullable FluidStack drain(int maxDrain, boolean doDrain) {
         if (maxDrain <= 0 || provider == null) return null;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return drainInternal(maxDrain, doDrain);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return drainInternal(maxDrain, doDrain);
+    }
+
+    @Nullable
+    private FluidStack drainInternal(int maxDrain, boolean doDrain) {
         for (FluidTankNTM tank : provider.getAllTanks()) {
             FluidType type = tank.getTankType();
             long available = provider.getFluidAvailable(type, 0);

@@ -14,10 +14,7 @@ import com.hbm.inventory.recipes.ChemicalPlantRecipes;
 import com.hbm.inventory.recipes.GenericRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
-import com.hbm.lib.DirPos;
-import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.Library;
+import com.hbm.lib.*;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineChemplant;
 import com.hbm.sound.AudioWrapper;
@@ -362,9 +359,47 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
     @Override public void setPower(long power) { this.power = power; }
     @Override public long getMaxPower() { return maxPower; }
 
-    @Override public FluidTankNTM[] getReceivingTanks() { return inputTanks; }
-    @Override public FluidTankNTM[] getSendingTanks() { return outputTanks; }
-    @Override public FluidTankNTM[] getAllTanks() { return allTanks; }
+    @Override
+    public FluidTankNTM[] getReceivingTanks() {
+        BlockPos acc = CapabilityContextProvider.getAccessor(this.pos);
+        if (isCoolantAccessor(acc)) return new FluidTankNTM[]{ this.water };
+        return inputTanks;
+    }
+
+    @Override
+    public FluidTankNTM[] getSendingTanks() {
+        BlockPos acc = CapabilityContextProvider.getAccessor(this.pos);
+        if (isCoolantAccessor(acc)) return new FluidTankNTM[]{ this.lps };
+        return outputTanks;
+    }
+
+    @Override
+    public FluidTankNTM[] getAllTanks() {
+        BlockPos acc = CapabilityContextProvider.getAccessor(this.pos);
+        if (isCoolantAccessor(acc)) return new FluidTankNTM[]{ this.water, this.lps };
+        return allTanks;
+    }
+
+    private boolean isCoolantAccessor(BlockPos accessor) {
+        if (accessor == null) return false;
+        if (coolantLine == null) {
+            ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+            ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+            coolantLine = new DirPos[]{
+                    new DirPos(pos.getX() + rot.offsetX + dir.offsetX * 2, pos.getY(), pos.getZ() + rot.offsetZ + dir.offsetZ * 2, dir),
+                    new DirPos(pos.getX() - rot.offsetX + dir.offsetX * 2, pos.getY(), pos.getZ() - rot.offsetZ + dir.offsetZ * 2, dir),
+                    new DirPos(pos.getX() + rot.offsetX - dir.offsetX * 2, pos.getY(), pos.getZ() + rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+                    new DirPos(pos.getX() - rot.offsetX - dir.offsetX * 2, pos.getY(), pos.getZ() - rot.offsetZ - dir.offsetZ * 2, dir.getOpposite()),
+            };
+        }
+        for (DirPos dPos : coolantLine)
+            if (dPos.compare(accessor.getX(), accessor.getY(), accessor.getZ())) return true;
+        return false;
+    }
+//
+//    @Override public FluidTankNTM[] getReceivingTanks() { return inputTanks; }
+//    @Override public FluidTankNTM[] getSendingTanks() { return outputTanks; }
+//    @Override public FluidTankNTM[] getAllTanks() { return allTanks; }
 
     @Override public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) { return new ContainerMachineChemicalFactory(player.inventory, this.inventory); }
     @Override @SideOnly(Side.CLIENT) public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) { return new GUIMachineChemicalFactory(player.inventory, this); }

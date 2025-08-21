@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IEnergyHandlerMK2;
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.config.GeneralConfig;
+import com.hbm.lib.CapabilityContextProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -34,13 +35,25 @@ public class NTMEnergyCapabilityWrapper implements IEnergyStorage {
         this.accessor = pos;
     }
 
-    public NTMEnergyCapabilityWrapper(@NotNull TileEntity handler){
+    public NTMEnergyCapabilityWrapper(@NotNull TileEntity handler) {
         this(handler, null);
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         if (!canReceive() || maxReceive <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return receiveEnergyInternal(maxReceive, simulate);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return receiveEnergyInternal(maxReceive, simulate);
+    }
+
+    private int receiveEnergyInternal(int maxReceive, boolean simulate) {
         long heToOffer = (long) Math.floor(maxReceive / GeneralConfig.conversionRateHeToRF);
         if (heToOffer <= 0) return simulate ? 1 : 0;
         long leftoverHE = receiver.transferPower(heToOffer, simulate);
@@ -52,6 +65,18 @@ public class NTMEnergyCapabilityWrapper implements IEnergyStorage {
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         if (!canExtract() || maxExtract <= 0 || GeneralConfig.conversionRateHeToRF <= 0) return 0;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return extractEnergyInternal(maxExtract, simulate);
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return extractEnergyInternal(maxExtract, simulate);
+    }
+
+    private int extractEnergyInternal(int maxExtract, boolean simulate) {
         long heBudget = (long) Math.floor(maxExtract / GeneralConfig.conversionRateHeToRF);
         if (heBudget <= 0) return simulate ? 1 : 0;
         long availableHE = Math.min(provider.getPower(), provider.getProviderSpeed());
@@ -64,21 +89,55 @@ public class NTMEnergyCapabilityWrapper implements IEnergyStorage {
 
     @Override
     public int getEnergyStored() {
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return (int) Math.min(Integer.MAX_VALUE, Math.round(handler.getPower() * GeneralConfig.conversionRateHeToRF));
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
         return (int) Math.min(Integer.MAX_VALUE, Math.round(handler.getPower() * GeneralConfig.conversionRateHeToRF));
     }
 
     @Override
     public int getMaxEnergyStored() {
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return (int) Math.min(Integer.MAX_VALUE, Math.round(handler.getMaxPower() * GeneralConfig.conversionRateHeToRF));
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
         return (int) Math.min(Integer.MAX_VALUE, Math.round(handler.getMaxPower() * GeneralConfig.conversionRateHeToRF));
     }
 
     @Override
     public boolean canExtract() {
-        return provider != null && provider.getPower() > 0;
+        if (provider == null) return false;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return provider.getPower() > 0;
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return provider.getPower() > 0;
     }
 
     @Override
     public boolean canReceive() {
-        return receiver != null && receiver.getPower() < receiver.getMaxPower();
+        if (receiver == null) return false;
+        if (accessor != null) {
+            var prev = CapabilityContextProvider.pushPos(accessor);
+            try {
+                return receiver.getPower() < receiver.getMaxPower();
+            } finally {
+                CapabilityContextProvider.popPos(prev);
+            }
+        }
+        return receiver.getPower() < receiver.getMaxPower();
     }
 }

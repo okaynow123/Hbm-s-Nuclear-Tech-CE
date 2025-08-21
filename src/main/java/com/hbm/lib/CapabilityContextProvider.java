@@ -1,12 +1,13 @@
 package com.hbm.lib;
 
 import net.minecraft.util.math.BlockPos;
-
-import java.util.function.Supplier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Context provider for forge capabilities.
  * makes porting 1.7 com.hbm.tileentity.IConditionalInvAccess possible.
+ * For now, it only works for forge capabilities
  *
  * @author mlbv
  */
@@ -20,25 +21,21 @@ public final class CapabilityContextProvider {
      * @param ownPos The BlockPos of the tile entity asking for the context.
      * @return The accessor's BlockPos, or ownPos if not in a proxy context.
      */
+    @NotNull
     public static BlockPos getAccessor(BlockPos ownPos) {
         BlockPos pos = accessorPos.get();
         return pos != null ? pos : ownPos;
     }
 
-    /**
-     * Executes a Supplier within a specific BlockPos context.
-     * This should be called by the proxy tile entity.
-     *
-     * @param pos      The BlockPos of the proxy to set as context.
-     * @param supplier The code to run (e.g., the call to tile.getCapability()).
-     * @return The result from the supplier.
-     */
-    public static <T> T runWithContext(BlockPos pos, Supplier<T> supplier) {
+    @Nullable
+    public static BlockPos pushPos(@NotNull BlockPos pos) {
+        BlockPos prev = accessorPos.get();
         accessorPos.set(pos);
-        try {
-            return supplier.get();
-        } finally {
-            accessorPos.remove();
-        }
+        return prev;
+    }
+
+    public static void popPos(@Nullable BlockPos prev) {
+        if (prev == null) accessorPos.remove();
+        else accessorPos.set(prev);
     }
 }

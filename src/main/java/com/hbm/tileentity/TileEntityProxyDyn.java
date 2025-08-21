@@ -5,7 +5,8 @@ import net.minecraft.util.math.BlockPos;
 
 // mlbv: This sucks, switch to CapabilityContextProvider
 // I'll make proxycombo use the context provider for HBM energy/fluid IO later
-@Deprecated
+// update: nvm I just realized that I might need to rewrite the whole nodespace just for that
+// This could've been much easier if we were using capabilities instead of instanceof interface check, sigh
 @AutoRegister
 public class TileEntityProxyDyn extends TileEntityProxyCombo {
 

@@ -9,23 +9,20 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.main.MainRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
-public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidReceiverMK2, IFluidHandler {
+public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidReceiverMK2 {
 
 	TileEntity tile;
 	boolean inventory;
@@ -90,109 +87,116 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if(tile == null) {
-			tile = this.getTE();
-			if(tile == null){
-				return super.getCapability(capability, facing);
+	public <T> T getCapability(@NotNull Capability<T> capability, @Nullable EnumFacing facing) {
+		TileEntity te = getTile();
+		if (te == null) return super.getCapability(capability, facing);
+		if (inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ||
+				power && capability == CapabilityEnergy.ENERGY ||
+				fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return te.getCapability(capability, facing);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
 			}
 		}
-		return CapabilityContextProvider.runWithContext(this.pos, () -> {
-			if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-				return tile.getCapability(capability, facing);
-			}
-			if(power && capability == CapabilityEnergy.ENERGY){
-				return tile.getCapability(capability, facing);
-			}
-			if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-				return tile.getCapability(capability, facing);
-			}
-			return super.getCapability(capability, facing);
-		});
+		return super.getCapability(capability, facing);
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(tile == null) {
-			tile = this.getTE();
-			if(tile == null){
-				return super.hasCapability(capability, facing);
+	public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
+		TileEntity te = getTile();
+		if (te == null) return super.hasCapability(capability, facing);
+
+		if (inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ||
+				power && capability == CapabilityEnergy.ENERGY ||
+				fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return te.hasCapability(capability, facing);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
 			}
 		}
-		return CapabilityContextProvider.runWithContext(this.pos, () -> {
-			if(inventory && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-				return tile.hasCapability(capability, facing);
-			}
-			if(power && capability == CapabilityEnergy.ENERGY){
-				return tile.hasCapability(capability, facing);
-			}
-			if(fluid && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-				return tile.hasCapability(capability, facing);
-			}
-			return super.hasCapability(capability, facing);
-		});
+		return super.hasCapability(capability, facing);
+	}
+
+	private @Nullable IEnergyReceiverMK2 coreEnergy() {
+		Object te = getCoreObject();
+		return te instanceof IEnergyReceiverMK2 ? (IEnergyReceiverMK2) te : null;
 	}
 
 	@Override
 	public void setPower(long i) {
-
-		if(!power)
-			return;
-
-		if(getCoreObject() instanceof IEnergyReceiverMK2) {
-			((IEnergyReceiverMK2)getCoreObject()).setPower(i);
+		if (!power) return;
+		IEnergyReceiverMK2 core = coreEnergy();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				core.setPower(i);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
 	}
 
 	@Override
 	public long getPower() {
-
-		if(!power)
-			return 0;
-
-		if(getCoreObject() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getCoreObject()).getPower();
+		if (!power) return 0;
+		IEnergyReceiverMK2 core = coreEnergy();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.getPower();
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return 0;
 	}
 
 	@Override
 	public long getMaxPower() {
-
-		if(!power)
-			return 0;
-
-		if(getCoreObject() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getCoreObject()).getMaxPower();
+		if (!power) return 0;
+		IEnergyReceiverMK2 core = coreEnergy();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.getMaxPower();
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return 0;
 	}
 
 	@Override
-	public long transferPower(long power, boolean simulate) {
-
-		if(!this.power)
-			return power;
-
-		if(getCoreObject() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getCoreObject()).transferPower(power, simulate);
+	public long transferPower(long amount, boolean simulate) {
+		if (!this.power) return amount;
+		IEnergyReceiverMK2 core = coreEnergy();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.transferPower(amount, simulate);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
-		return power;
+		return amount;
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection dir) {
-
-		if(!power)
-			return false;
-
-		if(getCoreObject() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getCoreObject()).canConnect(dir);
+		if (!power) return false;
+		IEnergyReceiverMK2 core = coreEnergy();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.canConnect(dir);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return true;
 	}
 
@@ -217,53 +221,107 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 
 	public static final FluidTankNTM[] EMPTY_TANKS = new FluidTankNTM[0];
 
+	private @Nullable IFluidReceiverMK2 coreFluidRecv() {
+		Object te = getCoreObject();
+		return te instanceof IFluidReceiverMK2 ? (IFluidReceiverMK2) te : null;
+	}
+
 	@Override
 	public FluidTankNTM[] getAllTanks() {
-		if(!fluid) return EMPTY_TANKS;
-
-		if(getCoreObject() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getCoreObject()).getAllTanks();
+		if (!fluid) return EMPTY_TANKS;
+		IFluidReceiverMK2 core = coreFluidRecv();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.getAllTanks();
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return EMPTY_TANKS;
 	}
 
 	@Override
 	public long transferFluid(FluidType type, int pressure, long amount) {
-		if(!fluid) return amount;
-
-		if(getCoreObject() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getCoreObject()).transferFluid(type, pressure, amount);
+		if (!fluid) return amount;
+		IFluidReceiverMK2 core = coreFluidRecv();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.transferFluid(type, pressure, amount);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return amount;
 	}
 
 	@Override
 	public long getDemand(FluidType type, int pressure) {
-		if(!fluid) return 0;
-
-		if(getCoreObject() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getCoreObject()).getDemand(type, pressure);
+		if (!fluid) return 0;
+		IFluidReceiverMK2 core = coreFluidRecv();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.getDemand(type, pressure);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
-
 		return 0;
 	}
 
 	@Override
 	public boolean canConnect(FluidType type, ForgeDirection dir) {
-
-		if(!this.fluid)
-			return false;
-
-		if(getCoreObject() instanceof IFluidConnectorMK2) {
-			return ((IFluidConnectorMK2) getCoreObject()).canConnect(type, dir);
+		if (!this.fluid) return false;
+		Object te = getCoreObject();
+		if (te instanceof IFluidConnectorMK2 connectorMK2) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return connectorMK2.canConnect(type, dir);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
 		}
 		return true;
 	}
 
+	private @Nullable IHeatSource coreHeat() {
+		Object te = getCoreObject();
+		return te instanceof IHeatSource ? (IHeatSource) te : null;
+	}
+
 	@Override
-	public NBTTagCompound getUpdateTag() {
+	public int getHeatStored() {
+		if (!this.heat) return 0;
+		IHeatSource core = coreHeat();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				return core.getHeatStored();
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public void useUpHeat(int heat) {
+		if (!this.heat) return;
+		IHeatSource core = coreHeat();
+		if (core != null) {
+			BlockPos prev = CapabilityContextProvider.pushPos(this.pos);
+			try {
+				core.useUpHeat(heat);
+			} finally {
+				CapabilityContextProvider.popPos(prev);
+			}
+		}
+	}
+
+	@Override
+	public @NotNull NBTTagCompound getUpdateTag() {
 		return writeToNBT(new NBTTagCompound());
 	}
 
@@ -273,68 +331,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	}
 
 	@Override
-	public void handleUpdateTag(NBTTagCompound tag) {
+	public void handleUpdateTag(@NotNull NBTTagCompound tag) {
 		this.readFromNBT(tag);
-	}
-
-	@Override
-	public int getHeatStored() {
-		if (!this.heat) {
-			return 0;
-		}
-
-		if (getCoreObject() instanceof IHeatSource) {
-			return ((IHeatSource) getCoreObject()).getHeatStored();
-		}
-		return 0;
-	}
-
-	@Override
-	public void useUpHeat(int heat) {
-		if (!this.heat) {
-			return;
-		}
-
-		if (getCoreObject() instanceof IHeatSource) {
-			((IHeatSource) getCoreObject()).useUpHeat(heat);
-		}
-	}
-
-	@Override
-	public IFluidTankProperties[] getTankProperties() {
-		if(tile instanceof IFluidHandler){
-			return ((IFluidHandler) tile).getTankProperties();
-		}
-			MainRegistry.logger.error("Tile Entity: {} doesn't support IFluidHandler. Very likely a bug!", tile.toString());
-		return new IFluidTankProperties[0];
-	}
-
-	@Override
-	public int fill(FluidStack resource, boolean doFill) {
-		if(tile instanceof IFluidHandler){
-			return ((IFluidHandler) tile).fill(resource, doFill);
-		}
-		MainRegistry.logger.error("Tile Entity: {} doesn't support IFluidHandler. Very likely a bug!", tile.toString());
-		return 0;
-	}
-
-	@Override
-	public @Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
-		if(tile instanceof IFluidHandler){
-			return ((IFluidHandler) tile).drain(resource, doDrain);
-		}
-		MainRegistry.logger.error("Tile Entity: {} doesn't support IFluidHandler. Very likely a bug!", tile.toString());
-		return null;
-	}
-
-	@Override
-	public @Nullable FluidStack drain(int maxDrain, boolean doDrain) {
-
-		if(tile instanceof IFluidHandler){
-			return ((IFluidHandler) tile).drain(maxDrain, doDrain);
-		}
-		MainRegistry.logger.error("Tile Entity: {} doesn't support IFluidHandler. Very likely a bug!", tile.toString());
-		return null;
-
 	}
 }
