@@ -100,7 +100,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
                     return;
                 }
             }
-            tileEntityRenderers.put(annotatedFqn, tileEntityClassName);
+            tileEntityRenderers.put(tileEntityClassName, annotatedFqn);
 
         } else if (isSubtypeByString(annotatedElement, RENDER_FQN)) {
             String entityClassName = getClassNameFromAnnotation(annotation, "entity");
@@ -231,8 +231,8 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             MethodSpec.Builder method =
                     MethodSpec.methodBuilder("registerTileEntityRenderers").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(AnnotationSpec.builder(SIDE_ONLY).addMember("value", "$T.CLIENT", SIDE).build());
             for (Map.Entry<String, String> entry : tileEntityRenderers.entrySet()) {
-                method.addStatement("$T.bindTileEntitySpecialRenderer($T.class, new $T())", CLIENT_REGISTRY, ClassName.bestGuess(entry.getValue()),
-                        ClassName.bestGuess(entry.getKey()));
+                method.addStatement("$T.bindTileEntitySpecialRenderer($T.class, new $T())",
+                        CLIENT_REGISTRY, ClassName.bestGuess(entry.getKey()), ClassName.bestGuess(entry.getValue()));
             }
             registrarBuilder.addMethod(method.build());
         }
