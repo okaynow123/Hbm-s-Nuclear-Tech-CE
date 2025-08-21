@@ -41,6 +41,7 @@ public class ItemCanister extends Item implements IDynamicModels {
         this.setTranslationKey(s);
         this.setRegistryName(s);
         this.setCreativeTab(MainRegistry.controlTab);
+        this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.cap = cap;
         ModItems.ALL_ITEMS.add(this);
