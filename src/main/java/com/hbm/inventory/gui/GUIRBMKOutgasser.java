@@ -7,12 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIRBMKOutgasser extends GuiInfoContainer {
-	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_rbmk_outgasser.png");
-	private TileEntityRBMKOutgasser rod;
+
+	// DO NOT update the texture. Our texture is superior to the 1.7 one as of writing this.
+	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_rbmk_outgasser.png");
+	private final TileEntityRBMKOutgasser rod;
 
 	public GUIRBMKOutgasser(InventoryPlayer invPlayer, TileEntityRBMKOutgasser tedf) {
 		super(new ContainerRBMKOutgasser(invPlayer, tedf));
@@ -26,7 +27,7 @@ public class GUIRBMKOutgasser extends GuiInfoContainer {
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
 
-		rod.gas.renderTankInfo(this, mouseX, mouseY, guiLeft + 112, guiTop + 21, 16, 48);
+		rod.gas.renderTankInfo(this, mouseX, mouseY, guiLeft + 143, guiTop + 23, 14, 58);
 		
 		super.renderHoveredToolTip(mouseX, mouseY);
 	}

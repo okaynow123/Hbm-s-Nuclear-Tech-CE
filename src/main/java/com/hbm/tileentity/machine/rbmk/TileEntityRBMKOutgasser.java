@@ -44,6 +44,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	public FluidTankNTM gas;
 	public double progress = 0;
 	public int duration = 10000;
+	private ItemStack previousStack;
 
 	public TileEntityRBMKOutgasser() {
 		super(2);
@@ -54,19 +55,20 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	public String getName() {
 		return "container.rbmkOutgasser";
 	}
-	
+
 	@Override
 	public void update() {
 
 		if(!world.isRemote) {
-
-			if(!canProcess()) {
+			// reset timer when item changes. does not exist in 1.7.
+			if(!canProcess() || !previousStack.isItemEqual(inventory.getStackInSlot(0))) {
 				this.progress = 0;
 			}
 
 			for(DirPos pos : getOutputPos()) {
 				if(this.gas.getFill() > 0) this.sendFluid(gas, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 			}
+			previousStack = inventory.getStackInSlot(0);
 		}
 		
 		super.update();
@@ -143,7 +145,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		if(inventory.getStackInSlot(1).isEmpty() || out == null)
 			return true;
 
-		return inventory.getStackInSlot(1).getItem() == out.getItem() && inventory.getStackInSlot(1).getItemDamage() == out.getItemDamage() && inventory.getStackInSlot(1).getCount() + out.getCount() <= inventory.getStackInSlot(1).getMaxStackSize();
+		return inventory.insertItem(1, output.getKey(), true).isEmpty();
 	}
 
 
@@ -160,11 +162,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		ItemStack out = output.getKey();
 
 		if(out != null) {
-			if(inventory.getStackInSlot(1).isEmpty()) {
-				inventory.setStackInSlot(1, out.copy());
-			} else {
-				inventory.getStackInSlot(1).setCount(inventory.getStackInSlot(1).getCount() + out.getCount());
-			}
+			inventory.insertItem(1, output.getKey(), false);
 		}
 	}
 	
@@ -239,17 +237,17 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
-		return i == 1;
+		return true;
 	}
 
 	@Override
 	public boolean canLoad(ItemStack toLoad) {
-		return toLoad != null && inventory.getStackInSlot(0).isEmpty();
+		return toLoad != null && inventory.insertItem(0, toLoad, true).isEmpty();
 	}
 
 	@Override
 	public void load(ItemStack toLoad) {
-		inventory.setStackInSlot(0, toLoad.copy());
+		inventory.insertItem(0, toLoad, false);
 		this.markDirty();
 	}
 
