@@ -26,9 +26,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -236,9 +239,21 @@ public class HazardSystem {
     public static void register(final Object o, final HazardData data) {
         if (o instanceof String) oreMap.put((String) o, data);
         if (o instanceof Item) itemMap.put((Item) o, data);
+        if (o instanceof ResourceLocation) retriveAndRegister((ResourceLocation) o,data);
         if (o instanceof Block) itemMap.put(Item.getItemFromBlock((Block) o), data);
         if (o instanceof ItemStack) stackMap.put(ItemStackUtil.comparableStackFrom((ItemStack) o), data);
         if (o instanceof ComparableStack) stackMap.put((ComparableStack) o, data);
+    }
+
+
+    /**
+     * Attempts to retrive and append an item onto the map from resource location, helpful for groovy users
+     * @param loc
+     */
+    private static void retriveAndRegister(ResourceLocation loc, HazardData data){
+        IForgeRegistry<Item> registry = ForgeRegistries.ITEMS;
+        if(registry.containsKey(loc))
+            itemMap.put(registry.getValue(loc),data);
     }
 
     /**
