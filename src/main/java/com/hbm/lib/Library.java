@@ -284,7 +284,7 @@ public class Library {
 		}
 		long powerNeeded = maxPower - power;
 		if (powerNeeded <= 0) return power;
-		long heExtracted = disChargeBatteryIfValid(stack, powerNeeded, false);
+		long heExtracted = dischargeBatteryIfValid(stack, powerNeeded, false);
 		return power + heExtracted;
 	}
 
@@ -1183,7 +1183,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	/**
 	 * @return The amount of energy that was actually extracted, in HE.
 	 */
-	public static long disChargeBatteryIfValid(@NotNull ItemStack stack, long ntmCharge, boolean instant) {
+	public static long dischargeBatteryIfValid(@NotNull ItemStack stack, long ntmCharge, boolean instant) {
 		if (stack.isEmpty()) return 0;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			long currentCharge = battery.getCharge(stack);
@@ -1509,14 +1509,14 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 				ItemStack destStack = destinationInventory.getStackInSlot(destSlot);
 				int amountToPull = destStack.getMaxStackSize() - destStack.getCount();
 				if (amountToPull <= 0) continue;
-				itemsPulled = isItemsPulled(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, amountToPull);
+				itemsPulled = tryPull(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, amountToPull);
 			}
 
 			int newSlotsToFill = slotsNeeded - slotsOccupied;
 			if (newSlotsToFill > 0) {
 				for (int i = 0; i < newSlotsToFill && i < emptySlots.size(); i++) {
 					int destSlot = emptySlots.get(i);
-                    itemsPulled = isItemsPulled(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, maxStackSize);
+                    itemsPulled = tryPull(sourceContainer, destinationInventory, sourceTE, itemsPulled, availableItems, singleIngredient, destSlot, maxStackSize);
 				}
 			}
 		}
@@ -1528,7 +1528,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return itemsPulled;
 	}
 
-	private static boolean isItemsPulled(@NotNull IItemHandler sourceContainer, @NotNull IItemHandlerModifiable destinationInventory, @Nullable TileEntityMachineBase sourceTE, boolean itemsPulled, Map<Integer, ItemStack> availableItems, AStack singleIngredient, int destSlot, int amountToPull) {
+	private static boolean tryPull(@NotNull IItemHandler sourceContainer, @NotNull IItemHandlerModifiable destinationInventory, @Nullable TileEntityMachineBase sourceTE, boolean itemsPulled, Map<Integer, ItemStack> availableItems, AStack singleIngredient, int destSlot, int amountToPull) {
 		for (Map.Entry<Integer, ItemStack> entry : availableItems.entrySet()) {
 			if (amountToPull <= 0) break;
 			int sourceSlot = entry.getKey();

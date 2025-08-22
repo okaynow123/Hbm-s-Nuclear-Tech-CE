@@ -8,12 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIMachineElectricFurnace extends GuiInfoContainer {
 	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/GUIElectricFurnace.png");
+	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/GUIElectricFurnace.png");
 	private TileEntityMachineElectricFurnace diFurnace;
 
 	public GUIMachineElectricFurnace(InventoryPlayer invPlayer, TileEntityMachineElectricFurnace tedf) {
@@ -27,6 +26,7 @@ public class GUIMachineElectricFurnace extends GuiInfoContainer {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float f) {
 		super.drawScreen(mouseX, mouseY, f);
+		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 20, guiTop + 69 - 52, 16, 52, diFurnace.power, TileEntityMachineElectricFurnace.maxPower);
 		String[] upgradeText = new String[3];
 		upgradeText[0] = I18nUtil.resolveKey("desc.gui.upgrade");
 		upgradeText[1] = I18nUtil.resolveKey("desc.gui.upgrade.speed");
@@ -65,11 +65,11 @@ public class GUIMachineElectricFurnace extends GuiInfoContainer {
 		}
 		
 		if(diFurnace.canProcess() && diFurnace.hasPower()) {
-			drawTexturedModalRect(guiLeft + 55, guiTop + 34, 176, 31, 18, 18);
+			drawTexturedModalRect(guiLeft + 56, guiTop + 35, 176, 0, 16, 16);
 		}
 
 		int j1 = diFurnace.getProgressScaled(24);
-		drawTexturedModalRect(guiLeft + 79, guiTop + 34, 176, 14, j1 + 1, 17);
+		drawTexturedModalRect(guiLeft + 79, guiTop + 34, 176, 17, j1 + 1, 17);
 		this.drawInfoPanel(guiLeft + 151, guiTop + 19, 8, 8, 8);
 	}
 }

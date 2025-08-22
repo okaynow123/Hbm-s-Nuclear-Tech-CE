@@ -1,6 +1,9 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotUpgrade;
+import com.hbm.items.machine.ItemMachineUpgrade;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineElectricFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,7 +23,8 @@ public class ContainerMachineElectricFurnace extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 56, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 56, 17));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 116, 35));
-		
+		//Upgrades
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 3, 147, 34));
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 9; j++)
@@ -34,42 +38,45 @@ public class ContainerMachineElectricFurnace extends Container {
 			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
 		}
 	}
-	
+
 	@Override
-    public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int par2)
-    {
-		ItemStack var3 = ItemStack.EMPTY;
-		Slot var4 = (Slot) this.inventorySlots.get(par2);
-		
-		if (var4 != null && var4.getHasStack())
-		{
-			ItemStack var5 = var4.getStack();
-			var3 = var5.copy();
-			
-            if (par2 <= 2) {
-				if (!this.mergeItemStack(var5, 3, this.inventorySlots.size(), true))
-				{
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		ItemStack rStack = ItemStack.EMPTY;
+		Slot slot = this.inventorySlots.get(index);
+
+		if(slot != null && slot.getHasStack()) {
+			ItemStack stack = slot.getStack();
+			rStack = stack.copy();
+
+			if(index <= 3) {
+				if(!this.mergeItemStack(stack, 4, this.inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			}
-			else if (!this.mergeItemStack(var5, 1, 2, false))
-			{
-				if (!this.mergeItemStack(var5, 0, 1, false))
+
+				slot.onSlotChange(stack, rStack);
+			} else {
+
+				if(Library.isItemDischargeableBattery(rStack)) {
+					if(!this.mergeItemStack(stack, 0, 1, false))
 						return ItemStack.EMPTY;
+
+				} else if(rStack.getItem() instanceof ItemMachineUpgrade) {
+					if(!this.mergeItemStack(stack, 3, 4, false))
+						return ItemStack.EMPTY;
+
+				} else if(!this.mergeItemStack(stack, 1, 2, false))
+					return ItemStack.EMPTY;
 			}
-			
-			if (var5.isEmpty())
-			{
-				var4.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				var4.onSlotChanged();
+
+			if(stack.getCount() == 0) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
 			}
 		}
-		
-		return var3;
-    }
+
+		return rStack;
+	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
