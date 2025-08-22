@@ -73,7 +73,6 @@ public class DuctBakedModel implements IBakedModel {
     // Th3_Sl1ze: okay, so half of this clusterfuck is made by me, and half of it by llm
     // It's still quite a big method but it's as debloated as I can do rn (considering that you need to rotate uv fucking manually)
     // UV's not perfect, but I'm NOT going to try finding where it fucks itself
-    // COLOR HANDLER WILL BE DONE LATER
     @Override
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
         if (side != null) return Collections.emptyList();

@@ -1120,6 +1120,8 @@ public class ModItems {
     public static final Item fallout = new ItemCustomLore("falloutitem").setCreativeTab(MainRegistry.partsTab);
     public static final Item containment_box = new ItemLeadBox("containment_box").setCreativeTab(MainRegistry.consumableTab);
     public static final Item plastic_bag = new ItemPlasticBag("plastic_bag").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item ammo_bag = new ItemAmmoBag("ammo_bag").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item ammo_bag_infinite = new ItemAmmoBag("ammo_bag_infinite").setCreativeTab(MainRegistry.consumableTab);
     public static final Item casing_bag = new ItemCasingBag("casing_bag").setCreativeTab(MainRegistry.consumableTab);
     public static final Item tritium_deuterium_cake = new ItemCustomLore("tritium_deuterium_cake").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
     public static final Item pile_rod_uranium = new ItemPileRod("pile_rod_uranium").setCreativeTab(MainRegistry.controlTab);

@@ -2,18 +2,18 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -34,7 +34,7 @@ public class GUIMassStorage extends GuiInfoContainer {
 	public void initGui() {
 		super.initGui();
 		if (mc.player != null) {
-			TileEntityMassStorage.openInventory(mc.player);
+			storage.openInventory(mc.player);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class GUIMassStorage extends GuiInfoContainer {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		if (mc.player != null) {
-			TileEntityMassStorage.closeInventory(mc.player);
+			storage.closeInventory(mc.player);
 		}
 	}
 

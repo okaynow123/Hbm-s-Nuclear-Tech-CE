@@ -1,0 +1,181 @@
+package com.hbm.blocks.generic;
+
+import com.hbm.blocks.BlockEnumMeta;
+import com.hbm.lib.RefStrings;
+import com.hbm.render.amlfrom1710.WavefrontObject;
+import com.hbm.render.model.BlockDecoBakedModel;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+
+public class BlockDecoModel extends BlockEnumMeta {
+
+    private float mnX = 0.0F;
+    private float mnY = 0.0F;
+    private float mnZ = 0.0F;
+    private float mxX = 1.0F;
+    private float mxY = 1.0F;
+    private float mxZ = 1.0F;
+
+    private ResourceLocation objModelLocation;
+    @SideOnly(Side.CLIENT)
+    private IBakedModel[] bakedByMeta = new IBakedModel[16];
+
+    public BlockDecoModel(Material mat, SoundType type, String registryName,
+                          Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture,
+                          ResourceLocation objModelLocation) {
+        super(mat, type, registryName, theEnum, multiName, multiTexture);
+        this.objModelLocation = objModelLocation;
+    }
+
+    public BlockDecoModel(Material mat, SoundType type, String registryName,
+                          Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture) {
+        super(mat, type, registryName, theEnum, multiName, multiTexture);
+    }
+
+    public BlockDecoModel setBlockBoundsTo(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        mnX = minX;
+        mnY = minY;
+        mnZ = minZ;
+        mxX = maxX;
+        mxY = maxY;
+        mxZ = maxZ;
+        return this;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    private static int orientationFromYaw(EntityLivingBase player) {
+        int i = MathHelper.floor(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+        if ((i & 1) != 1) {
+            return i >> 1; // North(0) and South(1)
+        } else {
+            return (i == 3) ? 2 : 3; // West(2) or East(3)
+        }
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
+                                            float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        int orient = orientationFromYaw(placer) & 3;
+        int finalMeta = ((orient << 2) | (meta & 3)) & 15;
+        return this.getDefaultState().withProperty(META, finalMeta);
+    }
+
+    private AxisAlignedBB getBoxFor(int orient) {
+        return switch (orient) {
+            case 0 -> // North
+                    new AxisAlignedBB(1.0F - mxX, mnY, 1.0F - mxZ, 1.0F - mnX, mxY, 1.0F - mnZ);
+            case 1 -> // South
+                    new AxisAlignedBB(mnX, mnY, mnZ, mxX, mxY, mxZ);
+            case 2 -> // West
+                    new AxisAlignedBB(1.0F - mxZ, mnY, mnX, 1.0F - mnZ, mxY, mxX);
+            case 3 -> // East
+                    new AxisAlignedBB(mnZ, mnY, 1.0F - mxX, mxZ, mxY, 1.0F - mnX);
+            default -> FULL_BLOCK_AABB;
+        };
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        int meta = state.getValue(META);
+        int orient = (meta >> 2) & 3;
+        return getBoxFor(orient);
+    }
+
+    @Override
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos,
+                                      AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
+                                      @Nullable Entity entityIn, boolean isActualState) {
+        AxisAlignedBB bb = getBoundingBox(state, worldIn, pos);
+        Block.addCollisionBoxToList(pos, entityBox, collidingBoxes, bb);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        int meta = state.getValue(META) & 3;
+        return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerSprite(TextureMap map) {
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/deco_computer"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void bakeModel(ModelBakeEvent event) {
+        WavefrontObject wavefront = null;
+        try {
+            wavefront = new WavefrontObject(objModelLocation);
+        } catch (Exception ignored) {}
+
+        if (wavefront == null) {
+            TextureAtlasSprite missing = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+            for (int m = 0; m < 4; m++) {
+                bakedByMeta[m * 4] = BlockDecoBakedModel.forBlock(new WavefrontObject(new ResourceLocation("minecraft:empty")), missing);
+            }
+        } else {
+            TextureAtlasSprite sprite = Minecraft.getMinecraft()
+                    .getTextureMapBlocks()
+                    .getAtlasSprite(new ResourceLocation("hbm", "blocks/deco_computer").toString());
+            for (int m = 0; m < 4; m++) {
+                ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
+                bakedByMeta[m * 4] = BlockDecoBakedModel.forBlock(wavefront, sprite);
+                event.getModelRegistry().putObject(mrl, bakedByMeta[m * 4]);
+            }
+        }
+
+        // Ensure all meta variants (even if META_COUNT > 4) point to the correct baked instance for (meta & 3)
+        for (int meta = 0; meta < 4; meta++) {
+            ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
+            event.getModelRegistry().putObject(modelLocation, bakedByMeta[meta * 4]);
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public StateMapperBase getStateMapper(ResourceLocation loc) {
+        return new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                int meta = state.getValue(META) & 3;
+                return new ModelResourceLocation(loc, "meta=" + meta);
+            }
+        };
+    }
+}

@@ -12,10 +12,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-// заметка для металлолома: ISidedInventory устарел к хуям, такое не юзаем
 public abstract class TileEntityCrateBase extends TileEntityLockableBase {
 
-	// этот рофлан с инвентарём я свистнул с TileEntityMachineBase, потому что зачем думать, если можно не думать?
 	public ItemStackHandler inventory;
 	public String customName;
 
@@ -42,12 +40,6 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase {
 		};
 	}
 
-	/* гайд пошёл дальше. slots[i] => inventory.getStackInSlot(i)
-	* ItemStack сделали так что теперь он null больше не может быть, так что
-	* теперь у нас есть ItemStack.EMPTY
-	* проверка на пустой слот - ".isEmpty()" вместо "== null"
-	* ну и приравнять слот к чему-либо мы не можем напрямую, но можем прописать setStackInSlot
-	*/
 	public ItemStack getStackInSlotOnClosing(int i) {
 		if (!inventory.getStackInSlot(i).isEmpty()) {
 			ItemStack itemStack = inventory.getStackInSlot(i);
@@ -76,12 +68,12 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase {
 	}
 
 
-	public static void openInventory(EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 
 
-	public static void closeInventory(EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 

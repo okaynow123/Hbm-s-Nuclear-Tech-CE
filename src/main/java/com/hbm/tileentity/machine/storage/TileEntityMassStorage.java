@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-// заметка №2 - тебе не надо втыкать IGuiProvider в класс, потому что TileEntityCrateBase и так его сжирает
 @AutoRegister
 public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, IControlReceiverFilter, IGUIProvider {
 	
@@ -148,11 +147,11 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
 		return Vec3.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 20;
 	}
 
-	public static void openInventory(EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.storageOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 
-	public static void closeInventory(EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.storageClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 

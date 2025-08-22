@@ -414,6 +414,9 @@ public class ResourceManager {
 	//Electrolyser
 	public static final IModelCustom electrolyser = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/electrolyser.obj")).asVBO();
 
+	//DecoContainer (File Cabinet for now)
+	public static final IModelCustom file_cabinet = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/file_cabinet.obj")).asVBO();
+
 	//Selenium Engine
 	public static final IModelCustom selenium_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/selenium_engine_body.obj")).asVBO();
 	public static final IModelCustom selenium_rotor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/selenium_engine_rotor.obj")).asVBO();
@@ -921,6 +924,10 @@ public class ResourceManager {
 
 	//Electrolyser
 	public static final ResourceLocation electrolyser_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/electrolyser.png");
+
+	//DecoContainer
+	public static final ResourceLocation file_cabinet_tex = new ResourceLocation(RefStrings.MODID, "textures/models/file_cabinet.png");
+	public static final ResourceLocation file_cabinet_steel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/file_cabinet_steel.png");
 
 	//Large Cable
 	public static final ResourceLocation pylon_large_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_large.png");

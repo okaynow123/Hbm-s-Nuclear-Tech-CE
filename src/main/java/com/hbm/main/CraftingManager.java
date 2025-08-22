@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.BlockEnums.LightstoneType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
@@ -668,9 +669,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.containment_box, 1), "LUL", "UCU", "LUL", 'L', PB.plate(), 'U', U238.billet(), 'C', ModBlocks.crate_steel );
 		addRecipeAuto(new ItemStack(ModItems.casing_bag, 1), " L ", "LGL", " L ", 'L', Items.LEATHER, 'G', GUNMETAL.plate() );
 		addRecipeAuto(new ItemStack(ModItems.casing_bag, 1), " L ", "LGL", " L ", 'L', ANY_RUBBER.ingot(), 'G', GUNMETAL.plate() );
-		// TODO: ammo bags
-		/*addRecipeAuto(new ItemStack(ModItems.ammo_bag, 1), "LLL", "MGM", "LLL", 'L', Items.LEATHER, 'G', WEAPONSTEEL.plate(), 'M', WEAPONSTEEL.mechanism() );
-		addRecipeAuto(new ItemStack(ModItems.ammo_bag, 1), "LLL", "MGM", "LLL", 'L', ANY_RUBBER.ingot(), 'G', WEAPONSTEEL.plate(), 'M', WEAPONSTEEL.mechanism() );*/
+		addRecipeAuto(new ItemStack(ModItems.ammo_bag, 1), "LLL", "MGM", "LLL", 'L', Items.LEATHER, 'G', WEAPONSTEEL.plate(), 'M', WEAPONSTEEL.mechanism() );
+		addRecipeAuto(new ItemStack(ModItems.ammo_bag, 1), "LLL", "MGM", "LLL", 'L', ANY_RUBBER.ingot(), 'G', WEAPONSTEEL.plate(), 'M', WEAPONSTEEL.mechanism() );
 
 		addRecipeAuto(new ItemStack(ModBlocks.absorber, 1), "ICI", "CPC", "ICI", 'I', CU.ingot(), 'C', COAL.dust(), 'P', PB.dust() );
 		addRecipeAuto(new ItemStack(ModBlocks.absorber_red, 1), "ICI", "CPC", "ICI", 'I', TI.ingot(), 'C', COAL.dust(), 'P', ModBlocks.absorber );
@@ -1029,8 +1029,7 @@ public class CraftingManager {
 
 		addRecipeAuto(new ItemStack(ModBlocks.machine_drain), "PPP", "T  ", "PPP", 'P', STEEL.plateCast(), 'T', ModItems.tank_steel );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_intake), "GGG", "PMP", "PTP", 'G', ModBlocks.steel_grate, 'P', STEEL.plate(), 'M', ModItems.motor, 'T', ModItems.tank_steel );
-		// TODO
-		//addRecipeAuto(new ItemStack(ModBlocks.filing_cabinet, 1, BlockEnums.DecoCabinetEnum.STEEL.ordinal()), " P ", "PIP", " P ", 'P', STEEL.plate(), 'I', ModItems.plate_polymer );
+		addRecipeAuto(new ItemStack(ModBlocks.filing_cabinet, 1, BlockEnums.DecoCabinetEnum.STEEL.ordinal()), " P ", "PIP", " P ", 'P', STEEL.plate(), 'I', ModItems.plate_polymer );
 
 		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile, 4), " I ", "IBI", " I ", 'I', ModItems.plate_polymer, 'B', ModBlocks.brick_light );
 		addRecipeAuto(new ItemStack(ModBlocks.vinyl_tile, 4, 1), "BB", "BB", 'B', new ItemStack(ModBlocks.vinyl_tile, 1, 0) );

@@ -702,7 +702,7 @@ public class AnvilRecipes extends SerializableRecipe {
 				}
 		).setTier(3));
 		// TODO: deco blocks
-		/*constructionRecipes.add(new AnvilConstructionRecipe(
+		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.deco_computer),
 				new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.crt_display, 1)),
@@ -716,7 +716,7 @@ public class AnvilRecipes extends SerializableRecipe {
 
 				}
 		).setTier(2));
-		constructionRecipes.add(new AnvilConstructionRecipe(
+		/*constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.deco_crt, 1, OreDictionary.WILDCARD_VALUE),
 				new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.crt_display, 1)),
@@ -766,7 +766,7 @@ public class AnvilRecipes extends SerializableRecipe {
 						new AnvilOutput(new ItemStack(ModItems.flame_pony, 1), 0.01F)
 
 				}
-		).setTier(2));
+		).setTier(2));*/
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.filing_cabinet),
 				new AnvilOutput[] {
@@ -776,7 +776,7 @@ public class AnvilRecipes extends SerializableRecipe {
 						new AnvilOutput(new ItemStack(ModItems.scrap, 1))
 
 				}
-		).setTier(1));*/
+		).setTier(1));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.radiorec),
 				new AnvilOutput[] {
