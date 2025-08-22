@@ -68,7 +68,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 			for(DirPos pos : getOutputPos()) {
 				if(this.gas.getFill() > 0) this.sendFluid(gas, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 			}
-			previousStack = inventory.getStackInSlot(0);
+			previousStack = inventory.getStackInSlot(0).copy();
 		}
 		
 		super.update();
@@ -145,7 +145,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		if(inventory.getStackInSlot(1).isEmpty() || out == null)
 			return true;
 
-		return inventory.insertItem(1, output.getKey(), true).isEmpty();
+		return inventory.insertItem(1, out.copy(), true).isEmpty();
 	}
 
 
@@ -162,7 +162,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		ItemStack out = output.getKey();
 
 		if(out != null) {
-			inventory.insertItem(1, output.getKey(), false);
+			inventory.insertItem(1, out.copy(), false);
 		}
 	}
 	
@@ -242,12 +242,12 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	@Override
 	public boolean canLoad(ItemStack toLoad) {
-		return toLoad != null && inventory.insertItem(0, toLoad, true).isEmpty();
+		return toLoad != null && inventory.insertItem(0, toLoad.copy(), true).isEmpty();
 	}
 
 	@Override
 	public void load(ItemStack toLoad) {
-		inventory.insertItem(0, toLoad, false);
+		inventory.insertItem(0, toLoad.copy(), false);
 		this.markDirty();
 	}
 

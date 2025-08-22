@@ -116,14 +116,14 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 
     public boolean canProcess() {
         if (inventory.getStackInSlot(1).isEmpty() || cooldown > 0) return false;
-        ItemStack itemStack = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(1));
+        ItemStack itemStack = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(1)).copy();
         if (itemStack.isEmpty()) return false;
         return inventory.insertItem(2, itemStack, true).isEmpty();
     }
 
     private void processItem() {
         if (canProcess()) {
-            ItemStack itemStack = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(1));
+            ItemStack itemStack = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(1)).copy();
             inventory.insertItem(2, itemStack, false);
             inventory.extractItem(1, 1, false);
         }
