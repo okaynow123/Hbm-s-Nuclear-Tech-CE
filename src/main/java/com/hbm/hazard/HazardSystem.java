@@ -255,7 +255,7 @@ public class HazardSystem {
         if(registry.containsKey(loc))
             itemMap.put(registry.getValue(loc),data);
         else
-            MainRegistry.logger.error("Hazard registration of " +loc.toString()+"failed to register as it was not in the registry");
+            MainRegistry.logger.error("Hazard registration of " +loc.toString()+" failed to register as it was not in the registry");
     }
 
     /**
