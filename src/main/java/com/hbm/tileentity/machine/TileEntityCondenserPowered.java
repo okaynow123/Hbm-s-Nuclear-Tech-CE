@@ -14,6 +14,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
@@ -138,18 +139,18 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 
 	@Override
 	public void subscribeToAllAround(FluidType type, TileEntity te) {
-		for(int i = 2; i < 6; i++) {
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			this.trySubscribe(this.tanks[0].getTankType(), world, pos.getX(), pos.getY(), pos.getZ(), dir);
-			this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir);
+		for(DirPos dirPos : getConPos()) {
+			BlockPos pos = dirPos.getPos();
+			this.trySubscribe(this.tanks[0].getTankType(), world, pos.getX(), pos.getY(), pos.getZ(), dirPos.getDir());
+			this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dirPos.getDir());
 		}
 	}
 
 	@Override
 	public void sendFluidToAll(FluidTankNTM tank, TileEntity te) {
-		for(int i = 2; i < 6; i++) {
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			this.sendFluid(this.tanks[1], world, pos.getX(), pos.getY(), pos.getZ(), dir);
+		for(DirPos dirPos : getConPos()) {
+			BlockPos pos = dirPos.getPos();
+			this.sendFluid(this.tanks[1], world, pos.getX(), pos.getY(), pos.getZ(), dirPos.getDir());
 		}
 	}
 	
