@@ -310,15 +310,14 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.anvil_murky, 1), "UUU", "UAU", "UUU", 'U', ModItems.undefined, 'A', ModBlocks.anvil_steel );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_fraction_tower), "H", "G", "H", 'H', STEEL.plateWelded(), 'G', ModBlocks.steel_grate );
 		addRecipeAuto(new ItemStack(ModBlocks.fraction_spacer), "BHB", 'H', STEEL.shell(), 'B', Blocks.IRON_BARS );
-		// TODO
-		//addRecipeAuto(new ItemStack(ModBlocks.machine_furnace_brick_off), "III", "I I", "BBB", 'I', Items.BRICK, 'B', Blocks.STONE );
+		addRecipeAuto(new ItemStack(ModBlocks.machine_furnace_brick_off), "III", "I I", "BBB", 'I', Items.BRICK, 'B', Blocks.STONE );
 		addRecipeAuto(new ItemStack(ModBlocks.furnace_iron), "III", "IFI", "BBB", 'I', IRON.ingot(), 'F', Blocks.FURNACE, 'B', Blocks.STONEBRICK );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_mixer), "PIP", "GCG", "PMP", 'P', STEEL.plate(), 'I', DURA.ingot(), 'G', KEY_ANYPANE, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE), 'M', ModItems.motor );
+		addRecipeAuto(new ItemStack(ModBlocks.fan), "BPB", "PRP", "BPB", 'B', STEEL.bolt(), 'P', IRON.plate(), 'R', REDSTONE.dust() );
 		// TODO
-		/*addRecipeAuto(new ItemStack(ModBlocks.fan), "BPB", "PRP", "BPB", 'B', STEEL.bolt(), 'P', IRON.plate(), 'R', REDSTONE.dust() );
-		addRecipeAuto(new ItemStack(ModBlocks.piston_inserter), "ITI", "TPT", "ITI", 'P', DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_PNEUMATIC), 'I', IRON.plate(), 'T', STEEL.bolt() );
+		//addRecipeAuto(new ItemStack(ModBlocks.piston_inserter), "ITI", "TPT", "ITI", 'P', DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_PNEUMATIC), 'I', IRON.plate(), 'T', STEEL.bolt() );
 
-		addRecipeAuto(new ItemStack(ModItems.upgrade_muffler, 16), "III", "IWI", "III", 'I', ANY_RUBBER.ingot(), 'W', Blocks.WOOL );*/
+		addRecipeAuto(new ItemStack(ModItems.upgrade_muffler, 16), "III", "IWI", "III", 'I', ANY_RUBBER.ingot(), 'W', Blocks.WOOL );
 		addRecipeAuto(new ItemStack(ModItems.upgrade_template, 1), "WIW", "PCP", "WIW", 'W', CU.wireFine(), 'I', IRON.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'P', ModItems.plate_polymer );
 		addRecipeAuto(new ItemStack(ModItems.upgrade_template, 1), "WIW", "PCP", "WIW", 'W', CU.wireFine(), 'I', ANY_PLASTIC.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), 'P', ModItems.plate_polymer );
 

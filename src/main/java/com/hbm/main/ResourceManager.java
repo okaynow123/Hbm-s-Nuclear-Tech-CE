@@ -191,6 +191,9 @@ public class ResourceManager {
 	public static final IModelCustom dfc_receiver = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/core_receiver.obj")).asVBO();
 	public static final IModelCustom dfc_injector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/core_injector.obj")).asVBO();
 
+	//Fan
+	public static final IModelCustom fan = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/fan.obj")).asVBO();
+
 	//Sphere
 	public static final IModelCustom sphere_ruv = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/sphere_ruv.obj")).asVBO();
 	public static final IModelCustom sphere_iuv = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/sphere_iuv.obj")).asVBO();
@@ -1116,6 +1119,9 @@ public class ResourceManager {
 	public static final ResourceLocation dfc_receiver_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/core_receiver.png");
 	public static final ResourceLocation dfc_injector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/core_injector.png");
 	public static final ResourceLocation dfc_stabilizer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/core_stabilizer.png");
+
+	//Fan
+	public static final ResourceLocation fan_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/fan.png");
 
 	//Radgen
 	public static final ResourceLocation radgen_body_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rad_gen_body.png");
