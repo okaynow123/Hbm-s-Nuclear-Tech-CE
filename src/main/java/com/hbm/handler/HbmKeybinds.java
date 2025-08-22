@@ -81,7 +81,7 @@ public class HbmKeybinds {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void postClientTick(TickEvent.ClientTickEvent event) {
-		if(event.phase != event.phase.END) return;
+		if(event.phase != TickEvent.Phase.END) return;
 		EntityPlayer player = MainRegistry.proxy.me();
 		if(player == null) return;
 		if(player.world == null) return;
@@ -129,7 +129,7 @@ public class HbmKeybinds {
 
 			//if anything errors here, run ./gradlew clean setupDecompWorkSpace
 			for (KeyBinding key : KeyBinding.KEYBIND_ARRAY.values()) {
-				if (key.getKeyCode() != keyCode) continue;
+				if (key.getKeyCode() != keyCode || key.getKeyCode() == 0) continue;
 				if (!key.getKeyConflictContext().isActive()) continue;
 
 				KeyModifier mod = key.getKeyModifier();
