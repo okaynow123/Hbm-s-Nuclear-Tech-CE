@@ -114,6 +114,7 @@ public class ItemCustomLore extends ItemBakedBase {
     }
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
 		if(stack.getItem() != ModItems.undefined || stack.getItemDamage() != 99) return ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
 
