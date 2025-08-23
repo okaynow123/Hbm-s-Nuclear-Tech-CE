@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -68,6 +69,12 @@ public class HazardSystem {
      */
     public static final HashSet<ComparableStack> stackBlacklist = new HashSet<>();
     public static final HashSet<String> dictBlacklist = new HashSet<>();
+
+
+    /**
+     * For items from outside of that mod that require registration right at end of fml loading
+     */
+    public static final List<Tuple<ResourceLocation,HazardData>> locationRateRegisterList = new ArrayList<>();
     /**
      * List of hazard transformers, called in order before and after unrolling all the HazardEntries.
      */
@@ -255,7 +262,8 @@ public class HazardSystem {
         if(registry.containsKey(loc))
             itemMap.put(registry.getValue(loc),data);
         else
-            MainRegistry.logger.error("Hazard registration of " +loc.toString()+" failed to register as it was not in the registry");
+           locationRateRegisterList.add(new Tuple<>(loc,data));
+
     }
 
     /**

@@ -28,7 +28,9 @@ import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardRegistry;
+import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.inventory.FluidContainerRegistry;
@@ -68,6 +70,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -456,5 +460,11 @@ public class MainRegistry {
     @EventHandler
     public void serverStopping(FMLServerStoppingEvent evt) {
         RadiationSystemNT.onServerStopping(evt);
+    }
+
+    @EventHandler
+    public void fMLLoadCompleteEvent(FMLLoadCompleteEvent evt){
+        for(Tuple<ResourceLocation, HazardData> tuple : HazardSystem.locationRateRegisterList)
+            HazardSystem.register(tuple.getFirst(), tuple.getSecond());
     }
 }
