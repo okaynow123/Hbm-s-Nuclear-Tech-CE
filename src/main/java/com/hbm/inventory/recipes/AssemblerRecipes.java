@@ -164,7 +164,7 @@ public class AssemblerRecipes extends SerializableRecipe {
 		makeRecipe(new ComparableStack(ModItems.plate_dura_steel, 2), new AStack[] { new OreDictStack(DURA.ingot(), 3), }, 30);
 		makeRecipe(new ComparableStack(ModItems.plate_weaponsteel, 2), new AStack[] { new OreDictStack(WEAPONSTEEL.ingot(), 3), }, 30);
 		makeRecipe(new ComparableStack(ModItems.plate_gunmetal, 2), new AStack[] { new OreDictStack(GUNMETAL.ingot(), 3), }, 30);
-		makeRecipe(new ComparableStack(ModItems.plate_mixed, 6), new AStack[] { new OreDictStack(ALLOY.plate(), 2), new OreDictStack(OreDictManager.getReflector(), 2), new OreDictStack(BIGMT.plate(), 1), }, 100);
+		makeRecipe(new ComparableStack(ModItems.plate_mixed, 4), new AStack[] { new OreDictStack(ALLOY.plate(), 2), new OreDictStack(OreDictManager.getReflector(), 1), new OreDictStack(BIGMT.plate(), 1), }, 100);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_ALUMINIUM.id), new AStack[] { new OreDictStack(AL.ingot(), 1), }, 20);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_COPPER.id), new AStack[] { new OreDictStack(CU.ingot(), 1), }, 20);
 		makeRecipe(new ComparableStack(ModItems.wire_fine, 6, Mats.MAT_TUNGSTEN.id), new AStack[] { new OreDictStack(W.ingot(), 1), }, 20);
