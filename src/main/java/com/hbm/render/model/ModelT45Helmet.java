@@ -4,9 +4,12 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ModelT45Helmet extends ModelBiped {
+    private static final float DEG_TO_RAD = (float) Math.PI / 180F;
+
     // fields
     private final ModelRenderer helmet;
     private final ModelRenderer Shape1;
@@ -99,15 +102,26 @@ public class ModelT45Helmet extends ModelBiped {
     @Override
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
 
-        if (entity instanceof EntityPlayer player) {
-            this.isSneak = player.isSneaking();
+        if (entity instanceof EntityArmorStand stand) {
+            this.bipedHead.rotateAngleX = stand.getHeadRotation().getX() * DEG_TO_RAD;
+            this.bipedHead.rotateAngleY = stand.getHeadRotation().getY() * DEG_TO_RAD;
+            this.bipedHead.rotateAngleZ = stand.getHeadRotation().getZ() * DEG_TO_RAD;
+            this.bipedHead.setRotationPoint(0.0F, 1.0F, 0.0F);
+            this.isSneak = false;
+        } else {
+            if (entity instanceof EntityPlayer player) {
+                this.isSneak = player.isSneaking();
+            }
+            super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         }
 
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.helmet.rotationPointX = this.bipedHead.rotationPointX;
         this.helmet.rotationPointY = this.bipedHead.rotationPointY;
-        this.helmet.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.helmet.rotationPointZ = this.bipedHead.rotationPointZ;
+
         this.helmet.rotateAngleX = this.bipedHead.rotateAngleX;
+        this.helmet.rotateAngleY = this.bipedHead.rotateAngleY;
+        this.helmet.rotateAngleZ = this.bipedHead.rotateAngleZ;
 
         if (this.isSneak) {
             this.helmet.rotationPointY = 3.7F;
