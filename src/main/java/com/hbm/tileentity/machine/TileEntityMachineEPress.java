@@ -161,7 +161,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 		inventory.insertItem(3, output.copy(), false);
 		input.shrink(1);
 		if (stamp.isItemStackDamageable()) {
-			stamp.damageItem(1, null);
+			stamp.setItemDamage(stamp.getItemDamage() + 1);
 			if (stamp.getItemDamage() >= stamp.getMaxDamage()) {
 				inventory.setStackInSlot(1, ItemStack.EMPTY);
 			}
