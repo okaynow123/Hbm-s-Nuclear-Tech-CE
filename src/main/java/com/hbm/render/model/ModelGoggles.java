@@ -3,11 +3,13 @@ package com.hbm.render.model;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ModelGoggles extends ModelBiped {
 
+	private static final float DEG_TO_RAD = (float) Math.PI / 180F;
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 	ModelRenderer Shape5;
@@ -73,25 +75,32 @@ public class ModelGoggles extends ModelBiped {
 
 	@Override
 	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+		if (entity instanceof EntityArmorStand stand) {
+            this.bipedHead.rotateAngleX = stand.getHeadRotation().getX() * DEG_TO_RAD;
+			this.bipedHead.rotateAngleY = stand.getHeadRotation().getY() * DEG_TO_RAD;
+			this.bipedHead.rotateAngleZ = stand.getHeadRotation().getZ() * DEG_TO_RAD;
+			this.bipedHead.setRotationPoint(0.0F, 1.0F, 0.0F);
 
-		if (entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			if (player.isSneaking()) {
-				this.isSneak = true;
+			this.isSneak = false;
+		} else {
+			if (entity instanceof EntityPlayer) {
+				this.isSneak = entity.isSneaking();
 			} else {
 				this.isSneak = false;
 			}
+			super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		}
-
-		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		this.google.rotationPointX = this.bipedHead.rotationPointX;
 		this.google.rotationPointY = this.bipedHead.rotationPointY;
-		this.google.rotateAngleY = this.bipedHead.rotateAngleY;
-		this.google.rotateAngleX = this.bipedHead.rotateAngleX;
+		this.google.rotationPointZ = this.bipedHead.rotationPointZ;
 
-		if(this.isSneak) {
-            this.google.rotationPointY = 3.73F;
-        }
+		this.google.rotateAngleX = this.bipedHead.rotateAngleX;
+		this.google.rotateAngleY = this.bipedHead.rotateAngleY;
+		this.google.rotateAngleZ = this.bipedHead.rotateAngleZ;
+
+		if (this.isSneak) {
+			this.google.rotationPointY = 3.73F;
+		}
 	}
 
 	@Override
