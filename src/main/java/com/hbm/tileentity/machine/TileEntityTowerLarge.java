@@ -57,13 +57,13 @@ public class TileEntityTowerLarge extends TileEntityCondenser {
 			if(GeneralConfig.enableSteamParticles && (this.waterTimer > 0 && this.world.getTotalWorldTime() % 4 == 0)) {
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("type", "tower");
-				data.setFloat("lift", 1F);
+				data.setFloat("lift", 0.5F);
 				data.setFloat("base", 1F);
-				data.setFloat("max", 5F);
-				data.setInteger("life", 750 + world.rand.nextInt(750));
+				data.setFloat("max", 10F);
+				data.setInteger("life", 750 + world.rand.nextInt(250));
 	
-				data.setDouble("posX", pos.getX() + 0.5 + world.rand.nextDouble() * 2 - 1);
-				data.setDouble("posZ", pos.getZ() + 0.5 + world.rand.nextDouble() * 2 - 1);
+				data.setDouble("posX", pos.getX() + 0.5 + world.rand.nextDouble() * 3 - 1.5);
+				data.setDouble("posZ", pos.getZ() + 0.5 + world.rand.nextDouble() * 3 - 1.5);
 				data.setDouble("posY", pos.getY() + 1);
 				
 				MainRegistry.proxy.effectNT(data);

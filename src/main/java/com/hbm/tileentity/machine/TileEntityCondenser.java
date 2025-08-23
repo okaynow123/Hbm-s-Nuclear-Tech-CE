@@ -7,7 +7,6 @@ import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.saveddata.TomSaveData;
@@ -20,9 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +26,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 @AutoRegister
-public class TileEntityCondenser extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IConfigurableMachine, IFluidCopiable, IFFtoNTMF {
+public class TileEntityCondenser extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IConfigurableMachine, IFluidCopiable {
 
 	public int age = 0;
-	public FluidTank[] tanksOld;
 	public FluidTankNTM[] tanks;
 	
 	public int waterTimer = 0;
@@ -43,19 +38,12 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 	//Configurable values
 	public static int inputTankSize = 100;
 	public static int outputTankSize = 100;
-	private static boolean converted = false;
 	
 	public TileEntityCondenser() {
-		tanksOld = new FluidTank[2];
-		//spentsteam
-		tanksOld[0] = new FluidTank(100);
-		//water
-		tanksOld[1] = new FluidTank(100);
 
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.SPENTSTEAM, 100);
 		tanks[1] = new FluidTankNTM(Fluids.WATER, 100);
-		converted = true;
 	}
 
 	@Override
@@ -77,10 +65,6 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 	
 	@Override
 	public void update() {
-		if (!converted){
-			convertAndSetFluids(new Fluid[]{Fluids.SPENTSTEAM.getFF(), FluidRegistry.WATER}, tanksOld, tanks);
-			converted = true;
-		}
 		if(!world.isRemote) {
 
 			age++;
@@ -145,28 +129,14 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(!converted){
-			tanksOld[0].readFromNBT(nbt.getCompoundTag("steam"));
-			tanksOld[1].readFromNBT(nbt.getCompoundTag("water"));
-		} else {
-			tanks[0].readFromNBT(nbt, "water");
-			tanks[1].readFromNBT(nbt, "steam");
-			if(nbt.hasKey("water")){
-				nbt.removeTag("water");
-				nbt.removeTag("steam");
-			}
-		}
+		tanks[0].readFromNBT(nbt, "water");
+		tanks[1].readFromNBT(nbt, "steam");
 	}
 
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		if(!converted){
-			nbt.setTag("steam", tanksOld[0].writeToNBT(new NBTTagCompound()));
-			nbt.setTag("water", tanksOld[1].writeToNBT(new NBTTagCompound()));
-		} else {
-			tanks[0].writeToNBT(nbt, "water");
-			tanks[1].writeToNBT(nbt, "steam");
-		}
+		tanks[0].writeToNBT(nbt, "water");
+		tanks[1].writeToNBT(nbt, "steam");
 		return super.writeToNBT(nbt);
 	}
 

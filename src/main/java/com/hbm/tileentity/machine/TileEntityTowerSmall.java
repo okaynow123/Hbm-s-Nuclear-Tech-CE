@@ -57,9 +57,9 @@ public class TileEntityTowerSmall extends TileEntityCondenser {
 			if(GeneralConfig.enableSteamParticles && (this.waterTimer > 0 && this.world.getTotalWorldTime() % 2 == 0)) {
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("type", "tower");
-				data.setFloat("lift", 1.5F);
+				data.setFloat("lift", 1F);
 				data.setFloat("base", 0.5F);
-				data.setFloat("max", 3F);
+				data.setFloat("max", 4F);
 				data.setInteger("life", 250 + world.rand.nextInt(250));
 	
 				data.setDouble("posX", pos.getX() + 0.5);
