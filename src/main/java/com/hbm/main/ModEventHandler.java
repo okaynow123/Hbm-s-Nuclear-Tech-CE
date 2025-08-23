@@ -296,7 +296,7 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.mask_of_infamy, 1, world.rand.nextInt(100)));
                 }
                 if (!(hasHat || hasChest || hasLegs || hasFeet)) {
-                    if (randomArmorNumber < 2) { //1:32768
+/*                    if (randomArmorNumber < 2) { //1:32768
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.dns_helmet, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.dns_plate, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.dns_legs, 1));
@@ -306,16 +306,21 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.rpa_plate, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.rpa_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.rpa_boots, 1));
-                    } else if (randomArmorNumber < 2 << 8) { //1:256
+                    } else if (randomArmorNumber < 2 << 8) { //1:256                                            // MetalloloM: Man that's fucking unbalanced, people just gonna farm these instead of normal crafting. Can we have a config option for this? Like the chances of drop
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.ajr_helmet, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.ajr_plate, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.ajr_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.ajr_boots, 1));
-                    } else if (randomArmorNumber < 2 << 10) { //1:64
+                    }*/ if (randomArmorNumber < 2 << 8) { //1:256
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.t45_helmet, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.t45_plate, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.t45_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.t45_boots, 1));
+                    } else  if (randomArmorNumber < 2 << 10) { //1:64 */
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.security_helmet, 1, world.rand.nextInt(ModItems.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.security_plate, 1, world.rand.nextInt(ModItems.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.security_legs, 1, world.rand.nextInt(ModItems.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.security_boots, 1, world.rand.nextInt(ModItems.titanium_boots.getMaxDamage(ItemStack.EMPTY))));
                     } else if (randomArmorNumber < 2 << 11) { //1:32
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.hazmat_helmet, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.hazmat_plate, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
