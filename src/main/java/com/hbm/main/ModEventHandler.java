@@ -316,7 +316,7 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.t45_plate, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.t45_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.t45_boots, 1));
-                    } else  if (randomArmorNumber < 2 << 10) { //1:64 */
+                    } else  if (randomArmorNumber < 2 << 10) { //1:64
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.security_helmet, 1, world.rand.nextInt(ModItems.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.security_plate, 1, world.rand.nextInt(ModItems.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.security_legs, 1, world.rand.nextInt(ModItems.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
