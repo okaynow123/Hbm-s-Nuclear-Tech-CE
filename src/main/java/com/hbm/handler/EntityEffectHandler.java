@@ -152,7 +152,7 @@ public class EntityEffectHandler {
 				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, RadiationConfig.cont * 0.0005F);
 			}
 			
-			if(entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode)
+			if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 				return;
 			
 			Random rand = new Random(entity.getEntityId());

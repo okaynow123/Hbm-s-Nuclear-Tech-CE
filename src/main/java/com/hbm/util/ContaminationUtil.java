@@ -84,7 +84,7 @@ public class ContaminationUtil {
 		if(!(e instanceof EntityLivingBase entity))
 			return;
 
-		if(e instanceof EntityPlayer && (((EntityPlayer) e).capabilities.isCreativeMode || ((EntityPlayer) e).isSpectator()))
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 		
 		if(e instanceof EntityPlayer && e.ticksExisted < 200)
@@ -105,8 +105,8 @@ public class ContaminationUtil {
 		
 		if(entity.getEntityData().hasKey("hbmradmultiplier", 99))
 			f *= entity.getEntityData().getFloat("hbmradmultiplier");
-		
-		if(entity instanceof EntityPlayer && (((EntityPlayer) entity).capabilities.isCreativeMode || ((EntityPlayer) entity).isSpectator()))
+
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 		
 		if(!(entity instanceof EntityLivingBase))
@@ -431,8 +431,8 @@ public class ContaminationUtil {
 
 		if(!(e instanceof EntityLivingBase entity))
 			return;
-		
-		if(e instanceof EntityPlayer && ((EntityPlayer)e).capabilities.isCreativeMode)
+
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 		
 		if(e instanceof EntityPlayer && e.ticksExisted < 200)
@@ -465,8 +465,8 @@ public class ContaminationUtil {
 
 		if(!(e instanceof EntityLivingBase entity))
 			return;
-		
-		if(e instanceof EntityPlayer && ((EntityPlayer)e).capabilities.isCreativeMode)
+
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 		
 		if(e instanceof EntityPlayer && e.ticksExisted < 200)
@@ -495,8 +495,8 @@ public class ContaminationUtil {
 
 		if(e instanceof EntityQuackos || e instanceof EntityOcelot)
 			return;
-		
-		if(e instanceof EntityPlayer && ((EntityPlayer)e).capabilities.isCreativeMode)
+
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 		
 		if(e instanceof EntityPlayer && e.ticksExisted < 200)
@@ -516,8 +516,8 @@ public class ContaminationUtil {
 
 		if(e instanceof IRadiationImmune)
 			return;
-		
-		if(e instanceof EntityPlayer && ((EntityPlayer)e).capabilities.isCreativeMode)
+
+		if(entity instanceof EntityPlayer player && (player.capabilities.isCreativeMode || player.isSpectator()))
 			return;
 
         HbmLivingProps.incrementDigamma(entity, f);
@@ -671,7 +671,7 @@ public class ContaminationUtil {
 		}
 		
 		if(entity instanceof EntityPlayer player) {
-
+			if (player.isSpectator()) return false;
             switch(cont) {
 			case GOGGLES:			if(ArmorUtil.checkForGoggles(player))	return false; break;
 			case FARADAY:			if(ArmorUtil.checkForFaraday(player))	return false; break;
