@@ -20,12 +20,12 @@ public interface ICustomBlockHighlight {
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
         GlStateManager.glLineWidth(2.0F);
         GlStateManager.disableTexture2D();
-        GL11.glDepthMask(false);
+        GlStateManager.depthMask(false);
     }
 
     @SideOnly(Side.CLIENT)
     public static void cleanup() {
-        GL11.glDepthMask(true);
+        GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }

@@ -1,5 +1,6 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.deco.TileEntityDecoBlock;
@@ -10,6 +11,8 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,11 +25,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
-public class DecoBlock extends BlockContainer {
+public class DecoBlock extends BlockContainer implements ICustomBlockHighlight {
 
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -56,8 +64,7 @@ public class DecoBlock extends BlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(@NotNull World world, int meta) {
-        if (this == ModBlocks.steel_scaffold || this == ModBlocks.steel_beam)
-            return null;
+        if (this == ModBlocks.steel_scaffold || this == ModBlocks.steel_beam) return null;
         return new TileEntityDecoBlock();
     }
 
@@ -68,8 +75,7 @@ public class DecoBlock extends BlockContainer {
 
     @Override
     public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) {
-        if (this == ModBlocks.steel_beam || this == ModBlocks.steel_scaffold)
-            return EnumBlockRenderType.MODEL;
+        if (this == ModBlocks.steel_beam || this == ModBlocks.steel_scaffold) return EnumBlockRenderType.MODEL;
         return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
@@ -94,7 +100,8 @@ public class DecoBlock extends BlockContainer {
     }
 
     @Override
-    public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
+    public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos,
+                                        @NotNull EnumFacing side) {
         return false;
     }
 
@@ -136,6 +143,147 @@ public class DecoBlock extends BlockContainer {
             };
         }
         return FULL_BLOCK_AABB;
+    }
+
+    @Override
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox,
+                                      java.util.List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
+        EnumFacing te = state.getValue(FACING);
+
+        Consumer<AxisAlignedBB> add = box -> {
+            if (box == null) return;
+            addCollisionBoxToList(pos, entityBox, collidingBoxes, box);
+        };
+
+        if (this == ModBlocks.steel_wall) {
+            AxisAlignedBB box = switch (te) {
+                case WEST -> WALL_WEST_BOX;
+                case NORTH -> WALL_NORTH_BOX;
+                case EAST -> WALL_EAST_BOX;
+                case SOUTH -> WALL_SOUTH_BOX;
+                default -> null;
+            };
+            add.accept(box);
+            return;
+        }
+
+        if (this == ModBlocks.steel_corner) {
+            AxisAlignedBB a = null, b = null;
+            switch (te) {
+                case EAST:
+                    a = WALL_EAST_BOX;
+                    b = WALL_SOUTH_BOX;
+                    break;
+                case NORTH:
+                    a = WALL_NORTH_BOX;
+                    b = WALL_EAST_BOX;
+                    break;
+                case SOUTH:
+                    a = WALL_SOUTH_BOX;
+                    b = WALL_WEST_BOX;
+                    break;
+                case WEST:
+                    a = WALL_WEST_BOX;
+                    b = WALL_NORTH_BOX;
+                    break;
+                default:
+                    break;
+            }
+            add.accept(a);
+            add.accept(b);
+            return;
+        }
+
+        if (this == ModBlocks.steel_roof) {
+            add.accept(STEEL_ROOF_BOX);
+            return;
+        }
+
+        if (this == ModBlocks.steel_beam) {
+            add.accept(STEEL_BEAM_BOX);
+            return;
+        }
+
+        if (this == ModBlocks.steel_scaffold) {
+            AxisAlignedBB box = switch (te) {
+                case WEST, EAST -> SCAFFOLD_EASTWEST_BOX;
+                case NORTH, SOUTH -> SCAFFOLD_NORTHSOUTH_BOX;
+                default -> null;
+            };
+            add.accept(box);
+            return;
+        }
+
+        super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, isActualState);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldDrawHighlight(World world, BlockPos pos) {
+        return this == ModBlocks.steel_wall || this == ModBlocks.steel_corner || this == ModBlocks.steel_roof || this == ModBlocks.steel_beam ||
+               this == ModBlocks.steel_scaffold;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void drawHighlight(DrawBlockHighlightEvent event, World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock() != this) return;
+
+        EnumFacing te = state.getValue(FACING);
+        final float exp = 0.002F;
+
+        double dx = event.getPlayer().lastTickPosX + (event.getPlayer().posX - event.getPlayer().lastTickPosX) * event.getPartialTicks();
+        double dy = event.getPlayer().lastTickPosY + (event.getPlayer().posY - event.getPlayer().lastTickPosY) * event.getPartialTicks();
+        double dz = event.getPlayer().lastTickPosZ + (event.getPlayer().posZ - event.getPlayer().lastTickPosZ) * event.getPartialTicks();
+
+        java.util.List<AxisAlignedBB> boxes = new java.util.ArrayList<>(2);
+        if (this == ModBlocks.steel_wall) {
+            boxes.add(switch (te) {
+                case WEST -> WALL_WEST_BOX;
+                case NORTH -> WALL_NORTH_BOX;
+                case EAST -> WALL_EAST_BOX;
+                case SOUTH -> WALL_SOUTH_BOX;
+                default -> FULL_BLOCK_AABB;
+            });
+        } else if (this == ModBlocks.steel_corner) {
+            switch (te) {
+                case EAST:
+                    boxes.add(WALL_EAST_BOX);
+                    boxes.add(WALL_SOUTH_BOX);
+                    break;
+                case NORTH:
+                    boxes.add(WALL_NORTH_BOX);
+                    boxes.add(WALL_EAST_BOX);
+                    break;
+                case SOUTH:
+                    boxes.add(WALL_SOUTH_BOX);
+                    boxes.add(WALL_WEST_BOX);
+                    break;
+                case WEST:
+                    boxes.add(WALL_WEST_BOX);
+                    boxes.add(WALL_NORTH_BOX);
+                    break;
+                default:
+                    boxes.add(FULL_BLOCK_AABB);
+                    break;
+            }
+        } else if (this == ModBlocks.steel_roof) {
+            boxes.add(STEEL_ROOF_BOX);
+        } else if (this == ModBlocks.steel_beam) {
+            boxes.add(STEEL_BEAM_BOX);
+        } else if (this == ModBlocks.steel_scaffold) {
+            boxes.add((te == EnumFacing.WEST || te == EnumFacing.EAST) ? SCAFFOLD_EASTWEST_BOX : SCAFFOLD_NORTHSOUTH_BOX);
+        } else {
+            return;
+        }
+
+        ICustomBlockHighlight.setup();
+        for (AxisAlignedBB local : boxes) {
+            AxisAlignedBB bb = local.expand(exp, exp, exp).offset(pos).offset(-dx, -dy, -dz);
+            RenderGlobal.drawSelectionBoundingBox(bb, 0, 0, 0, 1.0F);
+        }
+        ICustomBlockHighlight.cleanup();
     }
 
     @Override
