@@ -466,5 +466,10 @@ public class MainRegistry {
     public void fMLLoadCompleteEvent(FMLLoadCompleteEvent evt){
         for(Tuple<ResourceLocation, HazardData> tuple : HazardSystem.locationRateRegisterList)
             HazardSystem.register(tuple.getFirst(), tuple.getSecond());
+
+        HazardSystem.clearCaches();
+        if(!HazardSystem.locationRateRegisterList.isEmpty()){
+            HazardSystem.locationRateRegisterList.clear();
+        }
     }
 }
