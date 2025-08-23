@@ -461,7 +461,7 @@ public class ModBlocks {
 	public static final Block waste_terracotta = new BlockHazardMeta(Material.ROCK, SoundType.STONE, "waste_terracotta", "contamination/terracotta/", BlockBakeFrame.BlockForm.ALL, (short) 7).setCreativeTab(MainRegistry.resourceTab).setHardness(4.0F).setResistance(8.0F);
 
 	public static final Block waste_log = new WasteLog(Material.WOOD, SoundType.WOOD, "waste_log").setHardness(5.0F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block waste_planks = new BlockNTMOre("waste_planks", 2).setHardness(0.5F).setResistance(2.5F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block waste_planks = new BlockNTMOre("waste_planks", 2).setHardness(0.5F).setResistance(2.5F).setSoundType(SoundType.WOOD).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block waste_leaves = new WasteLeaves("waste_leaves").setHardness(0.3F).setResistance(0.3F).setCreativeTab(MainRegistry.resourceTab);
 
 	public static final Block waste_grass_tall = new WasteGrassTall(Material.PLANTS, "waste_grass_tall").setCreativeTab(MainRegistry.resourceTab);

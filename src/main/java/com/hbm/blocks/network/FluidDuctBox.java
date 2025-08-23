@@ -13,14 +13,13 @@ import com.hbm.render.model.DuctBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.ColorUtil;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -105,6 +104,11 @@ public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILoo
             iconCurveBR = new TextureAtlasSprite[3];
             iconJunction = new TextureAtlasSprite[3][5];
         }
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
     }
 
     @Override

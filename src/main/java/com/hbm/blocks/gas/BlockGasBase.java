@@ -6,6 +6,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -42,6 +43,12 @@ public abstract class BlockGasBase extends Block {
 
         ModBlocks.ALL_BLOCKS.add(this);
     }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+            return BlockFaceShape.UNDEFINED;
+    }
+
 
     @Override
     public boolean isOpaqueCube(IBlockState state) {
