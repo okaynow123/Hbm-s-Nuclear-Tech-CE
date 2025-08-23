@@ -44,9 +44,6 @@ public class BlockDecoModel extends BlockEnumMeta {
     private float mxZ = 1.0F;
 
     private ResourceLocation objModelLocation;
-    @SideOnly(Side.CLIENT)
-    private IBakedModel[] bakedByMeta = new IBakedModel[16];
-
     public BlockDecoModel(Material mat, SoundType type, String registryName,
                           Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture,
                           ResourceLocation objModelLocation) {
@@ -146,24 +143,20 @@ public class BlockDecoModel extends BlockEnumMeta {
 
         if (wavefront == null) {
             TextureAtlasSprite missing = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+            IBakedModel baked = BlockDecoBakedModel.forBlock(new WavefrontObject(new ResourceLocation("minecraft:empty")), missing);
             for (int m = 0; m < 4; m++) {
-                bakedByMeta[m * 4] = BlockDecoBakedModel.forBlock(new WavefrontObject(new ResourceLocation("minecraft:empty")), missing);
+                ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
+                event.getModelRegistry().putObject(mrl, baked);
             }
         } else {
             TextureAtlasSprite sprite = Minecraft.getMinecraft()
                     .getTextureMapBlocks()
                     .getAtlasSprite(new ResourceLocation("hbm", "blocks/deco_computer").toString());
+            IBakedModel baked = BlockDecoBakedModel.forBlock(wavefront, sprite);
             for (int m = 0; m < 4; m++) {
                 ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
-                bakedByMeta[m * 4] = BlockDecoBakedModel.forBlock(wavefront, sprite);
-                event.getModelRegistry().putObject(mrl, bakedByMeta[m * 4]);
+                event.getModelRegistry().putObject(mrl, baked);
             }
-        }
-
-        // Ensure all meta variants (even if META_COUNT > 4) point to the correct baked instance for (meta & 3)
-        for (int meta = 0; meta < 4; meta++) {
-            ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
-            event.getModelRegistry().putObject(modelLocation, bakedByMeta[meta * 4]);
         }
     }
 
