@@ -264,7 +264,7 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
             networkPackNT(150);
         } else {
 
-            float volume = this.getVolume(2);
+            float volume = this.getVolume(2F);
 
             if (isProgressing && volume > 0) {
 

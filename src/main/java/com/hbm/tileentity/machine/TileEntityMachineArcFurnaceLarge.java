@@ -232,7 +232,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
             }
 
             if((lid == 1 || lid == 0) && lid != prevLid && !(this.prevLid == 0)) {
-                MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.wgh_stop, SoundCategory.BLOCKS, this.getVolume(1), 1F);
+                MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.wgh_stop, SoundCategory.BLOCKS, this.getVolume(1F), 1F);
             }
 
             if(this.isProgressing) {
