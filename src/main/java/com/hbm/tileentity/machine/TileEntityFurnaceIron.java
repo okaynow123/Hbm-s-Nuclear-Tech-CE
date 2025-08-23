@@ -91,7 +91,7 @@ public class TileEntityFurnaceIron extends TileEntityMachineBase implements IGUI
 				this.progress++;
 				this.burnTime--;
 				
-				if(this.progress % 15 == 0) {
+				if(this.progress % 15 == 0 && !this.muffled) {
 					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 0.5F + world.rand.nextFloat() * 0.5F);
 				}
 				

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class GUIMachineGasCent extends GuiInfoContainer {
 
@@ -168,7 +168,7 @@ public class GUIMachineGasCent extends GuiInfoContainer {
     y += height;
     Minecraft.getMinecraft()
         .getTextureManager()
-        .bindTexture(gasCent.tankNew.getTankType().getTexture());
+        .bindTexture(gasCent.tank.getTankType().getTexture());
 
     int scaledHeight = (fluid * height) / maxFluid;
     double minX = x;

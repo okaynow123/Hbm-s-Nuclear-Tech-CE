@@ -1,91 +1,146 @@
 package com.hbm.tileentity.machine;
 
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.forgefluid.FFUtils;
+import com.hbm.explosion.vanillant.ExplosionVNT;
+import com.hbm.explosion.vanillant.standard.EntityProcessorStandard;
+import com.hbm.explosion.vanillant.standard.ExplosionEffectStandard;
+import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
+import com.hbm.saveddata.TomSaveData;
+import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IBufPacketReceiver;
+import com.hbm.tileentity.IConfigurableMachine;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 
 @AutoRegister
-public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IFFtoNTMF {
+public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IBufPacketReceiver, IConfigurableMachine, IFluidCopiable {
 
-    public FluidTank[] tanks;
     public Fluid[] types = new Fluid[2];
-    public FluidTankNTM[] tanksNew;
+    public FluidTankNTM[] tanks;
     public int heat;
+    public boolean isOn;
+    public boolean hasExploded = false;
     public static int maxHeat = 12_800_000; //the heat required to turn 64k of water into steam
-    public static final double diffusion = 0.1D;
+    public static double diffusion = 0.1D;
+    public static boolean canExplode = true;
 
-    private static boolean converted = false;
+    private AudioWrapper audio;
+    private int audioTime;
 
     public TileEntityHeatBoiler() {
         super();
-        tanksNew = new FluidTankNTM[2];
-        this.tanksNew[0] = new FluidTankNTM(Fluids.WATER, 16_000);
-        this.tanksNew[1] = new FluidTankNTM(Fluids.STEAM, 16_000 * 100);
+        tanks = new FluidTankNTM[2];
+        this.tanks[0] = new FluidTankNTM(Fluids.WATER, 16_000);
+        this.tanks[1] = new FluidTankNTM(Fluids.STEAM, 16_000 * 100);
 
-        tanks = new FluidTank[2];
 
-        tanks[0] = new FluidTank(FluidRegistry.WATER, 0, 640000);
         types[0] = FluidRegistry.WATER;
-
-        tanks[1] = new FluidTank(Fluids.STEAM.getFF(), 0, 64000000);
-        types[1] = Fluids.STEAM.getFF();;
-        converted = true;
+        types[1] = Fluids.STEAM.getFF();
 
     }
+
+    ByteBuf buf;
+
     @Override
     public void update() {
 
         if(!world.isRemote) {
-            if(!converted){
-                convertAndSetFluids(types, tanks, tanksNew);
-                converted = true;
-            }
-            setupTanks();
-            updateConnections();
-            tryPullHeat();
-            tryConvert();
 
-            for(DirPos pos : getConPos()) {
-                if(tanksNew[1].getFill() > 0) this.sendFluid(tanksNew[1], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            if(this.buf != null)
+                this.buf.release();
+            this.buf = Unpooled.buffer();
+
+            buf.writeBoolean(this.hasExploded);
+            if(!this.hasExploded) {
+                setupTanks();
+                updateConnections();
+                tryPullHeat();
+                int lastHeat = this.heat;
+
+                int light = this.world.getLightFor(EnumSkyBlock.SKY, this.pos);
+                if(light > 7 && TomSaveData.forWorld(world).fire > 1e-5) {
+                    this.heat += ((maxHeat - heat) * 0.000005D); //constantly heat up 0.0005% of the remaining heat buffer for rampant but diminishing heating
+                }
+
+                buf.writeInt(lastHeat);
+
+                tanks[0].serialize(buf);
+                this.isOn = false;
+                this.tryConvert();
+                tanks[1].serialize(buf);
+
+                if(this.tanks[1].getFill() > 0) {
+                    for(DirPos pos : getConPos()) {
+                        this.sendFluid(tanks[1], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir().getOpposite());
+                    }
+                }
             }
 
-            networkPackNT(50);
+            buf.writeBoolean(this.muffled);
+            buf.writeBoolean(this.isOn);
+            networkPackNT(25);
+        } else {
+
+            if(this.isOn) audioTime = 20;
+
+            if(audioTime > 0) {
+
+                audioTime--;
+
+                if(audio == null) {
+                    audio = createAudioLoop();
+                    audio.startSound();
+                } else if(!audio.isPlaying()) {
+                    audio = rebootAudio(audio);
+                }
+
+                audio.updateVolume(getVolume(1F));
+                audio.keepAlive();
+
+            } else {
+
+                if(audio != null) {
+                    audio.stopSound();
+                    audio = null;
+                }
+            }
         }
     }
 
     private void updateConnections() {
 
         for(DirPos pos : getConPos()) {
-            this.trySubscribe(tanksNew[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+            this.trySubscribe(tanks[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
         }
     }
 
@@ -103,89 +158,102 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        if(!converted){
-            FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
-            for(int i=0; i<tanks.length; i++){
-                if(tanks[i].getFluid() != null){
-                    types[i] = tanks[i].getFluid().getFluid();
-                } else {
-                    types[i] = null;
-                }
-            }
-        } else {
-            for (int i = 0; i < tanksNew.length; i++)
-                tanksNew[i].readFromNBT(nbt, "tank" + i);
-            if(nbt.hasKey("tanks")) nbt.removeTag("tanks");
-        }
+        tanks[0].readFromNBT(nbt, "water");
+        tanks[1].readFromNBT(nbt, "steam");
+        heat = nbt.getInteger("heat");
+        hasExploded = nbt.getBoolean("exploded");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        if(!converted){
-            for(int i=0; i<tanks.length; i++){
-                if(types[i] != null){
-                    tanks[i].setFluid(new FluidStack(types[i], tanks[i].getFluidAmount()));
-                } else {
-                    tanks[i].setFluid(null);
-                }
-            }
-            nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
-        } else {
-            for (int i = 0; i < tanksNew.length; i++)
-                tanksNew[i].writeToNBT(nbt, "tank" + i);
-        }
+        tanks[0].writeToNBT(nbt, "water");
+        tanks[1].writeToNBT(nbt, "steam");
+        nbt.setInteger("heat", heat);
+        nbt.setBoolean("exploded", hasExploded);
         return nbt;
     }
 
     @Override
     public void serialize(ByteBuf buf) {
-        for(int i = 0; i < 2; i++)
-            tanksNew[i].serialize(buf);
-
-        buf.writeInt(heat);
+        buf.writeBytes(this.buf);
     }
 
     @Override
     public void deserialize(ByteBuf buf) {
-        for(int i = 0; i < 2; i++)
-            tanksNew[i].deserialize(buf);
-
-        this.heat = buf.readInt();
+        this.hasExploded = buf.readBoolean();
+        if (!this.hasExploded) {
+            this.heat = buf.readInt();
+            this.tanks[0].deserialize(buf);
+            this.tanks[1].deserialize(buf);
+            this.muffled = buf.readBoolean();
+            this.isOn = buf.readBoolean();
+        }
     }
 
     protected void setupTanks() {
 
-        if(tanksNew[0].getTankType().hasTrait(FT_Heatable.class)) {
-            FT_Heatable trait = tanksNew[0].getTankType().getTrait(FT_Heatable.class);
+        if(tanks[0].getTankType().hasTrait(FT_Heatable.class)) {
+            FT_Heatable trait = tanks[0].getTankType().getTrait(FT_Heatable.class);
             if(trait.getEfficiency(FT_Heatable.HeatingType.BOILER) > 0) {
                 FT_Heatable.HeatingStep entry = trait.getFirstStep();
-                tanksNew[1].setTankType(entry.typeProduced);
-                tanksNew[1].changeTankSize(tanksNew[0].getMaxFill() * entry.amountProduced / entry.amountReq);
+                tanks[1].setTankType(entry.typeProduced);
+                tanks[1].changeTankSize(tanks[0].getMaxFill() * entry.amountProduced / entry.amountReq);
                 return;
             }
         }
 
-        tanksNew[0].setTankType(Fluids.NONE);
-        tanksNew[1].setTankType(Fluids.NONE);
+        tanks[0].setTankType(Fluids.NONE);
+        tanks[1].setTankType(Fluids.NONE);
     }
 
     protected void tryConvert() {
 
-        if(tanksNew[0].getTankType().hasTrait(FT_Heatable.class)) {
-            FT_Heatable trait = tanksNew[0].getTankType().getTrait(FT_Heatable.class);
+        if(tanks[0].getTankType().hasTrait(FT_Heatable.class)) {
+            FT_Heatable trait = tanks[0].getTankType().getTrait(FT_Heatable.class);
             if(trait.getEfficiency(FT_Heatable.HeatingType.BOILER) > 0) {
 
                 FT_Heatable.HeatingStep entry = trait.getFirstStep();
-                int inputOps = this.tanksNew[0].getFill() / entry.amountReq;
-                int outputOps = (this.tanksNew[1].getMaxFill() - this.tanksNew[1].getFill()) / entry.amountProduced;
+                int inputOps = this.tanks[0].getFill() / entry.amountReq;
+                int outputOps = (this.tanks[1].getMaxFill() - this.tanks[1].getFill()) / entry.amountProduced;
                 int heatOps = this.heat / entry.heatReq;
 
                 int ops = Math.min(inputOps, Math.min(outputOps, heatOps));
 
-                this.tanksNew[0].setFill(this.tanksNew[0].getFill() - entry.amountReq * ops);
-                this.tanksNew[1].setFill(this.tanksNew[1].getFill() + entry.amountProduced * ops);
+                this.tanks[0].setFill(this.tanks[0].getFill() - entry.amountReq * ops);
+                this.tanks[1].setFill(this.tanks[1].getFill() + entry.amountProduced * ops);
                 this.heat -= entry.heatReq * ops;
+
+                if(ops > 0 && world.rand.nextInt(400) == 0) {
+                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, new SoundEvent(new ResourceLocation("hbm:block.boilerGroan")), SoundCategory.BLOCKS, 0.5F, 1.0F);
+                }
+
+                if(ops > 0) {
+                    this.isOn = true;
+                }
+
+                if (outputOps == 0 && canExplode) {
+                    this.hasExploded = true;
+                    BlockDummyable.safeRem = true;
+
+                    BlockPos base = this.pos;
+                    for (int x = base.getX() - 1; x <= base.getX() + 1; x++) {
+                        for (int y = base.getY() + 2; y <= base.getY() + 3; y++) {
+                            for (int z = base.getZ() - 1; z <= base.getZ() + 1; z++) {
+                                this.world.setBlockToAir(new BlockPos(x, y, z));
+                            }
+                        }
+                    }
+                    this.world.setBlockToAir(this.pos.up());
+
+                    ExplosionVNT xnt = new ExplosionVNT(this.world, base.getX() + 0.5D, base.getY() + 2D, base.getZ() + 0.5D, 5F);
+                    xnt.setEntityProcessor(new EntityProcessorStandard().withRangeMod(3F));
+                    xnt.setPlayerProcessor(new PlayerProcessorStandard());
+                    xnt.setSFX(new ExplosionEffectStandard());
+                    xnt.explode();
+
+                    BlockDummyable.safeRem = false;
+                }
             }
         }
     }
@@ -196,8 +264,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
         BlockPos blockBelow = pos.down();
         TileEntity con = world.getTileEntity(blockBelow);
 
-        if(con instanceof IHeatSource) {
-            IHeatSource source = (IHeatSource) con;
+        if(con instanceof IHeatSource source) {
             int diff = source.getHeatStored() - this.heat;
 
             if(diff == 0) {
@@ -244,17 +311,36 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
 
     @Override
     public FluidTankNTM[] getSendingTanks() {
-        return new FluidTankNTM[] {tanksNew[1]};
+        return new FluidTankNTM[] {tanks[1]};
     }
 
     @Override
     public FluidTankNTM[] getReceivingTanks() {
-        return new FluidTankNTM[] {tanksNew[0]};
+        return new FluidTankNTM[] {tanks[0]};
     }
 
     @Override
     public FluidTankNTM[] getAllTanks() {
-        return tanksNew;
+        return tanks;
+    }
+
+    @Override
+    public String getConfigName() {
+        return "boiler";
+    }
+
+    @Override
+    public void readIfPresent(JsonObject obj) {
+        maxHeat = IConfigurableMachine.grab(obj, "I:maxHeat", maxHeat);
+        diffusion = IConfigurableMachine.grab(obj, "D:diffusion", diffusion);
+        canExplode = IConfigurableMachine.grab(obj, "B:canExplode", canExplode);
+    }
+
+    @Override
+    public void writeConfig(JsonWriter writer) throws IOException {
+        writer.name("I:maxHeat").value(maxHeat);
+        writer.name("D:diffusion").value(diffusion);
+        writer.name("B:canExplode").value(canExplode);
     }
 
     @Override

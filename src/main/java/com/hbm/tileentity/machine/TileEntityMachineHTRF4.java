@@ -200,7 +200,7 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements ITi
 	
 	@Override
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.lpwloop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 1.0F);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.lpwloop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 27.5F, 1.0F, 20);
 	}
 
 	@Override

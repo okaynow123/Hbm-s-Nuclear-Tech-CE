@@ -1699,6 +1699,14 @@ public class ClientProxy extends ServerProxy {
         audio.setKeepAlive(keepAlive);
         return audio;
     }
+    @Override
+    public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float range, float pitch) {
+        AudioWrapperClient audio = new AudioWrapperClient(sound, cat, true);
+        audio.updatePosition(x, y, z);
+        audio.updateVolume(volume);
+        audio.updateRange(range);
+        return audio;
+    }
 
     @Override
     public AudioWrapper getLoopedSoundStartStop(World world, SoundEvent sound, SoundEvent start, SoundEvent stop, SoundCategory cat, float x, float y, float z, float volume, float pitch) {

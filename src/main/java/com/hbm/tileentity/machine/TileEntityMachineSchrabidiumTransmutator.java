@@ -3,9 +3,9 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.recipes.NuclearTransmutationRecipes;
 import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
 import com.hbm.inventory.gui.GUIMachineSchrabidiumTransmutator;
+import com.hbm.inventory.recipes.NuclearTransmutationRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemCapacitor;
 import com.hbm.lib.ForgeDirection;
@@ -126,12 +126,16 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 			networkPackNT(50);
 			detectAndSendChanges();
 		} else {
+
 			if(process > 0) {
 
 				if(audio == null) {
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.tauChargeLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F);
+					audio = createAudioLoop();
 					audio.startSound();
+				} else if(!audio.isPlaying()) {
+					audio = rebootAudio(audio);
 				}
+				audio.updateVolume(getVolume(1F));
 			} else {
 
 				if(audio != null) {
@@ -140,6 +144,11 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				}
 			}
 		}
+	}
+
+	@Override
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.tauChargeLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F, 1.0F);
 	}
 	
 	@Override

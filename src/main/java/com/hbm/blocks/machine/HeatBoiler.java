@@ -80,7 +80,7 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
                     return false;
 
                 FluidType type = identifier.getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
-                boiler.tanksNew[0].setTankType(type);
+                boiler.tanks[0].setTankType(type);
                 boiler.markDirty();
                 player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getConditionalName()));
 
@@ -131,8 +131,8 @@ public class HeatBoiler extends BlockDummyable implements ILookOverlay, ITooltip
 
         List<String> text = new ArrayList();
 
-        for(int i = 0; i < boiler.tanksNew.length; i++)
-            text.add((i < 1 ? "§a-> " : "§c<- ") + "§r" + boiler.tanksNew[i].getTankType().getLocalizedName() + ": " + boiler.tanksNew[i].getFill() + "/" + boiler.tanksNew[i].getMaxFill() + "mB");
+        for(int i = 0; i < boiler.tanks.length; i++)
+            text.add((i < 1 ? "§a-> " : "§c<- ") + "§r" + boiler.tanks[i].getTankType().getLocalizedName() + ": " + boiler.tanks[i].getFill() + "/" + boiler.tanks[i].getMaxFill() + "mB");
 
         ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
     }

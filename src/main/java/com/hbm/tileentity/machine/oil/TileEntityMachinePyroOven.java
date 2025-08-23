@@ -346,7 +346,7 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
     }
 
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.pyroOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 15F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.pyroOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 15F, 1.0F, 20);
     }
 
     @Override public void onChunkUnload() {

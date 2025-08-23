@@ -9,10 +9,12 @@ import com.hbm.inventory.gui.GUIFEL;
 import com.hbm.items.machine.ItemFELCrystal;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
@@ -39,6 +41,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,6 +61,8 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 	public boolean missingValidSilex = true	;
 	public int distance;
 	public List<EntityLivingBase> entities = new ArrayList<>();
+	private int audioDuration = 0;
+	private AudioWrapper audio;
 	
 	
 	public TileEntityFEL() {
@@ -242,6 +247,35 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 			}
 
 			networkPackNT(250);
+		} else {
+
+			if(power > powerReq * Math.pow(2, mode.ordinal()) && isOn && !(mode == EnumWavelengths.NULL) && distance - 3 > 0) {
+				audioDuration += 2;
+			} else {
+				audioDuration -= 3;
+			}
+
+			audioDuration = MathHelper.clamp(audioDuration, 0, 60);
+
+			if(audioDuration > 10) {
+
+				if(audio == null) {
+					audio = createAudioLoop();
+					audio.startSound();
+				} else if(!audio.isPlaying()) {
+					audio = rebootAudio(audio);
+				}
+
+				audio.updateVolume(getVolume(2F));
+				audio.updatePitch((audioDuration - 10) / 100F + 0.5F);
+
+			} else {
+
+				if(audio != null) {
+					audio.stopSound();
+					audio = null;
+				}
+			}
 		}
 	}
 	
@@ -267,6 +301,11 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 		this.isOn = buf.readBoolean();
 		this.missingValidSilex = buf.readBoolean();
 		this.distance = buf.readInt();
+	}
+
+	@Override
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.fel, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F, 10F, 2.0F);
 	}
 
 	@Override

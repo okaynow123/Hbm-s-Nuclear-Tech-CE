@@ -5,14 +5,22 @@ import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.ICopiable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.MainRegistry;
+import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,12 +30,14 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 
 @AutoRegister
-public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IHeatSource, IEnergyReceiverMK2, ITickable {
+public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IHeatSource, IEnergyReceiverMK2, ITickable, IBufPacketReceiver, ICopiable {
 	
 	public long power;
 	public int heatEnergy;
 	public boolean isOn;
 	protected int setting = 1;
+
+	private AudioWrapper audio;
 
 	@Override
 	public void update() {
@@ -51,11 +61,58 @@ public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IH
 			}
 
 			networkPackNT(25);
+		} else {
+
+			if(isOn) {
+
+				if(audio == null) {
+					audio = createAudioLoop();
+					audio.startSound();
+				} else if(!audio.isPlaying()) {
+					audio = rebootAudio(audio);
+				}
+
+				audio.updateVolume(getVolume(1F));
+				audio.keepAlive();
+
+			} else {
+
+				if(audio != null) {
+					audio.stopSound();
+					audio = null;
+				}
+			}
+		}
+	}
+
+	@Override
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.electricHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 7.5F, 1.0F, 20);
+	}
+
+	@Override
+	public void onChunkUnload() {
+
+		if(audio != null) {
+			audio.stopSound();
+			audio = null;
+		}
+	}
+
+	@Override
+	public void invalidate() {
+
+		super.invalidate();
+
+		if(audio != null) {
+			audio.stopSound();
+			audio = null;
 		}
 	}
 
 	@Override
 	public void serialize(ByteBuf buf) {
+		buf.writeBoolean(this.muffled);
 		buf.writeByte(this.setting);
 		buf.writeInt(this.heatEnergy);
 		buf.writeBoolean(isOn);
@@ -63,6 +120,7 @@ public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IH
 
 	@Override
 	public void deserialize(ByteBuf buf) {
+		this.muffled = buf.readBoolean();
 		this.setting = buf.readByte();
 		this.heatEnergy = buf.readInt();
 		this.isOn = buf.readBoolean();
@@ -161,6 +219,18 @@ public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IH
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
+	}
+
+	@Override
+	public NBTTagCompound getSettings(World world, int x, int y, int z) {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setInteger("setting", setting);
+		return nbt;
+	}
+
+	@Override
+	public void pasteSettings(NBTTagCompound nbt, int index, World world, EntityPlayer player, int x, int y, int z) {
+		this.setting = nbt.getInteger("setting");
 	}
 
 	@Override

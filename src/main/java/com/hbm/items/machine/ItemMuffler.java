@@ -12,7 +12,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-// why does it look like it won't do.. anything at all?
 public class ItemMuffler extends ItemBakedBase {
 
     public ItemMuffler(String s){

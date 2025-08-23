@@ -340,7 +340,8 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 				audio.keepAlive();
 				// mlbv: original value = momentum / 50F but this somehow made the sound range extremely short
 				// so I lowered the denominator to 10F
-				audio.updateVolume(getVolume(momentum / 10F));
+				// Th3_Sl1ze: of course it will be short, because you use old audio system
+				audio.updateVolume(getVolume(momentum / 50F));
 				audio.updatePitch(momentum / 200F + 0.5F + this.afterburner * 0.16F);
 
 			} else {
@@ -426,7 +427,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	}
 
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbofanOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbofanOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 50F, 1.0F, 20);
 	}
 
 	@Override

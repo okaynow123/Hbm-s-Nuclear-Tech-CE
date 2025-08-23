@@ -90,7 +90,7 @@ public abstract class TileEntityFireboxBase extends TileEntityMachineBase implem
 				}
 				this.wasOn = true;
 				
-				if(world.rand.nextInt(15) == 0) {
+				if(world.rand.nextInt(15) == 0 && !this.muffled) {
 					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 0.5F + world.rand.nextFloat() * 0.5F);
 				}
 			}

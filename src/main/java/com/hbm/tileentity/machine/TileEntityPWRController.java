@@ -328,7 +328,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 10F, 1.0F, 20);
     }
 
     @Override

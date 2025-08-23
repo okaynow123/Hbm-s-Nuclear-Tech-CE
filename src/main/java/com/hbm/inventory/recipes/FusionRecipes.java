@@ -10,18 +10,18 @@ import java.util.Map;
 
 public class FusionRecipes {
 
-	public static HashMap<FluidType, Integer> chances = new HashMap();
+	public static HashMap<FluidType, Integer> delays = new HashMap();
 	static {
-		chances.put(Fluids.PLASMA_DT, 1200);
-		chances.put(Fluids.PLASMA_DH3, 600);
-		chances.put(Fluids.PLASMA_HD, 1200);
-		chances.put(Fluids.PLASMA_HT, 1200);
-		chances.put(Fluids.PLASMA_XM, 1200);
-		chances.put(Fluids.PLASMA_BF, 150);
+		delays.put(Fluids.PLASMA_DT, 1200);
+		delays.put(Fluids.PLASMA_DH3, 600);
+		delays.put(Fluids.PLASMA_HD, 1200);
+		delays.put(Fluids.PLASMA_HT, 1200);
+		delays.put(Fluids.PLASMA_XM, 1200);
+		delays.put(Fluids.PLASMA_BF, 150);
 	}
 
-	public static int getByproductChance(FluidType plasma) {
-		Integer chance = chances.get(plasma);
+	public static int getByproductDelay(FluidType plasma) {
+		Integer chance = delays.get(plasma);
 		return chance != null ? chance : 0;
 	}
 

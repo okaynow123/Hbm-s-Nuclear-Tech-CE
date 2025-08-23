@@ -268,9 +268,13 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
 
             if (isProgressing && volume > 0) {
 
-                if (audio == null) {
-                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.assemblerOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), volume, 1.0F);
+                if(audio == null) {
+                    audio = this.createAudioLoop();
+                    audio.updateVolume(volume);
                     audio.startSound();
+                } else if(!audio.isPlaying()) {
+                    audio = rebootAudio(audio);
+                    audio.updateVolume(volume);
                 }
 
             } else {
@@ -339,6 +343,11 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
                 this.trySubscribe(world, pos.getX() + 1, pos.getY(), pos.getZ() - 3, Library.NEG_Z);
             }
         }
+    }
+
+    @Override
+    public AudioWrapper createAudioLoop() {
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.assemblerOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F, 1.0F);
     }
 
     @Override

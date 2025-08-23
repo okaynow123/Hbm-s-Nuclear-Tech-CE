@@ -30,6 +30,7 @@
 	"block.boiler": {"category": "block", "sounds": [{"name": "hbm:block/boiler", "stream": false}]},
     "block.sonarPing": {"category": "block", "sounds": [{"name": "hbm:block/sonarPing", "stream": false}]},
     "block.reactorLoop": {"category": "block", "sounds": [{"name": "hbm:block/reactorLoop", "stream": false}]},
+    "block.fusionReactorRunning": {"category": "block", "sounds": [{"name": "hbm:block/fusionReactorSpin", "stream": false}]},
     "block.reactorStart": {"category": "block", "sounds": [{"name": "hbm:block/reactorStart", "stream": false}]},
     "block.reactorStop": {"category": "block", "sounds": [{"name": "hbm:block/reactorStop", "stream": false}]},
     "block.vaultScrape": {"category": "block", "sounds": [{"name": "hbm:block/vaultScrape", "stream": false}]},
@@ -45,6 +46,7 @@
     "block.missileAssembly": {"category": "block", "sounds": [{"name": "hbm:block/missileAssembly", "stream": false}]},
     "block.missileAssembly2": {"category": "block", "sounds": [{"name": "hbm:block/missileAssembly2", "stream": false}]},
     "block.motor": {"category": "block", "sounds": [{"name": "hbm:block/motor", "stream": false}]},
+    "block.engine": {"category": "block", "sounds": [{"name": "hbm:block/engine", "stream": false}]},
 
 	"item.techBleep": {"category": "player", "sounds": [{"name": "hbm:tool/techBleep", "stream": false}]},
     "item.techBoop": {"category": "player", "sounds": [{"name": "hbm:tool/techBoop", "stream": false}]},
@@ -383,6 +385,7 @@
     "block.openc": {"category": "block", "sounds": ["hbm:block/openc1", "hbm:block/openc2", "hbm:block/openc3"]},
     "block.closec": {"category": "block", "sounds": ["hbm:block/closec1", "hbm:block/closec2", "hbm:block/closec3"]},
 	"block.warnOverspeed": {"category": "block", "sounds": [{"name": "hbm:block/warnoverspeed", "stream": false}]},
+    "block.boilerGroan": {"category": "block", "sounds": ["hbm:block/boilerGroan0", "hbm:block/boilerGroan1", "hbm:block/boilerGroan2"]},
 	"block.steamEngineOperate": {"category": "block", "sounds": [{"name": "hbm:block/steamengineoperate", "stream": false}]},
 	"block.chungusTurbineRunning": {"category": "block", "sounds": [{"name": "hbm:block/chungusturbine", "stream": false}]},
 	"block.electricHum": {"category": "block", "sounds": [{"name": "block/electricHum", "stream": false}]},

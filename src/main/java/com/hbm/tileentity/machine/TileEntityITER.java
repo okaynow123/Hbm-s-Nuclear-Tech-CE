@@ -4,8 +4,8 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.recipes.FusionRecipes;
 import com.hbm.inventory.container.ContainerITER;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -13,6 +13,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIITER;
 import com.hbm.inventory.recipes.BreederRecipes;
 import com.hbm.inventory.recipes.BreederRecipes.BreederRecipe;
+import com.hbm.inventory.recipes.FusionRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemFusionShield;
 import com.hbm.lib.DirPos;
@@ -20,31 +21,36 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
+import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
 @AutoRegister
-public class TileEntityITER extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider {
+public class TileEntityITER extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, CompatHandler.OCComponent {
 
 	public long power;
 	public static final long maxPower = 1000000000;
@@ -55,6 +61,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 	public int progress;
 	public static final int duration = 100;
+	public long totalRuntime;
 
 	@SideOnly(Side.CLIENT)
 	public int blanket;
@@ -62,6 +69,10 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	public float rotor;
 	public float lastRotor;
 	public boolean isOn;
+
+	private float rotorSpeed = 0F;
+
+	private AudioWrapper audio;
 
     public TileEntityITER() {
 		super(5, true, true);
@@ -107,11 +118,9 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 				power -= powerReq;
 
 				if(plasma.getFill() > 0) {
-
-					int chance = FusionRecipes.getByproductChance(plasma.getTankType());
-
-					if(chance > 0 && world.rand.nextInt(chance) == 0)
-						produceByproduct();
+					this.totalRuntime++;
+					int delay = FusionRecipes.getByproductDelay(plasma.getTankType());
+					if(delay > 0 && totalRuntime % delay == 0) produceByproduct();
 				}
 
 				if(plasma.getFill() > 0 && this.getShield() != 0) {
@@ -155,17 +164,40 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 			}
 
 			networkPackNT(250);
+			/// END Notif packets ///
 		} else {
 
 			this.lastRotor = this.rotor;
+			this.rotor += this.rotorSpeed;
+
+			if(this.rotor >= 360) {
+				this.rotor -= 360;
+				this.lastRotor -= 360;
+			}
 
 			if(this.isOn && this.power >= powerReq) {
+				this.rotorSpeed = Math.max(0F, Math.min(15F, this.rotorSpeed + 0.05F));
 
-				this.rotor += 15F;
+				if(audio == null) {
+					audio = MainRegistry.proxy.getLoopedSound(new SoundEvent(new ResourceLocation("hbm:block.fusionReactorRunning")), SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 30F, 1.0F);
+					audio.startSound();
+				}
 
-				if(this.rotor >= 360) {
-					this.rotor -= 360;
-					this.lastRotor -= 360;
+				float rotorSpeed = this.rotorSpeed / 15F;
+				audio.updateVolume(getVolume(0.5f * rotorSpeed));
+				audio.updatePitch(0.25F + 0.75F * rotorSpeed);
+			} else {
+				this.rotorSpeed = Math.max(0F, Math.min(15F, this.rotorSpeed - 0.1F));
+
+				if(audio != null) {
+					if(this.rotorSpeed > 0) {
+						float rotorSpeed = this.rotorSpeed / 15F;
+						audio.updateVolume(getVolume(0.5f * rotorSpeed));
+						audio.updatePitch(0.25F + 0.75F * rotorSpeed);
+					} else {
+						audio.stopSound();
+						audio = null;
+					}
 				}
 			}
 		}
@@ -348,6 +380,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 		super.writeToNBT(nbt);
 		nbt.setLong("power", this.power);
 		nbt.setBoolean("isOn", isOn);
+		nbt.setLong("totalRuntime", this.totalRuntime);
 		tanks[0].writeToNBT(nbt, "water");
 		tanks[1].writeToNBT(nbt, "steam");
 		plasma.writeToNBT(nbt, "plasma");
@@ -479,5 +512,103 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIITER(player.inventory, this);
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String getComponentName() {
+		return "ntm_fusion";
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getEnergyInfo(Context context, Arguments args) {
+		return new Object[] {getPower(), getMaxPower()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] isActive(Context context, Arguments args) {
+		return new Object[] {isOn};
+	}
+
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setActive(Context context, Arguments args) {
+		isOn = args.checkBoolean(0);
+		return new Object[] {};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getFluid(Context context, Arguments args) {
+		return new Object[] {
+				tanks[0].getFill(), tanks[0].getMaxFill(),
+				tanks[1].getFill(), tanks[1].getMaxFill(),
+				plasma.getFill(), plasma.getMaxFill(), plasma.getTankType().getTranslationKey()
+		};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getPlasmaTemp(Context context, Arguments args) {
+		return new Object[] {plasma.getTankType().temperature};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getMaxTemp(Context context, Arguments args) {
+		if (!inventory.getStackInSlot(3).isEmpty() && (inventory.getStackInSlot(3).getItem() instanceof ItemFusionShield))
+			return new Object[] {((ItemFusionShield) inventory.getStackInSlot(3).getItem()).maxTemp};
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getBlanketDamage(Context context, Arguments args) {
+		if (!inventory.getStackInSlot(3).isEmpty() && (inventory.getStackInSlot(3).getItem() instanceof ItemFusionShield))
+			return new Object[]{ItemFusionShield.getShieldDamage(inventory.getStackInSlot(3)), ((ItemFusionShield)inventory.getStackInSlot(3).getItem()).maxDamage};
+		return new Object[] {"N/A", "N/A"};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public String[] methods() {
+		return new String[] {
+				"getEnergyInfo",
+				"isActive",
+				"setActive",
+				"getFluid",
+				"getPlasmaTemp",
+				"getMaxTemp",
+				"getBlanketDamage"
+		};
+	}
+
+	@Override
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+		switch (method) {
+			case ("getEnergyInfo"):
+				return getEnergyInfo(context, args);
+			case ("isActive"):
+				return isActive(context, args);
+			case ("setActive"):
+				return setActive(context, args);
+			case ("getFluid"):
+				return getFluid(context, args);
+			case ("getPlasmaTemp"):
+				return getPlasmaTemp(context, args);
+			case ("getMaxTemp"):
+				return getMaxTemp(context, args);
+			case ("getBlanketDamage"):
+				return getBlanketDamage(context, args);
+		}
+		throw new NoSuchMethodException();
+	}
+
+	@Override
+	public FluidTankNTM getTankToPaste() {
+		return null;
 	}
 }

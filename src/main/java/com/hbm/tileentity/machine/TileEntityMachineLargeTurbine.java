@@ -141,7 +141,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
                 this.fanAcceleration = Math.max(0F, Math.min(15F, this.fanAcceleration += 0.075F + audioDesync));
 
                 if (audio == null) {
-                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbofanOperate, SoundCategory.BLOCKS, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ(), 1.0F, 10F);
+                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbofanOperate, SoundCategory.BLOCKS, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ(), 1.0F, 10F, 1.0F);
                     audio.startSound();
                 }
 
@@ -173,6 +173,26 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
                 new DirPos(pos.getX() - rot.offsetX * 2, pos.getY(), pos.getZ() - rot.offsetZ * 2, rot.getOpposite()),
                 new DirPos(pos.getX() + dir.offsetX * 2, pos.getY(), pos.getZ() + dir.offsetZ * 2, dir)
         };
+    }
+
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+
+        if(audio != null) {
+            audio.stopSound();
+            audio = null;
+        }
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+
+        if(audio != null) {
+            audio.stopSound();
+            audio = null;
+        }
     }
 
     @Override

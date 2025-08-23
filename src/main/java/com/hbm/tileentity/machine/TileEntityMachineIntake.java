@@ -79,7 +79,7 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements ITi
                 }
 
                 audio.keepAlive();
-                audio.updateVolume(this.getVolume(10F));
+                audio.updateVolume(this.getVolume(0.25F));
 
             } else {
 
@@ -110,7 +110,7 @@ public class TileEntityMachineIntake extends TileEntityLoadedBase implements ITi
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 10F, 1.0F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 10F, 1.0F, 20);
     }
 
     @Override

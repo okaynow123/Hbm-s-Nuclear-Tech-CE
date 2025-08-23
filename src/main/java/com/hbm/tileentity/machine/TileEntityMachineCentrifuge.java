@@ -261,7 +261,7 @@ public class TileEntityMachineCentrifuge extends TileEntityMachineBase implement
     @Override
     public AudioWrapper createAudioLoop() {
         return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.centrifugeOperate, SoundCategory.BLOCKS, pos.getX() + 0.5F, pos.getY() + 0.5F,
-                pos.getZ() + 0.5F, 10F, 1.0F);
+                pos.getZ() + 0.5F, 1.0F, 10F, 1.0F, 20);
     }
 
     @Override

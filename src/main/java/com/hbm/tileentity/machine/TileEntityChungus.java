@@ -189,7 +189,7 @@ public class TileEntityChungus extends TileEntityLoadedBase implements ITickable
 
 
 				if(audio == null) {
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chungusOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 20F);
+					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chungusOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 20F, 1.0F);
 					audio.startSound();
 				}
 

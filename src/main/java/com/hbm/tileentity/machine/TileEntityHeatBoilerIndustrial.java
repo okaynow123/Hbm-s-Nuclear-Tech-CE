@@ -22,6 +22,7 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -59,14 +60,21 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
         this.tanks[1] = new FluidTankNTM(Fluids.STEAM, 64_000 * 100);
     }
 
+    ByteBuf buf;
+
     @Override
     public void update() {
 
         if (!world.isRemote) {
 
+            if(this.buf != null)
+                this.buf.release();
+            this.buf = Unpooled.buffer();
+
             this.setupTanks();
             this.updateConnections();
             this.tryPullHeat();
+            int lastHeat = this.heat;
 
             int light = this.world.getLightFor(EnumSkyBlock.SKY, pos);
             if (light > 7 && TomSaveData.forWorld(world).fire > 1e-5) {
@@ -74,13 +82,19 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
                 // rampant but diminishing heating
             }
 
+            buf.writeInt(lastHeat);
+
+            tanks[0].serialize(buf);
             this.isOn = false;
             this.tryConvert();
+            tanks[1].serialize(buf);
 
             if (this.tanks[1].getFill() > 0) {
                 this.sendFluid();
             }
 
+            buf.writeBoolean(this.isOn);
+            buf.writeBoolean(this.muffled);
             networkPackNT(25);
 
         } else {
@@ -98,7 +112,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
                     audio = rebootAudio(audio);
                 }
 
-                audio.updateVolume(getVolume(7F));
+                audio.updateVolume(getVolume(1F));
                 audio.keepAlive();
 
             } else {
@@ -113,7 +127,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 7F, 1.0F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.125F, 10F, 1.0F, 20);
     }
 
     @Override
@@ -138,11 +152,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
     @Override
     public void serialize(ByteBuf buf) {
-        super.serialize(buf);
-        buf.writeInt(heat);
-        tanks[0].serialize(buf);
-        tanks[1].serialize(buf);
-        buf.writeBoolean(this.isOn);
+        buf.writeBytes(this.buf);
     }
 
     @Override

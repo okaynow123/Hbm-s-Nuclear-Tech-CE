@@ -119,7 +119,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
             } else if (countdown > 0) {
 
                 if (audio == null) {
-                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.soyuzReady, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 1.0F);
+                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.soyuzReady, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F, 100F, 1.0F);
                     audio.updateVolume(100);
                     audio.startSound();
                 } else if (!audio.isPlaying()) {

@@ -168,17 +168,17 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 			if(rpm >= 10 && state != -1) { //if conditions are right, play the sound
 
 				if(audio == null) { //if there is no sound playing, start it
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F,  2.0F);
+					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
 					audio.startSound();
 
 				} else if(!audio.isPlaying()) {
 					audio.stopSound();
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F,  2.0F);
+					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
 					audio.startSound();
 				}
 
 				audio.updatePitch((float) (0.55 + 0.1 * rpm / 10)); //dynamic pitch update based on rpm
-				audio.updateVolume(getVolume(10F)); //yeah i need this
+				audio.updateVolume(getVolume(2F)); //yeah i need this
 				audio.keepAlive();
 
 			} else {

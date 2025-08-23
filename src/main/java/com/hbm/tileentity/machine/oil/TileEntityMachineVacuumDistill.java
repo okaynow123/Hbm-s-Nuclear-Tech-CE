@@ -119,7 +119,7 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 15F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 15F, 1.0F, 20);
     }
 
     @Override

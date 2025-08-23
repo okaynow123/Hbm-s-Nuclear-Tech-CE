@@ -159,7 +159,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chemplantOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chemplantOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F, 1.0F);
     }
 
     @Override
