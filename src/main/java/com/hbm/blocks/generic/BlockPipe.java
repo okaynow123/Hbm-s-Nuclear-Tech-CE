@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +25,15 @@ public class BlockPipe extends Block {
         this.setRegistryName(s);
 
         ModBlocks.ALL_BLOCKS.add(this);
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        if(state.getBlock() == ModBlocks.deco_pipe_framed || state.getBlock() == ModBlocks.deco_pipe_framed_green ||
+                state.getBlock() == ModBlocks.deco_pipe_framed_marked || state.getBlock() == ModBlocks.deco_pipe_framed_red ||
+                state.getBlock() == ModBlocks.deco_pipe_framed_rusted || state.getBlock() == ModBlocks.deco_pipe_framed_green_rusted)
+            return BlockFaceShape.SOLID;
+        else return BlockFaceShape.UNDEFINED;
     }
 
     @Override
