@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 
 import javax.vecmath.Vector3f;
 import java.util.*;
-// I want to ask Bob why the fuck have he done this renderer if it is used only for ONE FUCKING BLOCK
 public class BlockDecoBakedModel implements IBakedModel {
 
     private final WavefrontObject model;
@@ -38,6 +37,10 @@ public class BlockDecoBakedModel implements IBakedModel {
 
     public static BlockDecoBakedModel forBlock(WavefrontObject model, TextureAtlasSprite sprite) {
         return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, 0.0F, 0.0F);
+    }
+
+    public static BlockDecoBakedModel forBlock(WavefrontObject model, TextureAtlasSprite sprite, float ty) {
+        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, ty, 0.0F);
     }
 
     @Override
@@ -111,7 +114,7 @@ public class BlockDecoBakedModel implements IBakedModel {
                 if (vCount < 3) continue;
 
                 // Prepare 4 vertices (duplicate the last one if triangle)
-                int[] idxs = vCount >= 4 ? new int[]{0,1,2,3} : new int[]{0,1,2,2};
+                int[] idxs = vCount >= 4 ? new int[]{0, 1, 2, 3} : new int[]{0, 1, 2, 2};
 
                 // Build vertex data
                 float[] px = new float[4];
@@ -138,7 +141,7 @@ public class BlockDecoBakedModel implements IBakedModel {
                         z += 0.5F;
                     }
 
-                    // Apply base scale and translation (for item, or identity for block)
+                    // Apply base scale and translation
                     x = x * baseScale + tx;
                     y = y * baseScale + ty;
                     z = z * baseScale + tz;
@@ -242,6 +245,7 @@ public class BlockDecoBakedModel implements IBakedModel {
     public TextureAtlasSprite getParticleTexture() {
         return sprite;
     }
+    // TODO: probably implement debug transformer here (why? look at HEV battery block, for example)
     // I don't have Norwood's baked model wrapper yet, so..
     private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
     private static ItemCameraTransforms createCustomTransforms() {

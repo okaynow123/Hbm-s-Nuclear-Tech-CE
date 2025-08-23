@@ -1,10 +1,14 @@
 package com.hbm.blocks.bomb;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.entity.mob.EntityCreeperTainted;
+import com.hbm.entity.mob.EntityTaintCrab;
+import com.hbm.entity.mob.EntityTeslaCrab;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -24,18 +28,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockTaint extends Block {
+public class BlockTaint extends BlockBakeBase {
 
 	public static final PropertyInteger TEXTURE = PropertyInteger.create("taintage", 0, 15);
 	
 	public BlockTaint(Material m, String s) {
-		super(m);
+		super(m, s);
 		this.setTickRandomly(true);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TEXTURE, 0));
 		ModBlocks.ALL_BLOCKS.add(this);
+	}
+
+	@Override
+	public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+		return MapColor.GRAY;
 	}
 	
 	@Override
@@ -66,8 +75,7 @@ public class BlockTaint extends Block {
 
 	private static boolean checkAttachment(World world, BlockPos pos){
 		if(!world.isAirBlock(pos)){
-    		if(world.getBlockState(pos).getBlock() != ModBlocks.taint)
-    			return true;
+			return world.getBlockState(pos).getBlock() != ModBlocks.taint;
     	}
     	return false;
     }
@@ -109,7 +117,7 @@ public class BlockTaint extends Block {
 		int meta = world.getBlockState(pos).getBlock().getMetaFromState(state);
 		int level = 15 - meta;
 		
-    	List<ItemStack> list = new ArrayList<ItemStack>();
+    	List<ItemStack> list = new ArrayList<>();
     	PotionEffect effect = new PotionEffect(HbmPotion.taint, 15 * 20, level);
     	effect.setCurativeItems(list);
     	
@@ -128,6 +136,16 @@ public class BlockTaint extends Block {
     			world.spawnEntity(creep);
     		}
     	}
+
+		if (entity instanceof EntityTeslaCrab) {
+			EntityTaintCrab crab = new EntityTaintCrab(world);
+			crab.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+
+			if (!world.isRemote) {
+				entity.setDead();
+				world.spawnEntity(crab);
+			}
+		}
 	}
 	
 	@Override
