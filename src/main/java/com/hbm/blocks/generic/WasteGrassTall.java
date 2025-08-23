@@ -53,6 +53,12 @@ public class WasteGrassTall extends BlockBush {
 	}
 
 	@Override
+	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos)
+	{
+		return true;
+	}
+
+	@Override
 	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
 		return this.canBlockStay(world, pos, world.getBlockState(pos));
 	}
