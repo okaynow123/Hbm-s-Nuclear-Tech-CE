@@ -35,11 +35,8 @@ public class BlockTaint extends BlockBakeBase {
 	public BlockTaint(Material m, String s) {
 		super(m, s);
 		this.setTickRandomly(true);
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TEXTURE, 0));
-		ModBlocks.ALL_BLOCKS.add(this);
 	}
 
 	@Override
