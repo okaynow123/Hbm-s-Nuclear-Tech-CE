@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
@@ -116,7 +117,8 @@ public class BlockCrate extends BlockFalling {
         //Metal Crate
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_press), 10);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_difurnace_off), 9);
-        BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_nuke_furnace_off), 7);
+        BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_reactor_breeding), 6);
+        BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_wood_burner), 10);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_diesel), 8);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_rtg_grey), 4);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.red_pylon), 9);
@@ -125,21 +127,22 @@ public class BlockCrate extends BlockFalling {
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_electric_furnace_off), 8);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_assembler), 10);
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_fluidtank), 7);
-        BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_excavator), 4);
-
         BlockCrate.addToListWithWeight(metalList, ModItems.centrifuge_element, 6);
-
         BlockCrate.addToListWithWeight(metalList, ModItems.motor, 8);
         BlockCrate.addToListWithWeight(metalList, ModItems.coil_tungsten, 7);
         BlockCrate.addToListWithWeight(metalList, ModItems.photo_panel, 3);
         BlockCrate.addToListWithWeight(metalList, ModItems.coil_copper, 10);
-        BlockCrate.addToListWithWeight(metalList, ModItems.tank_steel, 9);
         BlockCrate.addToListWithWeight(metalList, ModItems.blade_titanium, 3);
-        BlockCrate.addToListWithWeight(metalList, ModItems.bolt_compound, 2);
         BlockCrate.addToListWithWeight(metalList, ModItems.piston_selenium, 6);
 
         //Red Crate
         BlockCrate.addToListWithWeight(redList, ModItems.mysteryshovel, 1);
+        BlockCrate.addToListWithWeight(redList, ModItems.gun_heavy_revolver_lilmac, 1);
+        BlockCrate.addToListWithWeight(redList, ModItems.gun_autoshotgun_sexy, 1);
+        BlockCrate.addToListWithWeight(redList, ModItems.gun_maresleg_broken, 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.M44_EQUESTRIAN.ordinal()), 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.G12_EQUESTRIAN.ordinal()), 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.BMG50_EQUESTRIAN.ordinal()), 1);
         BlockCrate.addToListWithWeight(redList, ModItems.battery_spark, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.bottle_sparkle, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.bottle_rad, 1);
