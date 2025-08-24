@@ -47,7 +47,9 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
     public static int maxHeat = 12_800_000;
     public static double diffusion = 0.1D;
     public int heat;
+    private int lastHeat;
     public FluidTankNTM[] tanks;
+    private FluidTankNTM[] tanksSync;
     public boolean isOn;
     AxisAlignedBB bb = null;
     private AudioWrapper audio;
@@ -55,26 +57,20 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
     public TileEntityHeatBoilerIndustrial() {
         this.tanks = new FluidTankNTM[2];
-
+        this.tanksSync = new FluidTankNTM[2];
         this.tanks[0] = new FluidTankNTM(Fluids.WATER, 64_000);
         this.tanks[1] = new FluidTankNTM(Fluids.STEAM, 64_000 * 100);
     }
-
-    ByteBuf buf;
 
     @Override
     public void update() {
 
         if (!world.isRemote) {
 
-            if(this.buf != null)
-                this.buf.release();
-            this.buf = Unpooled.buffer();
-
             this.setupTanks();
             this.updateConnections();
             this.tryPullHeat();
-            int lastHeat = this.heat;
+            lastHeat = this.heat;
 
             int light = this.world.getLightFor(EnumSkyBlock.SKY, pos);
             if (light > 7 && TomSaveData.forWorld(world).fire > 1e-5) {
@@ -82,19 +78,15 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
                 // rampant but diminishing heating
             }
 
-            buf.writeInt(lastHeat);
-
-            tanks[0].serialize(buf);
+            tanksSync[0] = tanks[0].clone();
             this.isOn = false;
             this.tryConvert();
-            tanks[1].serialize(buf);
+            tanksSync[1] = tanks[1].clone();
 
             if (this.tanks[1].getFill() > 0) {
                 this.sendFluid();
             }
 
-            buf.writeBoolean(this.isOn);
-            buf.writeBoolean(this.muffled);
             networkPackNT(25);
 
         } else {
@@ -152,7 +144,11 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
     @Override
     public void serialize(ByteBuf buf) {
-        buf.writeBytes(this.buf);
+        super.serialize(buf);
+        buf.writeInt(this.lastHeat);
+        this.tanksSync[0].serialize(buf);
+        this.tanksSync[1].serialize(buf);
+        buf.writeBoolean(this.isOn);
     }
 
     @Override

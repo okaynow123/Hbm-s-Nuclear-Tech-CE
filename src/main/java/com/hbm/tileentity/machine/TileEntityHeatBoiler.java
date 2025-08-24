@@ -47,12 +47,14 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
 
     public Fluid[] types = new Fluid[2];
     public FluidTankNTM[] tanks;
+    public FluidTankNTM[] tanksSync;
     public int heat;
     public boolean isOn;
     public boolean hasExploded = false;
     public static int maxHeat = 12_800_000; //the heat required to turn 64k of water into steam
     public static double diffusion = 0.1D;
     public static boolean canExplode = true;
+    private int lastHeat;
 
     private AudioWrapper audio;
     private int audioTime;
@@ -60,6 +62,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
     public TileEntityHeatBoiler() {
         super();
         tanks = new FluidTankNTM[2];
+        tanksSync = new FluidTankNTM[2];
         this.tanks[0] = new FluidTankNTM(Fluids.WATER, 16_000);
         this.tanks[1] = new FluidTankNTM(Fluids.STEAM, 16_000 * 100);
 
@@ -69,35 +72,25 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
 
     }
 
-    ByteBuf buf;
-
     @Override
     public void update() {
 
         if(!world.isRemote) {
 
-            if(this.buf != null)
-                this.buf.release();
-            this.buf = Unpooled.buffer();
-
-            buf.writeBoolean(this.hasExploded);
             if(!this.hasExploded) {
                 setupTanks();
                 updateConnections();
                 tryPullHeat();
-                int lastHeat = this.heat;
+                lastHeat = this.heat;
 
                 int light = this.world.getLightFor(EnumSkyBlock.SKY, this.pos);
                 if(light > 7 && TomSaveData.forWorld(world).fire > 1e-5) {
                     this.heat += ((maxHeat - heat) * 0.000005D); //constantly heat up 0.0005% of the remaining heat buffer for rampant but diminishing heating
                 }
-
-                buf.writeInt(lastHeat);
-
-                tanks[0].serialize(buf);
+                tanksSync[0] = tanks[0].clone();
                 this.isOn = false;
                 this.tryConvert();
-                tanks[1].serialize(buf);
+                tanksSync[1] = tanks[1].clone();
 
                 if(this.tanks[1].getFill() > 0) {
                     for(DirPos pos : getConPos()) {
@@ -105,9 +98,6 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
                     }
                 }
             }
-
-            buf.writeBoolean(this.muffled);
-            buf.writeBoolean(this.isOn);
             networkPackNT(25);
         } else {
 
@@ -176,7 +166,14 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
 
     @Override
     public void serialize(ByteBuf buf) {
-        buf.writeBytes(this.buf);
+        buf.writeBoolean(hasExploded);
+        if(!this.hasExploded) {
+            buf.writeInt(lastHeat);
+            tanksSync[0].serialize(buf);
+            tanksSync[1].serialize(buf);
+            buf.writeBoolean(this.muffled);
+            buf.writeBoolean(this.isOn);
+        }
     }
 
     @Override

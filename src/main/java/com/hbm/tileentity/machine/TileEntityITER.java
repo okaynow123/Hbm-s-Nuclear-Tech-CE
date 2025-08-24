@@ -370,6 +370,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 		this.power = nbt.getLong("power");
 		this.isOn = nbt.getBoolean("isOn");
+		this.totalRuntime = nbt.getLong("totalRuntime");
 		tanks[0].readFromNBT(nbt, "water");
 		tanks[1].readFromNBT(nbt, "steam");
 		plasma.readFromNBT(nbt, "plasma");

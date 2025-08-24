@@ -55,6 +55,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	/**
 	 * {@inheritDoc}
 	 * only call super.serialize() on noisy machines. It has no effect on others.<br>
+	 * This happens on the <strong>PacketThreading threadPool</strong>!
 	 */
 	@Override
 	public void serialize(ByteBuf buf) {
