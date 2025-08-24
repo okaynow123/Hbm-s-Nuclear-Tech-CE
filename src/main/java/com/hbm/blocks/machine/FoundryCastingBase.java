@@ -12,7 +12,6 @@ import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.InventoryHelper;
-import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityFoundryCastingBase;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockContainer;
@@ -162,7 +161,6 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
             return;
         }
         if (cast.amount > 0) {
-            MainRegistry.logger.info("Foundry casting broken with {} {}", cast.amount, cast.type);
             ItemStack scrap = ItemScraps.create(new MaterialStack(cast.type, cast.amount));
             world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, scrap));
         }

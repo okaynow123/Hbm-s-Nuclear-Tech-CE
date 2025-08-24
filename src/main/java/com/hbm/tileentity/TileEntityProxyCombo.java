@@ -1,5 +1,6 @@
 package com.hbm.tileentity;
 
+import com.hbm.api.block.ICrucibleAcceptor;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluidmk2.IFluidConnectorMK2;
 import com.hbm.api.fluidmk2.IFluidReceiverMK2;
@@ -7,6 +8,7 @@ import com.hbm.api.tile.IHeatSource;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.material.Mats;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -22,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
-public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidReceiverMK2 {
+public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidReceiverMK2, ICrucibleAcceptor {
 
 	TileEntity tile;
 	boolean inventory;
@@ -204,6 +207,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	public void readFromNBT(NBTTagCompound compound) {
 		inventory = compound.getBoolean("inv");
 		fluid = compound.getBoolean("flu");
+		this.moltenMetal = compound.getBoolean("metal");
 		power = compound.getBoolean("pow");
 		heat = compound.getBoolean("hea");
 
@@ -214,6 +218,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setBoolean("inv", inventory);
 		compound.setBoolean("flu", fluid);
+		compound.setBoolean("metal", moltenMetal);
 		compound.setBoolean("pow", power);
 		compound.setBoolean("hea", heat);
 		return super.writeToNBT(compound);
@@ -318,6 +323,38 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 				CapabilityContextProvider.popPos(prev);
 			}
 		}
+	}
+
+	@Override
+	public boolean canAcceptPartialPour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+		if(this.moltenMetal && getCoreObject() instanceof ICrucibleAcceptor){
+			return ((ICrucibleAcceptor)getCoreObject()).canAcceptPartialPour(world, pos, dX, dY, dZ, side, stack);
+		}
+		return false;
+	}
+
+	@Override
+	public Mats.MaterialStack pour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
+		if(this.moltenMetal && getCoreObject() instanceof ICrucibleAcceptor){
+			return ((ICrucibleAcceptor)getCoreObject()).pour(world, pos, dX, dY, dZ, side, stack);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canAcceptPartialFlow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+		if(this.moltenMetal && getCoreObject() instanceof ICrucibleAcceptor){
+			return ((ICrucibleAcceptor)getCoreObject()).canAcceptPartialFlow(world, pos, side, stack);
+		}
+		return false;
+	}
+
+	@Override
+	public Mats.MaterialStack flow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+		if(this.moltenMetal && getCoreObject() instanceof ICrucibleAcceptor){
+			return ((ICrucibleAcceptor)getCoreObject()).flow(world, pos, side, stack);
+		}
+		return null;
 	}
 
 	@Override

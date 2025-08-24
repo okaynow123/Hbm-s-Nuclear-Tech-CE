@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MachineStrandCaster extends BlockDummyable
-    implements ICrucibleAcceptor, ILookOverlay, IToolable {
+public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcceptor, ILookOverlay, IToolable {
 
   public MachineStrandCaster(Material material, String name) {
     super(material, name);
@@ -86,80 +85,51 @@ public class MachineStrandCaster extends BlockDummyable
   }
 
   @Override
-  public boolean canAcceptPartialPour(
-      World world,
-      BlockPos pos,
-      double dX,
-      double dY,
-      double dZ,
-      ForgeDirection side,
-      Mats.MaterialStack stack) {
+  public boolean canAcceptPartialPour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
     TileEntity poured = world.getTileEntity(pos);
-    if (!(poured instanceof TileEntityProxyCombo && ((TileEntityProxyCombo) poured).moltenMetal))
-      return false;
+    if (!(poured instanceof TileEntityProxyCombo && ((TileEntityProxyCombo) poured).moltenMetal)) return false;
 
     BlockPos corePos = this.findCore(world, pos);
     if (corePos == null) return false;
     TileEntity tile = world.getTileEntity(corePos);
     if (!(tile instanceof TileEntityMachineStrandCaster caster)) return false;
 
-    return caster.canAcceptPartialPour(
-        world, new BlockPos(pos.getX(), pos.getY(), pos.getZ()), dX, dY, dZ, side, stack);
+    return caster.canAcceptPartialPour(world, new BlockPos(pos.getX(), pos.getY(), pos.getZ()), dX, dY, dZ, side, stack);
   }
 
   @Override
-  public Mats.MaterialStack pour(
-      World world,
-      BlockPos pos,
-      double dX,
-      double dY,
-      double dZ,
-      ForgeDirection side,
-      Mats.MaterialStack stack) {
+  public Mats.MaterialStack pour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
 
     TileEntity poured = world.getTileEntity(pos);
-    if (!(poured instanceof TileEntityProxyCombo && ((TileEntityProxyCombo) poured).moltenMetal))
-      return stack;
+    if (!(poured instanceof TileEntityProxyCombo && ((TileEntityProxyCombo) poured).moltenMetal)) return stack;
 
-    BlockPos corePos = this.findCore(world, pos);
-    if (corePos == null) return stack;
-    TileEntity tile = world.getTileEntity(pos);
+    int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+    if(posC == null) return stack;
+    TileEntity tile = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
     if (!(tile instanceof TileEntityMachineStrandCaster caster)) return stack;
 
     return caster.pour(world, pos, dX, dY, dZ, side, stack);
   }
 
   @Override
-  public boolean canAcceptPartialFlow(
-      World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+  public boolean canAcceptPartialFlow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
     return false;
   }
 
   @Override
-  public Mats.MaterialStack flow(
-      World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+  public Mats.MaterialStack flow(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
     return null;
   }
 
   @Override
-  public boolean onBlockActivated(
-      World world,
-      @NotNull BlockPos pos,
-      @NotNull IBlockState state,
-      @NotNull EntityPlayer player,
-      @NotNull EnumHand hand,
-      @NotNull EnumFacing facing,
-      float hitX,
-      float hitY,
-      float hitZ) {
+  public boolean onBlockActivated(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
     if (world.isRemote) {
       return true;
     }
 
-    BlockPos corePos = findCore(world, pos);
-    TileEntityMachineStrandCaster caster =
-        (TileEntityMachineStrandCaster) world.getTileEntity(corePos);
+    int[] coords = findCore(world, pos.getX(), pos.getY(), pos.getZ());
+    TileEntityMachineStrandCaster caster = (TileEntityMachineStrandCaster) world.getTileEntity(new BlockPos(coords[0], coords[1], coords[2]));
     if (caster != null) {
       // insert mold
       ItemStack heldItem = player.getHeldItem(hand);
@@ -169,15 +139,7 @@ public class MachineStrandCaster extends BlockDummyable
         caster.inventory.setStackInSlot(0, heldItem.copy());
         caster.inventory.getStackInSlot(0).setCount(1);
         player.getHeldItem(hand).shrink(1);
-        world.playSound(
-            null,
-            pos.getX() + 0.5,
-            pos.getY() + 0.5,
-            pos.getZ() + 0.5,
-            HBMSoundHandler.upgradePlug,
-            SoundCategory.BLOCKS,
-            1.0F,
-            1.0F);
+        world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
         caster.markDirty();
         return true;
       }
@@ -188,8 +150,7 @@ public class MachineStrandCaster extends BlockDummyable
         if (caster.amount > 0) {
           ItemStack scrap = ItemScraps.create(new Mats.MaterialStack(caster.type, caster.amount));
           if (!player.inventory.addItemStackToInventory(scrap)) {
-            EntityItem item =
-                new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, scrap);
+            EntityItem item = new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, scrap);
             world.spawnEntity(item);
           } else {
             player.inventoryContainer.detectAndSendChanges();
@@ -212,8 +173,7 @@ public class MachineStrandCaster extends BlockDummyable
 
       if (caster.amount > 0) {
         ItemStack scrap = ItemScraps.create(new Mats.MaterialStack(caster.type, caster.amount));
-        EntityItem item =
-            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, scrap);
+        EntityItem item = new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, scrap);
         world.spawnEntity(item);
         caster.amount = 0; // just for safety
       }
@@ -225,8 +185,7 @@ public class MachineStrandCaster extends BlockDummyable
     BlockPos corePos = findCore(world, new BlockPos(x, y, z));
     if (corePos == null) return;
 
-    TileEntityMachineStrandCaster caster =
-        (TileEntityMachineStrandCaster) world.getTileEntity(corePos);
+    TileEntityMachineStrandCaster caster = (TileEntityMachineStrandCaster) world.getTileEntity(corePos);
 
     List<String> text = new ArrayList<>();
     if (caster != null) {
@@ -236,8 +195,7 @@ public class MachineStrandCaster extends BlockDummyable
         text.add(ChatFormatting.BLUE + caster.getInstalledMold().getTitle());
       }
     }
-    ILookOverlay.printGeneric(
-        event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xFF4000, 0x401000, text);
+    ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xFF4000, 0x401000, text);
   }
 
   @Override
@@ -252,29 +210,16 @@ public class MachineStrandCaster extends BlockDummyable
   }
 
   @Override
-  public boolean onScrew(
-      World world,
-      EntityPlayer player,
-      int x,
-      int y,
-      int z,
-      EnumFacing side,
-      float fX,
-      float fY,
-      float fZ,
-      EnumHand hand,
-      ToolType tool) {
+  public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool) {
     if (tool != ToolType.SCREWDRIVER) return false;
 
     BlockPos corePos = findCore(world, new BlockPos(x, y, z));
-    TileEntityMachineStrandCaster caster =
-        (TileEntityMachineStrandCaster) world.getTileEntity(corePos);
+    TileEntityMachineStrandCaster caster = (TileEntityMachineStrandCaster) world.getTileEntity(corePos);
 
     if (Objects.requireNonNull(caster).inventory.getStackInSlot(0).isEmpty()) return false;
 
     if (!player.inventory.addItemStackToInventory(caster.inventory.getStackInSlot(0).copy())) {
-      EntityItem item =
-          new EntityItem(world, x + 0.5, y + 1, z + 0.5, caster.inventory.getStackInSlot(0).copy());
+      EntityItem item = new EntityItem(world, x + 0.5, y + 1, z + 0.5, caster.inventory.getStackInSlot(0).copy());
       world.spawnEntity(item);
     } else {
       player.inventoryContainer.detectAndSendChanges();

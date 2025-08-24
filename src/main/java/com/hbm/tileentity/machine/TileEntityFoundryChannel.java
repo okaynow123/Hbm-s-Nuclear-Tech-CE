@@ -82,9 +82,8 @@ public class TileEntityFoundryChannel extends TileEntityFoundryBase {
 					ForgeDirection dir = ForgeDirection.getOrientation(i);
 					Block b = world.getBlockState(pos.add(dir.offsetX, 0, dir.offsetZ)).getBlock();
 					
-					if(b instanceof ICrucibleAcceptor && b != ModBlocks.foundry_channel) {
-						ICrucibleAcceptor acc = (ICrucibleAcceptor) b;
-						
+					if(b instanceof ICrucibleAcceptor acc && b != ModBlocks.foundry_channel) {
+
 						if(acc.canAcceptPartialFlow(world, pos.add(dir.offsetX, 0, dir.offsetZ), dir.getOpposite(), new MaterialStack(this.type, this.amount))) {
 							MaterialStack left = acc.flow(world, pos.add(dir.offsetX, 0, dir.offsetZ), dir.getOpposite(), new MaterialStack(this.type, this.amount));
 							if(left == null) {
@@ -106,9 +105,8 @@ public class TileEntityFoundryChannel extends TileEntityFoundryBase {
 						ForgeDirection dir = ForgeDirection.getOrientation(i);
 						TileEntity b = world.getTileEntity(pos.add(dir.offsetX, 0, dir.offsetZ));
 						
-						if(b instanceof TileEntityFoundryChannel) {
-							TileEntityFoundryChannel acc = (TileEntityFoundryChannel) b;
-							
+						if(b instanceof TileEntityFoundryChannel acc) {
+
 							if(acc.type == null || acc.type == this.type || acc.amount == 0) {
 								acc.type = this.type;
 								
@@ -222,8 +220,7 @@ public class TileEntityFoundryChannel extends TileEntityFoundryBase {
 		for(ForgeDirection dir : new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST }) {
 			TileEntity b = world.getTileEntity(pos.add(dir.offsetX, 0, dir.offsetZ));
 					
-			if(b instanceof TileEntityFoundryChannel && !visited.contains(b)) {
-				TileEntityFoundryChannel acc = (TileEntityFoundryChannel) b;
+			if(b instanceof TileEntityFoundryChannel acc && !visited.contains(b)) {
 				visited.add(acc);
 
 				if(acc.amount > 0) hasMaterial = true;
@@ -241,8 +238,7 @@ public class TileEntityFoundryChannel extends TileEntityFoundryBase {
 		for(ForgeDirection dir : new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST }) {
 			TileEntity b = world.getTileEntity(pos.add(dir.offsetX, 0, dir.offsetZ));
 			
-			if(b instanceof TileEntityFoundryChannel && !visited.contains(b)) {
-				TileEntityFoundryChannel acc = (TileEntityFoundryChannel) b;
+			if(b instanceof TileEntityFoundryChannel acc && !visited.contains(b)) {
 				visited.add(acc);
 
 				NTMMaterial neighborMaterial = acc.checkNeighbors(visited);

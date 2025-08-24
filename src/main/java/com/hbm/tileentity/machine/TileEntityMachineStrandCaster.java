@@ -24,6 +24,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -32,12 +34,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
-public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
-    implements IGUIProvider, ICrucibleAcceptor, IFluidStandardTransceiver {
+public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase implements IGUIProvider, ICrucibleAcceptor, IFluidStandardTransceiver {
 
   public FluidTankNTM water;
   public FluidTankNTM steam;
@@ -56,23 +58,36 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
   }
 
   @Override
+  public NBTTagCompound getUpdateTag() {
+    return this.writeToNBT(super.getUpdateTag());
+  }
+
+  @Override
+  public SPacketUpdateTileEntity getUpdatePacket() {
+    return new SPacketUpdateTileEntity(this.pos, 1, this.getUpdateTag());
+  }
+
+  @Override
+  public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    this.readFromNBT(pkt.getNbtCompound());
+  }
+
+  @Override
   public void update() {
 
     if (!world.isRemote) {
 
       if (this.lastType != this.type || this.lastAmount != this.amount) {
         IBlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
+        world.markAndNotifyBlock(pos, world.getChunk(pos), state, state, 3);
         this.lastType = this.type;
         this.lastAmount = this.amount;
       }
 
       // In case of overfill problems, spit out the excess as scrap
       if (amount > getCapacity()) {
-        ItemStack scrap =
-            ItemScraps.create(new Mats.MaterialStack(type, Math.max(amount - getCapacity(), 0)));
-        EntityItem item =
-            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, scrap);
+        ItemStack scrap = ItemScraps.create(new Mats.MaterialStack(type, Math.max(amount - getCapacity(), 0)));
+        EntityItem item = new EntityItem(world, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, scrap);
         world.spawnEntity(item);
         this.amount = this.getCapacity();
       }
@@ -93,33 +108,47 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
         this.amount -= moldsToCast * mold.getCost();
 
         ItemStack out = mold.getOutput(type);
-        int remaining = out.getCount() * moldsToCast;
-        final int maxStackSize = out.getMaxStackSize();
+        final int itemsPerCast = out.getCount();
+        final int initialRemaining = itemsPerCast * moldsToCast;
+        int remaining = initialRemaining;
 
-        for (int i = 1; i < 7; i++) {
-          if (remaining <= 0) {
-            break;
+        final int itemMaxStackSize = out.getMaxStackSize();
+
+        for (int i = 1; i < 7 && remaining > 0; i++) {
+          ItemStack slotStack = inventory.getStackInSlot(i);
+          int slotLimit = Math.min(inventory.getSlotLimit(i), itemMaxStackSize);
+
+          if (slotStack.isEmpty()) {
+            int toDeposit = Math.min(remaining, slotLimit);
+            if (toDeposit > 0) {
+              ItemStack put = out.copy();
+              put.setCount(toDeposit);
+              inventory.setStackInSlot(i, put);
+              remaining -= toDeposit;
+            }
+            continue;
           }
 
-          ItemStack itemStack = inventory.getStackInSlot(i);
-
-          if (itemStack.isEmpty()) {
-            inventory.setStackInSlot(i, new ItemStack(out.getItem(), 0, out.getItemDamage()));
-          }
-
-          if (itemStack.isItemEqual(out)) {
-            int toDeposit = Math.min(remaining, maxStackSize - itemStack.getCount());
-            itemStack.grow(toDeposit);
-            remaining -= toDeposit;
+          if (ItemHandlerHelper.canItemStacksStack(slotStack, out)) {
+            int toDeposit = Math.min(remaining, slotLimit - slotStack.getCount());
+            if (toDeposit > 0) {
+              slotStack.grow(toDeposit);
+              inventory.setStackInSlot(i, slotStack);
+              remaining -= toDeposit;
+            }
           }
         }
 
-        markDirty();
+        int producedItems = initialRemaining - remaining;
+        int castsMade = producedItems / itemsPerCast;
 
-        water.setFill(water.getFill() - getWaterRequired() * moldsToCast);
-        steam.setFill(steam.getFill() + getWaterRequired() * moldsToCast);
+        if (castsMade > 0) {
+          water.setFill(water.getFill() - getWaterRequired() * castsMade);
+          steam.setFill(steam.getFill() + getWaterRequired() * castsMade);
 
-        lastProgressTick = world.getWorldTime();
+          markDirty();
+          lastProgressTick = world.getWorldTime();
+        }
       }
 
       networkPackNT(150);
@@ -219,15 +248,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
   }
 
   @Override
-  public boolean canAcceptPartialPour(
-      World world,
-      BlockPos pos,
-      double dX,
-      double dY,
-      double dZ,
-      ForgeDirection side,
-      Mats.MaterialStack stack) {
-
+  public boolean canAcceptPartialPour(World world, BlockPos pos, double dX, double dY, double dZ, ForgeDirection side, Mats.MaterialStack stack) {
     if (side != ForgeDirection.UP) return false;
     for (int[] pourPos : getMetalPourPos()) {
       if (pourPos[0] == pos.getX() && pourPos[1] == pos.getY() && pourPos[2] == pos.getZ()) {
@@ -238,13 +259,9 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
   }
 
   @Override
-  public boolean standardCheck(
-      World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+  public boolean standardCheck(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
     if (this.type != null && this.type != stack.material) return false;
-    int limit =
-        this.getInstalledMold() != null
-            ? this.getInstalledMold().getCost() * 9
-            : this.getCapacity();
+    int limit = this.getInstalledMold() != null ? this.getInstalledMold().getCost() * 9 : this.getCapacity();
     return !(this.amount >= limit || getInstalledMold() == null);
   }
 
@@ -260,31 +277,15 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
 
   private void updateConnections() {
     for (DirPos dirPos : getFluidConPos()) {
-      this.trySubscribe(
-          water.getTankType(),
-          world,
-          dirPos.getPos().getX(),
-          dirPos.getPos().getY(),
-          dirPos.getPos().getZ(),
-          dirPos.getDir());
-      this.sendFluid(
-          steam,
-          world,
-          dirPos.getPos().getX(),
-          dirPos.getPos().getY(),
-          dirPos.getPos().getZ(),
-          dirPos.getDir());
+      this.trySubscribe(water.getTankType(), world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
+      this.sendFluid(steam, world, dirPos.getPos().getX(), dirPos.getPos().getY(), dirPos.getPos().getZ(), dirPos.getDir());
     }
   }
 
   @Override
-  public Mats.MaterialStack standardAdd(
-      World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
+  public Mats.MaterialStack standardAdd(World world, BlockPos pos, ForgeDirection side, Mats.MaterialStack stack) {
     this.type = stack.material;
-    int limit =
-        this.getInstalledMold() != null
-            ? this.getInstalledMold().getCost() * 9
-            : this.getCapacity();
+    int limit = this.getInstalledMold() != null ? this.getInstalledMold().getCost() * 9 : this.getCapacity();
     if (stack.amount + this.amount <= limit) {
       this.amount += stack.amount;
       return null;
@@ -322,8 +323,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
 
   @Override
   @SideOnly(Side.CLIENT)
-  public GuiInfoContainer provideGUI(
-      int ID, EntityPlayer player, World world, int x, int y, int z) {
+  public GuiInfoContainer provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
     return new GUIMachineStrandCaster(player.inventory, this);
   }
 
@@ -398,8 +398,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase
   public @NotNull AxisAlignedBB getRenderBoundingBox() {
 
     if (bb == null) {
-      bb =
-          new AxisAlignedBB(
+      bb = new AxisAlignedBB(
               pos.getX() - 7,
               pos.getY(),
               pos.getZ() - 7,

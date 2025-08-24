@@ -17,22 +17,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.DoubleBuffer;
 @AutoRegister
-public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMachineStrandCaster>
-    implements IItemRendererProvider {
-  public static final ResourceLocation lava =
-      new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
+public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMachineStrandCaster> implements IItemRendererProvider {
+  public static final ResourceLocation lava = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
   private static DoubleBuffer buf = null;
 
   @Override
-  public void render(
-      @NotNull TileEntityMachineStrandCaster caster,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
-
+  public void render(@NotNull TileEntityMachineStrandCaster caster, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
     if (buf == null) {
       buf = GLAllocation.createDirectByteBuffer(8 * 4).asDoubleBuffer();
     }
@@ -40,18 +30,10 @@ public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMach
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5, y, z + 0.5);
     switch (caster.getBlockMetadata() - BlockDummyable.offset) {
-      case 4:
-        GlStateManager.rotate(90, 0F, 1F, 0F);
-        break;
-      case 3:
-        GlStateManager.rotate(180, 0F, 1F, 0F);
-        break;
-      case 5:
-        GlStateManager.rotate(270, 0F, 1F, 0F);
-        break;
-      case 2:
-        GlStateManager.rotate(0, 0F, 1F, 0F);
-        break;
+      case 4 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+      case 3 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+      case 5 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+      case 2 -> GlStateManager.rotate(0, 0F, 1F, 0F);
     }
     GlStateManager.translate(0.5, 0, 0.5);
     GlStateManager.rotate(180, 0, 1, 0);
@@ -66,8 +48,7 @@ public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMach
     if (caster.amount != 0 && caster.getInstalledMold() != null) {
 
       double level = ((double) caster.amount / (double) caster.getCapacity()) * 0.675D;
-      double offset =
-          ((double) caster.amount / (double) caster.getInstalledMold().getCost()) * 0.375D;
+      double offset = ((double) caster.amount / (double) caster.getInstalledMold().getCost()) * 0.375D;
 
       int color = caster.type.moltenColor;
 
@@ -94,15 +75,17 @@ public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMach
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder buffer = tessellator.getBuffer();
-
-      buffer.normal(0F, 1F, 0F);
-      buffer.color(r / 255F, g / 255F, b / 255F, 1.0F);
       bindTexture(lava);
-      buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-      buffer.pos(-0.9, 2.3 + level, -0.999).tex(0, 0).endVertex();
-      buffer.pos(-0.9, 2.3 + level, 0.999).tex(0, 1).endVertex();
-      buffer.pos(0.9, 2.3 + level, 0.999).tex(1, 1).endVertex();
-      buffer.pos(0.9, 2.3 + level, -0.999).tex(1, 0).endVertex();
+      buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+      float rf = r / 255F;
+      float gf = g / 255F;
+      float bf = b / 255F;
+      double yPlane = 2.3 + level;
+
+      buffer.pos(-0.9, yPlane, -0.999).tex(0, 0).color(rf, gf, bf, 1.0F).normal(0F, 1F, 0F).endVertex();
+      buffer.pos(-0.9, yPlane, 0.999).tex(0, 1).color(rf, gf, bf, 1.0F).normal(0F, 1F, 0F).endVertex();
+      buffer.pos(0.9, yPlane, 0.999).tex(1, 1).color(rf, gf, bf, 1.0F).normal(0F, 1F, 0F).endVertex();
+      buffer.pos(0.9, yPlane, -0.999).tex(1, 0).color(rf, gf, bf, 1.0F).normal(0F, 1F, 0F).endVertex();
       tessellator.draw();
 
       GlStateManager.popMatrix();
