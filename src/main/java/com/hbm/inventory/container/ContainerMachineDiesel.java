@@ -20,8 +20,8 @@ public class ContainerMachineDiesel extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 44, 17));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 44, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 116, 53));
-		//this.addSlotToContainer(new Slot(tedf, 3, 8, 17));
-		//this.addSlotToContainer(new SlotMachineOutput(invPlayer.player, tedf, 4, 8, 53));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 8, 17));
+		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 8, 53));
 		
 		for(int i = 0; i < 3; i++)
 		{

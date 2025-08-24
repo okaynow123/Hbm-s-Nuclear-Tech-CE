@@ -6,14 +6,14 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.container.ContainerMachineDiesel;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIMachineDiesel;
-import com.hbm.inventory.recipes.EngineRecipes;
-import com.hbm.inventory.recipes.EngineRecipes.FuelGrade;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
@@ -24,14 +24,11 @@ import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +40,6 @@ import java.util.HashMap;
 public class TileEntityMachineDiesel extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IConfigurableMachine, IFluidCopiable {
 
 	public long power;
-	public int soundCycle = 0;
 
 	/* CONFIGURABLE CONSTANTS */
 	public static int fluidCap = 16000;
@@ -67,8 +63,8 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	}
 
 	public TileEntityMachineDiesel() {
-		super(3, 100, true, true);
-		tank = new FluidTankNTM(Fluids.NONE, 16000);
+		super(5, 100, true, true);
+		tank = new FluidTankNTM(Fluids.DIESEL, 4_000);
 	}
 	
 	@Override
@@ -94,8 +90,8 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	
 	@Override
 	public int[] getAccessibleSlotsFromSide(EnumFacing e) {
-		int p_94128_1_ = e.ordinal();
-		return p_94128_1_ == 0 ? slots_bottom : (p_94128_1_ == 1 ? slots_top : slots_side);
+		int ordinal = e.ordinal();
+		return ordinal == 0 ? slots_bottom : (ordinal == 1 ? slots_top : slots_side);
 	}
 	
 	public long getPowerScaled(long i) {
@@ -105,18 +101,19 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	@Override
 	public void update() {
 		if (!world.isRemote) {
+			this.wasOn = false;
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 				this.sendSmoke(pos.getX() + dir.offsetX, pos.getX() + dir.offsetY, pos.getX() + dir.offsetZ, dir);
 			}
 
 			//Tank Management
+			FluidType last = tank.getTankType();
+			if(tank.setType(3, 4, inventory)) this.unsubscribeToAllAround(last, this);
 			tank.loadTank(0, 1, inventory);
-			if(tank.getTankType() == Fluids.NITAN)
-				powerCap = maxPower * 10;
-			else
-				powerCap = maxPower;
-			
+
+			this.subscribeToAllAround(tank.getTankType(), this);
+
 			// Battery Item
 			power = Library.chargeItemsFromTE(inventory, 2, power, powerCap);
 			generate();
@@ -172,6 +169,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 		super.serialize(buf);
 		buf.writeLong(power);
 		buf.writeLong(powerCap);
+		buf.writeBoolean(wasOn);
 		tank.serialize(buf);
 	}
 
@@ -180,6 +178,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 		super.deserialize(buf);
 		power = buf.readLong();
 		powerCap = buf.readLong();
+		this.wasOn = buf.readBoolean();
 		tank.deserialize(buf);
 	}
 
@@ -188,38 +187,39 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	}
 	
 	public long getHEFromFuel() {
-		if(tank.getFluid() == null) return 0;
-		return getHEFromFuel(tank.getFluid().getFluid());
+        return getHEFromFuel(tank.getTankType());
 	}
 	
-	public static long getHEFromFuel(Fluid type) {
-		if(EngineRecipes.hasFuelRecipe(type)) {
-			FuelGrade grade = EngineRecipes.getFuelGrade(type);
+	public static long getHEFromFuel(FluidType type) {
+		if(type.hasTrait(FT_Combustible.class)) {
+			FT_Combustible fuel = type.getTrait(FT_Combustible.class);
+			FT_Combustible.FuelGrade grade = fuel.getGrade();
 			double efficiency = fuelEfficiency.containsKey(grade) ? fuelEfficiency.get(grade) : 0;
-			return (long) (EngineRecipes.getEnergy(type) / 1000L * efficiency);
+
+			if(fuel.getGrade() != FT_Combustible.FuelGrade.LOW) {
+				return (long) (fuel.getCombustionEnergy() / 1000L * efficiency);
+			}
 		}
 		
 		return 0;
 	}
 
 	public void generate() {
-		if (hasAcceptableFuel()) {
-			if (tank.getFluidAmount() > 0) {
-				if (soundCycle == 0) {
-					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_FIREWORK_BLAST, SoundCategory.BLOCKS, 0.5F, -100.0F);
-				}
-				soundCycle++;
+		if (world.isBlockPowered(pos)) return;
+		if(hasAcceptableFuel()) {
+			if (tank.getFill() > 0) {
 
-				if (soundCycle >= 5)
-					soundCycle = 0;
+				this.wasOn = true;
 
-				tank.drain(1, true);
+				tank.setFill(tank.getFill() - 1);
+				if(tank.getFill() < 0)
+					tank.setFill(0);
 
 				if(world.getTotalWorldTime() % 5 == 0) {
 					super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, 5F);
 				}
 
-				if (power + getHEFromFuel() <= powerCap) {
+				if(power + getHEFromFuel() <= powerCap) {
 					power += getHEFromFuel();
 				} else {
 					power = powerCap;
@@ -227,19 +227,11 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 			}
 		}
 	}
-	protected boolean inputValidForTank(int tank, int slot){
-		if(!inventory.getStackInSlot(slot).isEmpty()){
-			if(isValidFluid(FluidUtil.getFluidContained(inventory.getStackInSlot(slot)))){
-				return true;	
-			}
-		}
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack stack) {
+		if(i == 0) return FluidContainerRegistry.getFluidContent(stack, tank.getTankType()) > 0;
+		if(i == 2) return Library.isItemChargeableBattery(stack);
 		return false;
-	}
-
-	private boolean isValidFluid(FluidStack stack) {
-		if(stack == null)
-			return false;
-		return getHEFromFuel(stack.getFluid()) > 0;
 	}
 
 	@Override

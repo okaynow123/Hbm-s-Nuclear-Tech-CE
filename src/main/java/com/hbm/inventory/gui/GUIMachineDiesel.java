@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIMachineDiesel extends GuiInfoContainer {
 	
@@ -52,8 +51,6 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -63,7 +60,7 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 152, guiTop + 69 - i, 176, 52 - i, 16, i);
 		}
 		
-		if(machineDiesel.tank.getFluidAmount() > 0 && machineDiesel.hasAcceptableFuel())
+		if(machineDiesel.tank.getFill() > 0 && machineDiesel.hasAcceptableFuel())
 		{
 			drawTexturedModalRect(guiLeft + 43 + 18 * 4, guiTop + 34, 208, 0, 18, 18);
 		}
@@ -73,6 +70,5 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 		if(!machineDiesel.hasAcceptableFuel())
 			this.drawInfoPanel(guiLeft - 16, guiTop + 36 + 32, 16, 16, 6);
 		machineDiesel.tank.renderTank(guiLeft + 80, guiTop + 69, this.zLevel, 16, 52);
-		GL11.glPopAttrib();
 	}
 }
