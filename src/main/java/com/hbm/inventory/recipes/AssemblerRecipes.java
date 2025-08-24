@@ -657,12 +657,6 @@ public class AssemblerRecipes extends SerializableRecipe {
 			new OreDictStack(SBD.dust(), 16),
 			new OreDictStack(STAR.ingot(), 12),
 			new OreDictStack(GH336.nugget(), 8), }, 1600);
-		makeRecipe(new ComparableStack(ModBlocks.machine_radspice_battery, 1), new AStack[] {
-			new ComparableStack(ModItems.nothing, 32),
-			new ComparableStack(ModItems.powder_chlorophyte, 24),
-			new ComparableStack(ModItems.powder_balefire, 24),
-			new OreDictStack(VERTICIUM.ingot(), 16),
-			new OreDictStack(AS.nugget(), 8), }, 3200);
 		makeRecipe(new ComparableStack(ModBlocks.machine_dineutronium_battery, 1), new AStack[] {
 			new OreDictStack(DNT.ingot(), 48),
 			new ComparableStack(ModItems.powder_spark_mix, 32),
