@@ -4,11 +4,11 @@ import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityICFPress;
+import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -81,14 +81,9 @@ public class MachineICFPress extends Block implements ITileEntityProvider, ITool
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
-
+    // note for mlbv: you did splitting by "\n" but the splitting symbols in .lang files are "$". either leave resolveKeyArray or change .lang files
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        String descKey = this.getTranslationKey() + ".desc";
-        if (I18n.hasKey(descKey)) {
-            for (String s : I18n.format(descKey).split("\\\\n")) {
-                tooltip.add(TextFormatting.YELLOW + s);
-            }
-        }
+        for(String s : I18nUtil.resolveKeyArray(this.getTranslationKey() + ".desc")) tooltip.add(TextFormatting.YELLOW + s);
     }
 }

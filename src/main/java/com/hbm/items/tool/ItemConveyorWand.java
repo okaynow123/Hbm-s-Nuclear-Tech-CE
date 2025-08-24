@@ -201,13 +201,14 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(TextFormatting.YELLOW + I18nUtil.resolveKey("item.conveyor_wand.desc"));
+            for(String s : I18nUtil.resolveKeyArray(super.getTranslationKey(stack) + ".desc")) {
+                tooltip.add(TextFormatting.YELLOW + s);
+            }
             if (hasSnakesAndLadders(getType(stack))) {
                 tooltip.add(TextFormatting.AQUA + I18nUtil.resolveKey("item.conveyor_wand.vertical.desc"));
             }
         } else {
-            tooltip.add(
-                    I18nUtil.resolveKey("desc.misc.lshift"));
+            tooltip.add(I18nUtil.resolveKey("desc.misc.lshift"));
         }
     }
 

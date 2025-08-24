@@ -826,13 +826,8 @@ public class JeiRecipes {
 		
 		blades = new ArrayList<>();
 		blades.add(new ItemStack(ModItems.blades_advanced_alloy));
-		blades.add(new ItemStack(ModItems.blades_aluminum));
-		blades.add(new ItemStack(ModItems.blades_combine_steel));
-		blades.add(new ItemStack(ModItems.blades_gold));
-		blades.add(new ItemStack(ModItems.blades_iron));
 		blades.add(new ItemStack(ModItems.blades_steel));
 		blades.add(new ItemStack(ModItems.blades_titanium));
-		blades.add(new ItemStack(ModItems.blades_schrabidium));
 		return blades;
 	}
 	

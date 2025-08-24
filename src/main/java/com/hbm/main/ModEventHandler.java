@@ -1388,9 +1388,9 @@ public class ModEventHandler {
         if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto)) event.setBurnTime(single * 40);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto_triplet)) event.setBurnTime(single * 200);
-//        if(fuel.getItem().equals(ModItems.solid_fuel_bf))					return single * 160;
-//        if(fuel.getItem().equals(ModItems.solid_fuel_presto_bf))			return single * 400;
-//        if(fuel.getItem().equals(ModItems.solid_fuel_presto_triplet_bf))	return single * 2000;
+        else if(fuel.getItem().equals(ModItems.solid_fuel_bf))					event.setBurnTime(single * 160);
+        else if(fuel.getItem().equals(ModItems.solid_fuel_presto_bf))			event.setBurnTime(single * 400);
+        else if(fuel.getItem().equals(ModItems.solid_fuel_presto_triplet_bf))	event.setBurnTime(single * 2000);
         else if (fuel.getItem().equals(ModItems.rocket_fuel)) event.setBurnTime(single * 32);
 
         else if (fuel.getItem() == ModItems.biomass) event.setBurnTime(single * 2);

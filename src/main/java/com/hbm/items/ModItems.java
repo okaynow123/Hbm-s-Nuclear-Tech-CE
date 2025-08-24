@@ -270,15 +270,9 @@ public class ModItems {
     public static final Item stamp_9 = new ItemStamp("stamp_9", 1000, ItemStamp.StampType.C9);
     public static final Item stamp_50 = new ItemStamp("stamp_50", 1000, ItemStamp.StampType.C50);
     public static final Item stamp_book = new ItemStampBook("stamp_book").setMaxStackSize(1).setCreativeTab(null);
-    public static final Item blades_aluminum = new ItemBlades("blades_aluminum", 24);
-    public static final Item blades_gold = new ItemBlades("blades_gold", 32);
-    public static final Item blades_iron = new ItemBlades("blades_iron", 64);
-    public static final Item blades_steel = new ItemBlades("blades_steel", 128);
-    public static final Item blades_titanium = new ItemBlades("blades_titanium", 96);
-    public static final Item blades_advanced_alloy = new ItemBlades("blades_advanced_alloy", 256);
-    public static final Item blades_combine_steel = new ItemBlades("blades_combine_steel", 1024);
-    // TODO: Port ItemStampBook
-    public static final Item blades_schrabidium = new ItemBlades("blades_schrabidium", 4096);
+    public static final Item blades_steel = new ItemBlades("blades_steel", 200);
+    public static final Item blades_titanium = new ItemBlades("blades_titanium", 350);
+    public static final Item blades_advanced_alloy = new ItemBlades("blades_advanced_alloy", 700);
     public static final Item blades_desh = new ItemBlades("blades_desh", 0).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item fuse = new ItemCustomLore("fuse").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);
     public static final Item redcoil_capacitor = new ItemCapacitor(10, "redcoil_capacitor").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
@@ -290,7 +284,6 @@ public class ModItems {
     public static final Item piston_set = new ItemPistons("piston_set").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
     public static final Item thermo_element = new ItemBase("thermo_element").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);
     public static final Item catalytic_converter = new ItemBase("catalytic_converter").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-    public static final Item antiknock = new ItemBase("antiknock").setCreativeTab(MainRegistry.controlTab);
     public static final Item part_lithium = new ItemBase("part_lithium").setCreativeTab(MainRegistry.controlTab);
     public static final Item part_beryllium = new ItemBase("part_beryllium").setCreativeTab(MainRegistry.controlTab);
     public static final Item part_carbon = new ItemBase("part_carbon").setCreativeTab(MainRegistry.controlTab);
@@ -1290,7 +1283,6 @@ public class ModItems {
     public static final Item rag_damp = new ItemBase("rag_damp").setCreativeTab(MainRegistry.partsTab);
     public static final Item rag_piss = new ItemBase("rag_piss").setCreativeTab(MainRegistry.partsTab);
     public static final Item filter_coal = new ItemBase("filter_coal").setCreativeTab(MainRegistry.partsTab);
-    public static final Item magnet_dee = new ItemBase("magnet_dee").setCreativeTab(null);
     public static final Item magnet_circular = new ItemBase("magnet_circular").setCreativeTab(MainRegistry.partsTab);
     public static final Item cyclotron_tower = new ItemBase("cyclotron_tower").setCreativeTab(null);
     public static final Item centrifuge_element = new ItemBase("centrifuge_element").setCreativeTab(MainRegistry.partsTab);

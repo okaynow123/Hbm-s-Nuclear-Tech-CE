@@ -90,6 +90,7 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.STONE_AP, 6), "C", "P", "G", 'C', Items.FLINT, 'P', Items.PAPER, 'G', Items.GUNPOWDER );
         CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.STONE_SHOT, 6), "C", "P", "G", 'C', Blocks.GRAVEL, 'P', Items.PAPER, 'G', Items.GUNPOWDER );
         CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.STONE_IRON, 6), "C", "P", "G", 'C', IRON.ingot(), 'P', Items.PAPER, 'G', Items.GUNPOWDER );
+        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR_CHARGE, 1), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.CT_MORTAR), ModItems.ducttape, ModItems.ducttape);
 
         //Nitra!
         CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M357_SP, 6), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M357_SP), ModItems.nitra );
@@ -222,18 +223,19 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.disperser_canister_empty, 4), " P ", "PGP", " P ", 'P', ANY_HARDPLASTIC.ingot(), 'G', ModBlocks.glass_boron );*/
 
         //Sticks of explosives
-        /*CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_dynamite, 4), " S ", "PDP", "PDP", 'S', ModItems.safety_fuse, 'P', Items.paper, 'D', ModItems.ball_dynamite );
-        CraftingManager.addShapelessAuto(new ItemStack(ModItems.stick_dynamite_fishing, 1), ModItems.stick_dynamite, ModItems.stick_dynamite, ModItems.stick_dynamite, Items.paper, ANY_TAR.any() );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_tnt, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.paper, 'D', ModItems.ball_tnt );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_semtex, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.paper, 'D', ModItems.ingot_semtex );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_c4, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.paper, 'D', ModItems.ingot_c4 );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_dynamite, 4), " S ", "PDP", "PDP", 'S', ModItems.safety_fuse, 'P', Items.PAPER, 'D', ModItems.ball_dynamite );
+        // TODO
+        // CraftingManager.addShapelessAuto(new ItemStack(ModItems.stick_dynamite_fishing, 1), ModItems.stick_dynamite, ModItems.stick_dynamite, ModItems.stick_dynamite, Items.PAPER, ANY_TAR.any() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_tnt, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.PAPER, 'D', ModItems.ball_tnt );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_semtex, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.PAPER, 'D', ModItems.ingot_semtex );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.stick_c4, 4), " S ", "PDP", "PDP", 'S', ModBlocks.det_cord, 'P', Items.PAPER, 'D', ModItems.ingot_c4 );
 
         //Blocks of explosives
         CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.dynamite, 1), "DDD", "DSD", "DDD", 'D', ModItems.stick_dynamite, 'S', ModItems.safety_fuse );
         CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.tnt, 1), "DDD", "DSD", "DDD", 'D', ModItems.stick_tnt, 'S', ModItems.safety_fuse );
         CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.semtex, 1), "DDD", "DSD", "DDD", 'D', ModItems.stick_semtex, 'S', ModItems.safety_fuse );
         CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.c4, 1), "DDD", "DSD", "DDD", 'D', ModItems.stick_c4, 'S', ModItems.safety_fuse );
-        CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.fissure_bomb, 1), "SUS", "RPR", "SUS", 'S', ModBlocks.semtex, 'U', U238.block(), 'R', TA.ingot(), 'P', PU239.billet() );*/
+        CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.fissure_bomb, 1), "SUS", "RPR", "SUS", 'S', ModBlocks.semtex, 'U', U238.block(), 'R', TA.ingot(), 'P', PU239.billet() );
 
 
         //IF Grenades

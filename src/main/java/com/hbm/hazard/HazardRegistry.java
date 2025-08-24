@@ -10,6 +10,7 @@ import com.hbm.hazard.transformer.HazardTransformerRadiationContainer;
 import com.hbm.hazard.transformer.HazardTransformerRadiationME;
 import com.hbm.hazard.transformer.HazardTransformerRadiationNBT;
 import com.hbm.hazard.type.*;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
@@ -182,16 +183,16 @@ public class HazardRegistry {
 		HazardSystem.register(demon_core_closed, makeData(RADIATION, 100_000F));
 		HazardSystem.register(lamp_demon, makeData(RADIATION, 100_000F));
 
-		/*HazardSystem.register(cell_tritium, makeData(RADIATION, 0.001F));
-		HazardSystem.register(cell_sas3, makeData().addEntry(RADIATION, sas3).addEntry(BLINDING, 60F));
-		HazardSystem.register(cell_balefire, makeData(RADIATION, 50F));*/
+		HazardSystem.register(new ItemStack(cell, 1, Fluids.TRITIUM.getID()), makeData(RADIATION, 0.001F));
+		HazardSystem.register(new ItemStack(cell, 1, Fluids.SAS3.getID()), makeData().addEntry(RADIATION, sas3).addEntry(BLINDING, 60F));
+		HazardSystem.register(cell_balefire, makeData(RADIATION, 50F));
 		HazardSystem.register(powder_balefire, makeData(RADIATION, 500F).addEntry(CONTAMINATING, bf * powder));
 		HazardSystem.register(egg_balefire_shard, makeData(RADIATION, bf * nugget));
 		HazardSystem.register(egg_balefire, makeData(RADIATION, bf * ingot));
 
-		/*HazardSystem.register(solid_fuel_bf, makeData(RADIATION, 1000)); //roughly the amount of the balefire shard diluted in 250mB of rocket fuel
+		HazardSystem.register(solid_fuel_bf, makeData(RADIATION, 1000)); //roughly the amount of the balefire shard diluted in 250mB of rocket fuel
 		HazardSystem.register(solid_fuel_presto_bf, makeData(RADIATION, 2000));
-		HazardSystem.register(solid_fuel_presto_triplet_bf, makeData(RADIATION, 6000));*/
+		HazardSystem.register(solid_fuel_presto_triplet_bf, makeData(RADIATION, 6000));
 
 		HazardSystem.register(nuclear_waste_long, makeData(RADIATION, 5F));
 		HazardSystem.register(nuclear_waste_long_tiny, makeData(RADIATION, 0.5F));
@@ -345,7 +346,7 @@ public class HazardRegistry {
 		//HazardSystem.register(new ItemStack(pellet_rtg_depleted, 1, DepletedRTGMaterial.NEPTUNIUM.ordinal()), makeData(RADIATION, np237 * rtg));
 
 		HazardSystem.register(pile_rod_uranium, makeData(RADIATION, u * billet * 3));
-		//HazardSystem.register(pile_rod_pu239, makeData(RADIATION, !GeneralConfig.enable528 ? purg * billet + pu239 * billet + u * billet : purg * billet + pu239 * billet + wst * billet));
+		HazardSystem.register(pile_rod_pu239, makeData(RADIATION, !GeneralConfig.enable528 ? purg * billet + pu239 * billet + u * billet : purg * billet + pu239 * billet + wst * billet));
 		HazardSystem.register(pile_rod_plutonium, makeData(RADIATION, !GeneralConfig.enable528 ? purg * billet * 2 + u * billet : purg * billet * 2 + wst * billet));
 		HazardSystem.register(pile_rod_source, makeData(RADIATION, rabe * billet * 3));
 

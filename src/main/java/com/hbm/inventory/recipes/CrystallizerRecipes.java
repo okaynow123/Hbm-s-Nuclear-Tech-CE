@@ -14,6 +14,7 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemChemicalDye;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.items.special.ItemBedrockOreNew;
@@ -170,6 +171,16 @@ public class CrystallizerRecipes extends SerializableRecipe {
 			registerRecipe(new ComparableStack(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.PRIMARY_NORAD, type)), new CrystallizerRecipe(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.PRIMARY_SECOND, type), bedrock), secondary);
 
 			registerRecipe(new ComparableStack(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.CRUMBS, type)), new CrystallizerRecipe(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.BASE, type), bedrock).setReq(64), new FluidStack(Fluids.NITRIC_ACID, 1000));
+		}
+
+		FluidStack[] dyes = new FluidStack[] {new FluidStack(Fluids.WOODOIL, 100), new FluidStack(Fluids.FISHOIL, 100), new FluidStack(Fluids.LIGHTOIL, 100)};
+		for(FluidStack dye : dyes) {
+			registerRecipe(COAL.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.BLACK, 4), mixingTime).prod(0.15F), dye);
+			registerRecipe(TI.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.WHITE, 4), mixingTime).prod(0.15F), dye);
+			registerRecipe(IRON.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.RED, 4), mixingTime).prod(0.15F), dye);
+			registerRecipe(W.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.YELLOW, 4), mixingTime).prod(0.15F), dye);
+			registerRecipe(CU.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.GREEN, 4), mixingTime).prod(0.15F), dye);
+			registerRecipe(CO.dust(),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.chemical_dye, ItemChemicalDye.EnumChemDye.BLUE, 4), mixingTime).prod(0.15F), dye);
 		}
 
 		registerRecipe(new ComparableStack(DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.CRUDE)),		new CrystallizerRecipe(DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.WAX), 20),	new FluidStack(Fluids.CHLORINE, 250));

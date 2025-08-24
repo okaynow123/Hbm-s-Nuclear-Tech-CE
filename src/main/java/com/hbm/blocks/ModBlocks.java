@@ -1178,7 +1178,6 @@ public class ModBlocks {
 
 	//Drillgon200: AMS won't be removed after all
 	//Th3_Sl1ze: no, AMS will be removed :D
-	//33 40 43 45 51 54 55 56 62 63 132 GUI IDS ARE FREE! (for now)
 
 	//DFC
 	public static final Block dfc_emitter = new CoreComponent(Material.IRON, "dfc_emitter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

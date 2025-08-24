@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.hbm.inventory.OreDictManager.*;
+import static com.hbm.inventory.material.Mats.MAT_ALLOY;
 
 public class AnvilRecipes extends SerializableRecipe {
 
@@ -482,6 +483,15 @@ public class AnvilRecipes extends SerializableRecipe {
 						new ComparableStack(ModBlocks.steel_grate, 2)
 				},
 				new AnvilOutput(new ItemStack(ModBlocks.chimney_brick))).setTier(2));
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
+						new ComparableStack(ModBlocks.steel_wall, 2),
+						new OreDictStack(REDSTONE.dust(), 4),
+						new ComparableStack(Blocks.LEVER, 2),
+						new ComparableStack(ModItems.wire_dense, 3, MAT_ALLOY.id)
+				},
+				new AnvilOutput(new ItemStack(ModBlocks.bm_power_box))).setTier(5));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {

@@ -59,8 +59,7 @@ public class PyroOvenRecipes extends SerializableRecipe {
         registerSFAuto(UNSATURATEDS);
         registerSFAuto(REFORMATE);
         registerSFAuto(XYLENE);
-        // TODO
-        //registerSFAuto(BALEFIRE, 24_000_000L, ModItems.solid_fuel_bf);
+        registerSFAuto(BALEFIRE, 24_000_000L, ModItems.solid_fuel_bf);
 
         //bedrock ores
 

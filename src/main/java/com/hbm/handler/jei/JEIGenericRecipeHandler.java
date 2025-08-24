@@ -195,25 +195,25 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
 
         int[][] inPos = getInputSlotPositions(inputList.size());
         for (int i = 0; i < inputList.size(); i++) {
-            stacks.init(i, true, inPos[i][0] + wrapper.inputOffset, inPos[i][1]);
+            stacks.init(i, true, inPos[i][0] + wrapper.inputOffset - 1, inPos[i][1] - 1);
         }
 
         int[][] outPos = getOutputSlotPositions(outputList.size());
         for (int i = 0; i < outputList.size(); i++) {
-            stacks.init(inputList.size() + i, false, outPos[i][0] + wrapper.outputOffset, outPos[i][1]);
+            stacks.init(inputList.size() + i, false, outPos[i][0] + wrapper.outputOffset - 1, outPos[i][1] - 1);
         }
 
         stacks.set(ingredients);
 
         int slotIndex = inputList.size() + outputList.size();
         int mx = 74 + wrapper.machineOffset;
-        int my = (wrapper.templates == null) ? 30 : 37;
+        int my = (wrapper.templates == null) ? 29 : 36;
         stacks.init(slotIndex, false, mx, my);
         stacks.set(slotIndex, Arrays.asList(wrapper.machines));
 
         if (wrapper.templates != null && !wrapper.templates.isEmpty()) {
             int tIndex = slotIndex + 1;
-            stacks.init(tIndex, false, 75 + wrapper.machineOffset, 10);
+            stacks.init(tIndex, false, 74 + wrapper.machineOffset, 9);
             stacks.set(tIndex, wrapper.templates);
         }
     }
