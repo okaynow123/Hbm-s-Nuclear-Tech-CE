@@ -2,8 +2,6 @@ package com.hbm.main;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.dim.WorldProviderEarth;
-import com.hbm.entity.projectile.EntityTom;
-import com.hbm.handler.BossSpawnHandler;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.saveddata.TomSaveData;
 import net.minecraft.block.*;
@@ -13,6 +11,7 @@ import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -28,6 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,42 +48,33 @@ public class ModEventHandlerImpact {
 
 		ImpactWorldHandler.impactEffects(event.world);
 		TomSaveData data = TomSaveData.forWorld(event.world);
-
-		if (data.fire > 0) {
-			data.fire = Math.max(0, data.fire - cool);
-			data.dust = Math.min(1, data.dust + cool);
-			data.markDirty();
-		} else if (data.dust > 0) {
+		// Th3_Sl1ze: for now I'll remove whatever NTM Space handled, we'll rely on default NTM processing..
+		if(data.dust > 0 && data.fire == 0) {
 			data.dust = Math.max(0, data.dust - settle);
 			data.markDirty();
 		}
 
-		if (data.time > 0) {
-			data.time--;
-			if (data.time <= 2400) {
-				for (EntityPlayer player : event.world.playerEntities) {
-					if (rand.nextInt(100) == 0) {
-						BossSpawnHandler.spawnMeteorAtPlayer(player, false);
-					}
-				}
-			}
-			if (data.time == data.dtime) {
-				EntityTom tom = new EntityTom(event.world);
-				tom.setPosition(data.x + 0.5, 600, data.z + 0.5);
-				event.world.spawnEntity(tom);
-				event.world.getChunkProvider().provideChunk(data.x >> 4, data.z >> 4);
-			}
+		if(data.fire > 0) {
+			data.fire = Math.max(0, (data.fire - cool));
+			data.dust = Math.min(1, (data.dust + cool));
 			data.markDirty();
 		}
 
-		if (data.fire > 0 && data.dust < 0.75f) {
-			int dimension = event.world.provider.getDimension();
+		if(!event.world.loadedEntityList.isEmpty()) {
 
-			List<EntityLivingBase> entities = event.world.getEntities(EntityLivingBase.class, input -> input != null && input.isEntityAlive());
-			for (EntityLivingBase entity : entities) {
-				if (dimension == 0 && event.world.getLightFor(EnumSkyBlock.SKY, entity.getPosition()) > 7) {
-					entity.setFire(5);
-					entity.attackEntityFrom(DamageSource.ON_FIRE, 2);
+			List<Object> oList = new ArrayList<Object>();
+			oList.addAll(event.world.loadedEntityList);
+
+			for(Object e : oList) {
+				if(e instanceof EntityLivingBase) {
+					EntityLivingBase entity = (EntityLivingBase) e;
+
+					if(entity.world.provider.getDimension() == 0 && data.fire > 0 && data.dust < 0.75f &&
+							event.world.getLightFor(EnumSkyBlock.SKY, new BlockPos((int) entity.posX, (int) entity.posY, (int) entity.posZ)) > 7) {
+
+						entity.setFire(5);
+						entity.attackEntityFrom(DamageSource.ON_FIRE, 2);
+					}
 				}
 			}
 		}
