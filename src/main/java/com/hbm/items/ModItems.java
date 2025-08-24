@@ -829,7 +829,6 @@ public class ModItems {
     public static final Item ingot_ra226 = new ItemBakedBase("ingot_ra226").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_ac227 = new ItemBakedBase("ingot_ac227").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_gh336 = new ItemCustomLore("ingot_gh336").setRarity(EnumRarity.EPIC).setCreativeTab(MainRegistry.partsTab);
-    public static final Item ingot_radspice = new ItemBakedBase("ingot_radspice").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_electronium = new ItemUnstable(30, 6000, "ingot_electronium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_reiium = new ItemCustomLore("ingot_reiium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_weidanium = new ItemCustomLore("ingot_weidanium").setCreativeTab(MainRegistry.partsTab);
@@ -950,7 +949,6 @@ public class ModItems {
     public static final Item nugget_gh336 = new ItemCustomLore("nugget_gh336").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_au198 = new ItemCustomLore("nugget_au198").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_ra226 = new ItemCustomLore("nugget_ra226").setCreativeTab(MainRegistry.partsTab);
-    public static final Item nugget_radspice = new ItemCustomLore("nugget_radspice").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_reiium = new ItemCustomLore("nugget_reiium").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_weidanium = new ItemCustomLore("nugget_weidanium").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_australium = new ItemCustomLore("nugget_australium").setCreativeTab(MainRegistry.partsTab);
@@ -1089,8 +1087,6 @@ public class ModItems {
     public static final Item powder_ra226 = new ItemCustomLore("powder_ra226").setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_ac227 = new ItemCustomLore("powder_ac227").setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_ac227_tiny = new ItemCustomLore("powder_ac227_tiny").setCreativeTab(MainRegistry.partsTab);
-    public static final Item powder_radspice = new ItemCustomLore("powder_radspice").setCreativeTab(MainRegistry.partsTab);
-    public static final Item powder_radspice_tiny = new ItemCustomLore("powder_radspice_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item sulfur = new ItemBase("sulfur").setCreativeTab(MainRegistry.partsTab);
     public static final Item nitra = new ItemBakedBase("nitra").setCreativeTab(MainRegistry.partsTab);
     public static final Item nitra_small = new ItemBakedBase("nitra_small").setCreativeTab(MainRegistry.partsTab);

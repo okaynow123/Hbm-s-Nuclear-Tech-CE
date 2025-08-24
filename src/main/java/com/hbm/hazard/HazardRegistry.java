@@ -637,6 +637,5 @@ public class HazardRegistry {
 		HazardSystem.register(powder_au198, makeData(CONTAMINATING, au198 * powder));
 		HazardSystem.register(powder_ra226, makeData(CONTAMINATING, ra226 * powder));
 		HazardSystem.register(powder_ac227, makeData(CONTAMINATING, ac227 * powder));
-		HazardSystem.register(powder_radspice, makeData(CONTAMINATING, 20_000 * powder));
 	}
 }

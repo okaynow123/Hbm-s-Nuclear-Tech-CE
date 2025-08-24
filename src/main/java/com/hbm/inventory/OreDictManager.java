@@ -277,7 +277,6 @@ public class OreDictManager {
     /*
      * HAZARDS, MISC
      */
-    public static final DictFrame RADSPICE = new DictFrame("RadSpice");
     /**
      * LITHIUM
      */
@@ -552,8 +551,6 @@ public class OreDictManager {
          * RARE METALS
          */
         AUSTRALIUM.nugget(nugget_australium).billet(billet_australium).ingot(ingot_australium).dust(powder_australium).block(block_australium).ore(ore_australium);
-        // Th3_Sl1ze: remind me to delete radspice..
-        //RADSPICE.rad(HazardRegistry.radspice).hot(15).blinding(50F).hydro(10).toxic(2).nugget(nugget_radspice).dustSmall(powder_radspice_tiny).ingot(ingot_radspice).dust(powder_radspice).block(block_radspice);
         REIIUM.nugget(nugget_reiium).ingot(ingot_reiium).dust(powder_reiium).block(block_reiium).ore(ore_reiium);
         WEIDANIUM.nugget(nugget_weidanium).ingot(ingot_weidanium).dust(powder_weidanium).block(block_weidanium).ore(ore_weidanium);
         UNOBTAINIUM.nugget(nugget_unobtainium).billet(billet_unobtainium).ingot(ingot_unobtainium).dust(powder_unobtainium).block(block_unobtainium).ore(ore_unobtainium);

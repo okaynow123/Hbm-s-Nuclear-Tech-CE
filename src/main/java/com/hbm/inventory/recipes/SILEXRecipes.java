@@ -591,7 +591,6 @@ public class SILEXRecipes {
 			recipes.put(new ComparableStack(ModItems.rbmk_pellet_unobtainium, 1, i), new SILEXRecipe(600, 100, EnumWavelengths.XRAY)
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_unobtainium_greater), 90 - 18 * i))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_unobtainium_lesser), 8 + i * 10))
-					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_radspice), 2 + i * 4)) 
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_gh336), i * 4))
 					);
 		}
@@ -599,7 +598,6 @@ public class SILEXRecipes {
 			recipes.put(new ComparableStack(ModItems.rbmk_pellet_unobtainium, 1, i + 5), new SILEXRecipe(600, 100, EnumWavelengths.XRAY)
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_unobtainium_greater), 87 - 18 * i))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_unobtainium_lesser), 8 + i * 10))
-					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_radspice), 2 + i * 4)) 
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_gh336), i * 4))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_xe135_tiny), 3))
 					);
@@ -850,7 +848,6 @@ public class SILEXRecipes {
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.biomass_compressed), 110))
 				.addOut(new WeightedRandomObject(new ItemStack(ModBlocks.mush), 80))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_poison), 6))
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_radspice), 3))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.egg_balefire_shard), 1))
 				);
 		recipes.put(new ComparableStack(ModBlocks.ancient_scrap, 1), new SILEXRecipe(1000, 640, EnumWavelengths.DRX)
