@@ -459,6 +459,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting i
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public GuiInfoContainer provideGUI(
       int ID, EntityPlayer player, World world, int x, int y, int z) {
     return new GUIMachineRotaryFurnace(player.inventory, this);
