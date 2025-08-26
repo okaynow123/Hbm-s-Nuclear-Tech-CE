@@ -126,7 +126,7 @@ public class CompatibilityConfig {
 
 		String dimRadComment = "Amount of background radiation in the dimension in Rad/s - <dimID:Rad> (Int:Float)";
 		dimensionRad = CommonConfig.createConfigHashMap(config, CATEGORY_DIMRAD, "01.01_dimensionRadiation", dimRadComment, "Int", "Float", new String[]{  
-			"-1:0.666", //Nether
+			"-1:0.1", //Nether
 			"1:0.01", //End
 
 			"-13:2.5", //Mercury
