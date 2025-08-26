@@ -19,6 +19,7 @@ import java.util.*;
 public class ItemConsumable extends Item {
 
     Random rand = new Random();
+    private boolean hasEffect = false;
 
     public ItemConsumable(final String s) {
         this.setTranslationKey(s);
@@ -26,6 +27,16 @@ public class ItemConsumable extends Item {
         this.setCreativeTab(MainRegistry.controlTab);
         ModItems.ALL_ITEMS.add(this);
 
+    }
+
+    public ItemConsumable setEffect() {
+        this.hasEffect = true;
+        return this;
+    }
+
+    @Override
+    public boolean hasEffect(final ItemStack stack) {
+        return this.hasEffect || super.hasEffect(stack);
     }
 
     @Override

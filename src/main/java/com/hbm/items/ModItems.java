@@ -108,7 +108,7 @@ public class ModItems {
 
     //Syringe
     public static final Item syringe_empty = new ItemBase("syringe_empty").setFull3D().setCreativeTab(MainRegistry.consumableTab);
-    public static final Item syringe_awesome = new ItemConsumable("syringe_awesome").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item syringe_awesome = new ItemConsumable("syringe_awesome").setEffect().setFull3D().setCreativeTab(MainRegistry.consumableTab);
     public static final Item syringe_antidote = new ItemConsumable("syringe_antidote").setFull3D().setCreativeTab(MainRegistry.consumableTab);
     public static final Item syringe_poison = new ItemConsumable("syringe_poison").setFull3D().setCreativeTab(MainRegistry.consumableTab);
     public static final Item syringe_metal_empty = new ItemBase("syringe_metal_empty").setFull3D().setCreativeTab(MainRegistry.consumableTab);
