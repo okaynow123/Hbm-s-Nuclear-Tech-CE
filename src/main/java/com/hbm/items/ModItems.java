@@ -120,44 +120,51 @@ public class ModItems {
     public static final Item syringe_mkunicorn = new ItemConsumable("syringe_mkunicorn").setFull3D().setCreativeTab(null);
     public static final Item med_bag = new ItemConsumable("med_bag").setCreativeTab(MainRegistry.consumableTab);
     public static final Item radx = new ItemPill(0, "radx").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item siox = new ItemPill(0, "siox").setCreativeTab(MainRegistry.consumableTab);    public static final Item iv_xp_empty = new ItemSimpleConsumable("iv_xp_empty").setUseActionServer((stack, user) -> {
+    public static final Item siox = new ItemPill(0, "siox").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item iv_xp_empty = new ItemSimpleConsumable("iv_xp_empty").setUseActionServer((stack, user) -> {
         if (user.experienceTotal >= 100) {
             ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.syringeUse, new ItemStack(ModItems.iv_xp));
             EnchantmentUtil.removeExperience(user, 100);
         }
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item pill_herbal = new ItemPill(0, "pill_herbal").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item xanax = new ItemPill(0, "xanax").setCreativeTab(MainRegistry.consumableTab);    public static final Item iv_xp = new ItemSimpleConsumable("iv_xp").setUseActionServer((stack, user) -> {
+    public static final Item xanax = new ItemPill(0, "xanax").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item iv_xp = new ItemSimpleConsumable("iv_xp").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, new ItemStack(ModItems.iv_xp_empty));
         user.addExperience(100);
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item fmn = new ItemPill(0, "fmn").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item five_htp = new ItemPill(0, "five_htp").setCreativeTab(MainRegistry.consumableTab);    public static final Item iv_empty = new ItemSimpleConsumable("iv_empty").setUseActionServer((stack, user) -> {
+    public static final Item five_htp = new ItemPill(0, "five_htp").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item iv_empty = new ItemSimpleConsumable("iv_empty").setUseActionServer((stack, user) -> {
         if (user.hurtResistantTime <= 0) {
             ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.syringeUse, new ItemStack(ModItems.iv_blood));
             user.attackEntityFrom(DamageSource.MAGIC, 5F);
         }
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item pill_iodine = new ItemPill(0, "pill_iodine").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item plan_c = new ItemPill(0, "plan_c").setCreativeTab(MainRegistry.consumableTab);    public static final Item iv_blood = new ItemSimpleConsumable("iv_blood").setUseActionServer((stack, user) -> {
+    public static final Item plan_c = new ItemPill(0, "plan_c").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item iv_blood = new ItemSimpleConsumable("iv_blood").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         user.heal(3F);
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item stealth_boy = new ItemStarterKit("stealth_boy").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item jetpack_tank = new ItemConsumable("jetpack_tank").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);    public static final Item radaway = new ItemSimpleConsumable("radaway").setUseActionServer((stack, user) -> {
+    public static final Item jetpack_tank = new ItemConsumable("jetpack_tank").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item radaway = new ItemSimpleConsumable("radaway").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 200, 24);
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item gun_kit_1 = new ItemConsumable("gun_kit_1").setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item gun_kit_2 = new ItemConsumable("gun_kit_2").setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);    public static final Item radaway_strong = new ItemSimpleConsumable("radaway_strong").setUseActionServer((stack, user) -> {
+    }).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item gun_kit_1 = new ItemConsumable("gun_kit_1").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item gun_kit_2 = new ItemConsumable("gun_kit_2").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item radaway_strong = new ItemSimpleConsumable("radaway_strong").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 100, 99);
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item euphemium_kit = new ItemStarterKit("euphemium_kit").setMaxStackSize(1).setCreativeTab(null);
-    public static final Item cbt_device = new ItemConsumable("cbt_device").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);    public static final Item radaway_flush = new ItemSimpleConsumable("radaway_flush").setUseActionServer((stack, user) -> {
+    public static final Item cbt_device = new ItemConsumable("cbt_device").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item radaway_flush = new ItemSimpleConsumable("radaway_flush").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 50, 399);
-    }).setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
+    }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gas_mask_filter_rag = new ItemFilter("gas_mask_filter_rag", 4000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gas_mask_filter_piss = new ItemFilter("gas_mask_filter_piss", 4000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gas_mask_filter_mono = new ItemFilter("gas_mask_filter_mono", 12000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
