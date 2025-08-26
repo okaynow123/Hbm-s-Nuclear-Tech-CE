@@ -87,14 +87,17 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
             if (extension) this.sendSmoke(pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP);
 
             boolean markDirty = false;
-
-            if (this.hasItemPower(this.getFuelStack()) && this.fuel <= (TileEntityDiFurnace.maxFuel - BlastFurnaceRecipes.getItemPower(this.getFuelStack()))) {
-                this.fuel += BlastFurnaceRecipes.getItemPower(this.getFuelStack());
-                if (!this.getFuelStack().isEmpty()) {
-                    markDirty = true;
-                    this.getFuelStack().shrink(1);
-                    if (this.getFuelStack().isEmpty()) {
-                        inventory.setStackInSlot(2, this.getFuelStack().getItem().getContainerItem(this.getFuelStack()));
+            ItemStack fuelSim = inventory.extractItem(2, 1, true);
+            int fuelPower = BlastFurnaceRecipes.getItemPower(fuelSim);
+            if (!fuelSim.isEmpty() && fuelPower > 0 && this.fuel <= (TileEntityDiFurnace.maxFuel - fuelPower)) {
+                ItemStack fuelConsumed = inventory.extractItem(2, 1, false);
+                this.fuel += fuelPower;
+                markDirty = true;
+                ItemStack container = fuelConsumed.getItem().getContainerItem(fuelConsumed);
+                if (!container.isEmpty()) {
+                    ItemStack rem = inventory.insertItem(2, container, false);
+                    if (!rem.isEmpty()) {
+                        inventory.insertItem(3, rem, false);
                     }
                 }
             }
@@ -160,10 +163,18 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack itemStack) {
-        if (slot == 0 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(1).getItem() != itemStack.getItem();
-        if (slot == 1 && isItemValidForSlot(slot, itemStack)) return inventory.getStackInSlot(0).getItem() != itemStack.getItem();
-        return isItemValidForSlot(slot, itemStack);
+    public boolean canInsertItem(int slot, ItemStack stack) {
+        if (!isItemValidForSlot(slot, stack)) return false;
+
+        if (slot == 0) {
+            ItemStack other = inventory.getStackInSlot(1);
+            return other.isEmpty() || other.getItem() != stack.getItem();
+        }
+        if (slot == 1) {
+            ItemStack other = inventory.getStackInSlot(0);
+            return other.isEmpty() || other.getItem() != stack.getItem();
+        }
+        return true;
     }
 
     @Override
@@ -188,43 +199,50 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     public boolean canProcess() {
-        ItemStack input1 = inventory.getStackInSlot(0);
-        ItemStack input2 = inventory.getStackInSlot(1);
-        ItemStack outputSlot = inventory.getStackInSlot(3);
 
-        if (input1.isEmpty() || input2.isEmpty()) return false;
+        ItemStack inputA = inventory.extractItem(0, 1, true);
+        ItemStack inputB = inventory.extractItem(1, 1, true);
+
+        if (inputA.isEmpty() || inputB.isEmpty()) return false;
         if (!this.hasPower()) return false;
 
-        ItemStack result = BlastFurnaceRecipes.getOutput(input1, input2);
+        ItemStack result = BlastFurnaceRecipes.getOutput(inputA, inputB);
         if (result.isEmpty()) return false;
 
-        if (outputSlot.isEmpty()) return true;
-        if (!ItemStack.areItemsEqual(outputSlot, result)) return false;
+        ItemStack remainder = inventory.insertItem(3, result.copy(), true);
+        if (!remainder.isEmpty()) return false;
+        ItemStack contA = inputA.getItem().getContainerItem(inputA);
+        if (!contA.isEmpty()) {
+            ItemStack rA = inventory.insertItem(3, contA.copy(), true);
+            if (!rA.isEmpty()) return false;
+        }
+        ItemStack contB = inputB.getItem().getContainerItem(inputB);
+        if (!contB.isEmpty()) {
+            ItemStack rB = inventory.insertItem(3, contB.copy(), true);
+            return rB.isEmpty();
+        }
 
-        int combined = outputSlot.getCount() + result.getCount();
-        return combined <= outputSlot.getMaxStackSize();
+        return true;
     }
 
     private void processItem() {
-        if (canProcess()) {
-            ItemStack itemStack = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
+        if (!canProcess()) return;
 
-            if (inventory.getStackInSlot(3).isEmpty()) {
-                inventory.setStackInSlot(3, itemStack.copy());
-            } else if (inventory.getStackInSlot(3).isItemEqual(itemStack)) {
-                inventory.getStackInSlot(3).grow(itemStack.getCount());
-            }
+        ItemStack usedA = inventory.extractItem(0, 1, false);
+        ItemStack usedB = inventory.extractItem(1, 1, false);
 
-            for (int i = 0; i < 2; i++) {
-                if (inventory.getStackInSlot(i).getCount() <= 0) {
-                    inventory.setStackInSlot(i, new ItemStack(inventory.getStackInSlot(i).getItem().setFull3D()));
-                } else {
-                    inventory.getStackInSlot(i).shrink(1);
-                }
-                if (inventory.getStackInSlot(i).getCount() <= 0) {
-                    inventory.setStackInSlot(i, ItemStack.EMPTY);
-                }
-            }
+        ItemStack result = BlastFurnaceRecipes.getOutput(usedA, usedB);
+        if (!result.isEmpty()) {
+            inventory.insertItem(3, result.copy(), false);
+        }
+
+        ItemStack contA = usedA.getItem().getContainerItem(usedA);
+        if (!contA.isEmpty()) {
+            inventory.insertItem(3, contA, false);
+        }
+        ItemStack contB = usedB.getItem().getContainerItem(usedB);
+        if (!contB.isEmpty()) {
+            inventory.insertItem(3, contB, false);
         }
     }
 
