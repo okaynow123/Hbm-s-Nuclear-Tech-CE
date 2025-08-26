@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -72,7 +72,7 @@ public class GUIMachineFluidTank extends GuiInfoContainer {
 		int i = tank.mode;
 		drawTexturedModalRect(guiLeft + 151, guiTop + 34, 176, i * 18, 18, 18);
 
-		tank.tankNew.renderTank(guiLeft + 71, guiTop + 69, this.zLevel, 34, 52);
+		tank.tank.renderTank(guiLeft + 71, guiTop + 69, this.zLevel, 34, 52);
 		this.mc.getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft + 71, guiTop + 17, 0, 204, 34, 52);
 
@@ -98,7 +98,7 @@ public class GUIMachineFluidTank extends GuiInfoContainer {
 				this.drawFluidInfo(new String[] { I18n.format("None"), "0/" + tank.tank.getCapacity() + "mB" }, mouseX, mouseY);
 			}*/
 
-			tank.tankNew.renderTankInfo(this, mouseX, mouseY, x, y, width, height);
+			tank.tank.renderTankInfo(this, mouseX, mouseY, x, y, width, height);
 
 		}
 	}

@@ -10,7 +10,6 @@ import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IClimbable;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerMachineFluidTank;
@@ -43,9 +42,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,12 +53,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable, IClimbable {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable {
 	protected FluidNode node;
 	protected FluidType lastType;
-	public FluidTankNTM tankNew;
-	public FluidTank tank;
-	public Fluid oldFluid;
+	public FluidTankNTM tank;
 	/** 0 = receive-only, 1 = both, 2 = send-only, 3 = disabled */
 	public short mode = 0;
 	public static final short modes = 4;
@@ -73,14 +68,9 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public byte lastRedstone = 0;
 	public Explosion lastExplosion = null;
 
-	private static boolean converted = false;
-
 	public TileEntityMachineFluidTank() {
 		super(6);
-		tank = new FluidTank(256000);
-		tankNew = new FluidTankNTM(Fluids.NONE, 256000);
-
-		converted = true;
+		tank = new FluidTankNTM(Fluids.NONE, 256000);
 	}
 
 	public String getName() {
@@ -89,17 +79,14 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
-		if(!converted) {
-			tank.readFromNBT(compound);
-			oldFluid = tank.getFluid() != null ? tank.getFluid().getFluid() :Fluids.NONE.getFF();;
-		} else tankNew.readFromNBT(compound, "tank");
+		tank.readFromNBT(compound, "tank");
 		mode = compound.getShort("mode");
 		super.readFromNBT(compound);
 	}
 
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		if(!converted) tank.writeToNBT(compound); else tankNew.writeToNBT(compound, "tank");
+		tank.writeToNBT(compound, "tank");
 		compound.setShort("mode", mode);
 		return super.writeToNBT(compound);
 	}
@@ -150,19 +137,14 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	}
 
 	public byte getComparatorPower() {
-		if(tankNew.getFill() == 0) return 0;
-		double frac = (double) tankNew.getFill() / (double) tankNew.getMaxFill() * 15D;
+		if(tank.getFill() == 0) return 0;
+		double frac = (double) tank.getFill() / (double) tank.getMaxFill() * 15D;
 		return (byte) (MathHelper.clamp((int) frac + 1, 0, 15));
 	}
 
 	@Override
 	public void update() {
 		if (!world.isRemote) {
-			if(!converted){
-				convertAndSetFluid(oldFluid, tank, tankNew);
-				converted = true;
-			}
-
 			//meta below 12 means that it's an old multiblock configuration
 			//thanks for actually doing my work, Bob
 			if(this.getBlockMetadata() < 12) {
@@ -191,14 +173,14 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 				// In buffer mode, acts like a pipe block, providing fluid to its own node
 				// otherwise, it is a regular providing/receiving machine, blocking further propagation
 				if(mode == 1) {
-					if(this.node == null || this.node.expired || tankNew.getTankType() != lastType) {
+					if(this.node == null || this.node.expired || tank.getTankType() != lastType) {
 
-						this.node = (FluidNode) UniNodespace.getNode(world, pos, tankNew.getTankType().getNetworkProvider());
+						this.node = (FluidNode) UniNodespace.getNode(world, pos, tank.getTankType().getNetworkProvider());
 
-						if(this.node == null || this.node.expired || tankNew.getTankType() != lastType) {
-							this.node = this.createNode(tankNew.getTankType());
+						if(this.node == null || this.node.expired || tank.getTankType() != lastType) {
+							this.node = this.createNode(tank.getTankType());
 							UniNodespace.createNode(world, this.node);
-							lastType = tankNew.getTankType();
+							lastType = tank.getTankType();
 						}
 					}
 
@@ -208,15 +190,15 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 					}
 				} else {
 					if(this.node != null) {
-						UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+						UniNodespace.destroyNode(world, pos, tank.getTankType().getNetworkProvider());
 						this.node = null;
 					}
 
 					for(DirPos pos : getConPos()) {
-						FluidNode dirNode = (FluidNode) UniNodespace.getNode(world, pos.getPos(), tankNew.getTankType().getNetworkProvider());
+						FluidNode dirNode = (FluidNode) UniNodespace.getNode(world, pos.getPos(), tank.getTankType().getNetworkProvider());
 
 						if(mode == 2) {
-							tryProvide(tankNew, world, pos.getPos(), pos.getDir());
+							tryProvide(tank, world, pos.getPos(), pos.getDir());
 						} else {
 							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeProvider(this);
 						}
@@ -229,10 +211,10 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 					}
 				}
 
-				tankNew.loadTank(2, 3, inventory);
-				tankNew.setType(0, 1, inventory);
+				tank.loadTank(2, 3, inventory);
+				tank.setType(0, 1, inventory);
 			} else if (this.node != null) {
-				UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+				UniNodespace.destroyNode(world, pos, tank.getTankType().getNetworkProvider());
 				this.node = null;
 			}
 
@@ -243,33 +225,33 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 			}
 			this.lastRedstone = comp;
 
-			if(tankNew.getFill() > 0) {
-				if(tankNew.getTankType().isAntimatter()) {
+			if(tank.getFill() > 0) {
+				if(tank.getTankType().isAntimatter()) {
 					new ExplosionVNT(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 5F).makeAmat().setBlockAllocator(null).setBlockProcessor(null).explode();
 					this.explode();
-					this.tankNew.setFill(0);
+					this.tank.setFill(0);
 				}
 
-				if(tankNew.getTankType().hasTrait(FT_Corrosive.class) && tankNew.getTankType().getTrait(FT_Corrosive.class).isHighlyCorrosive()) {
+				if(tank.getTankType().hasTrait(FT_Corrosive.class) && tank.getTankType().getTrait(FT_Corrosive.class).isHighlyCorrosive()) {
 					this.explode();
 				}
 
 				if(this.hasExploded) {
 
 					int leaking;
-					if(tankNew.getTankType().isAntimatter()) {
-						leaking = tankNew.getFill();
-					} else if(tankNew.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous.class) || tankNew.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous_ART.class)) {
-						leaking = Math.min(tankNew.getFill(), tankNew.getMaxFill() / 100);
+					if(tank.getTankType().isAntimatter()) {
+						leaking = tank.getFill();
+					} else if(tank.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous.class) || tank.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous_ART.class)) {
+						leaking = Math.min(tank.getFill(), tank.getMaxFill() / 100);
 					} else {
-						leaking = Math.min(tankNew.getFill(), tankNew.getMaxFill() / 10000);
+						leaking = Math.min(tank.getFill(), tank.getMaxFill() / 10000);
 					}
 
 					updateLeak(leaking);
 				}
 			}
 
-			tankNew.unloadTank(4, 5, inventory);
+			tank.unloadTank(4, 5, inventory);
 
 			this.networkPackNT(150);
 		}
@@ -280,7 +262,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		super.serialize(buf);
 		buf.writeShort(mode);
 		buf.writeBoolean(hasExploded);
-		tankNew.serialize(buf);
+		tank.serialize(buf);
 	}
 
 	@Override
@@ -288,7 +270,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		super.deserialize(buf);
 		mode = buf.readShort();
 		hasExploded = buf.readBoolean();
-		tankNew.deserialize(buf);
+		tank.deserialize(buf);
 	}
 
 	protected FluidNode createNode(FluidType type) {
@@ -307,14 +289,14 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	/** called when the tank breaks due to hazardous materials or external force, can be used to quickly void part of the tank or spawn a mushroom cloud */
 	public void explode() {
 		this.hasExploded = true;
-		this.onFire = tankNew.getTankType().hasTrait(FT_Flammable.class);
+		this.onFire = tank.getTankType().hasTrait(FT_Flammable.class);
 		this.markDirty();
 	}
 
 	@Override
 	public void explode(World world, int x, int y, int z) {
 		if(this.hasExploded) return;
-		this.onFire = tankNew.getTankType().hasTrait(FT_Flammable.class);
+		this.onFire = tank.getTankType().hasTrait(FT_Flammable.class);
 		this.hasExploded = true;
 		this.markDirty();
 	}
@@ -324,10 +306,10 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if(!hasExploded) return;
 		if(amount <= 0) return;
 
-		this.tankNew.getTankType().onFluidRelease(this, tankNew, amount);
-		this.tankNew.setFill(Math.max(0, this.tankNew.getFill() - amount));
+		this.tank.getTankType().onFluidRelease(this, tank, amount);
+		this.tank.setFill(Math.max(0, this.tank.getFill() - amount));
 
-		FluidType type = tankNew.getTankType();
+		FluidType type = tank.getTankType();
 
 		if(type.hasTrait(FluidTraitSimple.FT_Amat.class)) {
 			new ExplosionVNT(world, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 5F).makeAmat().setBlockAllocator(null).setBlockProcessor(null).explode();
@@ -339,7 +321,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 			ParticleUtil.spawnGasFlame(world, pos.getX() + rand.nextDouble(), pos.getY() + 0.5 + rand.nextDouble(), pos.getZ() + rand.nextDouble(), rand.nextGaussian() * 0.2, 0.1, rand.nextGaussian() * 0.2);
 
 			if(world.getTotalWorldTime() % 5 == 0) {
-				FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tankNew.getTankType(), FluidTrait.FluidReleaseType.BURN, amount * 5);
+				FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tank.getTankType(), FluidTrait.FluidReleaseType.BURN, amount * 5);
 			}
 
 		} else if(type.hasTrait(FluidTraitSimple.FT_Gaseous.class) || type.hasTrait(FluidTraitSimple.FT_Gaseous_ART.class)) {
@@ -351,12 +333,12 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 				data.setFloat("base", 1F);
 				data.setFloat("max", 5F);
 				data.setInteger("life", 100 + world.rand.nextInt(20));
-				data.setInteger("color", tankNew.getTankType().getColor());
+				data.setInteger("color", tank.getTankType().getColor());
 				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
 			}
 
 			if(world.getTotalWorldTime() % 5 == 0 ) {
-				FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tankNew.getTankType(), FluidTrait.FluidReleaseType.SPILL, amount * 5);
+				FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tank.getTankType(), FluidTrait.FluidReleaseType.SPILL, amount * 5);
 			}
 		}
 	}
@@ -366,7 +348,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if(!this.hasExploded || !this.onFire) return;
 
 		if(type == EnumExtinguishType.WATER) {
-			if(tankNew.getTankType().hasTrait(FluidTraitSimple.FT_Liquid.class)) { // extinguishing oil with water is a terrible idea!
+			if(tank.getTankType().hasTrait(FluidTraitSimple.FT_Liquid.class)) { // extinguishing oil with water is a terrible idea!
 				world.newExplosion(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, 5F, true, true);
 			} else {
 				this.onFire = false;
@@ -417,7 +399,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	@Override
 	public long transferFluid(FluidType type, int pressure, long fluid) {
 		long toTransfer = Math.min(getDemand(type, pressure), fluid);
-		tankNew.setFill(tankNew.getFill() + (int) toTransfer);
+		tank.setFill(tank.getFill() + (int) toTransfer);
 		return fluid - toTransfer;
 	}
 
@@ -427,16 +409,16 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		if(this.mode == 2 || this.mode == 3 || this.sendingBrake)
 			return 0;
 
-		if(tankNew.getPressure() != pressure) return 0;
+		if(tank.getPressure() != pressure) return 0;
 
-		return type == tankNew.getTankType() ? tankNew.getMaxFill() - tankNew.getFill() : 0;
+		return type == tank.getTankType() ? tank.getMaxFill() - tank.getFill() : 0;
 	}
 
 	@Override
 	public void writeNBT(NBTTagCompound nbt) {
-		if(tankNew.getFill() == 0 && !this.hasExploded) return;
+		if(tank.getFill() == 0 && !this.hasExploded) return;
 		NBTTagCompound data = new NBTTagCompound();
-		this.tankNew.writeToNBT(data, "tank");
+		this.tank.writeToNBT(data, "tank");
 		data.setShort("mode", mode);
 		data.setBoolean("hasExploded", hasExploded);
 		data.setBoolean("onFire", onFire);
@@ -446,7 +428,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	@Override
 	public void readNBT(NBTTagCompound nbt) {
 		NBTTagCompound data = nbt.getCompoundTag(NBT_PERSISTENT_KEY);
-		this.tankNew.readFromNBT(data, "tank");
+		this.tank.readFromNBT(data, "tank");
 		this.mode = data.getShort("mode");
 		this.hasExploded = data.getBoolean("hasExploded");
 		this.onFire = data.getBoolean("onFire");
@@ -454,29 +436,29 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 	@Override
 	public FluidTankNTM[] getAllTanks() {
-		return new FluidTankNTM[] { tankNew };
+		return new FluidTankNTM[] {tank};
 	}
 
 	@Override
 	public FluidTankNTM[] getSendingTanks() {
 		if(this.hasExploded) return new FluidTankNTM[0];
-		return (mode == 1 || mode == 2) ? new FluidTankNTM[] {tankNew} : new FluidTankNTM[0];
+		return (mode == 1 || mode == 2) ? new FluidTankNTM[] {tank} : new FluidTankNTM[0];
 	}
 
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
 		if(this.hasExploded || this.sendingBrake) return new FluidTankNTM[0];
-		return (mode == 0 || mode == 1) ? new FluidTankNTM[] {tankNew} : new FluidTankNTM[0];
+		return (mode == 0 || mode == 1) ? new FluidTankNTM[] {tank} : new FluidTankNTM[0];
 	}
 
 	@Override
 	public int[] getFluidIDToCopy() {
-		return new int[] {tankNew.getTankType().getID()};
+		return new int[] {tank.getTankType().getID()};
 	}
 
 	@Override
 	public FluidTankNTM getTankToPaste() {
-		return tankNew;
+		return tank;
 	}
 
 	// control panel
@@ -485,10 +467,10 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public Map<String, DataValue> getQueryData() {
 		Map<String, DataValue> data = new HashMap<>();
 
-		if (tankNew.getTankType() != Fluids.NONE) {
-			data.put("t0_fluidType", new DataValueString(tankNew.getTankType().getLocalizedName()));
+		if (tank.getTankType() != Fluids.NONE) {
+			data.put("t0_fluidType", new DataValueString(tank.getTankType().getLocalizedName()));
 		}
-		data.put("t0_fluidAmount", new DataValueFloat(tankNew.getFill()));
+		data.put("t0_fluidAmount", new DataValueFloat(tank.getFill()));
 		data.put("mode", new DataValueFloat(mode));
 
 		return data;
@@ -529,7 +511,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 		if (!world.isRemote) {
 			if (this.node != null) {
-				UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+				UniNodespace.destroyNode(world, pos, tank.getTankType().getNetworkProvider());
 			}
 		}
 		unregisterClimbable();

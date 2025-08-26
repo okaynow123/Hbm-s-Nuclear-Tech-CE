@@ -458,6 +458,7 @@ public class ResourceManager {
 
 	//Tank
 	public static final IModelCustom fluidtank = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/fluidtank.obj")).asVBO();
+	public static final IModelCustom fluidtank_exploded = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/fluidtank_exploded.obj")).asVBO();
 	public static final IModelCustom bat9000 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/bat9000.obj")).asVBO();
 	public static final IModelCustom orbus = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/orbus.obj")).asVBO();
 
@@ -908,6 +909,7 @@ public class ResourceManager {
 
 	//Tank
 	public static final ResourceLocation tank_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/tank.png");
+	public static final ResourceLocation tank_inner_tex = new ResourceLocation(RefStrings.MODID, "textures/models/tank/tank_inner.png");
 	public static final ResourceLocation tank_label_tex = new ResourceLocation(RefStrings.MODID, "textures/models/tank/tank_NONE.png");
 	public static final ResourceLocation bat9000_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/bat9000.png");
 	public static final ResourceLocation orbus_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/orbus.png");

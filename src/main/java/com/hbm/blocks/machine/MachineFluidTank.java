@@ -103,7 +103,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 				if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof IItemFluidIdentifier) {
 					FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, posC[0], posC[1], posC[2], player.getHeldItem(hand));
 
-					tank.tankNew.setTankType(type);
+					tank.tank.setTankType(type);
 					tank.markDirty();
 					player.sendMessage(new TextComponentString("Changed type to ")
 							.setStyle(new Style().setColor(TextFormatting.YELLOW))
@@ -172,7 +172,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 			tank.explode();
 			Entity exploder = explosion.exploder;
 			if(exploder instanceof EntityBombletZeta) {
-				if(tank.tankNew.getTankType().getTrait(FT_Flammable.class) == null) return;
+				if(tank.tank.getTankType().getTrait(FT_Flammable.class) == null) return;
 
 				List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class,
 						new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(100, 100, 100));
