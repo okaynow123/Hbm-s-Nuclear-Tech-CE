@@ -163,7 +163,8 @@ public interface IToolAreaAbility extends IBaseAbility {
         }
 
         private boolean isSameBlock(Block b1, Block b2) {
-            if((b1 == Blocks.REDSTONE_BLOCK && b2 == Blocks.LIT_REDSTONE_ORE) || (b1 == Blocks.LIT_REDSTONE_ORE && b2 == Blocks.REDSTONE_BLOCK))return true;
+            if ((b1 == Blocks.REDSTONE_ORE && b2 == Blocks.LIT_REDSTONE_ORE) || (b1 == Blocks.LIT_REDSTONE_ORE && b2 == Blocks.REDSTONE_ORE))
+                return true;
             return b1 == b2;
         }
     };
