@@ -37,7 +37,6 @@ public class RenderSlidingBlastDoor extends TileEntitySpecialRenderer<TileEntity
         GL11.glEnable(GL11.GL_CLIP_PLANE0);
         GL11.glEnable(GL11.GL_CLIP_PLANE1);
         GlStateManager.enableCull();
-        GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.enableBlend();

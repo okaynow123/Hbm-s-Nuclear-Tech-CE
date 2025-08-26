@@ -97,10 +97,12 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
     }
 
     @Override
-    public void deserialize(ByteBuf buf){
+    public void deserialize(ByteBuf buf) {
         shouldUseBB = buf.readBoolean();
-        state = DoorState.values()[buf.readByte()];
-        if(buf.readableBytes() == 1)
+
+        DoorState newState = DoorState.values()[buf.readByte()];
+        handleNewState(newState);
+        if (buf.readableBytes() > 0)
             texture = buf.readByte();
     }
 
