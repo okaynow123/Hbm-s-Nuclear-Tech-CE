@@ -20,7 +20,6 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
-import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
@@ -91,7 +90,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -104,7 +102,6 @@ public class MainRegistry {
     @Mod.Instance(RefStrings.MODID)
     public static MainRegistry instance;
     public static Logger logger;
-    public static List<FFPipeNetwork> allPipeNetworks = new ArrayList<>();
     // Creative Tabs
     // ingots, nuggets, wires, machine parts
     public static CreativeTabs partsTab = new PartsTab(CreativeTabs.getNextID(), "tabParts");

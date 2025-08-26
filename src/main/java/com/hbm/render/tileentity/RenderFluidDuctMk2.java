@@ -1,6 +1,6 @@
 package com.hbm.render.tileentity;
 
-import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.network.BlockFluidPipeSolid;
 import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
@@ -17,7 +17,7 @@ public class RenderFluidDuctMk2<T extends TileEntityPipeBaseNT> extends TileEnti
 
 	@Override
 	public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		if(te.getBlockType() == ModBlocks.fluid_duct_solid || te.getBlockType() instanceof FluidDuctBox)
+		if(te.getBlockType() instanceof BlockFluidPipeSolid || te.getBlockType() instanceof FluidDuctBox)
 			return;
 		GlStateManager.pushMatrix();
 		GlStateManager.enableLighting();

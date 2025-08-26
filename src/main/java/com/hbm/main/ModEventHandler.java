@@ -22,7 +22,6 @@ import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
-import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.handler.*;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
@@ -167,14 +166,6 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void worldUnload(WorldEvent.Unload e) {
-        Iterator<FFPipeNetwork> itr = MainRegistry.allPipeNetworks.iterator();
-        while (itr.hasNext()) {
-            FFPipeNetwork net = itr.next();
-            if (net.getNetworkWorld() == e.getWorld()) {
-                net.destroySoft();
-                itr.remove();
-            }
-        }
         ClimbableRegistry.clearDimension(e.getWorld());
     }
 
@@ -532,19 +523,6 @@ public class ModEventHandler {
     public void worldTick(WorldTickEvent event) {
         if (event.world == null || event.world.isRemote) return;
         List<Object> entityList = new ArrayList<>(event.world.loadedEntityList);
-        if (!MainRegistry.allPipeNetworks.isEmpty()) {
-            Iterator<FFPipeNetwork> itr = MainRegistry.allPipeNetworks.iterator();
-            while (itr.hasNext()) {
-                FFPipeNetwork net = itr.next();
-                if (net.getNetworkWorld() != event.world)
-                    continue;
-                net.updateTick();
-                if (net.getPipes().isEmpty()) {
-                    net.destroySoft();
-                    itr.remove();
-                }
-            }
-        }
 
         if (event.world.getTotalWorldTime() % 100 == 97) {
             //Drillgon200: Retarded hack because I'm not convinced game rules are client sync'd

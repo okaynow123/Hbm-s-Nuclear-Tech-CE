@@ -2,7 +2,7 @@ package com.hbm.blocks.network;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.tileentity.conductor.TileEntityFFDuctBaseMk2;
+import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -29,7 +29,7 @@ public class BlockFluidPipeSolid extends BlockContainer implements ILookOverlay 
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityFFDuctBaseMk2();
+		return new TileEntityPipeBaseNT();
 	}
 
 	@Override
@@ -41,12 +41,10 @@ public class BlockFluidPipeSolid extends BlockContainer implements ILookOverlay 
 
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(!(te instanceof TileEntityFFDuctBaseMk2))
+		if(!(te instanceof TileEntityPipeBaseNT duct))
 			return;
 
-		TileEntityFFDuctBaseMk2 duct = (TileEntityFFDuctBaseMk2) te;
-
-		List<String> text = new ArrayList();
+        List<String> text = new ArrayList<>();
 		text.add("&[" + duct.getType().getColor() + "&]" + duct.getType().getLocalizedName());
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}

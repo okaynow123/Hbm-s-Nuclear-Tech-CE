@@ -17,14 +17,12 @@ import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.interfaces.IFluidDuct;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityMachineBase;
-import com.hbm.tileentity.TileEntityProxyInventory;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.InventoryUtil;
 import net.minecraft.block.Block;
@@ -383,18 +381,6 @@ public class Library {
 		}
 
 		return entity;
-	}
-
-	public static boolean checkFluidConnectables(World world, BlockPos pos, FluidType type)
-	{
-		TileEntity tileentity = world.getTileEntity(pos);
-		if(tileentity instanceof IFluidDuct && ((IFluidDuct) tileentity).getType() == type)
-			return true;
-
-		if(world.getBlockState(pos).getBlock() == ModBlocks.machine_mining_laser && tileentity instanceof TileEntityProxyInventory)
-			return true;
-
-		return false;
 	}
 
 	public static RayTraceResult rayTrace(EntityPlayer player, double length, float interpolation) {

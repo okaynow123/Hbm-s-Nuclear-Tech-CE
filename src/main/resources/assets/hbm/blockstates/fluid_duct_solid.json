@@ -1,6 +1,5 @@
 {
 	"variants": {
-		"extracts=false": { "model": "hbm:fluid_duct_solid" },
-		"extracts=true": { "model": "hbm:fluid_duct_solid_o" }
+		"normal": { "model": "hbm:fluid_duct_solid" }
 	}
 }

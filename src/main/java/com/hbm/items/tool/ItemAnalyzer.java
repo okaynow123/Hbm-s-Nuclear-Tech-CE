@@ -1,10 +1,10 @@
 package com.hbm.items.tool;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.interfaces.IFluidPipe;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntityDummy;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
+import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.tileentity.network.energy.TileEntityPylonBase;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -83,10 +83,10 @@ public class ItemAnalyzer extends Item {
 							"Electricity: " + ((IEnergyReceiverMK2)te).getPower() + " HE"));
 				}
 				
-				if(te instanceof IFluidPipe) {
+				if(te instanceof TileEntityPipeBaseNT pipeBaseNT) {
 					
 					player.sendMessage(new TextComponentString(
-							"Duct Type: " + I18n.format(((IFluidPipe)te).getType().getUnlocalizedName())));
+							"Duct Type: " + I18n.format((pipeBaseNT.getType().getTranslationKey()))));
 				}
 				
 				if(te instanceof TileEntityPylonBase) {

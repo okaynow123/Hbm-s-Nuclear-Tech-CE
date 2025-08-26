@@ -6,6 +6,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.uninos.UniNodespace;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.world.WorldServer;
 
 @AutoRegister
-public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, ITickable {
+public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, IFluidCopiable, ITickable {
 
     protected FluidNode node;
     protected FluidType type = Fluids.NONE;
@@ -30,7 +31,7 @@ public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, I
             if(this.node == null || this.node.expired) {
 
                 if(this.shouldCreateNode()) {
-                    this.node = (FluidNode) UniNodespace.getNode(world, pos, type.getNetworkProvider());
+                    this.node = UniNodespace.getNode(world, pos, type.getNetworkProvider());
 
                     if(this.node == null || this.node.expired) {
                         this.node = this.createNode(type);
@@ -54,8 +55,7 @@ public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, I
         this.type = type;
         this.markDirty();
 
-        if(world instanceof WorldServer) {
-            WorldServer server = (WorldServer) world;
+        if(world instanceof WorldServer server) {
             server.getPlayerChunkMap().markBlockForUpdate(pos);
         }
 
