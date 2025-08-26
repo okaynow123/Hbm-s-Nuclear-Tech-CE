@@ -53,7 +53,7 @@ public class ModForgeFluids {
 		ModBlocks.radwater_block = new RadWaterBlock(ModForgeFluids.radwater_fluid, ModBlocks.fluidradwater, ModDamageSource.radiation, "radwater_block").setResistance(500F);
 		ModBlocks.mud_block = new MudBlock(ModForgeFluids.mud_fluid, ModBlocks.fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);
 		ModBlocks.schrabidic_block = new SchrabidicBlock(schrabidic, ModBlocks.fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
-		ModBlocks.corium_block = new CoriumBlock(corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
+		ModBlocks.corium_block = new CoriumFinite(corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
 		ModBlocks.volcanic_lava_block = new VolcanicBlock(volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
 		ModBlocks.bromine_block = new BlockFluidClassic(bromine_fluid, Material.WATER).setResistance(500F);
 		toxic_fluid.setBlock(ModBlocks.toxic_block);
