@@ -124,7 +124,7 @@ public final class UniNodespace {
             UniNodeWorld<N, L> nodeWorld = worlds.get(world);
             if (nodeWorld == null) return;
 
-            for (L node : new HashSet<>(nodeWorld.getAllNodes())) {
+            for (L node : nodeWorld.getAllNodes()) {
                 if (node.expired) continue;
                 if (!node.hasValidNet() || node.recentlyChanged) {
                     checkNodeConnection(world, node);
