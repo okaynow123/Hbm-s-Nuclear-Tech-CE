@@ -248,6 +248,7 @@ public class ClientProxy extends ServerProxy {
         registerGrenadeRenderer(EntityGrenadeIFSpark.class, ModItems.grenade_if_spark);
         registerGrenadeRenderer(EntityGrenadeIFHopwire.class, ModItems.grenade_if_hopwire);
         registerGrenadeRenderer(EntityGrenadeIFNull.class, ModItems.grenade_if_null);
+        registerGrenadeRenderer(EntityGrenadeDynamite.class, ModItems.stick_dynamite);
 
         AutoRegistry.registerRenderInfo();
 

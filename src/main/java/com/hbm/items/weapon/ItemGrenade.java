@@ -39,6 +39,14 @@ public class ItemGrenade extends Item {
 
 		worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
+		/*
+		 * kill all this stupid bullshit
+		 * make a PROPER grenade entity base class
+		 * have all the grenade items be an NBT stat in the entity instead of having new entities for every fucking grenade type
+		 * register explosion effects with some lambdas to save on LOC
+		 * jesus christ why do i keep doing this
+		 */
+		// mlbv: I totally agree
 		if (!worldIn.isRemote) {
 			if (this == ModItems.grenade_generic) {
 				worldIn.spawnEntity(new EntityGrenadeGeneric(worldIn, playerIn, handIn));
@@ -169,6 +177,12 @@ public class ItemGrenade extends Item {
 			}
 			if (this == ModItems.grenade_if_null) {
 				worldIn.spawnEntity(new EntityGrenadeIFNull(worldIn, playerIn, handIn));
+			}
+//			if (this == ModItems.nuclear_waste_pearl) {
+//				p_77659_2_.spawnEntityInWorld(new EntityWastePearl(p_77659_2_, p_77659_3_));
+//			}
+			if (this == ModItems.stick_dynamite) {
+				worldIn.spawnEntity(new EntityGrenadeDynamite(worldIn, playerIn, handIn));
 			}
 		}
 		return super.onItemRightClick(worldIn, playerIn, handIn);
