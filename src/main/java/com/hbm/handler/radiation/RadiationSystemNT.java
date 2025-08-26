@@ -1,6 +1,7 @@
 package com.hbm.handler.radiation;
 
 import com.hbm.capability.HbmLivingProps;
+import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.entity.mob.EntityDuck;
@@ -9,7 +10,6 @@ import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IRadResistantBlock;
-import com.hbm.interfaces.Untested;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.AdvancementManager;
@@ -137,17 +137,13 @@ public final class RadiationSystemNT {
      */
     public static void incrementRad(World world, BlockPos pos, float amount, float max) {
         if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
-        if (!isSubChunkLoaded(world, pos)) {
-            rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
-        }
+        if (amount < 0 || max < 0) throw new IllegalArgumentException("Radiation amount and max must be positive.");
+        if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
-        if (p != null) {
-            float previous = p.radiation.getAndUpdate(current -> (current < max) ? current + amount : current);
-            if (previous < max && amount > 0) {
-                //Mark this pocket as active so it gets updated
-                WorldRadiationData data = getWorldRadData(world);
-                data.addActivePocket(p);
-            }
+        if (p == null) return;
+        final float prev = p.radiation.getAndUpdate(cur -> (cur < max) ? cur + amount : cur);
+        if (!nearZero(amount) && p.radiation.get() != prev) {
+            getWorldRadData(world).addActivePocket(p);
         }
     }
 
@@ -159,11 +155,14 @@ public final class RadiationSystemNT {
      * @param amount - the amount to subtract from current rads
      */
     public static void decrementRad(World world, BlockPos pos, float amount) {
-        //If there's nothing to decrement, return
-        if (pos.getY() < 0 || pos.getY() > 255 || !isSubChunkLoaded(world, pos)) return;
+        if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
+        if (amount < 0) throw new IllegalArgumentException("Radiation amount to decrement must be positive.");
+        if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
         if (p == null) return;
-        p.radiation.updateAndGet(current -> Math.max(0.0f, current - Math.max(amount, 0)));
+        final float minB = minBoundFor(world);
+        p.radiation.updateAndGet(cur -> Math.max(minB, cur - amount));
+        getWorldRadData(world).addActivePocket(p);
     }
 
     /**
@@ -175,17 +174,13 @@ public final class RadiationSystemNT {
      */
     public static void setRadForCoord(World world, BlockPos pos, float amount) {
         if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
-        if (!isSubChunkLoaded(world, pos)) {
-            rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
-        }
+        if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
         if (p == null) return;
-        p.radiation.set(Math.max(amount, 0));
-        //If the amount is greater than 0, make sure to mark it as dirty so it gets updated
-        if (amount > 0) {
-            WorldRadiationData data = getWorldRadData(world);
-            data.addActivePocket(p);
-        }
+        final float minB = minBoundFor(world);
+        final float clamped = Math.max(minB, amount);
+        final float prev = p.radiation.getAndSet(clamped);
+        if (!nearZero(clamped - prev)) getWorldRadData(world).addActivePocket(p);
     }
 
     /**
@@ -625,24 +620,37 @@ public final class RadiationSystemNT {
         RadiationUpdates.WorldUpdate wu = new RadiationUpdates.WorldUpdate();
         List<RadPocket> itrActive = new ArrayList<>(worldData.getActivePockets());
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
+        final float minB = minBoundFor(worldData.world);
 
         itrActive.parallelStream().forEach(p -> {
             BlockPos pos = p.parent.subChunkPos;
-            p.radiation.updateAndGet(current -> Math.max(0.0f, current * 0.999F - 0.05F));
+
+            // Symmetric decay towards 0, with clamp to -background
+            p.radiation.updateAndGet(current -> {
+                final float decay = (current > 0f) ? -0.05f : (current < 0f ? +0.05f : 0f);
+                final float next  = current * 0.999f + decay;
+                return Math.max(minB, next);
+            });
+
             wu.dirtyChunkPositions.add(new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4));
             float currentRadiation = p.radiation.get();
-            if (currentRadiation <= 0) {
-                // Pocket is depleted before spreading, add to its own accumulatedRads and it will be removed later.
+
+            if (nearZero(currentRadiation)) {
                 p.radiation.set(0.0f);
                 p.accumulatedRads.reset();
                 return;
             }
 
-            // Apply pruning for near-zero radiation in non-sealed pockets
-            if (!p.isSealed() && currentRadiation < PRUNE_THRESHOLD) {
-                p.radiation.updateAndGet(cur -> Math.max(0.0f, cur - EXTRA_DECAY));
+            // Near-zero pruning (non-sealed): nudge toward 0 symmetrically
+            if (!p.isSealed() && Math.abs(currentRadiation) < PRUNE_THRESHOLD) {
+                p.radiation.updateAndGet(cur -> {
+                    float n = cur + (cur > 0f ? -EXTRA_DECAY : (cur < 0f ? +EXTRA_DECAY : 0f));
+                    // keep between [-background, 0] if negative, or allow >0 if positive
+                    if (n < 0f) n = Math.max(minB, n);
+                    return n;
+                });
                 currentRadiation = p.radiation.get();
-                if (currentRadiation <= 0) {
+                if (nearZero(currentRadiation)) {
                     p.radiation.set(0.0f);
                     p.accumulatedRads.reset();
                     return;
@@ -658,35 +666,29 @@ public final class RadiationSystemNT {
                 for (int i = 0; i < 10; i++) {
                     BlockPos randPos = new BlockPos(rand.nextInt(16), rand.nextInt(16), rand.nextInt(16));
                     if (p.parent.getPocket(randPos) == p) {
-                        randPos = randPos.add(pos);
-                        @Untested("this is bad practice, but no crash observed so far") IBlockState state = worldData.world.getBlockState(randPos);
-                        Vec3d rPos = new Vec3d(randPos.getX() + 0.5, randPos.getY() + 0.5, randPos.getZ() + 0.5);
-                        RayTraceResult trace = worldData.world.rayTraceBlocks(rPos, rPos.add(0, -6, 0));
-                        if (state.getBlock().isAir(state, worldData.world, randPos) && trace != null && trace.typeOfHit == Type.BLOCK) {
-                            wu.fogPositions.add(randPos);
+                        final BlockPos worldPos = randPos.add(pos);
+                        final IBlockState state = worldData.world.getBlockState(worldPos);
+                        final Vec3d rPos = new Vec3d(worldPos.getX() + 0.5, worldPos.getY() + 0.5, worldPos.getZ() + 0.5);
+                        final RayTraceResult trace = worldData.world.rayTraceBlocks(rPos, rPos.add(0, -6, 0));
+                        if (state.getBlock().isAir(state, worldData.world, worldPos) && trace != null && trace.typeOfHit == Type.BLOCK) {
+                            wu.fogPositions.add(worldPos);
                             break;
                         }
                     }
                 }
             }
 
-            float count = 0;
-            for (EnumFacing e : EnumFacing.VALUES) {
-                count += p.connectionIndices[e.ordinal()].size();
-            }
-            float amountPer = count > 0 ? 0.7F / count : 0;
-            if (count == 0 || currentRadiation < 1) {
-                //Don't update if we have no connections or our own radiation is less than 1. Prevents micro radiation bleeding.
-                amountPer = 0;
-            }
+            float connectionCount = 0F;
+            for (EnumFacing e : EnumFacing.VALUES) connectionCount += p.connectionIndices[e.ordinal()].size();
+            final float amountPer = (connectionCount > 0 && Math.abs(currentRadiation) >= 1f) ? 0.7f / connectionCount : 0f;
 
             final float radForThisTick = p.radiation.get();
             // All pockets, even those not spreading, retain their own radiation value.
             p.accumulatedRads.add(radForThisTick);
 
-            if (radForThisTick > 0 && amountPer > 0) {
-                // If spreading, subtract the spread amount from its own accumulated value.
-                p.accumulatedRads.add(-radForThisTick * 0.7F);
+            // Diffuse both positive and negative radiation
+            if (amountPer > 0F && radForThisTick != 0F) {
+                p.accumulatedRads.add(-radForThisTick * 0.7F); // export share
                 for (EnumFacing e : EnumFacing.VALUES) {
                     BlockPos nPos = pos.offset(e, 16);
                     if (!worldData.world.isBlockLoaded(nPos) || nPos.getY() < 0 || nPos.getY() > 255) continue;
@@ -713,13 +715,17 @@ public final class RadiationSystemNT {
             }
         });
 
-        Set<RadPocket> allPocketsToUpdate = new HashSet<>(itrActive);
-        allPocketsToUpdate.addAll(wu.toAdd);
-        for (RadPocket act : allPocketsToUpdate) {
-            float newRadiation = (float) act.accumulatedRads.sumThenReset();
-            act.radiation.set(newRadiation);
-            if (newRadiation <= 0) {
+        // Apply accumulated totals & decide active set membership
+        Set<RadPocket> all = new HashSet<>(itrActive);
+        all.addAll(wu.toAdd);
+        for (RadPocket act : all) {
+            final float newRad = (float) act.accumulatedRads.sumThenReset();
+            final float bounded = Math.max(minB, newRad);
+            if (nearZero(bounded)) {
+                act.radiation.set(0F);
                 wu.toRemove.add(act);
+            } else {
+                act.radiation.set(bounded);
             }
         }
         return wu;
@@ -964,6 +970,19 @@ public final class RadiationSystemNT {
         }
     }
 
+    private static float dimBackground(@NotNull World world) {
+        Object v = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
+        return (v instanceof Number) ? ((Number) v).floatValue() : 0F;
+    }
+
+    private static float minBoundFor(@NotNull World world) {
+        return -dimBackground(world); // -background
+    }
+
+    private static boolean nearZero(float v) {
+        return Math.abs(v) < 1.0e-4f;
+    }
+
     private static NBTTagCompound writeToNBT(WorldRadiationData data, ChunkPos chunkPos) {
         boolean hasData = false;
         buf.clear();
@@ -1012,7 +1031,7 @@ public final class RadiationSystemNT {
                     sc.pockets = new RadPocket[len];
                     for (int j = 0; j < len; j++) {
                         sc.pockets[j] = readPocket(bdata, sc);
-                        if (sc.pockets[j] != null && sc.pockets[j].radiation.get() > 0) {
+                        if (sc.pockets[j] != null && !nearZero(sc.pockets[j].radiation.get())) {
                             data.addActivePocket(sc.pockets[j]);
                         }
                     }

@@ -12,13 +12,12 @@ import java.util.Random;
 
 public class BlockAbsorber extends Block {
 
-	float absorb = 0;
+	private final float absorb;
 
 	public BlockAbsorber(Material materialIn, float ab, String s) {
 		super(materialIn);
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
-		this.setTickRandomly(true);
 		absorb = ab;
 
 		ModBlocks.ALL_BLOCKS.add(this);
@@ -26,12 +25,12 @@ public class BlockAbsorber extends Block {
 
 	@Override
 	public int tickRate(World worldIn) {
-		return 10;
+		return 1;
 	}
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-		RadiationSavedData.decrementRad(world, pos, absorb);
+		RadiationSavedData.decrementRad(world, pos, absorb / 10);
 
     	world.scheduleUpdate(pos, this, this.tickRate(world));
 	}

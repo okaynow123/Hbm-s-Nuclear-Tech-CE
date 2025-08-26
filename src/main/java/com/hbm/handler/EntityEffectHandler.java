@@ -129,25 +129,21 @@ public class EntityEffectHandler {
 		RadiationSavedData data = RadiationSavedData.getData(world);
 		
 		if(!world.isRemote) {
-			int ix = (int)MathHelper.floor(entity.posX);
-			int iy = (int)MathHelper.floor(entity.posY);
-			int iz = (int)MathHelper.floor(entity.posZ);
+			int ix = MathHelper.floor(entity.posX);
+			int iy = MathHelper.floor(entity.posY);
+			int iz = MathHelper.floor(entity.posZ);
 
-			float rad = data.getRadNumFromCoord(new BlockPos(ix, iy, iz));
-			
-			Object dimRad = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
-			if(dimRad != null) {
-				if(rad < (float)dimRad) {
-					// TODO: Can we use sealed rad pockets to protect against dim rads?
-					rad = (float)dimRad;
-				}
-			}
+			BlockPos pos = new BlockPos(ix, iy, iz);
+			float offset =  data.getRadNumFromCoord(pos);
 
-			if(rad > 0) {
+			Object v = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
+			float background = (v instanceof Number) ? ((Number) v).floatValue() : 0f;
+			float rad = Math.max(0F, offset + background);
+			if (rad > 0F) {
 				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, rad / 20F);
 			}
 	
-			if(entity.world.isRaining() && RadiationConfig.cont > 0 && AuxSavedData.getThunder(entity.world) > 0 && entity.world.canBlockSeeSky(new BlockPos(ix, iy, iz))) {
+			if(entity.world.isRaining() && RadiationConfig.cont > 0 && AuxSavedData.getThunder(entity.world) > 0 && entity.world.canBlockSeeSky(pos)) {
 				
 				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, RadiationConfig.cont * 0.0005F);
 			}
@@ -245,10 +241,9 @@ public class EntityEffectHandler {
 			
 			int contagion = HbmLivingProps.getContagion(entity);
 			
-			if(entity instanceof EntityPlayer) {
-				
-				EntityPlayer player = (EntityPlayer) entity;
-				int randSlot = rand.nextInt(player.inventory.mainInventory.size());
+			if(entity instanceof EntityPlayer player) {
+
+                int randSlot = rand.nextInt(player.inventory.mainInventory.size());
 				ItemStack stack = player.inventory.getStackInSlot(randSlot);
 				
 				if(rand.nextInt(100) == 0) {
@@ -285,9 +280,8 @@ public class EntityEffectHandler {
 					
 					for(Entity ent : list) {
 						
-						if(ent instanceof EntityLivingBase) {
-							EntityLivingBase living = (EntityLivingBase) ent;
-							if(HbmLivingProps.getContagion(living) <= 0 && !ArmorUtil.checkForHazmatOnly(living) && !ArmorRegistry.hasProtection(living, EntityEquipmentSlot.HEAD, ArmorRegistry.HazardClass.BACTERIA)) {
+						if(ent instanceof EntityLivingBase living) {
+                            if(HbmLivingProps.getContagion(living) <= 0 && !ArmorUtil.checkForHazmatOnly(living) && !ArmorRegistry.hasProtection(living, EntityEquipmentSlot.HEAD, ArmorRegistry.HazardClass.BACTERIA)) {
 								HbmLivingProps.setContagion(living, 3 * hour);
 							}
 						}
@@ -495,11 +489,10 @@ public class EntityEffectHandler {
 
 	private static void handleTemperature(Entity entity) {
 
-		if(!(entity instanceof EntityLivingBase)) return;
+		if(!(entity instanceof EntityLivingBase living)) return;
 		if(entity.world.isRemote) return;
 
-		EntityLivingBase living = (EntityLivingBase) entity;
-		IEntityHbmProps props = HbmLivingProps.getData(living);
+        IEntityHbmProps props = HbmLivingProps.getData(living);
 		Random rand = living.getRNG();
 
 		if(!entity.isEntityAlive()) return;
