@@ -36,6 +36,7 @@ public class RenderBAT9000 extends TileEntitySpecialRenderer<TileEntityMachineBA
       float partialTicks,
       int destroyStage,
       float alpha) {
+    GlStateManager.enableAlpha();
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5F, y, z + 0.5F);
     GlStateManager.enableLighting();
