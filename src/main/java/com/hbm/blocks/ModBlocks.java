@@ -768,9 +768,11 @@ public class ModBlocks {
 
 	public static final Block keypad_test = new KeypadTest(Material.IRON, "keypad_test").setHardness(15.0F).setResistance(7500.0F).setCreativeTab(null);
 
-	public static final Block door_metal = new BlockModDoor(Material.IRON, "door_metal").setHardness(5.0F).setResistance(5.0F);
-	public static final Block door_office = new BlockModDoor(Material.IRON, "door_office").setHardness(10.0F).setResistance(10.0F);
-	public static final Block door_bunker = new BlockModDoor(Material.IRON, "door_bunker").setHardness(10.0F).setResistance(100.0F);
+	// mlbv: made their material ROCK to be compatible with Quark Double Doors feature.
+	// See vazkii.quark.tweaks.feature.DoubleDoors line 80, I can't believe they hardcoded a state.getMaterial() != Material.IRON check
+	public static final Block door_metal = new BlockModDoor(Material.ROCK, "door_metal").setHardness(5.0F).setResistance(5.0F);
+	public static final Block door_office = new BlockModDoor(Material.ROCK, "door_office").setHardness(10.0F).setResistance(10.0F);
+	public static final Block door_bunker = new BlockModDoor(Material.ROCK, "door_bunker").setHardness(10.0F).setResistance(100.0F);
 
 	public static final Block barbed_wire = new BarbedWire(Material.IRON, "barbed_wire").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
 	public static final Block barbed_wire_fire = new BarbedWire(Material.IRON, "barbed_wire_fire").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
