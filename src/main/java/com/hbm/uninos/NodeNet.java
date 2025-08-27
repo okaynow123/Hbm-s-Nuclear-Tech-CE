@@ -32,9 +32,7 @@ public abstract class NodeNet<R, P, L extends GenNode<N>, N extends NodeNet<R, P
     public void joinNetworks(NodeNet<R, P, L, N> network) {
         if (network == this || !network.isValid()) return;
 
-        List<L> oldNodes = new ArrayList<>(network.links);
-
-        for (L conductor : oldNodes) forceJoinLink(conductor);
+        for (L conductor : network.links) forceJoinLink(conductor);
         network.links.clear();
 
         for (R connector : network.receiverEntries.keySet()) this.addReceiver(connector);
@@ -78,9 +76,8 @@ public abstract class NodeNet<R, P, L extends GenNode<N>, N extends NodeNet<R, P
 
     public void destroy() {
         this.invalidate();
-        Set<L> linksToClear = new HashSet<>(this.links);
-        for (GenNode<?> link : linksToClear) {
-            if (link.net == this) link.setNet(null);
+        for (L link : this.links) {
+            link.setNet(null);
         }
         this.links.clear();
         this.receiverEntries.clear();
