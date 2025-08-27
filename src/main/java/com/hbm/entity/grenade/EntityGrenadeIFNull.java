@@ -3,13 +3,17 @@ package com.hbm.entity.grenade;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemGrenade;
+import com.hbm.util.DelayedTick;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 @AutoRegister(name = "entity_grenade_if_mystery")
@@ -32,31 +36,52 @@ public class EntityGrenadeIFNull extends EntityGrenadeBouncyBase {
 
     @Override
     public void explode() {
-    	
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             this.setDead();
             MutableBlockPos pos = new BlockPos.MutableBlockPos();
-    		for(int a = -3; a <= 3; a++)
-        		for(int b = -3; b <= 3; b++)
-            		for(int c = -3; c <= 3; c++)
-            			world.setBlockToAir(pos.setPos((int)posX + a, (int)posY + b, (int)posZ + c));
-            		
-    		
-    		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB((int)posX + 0.5 - 3, (int)posY + 0.5 - 3, (int)posZ + 0.5 - 3, (int)posX + 0.5 + 3, (int)posY + 0.5 + 3, (int)posZ + 0.5 + 3));
-    		
-    		for(Object o : list) {
-    			if(o instanceof EntityLivingBase) {
-    				EntityLivingBase e = (EntityLivingBase)o;
-    				
-    				e.setHealth(0);
-    			} else if(o instanceof Entity) {
-    				Entity e = (Entity)o;
-    				e.setDead();
-    				e.isDead = true;
-    			}
-    		}
+            for(int a = -3; a <= 3; a++)
+                for(int b = -3; b <= 3; b++)
+                    for(int c = -3; c <= 3; c++)
+                        world.setBlockToAir(pos.setPos((int)posX + a, (int)posY + b, (int)posZ + c));
+            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB((int)posX + 0.5 - 3, (int)posY + 0.5 - 3, (int)posZ + 0.5 - 3, (int)posX + 0.5 + 3, (int)posY + 0.5 + 3, (int)posZ + 0.5 + 3));
+
+            for(Entity entity : list) {
+                tryKill(entity);
+            }
         }
+    }
+
+    private static void tryKill(final Entity toKill) {
+        if (toKill instanceof MultiPartEntityPart part) {
+            if (part.parent instanceof Entity parent) {
+                tryKill(parent);
+                return;
+            }
+        }
+        if (toKill instanceof EntityLivingBase livingBase) livingBase.setHealth(0f);
+        else toKill.setDead();
+        DelayedTick.nextWorldTick(toKill.world, () -> {
+            if (!toKill.isDead && toKill.isEntityAlive()) {
+                WorldServer ws = (WorldServer) toKill.world;
+                if (toKill instanceof EntityPlayer) {
+                    ws.removeEntity(toKill);
+                    return;
+                }
+                if (toKill.isBeingRidden()) toKill.removePassengers();
+                if (toKill.isRiding()) toKill.dismountRidingEntity();
+                Entity[] parts = toKill.getParts();
+                if (parts != null) {
+                    for (Entity p : parts) {
+                        if (p != null) {
+                            if (p.isBeingRidden()) p.removePassengers();
+                            if (p.isRiding()) p.dismountRidingEntity();
+                            ws.removeEntityDangerously(p);
+                        }
+                    }
+                }
+                ws.removeEntityDangerously(toKill);
+            }
+        });
     }
 
 	@Override
