@@ -46,13 +46,11 @@ public class ItemRag extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		
 		ItemStack stack = player.getHeldItem(hand);
-		if((System.currentTimeMillis() % 120000) < 60000){
-			if(stack.getItem() == ModItems.rag)
-				player.dropItem(new ItemStack(ModItems.rag_piss, 1, 0), false);
-			else
-				player.dropItem(new ItemStack(ModItems.mask_piss, 1, 0), false);
-			stack.shrink(1);
-		}
+		if(stack.getItem() == ModItems.rag)
+			player.dropItem(new ItemStack(ModItems.rag_piss, 1, 0), false);
+		else
+			player.dropItem(new ItemStack(ModItems.mask_piss, 1, 0), false);
+		stack.shrink(1);
 		return ActionResult.<ItemStack> newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 	
