@@ -43,7 +43,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
         this.textures = Arrays.stream(theEnum.getEnumConstants())
                 .sorted(Comparator.comparing(Enum::ordinal))
                 .map(Enum::name)
-                .map(name -> registryName + "." + name.toLowerCase(Locale.US))
+                .map(name -> registryName + getSeparationChar() + name.toLowerCase(Locale.US))
                 .toArray(String[]::new);
     }
 
@@ -117,7 +117,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
         return multiTexture;
     }
 
-    public Class<? extends Enum> getTheEnum() {
+    public Class<? extends Enum<?>> getTheEnum() {
         return theEnum;
     }
 
@@ -131,9 +131,13 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
     public String getTranslationKey(ItemStack stack) {
         if (multiName) {
             Enum<?> num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
-            return super.getTranslationKey() + "." + num.name().toLowerCase(Locale.US);
+            return super.getTranslationKey() + getSeparationChar() + num.name().toLowerCase(Locale.US);
         } else {
             return super.getTranslationKey(stack);
         }
+    }
+
+    protected String getSeparationChar() {
+        return ".";
     }
 }

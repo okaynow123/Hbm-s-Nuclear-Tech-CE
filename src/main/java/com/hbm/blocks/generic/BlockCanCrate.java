@@ -2,17 +2,15 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
+import com.hbm.items.food.ItemConserve;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -22,104 +20,102 @@ import java.util.Random;
 
 public class BlockCanCrate extends Block {
 
-	public BlockCanCrate(Material materialIn, String s) {
-		super(materialIn);
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
+    public BlockCanCrate(Material materialIn, String s) {
+        super(materialIn);
+        this.setTranslationKey(s);
+        this.setRegistryName(s);
 
-		ModBlocks.ALL_BLOCKS.add(this);
-	}
+        ModBlocks.ALL_BLOCKS.add(this);
+    }
 
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if(worldIn.isRemote)
-		{
-			playerIn.sendMessage(new TextComponentTranslation("chat.crate.cansmash"));
-		}
-		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
-	}
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
+                                    float hitX, float hitY, float hitZ) {
+        if (playerIn.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(ModItems.crowbar)) {
+            if (!worldIn.isRemote) {
+                dropContents(worldIn, pos);
+                worldIn.setBlockToAir(pos);
+                worldIn.playSound(null, pos, HBMSoundHandler.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
+            }
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		List<Item> items = new ArrayList<Item>();
-    	items.add(ModItems.canned_beef);
-    	items.add(ModItems.canned_tuna);
-    	items.add(ModItems.canned_mystery);
-    	items.add(ModItems.canned_pashtet);
-    	items.add(ModItems.canned_cheese);
-    	items.add(ModItems.canned_jizz);
-    	items.add(ModItems.canned_milk);
-    	items.add(ModItems.canned_ass);
-    	items.add(ModItems.canned_pizza);
-    	items.add(ModItems.canned_tomato);
-    	items.add(ModItems.canned_tube);
-    	items.add(ModItems.canned_asbestos);
-    	items.add(ModItems.canned_bhole);
-    	items.add(ModItems.canned_hotdogs);
-    	items.add(ModItems.canned_leftovers);
-    	items.add(ModItems.canned_yogurt);
-    	items.add(ModItems.canned_stew);
-    	items.add(ModItems.canned_chinese);
-    	items.add(ModItems.canned_oil);
-    	items.add(ModItems.canned_fist);
-    	items.add(ModItems.canned_spam);
-    	items.add(ModItems.canned_fried);
-    	items.add(ModItems.canned_napalm);
-    	items.add(ModItems.canned_diesel);
-    	items.add(ModItems.canned_kerosene);
-    	items.add(ModItems.canned_recursion);
-    	items.add(ModItems.canned_bark);
-    	items.add(ModItems.can_smart);
-    	items.add(ModItems.can_creature);
-    	items.add(ModItems.can_redbomb);
-    	items.add(ModItems.can_mrsugar);
-    	items.add(ModItems.can_overcharge);
-    	items.add(ModItems.can_luna);
-    	items.add(ModItems.can_breen);
-    	items.add(ModItems.can_bepis);
-    	items.add(ModItems.pudding);
+    public void dropContents(World world, BlockPos pos) {
+        ArrayList<ItemStack> items = getContents(world, pos);
+
+        for (ItemStack item : items) {
+            spawnAsEntity(world, pos, item);
+        }
+    }
+
+    public ArrayList<ItemStack> getContents(World world, BlockPos pos) {
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+
+        int count = getContentAmount(world.rand);
+        for (int i = 0; i < count; i++) {
+            ret.add(getRandomItem(world.rand));
+        }
+
+        return ret;
+    }
+
+    public ItemStack getRandomItem(Random rand) {
+
+        List<ItemStack> items = new ArrayList();
+        for (int a = 0; a < ItemConserve.EnumFoodType.values().length; a++)
+            items.add(new ItemStack(ModItems.canned_conserve, 1, a));
+        items.add(new ItemStack(ModItems.can_smart));
+        items.add(new ItemStack(ModItems.can_creature));
+        items.add(new ItemStack(ModItems.can_redbomb));
+        items.add(new ItemStack(ModItems.can_mrsugar));
+        items.add(new ItemStack(ModItems.can_overcharge));
+        items.add(new ItemStack(ModItems.can_luna));
+        items.add(new ItemStack(ModItems.can_breen));
+        items.add(new ItemStack(ModItems.can_bepis));
+        items.add(new ItemStack(ModItems.pudding));
 
         return items.get(rand.nextInt(items.size()));
-	}
+    }
 
-	@Override
-	public int quantityDropped(IBlockState state, int fortune, Random random) {
-		return 5 + random.nextInt(4);
-	}
+    public int getContentAmount(Random rand) {
+        return 5 + rand.nextInt(4);
+    }
 
-	@Override
-	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-		return layer == BlockRenderLayer.CUTOUT;
-	}
+    @Override
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.CUTOUT;
+    }
 
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
+    }
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public boolean isBlockNormalCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public boolean isNormalCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public boolean isNormalCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return false;
-	}
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
 
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
 }

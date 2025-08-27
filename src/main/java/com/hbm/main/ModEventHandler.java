@@ -33,6 +33,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.ItemModRevive;
 import com.hbm.items.armor.ItemModShackles;
+import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
@@ -256,6 +257,15 @@ public class ModEventHandler {
                 e.player.inventoryContainer.detectAndSendChanges();
         }
     }
+    // TODO: implement
+//    @SubscribeEvent
+//    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
+//        if(event.getStack().getItem() == ModItems.canned_conserve && EnumUtil.grabEnumSafely(
+//                ItemConserve.EnumFoodType.class, event.getStack().getItemDamage()) == ItemConserve.EnumFoodType.JIZZ)
+//            AdvancementManager.grantAchievement(event.player, AdvancementManager.achC20_5);
+//        if(event.getStack().getItem() == Items.SLIME_BALL)
+//            AdvancementManager.grantAchievement(event.player, AdvancementManager.achSlimeball);
+//    }
 
     public boolean canWear(Entity entity) {
         return entity instanceof EntityZombie || entity instanceof EntitySkeleton || entity instanceof EntityVillager || entity instanceof EntityIronGolem;
