@@ -1,6 +1,8 @@
 package com.hbm.lib;
 
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockResourceStone;
 import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
@@ -22,6 +24,7 @@ import com.hbm.world.feature.BedrockOre;
 import com.hbm.world.feature.DepthDeposit;
 import com.hbm.world.feature.NTMFlowers;
 import com.hbm.world.feature.OilSpot;
+import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.generator.JungleDungeonStructure;
 import com.hbm.world.generator.MeteorDungeonStructure;
@@ -124,6 +127,9 @@ public class HbmWorldGen implements IWorldGenerator {
             DungeonToolbox.generateOre(world, rand, i, j, 4, 64, 20, 10, ModBlocks.gas_explosive, Blocks.AIR);
         }
 
+        if(WorldConfig.alexandriteSpawn > 0 && rand.nextInt(WorldConfig.alexandriteSpawn) == 0)
+            DungeonToolbox.generateOre(world, rand, i, j, 1, 3, 10, 5, ModBlocks.ore_alexandrite);
+
         //Depth ore
         if (dimID == 0) {
             DepthDeposit.generateConditionOverworld(world, i, 0, 3, j, 5, 0.6D, ModBlocks.cluster_depth_iron, rand, 24);
@@ -178,10 +184,12 @@ public class HbmWorldGen implements IWorldGenerator {
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.cinnabarSpawn.get(dimID)), 4, 8, 16, ModBlocks.ore_cinnabar);
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.cobaltSpawn.get(dimID)), 4, 4, 8, ModBlocks.ore_cobalt);
 
-        DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.ironClusterSpawn.get(dimID)), 6, 15, 45, ModBlocks.cluster_iron);
+        DungeonToolbox.generateOre(world, rand, i, j, parseInt(WorldConfig.ironClusterSpawn), 6, 15, 45, ModBlocks.cluster_iron);
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.titaniumClusterSpawn.get(dimID)), 6, 15, 30, ModBlocks.cluster_titanium);
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.aluminiumClusterSpawn.get(dimID)), 6, 15, 35, ModBlocks.cluster_aluminium);
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.copperClusterSpawn.get(dimID)), 6, 15, 20, ModBlocks.cluster_copper);
+
+        DungeonToolbox.generateOre(world, rand, i, j, parseInt(WorldConfig.limestoneSpawn), 6, 15, 20, ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.LIMESTONE.ordinal()));
 
         if (WorldConfig.newBedrockOres) {
 
@@ -193,9 +201,6 @@ public class HbmWorldGen implements IWorldGenerator {
             }
 
         }
-
-        //Stone ores
-        //DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.malachiteSpawn.get(dimID)), 16, 6, 40, ModBlocks.ore_malachite);
 
         //Special ores
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.reiiumSpawn.get(dimID)), 3, 14, 18, ModBlocks.ore_reiium);
@@ -299,11 +304,13 @@ public class HbmWorldGen implements IWorldGenerator {
             int randPosX = i + rand.nextInt(16);
             int randPosZ = j + rand.nextInt(16);
 
-            for (int v = 5; v >= -5; v--) {
-                for (int w = 5; w >= -5; w--) {
-                    for (int y = 6; y >= 0; y--) {
-                        if (isBedrock(world, new BlockPos(randPosX + w, y, randPosZ + v))) {
-                            world.setBlockState(new BlockPos(randPosX + w, y, randPosZ + v), ModBlocks.ore_bedrock_oil.getDefaultState());
+            for(int x = -4; x <= 4; x++) {
+                for(int y = 0; y <= 4; y++) {
+                    for(int z = -4; z <= 4; z++) {
+                        if(Math.abs(x) + Math.abs(y) + Math.abs(z) <= 6) {
+                            if (isBedrock(world, new BlockPos(randPosX + x, y, randPosZ + z))) {
+                                world.setBlockState(new BlockPos(randPosX + x, y, randPosZ + z), ModBlocks.ore_bedrock_oil.getDefaultState());
+                            }
                         }
                     }
                 }
@@ -546,16 +553,19 @@ public class HbmWorldGen implements IWorldGenerator {
             if (dimMeteorStructure > 0 && rand.nextInt(dimMeteorStructure) == 0) {
                 int x = i + rand.nextInt(16);
                 int z = j + rand.nextInt(16);
+                int y = 12;
 
-                MeteorDungeonStructure.INSTANCE.generate(world, rand, new BlockPos(x, 12, z));
+                new MeteorDungeonStructure(CellularDungeonFactory.meteor, y)
+                        .generate(world, rand, new BlockPos(x, y, z), true);
 
                 if (GeneralConfig.enableDebugMode)
                     MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at x=" + x + " y=10 z=" + z);
 
-                int y = world.getHeight(x, z);
-                int columnY = y;
+                int columnY = world.getHeight(x, z);
                 for (int y1 = y + 1; y1 > 1; y1--) {
-                    if (!world.getBlockState(new BlockPos(x, y1, z)).getBlock().isReplaceable(world, new BlockPos(x, y1, z)) && world.getBlockState(new BlockPos(x, y1, z)).getBlock().isOpaqueCube(world.getBlockState(new BlockPos(x, y1, z)))) {
+                    BlockPos check = new BlockPos(x, y1, z);
+                    IBlockState state = world.getBlockState(check);
+                    if (!state.getBlock().isReplaceable(world, check) && state.isOpaqueCube()) {
                         columnY = y1 + 1;
                         break;
                     }
@@ -565,18 +575,17 @@ public class HbmWorldGen implements IWorldGenerator {
                     world.setBlockState(new BlockPos(x, columnY + f, z), ModBlocks.meteor_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
                 world.setBlockState(new BlockPos(x, columnY + 3, z), ModBlocks.meteor_brick_chiseled.getDefaultState());
 
-                int sx, sz;
                 for (int f = 0; f < 10; f++) {
-
-                    sx = x + (int) (rand.nextGaussian() * 4);
-                    sz = z + (int) (rand.nextGaussian() * 4);
+                    int sx = x + (int) (rand.nextGaussian() * 4);
+                    int sz = z + (int) (rand.nextGaussian() * 4);
                     if (x == sx && sz == z) continue;
                     y = world.getHeight(sx, sz);
 
-                    if (world.getBlockState(new BlockPos(sx, y - 1, sz)).isSideSolid(world, new BlockPos(sx, y - 1, sz), EnumFacing.UP)) {
-                        world.setBlockState(new BlockPos(sx, y, sz), Blocks.SKULL.getDefaultState().withProperty(BlockSkull.FACING, EnumFacing.UP));
-                        TileEntitySkull skull = (TileEntitySkull) world.getTileEntity(new BlockPos(sx, y, sz));
-
+                    BlockPos below = new BlockPos(sx, y - 1, sz);
+                    if (world.getBlockState(below).isSideSolid(world, below, EnumFacing.UP)) {
+                        BlockPos skullPos = new BlockPos(sx, y, sz);
+                        world.setBlockState(skullPos, Blocks.SKULL.getDefaultState().withProperty(BlockSkull.FACING, EnumFacing.UP));
+                        TileEntitySkull skull = (TileEntitySkull) world.getTileEntity(skullPos);
                         if (skull != null) skull.setSkullRotation(rand.nextInt(16));
                     }
                 }
@@ -642,12 +651,12 @@ public class HbmWorldGen implements IWorldGenerator {
             }
         }
 
-        if (rand.nextInt(25) == 0) {
+        if(WorldConfig.oilSpawn > 0 && rand.nextInt(WorldConfig.oilSpawn) == 0) {
             int randPosX = i + rand.nextInt(16);
             int randPosY = rand.nextInt(25);
             int randPosZ = j + rand.nextInt(16);
 
-            new OilBubble(7 + rand.nextInt(9)).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
+            new OilBubble(10 + rand.nextInt(7), randPosY).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
         }
 
         if (GeneralConfig.enableNITAN) {

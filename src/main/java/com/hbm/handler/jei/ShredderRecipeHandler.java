@@ -1,44 +1,48 @@
 package com.hbm.handler.jei;
 
-import com.hbm.inventory.recipes.ShredderRecipes.ShredderRecipe;
+import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.lib.RefStrings;
-import com.hbm.util.I18nUtil;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.*;
-import mezz.jei.api.gui.IDrawableAnimated.StartDirection;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipe> {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-	public static final ResourceLocation gui_rl = new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_nei_shredder.png");
-	
-	protected final IDrawable background;
-	protected final IDrawableStatic progressStatic;
-	protected final IDrawableAnimated progressAnimated;
-	protected final IDrawableStatic powerStatic;
-	protected final IDrawableAnimated powerAnimated;
-	
-	public ShredderRecipeHandler(IGuiHelper help) {
-		background = help.createDrawable(gui_rl, 6, 15, 145, 55);
-		
-		progressStatic = help.createDrawable(gui_rl, 100, 119, 23, 16);
-		progressAnimated = help.createAnimatedDrawable(progressStatic, 48, StartDirection.LEFT, false);
-		
-		powerStatic = help.createDrawable(gui_rl, 36, 86, 16, 52);
-		powerAnimated = help.createAnimatedDrawable(powerStatic, 480, StartDirection.TOP, true);
+public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipeHandler.ShredderRecipeWrapper> {
+	private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_nei_shredder.png");
+	public static final String UID = "shredding";
+
+	private final IDrawable background;
+	private final IDrawableAnimated powerBar;
+	private final IDrawableAnimated progressBar;
+
+	public ShredderRecipeHandler(IGuiHelper helper) {
+		this.background = helper.createDrawable(GUI_TEXTURE, 5, 11, 166, 65);
+
+		IDrawableStatic powerDrawable = helper.createDrawable(GUI_TEXTURE, 36, 86, 16, 52);
+		this.powerBar = helper.createAnimatedDrawable(powerDrawable, 480, IDrawableAnimated.StartDirection.BOTTOM, true);
+
+		IDrawableStatic progressDrawable = helper.createDrawable(GUI_TEXTURE, 100, 118, 24, 16);
+		this.progressBar = helper.createAnimatedDrawable(progressDrawable, 48, IDrawableAnimated.StartDirection.LEFT, false);
 	}
-	
+
 	@Override
 	public String getUid() {
-		return JEIConfig.SHREDDER;
+		return UID;
 	}
 
 	@Override
 	public String getTitle() {
-		return I18nUtil.resolveKey("tile.machine_shredder.name");
+		return "Shredder";
 	}
 
 	@Override
@@ -50,25 +54,94 @@ public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipe> {
 	public IDrawable getBackground() {
 		return background;
 	}
-	
+
+	@Override
+	public void setRecipe(IRecipeLayout recipeLayout, ShredderRecipeWrapper recipeWrapper, IIngredients ingredients) {
+		IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
+
+		// Input and Output
+		stacks.init(0, true, 39, 24);   // input at (83 - 27 - 18 + 1, 5 + 18 + 1) -> (39, 24)
+		stacks.init(1, false, 129, 24); // output at (83 + 27 + 18 + 1, 5 + 18 + 1) -> (129, 24)
+
+		stacks.set(ingredients);
+
+		// Two blade "fuel" slots (top and bottom), cycling through available blades
+		int bladeTopIndex = 2;
+		int bladeBottomIndex = 3;
+
+		stacks.init(bladeTopIndex, true, 84, 6);   // 83 + 1, 5 + 1
+		stacks.init(bladeBottomIndex, true, 84, 42); // 83 + 1, 5 + 36 + 1
+
+		List<ItemStack> blades = recipeWrapper.getFuels();
+		if (!blades.isEmpty()) {
+			stacks.set(bladeTopIndex, blades);
+			stacks.set(bladeBottomIndex, blades);
+		}
+	}
+
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		progressAnimated.draw(minecraft, 79, 20);
-		powerAnimated.draw(minecraft, 2, 2);
+		powerBar.draw(minecraft, 3, 6);     // 83 - (18 * 4) - 9 + 1, 6
+		progressBar.draw(minecraft, 80, 23); // 83 - 3, 5 + 18
 	}
 
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, ShredderRecipe recipeWrapper, IIngredients ingredients) {
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		
-		guiItemStacks.init(0, true, 37, 19);
-		guiItemStacks.init(1, false, 127, 19);
-		guiItemStacks.init(2, true, 82, 1);
-		guiItemStacks.init(3, true, 82, 37);
-		
-		guiItemStacks.set(ingredients);
-		guiItemStacks.set(2, JeiRecipes.getBlades());
-		guiItemStacks.set(3, JeiRecipes.getBlades());
+	public static List<ShredderRecipeWrapper> getRecipes() {
+		List<ShredderRecipeWrapper> list = new ArrayList<>();
+
+		List<ItemStack> blades = new ArrayList<>();
+		for (ItemStack blade : JeiRecipes.getBlades()) {
+			if (blade != null && !blade.isEmpty()) {
+				blades.add(blade.copy());
+			}
+		}
+
+		Map<Object, Object> recipes = ShredderRecipes.getShredderRecipes();
+		for (Map.Entry<Object, Object> e : recipes.entrySet()) {
+			Object key = e.getKey();
+			Object val = e.getValue();
+
+			if (!(key instanceof RecipesCommon.ComparableStack) || !(val instanceof ItemStack)) continue;
+
+			ItemStack input = ((RecipesCommon.ComparableStack) key).toStack();
+			ItemStack output = ((ItemStack) val).copy();
+
+			if (input == null || input.isEmpty() || output.isEmpty()) continue;
+
+			list.add(new ShredderRecipeWrapper(input, output, blades));
+		}
+
+		return list;
 	}
 
+	public static class ShredderRecipeWrapper implements IRecipeWrapper {
+		private final ItemStack input;
+		private final ItemStack output;
+		private final List<ItemStack> fuels;
+
+		public ShredderRecipeWrapper(ItemStack input, ItemStack output, List<ItemStack> fuels) {
+			this.input = input.copy();
+			this.input.setCount(1);
+			this.output = output.copy();
+			this.fuels = new ArrayList<>();
+			for (ItemStack f : fuels) {
+				if (f != null && !f.isEmpty()) {
+					this.fuels.add(f.copy());
+				}
+			}
+		}
+
+		@Override
+		public void getIngredients(IIngredients ingredients) {
+			ingredients.setInput(VanillaTypes.ITEM, input);
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+		}
+
+		public List<ItemStack> getFuels() {
+			return fuels;
+		}
+
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+		}
+	}
 }

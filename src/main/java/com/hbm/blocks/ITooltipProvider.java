@@ -2,6 +2,8 @@ package com.hbm.blocks;
 
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 
@@ -16,5 +18,9 @@ public interface ITooltipProvider {
 		} else {
 			list.add(I18nUtil.resolveKey("desc.tooltip.hold", "LSHIFT"));
 		}
+	}
+
+	default EnumRarity getRarity(ItemStack stack) {
+		return EnumRarity.COMMON;
 	}
 }

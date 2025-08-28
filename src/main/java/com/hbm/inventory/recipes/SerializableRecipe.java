@@ -65,6 +65,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new ReformingRecipes());
         recipeHandlers.add(new RotaryFurnaceRecipes());
+        recipeHandlers.add(new ShredderRecipes());
         recipeHandlers.add(new SolderingRecipes());
         recipeHandlers.add(new SolidificationRecipes());
         recipeHandlers.add(new ParticleAcceleratorRecipes());

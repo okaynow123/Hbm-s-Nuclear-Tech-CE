@@ -21,7 +21,7 @@ public class HazardTypeHot extends HazardTypeBase {
 
 		final boolean wetOrReacher = HazardHelper.isHoldingReacher(target) || target.isWet() ;
 		if(RadiationConfig.disableHot || wetOrReacher) return;
-
+		if(target instanceof EntityPlayer player && player.capabilities.isCreativeMode) return;
 		target.setFire((int) Math.ceil(level)*hazardRate);
 	}
 

@@ -24,6 +24,7 @@ public class WorldConfig {
 	public static int gasbubbleSpawn = 4;
 	public static int explosivebubbleSpawn = 0;
 	public static int cobaltSpawn = 2;
+	public static int oilSpawn = 100;
 	public static boolean newBedrockOres = true;
 	public static int dunaOilSpawn = 100;
 	public static int eveGasSpawn = 100;
@@ -32,6 +33,10 @@ public class WorldConfig {
 	public static int ironClusterSpawn = 4;
 	public static int titaniumClusterSpawn = 2;
 	public static int aluminiumClusterSpawn = 3;
+	public static int copperClusterSpawn = 4;
+	public static int alexandriteSpawn = 100;
+
+	public static int limestoneSpawn = 1;
 
 	public static int netherUraniumuSpawn = 8;
 	public static int netherTungstenSpawn = 10;
@@ -42,6 +47,13 @@ public class WorldConfig {
 	public static int netherCobaltSpawn = 2;
 
 	public static int endTikiteSpawn = 8;
+
+	public static boolean enableHematite = true;
+	public static boolean enableMalachite = true;
+	public static boolean enableBauxite = true;
+
+	public static boolean enableSulfurCave = true;
+	public static boolean enableAsbestosCave = true;
 
 	public static int radioStructure = 500;
 	public static int antennaStructure = 750;
@@ -100,6 +112,8 @@ public class WorldConfig {
 		oilcoalSpawn = convertToInt(CompatibilityConfig.oilcoalSpawn.get(0));
 		gassshaleSpawn = convertToInt(CompatibilityConfig.gassshaleSpawn.get(0));
 		explosivebubbleSpawn = convertToInt(CompatibilityConfig.explosivebubbleSpawn.get(0));
+		alexandriteSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.20_alexandriteSpawnRate", "Spawns an alexandrite vein every nTH chunk", 100);
+		oilSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.21_oilSpawnRate", "Spawns an oil bubble every nTH chunk", 100);
 		gasbubbleSpawn = convertToInt(CompatibilityConfig.gasbubbleSpawn.get(0));
 		cinnabarSpawn = convertToInt(CompatibilityConfig.cinnabarSpawn.get(0));
 		cobaltSpawn = convertToInt(CompatibilityConfig.cobaltSpawn.get(0));
@@ -109,6 +123,9 @@ public class WorldConfig {
 		ironClusterSpawn = convertToInt(CompatibilityConfig.ironClusterSpawn.get(0));
 		titaniumClusterSpawn = convertToInt(CompatibilityConfig.titaniumClusterSpawn.get(0));
 		aluminiumClusterSpawn = convertToInt(CompatibilityConfig.aluminiumClusterSpawn.get(0));
+		copperClusterSpawn = convertToInt(CompatibilityConfig.copperClusterSpawn.get(0));
+
+		limestoneSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.L02_limestoneSpawn", "Amount of limestone block veins per chunk", 1);
 
 		netherUraniumuSpawn = convertToInt(CompatibilityConfig.netherUraniumSpawn.get(-1));
 		netherTungstenSpawn = convertToInt(CompatibilityConfig.netherTungstenSpawn.get(-1));
@@ -119,6 +136,13 @@ public class WorldConfig {
 		netherCobaltSpawn = convertToInt(CompatibilityConfig.netherCobaltSpawn.get(-1));
 
 		endTikiteSpawn = convertToInt(CompatibilityConfig.endTixiteSpawn.get(1));
+
+		enableHematite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L00_enableHematite", "Toggles hematite deposits", true);
+		enableMalachite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L01_enableMalachite", "Toggles malachite deposits", true);
+		enableBauxite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L02_enableBauxite", "Toggles bauxite deposits", true);
+
+		enableSulfurCave = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.C00_enableSulfurCave", "Toggles sulfur caves", true);
+		enableAsbestosCave = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.C01_enableAsbestosCave", "Toggles asbestos caves", true);
 
 
 		radioStructure = convertToInt(CompatibilityConfig.radioStructure.get(0));

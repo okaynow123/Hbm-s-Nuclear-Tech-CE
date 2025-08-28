@@ -2,6 +2,7 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.dim.SolarSystem;
 import com.hbm.handler.jei.transfer.*;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon;
@@ -141,6 +142,7 @@ public class JEIConfig implements IModPlugin {
     private ExposureChamberHandler exposureChamberHandler;
     private CombinationHandler combinationHandler;
     private SawmillHandler sawmillHandler;
+    private ShredderRecipeHandler shredderHandler;
     private VacuumRecipeHandler vacuumHandler;
     private ZirnoxRecipeHandler zirnoxHandler;
 
@@ -287,7 +289,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(sawmillHandler.getRecipes(), SAWMILL);
         registry.addRecipes(vacuumHandler.getRecipes(), VACUUM);
         registry.addRecipes(zirnoxHandler.getRecipes(), ZIRNOX);
-        registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
+        registry.addRecipes(shredderHandler.getRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
         registry.addRecipes(JeiRecipes.getBreederRecipes(), BREEDER);
@@ -382,13 +384,41 @@ public class JEIConfig implements IModPlugin {
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rod_euphemium));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.bobmazon_hidden));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.zirnox_destroyed));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_furnace_brick_on));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_misc));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rocket_custom));
+        if(!GeneralConfig.enableDebugMode) {
+            blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.obj_tester));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.test_render));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_debug));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.gun_debug));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.keypad_test));
+            // TODO
+            // WIP so removed it from JEI
+            for(int i = 0; i < SolarSystem.Body.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.full_drive, 1, i));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_capsule_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_1));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_3));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_6));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_12));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_legs_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_pod_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_station_core_20));
+        }
         if (MainRegistry.polaroidID != 11) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_secret));
             // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ams_core_thingy));
         }
-        //Th3_Sl1ze: gladly we DON'T have old dummy blocks now.. and un-fucking-gladly..
-        //TODO: fix the newly-old ported dummyfied machines
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_uf6));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_puf6));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_vault));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_blast));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_plate_compact_launcher));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_compact_launcher));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_plate_launch_table));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_port_launch_table));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_plate_cargo));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_silo_hatch));
 
 
@@ -407,7 +437,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCategories(
                 new PressRecipeHandler(help),
                 new AlloyFurnaceRecipeHandler(help),
-                new ShredderRecipeHandler(help),
+                shredderHandler = new ShredderRecipeHandler(help),
                 new AssemblerRecipeHandler(help),
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),

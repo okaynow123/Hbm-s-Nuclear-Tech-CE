@@ -15,9 +15,11 @@ import java.util.Random;
 
 public class OilBubble extends AbstractPhasedStructure {
 	public final int radius;
+	private final int y;
 
-	public OilBubble( int radius) {
+	public OilBubble(int radius, int y) {
 		this.radius = radius;
+		this.y = y;
 	}
 
 	@Override
@@ -28,20 +30,21 @@ public class OilBubble extends AbstractPhasedStructure {
 	@Override
 	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
 	}
-
+	// I think that Y pos somehow changes during validation, so keeping it at a fixed position should at least mitigate the issue
+	// or in the best case - fix it
 	@Override
 	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
 		return Arrays.asList(
-				origin.add(-radius, 0, -radius),
-				origin.add(radius, 0, -radius),
-				origin.add(-radius, 0, radius),
-				origin.add(radius, 0, radius)
+				origin.add(-radius, y, -radius),
+				origin.add(radius, y, -radius),
+				origin.add(-radius, y, radius),
+				origin.add(radius, y, radius)
 		);
 	}
 
 	@Override
 	public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
-		OilBubble.spawnOil(world, finalOrigin.getX(), finalOrigin.getY(), finalOrigin.getZ(), this.radius);
+		OilBubble.spawnOil(world, finalOrigin.getX(), this.y, finalOrigin.getZ(), this.radius);
 	}
 
 	private static void spawnOil(World world, int x, int y, int z, int radius) {

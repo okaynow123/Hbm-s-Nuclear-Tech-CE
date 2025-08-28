@@ -3,13 +3,14 @@ package com.hbm.items.special;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemOreDensityScanner;
 import com.hbm.main.MainRegistry;
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.hbm.util.I18nUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 
@@ -47,7 +48,7 @@ public class ItemBedrockOreBase extends Item {
         for(ItemBedrockOreNew.BedrockOreType type : ItemBedrockOreNew.BedrockOreType.values()) {
             double amount = this.getOreAmount(stack, type);
             String typeName = I18n.format("item.bedrock_ore.type." + type.suffix + ".name");
-            list.add(typeName + ": " + ((int) (amount * 100)) / 100D + " (" + ItemOreDensityScanner.translateDensity(amount) + ChatFormatting.RESET + ")");
+            list.add(typeName + ": " + ((int) (amount * 100)) / 100D + " (" + ItemOreDensityScanner.getColor(amount) + I18nUtil.resolveKey(ItemOreDensityScanner.translateDensity(amount)) + TextFormatting.RESET + ")");
         }
     }
 

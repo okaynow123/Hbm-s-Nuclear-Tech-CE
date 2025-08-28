@@ -38,7 +38,6 @@ import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.*;
-import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
 import com.hbm.lib.HBMSoundHandler;
@@ -56,6 +55,8 @@ import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
+import com.hbm.world.feature.OreCave;
+import com.hbm.world.feature.OreLayer3D;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.phased.PhasedStructureGenerator;
@@ -394,8 +395,6 @@ public class MainRegistry {
         DamageResistanceHandler.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
-        ShredderRecipes.registerShredder();
-        ShredderRecipes.registerOverrides();
         ExplosionNukeGeneric.loadSoliniumFromFile();
         CyclotronRecipes.register();
         HadronRecipes.register();
@@ -432,6 +431,11 @@ public class MainRegistry {
             World.MAX_ENTITY_RADIUS = 5;
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_gneiss.getDefaultState(), 0.01D, 5, 8, 30)); //DecorateBiomeEvent.Pre
         MinecraftForge.EVENT_BUS.register(new SchistStratum(ModBlocks.stone_resource.getDefaultState().withProperty(BlockResourceStone.META, BlockEnums.EnumStoneType.HEMATITE.ordinal()), 0.02D, 5.5, 5, 45)); //DecorateBiomeEvent.Pre
+        if(WorldConfig.enableSulfurCave) new OreCave(ModBlocks.stone_resource, 0).setThreshold(1.5D).setRangeMult(20).setYLevel(30).setMaxRange(20).withFluid(ModBlocks.sulfuric_acid_block);	//sulfur
+        if(WorldConfig.enableAsbestosCave) new OreCave(ModBlocks.stone_resource, 1).setThreshold(1.75D).setRangeMult(20).setYLevel(25).setMaxRange(20);											//asbestos
+        if(WorldConfig.enableHematite) new OreLayer3D(ModBlocks.stone_resource, BlockEnums.EnumStoneType.HEMATITE.ordinal()).setScaleH(0.04D).setScaleV(0.25D).setThreshold(230);
+        if(WorldConfig.enableBauxite) new OreLayer3D(ModBlocks.stone_resource, BlockEnums.EnumStoneType.BAUXITE.ordinal()).setScaleH(0.03D).setScaleV(0.15D).setThreshold(300);
+        if(WorldConfig.enableMalachite) new OreLayer3D(ModBlocks.stone_resource, BlockEnums.EnumStoneType.MALACHITE.ordinal()).setScaleH(0.1D).setScaleV(0.15D).setThreshold(275);
 
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();

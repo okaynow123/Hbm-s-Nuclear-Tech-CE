@@ -6,6 +6,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.IPersistentInfoProvider;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IPersistentNBT;
@@ -14,9 +15,9 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
@@ -37,9 +38,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MachineCapacitor extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
     public static final PropertyDirection FACING = BlockDirectional.FACING;
@@ -177,12 +183,14 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
     }
 
     @AutoRegister
-    public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable {
+    public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable, CompatHandler.OCComponent {
 
         public long power;
         protected long maxPower;
         public long powerReceived;
         public long powerSent;
+        public long lastPowerReceived;
+        public long lastPowerSent;
 
         public TileEntityCapacitor() { }
 
@@ -194,36 +202,38 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         public void update() {
             if(!world.isRemote) {
 
-                EnumFacing opp = EnumFacing.byIndex(this.getBlockMetadata());
-                EnumFacing dir = opp.getOpposite();
+                ForgeDirection opp = ForgeDirection.getOrientation(this.getBlockMetadata());
+                ForgeDirection dir = opp.getOpposite();
 
-                BlockPos posOff = new BlockPos(pos.getX() + dir.getXOffset(), pos.getY() + dir.getYOffset(), pos.getZ() + dir.getZOffset());
+                BlockPos pos = new BlockPos(this.pos.add(dir.offsetX, dir.offsetY, dir.offsetZ));
 
                 boolean didStep = false;
-                EnumFacing last = null;
+                ForgeDirection last = null;
 
-                while(world.getBlockState(posOff).getBlock() == ModBlocks.capacitor_bus) {
-                    EnumFacing current = EnumFacing.byIndex(world.getBlockState(posOff).getBlock().getMetaFromState(world.getBlockState(posOff)));
+                while(world.getBlockState(pos).getBlock() == ModBlocks.capacitor_bus) {
+                    ForgeDirection current = ForgeDirection.getOrientation(world.getBlockState(pos).getValue(FACING).getIndex());
                     if(!didStep) last = current;
                     didStep = true;
 
                     if(last != current) {
-                        posOff = null;
+                        pos = null;
                         break;
                     }
 
-                    posOff = posOff.offset(current);
+                    pos = pos.offset(current.toEnumFacing());
                 }
 
-                if(posOff != null && last != null) {
-                    this.tryUnsubscribe(world, posOff.getX(), posOff.getY(), posOff.getZ());
-                    this.tryProvide(world, posOff.getX(), posOff.getY(), posOff.getZ(), ForgeDirection.getOrientation(last));
+                if(pos != null && last != null) {
+                    this.tryUnsubscribe(world, pos.getX(), pos.getY(), pos.getZ());
+                    this.tryProvide(world, pos.getX(), pos.getY(), pos.getZ(), last);
                 }
 
-                this.trySubscribe(world, this.pos.getX() + opp.getXOffset(), this.pos.getY() + opp.getYOffset(), this.pos.getZ() + opp.getZOffset(), ForgeDirection.getOrientation(opp));
+                this.trySubscribe(world, this.pos.getX() + opp.offsetX, this.pos.getY() + opp.offsetY, this.pos.getZ() + opp.offsetZ, opp);
 
                 networkPackNT(15);
 
+                this.lastPowerSent = powerSent;
+                this.lastPowerReceived = powerReceived;
                 this.powerSent = 0;
                 this.powerReceived = 0;
             }
@@ -295,7 +305,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
         @Override
         public boolean canConnect(ForgeDirection dir) {
-            return dir == ForgeDirection.getOrientation(world.getBlockState(pos).getBlock().getMetaFromState(world.getBlockState(pos))).getOpposite();
+            return dir == ForgeDirection.getOrientation(world.getBlockState(pos).getValue(FACING).getIndex());
         }
 
         @Override
@@ -325,6 +335,70 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
             nbt.setLong("power", power);
             nbt.setLong("maxPower", maxPower);
             return super.writeToNBT(nbt);
+        }
+
+        // opencomputer
+        @Override
+        @Optional.Method(modid = "OpenComputers")
+        public String getComponentName() {
+            return "capacitor";
+        }
+
+        @Callback(direct = true)
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] getEnergy(Context context, Arguments args) {
+            return new Object[] {power};
+        }
+
+        @Callback(direct = true)
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] getMaxEnergy(Context context, Arguments args) {
+            return new Object[] {maxPower};
+        }
+
+        @Callback(direct = true)
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] getEnergySent(Context context, Arguments args) {
+            return new Object[] {lastPowerReceived};
+        }
+
+        @Callback(direct = true)
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] getEnergyReceived(Context context, Arguments args) { return new Object[] {lastPowerSent}; }
+
+        @Callback(direct = true)
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] getInfo(Context context, Arguments args) {
+            return new Object[] {power, maxPower, lastPowerReceived, lastPowerSent};
+        }
+
+        @Override
+        @Optional.Method(modid = "OpenComputers")
+        public String[] methods() {
+            return new String[] {
+                    "getEnergy",
+                    "getMaxEnergy",
+                    "getEnergySent",
+                    "getEnergyReceived",
+                    "getInfo"
+            };
+        }
+        @Override
+        @Optional.Method(modid = "OpenComputers")
+        public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+            switch(method) {
+                case ("getEnergy"):
+                    return getEnergy(context, args);
+                case ("getMaxEnergy"):
+                    return getMaxEnergy(context, args);
+                case ("getEnergySent"):
+                    return getEnergySent(context, args);
+                case ("getEnergyReceived"):
+                    return getEnergyReceived(context, args);
+                case ("getInfo"):
+                    return getEnergyReceived(context, args);
+            }
+            throw new NoSuchMethodException();
         }
     }
 

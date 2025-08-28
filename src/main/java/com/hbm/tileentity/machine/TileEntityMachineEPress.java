@@ -4,20 +4,21 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMachineEPress;
 import com.hbm.inventory.gui.GUIMachineEPress;
+import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.items.machine.ItemStamp;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.I18nUtil;
-import io.netty.buffer.ByteBuf; // Required import
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -84,6 +85,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 	@Override
 	public void update() {
 		if (!world.isRemote) {
+			this.updateConnections();
 			power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
 
 			boolean canProcess = this.canProcess();
@@ -248,6 +250,12 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 		if (type == UpgradeType.SPEED) {
 			info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_DELAY, "-" + (50 * level / 3) + "%"));
 		}
+	}
+
+	private void updateConnections() {
+
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 	}
 
 	@Override

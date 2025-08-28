@@ -13,7 +13,6 @@ import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.*;
 import com.hbm.entity.particle.*;
-import com.hbm.entity.projectile.EntityCombineBall;
 import com.hbm.entity.projectile.EntityDischarge;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
@@ -78,7 +77,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.particle.ParticleFirework.Spark;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -195,17 +193,9 @@ public class ClientProxy extends ServerProxy {
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
-
-        RenderingRegistry.registerEntityRenderingHandler(EntityCombineBall.class, (RenderManager man) -> {
-            return new RenderSnowball<EntityCombineBall>(man, ModItems.energy_ball, Minecraft.getMinecraft().getRenderItem()) {
-                @Override
-                public void doRender(EntityCombineBall entity, double x, double y, double z, float entityYaw, float partialTicks) {
-                    GlStateManager.disableLighting();
-                    super.doRender(entity, x, y, z, entityYaw, partialTicks);
-                    GlStateManager.enableLighting();
-                }
-            };
-        });
+        // TODO: replace it with EntityCombineBallNT
+        /*RenderingRegistry.registerEntityRenderingHandler(EntityCombineBall.class, (RenderManager man) -> {
+        });*/
         RenderingRegistry.registerEntityRenderingHandler(EntityDischarge.class, ElectricityRenderer.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityGrenadeGeneric.class, (RenderManager man) -> {
             return new RenderSnowball<EntityGrenadeGeneric>(man, ModItems.grenade_generic, Minecraft.getMinecraft().getRenderItem());

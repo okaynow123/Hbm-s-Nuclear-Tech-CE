@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class ConstructionHandler extends JEIUniversalHandler {
 
     public ConstructionHandler(IGuiHelper helper) {
-        super(helper, JEIConfig.CONSTRUCTION, "Construction",
+        super(helper, JEIConfig.CONSTRUCTION, "jei.construction",
                 new ItemStack[]{
                         new ItemStack(ModItems.acetylene_torch),
                         new ItemStack(ModItems.blowtorch),

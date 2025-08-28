@@ -570,11 +570,9 @@ public class ResourceManager {
 	public static final IModelCustom docking_port = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/docking_port.obj")).asVBO();
 
 	public static final IModelCustom mp_t_10_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_kerosene.obj")).asVBO();
-	public static final IModelCustom mp_t_10_kerosene_tec = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_kerosene_tec.obj")).asVBO();
 	public static final IModelCustom mp_t_10_solid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_solid.obj")).asVBO();
 	public static final IModelCustom mp_t_10_xenon = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_xenon.obj")).asVBO();
 	public static final IModelCustom mp_t_15_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_15_kerosene.obj")).asVBO();
-	public static final IModelCustom mp_t_15_kerosene_tec = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_15_kerosene_tec.obj")).asVBO();
 	public static final IModelCustom mp_t_15_kerosene_dual = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_15_kerosene_dual.obj")).asVBO();
 	public static final IModelCustom mp_t_15_kerosene_triple = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_15_kerosene_triple.obj")).asVBO();
 	public static final IModelCustom mp_t_15_solid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_15_solid.obj")).asVBO();
@@ -594,7 +592,6 @@ public class ResourceManager {
 	public static final IModelCustom mp_s_15_flat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_15_flat.obj")).asVBO();
 	public static final IModelCustom mp_s_15_thin = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_15_thin.obj")).asVBO();
 	public static final IModelCustom mp_s_15_soyuz = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_15_soyuz.obj")).asVBO();
-	public static final IModelCustom mp_s_20 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_s_20.obj")).asVBO();
 	public static final IModelCustom rp_s_20_leggy = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_s_20_leggy.obj")).asVBO();
 	public static final IModelCustom rp_s_20_leggy_deployed = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_s_20_leggy_deployed.obj")).asVBO();
 
@@ -625,7 +622,6 @@ public class ResourceManager {
 	public static final IModelCustom mp_w_15_balefire = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_15_balefire.obj")).asVBO();
 	public static final IModelCustom mp_w_15_turbine = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_15_turbine.obj")).asVBO();
 	public static final IModelCustom mp_w_15_mirv = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_15_mirv.obj")).asVBO();
-	public static final IModelCustom mp_w_20 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_20.obj")).asVBO();
 	public static final IModelCustom mp_w_fairing = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_w_fairing.obj")).asVBO();
 
 	//Anti Mass Spectrometer

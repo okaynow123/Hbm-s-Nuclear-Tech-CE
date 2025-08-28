@@ -38,7 +38,7 @@ public class HazardRegistry {
 	//CS137		            30a		β−	020.00Rad/s	Spicy
 	//AU198		            64h		β−	500.00Rad/s	2 much spice :(
 	//PB209		             3h		β−	10,000.00Rad/s mama mia my face is melting off
-	//AT209		             5h		β+	like 7.5k or sth idk bruv
+	//AT209		             5h		β+	like 7.5k or sth idk bruv`
 	//PO210		           138d		α	075.00Rad/s	Spicy
 	//RA226		         1,600a		α	007.50Rad/s
 	//AC227		            22a		β−	030.00Rad/s Spicy
@@ -225,6 +225,9 @@ public class HazardRegistry {
 		HazardSystem.register(new ItemStack(sellafield_3, 1, 0), makeData(RADIATION, 4F));
 		HazardSystem.register(new ItemStack(sellafield_4, 1, 0), makeData(RADIATION, 5F));
 		HazardSystem.register(new ItemStack(sellafield_core, 1, 0), makeData(RADIATION, 10F));
+
+		HazardSystem.register(new ItemStack(ModBlocks.ore_sellafield_radgem), makeData(RADIATION, 25F));
+		HazardSystem.register(new ItemStack(ModItems.gem_rad), makeData(RADIATION, 25F));
 
 
 

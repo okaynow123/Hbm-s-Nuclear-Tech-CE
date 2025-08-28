@@ -58,10 +58,10 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
 		if(WorldConfig.meteorStructure > 0 && rand.nextInt(WorldConfig.meteorStructure) == 0 && biome != Biomes.OCEAN && biome != Biomes.DEEP_OCEAN && biome != BiomeGenBaseLaythe.laytheOcean) {
 			int px = x + rand.nextInt(16) + 8;
 			int pz = z + rand.nextInt(16) + 8;
-			
-			MeteorDungeonStructure.INSTANCE.generate(world, rand, new BlockPos(px, 10, pz));
-			
-			if(GeneralConfig.enableDebugMode)
+
+            new MeteorDungeonStructure(CellularDungeonFactory.meteor, 10).generate(world, rand, new BlockPos(px, 10, pz), true);
+
+            if(GeneralConfig.enableDebugMode)
 				MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at " + px + " 10 " + pz);
 			
 			int y = world.getHeight(px, pz);

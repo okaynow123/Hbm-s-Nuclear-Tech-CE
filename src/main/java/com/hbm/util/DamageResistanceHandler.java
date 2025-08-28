@@ -130,7 +130,7 @@ public class DamageResistanceHandler {
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
         registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F));
-        registerSet(ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, ModItems.zirconium_legs, new ResistanceStats()
+        registerSet(null, null, ModItems.zirconium_legs, null, new ResistanceStats()
                 .setOther(0F, 1F)); //What?
                          //MetalloloM: *Yes*
         registerSet(ModItems.dnt_helmet, ModItems.dnt_plate, ModItems.dnt_legs, ModItems.dnt_boots, new ResistanceStats());
