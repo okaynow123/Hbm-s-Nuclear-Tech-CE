@@ -3,6 +3,7 @@ package com.hbm.entity.effect;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
+import com.hbm.explosion.ExplosionNukeRayParallelized;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.saveddata.AuxSavedData;
@@ -18,8 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
@@ -121,7 +122,8 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 						drainTick();
 					}
 					if (stompingDone && drainFinished) {
-						secondPassDrain();
+						ExplosionNukeRayParallelized.secondPass((WorldServer) world, drainedList);
+						drainedList = null;
 						setDead();
 					}
 				}
@@ -398,7 +400,7 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 					Block block = storage.get(xLocal, yLocal, zLocal).getBlock();
 					if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
 						BlockPos drainPos = new BlockPos(xGlobal, yGlobal, zGlobal);
-						if (world.getTileEntity(drainPos) != null) world.removeTileEntity(drainPos);
+						world.removeTileEntity(drainPos);
 						storage.set(xLocal, yLocal, zLocal, Blocks.AIR.getDefaultState());
 						chunkModified = true;
 						this.drainedList.add(drainPos);
@@ -416,22 +418,6 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 		if (orderedDrainChunks.isEmpty() && drainMap.isEmpty()) {
 			drainFinished = true;
 		}
-	}
-
-	private void secondPassDrain() {
-		if (drainedList == null || drainedList.isEmpty()) return;
-		Set<ChunkPos> modifiedChunks = new HashSet<>();
-		for (BlockPos pos : drainedList) {
-			world.notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
-			world.checkLightFor(EnumSkyBlock.SKY, pos);
-			world.checkLightFor(EnumSkyBlock.BLOCK, pos);
-			modifiedChunks.add(new ChunkPos(pos));
-		}
-		for (ChunkPos cp : modifiedChunks) {
-			world.markBlockRangeForRenderUpdate(cp.x << 4, 0, cp.z << 4, (cp.x << 4) | 15, WORLD_HEIGHT - 1, (cp.z << 4) | 15);
-		}
-		drainedList.clear();
-		drainedList = null;
 	}
 
 	@Override

@@ -107,7 +107,6 @@ public class PacketDispatcher {
 		wrapper.registerMessage(ControlPanelUpdatePacket.Handler.class, ControlPanelUpdatePacket.class, i++, Side.CLIENT);
 // 		wrapper.registerMessage(ControlPanelLinkerServerPacket.Handler.class, ControlPanelUpdatePacket.class, i++, Side.SERVER);
 //		wrapper.registerMessage(ControlPanelLinkerClientPacket.Handler.class, ControlPanelUpdatePacket.class, i++, Side.CLIENT);
-		wrapper.registerMessage(SetSubChunkAirPacket.Handler.class, SetSubChunkAirPacket.class, i++, Side.CLIENT);
 		wrapper.registerMessage(HbmCapabilityPacket.Handler.class, HbmCapabilityPacket.class, i++, Side.CLIENT);
 		wrapper.registerMessage(SerializableRecipePacket.Handler.class, SerializableRecipePacket.class, i++, Side.CLIENT);
 		wrapper.registerMessage(PlayerSoundPacket.Handler.class, PlayerSoundPacket.class, i++, Side.CLIENT);

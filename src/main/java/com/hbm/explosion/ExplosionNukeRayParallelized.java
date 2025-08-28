@@ -4,28 +4,28 @@ import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.interfaces.IExplosionRay;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.SetSubChunkAirPacket;
 import com.hbm.util.ConcurrentBitSet;
 import com.hbm.util.SubChunkKey;
 import com.hbm.util.SubChunkSnapshot;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
+import net.minecraft.network.play.server.SPacketChunkData;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -85,7 +85,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    private final World world;
+    private final WorldServer world;
     private final double explosionX, explosionY, explosionZ;
     private final int originX, originY, originZ;
     private final int radius;
@@ -117,7 +117,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     }
 
     public ExplosionNukeRayParallelized(World world, double x, double y, double z, int strength, int radius) {
-        this.world = world;
+        this.world = (WorldServer) world;
         this.explosionX = x;
         this.explosionY = y;
         this.explosionZ = z;
@@ -321,48 +321,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     bs.clear(startBit, endBit + 1);
                     continue;
                 }
-                boolean hasSurvivor = false;
-                int clearBit = bs.nextClearBit(startBit);
-                while (clearBit >= 0 && clearBit <= endBit) {
-                    int yGlobal = WORLD_HEIGHT - 1 - (clearBit >>> 8);
-                    int lx = (clearBit >>> 4) & 0xF;
-                    int lz = clearBit & 0xF;
-                    int ly = yGlobal - (subY << 4);
-                    if (storage.get(lx, ly, lz).getBlock() != Blocks.AIR) {
-                        hasSurvivor = true;
-                        break;
-                    }
-                    clearBit = bs.nextClearBit(clearBit + 1);
-                }
-
-                if (!hasSurvivor) {
-                    chunkModified = true;
-                    IBlockState airState = Blocks.AIR.getDefaultState();
-                    for (int lx = 0; lx < 16; lx++) {
-                        for (int ly = 0; ly < 16; ly++) {
-                            for (int lz = 0; lz < 16; lz++) {
-                                int xGlobal = (cp.x << 4) + lx;
-                                int yGlobal = (subY << 4) + ly;
-                                int zGlobal = (cp.z << 4) + lz;
-                                BlockPos pos = new BlockPos(xGlobal, yGlobal, zGlobal);
-                                world.removeTileEntity(pos);
-                                if (storage.get(lx, ly, lz).getBlock() != Blocks.AIR) {
-                                    destroyedList.add(pos);
-                                }
-                                storage.set(lx, ly, lz, airState);
-                            }
-                        }
-                    }
-                    storage.recalculateRefCounts();
-                    bs.clear(startBit, endBit + 1);
-
-                    double sendRange = this.radius * 2.0;
-                    NetworkRegistry.TargetPoint target =
-                            new NetworkRegistry.TargetPoint(world.provider.getDimension(), explosionX, explosionY, explosionZ, sendRange);
-                    PacketDispatcher.wrapper.sendToAllAround(new SetSubChunkAirPacket(cp.x, cp.z, subY), target);
-
-                    continue;
-                }
 
                 int bit = bs.nextSetBit(startBit);
 
@@ -384,7 +342,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                         world.removeTileEntity(pos);
                         storage.set(xLocal, yLocal, zLocal, Blocks.AIR.getDefaultState());
                         chunkModified = true;
-                        world.notifyBlockUpdate(pos, oldState, Blocks.AIR.getDefaultState(), 3);
                         this.destroyedList.add(pos);
                     }
                     bs.clear(bit);
@@ -399,26 +356,35 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
         if (orderedChunks.isEmpty() && destructionMap.isEmpty()) {
-            secondPass();
+            secondPass(world, destroyedList);
+            destroyedList = null;
             destroyFinished = true;
             if (pool != null) pool.shutdown();
         }
     }
 
-    private void secondPass() {
+    public static void secondPass(WorldServer world, List<BlockPos> destroyedList) {
         if (destroyedList == null || destroyedList.isEmpty()) return;
-        Set<ChunkPos> modifiedChunks = new HashSet<>();
+        Long2IntOpenHashMap sectionMaskByChunk = new Long2IntOpenHashMap();
         for (BlockPos pos : destroyedList) {
             world.notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
-            world.checkLightFor(EnumSkyBlock.SKY, pos);
-            world.checkLightFor(EnumSkyBlock.BLOCK, pos);
-            modifiedChunks.add(new ChunkPos(pos));
+            long key = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
+            int mask = sectionMaskByChunk.getOrDefault(key, 0);
+            mask |= 1 << (pos.getY() >>> 4);
+            sectionMaskByChunk.put(key, mask);
         }
-        for (ChunkPos cp : modifiedChunks) {
-            world.markBlockRangeForRenderUpdate(cp.x << 4, 0, cp.z << 4, (cp.x << 4) | 15, WORLD_HEIGHT - 1, (cp.z << 4) | 15);
+        for (Long2IntMap.Entry e : sectionMaskByChunk.long2IntEntrySet()) {
+            long longKey = e.getLongKey();
+            int cx = (int) (longKey & 0xFFFFFFFFL);
+            int cz = (int) (longKey >>> 32);
+            int mask = e.getIntValue();
+            Chunk chunk = world.getChunk(cx, cz);
+            chunk.generateSkylightMap();
+            chunk.resetRelightChecks();
+            PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(cx, cz);
+            if (entry != null) entry.sendPacket(new SPacketChunkData(chunk, mask));
         }
         destroyedList.clear();
-        destroyedList = null;
     }
 
     @Override
