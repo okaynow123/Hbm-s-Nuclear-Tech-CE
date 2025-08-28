@@ -31,7 +31,6 @@ public class CoriumFinite extends BlockFluidFinite {
         super(fluid, material);
         this.setTranslationKey(s);
         this.setRegistryName(s);
-        setQuantaPerBlock(5);
         this.tickRate = 30;
         this.setTickRandomly(true);
         displacements.put(this, false);
@@ -40,7 +39,6 @@ public class CoriumFinite extends BlockFluidFinite {
 
     @Override
     @NotNull
-    @SuppressWarnings("deprecation")
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
                                             EntityLivingBase placer, EnumHand hand) {
         return getDefaultState().withProperty(LEVEL, Math.max(0, quantaPerBlock - 1));
