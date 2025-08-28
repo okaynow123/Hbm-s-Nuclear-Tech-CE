@@ -3,6 +3,7 @@ package com.hbm.items.armor;
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.ModItems;
+import com.hbm.items.gear.ArmorFSB;
 import com.hbm.render.model.ModelArmorEnvsuit;
 import com.hbm.util.Vec3NT;
 import net.minecraft.init.MobEffects;
@@ -54,11 +55,11 @@ public class ArmorEnvsuit extends ArmorFSBPowered {
 			return;
 
 		/// SPEED ///
-		Multimap multimap = super.getAttributeModifiers(EntityEquipmentSlot.CHEST, stack);
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(EntityEquipmentSlot.CHEST, stack);
 		multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(speed, "SQUIRREL SPEED", 0.1, 0));
 		player.getAttributeMap().removeAttributeModifiers(multimap);
 
-		if(this.hasFSBArmor(player)) {
+		if(hasFSBArmor(player)) {
 
 			if(player.isSprinting()) player.getAttributeMap().applyAttributeModifiers(multimap);
 
@@ -80,7 +81,7 @@ public class ArmorEnvsuit extends ArmorFSBPowered {
 				player.motionZ += vec.z;
 			} else {
 				boolean canRemoveNightVision = true;
-				ItemStack helmet = player.inventory.armorItemInSlot(3);
+				ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 				ItemStack helmetMod = ArmorModHandler.pryMod(helmet, ArmorModHandler.helmet_only); // Get the modification!
 				if (helmetMod != ItemStack.EMPTY && helmetMod.getItem() instanceof ItemModNightVision) {
 					canRemoveNightVision = false;
