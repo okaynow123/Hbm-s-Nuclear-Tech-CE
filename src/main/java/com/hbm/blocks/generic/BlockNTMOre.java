@@ -6,6 +6,7 @@ import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -128,5 +129,12 @@ public class BlockNTMOre extends BlockOre {
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
         if (entity instanceof EntityLivingBase)
             HazardSystem.applyHazards(this, (EntityLivingBase)entity);
+    }
+    // Th3_Sl1ze: I'm not sure this doesn't cause charred wood to be able to burn...
+    @Override
+    public Material getMaterial(IBlockState state)
+    {
+        if(this == ModBlocks.waste_planks) return Material.WOOD;
+        else return super.getMaterial(state);
     }
 }
