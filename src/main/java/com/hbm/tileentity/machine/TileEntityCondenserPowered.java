@@ -76,7 +76,7 @@ public class TileEntityCondenserPowered extends TileEntityCondenser implements I
 					this.spin -= 360F;
 					this.lastSpin -= 360F;
 				}
-				
+				//MetalloloM: Suggestion - add operating sound from TileEntityChungus
 				if(world.getTotalWorldTime() % 4 == 0) {
 					ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
 					world.spawnParticle(EnumParticleTypes.CLOUD, pos.getX() + 0.5 + dir.offsetX * 1.5, pos.getY() + 1.5, pos.getZ() + 0.5 + dir.offsetZ * 1.5, dir.offsetX * 0.1, 0, dir.offsetZ * 0.1);
