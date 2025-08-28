@@ -69,17 +69,17 @@ public class ItemFolderPacket implements IMessage {
 				} else if (item instanceof ItemCassette) {
 					tryMakeItem(p, stack, ModItems.plate_polymer, "plateSteel");
 				} else if (item == ModItems.stamp_stone_plate || item == ModItems.stamp_stone_wire || item == ModItems.stamp_stone_circuit) {
-					tryConvert(p, ModItems.stamp_stone_flat, stack);
+					tryConvert(p, ModItems.stamp_stone_flat, stack.getItem());
 				} else if (item == ModItems.stamp_iron_plate || item == ModItems.stamp_iron_wire || item == ModItems.stamp_iron_circuit) {
-					tryConvert(p, ModItems.stamp_iron_flat, stack);
+					tryConvert(p, ModItems.stamp_iron_flat, stack.getItem());
 				} else if (item == ModItems.stamp_steel_plate || item == ModItems.stamp_steel_wire || item == ModItems.stamp_steel_circuit) {
-					tryConvert(p, ModItems.stamp_steel_flat, stack);
+					tryConvert(p, ModItems.stamp_steel_flat, stack.getItem());
 				} else if (item == ModItems.stamp_titanium_plate || item == ModItems.stamp_titanium_wire || item == ModItems.stamp_titanium_circuit) {
-					tryConvert(p, ModItems.stamp_titanium_flat, stack);
+					tryConvert(p, ModItems.stamp_titanium_flat, stack.getItem());
 				} else if (item == ModItems.stamp_obsidian_plate || item == ModItems.stamp_obsidian_wire || item == ModItems.stamp_obsidian_circuit) {
-					tryConvert(p, ModItems.stamp_obsidian_flat, stack);
+					tryConvert(p, ModItems.stamp_obsidian_flat, stack.getItem());
 				} else if (item == ModItems.stamp_desh_plate || item == ModItems.stamp_desh_wire || item == ModItems.stamp_desh_circuit) {
-					tryConvert(p, ModItems.stamp_desh_flat, stack);
+					tryConvert(p, ModItems.stamp_desh_flat, stack.getItem());
 				}
 			});
 
@@ -118,11 +118,15 @@ public class ItemFolderPacket implements IMessage {
 				player.dropItem(output, true);
 		}
 
-		private void tryConvert(EntityPlayer player, Item target, ItemStack result) {
-			if (Library.hasInventoryItem(player.inventory, target)) {
-				Library.consumeInventoryItem(player.inventory, target);
-				if (!player.inventory.addItemStackToInventory(result.copy()))
-					player.dropItem(result, true);
+		private void tryConvert(EntityPlayer player, Item target, Item result) {
+			for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				ItemStack stack = player.inventory.getStackInSlot(i);
+				if(stack.getItem() == target) {
+					Library.consumeInventoryItem(player.inventory, target);
+					ItemStack drop = new ItemStack(result, 1, stack.getItemDamage());
+					if (!player.inventory.addItemStackToInventory(drop))
+						player.dropItem(drop, true);
+				}
 			}
 		}
 	}
