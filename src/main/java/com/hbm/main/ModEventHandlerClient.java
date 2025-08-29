@@ -117,7 +117,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -1064,25 +1063,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
     public void onArmorRenderEvent(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
         ModelPlayer model = event.getRenderer().getMainModel();
-        boolean hasHelmet   = isFSBArmor(player, EntityEquipmentSlot.HEAD);
-        boolean hasChest    = isFSBArmor(player, EntityEquipmentSlot.CHEST);
-        boolean hasLeggings = isFSBArmor(player, EntityEquipmentSlot.LEGS);
-        boolean hasBoots    = isFSBArmor(player, EntityEquipmentSlot.FEET);
 
-        if (hasHelmet) {
-            model.bipedHeadwear.showModel = false;
-        }
-
-        if (hasChest) {
-            model.bipedBodyWear.showModel = false;
-            model.bipedLeftArmwear.showModel = false;
-            model.bipedRightArmwear.showModel = false;
-        }
-
-        if (hasLeggings || hasBoots) {
-            model.bipedLeftLegwear.showModel = false;
-            model.bipedRightLegwear.showModel = false;
-        }
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, player.isSneaking() ? 1.1 : 1.4, 0);
         GL11.glRotated(180, 0, 0, 1);
@@ -1109,8 +1090,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         GlStateManager.popMatrix();
     }
 
-    private boolean isFSBArmor(EntityPlayer player, EntityEquipmentSlot slot) {
-        ItemStack stack = player.inventory.armorItemInSlot(slot.getIndex());
+    private boolean isFSBArmor(ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() instanceof ArmorFSB;
     }
 
@@ -1788,10 +1768,32 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             evt.setCanceled(true);
             return;
         }
-        // event.setCanceled(true);
-        AbstractClientPlayer player = (AbstractClientPlayer) evt.getEntityPlayer();
+        EntityPlayer plr = evt.getEntityPlayer();
+        AbstractClientPlayer player = (AbstractClientPlayer) plr;
 
         ModelPlayer renderer = evt.getRenderer().getMainModel();
+        for (int i = 0; i < 4; i++) {
+
+            ItemStack armor = plr.inventory.armorItemInSlot(i);
+            boolean hasHelmet = isFSBArmor(armor);
+            boolean hasChest = isFSBArmor(armor);
+            boolean hasLeggings = isFSBArmor(armor);
+            boolean hasBoots = isFSBArmor(armor);
+            if (hasHelmet) {
+                renderer.bipedHeadwear.showModel = false;
+            }
+
+            if (hasChest) {
+                renderer.bipedBodyWear.showModel = false;
+                renderer.bipedLeftArmwear.showModel = false;
+                renderer.bipedRightArmwear.showModel = false;
+            }
+
+            if (hasLeggings || hasBoots) {
+                renderer.bipedLeftLegwear.showModel = false;
+                renderer.bipedRightLegwear.showModel = false;
+            }
+        }
 
         if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
             renderer.rightArmPose = ArmPose.BOW_AND_ARROW;
