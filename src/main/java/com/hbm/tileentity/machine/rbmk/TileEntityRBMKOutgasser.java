@@ -44,7 +44,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	public FluidTankNTM gas;
 	public double progress = 0;
 	public int duration = 10000;
-	private ItemStack previousStack;
+	private ItemStack previousStack = ItemStack.EMPTY;
 
 	public TileEntityRBMKOutgasser() {
 		super(2);
