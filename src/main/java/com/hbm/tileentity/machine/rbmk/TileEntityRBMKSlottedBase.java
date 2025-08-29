@@ -12,35 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase {
 
-	public ItemStackHandler inventory;
+	public RBMKSlottedItemStackHandler inventory;
 
 	public TileEntityRBMKSlottedBase(int scount) {
-        inventory = new ItemStackHandler(scount){
-			@Override
-			protected void onContentsChanged(int slot) {
-				markDirty();
-				super.onContentsChanged(slot);
-			}
-			
-			@Override
-			public boolean isItemValid(int slot, ItemStack itemStack) {
-				return isItemValidForSlot(slot, itemStack);
-			}
-
-			@Override
-			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-				if(canInsertItem(slot, stack))
-					return super.insertItem(slot, stack, simulate);
-				return stack;
-			}
-
-			@Override
-			public ItemStack extractItem(int slot, int amount, boolean simulate) {
-				if(canExtractItem(slot, inventory.getStackInSlot(slot), amount))
-					return super.extractItem(slot, amount, simulate);
-				return ItemStack.EMPTY;
-			}
-		};
+        inventory = new RBMKSlottedItemStackHandler(scount);
 	}
 
 	public int getGaugeScaled(int i, FluidTank tank) {
@@ -94,5 +69,44 @@ public abstract class TileEntityRBMKSlottedBase extends TileEntityRBMKActiveBase
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory) : 
 			super.getCapability(capability, facing);
+	}
+
+	public class RBMKSlottedItemStackHandler extends ItemStackHandler {
+		public RBMKSlottedItemStackHandler(int scount) {
+			super(scount);
+		}
+
+		@Override
+		protected void onContentsChanged(int slot) {
+			markDirty();
+			super.onContentsChanged(slot);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack itemStack) {
+			return isItemValidForSlot(slot, itemStack);
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			if(canInsertItem(slot, stack))
+				return super.insertItem(slot, stack, simulate);
+			return stack;
+		}
+
+		public ItemStack insertItemUnchecked(int slot, ItemStack stack, boolean simulate) {
+			return super.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if(canExtractItem(slot, inventory.getStackInSlot(slot), amount))
+				return super.extractItem(slot, amount, simulate);
+			return ItemStack.EMPTY;
+		}
+
+		public ItemStack extractItemUnchecked(int slot, int amount, boolean simulate) {
+			return super.extractItem(slot, amount, simulate);
+		}
 	}
 }

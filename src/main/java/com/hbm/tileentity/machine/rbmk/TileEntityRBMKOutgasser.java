@@ -145,14 +145,14 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		if(inventory.getStackInSlot(1).isEmpty() || out == null)
 			return true;
 
-		return inventory.insertItem(1, out.copy(), true).isEmpty();
+		return inventory.insertItemUnchecked(1, out.copy(), true).isEmpty();
 	}
 
 
 	private void process() {
 
 		Tuple.Pair<ItemStack, FluidStack> output = RBMKOutgasserRecipes.getOutput(inventory.getStackInSlot(0));
-		this.inventory.getStackInSlot(0).shrink(1);
+		inventory.extractItemUnchecked(0, 1, false);
 		this.progress = 0;
 
 		if(output.getValue() != null) {
@@ -162,10 +162,9 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		ItemStack out = output.getKey();
 
 		if(out != null) {
-			inventory.insertItem(1, out.copy(), false);
+			inventory.insertItemUnchecked(1, out.copy(), false);
 		}
 	}
-	
 	
 	@Override
 	public void onMelt(int reduce) {
@@ -233,11 +232,6 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 		return RBMKOutgasserRecipes.getOutput(itemStack) != null && i == 0;
-	}
-
-	@Override
-	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
-		return true;
 	}
 
 	@Override
