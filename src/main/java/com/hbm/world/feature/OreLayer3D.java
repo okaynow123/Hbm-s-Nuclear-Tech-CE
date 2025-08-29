@@ -70,8 +70,8 @@ public class OreLayer3D {
         if (this.noiseY == null) this.noiseY = new NoiseGeneratorPerlin(new Random(world.getSeed() + 102 + id), 4);
         if (this.noiseZ == null) this.noiseZ = new NoiseGeneratorPerlin(new Random(world.getSeed() + 103 + id), 4);
 
-        int cX = event.getChunkPos().x;
-        int cZ = event.getChunkPos().x;
+        int cX = event.getPos().getX();
+        int cZ = event.getPos().getZ();
 
         for (int x = cX + 8; x < cX + 24; x++) {
             for (int z = cZ + 8; z < cZ + 24; z++) {

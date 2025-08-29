@@ -80,9 +80,9 @@ public class OreCave {
         if (this.noise == null) {
             this.noise = new NoiseGeneratorPerlin(new Random(world.getSeed() + (ore.getID() * 31) + yLevel), 2);
         }
-
-        int cX = event.getChunkPos().x;
-        int cZ = event.getChunkPos().z;
+        // Apparently getChunkPos doesn't work here at all..
+        int cX = event.getPos().getX();
+        int cZ = event.getPos().getZ();
 
         double scale = 0.01D;
 
