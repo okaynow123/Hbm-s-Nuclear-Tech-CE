@@ -4,10 +4,10 @@
 			"item": "skull"
 		},
 		"title": {
-			"translate": "hbm.achievement.radDeath"
+			"translate": "achievement.radDeath"
 		},
 		"description": {
-			"translate": "hbm.achievement.radDeath.desc"
+			"translate": "achievement.radDeath.desc"
 		},
 		"frame": "challenge"
 	},

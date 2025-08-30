@@ -4,10 +4,10 @@
 			"item": "hbm:sat_gerald"
 		},
 		"title": {
-			"translate": "hbm.achievement.horizonsBonus"
+			"translate": "achievement.horizonsBonus"
 		},
 		"description": {
-			"translate": "hbm.achievement.horizonsBonus.desc"
+			"translate": "achievement.horizonsBonus.desc"
 		},
 		"frame": "challenge"
 	},

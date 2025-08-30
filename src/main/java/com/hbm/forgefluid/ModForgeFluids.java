@@ -32,7 +32,8 @@ public class ModForgeFluids {
 	public static Fluid corium_fluid = new CoriumFluid().setDensity(31200).setViscosity(2000).setTemperature(3000);
 	public static Fluid volcanic_lava_fluid = new VolcanicFluid().setLuminosity(15).setDensity(3000).setViscosity(3000).setTemperature(1300);
 	public static Fluid bromine_fluid = new Fluid("bromine_fluid", new ResourceLocation(RefStrings.MODID, "blocks/bromine_still"), new ResourceLocation(RefStrings.MODID, "blocks/bromine_flowing"), null, Color.WHITE).setDensity(3000).setViscosity(3000).setTemperature(273);
-	
+	public static Fluid sulfuric_acid_fluid = new Fluid("sulfuricacid", new ResourceLocation(RefStrings.MODID, "blocks/sulfuric_acid_still"), new ResourceLocation(RefStrings.MODID, "blocks/sulfuric_acid_flowing"), null, Color.WHITE).setDensity(1840).setViscosity(1000).setTemperature(273);
+
 	public static void init() {
 		if(!FluidRegistry.registerFluid(toxic_fluid))
 			toxic_fluid = FluidRegistry.getFluid("toxic_fluid");
@@ -48,6 +49,8 @@ public class ModForgeFluids {
 			volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
 		if(!FluidRegistry.registerFluid(bromine_fluid))
 			bromine_fluid = FluidRegistry.getFluid("bromine_fluid");
+		if (!FluidRegistry.registerFluid(sulfuric_acid_fluid))
+			sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuricacid");
 
 		ModBlocks.toxic_block = new ToxicBlock(ModForgeFluids.toxic_fluid, ModBlocks.fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
 		ModBlocks.radwater_block = new RadWaterBlock(ModForgeFluids.radwater_fluid, ModBlocks.fluidradwater, ModDamageSource.radiation, "radwater_block").setResistance(500F);
@@ -56,6 +59,7 @@ public class ModForgeFluids {
 		ModBlocks.corium_block = new CoriumFinite(corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
 		ModBlocks.volcanic_lava_block = new VolcanicBlock(volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
 		ModBlocks.bromine_block = new BlockFluidClassic(bromine_fluid, Material.WATER).setResistance(500F);
+		ModBlocks.sulfuric_acid_block = new GenericFluidBlock(sulfuric_acid_fluid,  Material.WATER, "sulfuric_acid_block").setDamage(ModDamageSource.acid, 5F).setResistance(500F);
 		toxic_fluid.setBlock(ModBlocks.toxic_block);
 		radwater_fluid.setBlock(ModBlocks.radwater_block);
 		mud_fluid.setBlock(ModBlocks.mud_block);
@@ -63,12 +67,14 @@ public class ModForgeFluids {
 		corium_fluid.setBlock(ModBlocks.corium_block);
 		volcanic_lava_fluid.setBlock(ModBlocks.volcanic_lava_block);
 		bromine_fluid.setBlock(ModBlocks.bromine_block);
+		sulfuric_acid_fluid.setBlock(ModBlocks.sulfuric_acid_block);
 		FluidRegistry.addBucketForFluid(toxic_fluid);
 		FluidRegistry.addBucketForFluid(radwater_fluid);
 		FluidRegistry.addBucketForFluid(mud_fluid);
 		FluidRegistry.addBucketForFluid(schrabidic);
 		FluidRegistry.addBucketForFluid(corium_fluid);
 		FluidRegistry.addBucketForFluid(volcanic_lava_fluid);
+		FluidRegistry.addBucketForFluid(sulfuric_acid_fluid);
 	}
 
 	//Stupid forge reads a bunch of default fluids from NBT when the world loads, which screws up my logic for replacing my fluids with fluids from other mods.
@@ -81,6 +87,7 @@ public class ModForgeFluids {
 		mud_fluid = FluidRegistry.getFluid("mud_fluid");
 		schrabidic = FluidRegistry.getFluid("schrabidic");
 		corium_fluid = FluidRegistry.getFluid("corium_fluid");
+		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuricacid");
 	}
 
 	@SubscribeEvent

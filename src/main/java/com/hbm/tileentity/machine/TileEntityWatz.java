@@ -18,6 +18,7 @@ import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.RadiationSavedData;
@@ -31,6 +32,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -526,10 +528,11 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 		setBrokenColumn(1, ModBlocks.watz_casing, 1, -2, 2);
 		setBrokenColumn(1, ModBlocks.watz_casing, 1, -2, -2);
 
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(50, 50, 50));
+		List<EntityPlayerMP> players = world.getEntitiesWithinAABB(
+				EntityPlayerMP.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(50, 50, 50));
 
-		for(EntityPlayer player : players) {
-			//player.triggerAchievement(MainRegistry.achWatzBoom);
+		for(EntityPlayerMP player : players) {
+			AdvancementManager.grantAchievement(player, AdvancementManager.achWatzBoom);
 		}
 	}
 

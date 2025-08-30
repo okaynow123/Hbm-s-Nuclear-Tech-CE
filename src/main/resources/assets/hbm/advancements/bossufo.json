@@ -4,10 +4,10 @@
 			"item": "hbm:coin_ufo"
 		},
 		"title": {
-			"translate": "hbm.achievement.bossUFO"
+			"translate": "achievement.bossUFO"
 		},
 		"description": {
-			"translate": "hbm.achievement.bossUFO.desc"
+			"translate": "achievement.bossUFO.desc"
 		},
 		"frame": "challenge"
 	},

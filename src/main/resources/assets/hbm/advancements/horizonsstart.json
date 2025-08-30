@@ -4,10 +4,10 @@
 			"item": "hbm:sat_gerald"
 		},
 		"title": {
-			"translate": "hbm.achievement.horizonsStart"
+			"translate": "achievement.horizonsStart"
 		},
 		"description": {
-			"translate": "hbm.achievement.horizonsStart.desc"
+			"translate": "achievement.horizonsStart.desc"
 		}
 	},
 	"parent": "hbm:bossworm",

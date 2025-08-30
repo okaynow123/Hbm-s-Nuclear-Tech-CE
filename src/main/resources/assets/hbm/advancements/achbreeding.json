@@ -1,0 +1,38 @@
+{
+  "parent": "hbm:achrbmk",
+  "display": {
+    "icon": {
+      "item": "hbm:ingot_am_mix"
+    },
+    "title": {
+      "translate": "achievement.breeding"
+    },
+    "description": {
+      "translate": "achievement.breeding.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:nugget_am241"
+          },
+          {
+            "item": "hbm:nugget_am242"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafting"
+    ]
+  ]
+}

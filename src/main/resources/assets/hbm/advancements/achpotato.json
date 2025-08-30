@@ -1,0 +1,35 @@
+{
+  "parent": "hbm:root",
+  "display": {
+    "icon": {
+      "item": "hbm:battery_potatos"
+    },
+    "title": {
+      "translate": "achievement.potato"
+    },
+    "description": {
+      "translate": "achievement.potato.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:battery_potatos"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafting"
+    ]
+  ]
+}

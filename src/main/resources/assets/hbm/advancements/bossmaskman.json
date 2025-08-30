@@ -4,10 +4,10 @@
 			"item": "hbm:coin_maskman"
 		},
 		"title": {
-			"translate": "hbm.achievement.bossMaskman"
+			"translate": "achievement.bossMaskman"
 		},
 		"description": {
-			"translate": "hbm.achievement.bossMaskman.desc"
+			"translate": "achievement.bossMaskman.desc"
 		}
 	},
 	"parent": "hbm:bosscreeper",

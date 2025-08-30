@@ -4,10 +4,10 @@
 			"item": "hbm:coin_creeper"
 		},
 		"title": {
-			"translate": "hbm.achievement.bossCreeper"
+			"translate": "achievement.bossCreeper"
 		},
 		"description": {
-			"translate": "hbm.achievement.bossCreeper.desc"
+			"translate": "achievement.bossCreeper.desc"
 		}
 	},
 	"parent": "hbm:root",

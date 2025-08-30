@@ -1,0 +1,35 @@
+{
+  "parent": "hbm:achburnerpress",
+  "display": {
+    "icon": {
+      "item": "hbm:machine_assembler"
+    },
+    "title": {
+      "translate": "achievement.assembly"
+    },
+    "description": {
+      "translate": "achievement.assembly.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:machine_assembler"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafting"
+    ]
+  ]
+}

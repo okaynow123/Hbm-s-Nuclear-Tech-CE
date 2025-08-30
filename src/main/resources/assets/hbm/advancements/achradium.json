@@ -1,0 +1,35 @@
+{
+  "parent": "hbm:achcentrifuge",
+  "display": {
+    "icon": {
+      "item": "hbm:coffee_radium"
+    },
+    "title": {
+      "translate": "achievement.radium"
+    },
+    "description": {
+      "translate": "achievement.radium.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "eaten": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:coffee_radium"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "eaten"
+    ]
+  ]
+}

@@ -282,11 +282,11 @@ public class GUIScreenBobmazon extends GuiScreen {
 	
 	public enum Requirement {
 
-		STEEL(AdvancementManager.bobMetalworks, "bobmetalworks"),
-		ASSEMBLY(AdvancementManager.bobAssembly, "bobassembly"),
-		CHEMICS(AdvancementManager.bobChemistry, "bobchemistry"),
-		OIL(AdvancementManager.bobOil, "boboil"),
-		NUCLEAR(AdvancementManager.bobNuclear, "bobnuclear"),
+		STEEL(AdvancementManager.achBlastFurnace, "achblastfurnace"),
+		ASSEMBLY(AdvancementManager.achAssembly, "achassembly"),
+		CHEMICS(AdvancementManager.achChemplant, "achchemplant"),
+		OIL(AdvancementManager.achDesh, "achdesh"),
+		NUCLEAR(AdvancementManager.achTechnetium, "achtechnetium"),
 		HIDDEN(AdvancementManager.bobHidden, "bobhidden");
 		
 		private Requirement(Advancement achievement, String advName) {

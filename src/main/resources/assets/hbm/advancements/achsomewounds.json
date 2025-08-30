@@ -10,7 +10,7 @@
 			"translate": "hbm.achievement.someWounds.desc"
 		}
 	},
-	"parent": "hbm:progress_modtable",
+	"parent": "hbm:root",
 	"criteria": {
 		"impossible": {
 			"trigger": "minecraft:impossible"

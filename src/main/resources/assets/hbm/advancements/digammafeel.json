@@ -1,22 +1,29 @@
 {
-	"display": {
-		"icon": {
-			"item": "hbm:digamma_feel"
-		},
-		"title": {
-			"translate": "hbm.achievement.digammaFeel"
-		},
-		"description": {
-			"translate": "hbm.achievement.digammaFeel.desc"
-		}
-	},
-	"parent": "hbm:digammasee",
-	"criteria": {
-		"impossible": {
-			"trigger": "minecraft:impossible"
-		}
-	},
-    "rewards": {
-        "experience": 250
+  "parent": "hbm:digammasee",
+  "display": {
+    "icon": {
+      "item": "hbm:achievement_icon",
+      "data": 4
+    },
+    "title": {
+      "translate": "achievement.digammaFeel"
+    },
+    "description": {
+      "translate": "achievement.digammaFeel.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
     }
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ]
 }

@@ -968,8 +968,6 @@ public class Fluids {
         } else {
             readTraits(config);
         }
-
-
     }
 
     private static void initDefaultFluids(File file) {

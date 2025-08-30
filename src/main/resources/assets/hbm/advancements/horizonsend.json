@@ -4,10 +4,10 @@
 			"item": "hbm:sat_gerald"
 		},
 		"title": {
-			"translate": "hbm.achievement.horizonsEnd"
+			"translate": "achievement.horizonsEnd"
 		},
 		"description": {
-			"translate": "hbm.achievement.horizonsEnd.desc"
+			"translate": "achievement.horizonsEnd.desc"
 		}
 	},
 	"parent": "hbm:horizonsstart",

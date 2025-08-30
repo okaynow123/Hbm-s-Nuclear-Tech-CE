@@ -14,6 +14,7 @@ import com.hbm.command.CommandPacketInfo;
 import com.hbm.command.CommandRadiation;
 import com.hbm.config.*;
 import com.hbm.creativetabs.*;
+import com.hbm.datagen.AdvGen;
 import com.hbm.dim.CommandSpaceTP;
 import com.hbm.dim.SolarSystem;
 import com.hbm.entity.logic.IChunkLoader;
@@ -124,6 +125,7 @@ public class MainRegistry {
     // drinks, kits, tools
     public static CreativeTabs consumableTab = new ConsumableTab(CreativeTabs.getNextID(), "tabConsumable");
 
+    public static StatBase statLegendary;
     public static StatBase statMines;
     public static StatBase statBullets;
     public static int generalOverride = 0;
@@ -440,6 +442,7 @@ public class MainRegistry {
             ModForgeFluids.registerFluidColors();
         }
         proxy.postInit(event);
+        AdvGen.generate();
     }
 
     @EventHandler

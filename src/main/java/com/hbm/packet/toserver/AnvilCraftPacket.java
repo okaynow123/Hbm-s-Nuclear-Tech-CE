@@ -63,12 +63,6 @@ public class AnvilCraftPacket implements IMessage {
 					
 					if(InventoryUtil.doesPlayerHaveAStacks(p, recipe.input, true)) {
 						InventoryUtil.giveChanceStacksToPlayer(p, recipe.output);
-
-						if(recipe.output.get(0).stack.getItem() == Item.getItemFromBlock(ModBlocks.machine_difurnace_off))
-							AdvancementManager.grantAchievement(p, AdvancementManager.bobMetalworks);
-						if(recipe.output.get(0).stack.getItem() == Item.getItemFromBlock(ModBlocks.machine_assembler))
-							AdvancementManager.grantAchievement(p, AdvancementManager.bobAssembly);
-						
 					} else {
 						break;
 					}

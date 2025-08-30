@@ -1106,10 +1106,15 @@ public class ModEventHandler {
         EntityPlayer player = event.getPlayer();
         if (event.isCancelable() && event.isCanceled())
             return;
-        if (!(player instanceof EntityPlayerMP))
+        if (!(player instanceof EntityPlayerMP playerMP))
             return;
 
         Block block = event.getState().getBlock();
+
+        if(block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
+            AdvancementManager.grantAchievement(playerMP, AdvancementManager.achStratum);
+            event.setExpToDrop(500);
+        }
 
         if (block == Blocks.COAL_ORE || block == Blocks.COAL_BLOCK || block == ModBlocks.ore_lignite) {
 

@@ -1,23 +1,29 @@
 {
-	"display": {
-		"icon": {
-			"item": "hbm:digamma_kauai_moho"
-		},
-		"title": {
-			"translate": "hbm.achievement.digammaKauaiMoho"
-		},
-		"description": {
-			"translate": "hbm.achievement.digammaKauaiMoho.desc"
-		},
-		"frame": "challenge"
-	},
-	"parent": "hbm:digammaknow",
-	"criteria": {
-		"impossible": {
-			"trigger": "minecraft:impossible"
-		}
-	},
-    "rewards": {
-        "experience": 750
+  "parent": "hbm:digammaknow",
+  "display": {
+    "icon": {
+      "item": "hbm:achievement_icon",
+      "data": 6
+    },
+    "title": {
+      "translate": "achievement.digammaKauaiMoho"
+    },
+    "description": {
+      "translate": "achievement.digammaKauaiMoho.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
     }
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ]
 }

@@ -68,7 +68,7 @@ public class EntitySoyuz extends Entity {
 						world.playSound(null, posX, posY, posZ, HBMSoundHandler.soyuzed, SoundCategory.NEUTRAL, 100, 1.0F);
 					}
 					
-					AdvancementManager.grantAchievement(((EntityPlayer)e), AdvancementManager.soyuz);
+					AdvancementManager.grantAchievement(((EntityPlayer)e), AdvancementManager.achSoyuz);
 				}
 			}
 		}

@@ -559,7 +559,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 50 + 0.5, pos.getY() - 50 + 0.5, pos.getZ() - 50 + 0.5, pos.getX() + 50 + 0.5, pos.getY() + 50 + 0.5, pos.getZ() + 50 + 0.5));
 
 		for(EntityPlayer e : list) {
-			AdvancementManager.grantAchievement(e, AdvancementManager.progress_rbmk_boom);
+			AdvancementManager.grantAchievement(e, AdvancementManager.achRBMKBoom);
 		}
 
 		if(RBMKBase.digamma) {

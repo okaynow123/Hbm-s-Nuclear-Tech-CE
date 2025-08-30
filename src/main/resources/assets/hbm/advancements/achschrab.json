@@ -1,0 +1,38 @@
+{
+  "parent": "hbm:achdesh",
+  "display": {
+    "icon": {
+      "item": "hbm:ingot_schrabidium"
+    },
+    "title": {
+      "translate": "achievement.schrab"
+    },
+    "description": {
+      "translate": "achievement.schrab.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:ingot_schrabidium"
+          },
+          {
+            "item": "hbm:nugget_schrabidium"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafting"
+    ]
+  ]
+}

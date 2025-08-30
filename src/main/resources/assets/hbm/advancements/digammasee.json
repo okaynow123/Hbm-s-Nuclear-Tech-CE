@@ -1,22 +1,29 @@
 {
-	"display": {
-		"icon": {
-			"item": "hbm:digamma_see"
-		},
-		"title": {
-			"translate": "hbm.achievement.digammaSee"
-		},
-		"description": {
-			"translate": "hbm.achievement.digammaSee.desc"
-		}
-	},
-	"parent": "hbm:achomega12",
-	"criteria": {
-		"impossible": {
-			"trigger": "minecraft:impossible"
-		}
-	},
-    "rewards": {
-        "experience": 125
+  "parent": "hbm:root",
+  "display": {
+    "icon": {
+      "item": "hbm:achievement_icon",
+      "data": 3
+    },
+    "title": {
+      "translate": "achievement.digammaSee"
+    },
+    "description": {
+      "translate": "achievement.digammaSee.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
     }
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ]
 }

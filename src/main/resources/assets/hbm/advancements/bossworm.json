@@ -4,10 +4,10 @@
 			"item": "hbm:coin_worm"
 		},
 		"title": {
-			"translate": "hbm.achievement.bossWorm"
+			"translate": "achievement.bossWorm"
 		},
 		"description": {
-			"translate": "hbm.achievement.bossWorm.desc"
+			"translate": "achievement.bossWorm.desc"
 		},
 		"frame": "challenge"
 	},

@@ -405,6 +405,7 @@ public class JEIConfig implements IModPlugin {
             // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ams_core_thingy));
         }
+        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.achievement_icon));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_uf6));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_puf6));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_vault));

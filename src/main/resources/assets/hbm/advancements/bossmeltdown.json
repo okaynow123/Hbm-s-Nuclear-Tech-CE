@@ -4,10 +4,10 @@
 			"item": "hbm:coin_radiation"
 		},
 		"title": {
-			"translate": "hbm.achievement.bossMeltdown"
+			"translate": "achievement.bossMeltdown"
 		},
 		"description": {
-			"translate": "hbm.achievement.bossMeltdown.desc"
+			"translate": "achievement.bossMeltdown.desc"
 		}
 	},
 	"parent": "hbm:bosscreeper",

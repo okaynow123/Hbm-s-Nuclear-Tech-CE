@@ -1,23 +1,28 @@
 {
-	"display": {
-		"icon": {
-			"item": "hbm:sat_foeq"
-		},
-		"title": {
-			"translate": "hbm.achievement.foeq"
-		},
-		"description": {
-			"translate": "hbm.achievement.foeq.desc"
-		},
-		"frame": "challenge"
-	},
-	"parent": "hbm:space",
-	"criteria": {
-		"impossible": {
-			"trigger": "minecraft:impossible"
-		}
-	},
-    "rewards": {
-        "experience": 700
+  "parent": "hbm:achdesh",
+  "display": {
+    "icon": {
+      "item": "hbm:sat_foeq"
+    },
+    "title": {
+      "translate": "achievement.FOEQ"
+    },
+    "description": {
+      "translate": "achievement.FOEQ.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "impossible": {
+      "trigger": "minecraft:impossible"
     }
+  },
+  "requirements": [
+    [
+      "impossible"
+    ]
+  ]
 }

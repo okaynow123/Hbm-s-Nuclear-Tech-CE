@@ -2712,16 +2712,7 @@ public class ModItems {
     public static final Item telepad = new ItemBase("telepad").setCreativeTab(MainRegistry.partsTab);
     public static final Item entanglement_kit = new ItemCustomLore("entanglement_kit").setCreativeTab(MainRegistry.partsTab);
     //Dummy texture items; Note: Use EffectItem to autohide them from JEI
-    public static final Item bob_metalworks = new EffectItem("bob_metalworks").setCreativeTab(null);
-    public static final Item bob_assembly = new EffectItem("bob_assembly").setCreativeTab(null);
-    public static final Item bob_chemistry = new EffectItem("bob_chemistry").setCreativeTab(null);
-    public static final Item bob_oil = new EffectItem("bob_oil").setCreativeTab(null);
-    public static final Item bob_nuclear = new EffectItem("bob_nuclear").setCreativeTab(null);
-    public static final Item digamma_see = new EffectItem("digamma_see").setCreativeTab(null);
-    public static final Item digamma_feel = new EffectItem("digamma_feel").setCreativeTab(null);
-    public static final Item digamma_know = new EffectItem("digamma_know").setCreativeTab(null);
-    public static final Item digamma_kauai_moho = new EffectItem("digamma_kauai_moho").setCreativeTab(null);
-    public static final Item digamma_up_on_top = new EffectItem("digamma_up_on_top").setCreativeTab(null);
+    public static final Item achievement_icon = new ItemEnumMulti("achievement_icon", ItemEnums.EnumAchievementType.class, true, true).setCreativeTab(null);
     public static final Item smoke1 = new EffectItem("smoke1").setCreativeTab(null);
     public static final Item smoke2 = new EffectItem("smoke2").setCreativeTab(null);
     public static final Item smoke3 = new EffectItem("smoke3").setCreativeTab(null);

@@ -1,0 +1,56 @@
+{
+  "parent": "hbm:achpolymer",
+  "display": {
+    "icon": {
+      "item": "hbm:missile_nuclear"
+    },
+    "title": {
+      "translate": "achievement.redBalloons"
+    },
+    "description": {
+      "translate": "achievement.redBalloons.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "crafting": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:missile_nuclear"
+          },
+          {
+            "item": "hbm:missile_nuclear_cluster"
+          },
+          {
+            "item": "hbm:missile_doomsday"
+          },
+          {
+            "item": "hbm:mp_warhead_10_nuclear"
+          },
+          {
+            "item": "hbm:mp_warhead_10_nuclear_large"
+          },
+          {
+            "item": "hbm:mp_warhead_15_nuclear"
+          },
+          {
+            "item": "hbm:mp_warhead_15_nuclear_shark"
+          },
+          {
+            "item": "hbm:mp_warhead_15_boxcar"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crafting"
+    ]
+  ]
+}
