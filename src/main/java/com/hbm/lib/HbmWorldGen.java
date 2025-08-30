@@ -597,9 +597,12 @@ public class HbmWorldGen implements IWorldGenerator {
                     int x = i + rand.nextInt(16);
                     int z = j + rand.nextInt(16);
 
-                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 20, z));
-                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 24, z));
-                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 28, z));
+                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 20)
+                            .generate(world, world.rand, new BlockPos(x, 20, z), true);
+                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 24)
+                            .generate(world, world.rand, new BlockPos(x, 24, z), true);
+                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 28)
+                            .generate(world, world.rand, new BlockPos(x, 28, z), true);
 
                     if (GeneralConfig.enableDebugMode)
                         MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x=" + x + " y=10 z=" + z);

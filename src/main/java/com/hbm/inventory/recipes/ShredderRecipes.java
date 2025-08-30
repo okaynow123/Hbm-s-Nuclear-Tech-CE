@@ -365,12 +365,26 @@ public class ShredderRecipes extends SerializableRecipe {
 		
 		shredderRecipes.remove(new ComparableStack(in));
 	}
-
+	// idk this shit doesn't work for now
 	public static Map<Object, Object> getShredderRecipes() {
+		if (jeiShredderRecipes == null || jeiShredderRecipes.size() != shredderRecipes.size()) {
+			HashMap<Object, Object> map = new HashMap<>();
 
-		//convert the map only once to save on processing power (might be more ram intensive but that can't be THAT bad, right?)
-		if(jeiShredderRecipes == null)
-			jeiShredderRecipes = new HashMap<>(shredderRecipes);
+			for (Map.Entry<ComparableStack, ItemStack> entry : shredderRecipes.entrySet()) {
+				ComparableStack comp = entry.getKey();
+				if (comp == null) continue;
+
+				ItemStack in = comp.toStack();
+				if (in == null || in.isEmpty()) continue;
+
+				ItemStack out = entry.getValue();
+				if (out == null || out.isEmpty()) continue;
+
+				map.put(comp.makeSingular(), out.copy());
+			}
+
+			jeiShredderRecipes = map;
+		}
 
 		return jeiShredderRecipes;
 	}

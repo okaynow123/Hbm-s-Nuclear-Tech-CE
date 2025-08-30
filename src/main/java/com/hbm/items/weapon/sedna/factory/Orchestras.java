@@ -1206,7 +1206,7 @@ public class Orchestras {
                     }
                     if(mop.typeOfHit == mop.typeOfHit.BLOCK) {
                         Block b = entity.world.getBlockState(mop.getBlockPos()).getBlock();
-                        entity.world.playSound(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, new SoundEvent(b.getSoundType().getStepSound().getSoundName()), SoundCategory.PLAYERS,  2F, 0.9F + entity.getRNG().nextFloat() * 0.2F, false);
+                        entity.world.playSound(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, b.getSoundType().getStepSound(), SoundCategory.PLAYERS,  2F, 0.9F + entity.getRNG().nextFloat() * 0.2F, false);
                     }
                 }
             }

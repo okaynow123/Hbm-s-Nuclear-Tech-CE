@@ -4,13 +4,18 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class JungleDungeonStructure extends AbstractPhasedStructure{
-    public static final JungleDungeonStructure INSTANCE = new JungleDungeonStructure();
-    private JungleDungeonStructure() {}
+    private final CellularDungeon dungeon;
+    private final int y;
+
+    public JungleDungeonStructure(CellularDungeon dungeon, int y) {
+        this.dungeon = dungeon;
+        this.y = y;
+    }
 
     @Override
     protected boolean isCacheable() {
@@ -24,6 +29,13 @@ public class JungleDungeonStructure extends AbstractPhasedStructure{
 
     @Override
     public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        return Collections.singletonList(origin);
+        int halfX = (dungeon.dimX * dungeon.width) / 2;
+        int halfZ = (dungeon.dimZ * dungeon.width) / 2;
+        return Arrays.asList(
+                new BlockPos(origin.getX() - halfX, y, origin.getZ() - halfZ),
+                new BlockPos(origin.getX() + halfX, y, origin.getZ() - halfZ),
+                new BlockPos(origin.getX() - halfX, y, origin.getZ() + halfZ),
+                new BlockPos(origin.getX() + halfX, y, origin.getZ() + halfZ)
+        );
     }
 }

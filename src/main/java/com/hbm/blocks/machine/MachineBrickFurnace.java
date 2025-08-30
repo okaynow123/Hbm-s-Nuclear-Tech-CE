@@ -40,6 +40,7 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
                 "machine_furnace_brick_side", blockState ? "machine_furnace_brick_front_on" : "machine_furnace_brick_front_off",
                 "machine_furnace_brick_side", "machine_furnace_brick_side"));
         isActive = blockState;
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
@@ -56,7 +57,13 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         super.onBlockAdded(worldIn, pos, state);
-        this.setDefaultDirection(worldIn, pos, state);
+        if (!keepInventory) {
+            this.setDefaultDirection(worldIn, pos, state);
+        }
+    }
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     private void setDefaultDirection(World world, BlockPos pos, IBlockState state) {
@@ -79,9 +86,6 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        EnumFacing enumfacing = player.getHorizontalFacing().getOpposite();
-        worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
-
         TileEntity te = worldIn.getTileEntity(pos);
         if (stack.hasDisplayName() && te instanceof TileEntityFurnaceBrick) {
             ((TileEntityFurnaceBrick) te).setCustomName(stack.getDisplayName());

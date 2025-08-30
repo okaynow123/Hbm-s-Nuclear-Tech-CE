@@ -137,7 +137,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 	@Override
 	public void bakeModel(ModelBakeEvent event) {
 		try {
-			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
+			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/handheld"));
 			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath);
 			IModel retexturedModel = baseModel.retexture(
 					ImmutableMap.of(

@@ -22,7 +22,6 @@ import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 
 import java.util.function.BiConsumer;
@@ -82,7 +81,7 @@ public class XFactory44 {
         ModItems.gun_henry = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_henry", new GunConfig()
                 .dura(300).draw(15).inspect(23).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(10F).delay(20).reload(25, 11, 14, 8).jam(45).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.rifle")), 1.0F, 1.0F)
+                        .dmg(10F).delay(20).reload(25, 11, 14, 8).jam(45).sound(HBMSoundHandler.fireRifle, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 14).addConfigs(m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
                         .offset(0.75, -0.0625, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_HENRY))
@@ -93,7 +92,7 @@ public class XFactory44 {
         ModItems.gun_heavy_revolver = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_heavy_revolver", new GunConfig()
                 .dura(600).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(15F).delay(14).reload(46).jam(23).sound(new SoundEvent(new ResourceLocation("hbm:weapon.44Shoot")), 1.0F, 1.0F)
+                        .dmg(15F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 6).addConfigs(m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
                         .offset(0.75, -0.0625, -0.3125D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_NOPIP))
@@ -103,7 +102,7 @@ public class XFactory44 {
         ModItems.gun_heavy_revolver_lilmac = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_lilmac", new GunConfig()
                 .dura(31_000).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).scopeTexture(scope_lilmac).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(30F).delay(14).reload(46).jam(23).sound(new SoundEvent(new ResourceLocation("hbm:weapon.44Shoot")), 1.0F, 1.0F)
+                        .dmg(30F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 6).addConfigs(m44_equestrian_pip, m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
                         .offset(0.75, -0.0625, -0.3125D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_NOPIP))
@@ -113,7 +112,7 @@ public class XFactory44 {
         ModItems.gun_heavy_revolver_protege = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_protege", new GunConfig()
                 .dura(31_000).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(30F).delay(14).reload(46).jam(23).sound(new SoundEvent(new ResourceLocation("hbm:weapon.44Shoot")), 1.0F, 0.8F)
+                        .dmg(30F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 0.8F)
                         .mag(new MagazineFullReload(0, 6).addConfigs(m44_equestrian_mn7, m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
                         .offset(0.75, -0.0625, -0.3125D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_NOPIP))
@@ -124,7 +123,7 @@ public class XFactory44 {
         ModItems.gun_hangman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_hangman", new GunConfig()
                 .dura(600).draw(10).inspect(31).inspectCancel(false).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(25F).delay(10).reload(46).jam(23).sound(new SoundEvent(new ResourceLocation("hbm:weapon.44Shoot")), 1.0F, 1.0F)
+                        .dmg(25F).delay(10).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 8).addConfigs(m44_bp, m44_sp, m44_fmj, m44_jhp, m44_ap, m44_express))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_HANGMAN))

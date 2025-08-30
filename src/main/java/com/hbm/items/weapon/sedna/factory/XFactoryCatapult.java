@@ -20,9 +20,7 @@ import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -129,7 +127,7 @@ public class XFactoryCatapult {
         ModItems.gun_fatman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_fatman", new GunConfig()
                 .dura(300).draw(20).inspect(30).crosshair(Crosshair.L_CIRCUMFLEX).hideCrosshair(false)
                 .rec(new Receiver(0)
-                        .dmg(100F).spreadHipfire(0F).delay(10).reload(57).jam(40).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.fatman")), 1.0F, 1.0F)
+                        .dmg(100F).spreadHipfire(0F).delay(10).reload(57).jam(40).sound(HBMSoundHandler.fireFatman, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 1).addConfigs(nuke_standard, nuke_demo, nuke_high, nuke_tots, nuke_hive))
                         .offset(1, -0.0625 * 1.5, -0.1875D).offsetScoped(1, -0.0625 * 1.5, -0.125D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_FATMAN))

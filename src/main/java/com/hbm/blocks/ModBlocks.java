@@ -84,7 +84,6 @@ public class ModBlocks {
 	public static final Block concrete_smooth = new BlockBase(Material.ROCK, "concrete_smooth").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
 	public static final Block concrete_colored = new BlockConcreteColored().setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
 	public static final Block concrete_colored_ext = new BlockConcreteColoredExt(Material.ROCK, SoundType.STONE, "concrete_colored_ext", BlockConcreteColoredExt.EnumConcreteType.class, true, true).setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
-	public static final Block concrete_hazard = new BlockBase(Material.ROCK, "concrete_hazard").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(140.0F);
 
 	public static final Block concrete_asbestos = new BlockOutgas(true, 20, true, "concrete_asbestos").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(1500.0F);
 	public static final Block concrete_pillar = new BlockRotatablePillar(Material.ROCK, "concrete_pillar").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(180.0F);

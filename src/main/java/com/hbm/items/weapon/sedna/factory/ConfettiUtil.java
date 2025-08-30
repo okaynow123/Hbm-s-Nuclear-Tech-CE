@@ -3,6 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.mob.EntityTaintCrab;
 import com.hbm.entity.mob.EntityTeslaCrab;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.AshesCreator;
@@ -14,9 +15,7 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -36,14 +35,14 @@ public class ConfettiUtil {
         int amount = MathHelper.clamp((int) (entity.width * entity.height * entity.width * 25), 5, 50);
         AshesCreator.composeEffect(entity.world, entity, amount, 0.125F);
         SkeletonCreator.composeEffect(entity.world, entity, 1F);
-        entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, new SoundEvent(new ResourceLocation("hbm:weapon.fire.disintegration")), SoundCategory.PLAYERS, 2.0F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
+        entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.fireDisintegration, SoundCategory.PLAYERS, 2.0F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
     }
 
     public static void cremate(EntityLivingBase entity) {
         int amount = MathHelper.clamp((int) (entity.width * entity.height * entity.width * 25), 5, 50);
         AshesCreator.composeEffect(entity.world, entity, amount, 0.125F);
         SkeletonCreator.composeEffect(entity.world, entity, 0.25F);
-        entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, new SoundEvent(new ResourceLocation("hbm:weapon.fire.disintegration")), SoundCategory.PLAYERS, 2.0F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
+        entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.fireDisintegration, SoundCategory.PLAYERS, 2.0F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
     }
 
     public static void gib(EntityLivingBase entity) {

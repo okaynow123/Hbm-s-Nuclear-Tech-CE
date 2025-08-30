@@ -8,16 +8,15 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.SpentCasing;
-import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
+import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -42,7 +41,7 @@ public class XFactory22lr {
         ModItems.gun_am180 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_am180", new GunConfig()
                 .dura(177 * 25).draw(15).inspect(38).crosshair(Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(2F).delay(1).dry(10).auto(true).spread(0.02F).reload(66).jam(30).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.silenced")), 1.0F, 1.0F)
+                        .dmg(2F).delay(1).dry(10).auto(true).spread(0.02F).reload(66).jam(30).sound(HBMSoundHandler.fireSilenced, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 177).addConfigs(p22_sp, p22_fmj, p22_jhp, p22_ap))
                         .offset(1, -0.0625 * 1.5, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_AM180))

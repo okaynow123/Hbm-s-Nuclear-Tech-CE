@@ -6,6 +6,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
@@ -13,8 +14,6 @@ import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -30,7 +29,7 @@ public class XFactory35800 {
         ModItems.gun_aberrator = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator", new GunConfig()
                 .dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(100F).delay(13).dry(21).reload(51).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.aberrator")), 1.0F, 1.0F)
+                        .dmg(100F).delay(13).dry(21).reload(51).sound(HBMSoundHandler.fireAberrator, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 5).addConfigs(p35800))
                         .offset(0.75, -0.0625 * 1.5, -0.1875)
                         .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_NOWEAR_FIRE).recoil(LAMBDA_RECOIL_ABERRATOR))
@@ -41,7 +40,7 @@ public class XFactory35800 {
         ModItems.gun_aberrator_eott = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator_eott",
                 new GunConfig().dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(100F).spreadHipfire(0F).delay(13).dry(21).reload(51).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.aberrator")), 1.0F, 1.0F)
+                                .dmg(100F).spreadHipfire(0F).delay(13).dry(21).reload(51).sound(HBMSoundHandler.fireAberrator, 1.0F, 1.0F)
                                 .mag(new MagazineFullReload(0, 5).addConfigs(p35800))
                                 .offset(0.75, -0.0625 * 1.5, 0.1875)
                                 .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_NOWEAR_FIRE).recoil(LAMBDA_RECOIL_ABERRATOR))
@@ -50,7 +49,7 @@ public class XFactory35800 {
                         .anim(LAMBDA_ABERRATOR).orchestra(Orchestras.ORCHESTRA_ABERRATOR),
                 new GunConfig().dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(100F).spreadHipfire(0F).delay(13).dry(21).reload(51).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.aberrator")), 1.0F, 1.0F)
+                                .dmg(100F).spreadHipfire(0F).delay(13).dry(21).reload(51).sound(HBMSoundHandler.fireAberrator, 1.0F, 1.0F)
                                 .mag(new MagazineFullReload(1, 5).addConfigs(p35800))
                                 .offset(0.75, -0.0625 * 1.5, -0.1875)
                                 .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_NOWEAR_FIRE).recoil(LAMBDA_RECOIL_ABERRATOR))

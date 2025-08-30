@@ -36,7 +36,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -132,7 +131,7 @@ public class XFactoryEnergy {
         ModItems.gun_tesla_cannon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tesla_cannon", new GunConfig()
                 .dura(2_000).draw(10).inspect(33).reloadSequential(true).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
-                        .dmg(35F).delay(20).reload(44).jam(19).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.tesla")), 1.0F, 1.0F)
+                        .dmg(35F).delay(20).reload(44).jam(19).sound(HBMSoundHandler.fireTesla, 1.0F, 1.0F)
                         .mag(new MagazineBelt().addConfigs(energy_tesla, energy_tesla_overcharge))
                         .offset(0.75, 0, -0.375).offsetScoped(0.75, 0, -0.25)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))
@@ -143,7 +142,7 @@ public class XFactoryEnergy {
         ModItems.gun_lasrifle = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lasrifle", new GunConfig()
                 .dura(2_000).draw(10).inspect(26).reloadSequential(true).crosshair(Crosshair.CIRCLE).scopeTexture(scope_luna)
                 .rec(new Receiver(0)
-                        .dmg(50F).delay(8).reload(44).jam(36).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.laser")), 1.0F, 1.0F)
+                        .dmg(50F).delay(8).reload(44).jam(36).sound(HBMSoundHandler.fireLaser, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 24).addConfigs(energy_las, energy_las_overcharge, energy_las_ir))
                         .offset(0.75, -0.0625 * 1.5, -0.1875)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))

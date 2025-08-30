@@ -8,18 +8,18 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.SpentCasing;
+import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
-import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -46,7 +46,7 @@ public class XFactory556mm {
         ModItems.gun_g3 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_g3", new GunConfig()
                 .dura(3_000).draw(10).inspect(33).crosshair(Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(5F).delay(2).auto(true).dry(15).spread(0.0F).reload(50).jam(47).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.assault")), 1.0F, 1.0F)
+                        .dmg(5F).delay(2).auto(true).dry(15).spread(0.0F).reload(50).jam(47).sound(HBMSoundHandler.fireAssault, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 30).addConfigs(r556_sp, r556_fmj, r556_jhp, r556_ap))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_G3))
@@ -57,7 +57,7 @@ public class XFactory556mm {
         ModItems.gun_stg77 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_stg77", new GunConfig()
                 .dura(3_000).draw(10).inspect(125).crosshair(Crosshair.CIRCLE).scopeTexture(scope_lilmac).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(10F).delay(2).dry(15).auto(true).spread(0.0F).reload(46).jam(0).sound(new SoundEvent(new ResourceLocation("hbm:weapon.fire.assault")), 1.0F, 1.0F)
+                        .dmg(10F).delay(2).dry(15).auto(true).spread(0.0F).reload(46).jam(0).sound(HBMSoundHandler.fireAssault, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 30).addConfigs(r556_sp, r556_fmj, r556_jhp, r556_ap))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_STG))
