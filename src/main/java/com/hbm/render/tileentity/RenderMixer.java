@@ -45,7 +45,7 @@ public class RenderMixer extends TileEntitySpecialRenderer<TileEntityMachineMixe
     int totalFill = 0;
     int totalMax = 0;
 
-    for (FluidTankNTM tank : mixer.tanksNew) {
+    for (FluidTankNTM tank : mixer.tanks) {
       if (tank.getTankType() != Fluids.NONE) {
         totalFill += tank.getFill();
         totalMax += tank.getMaxFill();
@@ -59,7 +59,7 @@ public class RenderMixer extends TileEntitySpecialRenderer<TileEntityMachineMixe
       GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
       OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 
-      Color color = new Color(mixer.tanksNew[2].getTankType().getColor());
+      Color color = new Color(mixer.tanks[2].getTankType().getColor());
       GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.75F);
       GlStateManager.translate(0, 1, 0);
       GL11.glScaled(1, (double) totalFill / (double) totalMax * 0.99, 1);

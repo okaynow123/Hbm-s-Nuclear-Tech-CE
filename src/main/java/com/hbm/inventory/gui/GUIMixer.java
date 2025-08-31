@@ -3,14 +3,20 @@ package com.hbm.inventory.gui;
 import com.hbm.inventory.container.ContainerMixer;
 import com.hbm.inventory.recipes.MixerRecipes;
 import com.hbm.lib.RefStrings;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineMixer;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +39,7 @@ public class GUIMixer extends GuiInfoContainer {
 		
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 23, guiTop + 22, 16, 52, mixer.getPower(), mixer.getMaxPower());
 
-		MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanksNew[2].getTankType());
+		MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanks[2].getTankType());
 
 		if(recipes != null && recipes.length > 1) {
 			List<String> label = new ArrayList<>();
@@ -47,10 +53,22 @@ public class GUIMixer extends GuiInfoContainer {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 22, 12, 12, mouseX, mouseY, labelArray);
 		}
 
-		mixer.tanksNew[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 43, guiTop + 23, 7, 52);
-		mixer.tanksNew[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 52, guiTop + 23, 7, 52);
-		mixer.tanksNew[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 117, guiTop + 23, 16, 52);
+		mixer.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 43, guiTop + 23, 7, 52);
+		mixer.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 52, guiTop + 23, 7, 52);
+		mixer.tanks[2].renderTankInfo(this, mouseX, mouseY, guiLeft + 117, guiTop + 23, 16, 52);
 		super.renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
+	protected void mouseClicked(int x, int y, int i) throws IOException {
+		super.mouseClicked(x, y, i);
+		if(guiLeft + 62 <= x && guiLeft + 62 + 12 > x && guiTop + 22 < y && guiTop + 22 + 12 >= y) {
+
+			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+			NBTTagCompound data = new NBTTagCompound();
+			data.setBoolean("toggle", true);
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, mixer.getPos()));
+		}
 	}
 
 	@Override
@@ -75,8 +93,8 @@ public class GUIMixer extends GuiInfoContainer {
 			int j = mixer.progress * 53 / mixer.processTime;
 			drawTexturedModalRect(guiLeft + 62, guiTop + 36, 192, 0, j, 44);
 		}
-		mixer.tanksNew[0].renderTank(guiLeft + 43, guiTop + 23 + 52, this.zLevel, 7, 52);
-		mixer.tanksNew[1].renderTank( guiLeft + 52, guiTop + 23 + 52, this.zLevel, 7, 52);
-		mixer.tanksNew[2].renderTank(guiLeft + 117, guiTop + 23 + 52, this.zLevel, 16, 52);
+		mixer.tanks[0].renderTank(guiLeft + 43, guiTop + 23 + 52, this.zLevel, 7, 52);
+		mixer.tanks[1].renderTank(guiLeft + 52, guiTop + 23 + 52, this.zLevel, 7, 52);
+		mixer.tanks[2].renderTank(guiLeft + 117, guiTop + 23 + 52, this.zLevel, 16, 52);
 	}
 }

@@ -2,20 +2,25 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
-import com.hbm.forgefluid.FFUtils;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.UpgradeManager;
+import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerMixer;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMixer;
 import com.hbm.inventory.recipes.MixerRecipes;
+import com.hbm.inventory.recipes.MixerRecipes.MixerRecipe;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.BobMathUtil;
+import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,20 +30,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.List;
+
 @AutoRegister
-public class TileEntityMachineMixer extends TileEntityMachineBase implements ITickable, IGUIProvider, IFluidStandardTransceiver, IEnergyReceiverMK2, IFFtoNTMF {
+public class TileEntityMachineMixer extends TileEntityMachineBase implements IControlReceiver, ITickable, IGUIProvider, IFluidStandardTransceiver, IEnergyReceiverMK2, IUpgradeInfoProvider, IFluidCopiable {
 
     public static final long maxPower = 10_000;
-    private static boolean converted = false;
-    private final UpgradeManager upgradeManager = new UpgradeManager();
+    private final UpgradeManagerNT upgradeManager;
     public long power;
     public int progress;
     public int processTime;
@@ -46,32 +51,17 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
     public float rotation;
     public float prevRotation;
     public boolean wasOn = false;
-    public FluidTankNTM[] tanksNew;
-    public FluidTank[] tanks;
-    public Fluid outputFluid;
-    public Fluid[] fluids;
+    public FluidTankNTM[] tanks;
     AxisAlignedBB aabb;
     private int consumption = 50;
 
     public TileEntityMachineMixer() {
         super(5, true, true);
-        this.tanksNew = new FluidTankNTM[3];
-        this.tanksNew[0] = new FluidTankNTM(Fluids.NONE, 16_000);
-        this.tanksNew[1] = new FluidTankNTM(Fluids.NONE, 16_000);
-        this.tanksNew[2] = new FluidTankNTM(Fluids.NONE, 24_000);
-
-        this.tanks = new FluidTank[3];
-        this.outputFluid = null;
-        this.tanks[0] = new FluidTank(16_000); //Input 1
-        this.tanks[1] = new FluidTank(16_000); //Input 2
-        this.tanks[2] = new FluidTank(24_000); //Output
-
-        this.fluids = new Fluid[3];
-        this.fluids[0] = Fluids.NONE.getFF();
-        this.fluids[1] = Fluids.NONE.getFF();
-        this.fluids[2] = Fluids.NONE.getFF();
-
-        converted = true;
+        this.upgradeManager = new UpgradeManagerNT(this);
+        this.tanks = new FluidTankNTM[3];
+        this.tanks[0] = new FluidTankNTM(Fluids.NONE, 16_000);
+        this.tanks[1] = new FluidTankNTM(Fluids.NONE, 16_000);
+        this.tanks[2] = new FluidTankNTM(Fluids.NONE, 24_000);
     }
 
     @Override
@@ -82,30 +72,26 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (!converted) {
-                convertAndSetFluids(fluids, tanks, tanksNew);
-                converted = true;
-            }
             this.power = Library.chargeTEFromItems(inventory, 0, power, getMaxPower());
-            tanksNew[2].setType(2, inventory);
+            tanks[2].setType(2, inventory);
 
-            upgradeManager.eval(inventory, 3, 4);
-            int speedLevel = Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3);
-            int powerLevel = Math.min(upgradeManager.getLevel(UpgradeType.POWER), 3);
+            upgradeManager.checkSlots(3, 4);
+            int speedLevel = upgradeManager.getLevel(UpgradeType.SPEED);
+            int powerLevel = upgradeManager.getLevel(UpgradeType.POWER);
             int overLevel = upgradeManager.getLevel(UpgradeType.OVERDRIVE);
 
-            this.consumption = getConsumption();
+            this.consumption = 50;
 
-            this.consumption *= (speedLevel + 1);
-            this.consumption /= (powerLevel + 1);
+            this.consumption += speedLevel * 150;
+            this.consumption -= this.consumption * powerLevel * 0.25;
             this.consumption *= (overLevel * 3 + 1);
 
             for (DirPos pos : getConPos()) {
                 this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-                if (tanksNew[0].getTankType() != Fluids.NONE)
-                    this.trySubscribe(tanksNew[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
-                if (tanksNew[1].getTankType() != Fluids.NONE)
-                    this.trySubscribe(tanksNew[1].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                if (tanks[0].getTankType() != Fluids.NONE)
+                    this.trySubscribe(tanks[0].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                if (tanks[1].getTankType() != Fluids.NONE)
+                    this.trySubscribe(tanks[1].getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             this.wasOn = this.canProcess();
@@ -129,8 +115,8 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
             }
 
             for (DirPos pos : getConPos()) {
-                if (tanksNew[2].getFill() > 0)
-                    this.sendFluid(tanksNew[2], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                if (tanks[2].getFill() > 0)
+                    this.sendFluid(tanks[2], world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             networkPackNT(50);
@@ -159,7 +145,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
         buf.writeInt(recipeIndex);
         buf.writeBoolean(wasOn);
 
-        for (FluidTankNTM fluidTankNTM : tanksNew)
+        for (FluidTankNTM fluidTankNTM : tanks)
             fluidTankNTM.serialize(buf);
     }
 
@@ -172,39 +158,39 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
         recipeIndex = buf.readInt();
         wasOn = buf.readBoolean();
 
-        for (FluidTankNTM fluidTankNTM : tanksNew)
+        for (FluidTankNTM fluidTankNTM : tanks)
             fluidTankNTM.deserialize(buf);
     }
 
     public boolean canProcess() {
 
-        MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(tanksNew[2].getTankType());
+        MixerRecipe[] recipes = MixerRecipes.getOutput(tanks[2].getTankType());
         if (recipes == null || recipes.length <= 0) {
             this.recipeIndex = 0;
             return false;
         }
 
         this.recipeIndex = this.recipeIndex % recipes.length;
-        MixerRecipes.MixerRecipe recipe = recipes[this.recipeIndex];
+        MixerRecipe recipe = recipes[this.recipeIndex];
         if (recipe == null) {
             this.recipeIndex = 0;
             return false;
         }
 
-        tanksNew[0].setTankType(recipe.input1 != null ? recipe.input1.type : Fluids.NONE);
-        tanksNew[1].setTankType(recipe.input2 != null ? recipe.input2.type : Fluids.NONE);
+        tanks[0].setTankType(recipe.input1 != null ? recipe.input1.type : Fluids.NONE);
+        tanks[1].setTankType(recipe.input2 != null ? recipe.input2.type : Fluids.NONE);
 
-        if (recipe.input1 != null && tanksNew[0].getFill() < recipe.input1.fill) return false;
-        if (recipe.input2 != null && tanksNew[1].getFill() < recipe.input2.fill) return false;
+        if (recipe.input1 != null && tanks[0].getFill() < recipe.input1.fill) return false;
+        if (recipe.input2 != null && tanks[1].getFill() < recipe.input2.fill) return false;
 
         /* simplest check would usually go first, but fluid checks also do the setup and we want that to happen even without power */
         if (this.power < getConsumption()) return false;
 
-        if (recipe.output + tanksNew[2].getFill() > tanksNew[2].getMaxFill()) return false;
+        if (recipe.output + tanks[2].getFill() > tanks[2].getMaxFill()) return false;
 
         if (recipe.solidInput != null) {
 
-            if (inventory.getStackInSlot(1) == ItemStack.EMPTY) return false;
+            if (inventory.getStackInSlot(1).isEmpty()) return false;
 
             if (!recipe.solidInput.matchesRecipe(inventory.getStackInSlot(1), true) || recipe.solidInput.getStack().getCount() > inventory.getStackInSlot(1).getCount())
                 return false;
@@ -216,13 +202,14 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 
     protected void process() {
 
-        MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(tanksNew[2].getTankType());
-        MixerRecipes.MixerRecipe recipe = recipes[this.recipeIndex % recipes.length];
+        MixerRecipe[] recipes = MixerRecipes.getOutput(tanks[2].getTankType());
+        MixerRecipe recipe = recipes[this.recipeIndex % recipes.length];
 
-        if (recipe.input1 != null) tanksNew[0].setFill(tanksNew[0].getFill() - recipe.input1.fill);
-        if (recipe.input2 != null) tanksNew[1].setFill(tanksNew[1].getFill() - recipe.input2.fill);
-        if (recipe.solidInput != null) this.inventory.getStackInSlot(1).shrink(recipe.solidInput.getStack().getCount());
-        tanksNew[2].setFill(tanksNew[2].getFill() + recipe.output);
+        if (recipe.input1 != null) tanks[0].setFill(tanks[0].getFill() - recipe.input1.fill);
+        if (recipe.input2 != null) tanks[1].setFill(tanks[1].getFill() - recipe.input2.fill);
+        if (recipe.solidInput != null)
+            inventory.extractItem(1, recipe.solidInput.getStack().getCount(), false);
+        tanks[2].setFill(tanks[2].getFill() + recipe.output);
     }
 
     public int getConsumption() {
@@ -246,10 +233,10 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-        MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(tanksNew[2].getTankType());
+        MixerRecipe[] recipes = MixerRecipes.getOutput(tanks[2].getTankType());
         if (recipes == null || recipes.length <= 0) return false;
 
-        MixerRecipes.MixerRecipe recipe = recipes[this.recipeIndex % recipes.length];
+        MixerRecipe recipe = recipes[this.recipeIndex % recipes.length];
         if (recipe == null || recipe.solidInput == null) return false;
 
         return recipe.solidInput.matchesRecipe(itemStack, true);
@@ -262,29 +249,10 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
         this.progress = nbt.getInteger("progress");
         this.processTime = nbt.getInteger("processTime");
         this.recipeIndex = nbt.getInteger("recipe");
-        if (!converted) {
-            if (nbt.hasKey("f")) {
-                if (nbt.getString("f").equals("None"))
-                    this.outputFluid = null;
-                else
-                    this.outputFluid = FluidRegistry.getFluid(nbt.getString("f"));
-            }
-            if (nbt.hasKey("tanks")) {
-                FFUtils.deserializeTankArray(nbt.getTagList("tanks", 10), tanks);
-            }
-            this.fluids = new Fluid[3];
-            this.fluids[0] = tanks[0].getFluid() != null ? tanks[0].getFluid().getFluid() : Fluids.NONE.getFF();
-            ;
-            this.fluids[1] = tanks[1].getFluid() != null ? tanks[0].getFluid().getFluid() : Fluids.NONE.getFF();
-            ;
-            this.fluids[2] = outputFluid != null ? outputFluid : Fluids.NONE.getFF();
-            ;
-        } else {
-            for (int i = 0; i < 3; i++) this.tanksNew[i].readFromNBT(nbt, i + "");
-            if (nbt.hasKey("f")) {
-                nbt.removeTag("f");
-                nbt.removeTag("tanks");
-            }
+        for (int i = 0; i < 3; i++) this.tanks[i].readFromNBT(nbt, i + "");
+        if (nbt.hasKey("f")) {
+            nbt.removeTag("f");
+            nbt.removeTag("tanks");
         }
     }
 
@@ -294,20 +262,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
         nbt.setInteger("progress", progress);
         nbt.setInteger("processTime", processTime);
         nbt.setInteger("recipe", recipeIndex);
-        if (!converted) {
-            if (outputFluid != null) {
-                nbt.setString("f", outputFluid.getName());
-            } else {
-                if (tanks[2].getFluid() != null) {
-                    nbt.setString("f", tanks[2].getFluid().getFluid().getName());
-                } else {
-                    nbt.setString("f", "None");
-                }
-            }
-            nbt.setTag("tanks", FFUtils.serializeTankArray(tanks));
-        } else {
-            for (int i = 0; i < 3; i++) this.tanksNew[i].writeToNBT(nbt, i + "");
-        }
+        for (int i = 0; i < 3; i++) this.tanks[i].writeToNBT(nbt, i + "");
         return super.writeToNBT(nbt);
     }
 
@@ -355,16 +310,59 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ITi
 
     @Override
     public FluidTankNTM[] getAllTanks() {
-        return tanksNew;
+        return tanks;
     }
 
     @Override
     public FluidTankNTM[] getSendingTanks() {
-        return new FluidTankNTM[]{tanksNew[2]};
+        return new FluidTankNTM[]{tanks[2]};
     }
 
     @Override
     public FluidTankNTM[] getReceivingTanks() {
-        return new FluidTankNTM[]{tanksNew[0], tanksNew[1]};
+        return new FluidTankNTM[]{tanks[0], tanks[1]};
+    }
+
+    @Override
+    public boolean hasPermission(EntityPlayer player) {
+        return player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 16;
+    }
+
+    @Override
+    public void receiveControl(NBTTagCompound data) {
+        if(data.hasKey("toggle")) this.recipeIndex++;
+    }
+
+    @Override
+    public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
+        return type == UpgradeType.SPEED || type == UpgradeType.POWER || type == UpgradeType.OVERDRIVE;
+    }
+
+    @Override
+    public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo) {
+        info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.machine_mixer));
+        if(type == UpgradeType.SPEED) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_DELAY, "-" + (level * 25) + "%"));
+            info.add(TextFormatting.RED + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "+" + (level * 300) + "%"));
+        }
+        if(type == UpgradeType.POWER) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "-" + (level * 25) + "%"));
+        }
+        if(type == UpgradeType.OVERDRIVE) {
+            info.add((BobMathUtil.getBlink() ? TextFormatting.RED : TextFormatting.DARK_GRAY) + "YES");
+        }
+    }
+
+    @Override
+    public HashMap<UpgradeType, Integer> getValidUpgrades() {
+        HashMap<UpgradeType, Integer> upgrades = new HashMap<>();
+        upgrades.put(UpgradeType.SPEED, 3);
+        upgrades.put(UpgradeType.POWER, 3);
+        upgrades.put(UpgradeType.OVERDRIVE, 6);
+        return upgrades;
+    }
+    @Override
+    public FluidTankNTM getTankToPaste() {
+        return this.tanks[2];
     }
 }
