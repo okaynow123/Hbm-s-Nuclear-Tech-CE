@@ -1,5 +1,6 @@
 package com.hbm.explosion.vanillant.standard;
 
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.ICustomDamageHandler;
 import com.hbm.explosion.vanillant.interfaces.IEntityProcessor;
@@ -29,6 +30,7 @@ public class EntityProcessorCross implements IEntityProcessor {
 	protected double nodeDist = 2D;
 	protected IEntityRangeMutator range;
 	protected ICustomDamageHandler damage;
+    protected double knockbackMult = 1D;
 	protected boolean allowSelfDamage = false;
 
 	public EntityProcessorCross(double nodeDist) {
@@ -39,6 +41,11 @@ public class EntityProcessorCross implements IEntityProcessor {
 		this.allowSelfDamage = true;
 		return this;
 	}
+
+    public EntityProcessorCross setKnockback(double mult) {
+        this.knockbackMult = mult;
+        return this;
+    }
 
 	@Override //add
 	public HashMap<EntityPlayer, Vec3d> process(ExplosionVNT explosion, World world, double x, double y, double z, float size) {
@@ -104,12 +111,11 @@ public class EntityProcessorCross implements IEntityProcessor {
 					if(!damageMap.containsKey(entity) || damageMap.get(entity) < dmg) damageMap.put(entity, dmg);
 					double enchKnockback = entity instanceof EntityLivingBase entityLivingBase ? EnchantmentProtection.getBlastDamageReduction(entityLivingBase, knockback) : knockback; //1.12 requires EntityLiving base oppose to just entity
 
-//					if(!(entity instanceof EntityBulletBaseMK4)) {
-//						entity.motionX += deltaX * enchKnockback;
-//						entity.motionY += deltaY * enchKnockback;
-//						entity.motionZ += deltaZ * enchKnockback;
-//					}
-					//TODO
+					if(!(entity instanceof EntityBulletBaseMK4)) {
+						entity.motionX += deltaX * enchKnockback;
+						entity.motionY += deltaY * enchKnockback;
+						entity.motionZ += deltaZ * enchKnockback;
+					}
 
 					if(entity instanceof EntityPlayer) {
 						affectedPlayers.put((EntityPlayer) entity, new Vec3d(deltaX * knockback, deltaY * knockback, deltaZ * knockback));

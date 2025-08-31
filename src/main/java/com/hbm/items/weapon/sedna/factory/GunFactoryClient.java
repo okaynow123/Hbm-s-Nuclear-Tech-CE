@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 
 import static com.hbm.items.weapon.sedna.factory.GunFactory.ammo_debug;
 import static com.hbm.items.weapon.sedna.factory.XFactory10ga.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory10ga.g10_explosive;
 import static com.hbm.items.weapon.sedna.factory.XFactory12ga.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory22lr.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory357.*;
@@ -17,9 +18,11 @@ import static com.hbm.items.weapon.sedna.factory.XFactory35800.p35800;
 import static com.hbm.items.weapon.sedna.factory.XFactory40mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory44.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory50.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory50.bmg50_he;
 import static com.hbm.items.weapon.sedna.factory.XFactory556mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory75Bolt.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory762mm.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory762mm.r762_he;
 import static com.hbm.items.weapon.sedna.factory.XFactory9mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryAccelerator.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryBlackPowder.*;
@@ -67,6 +70,12 @@ public class GunFactoryClient {
         p9_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         p9_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
 
+//        p45_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
+//        p45_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
+//        p45_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
+//        p45_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
+//        p45_du.setRenderer(LegoClient.RENDER_DU_BULLET);
+
         r556_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r556_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r556_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
@@ -77,15 +86,14 @@ public class GunFactoryClient {
         r762_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         r762_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
         r762_du.setRenderer(LegoClient.RENDER_DU_BULLET);
+        r762_he.setRenderer(LegoClient.RENDER_HE_BULLET);
 
         bmg50_sp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         bmg50_fmj.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         bmg50_jhp.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         bmg50_ap.setRenderer(LegoClient.RENDER_AP_BULLET);
         bmg50_du.setRenderer(LegoClient.RENDER_DU_BULLET);
-//        bmg50_he.setRenderer(LegoClient.RENDER_HE_BULLET);
-//        bmg50_sm.setRenderer(LegoClient.RENDER_SM_BULLET);
-//        bmg50_black.setRenderer(LegoClient.RENDER_BLACK_BULLET);
+        bmg50_he.setRenderer(LegoClient.RENDER_HE_BULLET);
 
         b75.setRenderer(LegoClient.RENDER_AP_BULLET);
         b75_inc.setRenderer(LegoClient.RENDER_AP_BULLET);
@@ -116,6 +124,7 @@ public class GunFactoryClient {
         g10_shrapnel.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
         g10_du.setRenderer(LegoClient.RENDER_DU_BULLET);
         g10_slug.setRenderer(LegoClient.RENDER_STANDARD_BULLET);
+        g10_explosive.setRenderer(LegoClient.RENDER_HE_BULLET);
 
         g26_flare.setRenderer(LegoClient.RENDER_FLARE);
         g26_flare_supply.setRenderer(LegoClient.RENDER_FLARE_SUPPLY);
@@ -148,15 +157,12 @@ public class GunFactoryClient {
 
         //HUDS
         ((ItemGunBaseNT) ModItems.gun_debug)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_greasegun)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_lag)							.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_uzi)							.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_uzi_akimbo)			        .getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
-        ((ItemGunBaseNT) ModItems.gun_uzi_akimbo)			        .getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_pepperbox)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_light_revolver)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_light_revolver_atlas)			.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_henry)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+//        ((ItemGunBaseNT) ModItems.gun_henry_lincoln)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_greasegun)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_maresleg)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_maresleg_broken)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_flaregun)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
@@ -170,6 +176,7 @@ public class GunFactoryClient {
         ((ItemGunBaseNT) ModItems.gun_flamer)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO_NOCOUNTER);
         ((ItemGunBaseNT) ModItems.gun_flamer_topaz)					.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO_NOCOUNTER);
         ((ItemGunBaseNT) ModItems.gun_flamer_daybreaker)			.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO_NOCOUNTER);
+        ((ItemGunBaseNT) ModItems.gun_uzi)							.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_spas12)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_panzerschreck)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_g3)							.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
@@ -180,6 +187,7 @@ public class GunFactoryClient {
         ((ItemGunBaseNT) ModItems.gun_autoshotgun_shredder)			.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_autoshotgun_sexy)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_quadro)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_lag)							.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_minigun)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_minigun_lacunae)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_missile_launcher)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
@@ -197,12 +205,14 @@ public class GunFactoryClient {
         ((ItemGunBaseNT) ModItems.gun_double_barrel)				.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
         ((ItemGunBaseNT) ModItems.gun_double_barrel_sacred_dragon)	.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
 
-        ((ItemGunBaseNT) ModItems.gun_light_revolver_dani)	        .getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
-        ((ItemGunBaseNT) ModItems.gun_light_revolver_dani)	        .getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_maresleg_akimbo)		        .getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
-        ((ItemGunBaseNT) ModItems.gun_maresleg_akimbo)		        .getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
-        ((ItemGunBaseNT) ModItems.gun_aberrator_eott)		        .getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_AMMO_MIRROR);
-        ((ItemGunBaseNT) ModItems.gun_aberrator_eott)		        .getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_light_revolver_dani)	.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
+        ((ItemGunBaseNT) ModItems.gun_light_revolver_dani)	.getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_maresleg_akimbo)		.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
+        ((ItemGunBaseNT) ModItems.gun_maresleg_akimbo)		.getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_uzi_akimbo)			.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY_MIRROR, LegoClient.HUD_COMPONENT_AMMO_MIRROR);
+        ((ItemGunBaseNT) ModItems.gun_uzi_akimbo)			.getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);
+        ((ItemGunBaseNT) ModItems.gun_aberrator_eott)		.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_AMMO_MIRROR);
+        ((ItemGunBaseNT) ModItems.gun_aberrator_eott)		.getConfig(null, 1).hud(LegoClient.HUD_COMPONENT_AMMO);
     }
 
     public static void setRendererBulk(BiConsumer<EntityBulletBaseMK4, Float> renderer, BulletConfig... configs) { for(BulletConfig config : configs) config.setRenderer(renderer); }

@@ -226,6 +226,7 @@ public final class HBMSoundHandler {
     public static SoundEvent switchmode2;
     public static SoundEvent mukeExplosion;
     public static SoundEvent explosion_medium;
+    public static SoundEvent explosion_tiny;
     public static SoundEvent crucibleStart;
     public static SoundEvent crucibleEnd;
     public static SoundEvent crucibleSwing;
@@ -599,6 +600,7 @@ public final class HBMSoundHandler {
         jetpack = register("weapon.jetpack");
         mukeExplosion = register("weapon.mukeExplosion");
         explosion_medium = register("weapon.explosion_medium");
+        explosion_tiny = register("weapon.explosion_tiny");
         crucibleStart = register("weapon.crucible_start");
         crucibleEnd = register("weapon.crucible_end");
         crucibleSwing = register("weapon.crucible_swing");
