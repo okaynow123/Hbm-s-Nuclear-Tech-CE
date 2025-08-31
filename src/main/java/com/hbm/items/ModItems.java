@@ -1911,6 +1911,14 @@ public class ModItems {
     public static Item gun_aberrator_eott;
     public static Item gun_double_barrel;
     public static Item gun_double_barrel_sacred_dragon;
+    public static Item gun_amat;
+    public static Item gun_amat_subtlety;
+    public static Item gun_amat_penance;
+    public static Item gun_charge_thrower;
+    public static Item gun_laser_pistol;
+    public static Item gun_laser_pistol_pew_pew;
+    public static Item gun_laser_pistol_morning_glory;
+
 
     public static Item ammo_debug;
     public static Item ammo_standard;

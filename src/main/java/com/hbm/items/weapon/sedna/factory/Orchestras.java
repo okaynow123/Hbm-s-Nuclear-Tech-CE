@@ -13,10 +13,12 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.helper.CasingCreator;
+import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EntityDamageUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -831,6 +833,56 @@ public class Orchestras {
         if(type != HbmAnimationsSedna.AnimType.CYCLE && entity.world.isRemote) {
             AudioWrapper runningAudio = ItemGunBaseNT.loopedSounds.get(entity);
             if(runningAudio != null && runningAudio.isPlaying()) runningAudio.stopSound();
+        }
+    };
+
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_AMAT = (stack, ctx) -> {
+        EntityLivingBase entity = ctx.entity;
+        if(entity.world.isRemote) return;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+        boolean aiming = ItemGunBaseNT.getIsAiming(stack);
+
+        if(type == HbmAnimationsSedna.AnimType.EQUIP) {
+            if(timer == 10) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock,SoundCategory.PLAYERS, 0.5F, 1.25F);
+            if(timer == 15) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose,SoundCategory.PLAYERS, 0.5F, 1.25F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.CYCLE) {
+            if(timer == 7) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 16) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 12) {
+                SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
+                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(),
+                        0.375, aiming ? 0 : -0.125, -0.25D,
+                        -0.05, 0.2, -0.025,
+                        0.01, -10F + (float) entity.getRNG().nextGaussian() * 10F, (float) entity.getRNG().nextGaussian() * 12.5F, casing.getName(), true, 60, 0.5D, 10);
+            }
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick,SoundCategory.PLAYERS, 1.0F, 0.75F);
+            if(timer == 7) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 16) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose,SoundCategory.PLAYERS, 0.5F, 1F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 2) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magRemove,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 20) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magInsert,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 32) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 41) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose,SoundCategory.PLAYERS, 0.5F, 1F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.JAMMED) {
+            if(timer == 5) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 12) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 16) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 23) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose,SoundCategory.PLAYERS, 0.5F, 1F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.INSPECT) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock,SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 45) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose,SoundCategory.PLAYERS, 0.5F, 1F);
         }
     };
 
