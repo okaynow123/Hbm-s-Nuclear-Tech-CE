@@ -400,6 +400,14 @@ public class TileEntityMachineCyclotron extends TileEntityMachineBase implements
 		this.trySubscribe(world, pos.getX() - 1, pos.getY(), pos.getZ() + 3, Library.POS_Z);
 		this.trySubscribe(world, pos.getX() + 1, pos.getY(), pos.getZ() - 3, Library.NEG_Z);
 		this.trySubscribe(world, pos.getX() - 1, pos.getY(), pos.getZ() - 3, Library.NEG_Z);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() + 3, pos.getY(), pos.getZ() + 1, Library.POS_X);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() + 3, pos.getY(), pos.getZ() - 1, Library.POS_X);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() - 3, pos.getY(), pos.getZ() + 1, Library.NEG_X);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() - 3, pos.getY(), pos.getZ() - 1, Library.NEG_X);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() + 1, pos.getY(), pos.getZ() + 3, Library.POS_Z);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() - 1, pos.getY(), pos.getZ() + 3, Library.POS_Z);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() + 1, pos.getY(), pos.getZ() - 3, Library.NEG_Z);
+		this.trySubscribe(tankCoolant.getTankType(), world, pos.getX() - 1, pos.getY(), pos.getZ() - 3, Library.NEG_Z);
 	}
 	
 	@Override
