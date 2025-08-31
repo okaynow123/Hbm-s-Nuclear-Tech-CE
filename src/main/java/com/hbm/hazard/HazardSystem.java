@@ -74,7 +74,7 @@ public class HazardSystem {
     /**
      * For items from outside of that mod that require registration right at end of fml loading
      */
-    public static final List<Tuple<ResourceLocation,HazardData>> locationRateRegisterList = new ArrayList<>();
+    public static final List<Tuple<ResourceLocation,HazardData>> locationRateRegisterList = new CopyOnWriteArrayList<>();
     /**
      * List of hazard transformers, called in order before and after unrolling all the HazardEntries.
      */

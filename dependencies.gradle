@@ -61,5 +61,6 @@ dependencies {
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:6839240")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6675988")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:configanytime-870276:5212709")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:fluidlogged-api-485654:3845703")
     runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
 }
