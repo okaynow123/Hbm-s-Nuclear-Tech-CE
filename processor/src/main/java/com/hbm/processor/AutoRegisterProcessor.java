@@ -91,7 +91,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         if (isSubtypeByString(annotatedElement, TESR_FQN)) {
             String tileEntityClassName = getClassNameFromAnnotation(annotation, "tileentity");
             if (tileEntityClassName.equals(DEFAULT_CLASS_FQN)) {
-                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring TileEntity for " + annotatedFqn, annotatedElement);
+//                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring TileEntity for " + annotatedFqn, annotatedElement);
                 tileEntityClassName = getGenericSupertypeFqn(annotatedElement, TESR_FQN);
 
                 if (tileEntityClassName == null) {
@@ -105,7 +105,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         } else if (isSubtypeByString(annotatedElement, RENDER_FQN)) {
             String entityClassName = getClassNameFromAnnotation(annotation, "entity");
             if (entityClassName.equals(DEFAULT_CLASS_FQN)) {
-                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring Entity for " + annotatedFqn, annotatedElement);
+//                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring Entity for " + annotatedFqn, annotatedElement);
                 entityClassName = getGenericSupertypeFqn(annotatedElement, RENDER_FQN);
 
                 if (entityClassName == null) {
