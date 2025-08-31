@@ -394,6 +394,7 @@
 	"block.rbmk_explosion": {"category": "block", "sounds": [{"name": "hbm:block/rbmk_explosion", "stream": false}]},
     "block.rbmk_az5_cover": {"category": "block", "sounds": [{"name": "hbm:block/rbmk_az5_cover", "stream": false}]},
     "block.chungusLever": {"category": "block", "sounds": [{"name": "hbm:block/chunguslever", "stream": false}]},
+    "block.bobble": {"category": "block", "sounds": [{"name": "block/bobble", "stream": false}]},
     "block.crateOpen": {"category": "block", "sounds": [{"name": "hbm:block/crateopen", "stream": false}]},
     "block.crateClose": {"category": "block", "sounds": [{"name": "hbm:block/crateclose", "stream": false}]},
     "block.storageOpen": {"category": "block", "sounds": [{"name": "hbm:block/storageopen", "stream": false}]},

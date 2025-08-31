@@ -251,6 +251,7 @@ public final class HBMSoundHandler {
     public static SoundEvent rbmk_explosion;
     public static SoundEvent rbmk_az5_cover;
     public static SoundEvent chungus_lever;
+    public static SoundEvent bobble;
     public static SoundEvent crateOpen;
     public static SoundEvent crateClose;
     public static SoundEvent storageOpen;
@@ -624,6 +625,7 @@ public final class HBMSoundHandler {
         sentryLockon = register("turret.sentry_lockon");
         rbmk_explosion = register("block.rbmk_explosion");
         rbmk_az5_cover = register("block.rbmk_az5_cover");
+        bobble = register("block.bobble");
         crateOpen = register("block.crateOpen");
         crateClose = register("block.crateClose");
         storageOpen = register("block.storageOpen");
