@@ -13,13 +13,16 @@ import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.SpentCasing;
-import com.hbm.util.*;
+import com.hbm.util.BobMathUtil;
+import com.hbm.util.DamageResistanceHandler;
+import com.hbm.util.EntityDamageUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
@@ -75,9 +78,9 @@ public class BulletConfig implements Cloneable {
                 bullet.world.playSound(bullet.posX, bullet.posY, bullet.posZ, HBMSoundHandler.ricochet, SoundCategory.BLOCKS,
                         0.25F, 1.0F, true);
                 bullet.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
-                //send a teleport so the ricochet is more accurate instead of the interp smoothing fucking everything up
-                if (bullet.world instanceof WorldServer) TrackerUtil.sendTeleport((WorldServer) bullet.world, bullet);
-                return;
+                if (bullet.world instanceof WorldServer ws) {
+                    ws.getEntityTracker().sendToTracking(bullet, new SPacketEntityTeleport(bullet));
+                }
 
             } else {
                 bullet.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);

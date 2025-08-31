@@ -7,10 +7,10 @@ import com.hbm.util.TrackerUtil;
 import com.hbm.util.Vec3NT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -162,9 +162,9 @@ public class EntityBulletBaseMK4 extends EntityThrowableInterp {
             this.motionX = newVec.x;
             this.motionY = newVec.y;
             this.motionZ = newVec.z;
-            EntityTrackerEntry entry = TrackerUtil.getTrackerEntry((WorldServer) world, this.getEntityId());
-            //entry.last = MathHelper.floor(this.rotationYaw * 256.0F / 360.0F) + 10;
-            entry.updatePlayerEntities(this.world.playerEntities); //force-trigger rotation update (replacement for missing var
+            if (world instanceof WorldServer ws) {
+                ws.getEntityTracker().sendToTracking(this, new SPacketEntityTeleport(this));
+            }
         }
 
         this.prevVelocity = this.velocity;

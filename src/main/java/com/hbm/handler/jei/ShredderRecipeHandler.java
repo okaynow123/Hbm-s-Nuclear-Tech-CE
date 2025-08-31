@@ -3,6 +3,7 @@ package com.hbm.handler.jei;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.I18nUtil;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipeHandler.ShredderRecipeWrapper> {
 	private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_nei_shredder.png");
-	public static final String UID = "shredding";
 
 	private final IDrawable background;
 	private final IDrawableAnimated powerBar;
@@ -29,7 +29,7 @@ public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipeHand
 		this.background = helper.createDrawable(GUI_TEXTURE, 5, 11, 166, 65);
 
 		IDrawableStatic powerDrawable = helper.createDrawable(GUI_TEXTURE, 36, 86, 16, 52);
-		this.powerBar = helper.createAnimatedDrawable(powerDrawable, 480, IDrawableAnimated.StartDirection.BOTTOM, true);
+		this.powerBar = helper.createAnimatedDrawable(powerDrawable, 480, IDrawableAnimated.StartDirection.TOP, true);
 
 		IDrawableStatic progressDrawable = helper.createDrawable(GUI_TEXTURE, 100, 118, 24, 16);
 		this.progressBar = helper.createAnimatedDrawable(progressDrawable, 48, IDrawableAnimated.StartDirection.LEFT, false);
@@ -37,12 +37,12 @@ public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipeHand
 
 	@Override
 	public String getUid() {
-		return UID;
+		return JEIConfig.SHREDDER;
 	}
 
 	@Override
 	public String getTitle() {
-		return "Shredder";
+		return I18nUtil.resolveKey("tile.machine_shredder.name");
 	}
 
 	@Override
@@ -59,18 +59,16 @@ public class ShredderRecipeHandler implements IRecipeCategory<ShredderRecipeHand
 	public void setRecipe(IRecipeLayout recipeLayout, ShredderRecipeWrapper recipeWrapper, IIngredients ingredients) {
 		IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
 
-		// Input and Output
-		stacks.init(0, true, 39, 24);   // input at (83 - 27 - 18 + 1, 5 + 18 + 1) -> (39, 24)
-		stacks.init(1, false, 129, 24); // output at (83 + 27 + 18 + 1, 5 + 18 + 1) -> (129, 24)
+		stacks.init(0, true, 38, 23);
+		stacks.init(1, false, 128, 23);
 
 		stacks.set(ingredients);
 
-		// Two blade "fuel" slots (top and bottom), cycling through available blades
 		int bladeTopIndex = 2;
 		int bladeBottomIndex = 3;
 
-		stacks.init(bladeTopIndex, true, 84, 6);   // 83 + 1, 5 + 1
-		stacks.init(bladeBottomIndex, true, 84, 42); // 83 + 1, 5 + 36 + 1
+		stacks.init(bladeTopIndex, true, 83, 5);
+		stacks.init(bladeBottomIndex, true, 83, 41);
 
 		List<ItemStack> blades = recipeWrapper.getFuels();
 		if (!blades.isEmpty()) {

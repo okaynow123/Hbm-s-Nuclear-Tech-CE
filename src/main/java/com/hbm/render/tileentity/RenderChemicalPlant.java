@@ -10,6 +10,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineChemicalPlant;
 import com.hbm.util.BobMathUtil;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
@@ -21,6 +22,7 @@ public class RenderChemicalPlant extends TileEntitySpecialRenderer<TileEntityMac
 
     @Override
     public void render(TileEntityMachineChemicalPlant chemplant, double x, double y, double z, float interp, int destroyStage, float alpha) {
+        GlStateManager.enableAlpha();
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5, y, z + 0.5);
         GL11.glRotated(90, 0, 1, 0);

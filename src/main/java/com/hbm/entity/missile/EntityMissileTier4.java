@@ -9,6 +9,9 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -17,13 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
+	public static final DataParameter<Byte> ROT_IDX =
+			EntityDataManager.createKey(EntityMissileTier4.class, DataSerializers.BYTE);
 
 	public EntityMissileTier4(World world) { super(world); }
 	public EntityMissileTier4(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 
 	@Override
+	protected void entityInit() {
+		super.entityInit();
+		this.getDataManager().register(ROT_IDX, (byte) 5);
+	}
+
+	@Override
 	public List<ItemStack> getDebris() {
-		List<ItemStack> list = new ArrayList<ItemStack>();
+		List<ItemStack> list = new ArrayList<>();
 		list.add(new ItemStack(ModItems.plate_titanium, 16));
 		list.add(new ItemStack(ModItems.plate_steel, 20));
 		list.add(new ItemStack(ModItems.plate_aluminium, 12));
@@ -44,14 +55,15 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 	@Override
 	protected void spawnContrail() {
 		
-		byte rot = this.dataManager.get(this.pr3);
-		
+		byte rot = this.dataManager.get(ROT_IDX);
+
 		Vec3d thrust = new Vec3d(0, 0, 1);
-		switch(rot) {
-		case 2: thrust = thrust.rotateYaw((float) -Math.PI / 2F); break;
-		case 4: thrust = thrust.rotateYaw((float) -Math.PI); break;
-		case 3: thrust = thrust.rotateYaw((float) -Math.PI / 2F * 3F);  break;
-		}
+		thrust = switch (rot) {
+			case 2 -> thrust.rotateYaw((float) -Math.PI / 2F);
+			case 4 -> thrust.rotateYaw((float) -Math.PI);
+			case 3 -> thrust.rotateYaw((float) -Math.PI / 2F * 3F);
+			default -> new Vec3d(0, 0, 1);
+		};
 		thrust = thrust.rotateYaw((this.rotationYaw + 90) * (float) Math.PI / 180F);
 		thrust = thrust.rotatePitch(this.rotationPitch * (float) Math.PI / 180F);
 		thrust = thrust.rotateYaw(-(this.rotationYaw + 90) * (float) Math.PI / 180F);
@@ -131,9 +143,9 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		public EntityMissileN2(World world) { super(world); }
 		public EntityMissileN2(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
-			this.world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (int)(BombConfig.n2Radius/12) * 5, posX, posY, posZ).setDetonator(thrower));
+			this.world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, (BombConfig.n2Radius/12) * 5, posX, posY, posZ).setDetonator(thrower));
 			if(BombConfig.enableNukeClouds) {
-				EntityNukeTorex.statFac(world, this.posX, this.posY, this.posZ, (int)(BombConfig.n2Radius/12) * 5);
+				EntityNukeTorex.statFac(world, this.posX, this.posY, this.posZ, ((float)BombConfig.n2Radius/12) * 5);
 			}
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.warhead_n2); }

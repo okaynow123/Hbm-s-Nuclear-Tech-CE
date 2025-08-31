@@ -11,9 +11,6 @@ import com.hbm.util.TrackerUtil;
 import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,8 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityMissileBaseNT extends EntityThrowableInterp implements IChunkLoader, IRadarDetectableNT {
-
-    public static final DataParameter<Byte> pr3 = EntityDataManager.createKey(EntityMissileBaseNT.class, DataSerializers.BYTE);
+    // not sure why you're making a parameter you're using only in tier 4 missiles..
+    // that causes a nasty classcastexception crash
+    // public static final DataParameter<Byte> pr3 = EntityDataManager.createKey(EntityMissileBaseNT.class, DataSerializers.BYTE);
 
     public int startX;
     public int startZ;
@@ -98,7 +96,6 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
     protected void entityInit() {
         super.entityInit();
         init(ForgeChunkManager.requestTicket(MainRegistry.instance, world, Type.ENTITY));
-        this.getDataManager().register(pr3, (byte) 5);
     }
 
     @Override

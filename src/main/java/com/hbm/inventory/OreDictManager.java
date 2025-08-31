@@ -1,5 +1,6 @@
 package com.hbm.inventory;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardEntry;
@@ -539,7 +540,7 @@ public class OreDictManager {
          * HAZARDS, MISC
          */
         LI.hydro(1F).ingot(lithium).dustSmall(powder_lithium_tiny).dust(powder_lithium).crystal(crystal_lithium).block(block_lithium).ore(ore_gneiss_lithium);
-        NA.hydro(1F).dust(powder_sodium);
+        NA.hydro(1F).hazIngot().dust(powder_sodium);
 
         /*
          * PHOSPHORUS
@@ -581,24 +582,12 @@ public class OreDictManager {
         /*
          * FISSION FRAGMENTS
          */
+        SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(powder_strontium);
         SR90.rad(HazardRegistry.sr90).hot(1F).hydro(1F).dustSmall(powder_sr90_tiny).dust(powder_sr90).ingot(ingot_sr90).billet(billet_sr90).nugget(nugget_sr90);
         I131.rad(HazardRegistry.i131).hot(1F).dustSmall(powder_i131_tiny).dust(powder_i131);
         XE135.rad(HazardRegistry.xe135).hot(10F).dustSmall(powder_xe135_tiny).dust(powder_xe135);
         CS137.rad(HazardRegistry.cs137).hot(3F).hydro(3F).dustSmall(powder_cs137_tiny).dust(powder_cs137);
         AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209);
-
-        /*
-         * Fuels - they should be deleted too..
-         */
-        /*U_FUEL.rad(HazardRegistry.u_fuel).nugget(nugget_uranium_fuel).billet(billet_uranium_fuel).ingot(ingot_uranium_fuel).block(block_uranium_fuel);
-        TH_FUEL.rad(HazardRegistry.th_fuel).nugget(nugget_thorium_fuel).billet(billet_thorium_fuel).ingot(ingot_thorium_fuel).block(block_thorium_fuel);
-        PU_FUEL.rad(HazardRegistry.pu_fuel).nugget(nugget_plutonium_fuel).billet(billet_plutonium_fuel).ingot(ingot_plutonium_fuel).block(block_plutonium_fuel);
-        NP_FUEL.rad(HazardRegistry.np_fuel).nugget(nugget_neptunium_fuel).billet(billet_neptunium_fuel).ingot(ingot_neptunium_fuel);
-        MOX_FUEL.rad(HazardRegistry.np_fuel).nugget(nugget_mox_fuel).billet(billet_mox_fuel).ingot(ingot_mox_fuel).block(block_mox_fuel);
-        AM_FUEL.rad(HazardRegistry.am_fuel).nugget(nugget_americium_fuel).ingot(ingot_americium_fuel).billet(billet_americium_fuel);
-        SCH_FUEL.rad(HazardRegistry.sch_fuel).blinding(50F).nugget(nugget_schrabidium_fuel).billet(billet_schrabidium_fuel).ingot(ingot_schrabidium_fuel).block(block_schrabidium_fuel);
-        LES_FUEL.rad(HazardRegistry.les_fuel).blinding(50F).nugget(nugget_les).billet(billet_les).ingot(ingot_les);
-        HES_FUEL.rad(HazardRegistry.hes_fuel).blinding(50F).nugget(nugget_hes).billet(billet_hes).ingot(ingot_hes);*/
 
         /*
          * COLLECTIONS
@@ -608,8 +597,8 @@ public class OreDictManager {
         ANY_PLASTICEXPLOSIVE.ingot(ingot_semtex, ingot_c4);
         ANY_HIGHEXPLOSIVE.ingot(ball_tnt).ingot(ball_tatb);
         ANY_CONCRETE.any(concrete, concrete_smooth, concrete_asbestos, ducrete, ducrete_smooth);
-        //for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored, 1, i)); } //Do we really need this with 1.12 concrete? fine TODO
-        //for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored_ext, 1, i)); }
+        for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored, 1, i)); }
+        for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored_ext, 1, i)); }
         ANY_COKE.gem(fromAll(coke, EnumCokeType.class)).block(fromAll(block_coke, EnumCokeType.class));
         ANY_BISMOID.ingot(ingot_bismuth, ingot_arsenic).nugget(nugget_bismuth, nugget_arsenic).block(block_bismuth);
         ANY_ASH.any(fromOne(ModItems.powder_ash, EnumAshType.WOOD), fromOne(ModItems.powder_ash, EnumAshType.COAL), fromOne(ModItems.powder_ash, EnumAshType.MISC), fromOne(ModItems.powder_ash, EnumAshType.FLY), fromOne(ModItems.powder_ash, EnumAshType.SOOT));
@@ -1189,6 +1178,21 @@ public class OreDictManager {
 
         public DictFrame makeBlocks(String tag, Block... blocks) {
             for (Block b : blocks) registerStack(tag, new ItemStack(b));
+            return this;
+        }
+
+        public DictFrame hazIngot() {
+            hazMult = HazardRegistry.ingot;
+            return autoRegHazard(INGOT);
+        }
+
+        // TODO: rethink this. currently, keys are only registered on-demand if the dict frame has a valid entry, even though we can maximize compatibility
+        // by simply registereing all known shapes in the haz reg, whether it exists or not
+        public DictFrame autoRegHazard(MaterialShapes shape) {
+            String tag = shape.name();
+            for(String mat : mats) {
+                registerHazards(hazards, hazMult, tag + mat);
+            }
             return this;
         }
 

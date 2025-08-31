@@ -73,7 +73,7 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
             IBlockState nX = world.getBlockState(pos.west());
             IBlockState pX = world.getBlockState(pos.east());
 
-            EnumFacing facing = EnumFacing.NORTH;
+            EnumFacing facing = state.getValue(FACING);
 
             if (nZ.isFullBlock() && !pZ.isFullBlock()) facing = EnumFacing.SOUTH;
             if (pZ.isFullBlock() && !nZ.isFullBlock()) facing = EnumFacing.NORTH;

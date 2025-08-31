@@ -1,20 +1,20 @@
 package com.hbm.items.armor;
 
-import java.util.List;
-
+import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.util.BobMathUtil;
-import com.hbm.api.fluidmk2.IFillableItem;
-
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class ArmorFSBFueled extends ArmorFSB implements IFillableItem {
 
@@ -132,5 +132,25 @@ public class ArmorFSBFueled extends ArmorFSB implements IFillableItem {
 	@Override
 	public FluidType getFirstFluidType(ItemStack stack) {
 		return null;
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 0;
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return false;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return false;
 	}
 }

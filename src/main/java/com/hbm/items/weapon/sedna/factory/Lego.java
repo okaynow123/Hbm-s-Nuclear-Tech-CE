@@ -28,6 +28,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
 import java.util.Random;
@@ -218,30 +220,45 @@ public class Lego {
 
         int projectiles = config.projectilesMin;
         if(config.projectilesMax > config.projectilesMin) projectiles += entity.getRNG().nextInt(config.projectilesMax - config.projectilesMin + 1);
+        World world = entity.world;
+        int finalProjectiles = projectiles;
+        spawnBullet(world, () -> {
+            for (int i = 0; i < finalProjectiles; i++) {
+                float damage = calcDamage(ctx, stack, primary, calcWear, index);
+                float spread  = calcSpread(ctx, stack, primary, config, calcWear, index, aim);
 
-        for(int i = 0; i < projectiles; i++) {
-            float damage = calcDamage(ctx, stack, primary, calcWear, index);
-            float spread = calcSpread(ctx, stack, primary, config, calcWear, index, aim);
-
-            if(config.pType == ProjectileType.BULLET) {
-                EntityBulletBaseMK4 mk4 = new EntityBulletBaseMK4(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
-                if(ItemGunBaseNT.getIsLockedOn(stack)) mk4.lockonTarget = entity.world.getEntityByID(ItemGunBaseNT.getLockonTarget(stack));
-                if(i == 0 && config.blackPowder) BlackPowderCreator.composeEffect(entity.world, mk4.posX, mk4.posY, mk4.posZ, mk4.motionX, mk4.motionY, mk4.motionZ, 10, 0.25F, 0.5F, 10, 0.25F);
-                entity.world.spawnEntity(mk4);
-            } else if(config.pType == ProjectileType.BULLET_CHUNKLOADING) {
-                EntityBulletBaseMK4CL mk4 = new EntityBulletBaseMK4CL(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
-                if(ItemGunBaseNT.getIsLockedOn(stack)) mk4.lockonTarget = entity.world.getEntityByID(ItemGunBaseNT.getLockonTarget(stack));
-                if(i == 0 && config.blackPowder) BlackPowderCreator.composeEffect(entity.world, mk4.posX, mk4.posY, mk4.posZ, mk4.motionX, mk4.motionY, mk4.motionZ, 10, 0.25F, 0.5F, 10, 0.25F);
-                entity.world.spawnEntity(mk4);
-            } else if(config.pType == ProjectileType.BEAM) {
-                EntityBulletBeamBase mk4 = new EntityBulletBeamBase(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
-                entity.world.spawnEntity(mk4);
+                if (config.pType == ProjectileType.BULLET) {
+                    EntityBulletBaseMK4 mk4 = new EntityBulletBaseMK4(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
+                    if (ItemGunBaseNT.getIsLockedOn(stack))
+                        mk4.lockonTarget = world.getEntityByID(ItemGunBaseNT.getLockonTarget(stack));
+                    if (i == 0 && config.blackPowder)
+                        BlackPowderCreator.composeEffect(world, mk4.posX, mk4.posY, mk4.posZ, mk4.motionX, mk4.motionY, mk4.motionZ, 10, 0.25F, 0.5F, 10, 0.25F);
+                    world.spawnEntity(mk4);
+                } else if (config.pType == ProjectileType.BULLET_CHUNKLOADING) {
+                    EntityBulletBaseMK4CL mk4 = new EntityBulletBaseMK4CL(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
+                    if (ItemGunBaseNT.getIsLockedOn(stack))
+                        mk4.lockonTarget = world.getEntityByID(ItemGunBaseNT.getLockonTarget(stack));
+                    if (i == 0 && config.blackPowder)
+                        BlackPowderCreator.composeEffect(world, mk4.posX, mk4.posY, mk4.posZ, mk4.motionX, mk4.motionY, mk4.motionZ, 10, 0.25F, 0.5F, 10, 0.25F);
+                    world.spawnEntity(mk4);
+                } else if (config.pType == ProjectileType.BEAM) {
+                    EntityBulletBeamBase mk4 = new EntityBulletBeamBase(entity, config, damage, spread, sideOffset, heightOffset, forwardOffset);
+                    world.spawnEntity(mk4);
+                }
             }
-        }
+        });
 
         if(player != null) player.addStat(MainRegistry.statBullets, 1);
         mag.useUpAmmo(stack, ctx.inventory, 1);
         if(calcWear) ItemGunBaseNT.setWear(stack, index, Math.min(ItemGunBaseNT.getWear(stack, index) + config.wear, ctx.config.getDurability(stack)));
+    }
+
+    public static void spawnBullet(World world, Runnable task) {
+        if (world instanceof WorldServer) {
+            ((WorldServer) world).addScheduledTask(task);
+        } else {
+            task.run();
+        }
     }
 
     public static float getStandardWearSpread(ItemStack stack, GunConfig config, int index) {

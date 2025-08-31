@@ -20,6 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import com.hbm.items.ItemEnums.EnumDepletedRTGMaterial;
 
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.*;
@@ -203,7 +204,7 @@ public class HazardRegistry {
 		HazardSystem.register(nuclear_waste_short_depleted, makeData(RADIATION, 3F));
 		HazardSystem.register(nuclear_waste_short_depleted_tiny, makeData(RADIATION, 0.3F));
 
-		//HazardSystem.register(scrap_nuclear, makeData(RADIATION, 1F));
+		HazardSystem.register(scrap_nuclear, makeData(RADIATION, 1F));
 		HazardSystem.register(trinitite, makeData(RADIATION, trn * ingot).addEntry(CONTAMINATING, 5));
 		HazardSystem.register(block_trinitite, makeData(RADIATION, trn * block));
 		HazardSystem.register(nuclear_waste, makeData(RADIATION, wst * ingot).addEntry(CONTAMINATING, wst * powder));
@@ -346,7 +347,7 @@ public class HazardRegistry {
 		registerRTGPellet(pellet_rtg_lead, pb209 * rtg, 0, 7F, 50F);
 		registerRTGPellet(pellet_rtg_gold, au198 * rtg, 0, 5F);
 		registerRTGPellet(pellet_rtg_americium, am241 * rtg, 0);
-		//HazardSystem.register(new ItemStack(pellet_rtg_depleted, 1, DepletedRTGMaterial.NEPTUNIUM.ordinal()), makeData(RADIATION, np237 * rtg));
+		HazardSystem.register(new ItemStack(pellet_rtg_depleted, 1, EnumDepletedRTGMaterial.NEPTUNIUM.ordinal()), makeData(RADIATION, np237 * rtg));
 
 		HazardSystem.register(pile_rod_uranium, makeData(RADIATION, u * billet * 3));
 		HazardSystem.register(pile_rod_pu239, makeData(RADIATION, !GeneralConfig.enable528 ? purg * billet + pu239 * billet + u * billet : purg * billet + pu239 * billet + wst * billet));

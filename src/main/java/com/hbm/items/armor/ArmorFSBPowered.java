@@ -6,6 +6,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.Library;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -159,4 +160,24 @@ public class ArmorFSBPowered extends ArmorFSB implements IBatteryItem {
     {
         this.dischargeBattery(stack, damage * consumption);
     }
+
+	@Override
+	public int getItemEnchantability() {
+		return 0;
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return false;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return false;
+	}
 }

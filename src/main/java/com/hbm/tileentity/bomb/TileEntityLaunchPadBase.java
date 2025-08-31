@@ -4,10 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.api.item.IDesignatorItem;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.missile.EntityMissileAntiBallistic;
-import com.hbm.entity.missile.EntityMissileBaseAdvanced;
-import com.hbm.entity.missile.EntityMissileBaseNT;
-import com.hbm.entity.missile.EntityMissileStealth;
+import com.hbm.entity.missile.*;
 import com.hbm.entity.missile.EntityMissileTier0.*;
 import com.hbm.entity.missile.EntityMissileTier1.*;
 import com.hbm.entity.missile.EntityMissileTier2.*;
@@ -351,7 +348,10 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 			try {
 				EntityMissileBaseNT missile = clazz.getConstructor(World.class, float.class, float.class, float.class, int.class, int.class).newInstance(world, pos.getX() + 0.5F, pos.getY() + (float) getLaunchOffset() /* Position arguments need to be floats, jackass */, pos.getZ() + 0.5F, targetX, targetZ);
 				if(GeneralConfig.enableExtendedLogging) MainRegistry.logger.log(Level.INFO, "[MISSILE] Tried to launch missile at " + pos.getX() + " / " + pos.getY() + " / " + pos.getZ() + " to " + pos.getX() + " / " + pos.getZ() + "!");
-				missile.getDataManager().set(EntityMissileBaseNT.pr3, (byte) MathHelper.clamp(this.getBlockMetadata() - 10, 2, 5));
+				byte rot = (byte) MathHelper.clamp(this.getBlockMetadata() - 10, 2, 5);
+				if (missile instanceof EntityMissileTier4) {
+					missile.getDataManager().set(EntityMissileTier4.ROT_IDX, rot);
+				}
 				return missile;
 			} catch(Exception ignored) { }
 		}
