@@ -16,13 +16,20 @@
     "hidden": false
   },
   "criteria": {
-    "crafting": {
+    "crafting_hbm_ingot_schrabidium": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "item": "hbm:ingot_schrabidium"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_nugget_schrabidium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:nugget_schrabidium"
           }
@@ -32,7 +39,8 @@
   },
   "requirements": [
     [
-      "crafting"
+      "crafting_hbm_ingot_schrabidium",
+      "crafting_hbm_nugget_schrabidium"
     ]
   ]
 }

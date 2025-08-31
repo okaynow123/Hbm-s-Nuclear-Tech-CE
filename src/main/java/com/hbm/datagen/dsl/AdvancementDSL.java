@@ -29,6 +29,30 @@ public final class AdvancementDSL {
     private AdvancementDSL() {
     }
 
+    private static String registryName(Item item) {
+        ResourceLocation rl = GameRegistry.findRegistry(Item.class).getKey(item);
+        return rl == null ? "minecraft:stone" : rl.toString();
+    }
+
+    private static String registryName(ItemStack stack) {
+        ResourceLocation rl = GameRegistry.findRegistry(Item.class).getKey(stack.getItem());
+        return rl == null ? "minecraft:stone" : rl.toString();
+    }
+
+    private static String sanitize(String s) {
+        return s.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "_");
+    }
+
+    private static String uniqueCriterionName(Set<String> used, String base, String hint, int fallbackIndex) {
+        String b = (base == null || base.isEmpty()) ? "crit" : base;
+        String h = (hint == null || hint.isEmpty()) ? String.valueOf(fallbackIndex) : hint;
+        String attempt = b + "_" + h;
+        int i = 1;
+        while (used.contains(attempt)) attempt = b + "_" + h + "_" + (i++);
+        used.add(attempt);
+        return attempt;
+    }
+
     public static Batch batch(String namespace) {
         return new Batch(namespace);
     }
@@ -154,42 +178,80 @@ public final class AdvancementDSL {
             JsonObject criteria = new JsonObject();
             criteria.add(criterionName, criterion(Triggers.IMPOSSIBLE, null));
             json.add("criteria", criteria);
-            json.add("requirements", reqAll(criterionName));
+            json.add("requirements", reqAll(criterionName)); // [["crit"]] => must complete this criterion
             return new Entry(idPath, json);
         }
 
         /**
          * Obtain one of the given items via inventory_changed.
+         * Produces a single OR-group with all generated criteria: [[c1, c2, ...]]
          */
         @Contract("_, _, _, _, _ -> new")
         public static @NotNull Entry obtainAnyItem(String idPath, @Nullable String parentRL, Display display, String criterionName, Item... items) {
+            if (items == null || items.length == 0) {
+                throw new IllegalArgumentException("obtainAnyItem requires at least one Item");
+            }
             JsonObject json = base(parentRL, display);
-            JsonObject conditions = new JsonObject();
-            JsonArray arr = new JsonArray();
-            for (Item it : items) arr.add(itemPredicate(it));
-            conditions.add("items", arr);
-            JsonObject criteria = new JsonObject();
-            criteria.add(criterionName, criterion(Triggers.INVENTORY_CHANGED, x -> x.add("items", arr)));
-            json.add("criteria", criteria);
-            json.add("requirements", reqAll(criterionName));
+
+            JsonObject crit = new JsonObject();
+            List<String> names = new ArrayList<>();
+            Set<String> used = new HashSet<>();
+
+            int idx = 0;
+            for (Item it : items) {
+                if (it == null) continue;
+                JsonArray single = new JsonArray();
+                single.add(itemPredicate(it));
+
+                String hint = sanitize(registryName(it));
+                String name = uniqueCriterionName(used, criterionName, hint, idx++);
+                crit.add(name, criterion(Triggers.INVENTORY_CHANGED, c -> c.add("items", single)));
+                names.add(name);
+            }
+
+            if (names.isEmpty()) throw new IllegalArgumentException("obtainAnyItem produced no valid items");
+
+            json.add("criteria", crit);
+            json.add("requirements", reqAny(names)); // [[ name1, name2, ... ]]
             return new Entry(idPath, json);
         }
 
+        /**
+         * Obtain one of the given ItemStacks (respects meta / NBT) via inventory_changed.
+         * Produces a single OR-group with all generated criteria: [[c1, c2, ...]]
+         */
         @Contract("_, _, _, _, _ -> new")
         public static @NotNull Entry obtainAnyItemStack(String idPath, @Nullable String parentRL, Display display, String criterionName,
                                                         ItemStack... stacks) {
+            if (stacks == null || stacks.length == 0) {
+                throw new IllegalArgumentException("obtainAnyItemStack requires at least one ItemStack");
+            }
             JsonObject json = base(parentRL, display);
 
-            JsonArray items = new JsonArray();
+            JsonObject crit = new JsonObject();
+            List<String> names = new ArrayList<>();
+            Set<String> used = new HashSet<>();
+
+            int idx = 0;
             for (ItemStack s : stacks) {
                 if (s == null || s.isEmpty()) continue;
-                items.add(itemPredicate(s));
+
+                JsonArray single = new JsonArray();
+                single.add(itemPredicate(s));
+
+                String rn = registryName(s);
+                String meta = s.getMetadata() != 0 ? "_" + s.getMetadata() : "";
+                String hint = sanitize(rn + meta);
+
+                String name = uniqueCriterionName(used, criterionName, hint, idx++);
+                crit.add(name, criterion(Triggers.INVENTORY_CHANGED, cond -> cond.add("items", single)));
+                names.add(name);
             }
 
-            JsonObject criteria = new JsonObject();
-            criteria.add(criterionName, criterion(Triggers.INVENTORY_CHANGED, cond -> cond.add("items", items)));
-            json.add("criteria", criteria);
-            json.add("requirements", reqAll(criterionName));
+            if (names.isEmpty()) throw new IllegalArgumentException("obtainAnyItemStack produced no valid stacks");
+
+            json.add("criteria", crit);
+            json.add("requirements", reqAny(names)); // [[ name1, name2, ... ]]
             return new Entry(idPath, json);
         }
 
@@ -243,7 +305,7 @@ public final class AdvancementDSL {
             JsonObject crit = new JsonObject();
             for (Map.Entry<String, JsonObject> e : namedCriteria.entrySet()) crit.add(e.getKey(), e.getValue());
             json.add("criteria", crit);
-            json.add("requirements", reqAny(namedCriteria.keySet()));
+            json.add("requirements", reqAny(namedCriteria.keySet())); // [[ allNames... ]]
             return new Entry(idPath, json);
         }
 
@@ -254,23 +316,35 @@ public final class AdvancementDSL {
             return json;
         }
 
+        /**
+         * AND-of-OR helpers matching vanilla semantics.
+         * <ul>
+         *   <li>reqAll("a","b") -> [["a"],["b"]] (both required)</li>
+         *   <li>reqAny(names) -> [["a","b",...]] (any one)</li>
+         * </ul>
+         */
         private static JsonArray reqAll(String... names) {
-            JsonArray outer = new JsonArray();
-            JsonArray inner = new JsonArray();
-            for (String n : names) inner.add(n);
-            if (inner.size() == 0) inner.add("__missing");
-            outer.add(inner);
+            JsonArray outer = new JsonArray(); // AND groups
+            if (names.length == 0) {
+                JsonArray inner = new JsonArray();
+                inner.add("__missing");
+                outer.add(inner);
+                return outer;
+            }
+            for (String n : names) {
+                JsonArray inner = new JsonArray(); // single-name OR group
+                inner.add(n);
+                outer.add(inner);
+            }
             return outer;
         }
 
         private static JsonArray reqAny(Collection<String> names) {
-            JsonArray outer = new JsonArray();
-            for (String n : names) {
-                JsonArray inner = new JsonArray();
-                inner.add(n);
-                outer.add(inner);
-            }
-            if (outer.size() == 0) outer.add(reqAll("__missing").get(0));
+            JsonArray outer = new JsonArray(); // AND groups
+            JsonArray inner = new JsonArray(); // one OR group containing all names
+            for (String n : names) inner.add(n);
+            if (inner.size() == 0) inner.add("__missing");
+            outer.add(inner);
             return outer;
         }
 
@@ -452,6 +526,8 @@ public final class AdvancementDSL {
     public static final class Builder {
         private final String idPath;
         private final LinkedHashMap<String, JsonObject> criteria = new LinkedHashMap<>();
+        private final List<LinkedHashSet<String>> cnf = new ArrayList<>();
+
         private @Nullable String parentRL;
         private @Nullable Display display;
         private @Nullable Rewards rewards;
@@ -462,9 +538,28 @@ public final class AdvancementDSL {
             this.idPath = idPath;
         }
 
-        /**
-         * Set "parent": full RL string ("hbm:root").
-         */
+        private String uniqueName(String base, String hint) {
+            String b = (base == null || base.isEmpty()) ? "crit" : base;
+            String h = (hint == null || hint.isEmpty()) ? "x" : hint;
+            String n = (b + "_" + h).toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "_");
+            int i = 1;
+            while (criteria.containsKey(n)) n = n + "_" + (i++);
+            return n;
+        }
+
+        private void addAndGroup(String name) {
+            if (requirements != null) return;
+            LinkedHashSet<String> g = new LinkedHashSet<>();
+            g.add(name);
+            cnf.add(g);
+        }
+
+        private void addAnyGroup(Collection<String> names) {
+            if (requirements != null) return;
+            LinkedHashSet<String> g = new LinkedHashSet<>(names);
+            if (!g.isEmpty()) cnf.add(g);
+        }
+
         public Builder parent(@Nullable String parentRL) {
             this.parentRL = parentRL;
             return this;
@@ -488,10 +583,13 @@ public final class AdvancementDSL {
 
         /**
          * Add an arbitrary prebuilt criterion JSON.
+         * By default each added criterion becomes its own AND-group (requires all), unless a custom requirements
+         * matrix was explicitly supplied.
          */
         public Builder criterion(String name, JsonObject criterion) {
             if (name == null || name.isEmpty()) throw new IllegalArgumentException("criterion name must not be empty");
             this.criteria.put(name, criterion);
+            addAndGroup(name);
             return this;
         }
 
@@ -503,39 +601,74 @@ public final class AdvancementDSL {
         }
 
         /**
-         * inventory_changed: any of these items present in inventory.
+         * inventory_changed: TRUE if inventory has ANY of the given Items.
+         * Emits one OR-group containing all generated criterion names.
          */
-        public Builder inventoryHasAny(String name, Item... items) {
-            return criterion(name, Triggers.INVENTORY_CHANGED, cond -> {
-                JsonArray arr = new JsonArray();
-                for (Item it : items) {
-                    ResourceLocation rl = GameRegistry.findRegistry(Item.class).getKey(it);
-                    JsonObject pred = new JsonObject();
-                    pred.addProperty("item", rl == null ? "minecraft:stone" : rl.toString());
-                    arr.add(pred);
-                }
-                cond.add("items", arr);
-            });
+        public Builder inventoryHasAny(String baseName, Item... items) {
+            List<String> added = new ArrayList<>();
+            int valid = 0;
+            for (Item it : items) if (it != null) ++valid;
+            for (Item it : items) {
+                if (it == null) continue;
+                JsonArray single = new JsonArray();
+                single.add(Templates.itemPredicate(it));
+                final String name = (valid == 1)
+                                    ? (baseName == null || baseName.isEmpty() ? "has_item" : baseName)
+                                    : uniqueName(baseName, sanitize(AdvancementDSL.registryName(it)));
+                this.criteria.put(name, AdvancementDSL.criterion(Triggers.INVENTORY_CHANGED, cond -> cond.add("items", single)));
+                added.add(name);
+            }
+            if (valid == 1 && !added.isEmpty()) addAndGroup(added.get(0));
+            else if (valid > 1) addAnyGroup(added);
+            return this;
         }
 
         /**
-         * inventory_changed: any of these ItemStacks present in inventory (respects metadata and optional NBT).
+         * inventory_changed: TRUE if inventory has ANY of the given ItemStacks (respects meta / NBT).
+         * Emits one OR-group containing all generated criterion names.
          */
         public Builder inventoryHasAnyStacks(ItemStack... stacks) {
-            return criterion("has_items", Triggers.INVENTORY_CHANGED, cond -> {
-                com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
-                for (ItemStack s : stacks) {
-                    if (s == null || s.isEmpty()) continue;
-                    // reuse Templates' helper via a tiny bridge
-                    arr.add(AdvancementDSL.Templates.itemPredicate(s));
-                }
-                cond.add("items", arr);
-            });
+            String baseName = "has_items";
+            List<String> added = new ArrayList<>();
+            int valid = 0;
+            for (ItemStack s : stacks) if (s != null && !s.isEmpty()) ++valid;
+            for (ItemStack s : stacks) {
+                if (s == null || s.isEmpty()) continue;
+                JsonArray single = new JsonArray();
+                single.add(AdvancementDSL.Templates.itemPredicate(s));
+                String hint = sanitize(registryName(s) + (s.getMetadata() != 0 ? "_" + s.getMetadata() : ""));
+                final String name = (valid == 1) ? baseName : uniqueName(baseName, hint);
+                this.criteria.put(name, AdvancementDSL.criterion(Triggers.INVENTORY_CHANGED, cond -> cond.add("items", single)));
+                added.add(name);
+            }
+            if (valid == 1 && !added.isEmpty()) addAndGroup(added.get(0));
+            else if (valid > 1) addAnyGroup(added);
+            return this;
         }
 
         /**
-         * player_killed_entity with an entity type RL (e.g., minecraft:creeper).
+         * consume_item: TRUE if player consumes ANY of the given Items (FIX: uses "item", not "items").
+         * Emits one OR-group containing all generated criterion names.
          */
+        public Builder consumeAnyItem(String baseName, Item... items) {
+            List<String> added = new ArrayList<>();
+            int valid = 0;
+            for (Item it : items) if (it != null) ++valid;
+            for (Item it : items) {
+                if (it == null) continue;
+                JsonObject pred = new JsonObject();
+                pred.addProperty("item", registryName(it));
+                final String name = (valid == 1)
+                                    ? (baseName == null || baseName.isEmpty() ? "consumed" : baseName)
+                                    : uniqueName(baseName, sanitize(registryName(it)));
+                this.criteria.put(name, AdvancementDSL.criterion(Triggers.CONSUME_ITEM, cond -> cond.add("item", pred)));
+                added.add(name);
+            }
+            if (valid == 1 && !added.isEmpty()) addAndGroup(added.get(0));
+            else if (valid > 1) addAnyGroup(added);
+            return this;
+        }
+
         public Builder playerKilledEntity(String name, String entityRL) {
             return criterion(name, Triggers.PLAYER_KILLED_ENTITY, cond -> {
                 JsonObject ent = new JsonObject();
@@ -558,25 +691,6 @@ public final class AdvancementDSL {
             return criterion(name, Triggers.ENTER_BLOCK, cond -> cond.addProperty("block", blockRL));
         }
 
-        /**
-         * consume_item for specific items (any of).
-         */
-        public Builder consumeAnyItem(String name, Item... items) {
-            return criterion(name, Triggers.CONSUME_ITEM, cond -> {
-                JsonArray arr = new JsonArray();
-                for (Item it : items) {
-                    ResourceLocation rl = GameRegistry.findRegistry(Item.class).getKey(it);
-                    JsonObject pred = new JsonObject();
-                    pred.addProperty("item", rl == null ? "minecraft:stone" : rl.toString());
-                    arr.add(pred);
-                }
-                cond.add("items", arr);
-            });
-        }
-
-        /**
-         * placed_block with block RL.
-         */
         public Builder placedBlock(String name, String blockRL) {
             return criterion(name, Triggers.PLACED_BLOCK, cond -> cond.addProperty("block", blockRL));
         }
@@ -589,21 +703,10 @@ public final class AdvancementDSL {
         }
 
         /**
-         * Make requirements be "all of" the provided criterion names (AND in one inner array).
+         * Make requirements be "all of" the provided criterion names (AND in outer list as singleton groups).
+         * Produces [["a"],["b"],...]
          */
         public Builder requireAll(String... names) {
-            List<List<String>> matrix = new ArrayList<>(1);
-            List<String> row = new ArrayList<>();
-            Collections.addAll(row, names);
-            matrix.add(row);
-            this.requirements = matrix;
-            return this;
-        }
-
-        /**
-         * Make requirements be "any of" the provided criterion names (OR across separate inner arrays).
-         */
-        public Builder requireAny(String... names) {
             List<List<String>> matrix = new ArrayList<>();
             for (String n : names) matrix.add(Collections.singletonList(n));
             this.requirements = matrix;
@@ -611,23 +714,22 @@ public final class AdvancementDSL {
         }
 
         /**
-         * Set a custom requirements matrix. Each inner list is an AND group; the outer list is OR across groups.
+         * Make requirements be "any of" the provided criterion names (one OR group).
+         * Produces [["a","b",...]]
          */
-        public Builder requirementsMatrix(List<List<String>> matrix) {
+        public Builder requireAny(String... names) {
+            List<List<String>> matrix = new ArrayList<>();
+            matrix.add(Arrays.asList(names));
             this.requirements = matrix;
             return this;
         }
 
         /**
-         * Auto "all-of" current criteria. Called if requirements were not explicitly set.
+         * Set a custom requirements matrix. Each inner list is an OR group; the outer list is AND across groups.
          */
-        private JsonArray autoRequirementsFromCriteria() {
-            JsonArray outer = new JsonArray();
-            JsonArray inner = new JsonArray();
-            for (String n : criteria.keySet()) inner.add(n);
-            if (inner.size() == 0) inner.add("__missing");
-            outer.add(inner);
-            return outer;
+        public Builder requirementsMatrix(List<List<String>> matrix) {
+            this.requirements = matrix;
+            return this;
         }
 
         private JsonArray toJsonRequirements(List<List<String>> matrix) {
@@ -638,7 +740,25 @@ public final class AdvancementDSL {
                 outer.add(inner);
             }
             if (outer.size() == 0) {
-                outer.add(autoRequirementsFromCriteria().get(0));
+                JsonArray inner = new JsonArray();
+                inner.add("__missing");
+                outer.add(inner);
+            }
+            return outer;
+        }
+
+        private JsonArray cnfToRequirementsJson() {
+            JsonArray outer = new JsonArray();
+            for (Set<String> group : cnf) {
+                if (group.isEmpty()) continue;
+                JsonArray inner = new JsonArray();
+                for (String n : group) inner.add(n);
+                outer.add(inner);
+            }
+            if (outer.size() == 0) {
+                JsonArray inner = new JsonArray();
+                inner.add("__missing");
+                outer.add(inner);
             }
             return outer;
         }
@@ -660,10 +780,11 @@ public final class AdvancementDSL {
                 crit.add(e.getKey(), e.getValue());
             }
             json.add("criteria", crit);
-            if (requirements == null) {
-                json.add("requirements", autoRequirementsFromCriteria());
-            } else {
+
+            if (requirements != null) {
                 json.add("requirements", toJsonRequirements(requirements));
+            } else {
+                json.add("requirements", cnfToRequirementsJson());
             }
 
             return new Entry(idPath, json);

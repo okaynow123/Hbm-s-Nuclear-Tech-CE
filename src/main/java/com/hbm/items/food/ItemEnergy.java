@@ -3,15 +3,18 @@ package com.hbm.items.food;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -55,6 +58,7 @@ public class ItemEnergy extends Item {
 		return this;
 	}
 
+	@Spaghetti("clusterfuck")
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entity) {
 		if(!worldIn.isRemote && entity instanceof EntityPlayer player) {
@@ -62,6 +66,9 @@ public class ItemEnergy extends Item {
         		worldIn.newExplosion(player, player.posX, player.posY, player.posZ, 5F, true, true);
         		return super.onItemUseFinish(stack, worldIn, entity);
         	}
+			if (player instanceof EntityPlayerMP playerMP) {
+				CriteriaTriggers.CONSUME_ITEM.trigger(playerMP, stack);
+			}
 			VersatileConfig.applyPotionSickness(player, 5);
 			if(!player.capabilities.isCreativeMode) {
 				stack.shrink(1);

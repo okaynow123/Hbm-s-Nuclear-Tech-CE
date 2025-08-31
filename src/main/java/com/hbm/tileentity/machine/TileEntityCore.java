@@ -16,6 +16,7 @@ import com.hbm.items.machine.ItemCatalyst;
 import com.hbm.items.special.ItemAMSCore;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.main.AdvancementManager;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -23,6 +24,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -55,7 +57,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
     protected int consumption;
     protected int prevConsumption;
     private boolean lastTickValid = false;
-
+    private boolean hasGranted = false;
 
     public TileEntityCore() {
         super(3);
@@ -249,7 +251,14 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
         //check if a reaction can take place
         if (!isReady())
             return joules;
-
+        if (!hasGranted){
+            List<EntityPlayerMP> players = world.getEntitiesWithinAABB(
+                    EntityPlayerMP.class, new AxisAlignedBB(pos.getX() - 50 + 0.5, pos.getY() - 50 + 0.5, pos.getZ() - 50 + 0.5, pos.getX() + 50 + 0.5, pos.getY() + 50 + 0.5, pos.getZ() + 50 + 0.5));
+            for (EntityPlayerMP player : players) {
+                AdvancementManager.grantAchievement(player, AdvancementManager.progress_dfc);
+            }
+            hasGranted = true;
+        }
         int demand = (int) Math.ceil((double) joules / 1000D);
 
         //check if the reaction has enough valid fuel
@@ -354,6 +363,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
         tanks[0].readFromNBT(compound, "fuel1");
         tanks[1].readFromNBT(compound, "fuel2");
         this.field = compound.getInteger("field");
+        this.hasGranted = compound.getBoolean("hasGranted");
     }
 
     @Override
@@ -361,6 +371,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
         tanks[0].writeToNBT(compound, "fuel1");
         tanks[1].writeToNBT(compound, "fuel2");
         compound.setInteger("field", this.field);
+        compound.setBoolean("hasGranted", this.hasGranted);
         return super.writeToNBT(compound);
     }
 

@@ -1,14 +1,14 @@
 {
-  "parent": "hbm:achfusion",
+  "parent": "hbm:achpolymer",
   "display": {
     "icon": {
-      "item": "hbm:dfc_core"
+      "item": "hbm:hard_drive_full"
     },
     "title": {
-      "translate": "hbm.achievement.progress_dfc"
+      "translate": "achievement.driveFail"
     },
     "description": {
-      "translate": "hbm.achievement.progress_dfc.desc"
+      "translate": "achievement.driveFail.desc"
     },
     "frame": "challenge",
     "show_toast": true,

@@ -16,7 +16,7 @@
     "hidden": false
   },
   "criteria": {
-    "crafting": {
+    "crafting_hbm_gem_tantalium": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -29,7 +29,7 @@
   },
   "requirements": [
     [
-      "crafting"
+      "crafting_hbm_gem_tantalium"
     ]
   ]
 }

@@ -156,9 +156,10 @@ public class AdvancementManager {
         achRedBalloons  = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achredballoons"));
         achManhattan    = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achmanhattan"));
 
-        achDriveFail      = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achDriveFail"));
-        progress_dfc      = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "progress_dfc"));
-        root              = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "root"));
+        achDriveFail      = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achdrivefail")); // NTM SPACE
+        progress_dfc      = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "progress_dfc")); // 1.12.2 exclusive, kept because why not?
+        // TODO: Maybe add an achievement for SAFE
+        root              = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "root")); // 1.12.2 Root advancement
     }
 
     public static void grantAchievement(EntityPlayerMP player, Advancement a) {

@@ -16,31 +16,80 @@
     "hidden": false
   },
   "criteria": {
-    "crafting": {
+    "crafting_hbm_missile_nuclear": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "item": "hbm:missile_nuclear"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_missile_nuclear_cluster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:missile_nuclear_cluster"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_missile_doomsday": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:missile_doomsday"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_mp_warhead_10_nuclear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:mp_warhead_10_nuclear"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_mp_warhead_10_nuclear_large": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:mp_warhead_10_nuclear_large"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_mp_warhead_15_nuclear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:mp_warhead_15_nuclear"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_mp_warhead_15_nuclear_shark": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:mp_warhead_15_nuclear_shark"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_mp_warhead_15_boxcar": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:mp_warhead_15_boxcar"
           }
@@ -50,7 +99,14 @@
   },
   "requirements": [
     [
-      "crafting"
+      "crafting_hbm_missile_nuclear",
+      "crafting_hbm_missile_nuclear_cluster",
+      "crafting_hbm_missile_doomsday",
+      "crafting_hbm_mp_warhead_10_nuclear",
+      "crafting_hbm_mp_warhead_10_nuclear_large",
+      "crafting_hbm_mp_warhead_15_nuclear",
+      "crafting_hbm_mp_warhead_15_nuclear_shark",
+      "crafting_hbm_mp_warhead_15_boxcar"
     ]
   ]
 }

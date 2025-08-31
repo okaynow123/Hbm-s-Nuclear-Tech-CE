@@ -16,13 +16,20 @@
     "hidden": false
   },
   "criteria": {
-    "crafting": {
+    "crafting_hbm_machine_chemical_plant": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "item": "hbm:machine_chemical_plant"
-          },
+          }
+        ]
+      }
+    },
+    "crafting_hbm_machine_chemplant": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
           {
             "item": "hbm:machine_chemplant"
           }
@@ -32,7 +39,8 @@
   },
   "requirements": [
     [
-      "crafting"
+      "crafting_hbm_machine_chemical_plant",
+      "crafting_hbm_machine_chemplant"
     ]
   ]
 }

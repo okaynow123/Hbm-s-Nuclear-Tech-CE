@@ -19,11 +19,9 @@
     "eaten": {
       "trigger": "minecraft:consume_item",
       "conditions": {
-        "items": [
-          {
-            "item": "hbm:coffee_radium"
-          }
-        ]
+        "item": {
+          "item": "hbm:coffee_radium"
+        }
       }
     }
   },

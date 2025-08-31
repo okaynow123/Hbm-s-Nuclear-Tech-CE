@@ -16,7 +16,7 @@
     "hidden": false
   },
   "criteria": {
-    "crafting": {
+    "crafting_hbm_ingot_polymer": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -29,7 +29,7 @@
   },
   "requirements": [
     [
-      "crafting"
+      "crafting_hbm_ingot_polymer"
     ]
   ]
 }
