@@ -16,7 +16,7 @@ public interface ICustomBlockHighlight {
     @SideOnly(Side.CLIENT)
     public static void setup() {
         GlStateManager.enableBlend();
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
         GlStateManager.glLineWidth(2.0F);
         GlStateManager.disableTexture2D();

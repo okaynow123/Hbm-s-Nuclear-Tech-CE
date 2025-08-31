@@ -89,11 +89,11 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		// To prevent particles cutting off before fully fading out
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
 		GlStateManager.disableAlpha();
-		GL11.glDepthMask(false);
+		GlStateManager.depthMask(false);
 		RenderHelper.disableStandardItemLighting();
 		
 		bindTexture(cloudlet);
@@ -112,7 +112,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
 		tess.draw();
 
-		GL11.glDepthMask(true);
+		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);

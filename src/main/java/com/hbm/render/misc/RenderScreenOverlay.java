@@ -259,14 +259,14 @@ public class RenderScreenOverlay {
 	@Spaghetti("like a fella once said, aint that a kick in the head")
 	public static void renderDashBar(ScaledResolution resolution, Gui gui, HbmCapability.IHBMData props) {
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(false);
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableBlend();
+		GlStateManager.disableDepth();
+		GlStateManager.depthMask(false);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableAlpha();
 
 		Minecraft mc = Minecraft.getMinecraft();
 
@@ -313,7 +313,7 @@ public class RenderScreenOverlay {
 					fadeOut = 1F;
 				}
 				if(fadeOut > 0 && staminaDiv-1 == barID) {
-					GL11.glColor4f(1F, 1F, 1F, fadeOut);
+					GlStateManager.color(1F, 1F, 1F, fadeOut);
 					int bar = barID;
 					if(stamina % 30 >= 25)
 						bar++;
@@ -322,7 +322,7 @@ public class RenderScreenOverlay {
 					bar = bar % 3;
 					gui.drawTexturedModalRect(posX + (width + 2) * bar, posY - 12 * y, 76, 58, width, 10);
 					fadeOut -= 0.04F;
-					GL11.glColor4f(1F, 1F, 1F, 1F);
+					GlStateManager.color(1F, 1F, 1F, 1F);
 				}
 			}
 		}
@@ -351,21 +351,21 @@ public class RenderScreenOverlay {
 				fadeOut = 1F;
 			}
 			if(fadeOut > 0 && staminaDiv-1 == x) {
-				GL11.glColor4f(1F, 1F, 1F, fadeOut);
+				GlStateManager.color(1F, 1F, 1F, fadeOut);
 				int bar = x;
 				if(stamina % 60 >= 50)
 					bar++;
 				System.out.println(bar);
 				gui.drawTexturedModalRect(posX + 24*bar, posY, 76, 58, width, 10);
 				fadeOut -= 0.04F;
-				GL11.glColor4f(1F, 1F, 1F, 1F);
+				GlStateManager.color(1F, 1F, 1F, 1F);
 			}
 		}*/
 
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthMask(true);
-		GL11.glPopMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.depthMask(true);
+		GlStateManager.popMatrix();
 		mc.renderEngine.bindTexture(Gui.ICONS);
 	}
 

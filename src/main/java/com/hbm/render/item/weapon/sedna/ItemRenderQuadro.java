@@ -81,7 +81,7 @@ public class ItemRenderQuadro extends ItemRenderWeaponBase {
 			GlStateManager.pushAttrib();
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			float f3 = 0.04F;

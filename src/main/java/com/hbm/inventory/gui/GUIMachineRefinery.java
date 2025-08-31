@@ -73,7 +73,7 @@ public class GUIMachineRefinery extends GuiInfoContainer {
 		int j = (int)refinery.getPowerScaled(50);
 		drawModalRectWithCustomSizedTexture(guiLeft + 186, guiTop + 69 - j, 210, 52 - j, 16, j, 350, 256);
 
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0); // default
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0); // default
 
 		// input tank
 		FluidTankNTM inputOil = refinery.tanks[0];

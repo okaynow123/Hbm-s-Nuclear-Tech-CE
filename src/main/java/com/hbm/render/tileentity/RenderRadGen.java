@@ -84,15 +84,15 @@ public class RenderRadGen extends TileEntitySpecialRenderer<TileEntityMachineRad
 
     GlStateManager.enableBlend();
     GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-    OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    GL11.glDepthMask(false);
+    GlStateManager.depthMask(false);
 
     GlStateManager.color(0.5F, 0.75F, 1F, 0.3F);
     ResourceManager.radgen_body.renderPart("Glass");
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-    GL11.glDepthMask(true);
+    GlStateManager.depthMask(true);
     GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
     GlStateManager.disableBlend();
 

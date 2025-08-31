@@ -50,6 +50,7 @@ dependencies {
     implementation 'mezz:jei:4.29.1'
     implementation 'com.google.guava:guava:31.0.1-jre'
 
+    // Don't forget to restore these if you tweaked the runtime mods for testing!
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:6344449")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
@@ -58,9 +59,9 @@ dependencies {
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregic-probe-ceu-1109784:6393352")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848")
-//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:6839240")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:6839240")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6675988")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:configanytime-870276:5212709")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:fluidlogged-api-485654:3845703")
-//    runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
+    runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
 }

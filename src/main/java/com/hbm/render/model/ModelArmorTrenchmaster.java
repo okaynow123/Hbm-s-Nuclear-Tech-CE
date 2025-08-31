@@ -1,6 +1,7 @@
 package com.hbm.render.model;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 
 import com.hbm.main.ResourceManager;
@@ -34,10 +35,10 @@ public class ModelArmorTrenchmaster extends ModelArmorBase {
 				this.head.copyTo(this.light);
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.trenchmaster_helmet);
 				head.render(par7 * 1.001F);
-				GL11.glEnable(GL11.GL_BLEND);
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				GlStateManager.enableBlend();
+				GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 				head.render(par7);
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.disableBlend();
 
 				/// START GLOW ///
 				float lastX = OpenGlHelper.lastBrightnessX;

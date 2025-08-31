@@ -213,7 +213,7 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable, IPl
 
 
     @Override
-        public List<ItemStack> getDrops(IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
+    public List<ItemStack> getDrops(IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
         World world = (World) blockAccess;
         List<ItemStack> drops = NonNullList.create();
         EnumTallPlantType type = (EnumTallPlantType) getEnumFromState(state);

@@ -11,100 +11,103 @@ import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineChemicalPlant;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+
 @AutoRegister
 public class RenderChemicalPlant extends TileEntitySpecialRenderer<TileEntityMachineChemicalPlant> implements IItemRendererProvider {
 
     @Override
     public void render(TileEntityMachineChemicalPlant chemplant, double x, double y, double z, float interp, int destroyStage, float alpha) {
         GlStateManager.enableAlpha();
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y, z + 0.5);
-        GL11.glRotated(90, 0, 1, 0);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5, y, z + 0.5);
+        GlStateManager.rotate(90F, 0F, 1F, 0F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         switch (chemplant.getBlockMetadata() - BlockDummyable.offset) {
-            case 2 -> GL11.glRotatef(0, 0F, 1F, 0F);
-            case 4 -> GL11.glRotatef(90, 0F, 1F, 0F);
-            case 3 -> GL11.glRotatef(180, 0F, 1F, 0F);
-            case 5 -> GL11.glRotatef(270, 0F, 1F, 0F);
+            case 2 -> GlStateManager.rotate(0F, 0F, 1F, 0F);
+            case 4 -> GlStateManager.rotate(90F, 0F, 1F, 0F);
+            case 3 -> GlStateManager.rotate(180F, 0F, 1F, 0F);
+            case 5 -> GlStateManager.rotate(270F, 0F, 1F, 0F);
         }
         float anim = chemplant.prevAnim + (chemplant.anim - chemplant.prevAnim) * interp;
         GenericRecipe recipe = ChemicalPlantRecipes.INSTANCE.recipeNameMap.get(chemplant.chemplantModule.recipe);
 
         bindTexture(ResourceManager.chemical_plant_tex);
         ResourceManager.chemical_plant.renderPart("Base");
-        if(chemplant.frame) ResourceManager.chemical_plant.renderPart("Frame");
+        if (chemplant.frame) ResourceManager.chemical_plant.renderPart("Frame");
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(BobMathUtil.sps(anim * 0.125) * 0.375, 0, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(BobMathUtil.sps(anim * 0.125) * 0.375, 0, 0);
         ResourceManager.chemical_plant.renderPart("Slider");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(0.5, 0, 0.5);
-        GL11.glRotated((anim * 15) % 360D, 0, 1, 0);
-        GL11.glTranslated(-0.5, 0, -0.5);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.5, 0, 0.5);
+        GlStateManager.rotate((anim * 15) % 360F, 0, 1, 0);
+        GlStateManager.translate(-0.5, 0, -0.5);
         ResourceManager.chemical_plant.renderPart("Spinner");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        if(chemplant.didProcess && recipe != null) {
+        if (chemplant.didProcess && recipe != null) {
             int colors = 0;
-            int r = 0;
-            int g = 0;
-            int b = 0;
-            if(recipe.outputFluid != null) for(FluidStack stack : recipe.outputFluid) {
-                Color color = new Color(stack.type.getColor());
-                r += color.getRed();
-                g += color.getGreen();
-                b += color.getBlue();
-                colors++;
+            int r = 0, g = 0, b = 0;
+
+            if (recipe.outputFluid != null) {
+                for (FluidStack stack : recipe.outputFluid) {
+                    Color c = new Color(stack.type.getColor());
+                    r += c.getRed();
+                    g += c.getGreen();
+                    b += c.getBlue();
+                    colors++;
+                }
             }
 
-            if(colors == 0 && recipe.inputFluid != null) for(FluidStack stack : recipe.inputFluid) {
-                Color color = new Color(stack.type.getColor());
-                r += color.getRed();
-                g += color.getGreen();
-                b += color.getBlue();
-                colors++;
+            if (colors == 0 && recipe.inputFluid != null) {
+                for (FluidStack stack : recipe.inputFluid) {
+                    Color c = new Color(stack.type.getColor());
+                    r += c.getRed();
+                    g += c.getGreen();
+                    b += c.getBlue();
+                    colors++;
+                }
             }
 
-            if(colors > 0) {
+            if (colors > 0) {
                 bindTexture(ResourceManager.chemical_plant_fluid_tex);
 
-                GL11.glPushMatrix();
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL11.GL_BLEND);
-                GL11.glAlphaFunc(GL11.GL_GREATER, 0);
-                OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                GL11.glColor4f(r / 255F / colors, g / 255F / colors, b / 255F / colors, 0.5F);
-                GL11.glDepthMask(false);
+                GlStateManager.pushMatrix();
+                GlStateManager.disableLighting();
+                GlStateManager.enableBlend();
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
+                GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+                GlStateManager.color((r / 255F) / colors, (g / 255F) / colors, (b / 255F) / colors, 0.5F);
+                GlStateManager.depthMask(false);
 
-                GL11.glMatrixMode(GL11.GL_TEXTURE);
-                GL11.glLoadIdentity();
-                GL11.glTranslated(-anim / 100F, BobMathUtil.sps(anim * 0.1) * 0.1 - 0.25, 0);
+                GlStateManager.matrixMode(GL11.GL_TEXTURE);
+                GlStateManager.loadIdentity();
+                GlStateManager.translate(-anim / 100F, BobMathUtil.sps(anim * 0.1) * 0.1 - 0.25, 0);
                 ResourceManager.chemical_plant.renderPart("Fluid");
-                GL11.glMatrixMode(GL11.GL_TEXTURE);
-                GL11.glLoadIdentity();
-                GL11.glMatrixMode(GL11.GL_MODELVIEW);
+                GlStateManager.matrixMode(GL11.GL_TEXTURE);
+                GlStateManager.loadIdentity();
+                GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
-                GL11.glDepthMask(true);
-                GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.depthMask(true);
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+                GlStateManager.disableBlend();
+                GlStateManager.enableLighting();
+                GlStateManager.color(1F, 1F, 1F, 1F);
 
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
 
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glPopMatrix();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -114,23 +117,25 @@ public class RenderChemicalPlant extends TileEntitySpecialRenderer<TileEntityMac
 
     @Override
     public ItemRenderBase getRenderer(Item item) {
-
         return new ItemRenderBase() {
-
+            @Override
             public void renderInventory() {
-                GL11.glTranslated(0, -2.75, 0);
-                GL11.glScaled(4.5, 4.5, 4.5);
+                GlStateManager.translate(0, -2.75, 0);
+                GlStateManager.scale(4.5, 4.5, 4.5);
             }
+
+            @Override
             public void renderCommon() {
-                GL11.glRotated(90, 0, 1, 0);
-                GL11.glScaled(0.75, 0.75, 0.75);
-                GL11.glShadeModel(GL11.GL_SMOOTH);
+                GlStateManager.rotate(90F, 0F, 1F, 0F);
+                GlStateManager.scale(0.75, 0.75, 0.75);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
                 bindTexture(ResourceManager.chemical_plant_tex);
                 ResourceManager.chemical_plant.renderPart("Base");
                 ResourceManager.chemical_plant.renderPart("Slider");
                 ResourceManager.chemical_plant.renderPart("Spinner");
                 ResourceManager.chemical_plant.renderPart("Frame");
-                GL11.glShadeModel(GL11.GL_FLAT);
-            }};
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
+        };
     }
 }

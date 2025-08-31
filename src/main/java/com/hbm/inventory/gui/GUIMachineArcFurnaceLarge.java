@@ -121,7 +121,7 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
             lastHeight = targetHeight;
         }
 
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glColor3f(255, 255, 255);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(255, 255, 255);
     }
 }

@@ -115,7 +115,7 @@ public class GUIMachineChemicalFactory extends GuiInfoContainer {
                 }
 
                 Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-                OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+                GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.color(1F, 1F, 1F, 0.5F);
                 GlStateManager.enableBlend();
                 this.zLevel = 300F;

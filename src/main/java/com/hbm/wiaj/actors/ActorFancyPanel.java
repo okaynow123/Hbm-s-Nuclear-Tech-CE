@@ -322,7 +322,7 @@ public class ActorFancyPanel implements ISpecialActor {
 		} else if(element instanceof ItemStack) {
 			
 			ItemStack stack = (ItemStack) element;
-			GL11.glColor3f(1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F);
 
 			if(stack.getCount() == 0) {
 				this.drawGradientRect(x - 1, y - 1 - 8, x + 17, y + 17, 0xffff0000, 0xffff0000);
@@ -331,7 +331,7 @@ public class ActorFancyPanel implements ISpecialActor {
 			itemRender.renderItemAndEffectIntoGUI(stack, x, y - 8);
 			itemRender.renderItemOverlayIntoGUI(this.font, stack, x, y - 8, null);
 			RenderHelper.disableStandardItemLighting();
-			GL11.glColor3f(1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F);
 			GlStateManager.disableDepth();
 		} //TODO: scaled stacks
 	}
@@ -361,7 +361,7 @@ public class ActorFancyPanel implements ISpecialActor {
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();

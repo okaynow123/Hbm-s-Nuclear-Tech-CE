@@ -444,7 +444,7 @@ public class ModelB93 extends ModelBase {
 		Nix32.render(f5);
         GlStateManager.enableBlend();
         //GlStateManager.disableAlpha();
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		Nix1.render(f5);
 		Nix2.render(f5);
 		Nix3.render(f5);

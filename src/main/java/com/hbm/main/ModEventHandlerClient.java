@@ -1572,10 +1572,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             buffer.pos(buff, height - buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
             buffer.pos(width - buff, height - buff, 0).color(1F, 1F, 1F, brightness * 1F).endVertex();
             tess.draw();
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.enableTexture2D();
             GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
-            GL11.glDepthMask(true);
+            GlStateManager.depthMask(true);
             return;
         }
 

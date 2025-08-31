@@ -53,21 +53,21 @@ public class RenderMixer extends TileEntitySpecialRenderer<TileEntityMachineMixe
     }
 
     if (totalFill > 0) {
-      GL11.glDepthMask(false);
+      GlStateManager.depthMask(false);
       GlStateManager.disableTexture2D();
       GlStateManager.enableBlend();
       GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-      OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+      GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
       Color color = new Color(mixer.tanks[2].getTankType().getColor());
       GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.75F);
       GlStateManager.translate(0, 1, 0);
-      GL11.glScaled(1, (double) totalFill / (double) totalMax * 0.99, 1);
+      GlStateManager.scale(1, (double) totalFill / (double) totalMax * 0.99, 1);
       GlStateManager.translate(0, -1, 0);
       ResourceManager.mixer.renderPart("Fluid");
 
       GlStateManager.color(1F, 1F, 1F, 1F);
-      GL11.glDepthMask(true);
+      GlStateManager.depthMask(true);
       GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
       GlStateManager.disableBlend();
       GlStateManager.enableTexture2D();

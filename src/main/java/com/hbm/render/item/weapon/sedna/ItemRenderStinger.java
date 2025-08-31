@@ -70,7 +70,7 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
 		String label = "Not accurate";

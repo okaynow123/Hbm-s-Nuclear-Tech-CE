@@ -39,7 +39,7 @@ public class ModelArmorDigamma extends ModelArmorBase {
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fau_chest);
 				body.render(par7 * 1.1F);
 				GlStateManager.enableBlend();
-				OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fau_cassette);
 				cassette.render(par7 * 1.1F);
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fau_arm);

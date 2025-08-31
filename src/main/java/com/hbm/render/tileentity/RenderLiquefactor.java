@@ -47,7 +47,7 @@ public class RenderLiquefactor extends TileEntitySpecialRenderer<TileEntityMachi
 
         GlStateManager.enableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.75F, 1.0F, 1.0F, 0.15F);
         GlStateManager.depthMask(false);
 

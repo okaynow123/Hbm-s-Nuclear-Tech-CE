@@ -1,6 +1,7 @@
 package com.hbm.render.model;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.main.ResourceManager;
@@ -33,10 +34,10 @@ public class ModelArmorEnvsuit extends ModelArmorBase {
 			case 0 -> {
 				this.head.copyTo(this.lamps);
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.envsuit_helmet);
-				GL11.glEnable(GL11.GL_BLEND);
-				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				GlStateManager.enableBlend();
+				GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 				this.head.render(par7);
-				GL11.glDisable(GL11.GL_BLEND);
+				GlStateManager.disableBlend();
 
 				/// START GLOW ///
 				float lastX = OpenGlHelper.lastBrightnessX;

@@ -95,8 +95,8 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
     	
 
         GlStateManager.disableDepth();
-        GL11.glDepthMask(false);
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.depthMask(false);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableAlpha();
         Minecraft.getMinecraft().getTextureManager().bindTexture(asbestosBlur);
@@ -106,7 +106,7 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
         NTMRenderHelper.addVertexWithUV((double)resolution.getScaledWidth(), 0.0D, -90.0D, 1.0D, 0.0D);
         NTMRenderHelper.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
         NTMRenderHelper.draw();
-        GL11.glDepthMask(true);
+		GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

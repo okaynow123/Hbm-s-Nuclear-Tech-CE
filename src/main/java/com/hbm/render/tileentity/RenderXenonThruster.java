@@ -58,16 +58,16 @@ public class RenderXenonThruster extends TileEntitySpecialRenderer<TileEntityXen
       ResourceManager.xenon_thruster.renderPart("Thruster");
 
       if (trailStretch > 0) {
-        GL11.glColor4d(1, 1, 1, te.thrustAmount);
+        GlStateManager.color(1, 1, 1, te.thrustAmount);
 
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
-        OpenGlHelper.glBlendFunc(
+        GlStateManager.tryBlendFuncSeparate(
             GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-        GL11.glDepthMask(false);
+        GlStateManager.depthMask(false);
 
         GlStateManager.translate(0, 0, -1F);
         GlStateManager.scale(1, 1, trailStretch);
@@ -76,13 +76,13 @@ public class RenderXenonThruster extends TileEntitySpecialRenderer<TileEntityXen
         bindTexture(ResourceManager.xenon_exhaust_tex);
         ResourceManager.xenon_thruster.renderPart("Exhaust");
 
-        GL11.glDepthMask(true);
+        GlStateManager.depthMask(true);
         GL11.glPopAttrib();
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
         GlStateManager.disableBlend();
 
-        GL11.glColor4d(1, 1, 1, 1);
+        GlStateManager.color(1, 1, 1, 1);
       }
 
       GlStateManager.shadeModel(GL11.GL_FLAT);

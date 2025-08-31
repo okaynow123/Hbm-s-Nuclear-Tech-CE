@@ -59,7 +59,7 @@ public class RenderInfoSystemLegacy {
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
         int longest = 0;
 

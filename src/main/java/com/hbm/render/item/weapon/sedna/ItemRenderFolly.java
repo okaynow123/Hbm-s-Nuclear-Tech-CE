@@ -114,7 +114,7 @@ public class ItemRenderFolly extends ItemRenderWeaponBase {
 			GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 			GlStateManager.disableLighting();
 			GlStateManager.disableCull();
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			float variance = 0.85F + player.getRNG().nextFloat() * 0.15F;
