@@ -42,7 +42,7 @@ public class XFactory50 {
                 .setCasing(casing762.clone().setColor(SpentCasing.COLOR_CASE_44).register("bmg50ap"));
         bmg50_du = new BulletConfig().setItem(GunFactory.EnumAmmo.BMG50_DU).setCasing(ItemEnums.EnumCasingType.LARGE_STEEL, 12).setDoesPenetrate(true).setDamageFalloutByPen(false).setDamage(2.5F).setThresholdNegation(21F).setArmorPiercing(0.25F)
                 .setCasing(casing762.clone().setColor(SpentCasing.COLOR_CASE_44).register("bmg50du"));
-        bmg50_he = new BulletConfig().setItem(GunFactory.EnumAmmo.BMG50_HE).setCasing(ItemEnums.EnumCasingType.LARGE_STEEL, 12).setWear(3F).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.75F).setOnImpact(LAMBDA_STANDARD_EXPLODE)
+/*        bmg50_he = new BulletConfig().setItem(GunFactory.EnumAmmo.BMG50_HE).setCasing(ItemEnums.EnumCasingType.LARGE_STEEL, 12).setWear(3F).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.75F).setOnImpact(LAMBDA_STANDARD_EXPLODE)
                 .setCasing(casing50.clone().setColor(SpentCasing.COLOR_CASE_44).register("bmg50he"));
         bmg50_sm = new BulletConfig().setItem(GunFactory.EnumAmmo.BMG50_SM).setCasing(ItemEnums.EnumCasingType.LARGE_STEEL, 6).setWear(10F).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(2.5F).setThresholdNegation(30F).setArmorPiercing(0.35F)
                 .setCasing(casing50.clone().setColor(SpentCasing.COLOR_CASE_44).register("bmg50sm"));
@@ -81,7 +81,7 @@ public class XFactory50 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_AMAT_ANIMS).orchestra(Orchestras.ORCHESTRA_AMAT)
         ).setUnlocalizedName("gun_amat_penance");
-
+*/
         ModItems.gun_m2 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_m2", new GunConfig()
                 .dura(3_000).draw(10).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
@@ -96,12 +96,10 @@ public class XFactory50 {
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_SMOKE = (stack, ctx) -> Lego.handleStandardSmoke(ctx.entity, stack, 2000, 0.05D, 1.1D, 0);
 
-    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_RECOIL_AMAT = (stack, ctx) -> {
-        ItemGunBaseNT.setupRecoil(12.5F, (float) (ctx.getPlayer().getRNG().nextGaussian() * 1));
-    };
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_RECOIL_AMAT = (stack, ctx) -> ItemGunBaseNT.setupRecoil(12.5F, (float) (ctx.getPlayer().getRNG().nextGaussian() * 1));
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_RECOIL_M2 = (stack, ctx) -> ItemGunBaseNT.setupRecoil((float) (ctx.getPlayer().getRNG().nextGaussian() * 0.5), (float) (ctx.getPlayer().getRNG().nextGaussian() * 0.5));
-
+/*
     @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimations.AnimType, BusAnimation> LAMBDA_AMAT_ANIMS = (stack, type) -> {
         double turn = -60;
         double pullAmount = -2.5;
@@ -139,7 +137,7 @@ public class XFactory50 {
 
         return null;
     };
-
+*/
     @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_M2_ANIMS = (stack, type) -> switch (type) {
         case EQUIP -> new BusAnimationSedna()
                 .addBus("EQUIP", new BusAnimationSequenceSedna().addPos(80, 0, 0, 0).addPos(0, 0, 0, 500, IType.SIN_FULL));
