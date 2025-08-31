@@ -11,12 +11,14 @@ import com.hbm.explosion.ExplosionNukeRayBatched;
 import com.hbm.explosion.ExplosionNukeRayParallelized;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IExplosionRay;
+import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Biomes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -123,6 +125,9 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         }
         //load own chunk
         loadMainChunk();
+        for (EntityPlayer player : this.world.playerEntities) {
+            AdvancementManager.grantAchievement(player, AdvancementManager.achManhattan);
+        }
         if (fallout && explosion != null && this.ticksExisted < 10 && strength >= 75) {
             radiate(2_500_000F / (this.ticksExisted * 5 + 1), this.radius * 2.0D);
         }

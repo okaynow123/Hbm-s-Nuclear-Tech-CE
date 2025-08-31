@@ -1,13 +1,13 @@
 package com.hbm.entity.logic;
 
+import com.hbm.explosion.*;
+import com.hbm.main.AdvancementManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.effect.EntityFalloutRain;
-import com.hbm.explosion.ExplosionDrying;
-import com.hbm.explosion.ExplosionFleija;
-import com.hbm.explosion.ExplosionNukeAdvanced;
-import com.hbm.explosion.ExplosionSolinium;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.Spaghetti;
@@ -15,7 +15,6 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -24,6 +23,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
@@ -55,6 +55,8 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 	public int extType = 0;
 	private Ticket loaderTicket;
 	public UUID detonator = null;
+	private int lastChunkX = Integer.MIN_VALUE;
+	private int lastChunkZ = Integer.MIN_VALUE;
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
@@ -71,9 +73,11 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 			detonator = nbt.getUniqueId("detonator");
 		long time = nbt.getLong("milliTime");
 		
-		if(BombConfig.limitExplosionLifespan > 0 && System.currentTimeMillis() - time > BombConfig.limitExplosionLifespan * 1000)
+		if(BombConfig.limitExplosionLifespan > 0 && System.currentTimeMillis() - time > BombConfig.limitExplosionLifespan * 1000) {
+			clearChunkLoader();
 			this.setDead();
-		
+		}
+
     	if(this.waste)
     	{
         	exp = new ExplosionNukeAdvanced((int)this.posX, (int)this.posY, (int)this.posZ, this.world, this.destructionRange, this.coefficient, 0);
@@ -151,9 +155,22 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 			this.setDead();
 			return;
 		}
-        
+
+		if(loaderTicket != null) {
+			final int curChunkX = MathHelper.floor(this.posX) >> 4;
+			final int curChunkZ = MathHelper.floor(this.posZ) >> 4;
+			if (curChunkX != lastChunkX || curChunkZ != lastChunkZ) {
+				loadNeighboringChunks(curChunkX, curChunkZ);
+				lastChunkX = curChunkX;
+				lastChunkZ = curChunkZ;
+			}
+		}
+
         if(!this.did)
         {
+			for (EntityPlayer player : this.world.playerEntities) {
+				AdvancementManager.grantAchievement(player, AdvancementManager.achManhattan);
+			}
     		if(GeneralConfig.enableExtendedLogging && !world.isRemote)
     			MainRegistry.logger.log(Level.INFO, "[NUKE] Initialized mk3 explosion at " + posX + " / " + posY + " / " + posZ + " with strength " + destructionRange + "!");
     		
@@ -192,9 +209,13 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
         {
         	if(waste) {
         		flag = exp.update();
+        		if (wst != null) {
+        			wst.update();
+        		}
         		flag3 = vap.update();
         		
         		if(flag3) {
+        			clearChunkLoader();
         			this.setDead();
         		}
         	} else {
@@ -213,11 +234,11 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
         if(!flag)
         {
         	this.world.playSound(this.posX, this.posY, this.posZ, SoundEvents.ENTITY_LIGHTNING_THUNDER, SoundCategory.AMBIENT, 10000.0F, 0.8F + this.rand.nextFloat() * 0.2F, true);
-        	if(waste || extType != 1) {
-        		ContaminationUtil.radiate(this.world, this.posX, this.posY, this.posZ, this.destructionRange * 1D, 0F, 0F, 0F, this.destructionRange * 2F, this.destructionRange);
-        	} else {
-        		ContaminationUtil.radiate(world, posX, posY, posZ, this.destructionRange, 250000F);
-        	}
+			if(waste || extType != 1) {
+				ExplosionNukeGeneric.dealDamage(this.world, this.posX, this.posY, this.posZ, this.destructionRange * 2);
+			} else {
+				ExplosionHurtUtil.doRadiation(world, posX, posY, posZ, 15000, 250000, this.destructionRange);
+			}
         } else {
 			if (!did2 && waste) {
 				EntityFalloutRain fallout = new EntityFalloutRain(this.world);
@@ -287,7 +308,7 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
         }
 	}
 
-	public static HashMap<ATEntry, Long> at = new HashMap();
+	public static HashMap<ATEntry, Long> at = new HashMap<>();
 
 	private static void createParticle(World world, int dim, double x, double y, double z, float r, float g, float b) {
 		world.playSound(null, x+0.5D, y+0.5D, z+0.5D, HBMSoundHandler.ufoBlast, SoundCategory.HOSTILE, 15.0F, 1.0F);
@@ -391,6 +412,28 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 	public void setDetonator(Entity detonator){
 		if(detonator instanceof EntityPlayerMP)
 			this.detonator = detonator.getUniqueID();
+	}
+
+	private void clearChunkLoader() {
+		if (world.isRemote) return;
+		if (loaderTicket != null) {
+			for (ChunkPos chunk : loadedChunks) {
+				ForgeChunkManager.unforceChunk(loaderTicket, chunk);
+			}
+			loadedChunks.clear();
+			try {
+				ForgeChunkManager.releaseTicket(loaderTicket);
+			} catch (Throwable ignored) {}
+			loaderTicket = null;
+		}
+	}
+
+	@Override
+	public void setDead() {
+		if (!world.isRemote) {
+			clearChunkLoader();
+		}
+		super.setDead();
 	}
 
 	public static class ATEntry {
