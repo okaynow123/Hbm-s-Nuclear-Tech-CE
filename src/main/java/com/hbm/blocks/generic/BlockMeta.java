@@ -48,6 +48,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
     public final short META_COUNT;
+    protected boolean separateTranslationKeys = true;
 
     protected BlockBakeFrame[] blockFrames;
     private boolean showMetaInCreative = true;
@@ -83,6 +84,15 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         this.showMetaInCreative = showMetaInCreative;
         INSTANCES.add(this);
     }
+
+    public BlockMeta(Material m, String s, short metaCount, boolean showMetaInCreative, BlockBakeFrame... frames) {
+        super(m, s);
+        META_COUNT = metaCount;
+        this.showMetaInCreative = showMetaInCreative;
+        this.blockFrames = frames;
+        INSTANCES.add(this);
+    }
+
 
     public BlockMeta(Material mat, SoundType type, String s, BlockBakeFrame... blockFrames) {
         this(mat, type, s, (short) blockFrames.length);
@@ -159,7 +169,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
 
     public void registerItem() {
-        ItemBlock itemBlock = new MetaBlockItem(this);
+        ItemBlock itemBlock = new MetaBlockItem(this, separateTranslationKeys);
         itemBlock.setRegistryName(this.getRegistryName());
         if (showMetaInCreative) itemBlock.setCreativeTab(this.getCreativeTab());
         ForgeRegistries.ITEMS.register(itemBlock);
@@ -208,11 +218,19 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     public static class MetaBlockItem extends ItemBlock implements IModelRegister {
         BlockMeta metaBlock = (BlockMeta) this.block;
+        boolean separateTranslationKeys = true;
 
         public MetaBlockItem(Block block) {
             super(block);
             this.hasSubtypes = true;
             this.canRepair = false;
+        }
+
+        public MetaBlockItem(Block block, boolean transationKeys) {
+            super(block);
+            this.hasSubtypes = true;
+            this.canRepair = false;
+            this.separateTranslationKeys = transationKeys;
         }
 
         @Override
@@ -261,7 +279,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
         @Override
         public String getTranslationKey(ItemStack stack) {
-            return super.getTranslationKey() + "_" + stack.getItemDamage();
+            return separateTranslationKeys ? super.getTranslationKey() + "_" + stack.getItemDamage() : super.getTranslationKey();
         }
 
 
