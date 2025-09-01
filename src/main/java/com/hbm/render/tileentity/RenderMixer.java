@@ -8,7 +8,6 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineMixer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
@@ -19,14 +18,8 @@ public class RenderMixer extends TileEntitySpecialRenderer<TileEntityMachineMixe
     implements IItemRendererProvider {
 
   @Override
-  public void render(
-      TileEntityMachineMixer mixer,
-      double x,
-      double y,
-      double z,
-      float partialTicks,
-      int destroyStage,
-      float alpha) {
+  public void render(TileEntityMachineMixer mixer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    GlStateManager.enableAlpha();
     GlStateManager.pushMatrix();
     GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();

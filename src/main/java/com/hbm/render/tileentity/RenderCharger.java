@@ -1,37 +1,116 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.render.misc.BeamPronter;
-import com.hbm.render.misc.BeamPronter.EnumBeamType;
-import com.hbm.render.misc.BeamPronter.EnumWaveType;
+import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityCharger;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
+import org.lwjgl.opengl.GL11;
+// FIXME inventory render
 @AutoRegister
-public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> {
-	
+public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> implements IItemRendererProvider {
 	@Override
-	public boolean isGlobalRenderer(TileEntityCharger te) {
-		return te.isOn;
+	public void render(TileEntityCharger charger, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5, y, z + 0.5);
+		GlStateManager.enableLighting();
+		GlStateManager.rotate(90F, 0F, 1F, 0F);
+		switch (charger.getBlockMetadata()) {
+			case 4 -> GlStateManager.rotate(90F, 0F, 1F, 0F);
+			case 3 -> GlStateManager.rotate(180F, 0F, 1F, 0F);
+			case 5 -> GlStateManager.rotate(270F, 0F, 1F, 0F);
+			case 2 -> GlStateManager.rotate(0F, 0F, 1F, 0F);
+		}
+
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
+		bindTexture(ResourceManager.charger_tex);
+		ResourceManager.charger.renderPart("Base");
+
+		double time = (charger.lastUsingTicks + (charger.usingTicks - charger.lastUsingTicks) * partialTicks) / (double) charger.delay;
+
+		double extend = Math.min(1, time * 2);
+		double swivel = Math.max(0, (time - 0.5) * 2);
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(-0.34375D, 0.25D, 0);
+		GlStateManager.rotate(10F, 0F, 0F, 1F);
+		GlStateManager.translate(0.34375D, -0.25D, 0);
+
+		GlStateManager.translate(0, -0.25 * extend, 0);
+
+		//ResourceManager.charger.renderPart("Slide");
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0.28D, 0);
+		GlStateManager.rotate(30F * (float) swivel, 1F, 0F, 0F);
+		GlStateManager.translate(0, -0.28D, 0);
+		ResourceManager.charger.renderPart("Left");
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0.28D, 0);
+		GlStateManager.rotate(-30F * (float) swivel, 1F, 0F, 0F);
+		GlStateManager.translate(0, -0.28D, 0);
+		ResourceManager.charger.renderPart("Right");
+		GlStateManager.popMatrix();
+
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableLighting();
+		GlStateManager.disableCull();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+
+		GlStateManager.color(1F, 0.75F, 0F, 1F);
+		ResourceManager.charger.renderPart("Light");
+		GlStateManager.color(1F, 1F, 1F, 1F);
+
+		GlStateManager.translate(-0.34375D, 0.25D, 0);
+		GlStateManager.rotate(10F, 0F, 0F, 1F);
+		GlStateManager.translate(0.34375D, -0.25D, 0);
+		GlStateManager.translate(0, -0.25 * extend, 0);
+		GlStateManager.enableTexture2D();
+
+		ResourceManager.charger.renderPart("Slide");
+
+		GlStateManager.enableLighting();
+
+		GL11.glPopAttrib();
+		GlStateManager.popMatrix();
+
+		GlStateManager.shadeModel(GL11.GL_FLAT);
+
+		GlStateManager.popMatrix();
 	}
 
 	@Override
-	public void render(TileEntityCharger te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+	public Item getItemForRenderer() {
+		return Item.getItemFromBlock(ModBlocks.charger);
+	}
 
-		if(te.isOn){
-			GlStateManager.pushMatrix();
-	        GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
-	        GlStateManager.enableLighting();
-			GlStateManager.enableCull();
-			GlStateManager.color(1, 1, 1, 1);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-			 
-	        BeamPronter.prontBeam(Vec3.createVectorHelper(0, te.pointingUp ? te.range + 0.5 : -te.range - 0.5, 0).toVec3d(), EnumWaveType.STRAIGHT, EnumBeamType.SOLID, 0x002038, 0x002038, 0, 1, 0F, 1, 0.499F);
-	        
-	        GlStateManager.popMatrix();
-       	}
+	@Override
+	public ItemRenderBase getRenderer(Item item) {
+		return new ItemRenderBase() {
+			public void renderInventory() {
+				GlStateManager.translate(0, -3, 0);
+				GlStateManager.scale(6, 6, 6);
+			}
+			public void renderCommon() {
+				GlStateManager.scale(2, 2, 2);
+				GlStateManager.shadeModel(GL11.GL_SMOOTH);
+				bindTexture(ResourceManager.charger_tex);
+				ResourceManager.charger.renderAll();
+				GlStateManager.shadeModel(GL11.GL_FLAT);
+			}
+		};
 	}
 }

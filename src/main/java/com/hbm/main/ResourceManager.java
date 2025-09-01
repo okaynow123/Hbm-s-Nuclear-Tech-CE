@@ -417,6 +417,10 @@ public class ResourceManager {
 	//Electrolyser
 	public static final IModelCustom electrolyser = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/electrolyser.obj")).asVBO();
 
+	//Charging Station
+	public static final IModelCustom charger = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/charger.obj")).asVBO();
+	public static final IModelCustom refueler = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/refueler.obj")).asVBO();
+
 	//DecoContainer (File Cabinet for now)
 	public static final IModelCustom file_cabinet = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/file_cabinet.obj")).asVBO();
 
@@ -928,6 +932,10 @@ public class ResourceManager {
 
 	//Electrolyser
 	public static final ResourceLocation electrolyser_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/electrolyser.png");
+
+	//Charger
+	public static final ResourceLocation charger_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/charger.png");
+	public static final ResourceLocation refueler_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/refueler.png");
 
 	//DecoContainer
 	public static final ResourceLocation file_cabinet_tex = new ResourceLocation(RefStrings.MODID, "textures/models/file_cabinet.png");

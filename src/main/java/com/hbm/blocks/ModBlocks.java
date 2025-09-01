@@ -786,6 +786,9 @@ public class ModBlocks {
 	public static final Block barbed_wire_ultradeath = new BarbedWire(Material.IRON, "barbed_wire_ultradeath").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
 	public static final Block spikes = new Spikes(Material.IRON, "spikes").setHardness(2.5F).setResistance(5.0F).setCreativeTab(MainRegistry.blockTab);
 
+	public static final Block charger = new Charger(Material.IRON, "charger").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
+	public static final Block refueler = new BlockRefueler(Material.IRON, "refueler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
+
 	// Crates
 	public static final Block crate = new BlockCrate(Material.IRON, "crate").setSoundType(SoundType.WOOD).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
 	public static final Block crate_weapon = new BlockCrate(Material.IRON, "crate_weapon").setSoundType(SoundType.WOOD).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
@@ -836,10 +839,10 @@ public class ModBlocks {
 	public static final Block machine_electronium_battery = new MachineBattery(Material.IRON, 1000000000000000L, "machine_electronium_battery").setHardness(16.0F).setResistance(7000000.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_fensu = new MachineFENSU(Material.IRON, "machine_fensu").setHardness(5.0F).setResistance(10000000.0F).setCreativeTab(MainRegistry.machineTab);
 
-	public static final Block machine_transformer = new MachineCharger(Material.IRON, "machine_transformer", 1000000L, true).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_transformer_20 = new MachineCharger(Material.IRON, "machine_transformer_20", 1000000L, false).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_transformer_dnt = new MachineCharger(Material.IRON, "machine_transformer_dnt", Long.MAX_VALUE, true).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_transformer_dnt_20 = new MachineCharger(Material.IRON, "machine_transformer_dnt_20", Long.MAX_VALUE, false).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_transformer = new BlockBase(Material.IRON, "machine_transformer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_transformer_20 = new BlockBase(Material.IRON, "machine_transformer_20").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_transformer_dnt = new BlockBase(Material.IRON, "machine_transformer_dnt").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_transformer_dnt_20 = new BlockBase(Material.IRON, "machine_transformer_dnt_20").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block machine_press = new MachinePress(Material.IRON, "machine_press").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_epress = new MachineEPress(Material.IRON, "machine_epress").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

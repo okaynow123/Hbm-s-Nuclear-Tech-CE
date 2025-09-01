@@ -292,7 +292,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.crate_steel, 1), "PPP", "I I", "III", 'P', STEEL.plate(), 'I', STEEL.ingot() );
 		
 		// Note: doesn't preserve storage because a crate's contents are different items, but a mass storage's is just one
-		addRecipeAuto(new ItemStack(ModBlocks.mass_storage), " L ", "ICI", " I ", 'I', TI.ingot(), 'C', ModBlocks.crate_steel, 'L', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE) );
+		addRecipeAuto(new ItemStack(ModBlocks.mass_storage_iron), " L ", "ICI", " I ", 'I', TI.ingot(), 'C', ModBlocks.crate_steel, 'L', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE) );
 		addRecipeAuto(new ItemStack(ModBlocks.mass_storage_wood), "PPP", "PIP", "PPP", 'P', KEY_PLANKS, 'I', IRON.plate() );
 
 		addRecipeAuto(new ItemStack(ModBlocks.machine_autocrafter, 1), "SCS", "MWM", "SCS", 'S', STEEL.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE), 'M', ModItems.motor, 'W', Blocks.CRAFTING_TABLE );
@@ -939,11 +939,11 @@ public class CraftingManager {
 
 		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.RBMK.ordinal()), Items.BOOK, Items.POTATO );
 		addShapelessAuto(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()), Items.BOOK, Items.IRON_INGOT );
-		// TODO: charger, refueler, press preheater
-		/*addRecipeAuto(new ItemStack(ModBlocks.charger), "G", "S", "C", 'G', Items.GLOWSTONE_DUST, 'S', STEEL.ingot(), 'C', ModItems.coil_copper );
+		addRecipeAuto(new ItemStack(ModBlocks.charger), "G", "S", "C", 'G', Items.GLOWSTONE_DUST, 'S', STEEL.ingot(), 'C', ModItems.coil_copper );
 		addRecipeAuto(new ItemStack(ModBlocks.charger, 16), "G", "S", "C", 'G', Blocks.GLOWSTONE, 'S', STEEL.block(), 'C', ModItems.coil_copper_torus );
 		addRecipeAuto(new ItemStack(ModBlocks.refueler), "SS", "HC", "SS", 'S', TI.plate(), 'H', DictFrame.fromOne(ModItems.part_generic, EnumPartType.PISTON_HYDRAULIC), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) );
-		addRecipeAuto(new ItemStack(ModBlocks.press_preheater), "CCC", "SLS", "TST", 'C', CU.plate(), 'S', Blocks.STONE, 'L', Fluids.LAVA.getDict(1000), 'T', W.ingot() );*/
+		// TODO: press preheater
+		//addRecipeAuto(new ItemStack(ModBlocks.press_preheater), "CCC", "SLS", "TST", 'C', CU.plate(), 'S', Blocks.STONE, 'L', Fluids.LAVA.getDict(1000), 'T', W.ingot() );
 		addRecipeAuto(new ItemStack(ModItems.fluid_identifier_multi), "D", "C", "P", 'D', "dye", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'P', IRON.plate() );
 
 		addShapelessAuto(ItemBattery.getEmptyBattery(ModItems.anchor_remote), DIAMOND.gem(), ModItems.ducttape, DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) );

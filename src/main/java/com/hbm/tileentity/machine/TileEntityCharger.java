@@ -2,7 +2,6 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.blocks.machine.MachineCharger;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.config.GeneralConfig;
 import com.hbm.interfaces.AutoRegister;
@@ -11,50 +10,50 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 @AutoRegister
 public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
 
-	public static final int range = 3;
-
-	private List<EntityPlayer> players = new ArrayList<>();
-	private long maxChargeRate;
-	public long charge = 0;
-	public long actualCharge = 0;
-	public long totalCapacity = 0;
-	public long totalEnergy = 0;
+	private List<EntityPlayer> players = new ArrayList();
+	private long charge = 0;
 	private int lastOp = 0;
 
-	public boolean isOn = false;
-	public boolean pointingUp = true;
+	boolean particles = false;
+
+	public int usingTicks;
+	public int lastUsingTicks;
+	public static final int delay = 20;
 
 	@Override
 	public void update() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
 
-		if(!world.isRemote) {
-			MachineCharger c = (MachineCharger)world.getBlockState(pos).getBlock();
-			this.maxChargeRate = c.maxThroughput;
-			this.pointingUp = c.pointingUp;
-
+		if (!world.isRemote) {
 			this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY(), pos.getZ() + dir.offsetZ, dir);
 
-			players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + (pointingUp ? range : -range), pos.getZ() + 1));
+			this.players = world.getEntitiesWithinAABB(
+					EntityPlayer.class,
+					new AxisAlignedBB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)
+							.grow(0.5, 0.0, 0.5)
+			);
 
-			totalCapacity = 0;
-			totalEnergy = 0;
 			charge = 0;
 
 			for(EntityPlayer player : players) {
@@ -65,16 +64,12 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 
 					if(Library.isItemBattery(stack)) {
 						if (stack.getItem() instanceof IBatteryItem battery) {
-							totalCapacity += battery.getMaxCharge(stack);
-							totalEnergy += battery.getCharge(stack);
 							charge += Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
 						} else {
 							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 							if (cap != null && GeneralConfig.conversionRateHeToRF > 0) {
 								long maxHe = (long) (cap.getMaxEnergyStored() / GeneralConfig.conversionRateHeToRF);
 								long currentHe = (long) (cap.getEnergyStored() / GeneralConfig.conversionRateHeToRF);
-								totalCapacity += maxHe;
-								totalEnergy += currentHe;
 								charge += maxHe - currentHe;
 							}
 						}
@@ -82,35 +77,54 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 				}
 			}
 
-			isOn = lastOp > 0;
+			particles = lastOp > 0;
 
-			if(isOn) {
+			if (particles) {
+
 				lastOp--;
+
+				if (world.getTotalWorldTime() % 20 == 0)
+					world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.2F, 0.5F);
 			}
 
 			networkPackNT(50);
-			actualCharge = 0;
+		}
+
+		lastUsingTicks = usingTicks;
+
+		if ((charge > 0 || particles) && usingTicks < delay) {
+			usingTicks++;
+			if (usingTicks == 2)
+				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, 0.5F);
+		}
+		if ((charge <= 0 && !particles) && usingTicks > 0) {
+			usingTicks--;
+			if (usingTicks == 4)
+				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, 0.5F);
+		}
+
+		if (world.isRemote && particles) {
+			Random rand = world.rand;
+			world.spawnParticle(EnumParticleTypes.CRIT_MAGIC,
+					pos.getX() + 0.5 + rand.nextDouble() * 0.0625 + dir.offsetX * 0.75,
+					pos.getY() + 0.1,
+					pos.getZ() + 0.5 + rand.nextDouble() * 0.0625 + dir.offsetZ * 0.75,
+					-dir.offsetX + rand.nextGaussian() * 0.1,
+					0,
+					-dir.offsetZ + rand.nextGaussian() * 0.1);
 		}
 	}
 
 	@Override
 	public void serialize(ByteBuf buf) {
-		buf.writeBoolean( isOn);
-		buf.writeBoolean(pointingUp);
-		buf.writeLong(totalCapacity);
-		buf.writeLong(totalEnergy);
-		buf.writeLong(charge);
-		buf.writeLong(actualCharge);
+		buf.writeLong(this.charge);
+		buf.writeBoolean(this.particles);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
-		this.isOn = buf.readBoolean();
-		this.pointingUp = buf.readBoolean();
-		this.totalCapacity = buf.readLong();
-		this.totalEnergy = buf.readLong();
 		this.charge = buf.readLong();
-		this.actualCharge = buf.readLong();
+		this.particles = buf.readBoolean();
 	}
 
 	@Override
@@ -120,7 +134,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 
 	@Override
 	public long getMaxPower() {
-		return Math.min(charge, maxChargeRate);
+		return charge;
 	}
 
 	@Override
@@ -129,45 +143,31 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 	@Override
 	public long transferPower(long power, boolean simulate) {
 		if(power == 0) return 0;
-		if(!simulate) {
-			actualCharge = 0;
-		}
-		long chargeBudget = maxChargeRate;
 		long powerBudget = power;
 		for(EntityPlayer player : players) {
 			InventoryPlayer inv = player.inventory;
 			for(int i = 0; i < inv.getSizeInventory(); i ++){
-				if(chargeBudget <= 0 || powerBudget <= 0) break;
+				if(powerBudget <= 0) break;
 				ItemStack stack = inv.getStackInSlot(i);
 				if(Library.isItemChargeableBattery(stack)) {
-					long powerToOffer = Math.min(powerBudget, chargeBudget);
-                    if (!simulate) {
-                        long chargedAmount = Library.chargeBatteryIfValid(stack, powerToOffer, false);
-
-                        if (chargedAmount > 0) {
-                            actualCharge += chargedAmount;
-                            powerBudget -= chargedAmount;
-                            chargeBudget -= chargedAmount;
-                            lastOp = 4;
-                        }
-                    } else {
+					long powerToOffer = powerBudget;
                         long chargedAmount;
                         if (stack.getItem() instanceof IBatteryItem battery) {
                             chargedAmount = Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
+							battery.chargeBattery(stack, Math.min(chargedAmount, powerToOffer));
                         } else {
 							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
                             chargedAmount = (long) ((cap.getMaxEnergyStored() - cap.getEnergyStored()) / GeneralConfig.conversionRateHeToRF);
                         }
                         chargedAmount = Math.min(chargedAmount, powerToOffer);
                         powerBudget -= chargedAmount;
-                        chargeBudget -= chargedAmount;
+						lastOp = 4;
                     }
                 }
+				if(powerBudget <= 0) {
+					break;
+				}
 			}
-			if(chargeBudget <= 0 || powerBudget <= 0) {
-				break;
-			}
-		}
 		return powerBudget;
 	}
 
