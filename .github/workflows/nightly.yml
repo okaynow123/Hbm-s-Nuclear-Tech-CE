@@ -38,7 +38,7 @@ jobs:
 
       - name: Find mod jar
         run: |
-          FILE=$(ls build/libs | grep -E '^NTM-CE.*\.jar$' | grep -vE '(-dev|-sources)' | head -n1)
+          FILE=$(ls build/libs | grep -E '^NTM-CE.*\.jar$' | grep -vE '(-dev|-sources|-api)' | head -n1)
           echo "FILE=$FILE" >> $GITHUB_ENV
 
 
