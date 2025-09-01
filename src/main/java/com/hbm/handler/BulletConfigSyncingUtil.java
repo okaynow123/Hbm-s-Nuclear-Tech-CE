@@ -260,8 +260,7 @@ private static HashMap<Integer, BulletConfiguration> configSet = new HashMap<Int
 		configSet.put(WORM_BOLT, GunNPCFactory.getWormBolt());
 		configSet.put(WORM_LASER, GunNPCFactory.getWormHeadBolt());
 		
-		configSet.put(NEEDLE_GPS, GunDartFactory.getGPSConfig());
-		
+
 		configSet.put(UFO_ROCKET, GunNPCFactory.getRocketUFOConfig());
 	}
 

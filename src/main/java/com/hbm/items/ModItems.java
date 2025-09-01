@@ -10,7 +10,6 @@ import com.hbm.handler.ability.IToolAreaAbility;
 import com.hbm.handler.ability.IToolHarvestAbility;
 import com.hbm.handler.ability.IWeaponAbility;
 import com.hbm.handler.guncfg.Gun12GaugeFactory;
-import com.hbm.handler.guncfg.GunDartFactory;
 import com.hbm.handler.guncfg.GunEnergyFactory;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
@@ -716,7 +715,6 @@ public class ModItems {
     public static final Item gun_vortex = new ItemGunVortex(GunEnergyFactory.getVortexConfig(), "gun_vortex").setCreativeTab(MainRegistry.weaponTab);
     public static final Item gun_egon = new ItemGunEgon(GunEnergyFactory.getEgonConfig(), "gun_egon").setCreativeTab(MainRegistry.weaponTab);
     public static final Item gun_moist_nugget = new ItemNugget(3, false, "gun_moist_nugget").setCreativeTab(MainRegistry.weaponTab);
-    public static final Item gun_darter = new ItemGunDart(GunDartFactory.getDarterConfig(), "gun_darter").setCreativeTab(MainRegistry.weaponTab);
     public static final Item crucible = new ItemCrucible(500, 1F, MainRegistry.matCrucible, "crucible").setCreativeTab(MainRegistry.weaponTab);
     //Yeah it's supposed to be "ultrahard steel", but I don't feel like adding that, so high-speed steel sword it is.
     public static final Item hs_sword = new ItemSwordCutter(10F, 1F, MainRegistry.matCrucible, "hs_sword").setCreativeTab(MainRegistry.weaponTab);

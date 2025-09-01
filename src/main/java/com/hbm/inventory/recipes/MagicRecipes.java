@@ -63,11 +63,6 @@ public class MagicRecipes {
 				new ComparableStack(ModItems.powder_dineutronium),
 				new ComparableStack(ModItems.plate_desh),
 				new OreDictStack(GOLD.ingot())));
-		recipes.add(new MagicRecipe(new ItemStack(ModItems.gun_darter),
-				new OreDictStack(STEEL.plate()),
-				new OreDictStack(STEEL.plate()),
-				new ComparableStack(ModItems.ingot_polymer),
-				new OreDictStack(GOLD.plate())));
 	}
 
 	public static List<MagicRecipe> getRecipes() {
