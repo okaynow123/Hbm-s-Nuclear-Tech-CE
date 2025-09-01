@@ -5,11 +5,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A snapshot of a 16×16×16 sub-chunk.
@@ -29,6 +27,14 @@ public class SubChunkSnapshot {
         this.data = d;
     }
 
+    @NotNull
+    public static SubChunkSnapshot getSnapshot(@NotNull World world, long packed, boolean allowGeneration) {
+        int chunkXPos = SubChunkKey.getSubX(packed);
+        int chunkZPos = SubChunkKey.getSubZ(packed);
+        int subY = SubChunkKey.getSubY(packed);
+        return getSnapshotInternal(world, chunkXPos, chunkZPos, subY, allowGeneration);
+    }
+
     /**
      * Creates a SubChunkSnapshot.
      *
@@ -38,15 +44,24 @@ public class SubChunkSnapshot {
      * @return A SubChunkSnapshot containing the palette and block data for the sub-chunk,
      * or {@link SubChunkSnapshot#EMPTY} if the region contains only air.
      */
-    public static SubChunkSnapshot getSnapshot(World world, SubChunkKey key, boolean allowGeneration) {
-        if (!world.getChunkProvider().isChunkGeneratedAt(key.getChunkXPos(), key.getChunkZPos()) && !allowGeneration) {
+    @NotNull
+    public static SubChunkSnapshot getSnapshot(@NotNull World world, @NotNull SubChunkKey key, boolean allowGeneration) {
+        int chunkXPos = key.getChunkXPos();
+        int chunkZPos = key.getChunkZPos();
+        int subY = key.getSubY();
+        return getSnapshotInternal(world, chunkXPos, chunkZPos, subY, allowGeneration);
+    }
+
+    @NotNull
+    private static SubChunkSnapshot getSnapshotInternal(@NotNull World world, int chunkXPos, int chunkZPos, int subY, boolean allowGeneration) {
+        if (!world.getChunkProvider().isChunkGeneratedAt(chunkXPos, chunkZPos) && !allowGeneration) {
             return SubChunkSnapshot.EMPTY;
         }
-        Chunk chunk = world.getChunkProvider().provideChunk(key.getChunkXPos(), key.getChunkZPos());
-        if (key.getSubY() < 0 || key.getSubY() >= chunk.getBlockStorageArray().length) {
+        Chunk chunk = world.getChunkProvider().provideChunk(chunkXPos, chunkZPos);
+        if (subY < 0 || subY >= chunk.getBlockStorageArray().length) {
             return SubChunkSnapshot.EMPTY;
         }
-        ExtendedBlockStorage ebs = chunk.getBlockStorageArray()[key.getSubY()];
+        ExtendedBlockStorage ebs = chunk.getBlockStorageArray()[subY];
         if (ebs == null || ebs.isEmpty()) return SubChunkSnapshot.EMPTY;
 
         short[] data = new short[16 * 16 * 16];

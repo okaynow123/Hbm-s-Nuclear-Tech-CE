@@ -3,10 +3,11 @@ package com.hbm.entity.effect;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.explosion.ExplosionNukeRayParallelized;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.saveddata.AuxSavedData;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +15,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
+import net.minecraft.network.play.server.SPacketChunkData;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
@@ -122,7 +125,7 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 						drainTick();
 					}
 					if (stompingDone && drainFinished) {
-						ExplosionNukeRayParallelized.secondPass((WorldServer) world, drainedList);
+						secondPass((WorldServer) world, drainedList);
 						drainedList = null;
 						setDead();
 					}
@@ -155,6 +158,30 @@ public class EntityFalloutRain extends EntityFallout implements IConstantRendere
 				}
 			}
 		}
+	}
+
+	public static void secondPass(WorldServer world, List<BlockPos> destroyedList) {
+		if (destroyedList == null || destroyedList.isEmpty()) return;
+		Long2IntOpenHashMap sectionMaskByChunk = new Long2IntOpenHashMap();
+		for (BlockPos pos : destroyedList) {
+			world.notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
+			long key = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
+			int mask = sectionMaskByChunk.getOrDefault(key, 0);
+			mask |= 1 << (pos.getY() >>> 4);
+			sectionMaskByChunk.put(key, mask);
+		}
+		for (Long2IntMap.Entry e : sectionMaskByChunk.long2IntEntrySet()) {
+			long longKey = e.getLongKey();
+			int cx = (int) (longKey & 0xFFFFFFFFL);
+			int cz = (int) (longKey >>> 32);
+			int mask = e.getIntValue();
+			Chunk chunk = world.getChunk(cx, cz);
+			chunk.generateSkylightMap();
+			chunk.resetRelightChecks();
+			PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(cx, cz);
+			if (entry != null) entry.sendPacket(new SPacketChunkData(chunk, mask));
+		}
+		destroyedList.clear();
 	}
 
 	private void gatherChunks() {

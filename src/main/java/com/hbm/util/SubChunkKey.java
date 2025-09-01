@@ -2,35 +2,43 @@ package com.hbm.util;
 
 import net.minecraft.util.math.ChunkPos;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * Unique identifier for sub-chunks.
  *
  * @author mlbv
  */
+@Immutable
 public class SubChunkKey {
+    private static final int CHUNK_BITS = 28;
+    private static final int SUBY_BITS = 64 - 2 * CHUNK_BITS;
+    private static final long SUBY_MASK = (1L << SUBY_BITS) - 1;
+    private static final long CHUNK_MASK = (1L << CHUNK_BITS) - 1;
 
-    private int chunkXPos;
-    private int chunkZPos;
-    private int subY;
-    private int hash;
+    private final int chunkXPos;
+    private final int chunkZPos;
+    private final int subY;
+    private final long packed;
+    private final int hash;
 
     public SubChunkKey(int cx, int cz, int sy) {
-        this.update(cx, cz, sy);
-    }
-
-    public SubChunkKey(ChunkPos pos, int sy) {
-        this.update(pos.x, pos.z, sy);
-    }
-
-    public SubChunkKey update(int cx, int cz, int sy) {
         this.chunkXPos = cx;
         this.chunkZPos = cz;
         this.subY = sy;
+        this.packed = asLong(cx, cz, sy);
         int result = subY;
         result = 31 * result + cx;
         result = 31 * result + cz;
         this.hash = result;
-        return this;
+    }
+
+    public SubChunkKey(long longSubKey){
+        this(getSubX(longSubKey), getSubZ(longSubKey), getSubY(longSubKey));
+    }
+
+    public SubChunkKey(ChunkPos pos, int sy) {
+        this(pos.x, pos.z, sy);
     }
 
     @Override
@@ -59,5 +67,57 @@ public class SubChunkKey {
 
     public ChunkPos getPos() {
         return new ChunkPos(this.chunkXPos, this.chunkZPos);
+    }
+    
+    public long getPosLong() {
+        return ChunkPos.asLong(chunkXPos, chunkZPos);
+    }
+
+    public long asLong() {
+        return packed;
+    }
+
+    private static long zz(int v) {
+        return ((long) v << 1) ^ (v >> 31);
+    }
+
+    private static int unzz(long u) {
+        return (int) ((u >>> 1) ^ -(u & 1L));
+    }
+
+    public static long asLong(int cx, int cz, int subY) {
+        long ux = zz(cx);
+        long uz = zz(cz);
+        if ((ux & ~CHUNK_MASK) != 0L || (uz & ~CHUNK_MASK) != 0L || (long) subY < 0L || (long) subY > SUBY_MASK)
+            throw new IllegalArgumentException("Out of range: cx=" + cx + " cz=" + cz + " sy=" + subY);
+        return ux | (uz << CHUNK_BITS) | (((long) subY & SUBY_MASK) << (2 * CHUNK_BITS));
+    }
+
+    public static int getSubX(long longSubKey) {
+        return unzz(longSubKey & CHUNK_MASK);
+    }
+
+    public static int getSubZ(long longSubKey) {
+        return unzz((longSubKey >>> CHUNK_BITS) & CHUNK_MASK);
+    }
+
+    public static int getSubY(long longSubKey) {
+        return (int) ((longSubKey >>> (2 * CHUNK_BITS)) & SUBY_MASK);
+    }
+
+    public static ChunkPos getPos(long longSubKey) {
+        return new ChunkPos(getSubX(longSubKey), getSubZ(longSubKey));
+    }
+
+    public static long getPosLong(long longSubKey) {
+        return ChunkPos.asLong(SubChunkKey.getSubX(longSubKey), SubChunkKey.getSubZ(longSubKey));
+    }
+
+    public static int getChunkX(long chunkKey) {
+        return (int) (chunkKey & 0xFFFFFFFFL);
+    }
+
+    public static int getChunkZ(long chunkKey) {
+        return (int) ((chunkKey >>> 32) & 0xFFFFFFFFL);
     }
 }

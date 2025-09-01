@@ -1,13 +1,12 @@
 package com.hbm.util;
 
-import com.hbm.main.MainRegistry;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import sun.misc.Unsafe;
 
 import javax.annotation.concurrent.ThreadSafe;
-import java.lang.reflect.Field;
 import java.util.concurrent.atomic.LongAdder;
+
+import static com.hbm.lib.UnsafeHolder.U;
 
 /**
  * Thread-safe bitset
@@ -16,27 +15,10 @@ import java.util.concurrent.atomic.LongAdder;
  */
 @ThreadSafe
 public class ConcurrentBitSet implements Cloneable {
-    private static final Unsafe U;
     private static final int ABASE;
     private static final int ASHIFT;
 
     static {
-        Unsafe unsafeInstance;
-        try {
-            Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            unsafeInstance = (Unsafe) f.get(null);
-        } catch (Exception e) {
-            MainRegistry.logger.error("Failed to get theUnsafe in Unsafe.class, trying UnsafeHolder", e);
-            try { // Fallback for cleanroom loader but should never happen
-                Class<?> holderClass = Class.forName("top.outlands.foundation.boot.UnsafeHolder");
-                Field unsafeField = holderClass.getField("UNSAFE");
-                unsafeInstance = (Unsafe) unsafeField.get(null);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        U = unsafeInstance;
         int scale = U.arrayIndexScale(long[].class);
         if ((scale & (scale - 1)) != 0) {
             throw new Error("long[] element size not power of two");
