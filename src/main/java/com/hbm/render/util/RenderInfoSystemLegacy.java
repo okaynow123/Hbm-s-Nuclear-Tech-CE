@@ -15,12 +15,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RenderInfoSystemLegacy {
 
     private static int nextID = 1000;
-    private static HashMap<Integer, InfoEntry> inbox = new HashMap();
-    private static HashMap<Integer, InfoEntry> messages = new HashMap();
+    private static Map<Integer, InfoEntry> inbox = new ConcurrentHashMap<>();
+    private static Map<Integer, InfoEntry> messages = new ConcurrentHashMap<>();
 
     @SubscribeEvent
     public void clentTick(TickEvent.ClientTickEvent event) {
