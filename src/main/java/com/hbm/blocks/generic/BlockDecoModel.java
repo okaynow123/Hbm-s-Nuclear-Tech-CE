@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockEnumMeta;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.BlockDecoBakedModel;
@@ -59,9 +60,14 @@ public class BlockDecoModel extends BlockEnumMeta {
         super(mat, type, registryName, theEnum, multiName, multiTexture);
     }
 
+
+    //FIXME: This is a hack, the mapping for items should be flat (first model occupies 0-3, seconds occupies 3-7, etc)
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(Item.getItemFromBlock(this));
+        if(state.getBlock() == ModBlocks.filing_cabinet)
+        return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META)%2);
+        else
+            return super.getPickBlock(state, target, world, pos, player);
     }
 
     public BlockDecoModel setBlockBoundsTo(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
