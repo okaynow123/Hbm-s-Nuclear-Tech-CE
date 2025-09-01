@@ -54,7 +54,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 							.grow(0.5, 0.0, 0.5)
 			);
 
-			charge = 0;
+			charge = 0; // required
 
 			for(EntityPlayer player : players) {
 				InventoryPlayer inv = player.inventory;
@@ -151,23 +151,17 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 				ItemStack stack = inv.getStackInSlot(i);
 				if(Library.isItemChargeableBattery(stack)) {
 					long powerToOffer = powerBudget;
-                        long chargedAmount;
-                        if (stack.getItem() instanceof IBatteryItem battery) {
-                            chargedAmount = Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
-							battery.chargeBattery(stack, Math.min(chargedAmount, powerToOffer));
-                        } else {
-							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-                            chargedAmount = (long) ((cap.getMaxEnergyStored() - cap.getEnergyStored()) / GeneralConfig.conversionRateHeToRF);
-                        }
-                        chargedAmount = Math.min(chargedAmount, powerToOffer);
-                        powerBudget -= chargedAmount;
+					long chargedAmount = Library.chargeBatteryIfValid(stack, powerToOffer, false);
+					if (chargedAmount > 0) {
+						powerBudget -= chargedAmount;
 						lastOp = 4;
-                    }
-                }
-				if(powerBudget <= 0) {
-					break;
+					}
 				}
 			}
+			if(powerBudget <= 0) {
+				break;
+			}
+		}
 		return powerBudget;
 	}
 

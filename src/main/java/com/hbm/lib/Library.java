@@ -76,6 +76,9 @@ import static net.minecraft.nbt.CompressedStreamTools.writeCompressed;
 @Spaghetti("this whole class")
 public class Library {
 
+	private Library(){
+	}
+
 	static Random rand = new Random();
 	
 	//this is a list of UUIDs used for various things, primarily for accessories.
@@ -1093,104 +1096,120 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return new Explosion(w, null, x, y, z, 1000, false, false);
 	}
 
+	@Nullable
+	private static IEnergyStorage getFE(@NotNull ItemStack stack) {
+		if (stack.isEmpty()) return null;
+		if (!stack.hasCapability(CapabilityEnergy.ENERGY, null)) return null;
+		return stack.getCapability(CapabilityEnergy.ENERGY, null);
+	}
+
 	/** @return true if is instance of IBatteryItem or has FE capability */
 	public static boolean isItemBattery(@NotNull ItemStack stack){
-		if(stack.isEmpty()) return false;
-		return stack.getItem() instanceof IBatteryItem || stack.hasCapability(CapabilityEnergy.ENERGY, null);
+		if (stack.isEmpty()) return false;
+		return stack.getItem() instanceof IBatteryItem || getFE(stack) != null;
 	}
 
 	public static boolean isItemDischargeableBattery(@NotNull ItemStack stack){
-		if(stack.isEmpty()) return false;
+		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getCharge(stack) > 0 && battery.getDischargeRate() > 0;
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap != null) return cap.getEnergyStored() > 0 && cap.canExtract();
 		}
-		return false;
+		IEnergyStorage cap = getFE(stack);
+		return cap != null && cap.getEnergyStored() > 0 && cap.canExtract();
 	}
 
 	public static boolean isItemChargeableBattery(@NotNull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate() > 0;
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap != null) return cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
 		}
-		return false;
+		IEnergyStorage cap = getFE(stack);
+		return cap != null && cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
 	}
 
 	public static boolean isItemEmptyBattery(@NotNull ItemStack stack){
-		if(stack.isEmpty()) return true;
+		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getCharge(stack) == 0;
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap!= null) return cap.getEnergyStored() == 0;
+			return battery.getCharge(stack) <= 0;
 		}
-		return false;
+		IEnergyStorage cap = getFE(stack);
+		return cap != null && cap.getEnergyStored() <= 0;
 	}
 
 	public static boolean isItemFullBattery(@NotNull ItemStack stack){
-		if(stack.isEmpty()) return false;
+		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getCharge(stack) == battery.getMaxCharge(stack);
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap!= null) return cap.getEnergyStored() == cap.getMaxEnergyStored();
+			long max = battery.getMaxCharge(stack);
+			long cur = battery.getCharge(stack);
+			return cur >= max;
 		}
-		return false;
+		IEnergyStorage cap = getFE(stack);
+		return cap != null && cap.getEnergyStored() >= cap.getMaxEnergyStored();
+	}
+
+	private static int clampFeRequest(long feLong) {
+		if (feLong <= 0) return 0;
+		return feLong > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) feLong;
 	}
 
 	/**
-	 * @return amount of energy charged in HE
+	 * Charges the item if valid.
+	 * @return actual energy charged (in HE).
+	 * @throws IllegalArgumentException if chargeAmountHE <= 0.
 	 */
-	public static long chargeBatteryIfValid(@NotNull ItemStack stack, long heCharge, boolean instant) {
+	public static long chargeBatteryIfValid(@NotNull ItemStack stack, long chargeAmountHE, boolean instant) {
 		if (stack.isEmpty()) return 0;
-		long added = 0;
+		if (chargeAmountHE <= 0) throw new IllegalArgumentException("chargeAmountHE must be > 0");
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			long maxcharge = battery.getMaxCharge(stack);
-			long charge = battery.getCharge(stack);
-			added = instant ? heCharge : Math.min(heCharge, battery.getChargeRate());
-			added = charge + added > maxcharge ? maxcharge - charge : added;
-			battery.setCharge(stack, charge + added);
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			if (GeneralConfig.conversionRateHeToRF <= 0) return 0;
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap != null) {
-				int feReceived = cap.receiveEnergy((int) (heCharge * GeneralConfig.conversionRateHeToRF), false);
-				added = (long) (feReceived / GeneralConfig.conversionRateHeToRF);
-			}
+			long max = Math.max(0L, battery.getMaxCharge(stack));
+			long cur = Math.max(0L, Math.min(max, battery.getCharge(stack)));
+			long room = Math.max(0L, max - cur);
+			long rate = Math.max(0L, battery.getChargeRate());
+			long req = instant ? chargeAmountHE : Math.min(chargeAmountHE, rate);
+			long added = Math.min(req, room);
+			if (added > 0) battery.chargeBattery(stack, added);
+			return added;
 		}
-		return added;
+		IEnergyStorage cap = getFE(stack);
+		double rate = GeneralConfig.conversionRateHeToRF;
+		if (cap == null || rate <= 0d) return 0;
+		long feReqLong = Math.round(chargeAmountHE * rate);
+		int feReq = clampFeRequest(feReqLong);
+		if (feReq <= 0) return 0;
+		int canReceive = cap.receiveEnergy(feReq, true);
+		if (canReceive <= 0) return 0;
+		int feReceived = cap.receiveEnergy(canReceive, false);
+		long heAdded = (long) Math.floor(feReceived / rate);
+		return Math.max(0L, heAdded);
 	}
 
 	/**
-	 * @return The amount of energy that was actually extracted, in HE.
+	 * Discharges the item if valid.
+	 * @return actual energy extracted (in HE).
+	 * @throws IllegalArgumentException if dischargeAmountHE <= 0.
 	 */
-	public static long dischargeBatteryIfValid(@NotNull ItemStack stack, long ntmCharge, boolean instant) {
+	public static long dischargeBatteryIfValid(@NotNull ItemStack stack, long dischargeAmountHE, boolean instant) {
 		if (stack.isEmpty()) return 0;
+		if (dischargeAmountHE <= 0) throw new IllegalArgumentException("dischargeAmountHE must be > 0");
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			long currentCharge = battery.getCharge(stack);
-			long extractLimit = instant ? ntmCharge : Math.min(ntmCharge, battery.getDischargeRate());
-			long actualExtracted = Math.min(extractLimit, currentCharge);
-			if (actualExtracted > 0) {
-				battery.setCharge(stack, currentCharge - actualExtracted);
-			}
-			return actualExtracted;
-		} else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
-			if (GeneralConfig.conversionRateHeToRF <= 0) {
-				return 0;
-			}
-			IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
-			if (cap != null) {
-				int feToExtract = (int) (ntmCharge * GeneralConfig.conversionRateHeToRF);
-				int feExtracted = cap.extractEnergy(feToExtract, false);
-				return (long) (feExtracted / GeneralConfig.conversionRateHeToRF);
-			}
+			long cur = Math.max(0L, battery.getCharge(stack));
+			long rate = Math.max(0L, battery.getDischargeRate());
+			long req = instant ? dischargeAmountHE : Math.min(dischargeAmountHE, rate);
+			long take = Math.min(req, cur);
+			if (take > 0) battery.dischargeBattery(stack, take);
+			return take;
 		}
-		return 0;
+		IEnergyStorage cap = getFE(stack);
+		double rate = GeneralConfig.conversionRateHeToRF;
+		if (cap == null || rate <= 0d) return 0;
+		long feReqLong = Math.round(dischargeAmountHE * rate);
+		int feReq = clampFeRequest(feReqLong);
+		if (feReq <= 0) return 0;
+		int canExtract = cap.extractEnergy(feReq, true);
+		if (canExtract <= 0) return 0;
+		int feExtracted = cap.extractEnergy(canExtract, false);
+		long heExtracted = (long) Math.floor(feExtracted / rate);
+		return Math.max(0L, heExtracted);
 	}
 
     public static long getCompressedNbtSize(NBTTagCompound compound) {
