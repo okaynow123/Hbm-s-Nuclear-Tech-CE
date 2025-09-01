@@ -60,6 +60,7 @@ public class RenderEPress extends TileEntitySpecialRenderer<TileEntityMachineEPr
     ResourceManager.epress_body.renderAll();
 
     GlStateManager.popMatrix();
+    GlStateManager.enableAlpha();
 
     renderTileEntityAt2(tileentity, x, y, z, partialTicks);
   }

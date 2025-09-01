@@ -59,7 +59,7 @@ public class BlockMassStorage extends BlockContainer implements ILookOverlay, IT
 
 
 	public int getCapacity() {
-		return this == ModBlocks.mass_storage_wood ? 1_000 : this == ModBlocks.mass_storage_iron ? 10_000 : this == ModBlocks.mass_storage_desh ? 100_000 : this == ModBlocks.mass_storage ? 1_000_000 : 0;
+		return this == ModBlocks.mass_storage_wood ? 1000 : this == ModBlocks.mass_storage_iron ? 10_000 : this == ModBlocks.mass_storage_desh ? 100_000 : this == ModBlocks.mass_storage ? 1_000_000 : 0;
 	}
 
 	@Override
