@@ -145,7 +145,13 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         return showMetaInCreative;
     }
 
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        drops.addAll(this.getDrops(world, pos, state, fortune));
+    }
 
+    // mlbv: It's a BAD idea to override this method
+    // Ideally we should override all three of getItemDropped, damageDropped, and quantityDropped
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int meta = state.getValue(META);
         return Arrays.asList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
