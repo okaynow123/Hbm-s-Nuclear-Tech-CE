@@ -13,12 +13,26 @@
  */
 package com.hbm.lib.maps;
 
+import it.unimi.dsi.fastutil.longs.AbstractLong2ObjectMap;
+import it.unimi.dsi.fastutil.longs.AbstractLongSet;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.AbstractObjectCollection;
+import it.unimi.dsi.fastutil.objects.AbstractObjectSet;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.LongFunction;
 
 import static com.hbm.lib.maps.NonBlockingHashMap.DUMMY_VOLATILE;
 import static com.hbm.lib.UnsafeHolder.U;
@@ -88,7 +102,7 @@ import static com.hbm.lib.UnsafeHolder.fieldOffset;
  */
 
 public class NonBlockingHashMapLong<TypeV>
-        extends AbstractMap<Long,TypeV>
+        extends AbstractLong2ObjectMap<TypeV>
         implements ConcurrentMap<Long,TypeV>, Cloneable, Serializable {
 
     private static final long serialVersionUID = 1234123412341234124L;
@@ -378,20 +392,28 @@ public class NonBlockingHashMapLong<TypeV>
     }
 
     /** Auto-boxing version of {@link #get(long)}. */
+    @Deprecated
     public TypeV   get    ( Object key              ) { return (key instanceof Long) ? get    (((Long)key).longValue()) : null;  }
     /** Auto-boxing version of {@link #remove(long)}. */
+    @Deprecated
     public TypeV   remove ( Object key              ) { return (key instanceof Long) ? remove (((Long)key).longValue()) : null;  }
     /** Auto-boxing version of {@link #remove(long,Object)}. */
+    @Deprecated
     public boolean remove ( Object key, Object Val  ) { return (key instanceof Long) && remove(((Long) key).longValue(), Val);  }
     /** Auto-boxing version of {@link #containsKey(long)}. */
+    @Deprecated
     public boolean containsKey( Object key          ) { return (key instanceof Long) && containsKey(((Long) key).longValue()); }
     /** Auto-boxing version of {@link #putIfAbsent}. */
+    @Deprecated
     public TypeV   putIfAbsent( Long key, TypeV val ) { return putIfAbsent( key.longValue(), val ); }
     /** Auto-boxing version of {@link #replace}. */
+    @Deprecated
     public TypeV   replace( Long key, TypeV Val     ) { return replace(key.longValue(), Val);  }
     /** Auto-boxing version of {@link #put}. */
+    @Deprecated
     public TypeV   put    ( Long key, TypeV val     ) { return put(key.longValue(),val); }
     /** Auto-boxing version of {@link #replace}. */
+    @Deprecated
     public boolean replace( Long key, TypeV oldValue, TypeV newValue ) {
         return replace(key.longValue(), oldValue, newValue);
     }
@@ -1026,7 +1048,7 @@ public class NonBlockingHashMapLong<TypeV>
     // --- Snapshot ------------------------------------------------------------
     // The main class for iterating over the NBHM.  It "snapshots" a clean
     // view of the K/V array.
-    private class SnapshotV implements Iterator<TypeV>, Enumeration<TypeV> {
+    private class SnapshotV implements ObjectIterator<TypeV>, Enumeration<TypeV> {
         final CHM _sschm;
         public SnapshotV() {
             CHM topchm;
@@ -1094,6 +1116,15 @@ public class NonBlockingHashMapLong<TypeV>
 
         public TypeV nextElement() { return next(); }
         public boolean hasMoreElements() { return hasNext(); }
+
+        @Override
+        public int skip(int n) {
+            int i = n;
+            while (i-- > 0 && hasNext()) {
+                next();
+            }
+            return n - (i + 1);
+        }
     }
 
     /** Returns an enumeration of the values in this table.
@@ -1115,12 +1146,12 @@ public class NonBlockingHashMapLong<TypeV>
      *  to traverse elements as they existed upon construction of the iterator,
      *  and may (but is not guaranteed to) reflect any modifications subsequent
      *  to construction. */
-    public Collection<TypeV> values() {
-        return new AbstractCollection<TypeV>() {
+    public ObjectCollection<TypeV> values() {
+        return new AbstractObjectCollection<TypeV>() {
             public void    clear   (          ) {        NonBlockingHashMapLong.this.clear   ( ); }
             public int     size    (          ) { return NonBlockingHashMapLong.this.size    ( ); }
             public boolean contains( Object v ) { return NonBlockingHashMapLong.this.containsValue(v); }
-            public Iterator<TypeV> iterator()   { return new SnapshotV(); }
+            public ObjectIterator<TypeV> iterator()   { return new SnapshotV(); }
         };
     }
 
@@ -1128,7 +1159,7 @@ public class NonBlockingHashMapLong<TypeV>
     /** A class which implements the {@link Iterator} and {@link Enumeration}
      *  interfaces, generified to the {@link Long} class and supporting a
      *  <strong>non-auto-boxing</strong> {@link #nextLong} function.  */
-    public class IteratorLong implements Iterator<Long>, Enumeration<Long> {
+    public class IteratorLong implements LongIterator, Enumeration<Long> {
         private final SnapshotV _ss;
         /** A new IteratorLong */
         public IteratorLong() { _ss = new SnapshotV(); }
@@ -1144,12 +1175,30 @@ public class NonBlockingHashMapLong<TypeV>
         public Long nextElement() { return next(); }
         /** True if there are more keys to iterate over. */
         public boolean hasMoreElements() { return hasNext(); }
+
+        @Override
+        public int skip(int n) {
+            return _ss.skip(n);
+        }
     }
     /** Returns an enumeration of the <strong>auto-boxed</strong> keys in this table.
      *  <strong>Warning:</strong> this version will auto-box all returned keys.
      *  @return an enumeration of the auto-boxed keys in this table
      *  @see #keySet()  */
     public Enumeration<Long> keys() { return new IteratorLong(); }
+
+    private final class KeySet extends AbstractLongSet {
+        @Override
+        public LongIterator iterator() { return new IteratorLong(); }
+        @Override
+        public int size() { return NonBlockingHashMapLong.this.size(); }
+        @Override
+        public boolean contains(long k) { return NonBlockingHashMapLong.this.containsKey(k); }
+        @Override
+        public boolean remove(long k) { return NonBlockingHashMapLong.this.remove(k) != null; }
+        @Override
+        public void clear() { NonBlockingHashMapLong.this.clear(); }
+    }
 
     /** Returns a {@link Set} view of the keys contained in this map; with care
      *  the keys may be iterated over <strong>without auto-boxing</strong>.  The
@@ -1165,14 +1214,8 @@ public class NonBlockingHashMapLong<TypeV>
      *  to traverse elements as they existed upon construction of the iterator,
      *  and may (but is not guaranteed to) reflect any modifications subsequent
      *  to construction.  */
-    public Set<Long> keySet() {
-        return new AbstractSet<Long> () {
-            public void    clear   (          ) {        NonBlockingHashMapLong.this.clear   ( ); }
-            public int     size    (          ) { return NonBlockingHashMapLong.this.size    ( ); }
-            public boolean contains( Object k ) { return NonBlockingHashMapLong.this.containsKey(k); }
-            public boolean remove  ( Object k ) { return NonBlockingHashMapLong.this.remove  (k) != null; }
-            public IteratorLong iterator()    { return new IteratorLong(); }
-        };
+    public LongSet keySet() {
+        return new KeySet();
     }
 
     /** Keys as a long array.  Array may be zero-padded if keys are concurrently deleted. */
@@ -1189,15 +1232,19 @@ public class NonBlockingHashMapLong<TypeV>
     // --- entrySet ------------------------------------------------------------
     // Warning: Each call to 'next' in this iterator constructs a new Long and a
     // new NBHMLEntry.
-    private class NBHMLEntry extends AbstractEntry<Long,TypeV> {
+    private class NBHMLEntry extends AbstractEntry<Long,TypeV> implements Long2ObjectMap.Entry<TypeV> {
         NBHMLEntry( final Long k, final TypeV v ) { super(k,v); }
         public TypeV setValue(final TypeV val) {
             if (val == null) throw new NullPointerException();
             _val = val;
             return put(_key, val);
         }
+        @Override
+        public long getLongKey() {
+            return getKey();
+        }
     }
-    private class SnapshotE implements Iterator<Map.Entry<Long,TypeV>> {
+    private class SnapshotE implements ObjectIterator<Long2ObjectMap.Entry<TypeV>> {
         final SnapshotV _ss;
         public SnapshotE() { _ss = new SnapshotV(); }
         public void remove() {
@@ -1206,8 +1253,49 @@ public class NonBlockingHashMapLong<TypeV>
             // even when the value has changed.
             _ss.removeKey();
         }
-        public Map.Entry<Long,TypeV> next() { _ss.next(); return new NBHMLEntry(_ss._prevK,_ss._prevV); }
+        public Long2ObjectMap.Entry<TypeV> next() { _ss.next(); return new NBHMLEntry(_ss._prevK,_ss._prevV); }
         public boolean hasNext() { return _ss.hasNext(); }
+        @Override
+        public int skip(int n) {
+            return _ss.skip(n);
+        }
+    }
+
+    private final class EntrySet extends AbstractObjectSet<Long2ObjectMap.Entry<TypeV>> implements Long2ObjectMap.FastEntrySet<TypeV> {
+        @Override
+        public ObjectIterator<Long2ObjectMap.Entry<TypeV>> iterator() {
+            return new SnapshotE();
+        }
+
+        @Override
+        public ObjectIterator<Long2ObjectMap.Entry<TypeV>> fastIterator() {
+            return new SnapshotE();
+        }
+
+        @Override
+        public int size() {
+            return NonBlockingHashMapLong.this.size();
+        }
+
+        @Override
+        public void clear() {
+            NonBlockingHashMapLong.this.clear();
+        }
+
+        @Override
+        public boolean contains(final Object o) {
+            if (!(o instanceof Map.Entry)) return false;
+            final Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+            TypeV v = get(e.getKey());
+            return v != null && v.equals(e.getValue());
+        }
+
+        @Override
+        public boolean remove(final Object o) {
+            if (!(o instanceof Map.Entry)) return false;
+            final Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+            return NonBlockingHashMapLong.this.remove(e.getKey(), e.getValue());
+        }
     }
 
     /** Returns a {@link Set} view of the mappings contained in this map.  The
@@ -1232,23 +1320,8 @@ public class NonBlockingHashMapLong<TypeV>
      *  {@link Map#keySet} or {@link Map#values} will be more efficient.  In addition,
      *  this version requires <strong>auto-boxing</strong> the keys.
      */
-    public Set<Map.Entry<Long,TypeV>> entrySet() {
-        return new AbstractSet<Map.Entry<Long,TypeV>>() {
-            public void    clear   (          ) {        NonBlockingHashMapLong.this.clear( ); }
-            public int     size    (          ) { return NonBlockingHashMapLong.this.size ( ); }
-            public boolean remove( final Object o ) {
-                if (!(o instanceof Map.Entry)) return false;
-                final Map.Entry<?,?> e = (Map.Entry<?,?>)o;
-                return NonBlockingHashMapLong.this.remove(e.getKey(), e.getValue());
-            }
-            public boolean contains(final Object o) {
-                if (!(o instanceof Map.Entry)) return false;
-                final Map.Entry<?,?> e = (Map.Entry<?,?>)o;
-                TypeV v = get(e.getKey());
-                return v != null && v.equals(e.getValue());
-            }
-            public Iterator<Map.Entry<Long,TypeV>> iterator() { return new SnapshotE(); }
-        };
+    public Long2ObjectMap.FastEntrySet<TypeV> long2ObjectEntrySet() {
+        return new EntrySet();
     }
 
     public void forEachLong(LongObjectConsumer<? super TypeV> action) {
@@ -1274,6 +1347,188 @@ public class NonBlockingHashMapLong<TypeV>
                 }
             }
         }
+    }
+
+    @Deprecated
+    @Override
+    public void forEach(BiConsumer<? super Long, ? super TypeV> action) {
+        if (action == null) throw new NullPointerException();
+        forEachLong(action::accept);
+    }
+
+    public TypeV getOrDefault(long key, TypeV defaultValue) {
+        TypeV v = get(key);
+        return (v != null) ? v : defaultValue;
+    }
+
+    @Deprecated
+    @Override
+    public TypeV getOrDefault(Object key, TypeV defaultValue) {
+        return (key instanceof Long) ? getOrDefault(((Long) key).longValue(), defaultValue) : defaultValue;
+    }
+
+    public void replaceAllLong(LongObjectBiFunction<? super TypeV, ? extends TypeV> function) {
+        if (function == null) throw new NullPointerException();
+
+        if (_val_1 != TOMBSTONE) {
+            Object oldVal;
+            do {
+                oldVal = _val_1;
+                if (oldVal == TOMBSTONE) break;
+                @SuppressWarnings("unchecked")
+                TypeV newVal = function.apply(NO_KEY, (TypeV) oldVal);
+                if (newVal == null) throw new NullPointerException();
+                if (CAS(_val_1_offset, oldVal, newVal)) break;
+            } while (true);
+        }
+
+        CHM topchm;
+        while (true) {
+            topchm = _chm;
+            if (topchm._newchm == null) {
+                break;
+            }
+            topchm.help_copy_impl(true);
+        }
+        for (int i = 0; i < topchm._keys.length; i++) {
+            long k = topchm._keys[i];
+            if (k != NO_KEY) {
+                while (true) {
+                    TypeV oldVal = get(k);
+                    if (oldVal == null) {
+                        break;
+                    }
+                    TypeV newVal = function.apply(k, oldVal);
+                    if (newVal == null) throw new NullPointerException();
+                    if (replace(k, oldVal, newVal)) {
+                        break;
+                    }
+                    // CAS failed, retry
+                }
+            }
+        }
+    }
+
+    @Deprecated
+    @Override
+    public void replaceAll(BiFunction<? super Long, ? super TypeV, ? extends TypeV> function) {
+        if (function == null) throw new NullPointerException();
+        replaceAllLong(function::apply);
+    }
+
+    public TypeV computeIfAbsent(long key, LongFunction<? extends TypeV> mappingFunction) {
+        if (mappingFunction == null) throw new NullPointerException();
+        TypeV v = get(key);
+        if (v != null) {
+            return v;
+        }
+        TypeV newValue = mappingFunction.apply(key);
+        if (newValue == null) {
+            return null;
+        }
+        TypeV concurrentValue = putIfAbsent(key, newValue);
+        return (concurrentValue != null) ? concurrentValue : newValue;
+    }
+
+    public TypeV computeIfPresent(long key, LongObjectBiFunction<? super TypeV, ? extends TypeV> remappingFunction) {
+        if (remappingFunction == null) throw new NullPointerException();
+        while (true) {
+            TypeV oldVal = get(key);
+            if (oldVal == null) {
+                return null;
+            }
+            TypeV newVal = remappingFunction.apply(key, oldVal);
+            if (newVal != null) {
+                if (replace(key, oldVal, newVal)) {
+                    return newVal;
+                }
+            } else {
+                if (remove(key, oldVal)) {
+                    return null;
+                }
+            }
+            // CAS failed, retry
+        }
+    }
+
+    @Deprecated
+    @Override
+    public TypeV computeIfAbsent(Long key, Function<? super Long, ? extends TypeV> mappingFunction) {
+        if (mappingFunction == null) throw new NullPointerException();
+        return computeIfAbsent(key.longValue(), mappingFunction::apply);
+    }
+
+    @Deprecated
+    @Override
+    public TypeV computeIfPresent(Long key, BiFunction<? super Long, ? super TypeV, ? extends TypeV> remappingFunction) {
+        if (remappingFunction == null) throw new NullPointerException();
+        return computeIfPresent(key.longValue(), remappingFunction::apply);
+    }
+
+    public TypeV compute(long key, LongObjectBiFunction<? super TypeV, ? extends TypeV> remappingFunction) {
+        if (remappingFunction == null) throw new NullPointerException();
+        while (true) {
+            TypeV oldVal = get(key);
+            TypeV newVal = remappingFunction.apply(key, oldVal);
+            if (newVal == null) {
+                if (oldVal != null) {
+                    if (remove(key, oldVal)) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                if (oldVal != null) {
+                    if (replace(key, oldVal, newVal)) {
+                        return newVal;
+                    }
+                } else {
+                    if (putIfAbsent(key, newVal) == null) {
+                        return newVal;
+                    }
+                }
+            }
+            // CAS failed, retry
+        }
+    }
+
+    @Deprecated
+    @Override
+    public TypeV compute(Long key, BiFunction<? super Long, ? super TypeV, ? extends TypeV> remappingFunction) {
+        if (remappingFunction == null) throw new NullPointerException();
+        return compute(key.longValue(), remappingFunction::apply);
+    }
+
+    public TypeV merge(long key, TypeV value, BiFunction<? super TypeV, ? super TypeV, ? extends TypeV> remappingFunction) {
+        if (value == null || remappingFunction == null) throw new NullPointerException();
+        while (true) {
+            TypeV oldVal = get(key);
+            if (oldVal == null) {
+                if (putIfAbsent(key, value) == null) {
+                    return value;
+                }
+            } else {
+                TypeV newVal = remappingFunction.apply(oldVal, value);
+                if (newVal != null) {
+                    if (replace(key, oldVal, newVal)) {
+                        return newVal;
+                    }
+                } else {
+                    if (remove(key, oldVal)) {
+                        return null;
+                    }
+                }
+            }
+            // CAS failed, retry
+        }
+    }
+
+    @Deprecated
+    @Override
+    public TypeV merge(Long key, TypeV value, BiFunction<? super TypeV, ? super TypeV, ? extends TypeV> remappingFunction) {
+        if (value == null || remappingFunction == null) throw new NullPointerException();
+        return merge(key.longValue(), value, remappingFunction);
     }
 
     // --- writeObject -------------------------------------------------------

@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Threaded DDA raytracer for mk5 explosion.
  *
@@ -99,7 +100,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private LongArrayList destroyedPacked;
     private final BlockingQueue<Long> reactiveSnapQueue;
     private final LongArrayList proactiveSubChunks;
-    private final AtomicInteger proactiveIdx = new AtomicInteger(0);
+    private final AtomicInteger pendingRays;
 
     private final int strength;
     private final CompletableFuture<double[]> directionsFuture;
@@ -107,6 +108,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     private int algorithm;
     private int rayCount;
+    private int proactiveIdx = 0;
     private ForkJoinPool pool;
     private volatile UUID detonator;
     private volatile boolean collectFinished = false;
@@ -147,10 +149,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.destroyedPacked = new LongArrayList(0);
             this.directionsFuture = CompletableFuture.completedFuture(new double[0]);
             this.pool = null;
+            this.pendingRays = new AtomicInteger(0);
             return;
         }
 
         this.rayCount = Math.max(0, (int) (2.5 * Math.PI * strength * strength * RESOLUTION_FACTOR));
+        this.pendingRays = new AtomicInteger(this.rayCount);
         this.proactiveSubChunks = getAllSubChunksPacked();
         this.reactiveSnapQueue = new LinkedBlockingQueue<>();
 
@@ -194,21 +198,26 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     }
 
     private static double[] generateSphereRays(int count) {
-        if (count <= 0) return new double[0];
-        double[] arr = new double[count * 3];
-        if (count == 1) {
-            arr[0] = 1.0;
+        final double[] arr = new double[count * 3];
+        final double phi = Math.PI * (3.0 - Math.sqrt(5.0));
+        if (count < 16384) {
+            if (count <= 0) return new double[0];
+            if (count == 1) {
+                arr[0] = 1.0;
+                return arr;
+            }
+            for (int i = 0, baseIndex = 0; i < count; i++, baseIndex += 3) {
+                double y = 1.0 - (i / (double) (count - 1)) * 2.0;
+                double r = Math.sqrt(1.0 - y * y);
+                double t = phi * i;
+                arr[baseIndex] = Math.cos(t) * r;
+                arr[baseIndex + 1] = y;
+                arr[baseIndex + 2] = Math.sin(t) * r;
+            }
             return arr;
         }
-        double phi = Math.PI * (3.0 - Math.sqrt(5.0));
-        for (int i = 0, baseIndex = 0; i < count; i++, baseIndex += 3) {
-            double y = 1.0 - (i / (double) (count - 1)) * 2.0;
-            double r = Math.sqrt(1.0 - y * y);
-            double t = phi * i;
-            arr[baseIndex] = Math.cos(t) * r;
-            arr[baseIndex + 1] = y;
-            arr[baseIndex + 2] = Math.sin(t) * r;
-        }
+        final double inv = 1.0 / (count - 1);
+        new RayGenTask(arr, 0, count, phi, inv).invoke();
         return arr;
     }
 
@@ -224,15 +233,21 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
         final RayTracerTask mainTask = new RayTracerTask(0, rayCount);
 
-        CompletableFuture.runAsync(() -> pool.invoke(mainTask), pool).whenComplete((v, ex) -> {
-            if (ex != null) MainRegistry.logger.error("Nuke ray-tracing failed catastrophically.", ex);
-            collectFinished = true;
-            if (algorithm == 2) {
-                pool.submit(this::runConsolidation);
-            } else {
-                consolidationFinished = true;
-            }
+        CompletableFuture.runAsync(() -> pool.invoke(mainTask), pool).exceptionally(ex -> {
+            MainRegistry.logger.error("Nuke ray-tracing failed catastrophically.", ex);
+            onAllRaysFinished();
+            return null;
         });
+    }
+
+    private void onAllRaysFinished() {
+        if (collectFinished) return;
+        collectFinished = true;
+        if (algorithm == 2) {
+            pool.submit(this::runConsolidation);
+        } else {
+            consolidationFinished = true;
+        }
     }
 
     private LongArrayList getAllSubChunksPacked() {
@@ -283,9 +298,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             if (ck == null) break;
             processCacheKey(ck);
         }
-        int idx;
-        while (System.nanoTime() < deadline && (idx = proactiveIdx.getAndIncrement()) < proactiveSubChunks.size()) {
-            long ck = proactiveSubChunks.getLong(idx);
+        while (System.nanoTime() < deadline && proactiveIdx < proactiveSubChunks.size()) {
+            long ck = proactiveSubChunks.getLong(proactiveIdx++);
             processCacheKey(ck);
         }
     }
@@ -456,7 +470,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     }
 
     private void runConsolidation() {
-        this.aggMap.forEachLong((cpLong, agg) -> {
+        Arrays.stream(this.aggMap.keySetLong()).parallel().forEach(cpLong -> {
+            final ChunkAgg agg = this.aggMap.get(cpLong);
             if (agg == null) return;
             agg.drainUnlocked();
             processConsolidationForChunk(cpLong, agg);
@@ -572,6 +587,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 this.collectFinished = this.consolidationFinished = this.destroyFinished = true;
                 return;
             }
+            this.pendingRays.set(this.rayCount);
             initializeAndStartWorkers();
         }
     }
@@ -769,6 +785,40 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
+    private static final class RayGenTask extends RecursiveAction {
+        private static final int THRESHOLD = 16384;
+        private final double[] arr;
+        private final int start, end;
+        private final double phi, inv;
+
+        RayGenTask(double[] arr, int start, int end, double phi, double inv) {
+            this.arr = arr;
+            this.start = start;
+            this.end = end;
+            this.phi = phi;
+            this.inv = inv;
+        }
+
+        @Override
+        protected void compute() {
+            int len = end - start;
+            if (len <= THRESHOLD) {
+                int baseIndex = start * 3;
+                for (int i = start; i < end; i++, baseIndex += 3) {
+                    double y = 1.0 - (i * inv) * 2.0;
+                    double r = Math.sqrt(Math.max(0.0, 1.0 - y * y));
+                    double t = phi * i;
+                    arr[baseIndex    ] = Math.cos(t) * r;
+                    arr[baseIndex + 1] = y;
+                    arr[baseIndex + 2] = Math.sin(t) * r;
+                }
+            } else {
+                int mid = start + (len >>> 1);
+                invokeAll(new RayGenTask(arr, start, mid, phi, inv), new RayGenTask(arr, mid, end, phi, inv));
+            }
+        }
+    }
+
     private class RayTracerTask extends RecursiveAction {
         private static final int THRESHOLD = 2048; // rays per task
         private static final double RAY_DIRECTION_EPSILON = 1e-6;
@@ -826,6 +876,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
 
         void trace(int dirIndex, LocalAgg agg) {
+            boolean paused = false;
             float energy = strength * INITIAL_ENERGY_FACTOR;
             double px = explosionX;
             double py = explosionY;
@@ -902,6 +953,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                             if (amFirst[0]) reactiveSnapQueue.add(currentSubChunkKey);
 
                             waiters.add(new RayTracerTask(dirIndex, dirIndex + 1));
+                            paused = true;
                             return;
                         }
                         if (snap == SubChunkSnapshot.EMPTY) {
@@ -976,6 +1028,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
             } catch (Exception e) {
                 MainRegistry.logger.error("A ray in batch {}-{} finished exceptionally: ", start, end, e);
+            } finally {
+                if (!paused) {
+                    if (ExplosionNukeRayParallelized.this.pendingRays.decrementAndGet() == 0) {
+                        onAllRaysFinished();
+                    }
+                }
             }
         }
 
