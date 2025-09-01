@@ -89,6 +89,16 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 	}
 
 	@Override
+	public boolean writeToNBTOptional(NBTTagCompound compound) {
+		return false;
+	}
+
+	@Override
+	public boolean writeToNBTAtomically(NBTTagCompound compound){
+		return false;
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
     public boolean isInRangeToRenderDist(double distance) {
 		return true;

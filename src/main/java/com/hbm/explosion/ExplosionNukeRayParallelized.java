@@ -3,6 +3,7 @@ package com.hbm.explosion;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.interfaces.IExplosionRay;
+import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ConcurrentBitSet;
 import com.hbm.util.SubChunkKey;
@@ -17,10 +18,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
 import net.minecraft.network.play.server.SPacketChunkData;
 import net.minecraft.server.management.PlayerChunkMapEntry;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -33,7 +32,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * Threaded DDA raytracer for mk5 explosion.
  *
@@ -104,8 +102,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private final AtomicInteger proactiveIdx = new AtomicInteger(0);
 
     private final int strength;
-    private final CompletableFuture<Vec3d[]> directionsFuture;
-    private volatile Vec3d[] directions;
+    private final CompletableFuture<double[]> directionsFuture;
+    private volatile double[] directions;
 
     private int algorithm;
     private int rayCount;
@@ -147,7 +145,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.waitingRoom = new NonBlockingHashMapLong<>(16);
             this.orderedChunks = new LongArrayList(0);
             this.destroyedPacked = new LongArrayList(0);
-            this.directionsFuture = CompletableFuture.completedFuture(new Vec3d[0]);
+            this.directionsFuture = CompletableFuture.completedFuture(new double[0]);
             this.pool = null;
             return;
         }
@@ -195,16 +193,21 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         return b.getExplosionResistance(null);
     }
 
-    private static Vec3d[] generateSphereRays(int count) {
-        if (count <= 0) return new Vec3d[0];
-        if (count == 1) return new Vec3d[]{new Vec3d(1, 0, 0)};
-        Vec3d[] arr = new Vec3d[count];
+    private static double[] generateSphereRays(int count) {
+        if (count <= 0) return new double[0];
+        double[] arr = new double[count * 3];
+        if (count == 1) {
+            arr[0] = 1.0;
+            return arr;
+        }
         double phi = Math.PI * (3.0 - Math.sqrt(5.0));
-        for (int i = 0; i < count; i++) {
+        for (int i = 0, baseIndex = 0; i < count; i++, baseIndex += 3) {
             double y = 1.0 - (i / (double) (count - 1)) * 2.0;
             double r = Math.sqrt(1.0 - y * y);
             double t = phi * i;
-            arr[i] = new Vec3d(Math.cos(t) * r, y, Math.sin(t) * r);
+            arr[baseIndex] = Math.cos(t) * r;
+            arr[baseIndex + 1] = y;
+            arr[baseIndex + 2] = Math.sin(t) * r;
         }
         return arr;
     }
@@ -317,6 +320,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
 
         int i = 0;
+        final MutableBlockPos pos = new MutableBlockPos();
         while (i < orderedChunks.size() && System.nanoTime() < deadline) {
             final long cpLong = orderedChunks.getLong(i);
             final int cx = SubChunkKey.getChunkX(cpLong);
@@ -356,11 +360,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
                     IBlockState oldState = storage.get(xLocal, yLocal, zLocal);
                     if (oldState.getBlock() != Blocks.AIR) {
-                        BlockPos pos = new BlockPos(xGlobal, yGlobal, zGlobal);
+                        pos.setPos(xGlobal, yGlobal, zGlobal);
                         world.removeTileEntity(pos);
                         storage.set(xLocal, yLocal, zLocal, Blocks.AIR.getDefaultState());
                         chunkModified = true;
-                        destroyedPacked.add(blockPosToLong(xGlobal, yGlobal, zGlobal));
+                        destroyedPacked.add(Library.blockPosToLong(xGlobal, yGlobal, zGlobal));
                     }
                     bs.clear(bit);
                     bit = bs.nextSetBit(bit + 1);
@@ -385,11 +389,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     private static void secondPass(WorldServer world, LongArrayList destroyedPacked) {
         if (destroyedPacked == null || destroyedPacked.isEmpty()) return;
+        MutableBlockPos pos = new MutableBlockPos();
         Long2IntOpenHashMap sectionMaskByChunk = new Long2IntOpenHashMap();
         LongIterator it = destroyedPacked.iterator();
         while (it.hasNext()) {
             long lp = it.nextLong();
-            BlockPos pos = BlockPos.fromLong(lp);
+            Library.fromLong(pos, lp);
             world.notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
             long key = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
             int mask = sectionMaskByChunk.getOrDefault(key, 0);
@@ -558,7 +563,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 NBTTagList list = nbt.getTagList(TAG_DESTROYED_LIST, Constants.NBT.TAG_COMPOUND);
                 for (int i = 0; i < list.tagCount(); i++) {
                     NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-                    long lp = blockPosToLong(nbt1.getInteger(TAG_POS_X), nbt1.getInteger(TAG_POS_Y), nbt1.getInteger(TAG_POS_Z));
+                    long lp = Library.blockPosToLong(nbt1.getInteger(TAG_POS_X), nbt1.getInteger(TAG_POS_Y), nbt1.getInteger(TAG_POS_Z));
                     this.destroyedPacked.add(lp);
                 }
             }
@@ -569,10 +574,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
             initializeAndStartWorkers();
         }
-    }
-
-    private static long blockPosToLong(int x, int y, int z) {
-        return ((long)x & 0x03FF_FFFF) << 38 | ((long)y & 0x0000_0FFF) << 26 | ((long) z & 0x03FF_FFFF);
     }
 
     @Override
@@ -609,10 +610,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             nbt.setTag(TAG_ORDERED_CHUNKS, list);
         }
         if (this.destroyedPacked != null && !this.destroyedPacked.isEmpty()) {
+            MutableBlockPos p = new MutableBlockPos();
             NBTTagList list = new NBTTagList();
             for (int i = 0; i < destroyedPacked.size(); i++) {
                 long lp = destroyedPacked.getLong(i);
-                BlockPos p = BlockPos.fromLong(lp);
+                Library.fromLong(p, lp);
                 NBTTagCompound nbt1 = new NBTTagCompound();
                 nbt1.setInteger(TAG_POS_X, p.getX());
                 nbt1.setInteger(TAG_POS_Y, p.getY());
@@ -824,7 +826,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
 
         void trace(int dirIndex, LocalAgg agg) {
-            Vec3d dir = directions[dirIndex];
             float energy = strength * INITIAL_ENERGY_FACTOR;
             double px = explosionX;
             double py = explosionY;
@@ -834,9 +835,10 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             int z = originZ;
             double currentRayPosition = 0.0;
 
-            double dirX = dir.x;
-            double dirY = dir.y;
-            double dirZ = dir.z;
+            final int baseIndex = dirIndex * 3;
+            final double dirX = directions[baseIndex];
+            final double dirY = directions[baseIndex + 1];
+            final double dirZ = directions[baseIndex + 2];
 
             double absDirX = Math.abs(dirX);
             int stepX = (absDirX < RAY_DIRECTION_EPSILON) ? 0 : (dirX > 0 ? 1 : -1);

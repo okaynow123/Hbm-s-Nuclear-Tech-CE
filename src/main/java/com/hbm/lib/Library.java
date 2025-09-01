@@ -60,6 +60,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -1563,5 +1564,18 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 			}
 		}
 		return itemsPulled;
+	}
+
+	@Contract(pure = true)
+	public static long blockPosToLong(int x, int y, int z) {
+		return ((long)x & 0x03FF_FFFF) << 38 | ((long)y & 0x0000_0FFF) << 26 | ((long) z & 0x03FF_FFFF);
+	}
+
+	@Contract(mutates = "param1")
+	public static void fromLong(@NotNull BlockPos.MutableBlockPos pos, long serialized) {
+		int x = (int)(serialized >> 38);
+		int y = (int)(serialized << 26 >> 52);
+		int z = (int)(serialized << 38 >> 38);
+		pos.setPos(x, y, z);
 	}
 }
