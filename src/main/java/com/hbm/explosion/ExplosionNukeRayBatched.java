@@ -96,8 +96,7 @@ public class ExplosionNukeRayBatched implements IExplosionRay {
 
 	int age = 0;
 
-	@Override
-	public void cacheChunksTick(int time) {
+	private void cacheChunksTick(int time) {
 		if(!CompatibilityConfig.isWarDim(world)){
 			isAusf3Complete = true;
 			return;
@@ -186,6 +185,12 @@ public class ExplosionNukeRayBatched implements IExplosionRay {
 	}
 
 	@Override
+	public void update(int processTimeMs) {
+		cacheChunksTick(processTimeMs);
+		destructionTick(processTimeMs);
+	}
+
+	@Override
 	public void cancel() {
 		isAusf3Complete = true;
 		orderedChunks.clear();
@@ -223,7 +228,6 @@ public class ExplosionNukeRayBatched implements IExplosionRay {
 		}
 	}
 
-	@Override
 	public void destructionTick(int time){
 		long start = System.currentTimeMillis();
 		while(System.currentTimeMillis() < start + time){

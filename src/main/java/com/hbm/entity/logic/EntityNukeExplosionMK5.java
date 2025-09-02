@@ -154,8 +154,7 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
 
         //Calculating crater
         if (!explosion.isComplete()) {
-            explosion.cacheChunksTick(BombConfig.mk5);
-            explosion.destructionTick(BombConfig.mk5);
+            explosion.update(BombConfig.mk5);
         } else {
             if (GeneralConfig.enableExtendedLogging && explosionStart != 0)
                 MainRegistry.logger.log(Level.INFO, "[NUKE] Explosion complete. Time elapsed: {}ms", (System.currentTimeMillis() - explosionStart));

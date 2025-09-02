@@ -546,7 +546,7 @@ public class ConcurrentBitSet implements Cloneable {
     @NotNull
     @Override
     @Contract(value = "-> new", pure = true)
-    public ConcurrentBitSet clone() throws CloneNotSupportedException {
+    public ConcurrentBitSet clone() {
         return new ConcurrentBitSet(this);
     }
 }

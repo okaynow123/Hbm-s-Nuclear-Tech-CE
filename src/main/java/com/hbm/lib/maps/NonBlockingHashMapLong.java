@@ -1324,7 +1324,7 @@ public class NonBlockingHashMapLong<TypeV>
         return new EntrySet();
     }
 
-    public void forEachLong(LongObjectConsumer<? super TypeV> action) {
+    public void forEach(LongObjectConsumer<? super TypeV> action) {
         if (action == null) throw new NullPointerException();
         TypeV val1 = get(NO_KEY);
         if (val1 != null) {
@@ -1353,7 +1353,7 @@ public class NonBlockingHashMapLong<TypeV>
     @Override
     public void forEach(BiConsumer<? super Long, ? super TypeV> action) {
         if (action == null) throw new NullPointerException();
-        forEachLong(action::accept);
+        forEach((LongObjectConsumer<? super TypeV>) action::accept);
     }
 
     public TypeV getOrDefault(long key, TypeV defaultValue) {
@@ -1367,7 +1367,7 @@ public class NonBlockingHashMapLong<TypeV>
         return (key instanceof Long) ? getOrDefault(((Long) key).longValue(), defaultValue) : defaultValue;
     }
 
-    public void replaceAllLong(LongObjectBiFunction<? super TypeV, ? extends TypeV> function) {
+    public void replaceAll(LongObjectBiFunction<? super TypeV, ? extends TypeV> function) {
         if (function == null) throw new NullPointerException();
 
         if (_val_1 != TOMBSTONE) {
@@ -1413,7 +1413,7 @@ public class NonBlockingHashMapLong<TypeV>
     @Override
     public void replaceAll(BiFunction<? super Long, ? super TypeV, ? extends TypeV> function) {
         if (function == null) throw new NullPointerException();
-        replaceAllLong(function::apply);
+        replaceAll((LongObjectBiFunction<? super TypeV, ? extends TypeV>) function::apply);
     }
 
     public TypeV computeIfAbsent(long key, LongFunction<? extends TypeV> mappingFunction) {
