@@ -466,6 +466,7 @@ public class MainRegistry {
 
     @EventHandler
     public void fMLLoadCompleteEvent(FMLLoadCompleteEvent evt){
+        FalloutConfigJSON.initialize();
         for(Tuple<ResourceLocation, HazardData> tuple : HazardSystem.locationRateRegisterList)
             HazardSystem.register(tuple.getFirst(), tuple.getSecond());
 
