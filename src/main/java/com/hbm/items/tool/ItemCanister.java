@@ -117,7 +117,7 @@ public class ItemCanister extends Item implements IDynamicModels {
     }
 
     @SideOnly(Side.CLIENT)
-    public IItemColor getColorHandler() {
+    public IItemColor getItemColorHandler() {
         return (stack, tintIndex) ->
         {
             if (tintIndex == 0) {

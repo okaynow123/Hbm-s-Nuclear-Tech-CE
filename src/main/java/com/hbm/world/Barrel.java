@@ -1,6 +1,7 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import static com.hbm.blocks.generic.BlockMeta.META;
 
 public class Barrel extends AbstractPhasedStructure {
 	public static final Barrel INSTANCE = new Barrel();
@@ -82,12 +85,12 @@ public class Barrel extends AbstractPhasedStructure {
 	Block Block1 = ModBlocks.reinforced_brick;
 	Block Block2 = ModBlocks.sellafield_slaked;
 	Block Block3 = ModBlocks.brick_concrete;
-	Block Block4 = ModBlocks.sellafield_3;
-	Block Block5 = ModBlocks.sellafield_4;
-	Block Block6 = ModBlocks.sellafield_core;
-	Block Block7 = ModBlocks.sellafield_2;
-	Block Block8 = ModBlocks.sellafield_1;
-	Block Block9 = ModBlocks.sellafield_0;
+	IBlockState Block4 = ModBlocks.sellafield.getDefaultState().withProperty(META, 3);
+	IBlockState Block5 = ModBlocks.sellafield.getDefaultState().withProperty(META, 4);
+	IBlockState Block6 = ModBlocks.sellafield.getDefaultState().withProperty(META, 5);
+	IBlockState Block7 = ModBlocks.sellafield.getDefaultState().withProperty(META, 2);
+	IBlockState Block8 = ModBlocks.sellafield.getDefaultState().withProperty(META, 1);
+	IBlockState Block9 = ModBlocks.sellafield.getDefaultState().withProperty(META, 0);
 	Block Block10 = ModBlocks.deco_lead;
 	Block Block11 = ModBlocks.reinforced_glass;
 	Block Block12 = ModBlocks.toxic_block;
@@ -126,25 +129,25 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 0, z + 0), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 0, z + 1), Block4.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 0, z + 1), Block5.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 0, z + 1), Block4.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 0, z + 1), Block4, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 0, z + 1), Block5, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 0, z + 1), Block4, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 0, z + 2), Block5.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 0, z + 2), Block6.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 0, z + 2), Block5, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 0, z + 2), Block6, 3);
 		
 		//Drillgon200: This tile entity is never actually used. Possibly a bug?
 		/*if(world.getTileEntity(x + 2, y + 0, z + 2) instanceof TileEntitySellafield) {
 			((TileEntitySellafield)world.getTileEntity(x + 2, y + 0, z + 2)).radius = 2.5;
 		}*/
 		
-		world.setBlockState(pos.setPos(x + 3, y + 0, z + 2), Block5.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 3, y + 0, z + 2), Block5, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 2), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 3), Block2.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 0, z + 3), Block5.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 0, z + 3), Block4.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 0, z + 3), Block5.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 0, z + 3), Block5, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 0, z + 3), Block4, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 0, z + 3), Block5, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 3), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 4), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -153,12 +156,12 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 1, z + 0), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 1, z + 1), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 1, z + 1), Block4.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 1, z + 1), Block4.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 1, z + 1), Block7, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 1, z + 1), Block4, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 1, z + 1), Block4, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 1, z + 1), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 1, z + 2), Block4.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 1, z + 2), Block4, 3);
 		
 		/*world.setBlock(x + 2, y + 1, z + 2, Blocks.chest, 3, 3);
 
@@ -170,12 +173,12 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 2), ModBlocks.crate_steel.getDefaultState(),
 				((worldIn, random, blockPos, chest) ->
 						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_EXPENSIVE), chest, 16)));
-		world.setBlockState(pos.setPos(x + 3, y + 1, z + 2), Block4.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 3, y + 1, z + 2), Block4, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 1, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 1, z + 3), Block4.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 1, z + 3), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 1, z + 3), Block4.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 1, z + 3), Block4, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 1, z + 3), Block7, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 1, z + 3), Block4, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 1, z + 3), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 4), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -184,19 +187,19 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 2, z + 0), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 2, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 2, z + 1), Block2.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 2, z + 1), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 2, z + 1), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 2, z + 1), Block7.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 2, z + 1), Block8, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 2, z + 1), Block7, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 2, z + 1), Block7, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 2, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 2, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 2, z + 2), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 2, z + 2), Block5.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 2, z + 2), Block7.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 2, z + 2), Block7, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 2, z + 2), Block5, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 2, z + 2), Block7, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 2, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 2, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 2, z + 3), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 2, z + 3), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 2, z + 3), Block7.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 2, z + 3), Block7, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 2, z + 3), Block8, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 2, z + 3), Block7, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 2, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 2, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 2, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -205,19 +208,19 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 3, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 3, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 3, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 3, z + 1), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 3, z + 1), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 3, z + 1), Block8.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 3, z + 1), Block8, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 3, z + 1), Block8, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 3, z + 1), Block8, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 3, z + 1), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 3, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 3, z + 2), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 3, z + 2), Block4.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 3, z + 2), Block8.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 3, z + 2), Block8, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 3, z + 2), Block4, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 3, z + 2), Block8, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 3, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 3, z + 3), Block2.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 3, z + 3), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 3, z + 3), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 3, z + 3), Block8.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 3, z + 3), Block8, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 3, z + 3), Block9, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 3, z + 3), Block8, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 3, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 3, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 3, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -226,19 +229,19 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 4, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 4, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 4, z + 1), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 4, z + 1), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 4, z + 1), Block9.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 4, z + 1), Block9, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 4, z + 1), Block8, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 4, z + 1), Block9, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 4, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 4, z + 2), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 4, z + 2), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 4, z + 2), Block8.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 4, z + 2), Block9, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 4, z + 2), Block7, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 4, z + 2), Block8, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 2), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 4, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 4, z + 3), Block8.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 4, z + 3), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 4, z + 3), Block9.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 4, z + 3), Block8, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 4, z + 3), Block9, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 4, z + 3), Block9, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 3), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 4, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 4, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -247,18 +250,18 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + 5, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 5, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 5, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 5, z + 1), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 5, z + 1), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 3, y + 5, z + 1), Block9.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 5, z + 1), Block9, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 5, z + 1), Block9, 3);
+		world.setBlockState(pos.setPos(x + 3, y + 5, z + 1), Block9, 3);
 		world.setBlockState(pos.setPos(x + 4, y + 5, z + 1), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 5, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 5, z + 2), Block12.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 5, z + 2), Block8.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 2, y + 5, z + 2), Block8, 3);
 		world.setBlockState(pos.setPos(x + 3, y + 5, z + 2), Block12.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 5, z + 2), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 5, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + 5, z + 3), Block9.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 5, z + 3), Block9.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 1, y + 5, z + 3), Block9, 3);
+		world.setBlockState(pos.setPos(x + 2, y + 5, z + 3), Block9, 3);
 		world.setBlockState(pos.setPos(x + 3, y + 5, z + 3), Block12.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 5, z + 3), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 5, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
@@ -274,7 +277,7 @@ public class Barrel extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 4, y + 6, z + 1), Block10.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 6, z + 2), Block10.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 6, z + 2), Block12.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 6, z + 2), Block9.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 2, y + 6, z + 2), Block9, 3);
 		world.setBlockState(pos.setPos(x + 3, y + 6, z + 2), Block12.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 6, z + 2), Block10.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 6, z + 3), Block10.getDefaultState(), 3);

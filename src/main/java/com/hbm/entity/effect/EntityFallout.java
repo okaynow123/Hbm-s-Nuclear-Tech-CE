@@ -1,6 +1,8 @@
 package com.hbm.entity.effect;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.blocks.generic.BlockSellafield;
 import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.WasteLog;
 import com.hbm.config.VersatileConfig;
@@ -183,34 +185,30 @@ public abstract class EntityFallout extends Entity implements IChunkLoader {
             case "minecraft:cobblestone":
                 double ranDist = dist * (1D + world.rand.nextDouble() * (isSurface ? 0.2D : 0.1D));
 
-                Block targetBlock;
+                IBlockState targetBlock;
                 if (ranDist > s1 || (isSurface && stoneDepth == maxStoneDepth)) {
-                    targetBlock = ModBlocks.sellafield_slaked;
+                    targetBlock = ModBlocks.sellafield_slaked.getDefaultState();
                 } else if (ranDist > s2 || (isSurface && stoneDepth == maxStoneDepth - 1)) {
-                    targetBlock = ModBlocks.sellafield_0;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 0);
                 } else if (ranDist > s3 || (isSurface && stoneDepth == maxStoneDepth - 2)) {
-                    targetBlock = ModBlocks.sellafield_1;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 1);
                 } else if (ranDist > s4 || (isSurface && stoneDepth == maxStoneDepth - 3)) {
-                    targetBlock = ModBlocks.sellafield_2;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 2);
                 } else if (ranDist > s5 || (isSurface && stoneDepth == maxStoneDepth - 4)) {
-                    targetBlock = ModBlocks.sellafield_3;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 3);
                 } else if (ranDist > s6 || (isSurface && stoneDepth == maxStoneDepth - 5)) {
-                    targetBlock = ModBlocks.sellafield_4;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4);
                 } else {
-                    targetBlock = ModBlocks.sellafield_core;
+                    targetBlock = ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 5);
                 }
 
-                int variant = world.rand.nextInt(4);
-                IBlockState newState =
-                        targetBlock.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT,
-                                variant);
 
-                world.setBlockState(pos, newState);
+                world.setBlockState(pos, targetBlock);
                 return false;
             case "minecraft:bedrock":
             case "hbm:ore_bedrock_oil":
             case "hbm:ore_bedrock_block":
-                world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true));
+                world.setBlockState(pos, ModBlocks.sellafield_bedrock.getDefaultState());
                 return false;
             case "minecraft:grass":
                 placeBlockFromDist(dist, ModBlocks.waste_earth, pos);
@@ -306,48 +304,48 @@ public abstract class EntityFallout extends Entity implements IChunkLoader {
                     world.setBlockState(pos, ModBlocks.brick_concrete_broken.getDefaultState());
                 }
                 return false;
-            case "hbm:sellafield_4":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_core.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
-            case "hbm:sellafield_3":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_4.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
-            case "hbm:sellafield_2":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_3.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
-            case "hbm:sellafield_1":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_2.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
-            case "hbm:sellafield_0":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_1.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
-            case "hbm:sellafield_slaked":
-                if (isSurface) {
-                    world.setBlockState(pos,
-                            ModBlocks.sellafield_0.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, rand.nextInt(4)));
-                    return true;
-                }
-                break;
+//            case "hbm:sellafield_4":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield_core.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.SHADE, rand.nextInt(4)));
+//                    return true;
+//                }
+//                break;
+//            case "hbm:sellafield_3":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4).getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.SHADE, rand.nextInt(4)));
+//                    return true;
+//                }
+//                break;
+//            case "hbm:sellafield_2":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield.getDefaultState();
+//                    return true;
+//                }
+//                break;
+//            case "hbm:sellafield_1":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield.getDefaultState();
+//                    return true;
+//                }
+//                break;
+//            case "hbm:sellafield_0":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 1).getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.SHADE, rand.nextInt(4)));
+//                    return true;
+//                }
+//                break;
+//            case "hbm:sellafield_slaked":
+//                if (isSurface) {
+//                    world.setBlockState(pos,
+//                            ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 0).getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.SHADE, rand.nextInt(4)));
+//                    return true;
+//                }
+//                break;
         }
         if (isSurface) {
             if (pos.getY() == contactHeight - 1 && block != ModBlocks.fallout && Math.abs(rand.nextGaussian() * (dist * dist) / (s0 * s0)) < 0.05 && rand.nextDouble() < 0.05 && ModBlocks.fallout.canPlaceBlockAt(world, pos.up())) {

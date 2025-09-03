@@ -10,6 +10,7 @@ import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -34,6 +35,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -51,7 +54,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
     protected boolean separateTranslationKeys = true;
 
     protected BlockBakeFrame[] blockFrames;
-    private boolean showMetaInCreative = true;
+    protected boolean showMetaInCreative = true;
 
     public IBlockState getRandomState(Random rand){
         return this.getDefaultState().withProperty(META, rand.nextInt(META_COUNT));
@@ -77,6 +80,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
         INSTANCES.add(this);
         META_COUNT = metaCount;
     }
+
 
     public BlockMeta(Material m, String s, short metaCount, boolean showMetaInCreative) {
         super(m, s);
@@ -188,8 +192,9 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, META);
+        return new BlockStateContainer(this, new IProperty[]{META});
     }
+
 
     @Override
     public int getMetaFromState(IBlockState state) {

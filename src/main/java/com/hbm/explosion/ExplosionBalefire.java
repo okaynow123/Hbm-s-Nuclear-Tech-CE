@@ -1,7 +1,9 @@
 package com.hbm.explosion;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.blocks.generic.BlockSellafieldSlaked;
+import com.hbm.inventory.RecipesCommon;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +12,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
+import static com.hbm.blocks.generic.BlockMeta.*;
 
 public class ExplosionBalefire {
 
@@ -139,15 +143,22 @@ public class ExplosionBalefire {
 			int startDepth = (int)(6 * dist / radius);
 			for(int i = 0; i <= startDepth; i++) {
 				if(worldObj.getBlockState(new BlockPos(pX, depth-i, pZ)).getBlock() == Blocks.STONE){
-					switch(startDepth-i){
-						case 6: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_core.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 5: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_4.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 4: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_3.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 3: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_2.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 2: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_1.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 1: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_0.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-						case 0: worldObj.setBlockState(new BlockPos(pX, depth-i, pZ), ModBlocks.sellafield_slaked.getDefaultState().withProperty(BlockSellafieldSlaked.NATURAL, true).withProperty(BlockSellafieldSlaked.VARIANT, worldObj.rand.nextInt(4))); break;
-					}
+                    switch (startDepth - i) {
+                        case 6 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META,5));
+                        case 5 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META, 4));
+                        case 4 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META, 3));
+                        case 3 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META, 2));
+                        case 2 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META, 1));
+                        case 1 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield.getDefaultState().withProperty(META,0));
+                        case 0 ->
+                                worldObj.setBlockState(new BlockPos(pX, depth - i, pZ), ModBlocks.sellafield_slaked.getDefaultState());
+                    }
 				}
 			}
 		}

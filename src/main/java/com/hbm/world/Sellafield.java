@@ -1,8 +1,10 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -73,15 +75,15 @@ public class Sellafield extends AbstractPhasedStructure {
 					dig(world, x + a, z + b, dep);
 
 					if(r + rand.nextInt(3) <= radius / 6D) {
-						place(world, x + a, z + b, 3, ModBlocks.sellafield_4);
+						place(world, x + a, z + b, 3, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4));
 					} else if(r - rand.nextInt(3) <= radius / 6D * 2D) {
-						place(world, x + a, z + b, 3, ModBlocks.sellafield_3);
+						place(world, x + a, z + b, 3, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 3));
 					} else if(r - rand.nextInt(3) <= radius / 6D * 3D) {
-						place(world, x + a, z + b, 3, ModBlocks.sellafield_2);
+						place(world, x + a, z + b, 3, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 2));
 					} else if(r - rand.nextInt(3) <= radius / 6D * 4D) {
-						place(world, x + a, z + b, 3, ModBlocks.sellafield_1);
+						place(world, x + a, z + b, 3, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 1));
 					} else if(r - rand.nextInt(3) <= radius / 6D * 5D) {
-						place(world, x + a, z + b, 3, ModBlocks.sellafield_0);
+						place(world, x + a, z + b, 3, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 0));
 					} else {
 						place(world, x + a, z + b, 3, ModBlocks.sellafield_slaked);
 					}
@@ -110,12 +112,20 @@ public class Sellafield extends AbstractPhasedStructure {
 		for(int i = 0; i < depth; i++)
 			world.setBlockState(new BlockPos(x, y - i, z), block.getDefaultState(), 2 | 16);
 	}
-	
+
+    private static void place(World world, int x, int z, int depth, IBlockState block) {
+
+        int y = world.getHeight(x, z) - 1;
+
+        for(int i = 0; i < depth; i++)
+            world.setBlockState(new BlockPos(x, y - i, z), block, 2 | 16);
+    }
+
 	private static void placeCore(World world, int x, int z, double rad) {
 		
 		int y = world.getHeight(x, z) - 1;
 		
-		world.setBlockState(new BlockPos(x, y, z), ModBlocks.sellafield_core.getDefaultState(), 2 | 16);
+		world.setBlockState(new BlockPos(x, y, z), ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 5), 2 | 16);
 		//Drillgon200: This tile entity is never actually created anywhere
 		/*try {
 			

@@ -515,12 +515,7 @@ public class ModBlocks {
 	//TODO: We need some kind of crafting recepie for purifying the higher meta blocks if we want them for building
 	public static final Block sellafield_slaked = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_slaked").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 	public static final Block sellafield_bedrock = new BlockSellafieldSlaked(Material.ROCK, SoundType.STONE, "sellafield_bedrock").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_0 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_0", 0).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_1 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_1", 1).setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_2 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_2", 2).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_3 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_3", 3).setHardness(5.0F).setResistance(7F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_4 = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_4", 4).setHardness(5.0F).setResistance(8F).setCreativeTab(MainRegistry.resourceTab);
-	public static final Block sellafield_core = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield_core", 5).setHardness(10.0F).setResistance(10F).setCreativeTab(MainRegistry.resourceTab);
+	public static final Block sellafield = new BlockSellafield(Material.ROCK, SoundType.STONE, "sellafield").setHardness(5.0F).setResistance(6F).setCreativeTab(MainRegistry.resourceTab);
 
 
 	public static final Block geysir_water = new BlockGeysir(Material.ROCK, "geysir_water").setSoundType(SoundType.STONE).setHardness(5.0F).setCreativeTab(MainRegistry.resourceTab);
@@ -1409,7 +1404,6 @@ public class ModBlocks {
 				((BlockHazard)block).addRadiation(HazardSystem.getRawRadsFromBlock(block));
 			}
 		}
-		BlockSellafield.registerSellafieldLevels();
 		BlockTallPlant.initPlacables();
 		BlockDeadPlant.initPlacables();
 		BlockFlowerPlant.initPlacables();

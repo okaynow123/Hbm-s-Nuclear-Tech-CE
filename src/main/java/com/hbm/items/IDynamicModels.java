@@ -2,6 +2,7 @@ package com.hbm.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
@@ -56,9 +57,9 @@ public interface IDynamicModels {
     }
 
     @SideOnly(Side.CLIENT)
-    static void registerColorHandlers(ColorHandlerEvent.Item evt) {
+    static void registerItemColorHandlers(ColorHandlerEvent.Item evt) {
         for (IDynamicModels model : INSTANCES) {
-            IItemColor colorHandler = model.getColorHandler();
+            IItemColor colorHandler = model.getItemColorHandler();
             Object self = model.getSelf();
 
             if (colorHandler == null || !(self instanceof Item item)) continue;
@@ -67,9 +68,26 @@ public interface IDynamicModels {
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    static void registerBlockColorHandlers(ColorHandlerEvent.Block evt) {
+        for (IDynamicModels model : INSTANCES) {
+            IBlockColor colorHandler = model.getBlockColorHandler();
+            Object self = model.getSelf();
+
+            if (colorHandler == null || !(self instanceof Block item)) continue;
+
+            evt.getBlockColors().registerBlockColorHandler(colorHandler, item);
+        }
+    }
+
 
     @SideOnly(Side.CLIENT)
-    default IItemColor getColorHandler() {
+    default IItemColor getItemColorHandler() {
+        return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    default IBlockColor getBlockColorHandler() {
         return null;
     }
 
@@ -85,6 +103,7 @@ public interface IDynamicModels {
     default Object getSelf() {
         return this;
     }
+
 
     @SideOnly(Side.CLIENT)
     void registerModel();

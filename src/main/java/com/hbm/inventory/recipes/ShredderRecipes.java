@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ItemEnums;
@@ -250,12 +251,12 @@ public class ShredderRecipes extends SerializableRecipe {
 
 		/* Sellafite scrapping */
 		ShredderRecipes.setRecipe(ModBlocks.sellafield_slaked, new ItemStack(Blocks.GRAVEL));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_0, 1, 0), new ItemStack(ModItems.scrap_nuclear, 1));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_1, 1, 1), new ItemStack(ModItems.scrap_nuclear, 2));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_2, 1, 2), new ItemStack(ModItems.scrap_nuclear, 3));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_3, 1, 3), new ItemStack(ModItems.scrap_nuclear, 5));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_4, 1, 4), new ItemStack(ModItems.scrap_nuclear, 7));
-		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield_core, 1, 5), new ItemStack(ModItems.scrap_nuclear, 15));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 0), new ItemStack(ModItems.scrap_nuclear, 1));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 1), new ItemStack(ModItems.scrap_nuclear, 2));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 2), new ItemStack(ModItems.scrap_nuclear, 3));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 3), new ItemStack(ModItems.scrap_nuclear, 5));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 4), new ItemStack(ModItems.scrap_nuclear, 7));
+		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.sellafield, 1, 5), new ItemStack(ModItems.scrap_nuclear, 15));
 
 		/* Fracking debris scrapping */
 		ShredderRecipes.setRecipe(ModBlocks.dirt_dead, new ItemStack(ModItems.scrap_oil, 1));

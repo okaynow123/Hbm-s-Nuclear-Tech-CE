@@ -5,7 +5,9 @@ import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.RefStrings;
+import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.icon.TextureAtlasSpriteMultipass;
+import com.hbm.render.model.VariantBakedModel;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -45,19 +47,16 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         for (int i = 0; i < sellafieldTextures.length; i++) {
-            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + i);
-            TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/" + sellafieldTextures[i], "blocks/" + "ore_overlay_" + oreType.getName());
+            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i);
+            TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/" + sellafieldTextures[i].textureArray[0], "blocks/" + "ore_overlay_" + oreType.getName());
             map.setTextureEntry(layeredSprite);
         }
     }
 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         Random rand = ((World) world).rand;
-        boolean natural = state.getValue(NATURAL);
-        int variant = state.getValue(VARIANT);
+        int variant = state.getValue(SHADE);
         int meta = variant + 1;
-        if (natural)
-            meta = 0;
         if (oreType.oreEnum == null)
             return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
         else {
@@ -71,41 +70,29 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
 
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        try {
-            IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft:block/cube_all"));
-            IBakedModel inventoryModel = null;
-
-            for (int textureIndex = 0; textureIndex <= sellafieldTextures.length - 1; textureIndex++) {
+        var models = new IBakedModel[META_COUNT];
+        for (int i = 0; i < sellafieldTextures.length; i++) {
+            BlockBakeFrame blockFrame = sellafieldTextures[i % sellafieldTextures.length];
+            try {
+                IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
 
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, basePath + this.getRegistryName() + "_" + textureIndex);
-
-                // Base texture
+                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i );
                 textureMap.put("all", spriteLoc.toString());
-
-
                 IModel retexturedModel = baseModel.retexture(textureMap.build());
                 IBakedModel bakedModel = retexturedModel.bake(
                         ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter()
                 );
 
-                if (textureIndex == 0) {
-                    inventoryModel = bakedModel;
-                }
+                models[i] = bakedModel;
 
-                List<ModelResourceLocation> modelLocations = new ArrayList<>();
-                modelLocations.add(new ModelResourceLocation(getRegistryName(), "natural=false,variant=" + textureIndex));
-                modelLocations.add(new ModelResourceLocation(getRegistryName(), "natural=true,variant=" + textureIndex));
-                modelLocations.forEach(model -> event.getModelRegistry().putObject(model, bakedModel));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            if (inventoryModel != null) {
-                event.getModelRegistry().putObject(new ModelResourceLocation(getRegistryName(), "inventory"), inventoryModel);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        event.getModelRegistry().putObject(new ModelResourceLocation(this.getRegistryName(), "normal"), new VariantBakedModel(models, models[0], VARIANT));
+        event.getModelRegistry().putObject(new ModelResourceLocation(this.getRegistryName(), "inventory"), models[0]);
     }
 
 }

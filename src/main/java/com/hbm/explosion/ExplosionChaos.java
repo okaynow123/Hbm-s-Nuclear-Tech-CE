@@ -1,6 +1,7 @@
 package com.hbm.explosion;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.grenade.EntityGrenadeTau;
 import com.hbm.entity.grenade.EntityGrenadeZOMG;
@@ -1005,27 +1006,27 @@ public class ExplosionChaos {
 			world.setBlockState(pos, ModBlocks.block_lead.getDefaultState());
 		}
 
-		else if(bblock == ModBlocks.sellafield_core && random.nextInt(10) == 0) {
-			world.setBlockState(pos, ModBlocks.sellafield_4.getStateFromMeta(world.rand.nextInt(4)));
+		else if(bblock == ModBlocks.sellafield && random.nextInt(10) == 0) {
+			world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4));
 		}
 
-		else if(bblock == ModBlocks.sellafield_4 && random.nextInt(5) == 0) {
-			world.setBlockState(pos, ModBlocks.sellafield_3.getStateFromMeta(world.rand.nextInt(4)));
+		else if(bblock == ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4) && random.nextInt(5) == 0) {
+			world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 3));
 		}
 
-		else if(bblock == ModBlocks.sellafield_3 && random.nextInt(5) == 0) {
-			world.setBlockState(pos, ModBlocks.sellafield_2.getStateFromMeta(world.rand.nextInt(4)));
+		else if(bblock == ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 3) && random.nextInt(5) == 0) {
+			world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 2));
 		}
 
-		else if(bblock == ModBlocks.sellafield_2 && random.nextInt(5) == 0) {
-			world.setBlockState(pos, ModBlocks.sellafield_1.getStateFromMeta(world.rand.nextInt(4)));
+		else if(bblock == ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 2) && random.nextInt(5) == 0) {
+			world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 1));
 		}
 
-		else if(bblock == ModBlocks.sellafield_1 && random.nextInt(5) == 0) {
-			world.setBlockState(pos, ModBlocks.sellafield_0.getStateFromMeta(world.rand.nextInt(4)));
+		else if(bblock == ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 1) && random.nextInt(5) == 0) {
+			world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 0));
 		}
 
-		else if(bblock == ModBlocks.sellafield_0 && random.nextInt(5) == 0) {
+		else if(bblock == ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 0) && random.nextInt(5) == 0) {
 			world.setBlockState(pos, ModBlocks.sellafield_slaked.getStateFromMeta(world.rand.nextInt(4)));
 		}
 

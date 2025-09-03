@@ -1,6 +1,7 @@
 package com.hbm.blocks.fluid;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
@@ -82,10 +83,10 @@ public class ToxicBlock extends BlockFluidClassic {
 
 	private IBlockState getRandomSellafite(World world){
 		int n = world.rand.nextInt(100);
-		if(n < 2) return ModBlocks.sellafield_core.getStateFromMeta(world.rand.nextInt(4));
-		if(n < 20) return ModBlocks.sellafield_4.getStateFromMeta(world.rand.nextInt(4));
-		if(n < 60) return ModBlocks.sellafield_3.getStateFromMeta(world.rand.nextInt(4));
-		return ModBlocks.sellafield_2.getStateFromMeta(world.rand.nextInt(4));
+		if(n < 2) return ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 5);
+		if(n < 20) return ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 4);
+		if(n < 60) return ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 3);
+		return ModBlocks.sellafield.getDefaultState().withProperty(BlockMeta.META, 2);
 	}
 	
 	public boolean reactToBlocks(World world, BlockPos pos) {

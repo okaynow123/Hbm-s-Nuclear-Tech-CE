@@ -16,6 +16,7 @@ import com.hbm.forgefluid.SpecialContainerFillLists.EnumCell;
 import com.hbm.forgefluid.SpecialContainerFillLists.EnumGasCanister;
 import com.hbm.handler.*;
 import com.hbm.hazard.HazardSystem;
+import com.hbm.hazard.type.HazardTypeDangerousDrop;
 import com.hbm.interfaces.*;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
@@ -615,13 +616,14 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         ItemFFFluidDuct.registerColorHandlers(evt);
         ItemGasCanister.registerColorHandler(evt);
         ItemAutogen.registerColorHandlers(evt);
-        IDynamicModels.registerColorHandlers(evt);
+        IDynamicModels.registerItemColorHandlers(evt);
         ItemChemicalDye.registerColorHandlers(evt);
     }
 
     @SubscribeEvent
     public void blockColorsEvent(ColorHandlerEvent.Block evt) {
         FluidDuctBox.registerColorHandler(evt);
+        IDynamicModels.registerBlockColorHandlers(evt);
     }
 
     @SubscribeEvent
