@@ -120,7 +120,7 @@ public class GunConfig {
 
     /* SETTERS */
 
-    public GunConfig rec(Receiver... receivers) {			this.receivers_DNA = receivers; return this; }
+    public GunConfig rec(Receiver... receivers) {			this.receivers_DNA = receivers; for(Receiver r : receivers_DNA) r.parent = this; return this; }
     public GunConfig dura(float dura) {						this.durability_DNA = dura; return this; }
     public GunConfig draw(int draw) {						this.drawDuration_DNA = draw; return this; }
     public GunConfig inspect(int inspect) {					this.inspectDuration_DNA = inspect; return this; }

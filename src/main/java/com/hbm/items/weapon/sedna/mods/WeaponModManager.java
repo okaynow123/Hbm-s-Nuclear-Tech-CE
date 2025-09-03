@@ -287,7 +287,7 @@ public class WeaponModManager {
      * is passed for context (so upgrades can differentiate primary and secondary receivers for example). Passing a null
      * stack causes the base value to be returned. */
     public static <T> T eval(T base, ItemStack stack, String key, Object parent, int cfg) {
-        if(stack == null) return base;
+        if(stack.isEmpty()) return base;
         if(!stack.hasTagCompound()) return base;
 
         for(int i : Objects.requireNonNull(stack.getTagCompound()).getIntArray(KEY_MOD_LIST + cfg)) {
