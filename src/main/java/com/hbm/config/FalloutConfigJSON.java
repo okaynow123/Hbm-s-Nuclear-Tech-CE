@@ -18,6 +18,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -28,6 +29,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+@SuppressWarnings({"deprication", "unchecked"})
 public class FalloutConfigJSON {
 
     public static final List<FalloutEntry> entries = new ArrayList();
@@ -99,216 +101,132 @@ public class FalloutConfigJSON {
         /* petrify all wooden things possible */
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LOG)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LOG2)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.RED_MUSHROOM_BLOCK.getStateFromMeta(10))
                 .shouldMatchState(true)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.BROWN_MUSHROOM_BLOCK.getStateFromMeta(10))
                 .shouldMatchState(true)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.RED_MUSHROOM_BLOCK)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.BROWN_MUSHROOM_BLOCK)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.SNOW)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.PLANKS)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_planks.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_planks.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         /* if it can't be petrified, destroy it */
         entries.add(new FalloutEntry()
                 .setMatchingMaterial(Material.WOOD)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         /* destroy all leaves within the radius, kill all leaves outside of it */
         entries.add(new FalloutEntry()
                 .setMatchingMaterial(Material.LEAVES)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setMatchingMaterial(Material.PLANTS)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setMatchingMaterial(Material.VINE)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(ModBlocks.waste_leaves)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LEAVES)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_leaves.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_leaves.getDefaultState(), 1))
                 .setMinDistance(woodEffectRange - 5D));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LEAVES2)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_leaves.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_leaves.getDefaultState(), 1))
                 .setMinDistance(woodEffectRange - 5D));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.MOSSY_COBBLESTONE)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.COAL_ORE.getDefaultState(), 1)));
+                .primaryStates(new Tuple<>(Blocks.COAL_ORE.getDefaultState(), 1)));
 
         entries.add(new FalloutEntry()
                 .setBlockState(ModBlocks.ore_nether_uranium)
                 .primaryStates(
-                        new net.minecraft.util.Tuple(ModBlocks.ore_nether_schrabidium.getDefaultState(), 1),
-                        new net.minecraft.util.Tuple(ModBlocks.ore_nether_uranium_scorched.getDefaultState(), 99)
+                        new Tuple<>(ModBlocks.ore_nether_schrabidium.getDefaultState(), 1),
+                        new Tuple<>(ModBlocks.ore_nether_uranium_scorched.getDefaultState(), 99)
                 ));
 
 
         for (int i = 1; i <= 10; i++) {
             int m = 10 - i;
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(
-                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getDefaultState(), 3),
-                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getDefaultState(), 2))
-                    .setPrimaryChance(0.5)
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(Blocks.COAL_ORE));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getDefaultState(), 1))
-                    .setPrimaryChance(0.2)
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(ModBlocks.ore_lignite));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(ModBlocks.ore_beryllium));
-
-            if (m > 4) {
-                entries.add(new FalloutEntry()
-                        .primaryStates(
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getDefaultState(), 1),
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getDefaultState(), 9))
-                        .setMax(i * 5)
-                        .isSolid(true)
-                        .setBlockState(ModBlocks.ore_uranium));
-
-                entries.add(new FalloutEntry()
-                        .primaryStates(
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getDefaultState(), 1),
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getDefaultState(), 9))
-                        .setMax(i * 5)
-                        .isSolid(true)
-                        .setBlockState(ModBlocks.ore_gneiss_uranium));
-            }
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_radgem.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(Blocks.DIAMOND_ORE));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(Blocks.BEDROCK));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(ModBlocks.ore_bedrock_block));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(ModBlocks.ore_bedrock_oil));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setBlockState(ModBlocks.sellafield_bedrock));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setMatchingMaterial(Material.IRON));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setMatchingMaterial(Material.ROCK));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setMatchingMaterial(Material.SAND));
-
-            entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
-                    .setMax(i * 5)
-                    .isSolid(true)
-                    .setMatchingMaterial(Material.GROUND));
-
-            if (i <= 9) {
-                entries.add(new FalloutEntry()
-                        .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
-                        .setMax(i * 5)
-                        .isSolid(true)
-                        .setMatchingMaterial(Material.GRASS));
-            }
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 3), new Tuple<>(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 2)).setPrimaryChance(0.5).setMax(i * 5).shouldBeOpaque(true).setBlockState(Blocks.COAL_ORE));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 1)).setPrimaryChance(0.2).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_lignite));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_beryllium));
+            if (m > 4)
+                entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_schrabidium.getStateFromMeta(m), 1), new Tuple<>(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_uranium));
+            if (m > 4)
+                entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_schrabidium.getStateFromMeta(m), 1), new Tuple<>(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_gneiss_uranium));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.ore_sellafield_radgem.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(Blocks.DIAMOND_ORE));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(Blocks.BEDROCK));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_bedrock_block));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.ore_bedrock_oil));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setBlockState(ModBlocks.sellafield_bedrock));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setMatchingMaterial(Material.IRON));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setMatchingMaterial(Material.ROCK));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setMatchingMaterial(Material.SAND));
+            entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setMatchingMaterial(Material.GROUND));
+            if (i <= 9)
+                entries.add(new FalloutEntry().primaryStates(new Tuple<>(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)).setMax(i * 5).shouldBeOpaque(true).setMatchingMaterial(Material.GRASS));
         }
 
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.MYCELIUM)
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_mycelium.getDefaultState(),  1)));
+                .primaryStates(new Tuple<>(ModBlocks.waste_mycelium.getDefaultState(), 1)));
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.SAND.getDefaultState())
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_trinitite.getDefaultState(),  1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_trinitite.getDefaultState(), 1))
                 .setPrimaryChance(0.05));
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND))
-                .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_trinitite_red.getDefaultState(),  1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_trinitite_red.getDefaultState(), 1))
                 .setPrimaryChance(0.05));
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.CLAY)
-                .primaryStates(new net.minecraft.util.Tuple(Blocks.HARDENED_CLAY.getDefaultState(),  1)));
+                .primaryStates(new Tuple<>(Blocks.HARDENED_CLAY.getDefaultState(), 1)));
     }
 
     private static void writeDefault(File file) {
@@ -338,7 +256,7 @@ public class FalloutConfigJSON {
         try {
             JsonObject json = gson.fromJson(new FileReader(config), JsonObject.class);
             JsonArray recipes = json.get("entries").getAsJsonArray();
-            List<FalloutEntry> conf = new ArrayList();
+            List<FalloutEntry> conf = new ArrayList<>();
 
             for (JsonElement recipe : recipes) {
                 conf.add(FalloutEntry.readEntry(recipe));
@@ -409,7 +327,7 @@ public class FalloutConfigJSON {
             JsonObject obj = recipe.getAsJsonObject();
 
             if (obj.has("matchesBlock"))
-                entry.setBlockState(entry.parseBlockState(obj.get("matchesBlock").getAsString()));
+                entry.setBlockState(parseBlockState(obj.get("matchesBlock").getAsString()));
             if (obj.has("matchesState")) entry.shouldMatchState(obj.get("matchesState").getAsBoolean());
             if (obj.has("mustBeOpaque")) entry.shouldBeOpaque(obj.get("mustBeOpaque").getAsBoolean());
             if (obj.has("matchesMaterial"))
@@ -450,18 +368,18 @@ public class FalloutConfigJSON {
             if (!jsonElement.isJsonArray()) return null;
 
             JsonArray array = jsonElement.getAsJsonArray();
-            net.minecraft.util.Tuple<IBlockState, Integer>[] stateArray = new net.minecraft.util.Tuple[array.size()];
+            net.minecraft.util.Tuple<IBlockState, Integer>[] stateArray = new Tuple[array.size()];
 
             for (int i = 0; i < stateArray.length; i++) {
                 JsonElement metaBlock = array.get(i);
 
                 if (!metaBlock.isJsonArray()) {
-                    throw new IllegalStateException("Could not read meta block " + metaBlock.toString());
+                    throw new IllegalStateException("Could not read meta block " + metaBlock);
                 }
 
                 JsonArray mBArray = metaBlock.getAsJsonArray();
 
-                stateArray[i] = new net.minecraft.util.Tuple(parseBlockState(mBArray.get(0).getAsString()), mBArray.get(1).getAsInt());
+                stateArray[i] = new Tuple<>(parseBlockState(mBArray.get(0).getAsString()), mBArray.get(1).getAsInt());
             }
 
             return stateArray;
@@ -531,6 +449,7 @@ public class FalloutConfigJSON {
             this.blockState = block;
             return this;
         }
+
         public FalloutEntry setBlockState(Block block) {
             this.blockState = block.getDefaultState();
             this.matchState = false;
@@ -593,7 +512,7 @@ public class FalloutConfigJSON {
 
             if (this.blockState != null && blockState.getBlock() != this.blockState.getBlock()) return false;
             if (matchesMaterial != null && blockState.getMaterial() != matchesMaterial) return false;
-            if (matchState && this.blockState != null && blockState.equals(this.blockState)) return false;
+            if (matchState && blockState.equals(this.blockState)) return false;
             if (matchesOpaque && !blockState.isOpaqueCube()) return false;
 
             if (dist > maxDist * falloffStart) {
