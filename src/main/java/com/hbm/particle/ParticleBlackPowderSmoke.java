@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.nio.FloatBuffer;
 
 @SideOnly(Side.CLIENT)
 public class ParticleBlackPowderSmoke extends ParticleFXRotating {
@@ -61,7 +62,7 @@ public class ParticleBlackPowderSmoke extends ParticleFXRotating {
 
     @Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
-        double ageScaled = (double) (this.particleAge + partialTicks) / (double) this.particleMaxAge;
+        double ageScaled = (this.particleAge + partialTicks) / (double) this.particleMaxAge;
 
         Color color = Color.getHSBColor(
                 hue / 255F,
@@ -69,15 +70,21 @@ public class ParticleBlackPowderSmoke extends ParticleFXRotating {
                 MathHelper.clamp(1.25F - (float) ageScaled * 2F, 0.7F, 1F)
         );
 
-        this.setRBGColorF(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+        this.setRBGColorF(
+                color.getRed() / 255F,
+                color.getGreen() / 255F,
+                color.getBlue() / 255F
+        );
         this.particleAlpha = (float) Math.pow(1 - Math.min(ageScaled, 1), 0.25) * 0.7F;
 
-        GlStateManager.color(particleRed, particleGreen, particleBlue, particleAlpha * 0.25F);
-        GlStateManager.depthMask(false);
+
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
+
+        GlStateManager.depthMask(false);
 
         newScale = (float) (0.25 + ageScaled + (this.particleAge + partialTicks) * 0.025) * this.particleScale;
         super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);

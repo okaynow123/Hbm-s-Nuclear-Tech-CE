@@ -32,6 +32,7 @@ public class RenderFrackingTower extends TileEntitySpecialRenderer<TileEntityMac
 
     GlStateManager.translate(x + 0.5D, y, z + 0.5D);
     GlStateManager.enableLighting();
+    GlStateManager.enableAlpha();
     GlStateManager.disableCull();
     GlStateManager.rotate(180, 0F, 1F, 0F);
 

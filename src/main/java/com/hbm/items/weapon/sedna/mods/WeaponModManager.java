@@ -271,7 +271,7 @@ public class WeaponModManager {
         IWeaponMod newMod = modFromStack(gun, mod, cfg);
         if(newMod == null) return false; //if there's just no mod applicable
 
-        if(checkMutex) for(int i : Objects.requireNonNull(gun.getTagCompound()).getIntArray(KEY_MOD_LIST + cfg)) {
+        if(checkMutex) for(int i : Objects.requireNonNull(gun).getTagCompound().getIntArray(KEY_MOD_LIST + cfg)) {
             IWeaponMod iMod = idToMod.get(i);
             if(iMod != null) for(String mutex0 : newMod.getSlots()) for(String mutex1 : iMod.getSlots()) {
                 if(mutex0.equals(mutex1)) return false; //if any of the mod's slots are already taken
