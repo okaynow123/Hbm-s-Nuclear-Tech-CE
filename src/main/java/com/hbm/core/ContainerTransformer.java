@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
 import static com.hbm.core.HbmCorePlugin.coreLogger;
+import static com.hbm.core.HbmCorePlugin.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 public class ContainerTransformer implements IClassTransformer {
@@ -95,8 +96,8 @@ public class ContainerTransformer implements IClassTransformer {
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(writer);
             return writer.toByteArray();
-        } catch (Exception e) {
-            coreLogger.fatal("Error transforming Container", e);
+        } catch (Throwable t) {
+            fail("net.minecraft.inventory.Container", t);
             return basicClass;
         }
     }

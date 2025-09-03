@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
 import static com.hbm.core.HbmCorePlugin.coreLogger;
+import static com.hbm.core.HbmCorePlugin.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 public class GlStateManagerTransformer implements IClassTransformer {
@@ -42,8 +43,8 @@ public class GlStateManagerTransformer implements IClassTransformer {
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(writer);
             return writer.toByteArray();
-        } catch (Exception e) {
-            coreLogger.fatal("Error transforming GlStateManager", e);
+        } catch (Throwable t) {
+            fail("net.minecraft.client.renderer.GlStateManager", t);
             return basicClass;
         }
     }

@@ -7,6 +7,7 @@ import com.hbm.interfaces.IExplosionRay;
 import com.hbm.lib.Library;
 import com.hbm.lib.TLPool;
 import com.hbm.lib.UnsafeHolder;
+import com.hbm.lib.maps.LongObjectConsumer;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ConcurrentBitSet;
@@ -35,7 +36,9 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.annotation.*;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -68,10 +71,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final float DAMAGE_THRESHOLD_MULT = 1.00F;
     private static final float LOW_R_BOUND = 0.25F;
     private static final float LOW_R_PASS_LENGTH_BREAK = 0.75F;
+    private static final double GOLDEN_ANGLE = Math.PI * (3.0 - Math.sqrt(5.0));
 
     private static final double RAY_DIRECTION_EPSILON = 1e-6;
     private static final double PROCESSING_EPSILON = 1e-9;
     private static final float MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC = 0.01f;
+    private static final long UNLOAD_QUEUED_OFFSET = UnsafeHolder.fieldOffset(Chunk.class, "unloadQueued", "field_189550_d");
 
     private static final ThreadLocal<MutableBlockPos> TL_POS = ThreadLocal.withInitial(MutableBlockPos::new);
     private static final ThreadLocal<LocalAgg> TL_LOCAL_AGG = ThreadLocal.withInitial(LocalAgg::new);
@@ -90,13 +95,14 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     private final WorldServer world;
     private final double explosionX, explosionY, explosionZ;
+    private final double invRadius, invRayIndexScale;
     private final int originX, originY, originZ;
     private final int radius;
     private final int strength;
     private final NonBlockingHashMapLong<ConcurrentBitSet> destructionMap;
     private final NonBlockingHashMapLong<ChunkAgg> aggMap;
     private final NonBlockingHashMapLong<WaitGroup> waitingRoom;
-    private final NonBlockingHashMapLong<Runnable> postLoadActions;
+    private final NonBlockingHashMapLong<LongObjectConsumer<ExtendedBlockStorage[]>> postLoadActions;
     private final MpscLinkedAtomicQueue<Long> chunkLoadQueue;
     private final Long2IntOpenHashMap sectionMaskByChunk;
     private final AtomicInteger pendingRays;
@@ -126,6 +132,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         this.originZ = (int) Math.floor(z);
         this.strength = strength;
         this.radius = radius;
+        this.invRadius = radius > 0 ? 1.0 / radius : 0.0;
 
         if (!CompatibilityConfig.isWarDim(world)) {
             this.collectFinished = true;
@@ -141,10 +148,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             this.sectionMaskByChunk = new Long2IntOpenHashMap(0);
             this.sectionMaskByChunk.defaultReturnValue(0);
             this.pendingRays = new AtomicInteger(0);
+            this.invRayIndexScale = 0.0;
             return;
         }
 
         this.rayCount = Math.max(0, (int) (2.5 * Math.PI * strength * strength * RESOLUTION_FACTOR));
+        this.invRayIndexScale = rayCount > 1 ? 1.0 / (rayCount - 1) : 0.0;
         this.pendingRays = new AtomicInteger(this.rayCount);
         this.chunkLoadQueue = new MpscLinkedAtomicQueue<>();
 
@@ -221,18 +230,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         return ENERGY_LOSS_LUT[rBin][dBin];
     }
 
-    private static void directionFromIndex(int i, int n, double[] out3) {
-        if (n == 1) {
-            out3[0] = 1.0;
-            out3[1] = 0.0;
-            out3[2] = 0.0;
-            return;
-        }
-        final double phi = Math.PI * (3.0 - Math.sqrt(5.0));
-        final double inv = 1.0 / (n - 1);
-        final double y = 1.0 - (i * inv) * 2.0;
+    @Contract(mutates = "param2")
+    private void directionFromIndex(int i, double[] out3) {
+        final double y = 1.0 - (i * invRayIndexScale) * 2.0;
         final double r = Math.sqrt(Math.max(0.0, 1.0 - y * y));
-        final double t = phi * i;
+        final double t = GOLDEN_ANGLE * i;
         out3[0] = Math.cos(t) * r;
         out3[1] = y;
         out3[2] = Math.sin(t) * r;
@@ -268,6 +270,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         pool.submit(this::runConsolidation);
     }
 
+    @ServerThread
     private void loadMissingChunks(int timeBudgetMs) {
         final long deadline = System.nanoTime() + (timeBudgetMs * 1_000_000L);
         while (System.nanoTime() < deadline) {
@@ -277,8 +280,36 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
+    @Nullable
+    private Chunk getLoadedChunk(long chunkPos) {
+        try {
+            Chunk chunk = world.getChunkProvider().loadedChunks.get(chunkPos);
+            if (chunk != null) U.putBooleanVolatile(chunk, UNLOAD_QUEUED_OFFSET, false);
+            return chunk;
+        } catch (Exception ignored) {
+            // ChunkProviderServer#loadedChunks is a Long2ObjectOpenHashMap, which isn't thread-safe
+            // This is extremely unlikely to happen for small to medium-sized blasts
+            // with radius = 1000, strength = 2000 I can only observe two ArrayIndexOutOfBoundsException thrown
+            // that's 0.0636 ppm
+            return null;
+        }
+    }
+
+    @Nullable
+    private ExtendedBlockStorage[] getLoadedEBS(long chunkPos) {
+        try {
+            Chunk chunk = world.getChunkProvider().loadedChunks.get(chunkPos);
+            if (chunk == null) return null;
+            U.putBooleanVolatile(chunk, UNLOAD_QUEUED_OFFSET, false);
+            return chunk.getBlockStorageArray();
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    @ServerThread
     private void processChunkLoadRequest(long chunkPos) {
-        world.getChunk(SubChunkKey.getChunkX(chunkPos), SubChunkKey.getChunkZ(chunkPos));
+        Chunk chunk = world.getChunk(SubChunkKey.getChunkX(chunkPos), SubChunkKey.getChunkZ(chunkPos));
         WaitGroup waiters = waitingRoom.remove(chunkPos);
         if (waiters != null && pool != null && !pool.isShutdown()) {
             IntArrayList batch = waiters.drain();
@@ -287,25 +318,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             }
         }
         if (pool != null && !pool.isShutdown()) {
-            Runnable r = postLoadActions.remove(chunkPos);
-            if (r != null) {
-                pool.submit(r);
-            }
+            LongObjectConsumer<ExtendedBlockStorage[]> r = postLoadActions.remove(chunkPos);
+            if (r != null) pool.submit(() -> r.accept(chunkPos, chunk.getBlockStorageArray()));
         }
     }
 
-    private void runWhenChunkLoaded(long cpLong, int cx, int cz, Runnable action) {
-        final Runnable[] self = new Runnable[1];
-        self[0] = () -> {
-            if (!world.getChunkProvider().chunkExists(cx, cz)) {
-                enqueueResumableForMissingChunk(cpLong, self[0]);
-                return;
-            }
-            action.run();
-        };
-        enqueueResumableForMissingChunk(cpLong, self[0]);
-    }
-
+    @ServerThread
     private void secondPass() {
         for (Long2IntMap.Entry e : sectionMaskByChunk.long2IntEntrySet()) {
             long cp = e.getLongKey();
@@ -313,8 +331,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             int cz = SubChunkKey.getChunkZ(cp);
             int changedMask = e.getIntValue();
             if (changedMask == 0) continue;
-            if (!world.getChunkProvider().chunkExists(cx, cz)) continue;
-            Chunk chunk = world.getChunk(cx, cz);
+            Chunk chunk = getLoadedChunk(cp);
+            if (chunk == null) continue;
             ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
 
             boolean groundUp = false;
@@ -392,17 +410,16 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 if (agg == null) return;
                 agg.drainUnlocked();
 
-                final int cx = SubChunkKey.getChunkX(cpLong);
-                final int cz = SubChunkKey.getChunkZ(cpLong);
                 aggMap.remove(cpLong);
-                if (!world.getChunkProvider().chunkExists(cx, cz)) {
-                    runWhenChunkLoaded(cpLong, cx, cz, () -> {
-                        aggChunk(cpLong, agg, cx, cz);
+                ExtendedBlockStorage[] storages = getLoadedEBS(cpLong);
+                if (storages == null) {
+                    enqueueResumableForMissingChunk(cpLong, (cp, ebs) -> {
+                        aggChunk(cp, agg, ebs);
                         maybeFinish();
                     });
                     return;
                 }
-                aggChunk(cpLong, agg, cx, cz);
+                aggChunk(cpLong, agg, storages);
             });
             aggMap.clear();
         } else {
@@ -412,20 +429,16 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     destructionMap.remove(cpLong);
                     return;
                 }
-
-                final int cx = SubChunkKey.getChunkX(cpLong);
-                final int cz = SubChunkKey.getChunkZ(cpLong);
-
-                if (!world.getChunkProvider().chunkExists(cx, cz)) {
-                    runWhenChunkLoaded(cpLong, cx, cz, () -> {
-                        final ConcurrentBitSet latest = destructionMap.remove(cpLong);
-                        if (latest != null && !latest.isEmpty()) carveChunk(cpLong, latest, cx, cz);
+                ExtendedBlockStorage[] storages = getLoadedEBS(cpLong);
+                if (storages == null) {
+                    enqueueResumableForMissingChunk(cpLong, (cp, ebs) -> {
+                        final ConcurrentBitSet latest = destructionMap.remove(cp);
+                        if (latest != null && !latest.isEmpty()) carveChunk(cp, latest, ebs);
                         maybeFinish();
                     });
                     return;
                 }
-
-                carveChunk(cpLong, chunkBitSet, cx, cz);
+                carveChunk(cpLong, chunkBitSet, storages);
                 destructionMap.remove(cpLong);
             });
         }
@@ -444,10 +457,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    private void carveChunk(long cpLong, ConcurrentBitSet chunkBitSet, int cx, int cz) {
-        final Chunk chunk = world.getChunk(cx, cz);
-        final ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
-
+    private void carveChunk(long cpLong, ConcurrentBitSet chunkBitSet, ExtendedBlockStorage[] storages) {
         final LongArrayList teRemovals = new LongArrayList(64);
         final LongArrayList neighborNotifies = new LongArrayList(128);
         int selfMask = 0;
@@ -464,14 +474,14 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 selfMask |= (1 << subY);
                 continue;
             }
-            selfMask = updateLists(chunkBitSet, cx, cz, storages, teRemovals, neighborNotifies, selfMask, neighborMask, subY);
+            selfMask = updateLists(chunkBitSet, cpLong, storages, teRemovals, neighborNotifies, selfMask, neighborMask, subY);
         }
-        notifyMainThread(cpLong, cx, cz, teRemovals, neighborNotifies, selfMask, neighborMask);
+        notifyMainThread(cpLong, teRemovals, neighborNotifies, selfMask, neighborMask);
     }
 
-    private int updateLists(ConcurrentBitSet chunkBitSet, int cx, int cz, ExtendedBlockStorage[] storages, LongArrayList teRemovals,
+    private int updateLists(ConcurrentBitSet chunkBitSet, long cpLong, ExtendedBlockStorage[] storages, LongArrayList teRemovals,
                             LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask, int subY) {
-        CarveResult r = carveSubchunkAndSwap(cx, cz, subY, chunkBitSet, storages);
+        CarveResult r = carveSubchunkAndSwap(cpLong, subY, chunkBitSet, storages);
         selfMask |= (1 << subY);
 
         for (int i = 0, n = r.teRemovals.size(); i < n; i++) teRemovals.add(r.teRemovals.getLong(i));
@@ -492,9 +502,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         return selfMask;
     }
 
-    private void aggChunk(long cpLong, ChunkAgg agg, int cx, int cz) {
-        final Chunk chunk = world.getChunk(cx, cz);
-        final ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
+    private void aggChunk(long cpLong, ChunkAgg agg, ExtendedBlockStorage[] storages) {
         Int2ObjectOpenHashMap<ConcurrentBitSet> subChunkBitSets = new Int2ObjectOpenHashMap<>();
         Int2DoubleOpenHashMap dmg = agg.damage;
         Int2DoubleOpenHashMap len = agg.passLen;
@@ -528,15 +536,15 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             for (Int2ObjectMap.Entry<ConcurrentBitSet> entry : subChunkBitSets.int2ObjectEntrySet()) {
                 final int subY = entry.getIntKey();
                 final ConcurrentBitSet subBitSet = entry.getValue();
-                selfMask = updateLists(subBitSet, cx, cz, storages, teRemovals, neighborNotifies, selfMask, neighborMask, subY);
+                selfMask = updateLists(subBitSet, cpLong, storages, teRemovals, neighborNotifies, selfMask, neighborMask, subY);
             }
-            notifyMainThread(cpLong, cx, cz, teRemovals, neighborNotifies, selfMask, neighborMask);
+            notifyMainThread(cpLong, teRemovals, neighborNotifies, selfMask, neighborMask);
         }
 
         agg.clear();
     }
 
-    private void notifyMainThread(long cpLong, int cx, int cz, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask,
+    private void notifyMainThread(long cpLong, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask,
                                   Long2IntOpenHashMap neighborMask) {
         pendingCarveNotifies.incrementAndGet();
         world.addScheduledTask(() -> {
@@ -558,7 +566,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     Library.fromLong(p, lp);
                     if (world.isBlockLoaded(p)) world.notifyNeighborsOfStateChange(p, Blocks.AIR, true);
                 }
-                if (world.getChunkProvider().chunkExists(cx, cz)) world.getChunk(cx, cz).markDirty();
+                Chunk chunk = getLoadedChunk(cpLong);
+                if (chunk != null) chunk.markDirty();
             } finally {
                 if (pendingCarveNotifies.decrementAndGet() == 0) {
                     maybeFinish();
@@ -567,7 +576,9 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         });
     }
 
-    private CarveResult carveSubchunkAndSwap(int cx, int cz, int subY, ConcurrentBitSet bitset, ExtendedBlockStorage[] storages) {
+    private CarveResult carveSubchunkAndSwap(long chunkKey, int subY, ConcurrentBitSet bitset, ExtendedBlockStorage[] storages) {
+        final int cx = SubChunkKey.getChunkX(chunkKey);
+        final int cz = SubChunkKey.getChunkZ(chunkKey);
         ExtendedBlockStorage expected = storages[subY];
         if (expected == Chunk.NULL_BLOCK_STORAGE || expected.isEmpty()) {
             return new CarveResult(new LongArrayList(0), new LongOpenHashSet(0), true);
@@ -696,22 +707,19 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         group.add(dirIndex);
     }
 
-    private void enqueueResumableForMissingChunk(long chunkPos, Runnable task) {
-        Runnable prev = postLoadActions.putIfAbsent(chunkPos, task);
+    private void enqueueResumableForMissingChunk(long chunkPos, LongObjectConsumer<ExtendedBlockStorage[]> task) {
+        LongObjectConsumer<ExtendedBlockStorage[]> prev = postLoadActions.putIfAbsent(chunkPos, task);
         if ((prev == null)) chunkLoadQueue.add(chunkPos);
     }
 
     private boolean traceSingle(int dirIndex, LocalAgg agg) {
-        float energy = strength * INITIAL_ENERGY_FACTOR;
-        final double px = explosionX;
-        final double py = explosionY;
-        final double pz = explosionZ;
-        int x = originX;
-        int y = originY;
-        int z = originZ;
+        double energy = strength * INITIAL_ENERGY_FACTOR;
+        final double px = explosionX, py = explosionY, pz = explosionZ;
+        int x = originX, y = originY, z = originZ;
+
         double currentRayPosition = 0.0;
         final double[] d = TL_DIR.get();
-        directionFromIndex(dirIndex, rayCount, d);
+        directionFromIndex(dirIndex, d);
         final double dirX = d[0], dirY = d[1], dirZ = d[2];
 
         final double absDirX = Math.abs(dirX);
@@ -726,6 +734,10 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         final int stepZ = (absDirZ < RAY_DIRECTION_EPSILON) ? 0 : (dirZ > 0 ? 1 : -1);
         final double tDeltaZ = (stepZ == 0) ? Double.POSITIVE_INFINITY : 1.0 / absDirZ;
 
+        final double minDeltaT = Math.min(tDeltaX, Math.min(tDeltaY, tDeltaZ));
+        final double radiusLimit = radius - PROCESSING_EPSILON;
+        final boolean useAggDamage = (algorithm == 2);
+
         double tMaxX = (stepX == 0) ? Double.POSITIVE_INFINITY : ((stepX > 0 ? (x + 1 - px) : (px - x)) * tDeltaX);
         double tMaxY = (stepY == 0) ? Double.POSITIVE_INFINITY : ((stepY > 0 ? (y + 1 - py) : (py - y)) * tDeltaY);
         double tMaxZ = (stepZ == 0) ? Double.POSITIVE_INFINITY : ((stepZ > 0 ? (z + 1 - pz) : (pz - z)) * tDeltaZ);
@@ -733,54 +745,78 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         long cachedCPLong = 0L;
         ExtendedBlockStorage[] storages = null;
         int lastCX = Integer.MIN_VALUE, lastCZ = Integer.MIN_VALUE;
+        int chunkMinX = 0, chunkMaxX = 0, chunkMinZ = 0, chunkMaxZ = 0;
+        int emptySubMask = 0;
+        long bitsetCPLong = Long.MIN_VALUE;
+        ConcurrentBitSet currentBits = null;
+        int loopCount = 0;
 
         try {
             if (energy <= 0) return true;
-
             while (energy > 0) {
-                if (y < 0 || y >= WORLD_HEIGHT || Thread.currentThread().isInterrupted()) break;
-                if (currentRayPosition >= radius - PROCESSING_EPSILON) break;
-
+                if ((loopCount++ & 0x3FF) == 0) {
+                    if (y < 0 || y >= WORLD_HEIGHT || Thread.currentThread().isInterrupted()) break;
+                    if (currentRayPosition >= radiusLimit) break;
+                } else {
+                    if (currentRayPosition >= radiusLimit) break;
+                    if (y < 0 || y >= WORLD_HEIGHT) break;
+                }
                 final int cx = x >> 4;
                 final int cz = z >> 4;
 
                 if (cx != lastCX || cz != lastCZ) {
                     cachedCPLong = ChunkPos.asLong(cx, cz);
-                    if (!world.getChunkProvider().chunkExists(cx, cz)) {
+                    storages = getLoadedEBS(cachedCPLong);
+                    if (storages == null) {
                         enqueueIndexForMissingChunk(cachedCPLong, dirIndex);
                         return false;
                     }
-                    storages = world.getChunk(cx, cz).getBlockStorageArray();
                     lastCX = cx;
                     lastCZ = cz;
+                    chunkMinX = cx << 4;
+                    chunkMaxX = chunkMinX + 16;
+                    chunkMinZ = cz << 4;
+                    chunkMaxZ = chunkMinZ + 16;
+                    int mask = 0;
+                    for (int i = 0; i < storages.length; i++) {
+                        final ExtendedBlockStorage s = storages[i];
+                        if (s == Chunk.NULL_BLOCK_STORAGE || s.isEmpty()) {
+                            mask |= (1 << i);
+                        }
+                    }
+                    emptySubMask = mask;
+                    if (!useAggDamage) {
+                        if (bitsetCPLong != cachedCPLong) {
+                            ConcurrentBitSet bs = destructionMap.get(cachedCPLong);
+                            if (bs == null) {
+                                ConcurrentBitSet created = new ConcurrentBitSet(BITSET_SIZE);
+                                ConcurrentBitSet prev = destructionMap.putIfAbsent(cachedCPLong, created);
+                                bs = (prev != null) ? prev : created;
+                            }
+                            currentBits = bs;
+                            bitsetCPLong = cachedCPLong;
+                        }
+                    }
                 }
 
                 final int subY = y >> 4;
-                final ExtendedBlockStorage storage = storages[subY];
-                final boolean allAir = storage == Chunk.NULL_BLOCK_STORAGE || storage.isEmpty();
-
-                if (allAir) {
-                    final double minX = cx << 4;
-                    final double maxX = minX + 16.0;
-                    final double minY = subY << 4;
+                final boolean subIsEmpty = ((emptySubMask >>> subY) & 1) != 0;
+                if (subIsEmpty) {
+                    final double minY = (subY << 4);
                     final double maxY = minY + 16.0;
-                    final double minZ = cz << 4;
-                    final double maxZ = minZ + 16.0;
 
                     double tExitAbs = Double.POSITIVE_INFINITY;
-                    if (stepX > 0) tExitAbs = Math.min(tExitAbs, (maxX - px) * tDeltaX);
-                    else if (stepX < 0) tExitAbs = Math.min(tExitAbs, (px - minX) * tDeltaX);
+                    if (stepX > 0) tExitAbs = Math.min(tExitAbs, (chunkMaxX - px) * tDeltaX);
+                    else if (stepX < 0) tExitAbs = Math.min(tExitAbs, (px - chunkMinX) * tDeltaX);
                     if (stepY > 0) tExitAbs = Math.min(tExitAbs, (maxY - py) * tDeltaY);
                     else if (stepY < 0) tExitAbs = Math.min(tExitAbs, (py - minY) * tDeltaY);
-                    if (stepZ > 0) tExitAbs = Math.min(tExitAbs, (maxZ - pz) * tDeltaZ);
-                    else if (stepZ < 0) tExitAbs = Math.min(tExitAbs, (pz - minZ) * tDeltaZ);
+                    if (stepZ > 0) tExitAbs = Math.min(tExitAbs, (chunkMaxZ - pz) * tDeltaZ);
+                    else if (stepZ < 0) tExitAbs = Math.min(tExitAbs, (pz - chunkMinZ) * tDeltaZ);
 
-                    double deltaT = Math.max(0.0, Math.min(tExitAbs, radius) - currentRayPosition);
-                    if (deltaT <= PROCESSING_EPSILON) {
-                        deltaT = Math.min(tDeltaX, Math.min(tDeltaY, tDeltaZ));
-                    }
+                    double deltaT = Math.min(tExitAbs, radius) - currentRayPosition;
+                    if (deltaT <= PROCESSING_EPSILON) deltaT = minDeltaT;
                     currentRayPosition += deltaT;
-                    if (currentRayPosition >= radius - PROCESSING_EPSILON) break;
+                    if (currentRayPosition >= radiusLimit) break;
 
                     final double bias = 1e-9;
                     x = (int) Math.floor(px + dirX * (currentRayPosition - bias));
@@ -790,62 +826,64 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     tMaxX = (stepX == 0) ? Double.POSITIVE_INFINITY : ((stepX > 0 ? (x + 1 - px) : (px - x)) * tDeltaX);
                     tMaxY = (stepY == 0) ? Double.POSITIVE_INFINITY : ((stepY > 0 ? (y + 1 - py) : (py - y)) * tDeltaY);
                     tMaxZ = (stepZ == 0) ? Double.POSITIVE_INFINITY : ((stepZ > 0 ? (z + 1 - pz) : (pz - z)) * tDeltaZ);
+                    continue;
+                }
+                final ExtendedBlockStorage storage = storages[subY];
 
-                } else {
-                    final int xLocal = x & 0xF;
-                    final int yLocal = y & 0xF;
-                    final int zLocal = z & 0xF;
+                final int xLocal = x & 0xF, yLocal = y & 0xF, zLocal = z & 0xF;
+                final IBlockState state = storage.get(xLocal, yLocal, zLocal);
 
-                    final IBlockState state = storage.get(xLocal, yLocal, zLocal);
+                final double tExitVoxel = Math.min(tMaxX, Math.min(tMaxY, tMaxZ));
+                double segLen = tExitVoxel - currentRayPosition;
+                double remaining = radius - currentRayPosition;
+                if (remaining <= PROCESSING_EPSILON) break;
+                final boolean clipAtRadius = segLen > remaining - 1e-12;
+                if (clipAtRadius) segLen = remaining;
 
-                    final double t_exit_voxel = Math.min(tMaxX, Math.min(tMaxY, tMaxZ));
-                    final double segmentLenInVoxel = t_exit_voxel - currentRayPosition;
-                    final boolean stopAfterThisSegment = (currentRayPosition + segmentLenInVoxel > radius - PROCESSING_EPSILON);
-                    final double segmentLenForProcessing = stopAfterThisSegment ? Math.max(0.0, radius - currentRayPosition) : segmentLenInVoxel;
+                if (state.getBlock() != Blocks.AIR && segLen > PROCESSING_EPSILON) {
+                    final float resistance = getNukeResistance(state);
+                    if (resistance >= NUKE_RESISTANCE_CUTOFF) {
+                        energy = 0;
+                    } else {
+                        final double distFrac = Math.max(currentRayPosition, MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC) * invRadius;
+                        final double energyLoss = getEnergyLossFactor(resistance, distFrac) * segLen;
+                        energy -= energyLoss;
 
-                    if (state.getBlock() != Blocks.AIR && segmentLenForProcessing > PROCESSING_EPSILON) {
-                        final float resistance = getNukeResistance(state);
-                        if (resistance >= NUKE_RESISTANCE_CUTOFF) {
-                            energy = 0;
-                        } else {
-                            final double distFrac = Math.max(currentRayPosition, MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC) / radius;
-                            final double energyLoss = getEnergyLossFactor(resistance, distFrac) * segmentLenForProcessing;
-                            if (energyLoss > 0) energy -= (float) energyLoss;
-
+                        if (useAggDamage) {
                             final int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
-                            if (algorithm == 2) {
-                                double damageInc = Math.max(DAMAGE_PER_BLOCK * segmentLenForProcessing, energyLoss) * INITIAL_ENERGY_FACTOR;
-                                if (damageInc > 0) agg.dmg(cachedCPLong).add(bitIndex, damageInc);
-                                agg.len(cachedCPLong).add(bitIndex, segmentLenForProcessing);
-                            } else if (energy > 0) {
-                                if (energyLoss > 0) {
-                                    destructionMap.computeIfAbsent(cachedCPLong, k -> new ConcurrentBitSet(BITSET_SIZE)).set(bitIndex);
-                                }
+                            final double damageInc = Math.max(DAMAGE_PER_BLOCK * segLen, energyLoss) * INITIAL_ENERGY_FACTOR;
+                            if (damageInc > 0) agg.dmg(cachedCPLong).add(bitIndex, damageInc);
+                            agg.len(cachedCPLong).add(bitIndex, segLen);
+                        } else if (energy > 0) {
+                            if (energyLoss > 0) {
+                                final int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
+                                currentBits.set(bitIndex);
                             }
                         }
                     }
+                }
 
-                    currentRayPosition = t_exit_voxel;
-                    if (energy <= 0 || stopAfterThisSegment) break;
-                    if (tMaxX < tMaxY) {
-                        if (tMaxX < tMaxZ) {
-                            x += stepX;
-                            tMaxX += tDeltaX;
-                        } else {
-                            z += stepZ;
-                            tMaxZ += tDeltaZ;
-                        }
+                currentRayPosition = tExitVoxel;
+                if (energy <= 0.0 || clipAtRadius) break;
+                if (tMaxX < tMaxY) {
+                    if (tMaxX < tMaxZ) {
+                        x += stepX;
+                        tMaxX += tDeltaX;
                     } else {
-                        if (tMaxY < tMaxZ) {
-                            y += stepY;
-                            tMaxY += tDeltaY;
-                        } else {
-                            z += stepZ;
-                            tMaxZ += tDeltaZ;
-                        }
+                        z += stepZ;
+                        tMaxZ += tDeltaZ;
+                    }
+                } else {
+                    if (tMaxY < tMaxZ) {
+                        y += stepY;
+                        tMaxY += tDeltaY;
+                    } else {
+                        z += stepZ;
+                        tMaxZ += tDeltaZ;
                     }
                 }
             }
+
             if (energy > 0) this.isContained = false;
             return true;
         } catch (Exception e) {
@@ -1109,5 +1147,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
     @Desugar
     private record CarveResult(@NotNull LongArrayList teRemovals, @NotNull LongOpenHashSet edgeTouched, boolean emptiedAfterSwap) {
+    }
+
+    @Documented
+    @Retention(RetentionPolicy.SOURCE)
+    @Target(ElementType.METHOD)
+    private @interface ServerThread {
     }
 }

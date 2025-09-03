@@ -2,10 +2,15 @@ package com.hbm.util;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import java.util.function.UnaryOperator;
 
 import static java.lang.Float.floatToRawIntBits;
 import static java.lang.Float.intBitsToFloat;
@@ -103,24 +108,24 @@ public class AtomicFloat extends Number implements Serializable {
         return get();
     }
 
-    private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
+    private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
 
         s.writeFloat(get());
     }
 
-    private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
 
         set(s.readFloat());
     }
 
     @CanIgnoreReturnValue
-    public final float getAndUpdate(UnaryOperator<Float> updateFunction) {
+    public final float getAndUpdate(FloatUnaryOperator updateFunction) {
         while (true) {
             int current = value;
             float currentVal = intBitsToFloat(current);
-            float nextVal = updateFunction.apply(currentVal);
+            float nextVal = updateFunction.applyAsFloat(currentVal);
             int next = floatToRawIntBits(nextVal);
             if (updater.compareAndSet(this, current, next)) {
                 return currentVal;
@@ -129,15 +134,36 @@ public class AtomicFloat extends Number implements Serializable {
     }
 
     @CanIgnoreReturnValue
-    public final float updateAndGet(UnaryOperator<Float> updateFunction) {
+    public final float updateAndGet(FloatUnaryOperator updateFunction) {
         while (true) {
             int current = value;
             float currentVal = intBitsToFloat(current);
-            float nextVal = updateFunction.apply(currentVal);
+            float nextVal = updateFunction.applyAsFloat(currentVal);
             int next = floatToRawIntBits(nextVal);
             if (updater.compareAndSet(this, current, next)) {
                 return nextVal;
             }
+        }
+    }
+
+    @FunctionalInterface
+    public interface FloatUnaryOperator {
+        float applyAsFloat(float value);
+
+        @Contract(pure = true)
+        default FloatUnaryOperator compose(@NotNull FloatUnaryOperator before) {
+            Objects.requireNonNull(before);
+            return v -> applyAsFloat(before.applyAsFloat(v));
+        }
+
+        @Contract(pure = true)
+        default FloatUnaryOperator andThen(@NotNull FloatUnaryOperator after) {
+            Objects.requireNonNull(after);
+            return v -> after.applyAsFloat(applyAsFloat(v));
+        }
+
+        static FloatUnaryOperator identity() {
+            return v -> v;
         }
     }
 }

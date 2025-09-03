@@ -12,7 +12,8 @@ import java.util.Map;
 public class HbmCorePlugin implements IFMLLoadingPlugin {
 
     static final Logger coreLogger = LogManager.getLogger("HBM CoreMod");
-    static boolean runtimeDeobfEnabled = false;
+    private static boolean runtimeDeobfEnabled = false;
+    private static boolean hardCrash = true;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -33,10 +34,27 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
     @Override
     public void injectData(Map<String, Object> data) {
         runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        String prop = System.getProperty("hbm.core.disablecrash");
+        if (prop != null) {
+            hardCrash = false;
+            coreLogger.info("Crash suppressed with -Dhbm.core.disablecrash");
+        }
+    }
+
+    static void fail(String className, Throwable t) {
+        coreLogger.fatal("Error transforming class {}. This is a coremod clash! Please report this on our issue tracker", className, t);
+        if (hardCrash) {
+            coreLogger.info("Crashing! To suppress the crash, launch Minecraft with -Dhbm.core.disablecrash");
+            throw new IllegalStateException("HBM CoreMod transformation failure: " + className, t);
+        }
     }
 
     @Override
     public String getAccessTransformerClass() {
         return null;
+    }
+
+    public static boolean runtimeDeobfEnabled() {
+        return runtimeDeobfEnabled;
     }
 }

@@ -7,8 +7,8 @@ import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyConnectorBlock;
 import com.hbm.api.energymk2.IEnergyConnectorMK2;
-import com.hbm.api.fluidmk2.IFluidConnectorMK2;
 import com.hbm.api.fluidmk2.IFluidConnectorBlockMK2;
+import com.hbm.api.fluidmk2.IFluidConnectorMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
@@ -1569,6 +1569,21 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	@Contract(pure = true)
 	public static long blockPosToLong(int x, int y, int z) {
 		return ((long)x & 0x03FF_FFFF) << 38 | ((long)y & 0x0000_0FFF) << 26 | ((long) z & 0x03FF_FFFF);
+	}
+
+	@Contract(pure = true)
+	public static int getBlockPosX(long serialized) {
+		return (int)(serialized >> 38);
+	}
+
+	@Contract(pure = true)
+	public static int getBlockPosY(long serialized) {
+		return (int)(serialized << 26 >> 52);
+	}
+
+	@Contract(pure = true)
+	public static int getBlockPosZ(long serialized) {
+		return (int)(serialized << 38 >> 38);
 	}
 
 	@Contract(mutates = "param1")

@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
 import static com.hbm.core.HbmCorePlugin.coreLogger;
+import static com.hbm.core.HbmCorePlugin.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 public class ForgeHooksTransformer implements IClassTransformer {
@@ -124,7 +125,7 @@ public class ForgeHooksTransformer implements IClassTransformer {
             cn.accept(cw);
             return cw.toByteArray();
         } catch (Throwable t) {
-            coreLogger.fatal("Error transforming ForgeHooks", t);
+            fail(TARGET_CLASS, t);
             return basicClass;
         }
     }
