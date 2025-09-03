@@ -6,6 +6,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 
 import static com.hbm.core.HbmCorePlugin.coreLogger;
+import static com.hbm.core.HbmCorePlugin.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 public class InventoryPlayerTransformer implements IClassTransformer {
@@ -34,8 +35,8 @@ public class InventoryPlayerTransformer implements IClassTransformer {
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(writer);
             return writer.toByteArray();
-        } catch (Exception e) {
-            coreLogger.fatal("Error transforming InventoryPlayer", e);
+        } catch (Throwable t) {
+            fail("net.minecraft.entity.player.InventoryPlayer", t);
             return basicClass;
         }
     }

@@ -1,5 +1,6 @@
 package com.hbm.lib;
 
+import com.hbm.core.HbmCorePlugin;
 import com.hbm.main.MainRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import sun.misc.Unsafe;
@@ -43,6 +44,15 @@ public class UnsafeHolder {
     public static long fieldOffset(Class<?> clz, String fieldName) throws RuntimeException {
         try {
             return U.objectFieldOffset(clz.getDeclaredField(fieldName));
+        }
+        catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static long fieldOffset(Class<?> clz, String mcp, String srg) throws RuntimeException {
+        try {
+            return U.objectFieldOffset(clz.getDeclaredField(HbmCorePlugin.runtimeDeobfEnabled() ? srg : mcp));
         }
         catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
