@@ -40,6 +40,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.*;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.HbmWorld;
 import com.hbm.lib.Library;
@@ -307,6 +308,7 @@ public class MainRegistry {
         ControlEvent.init();
         SiegeTier.registerTiers();
         HazardRegistry.registerItems();
+        WeaponModManager.init();
         PotionRecipes.registerPotionRecipes();
 
         proxy.registerRenderInfo();

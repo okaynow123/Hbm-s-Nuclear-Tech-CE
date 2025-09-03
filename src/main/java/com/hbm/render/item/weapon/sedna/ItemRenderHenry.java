@@ -1,15 +1,20 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-@AutoRegister(item = "gun_henry")
 public class ItemRenderHenry extends ItemRenderWeaponBase {
+
+	public ResourceLocation texture;
+
+	public ItemRenderHenry(ResourceLocation texture) {
+		this.texture = texture;
+	}
 
 	@Override
 	protected float getTurnMagnitude(ItemStack stack) {
@@ -42,7 +47,7 @@ public class ItemRenderHenry extends ItemRenderWeaponBase {
 	public void renderFirstPerson(ItemStack stack) {
 
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.henry_tex);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		double scale = 0.375D;
 		GlStateManager.scale(scale, scale, scale);
 
@@ -139,13 +144,10 @@ public class ItemRenderHenry extends ItemRenderWeaponBase {
 	}
 
 	@Override
-	public void setupInv(ItemStack stack) {
-		super.setupInv(stack);
-		double scale = 1.5D;
+	public void setupModTable(ItemStack stack) {
+		double scale = -7.5D;
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.rotate(25, 1, 0, 0);
-		GlStateManager.rotate(45, 0, 1, 0);
-		GlStateManager.translate(-0.5, 0.5, 0);
+		GlStateManager.rotate(90, 0, 1, 0);
 	}
 
 	@Override

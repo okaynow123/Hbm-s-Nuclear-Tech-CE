@@ -2,6 +2,7 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
@@ -150,6 +151,13 @@ public class ItemRenderMaresleg extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -8.75D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 
@@ -165,7 +173,7 @@ public class ItemRenderMaresleg extends ItemRenderWeaponBase {
 	}
 
 	public boolean getShort(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_maresleg_broken;
+		return stack.getItem() == ModItems.gun_maresleg_broken || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SAWED_OFF);
 	}
 }
 

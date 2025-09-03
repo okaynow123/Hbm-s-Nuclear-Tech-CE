@@ -2,8 +2,10 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.factory.XFactoryCatapult;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
+import com.hbm.render.util.RenderMiscEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -84,10 +86,9 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 		GlStateManager.popMatrix();
 
 		if(isLoaded || nuke[0] != 0 || nuke[1] != 0 || nuke[2] != 0) {
-			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.fatman_mininuke_tex);
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(nuke[0], nuke[1], nuke[2]);
-			ResourceManager.fatman.renderPart("MiniNuke");
+			renderNuke(gun.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getType(stack, null));
 			GlStateManager.popMatrix();
 		}
 
@@ -130,6 +131,69 @@ public class ItemRenderFatMan extends ItemRenderWeaponBase {
 			ResourceManager.fatman.renderPart("MiniNuke");
 		}
 		GlStateManager.shadeModel(GL11.GL_FLAT);
+	}
+
+	public void renderNuke(Object type) {
+		if(type == XFactoryCatapult.nuke_balefire) {
+			renderBalefire(interp);
+		} else {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.fatman_mininuke_tex);
+			ResourceManager.fatman.renderPart("MiniNuke");
+		}
+	}
+
+	public static void renderBalefire(float interp) {
+
+		Minecraft mc = Minecraft.getMinecraft();
+		mc.renderEngine.bindTexture(ResourceManager.fatman_balefire_tex);
+		ResourceManager.fatman.renderPart("MiniNuke");
+		mc.renderEngine.bindTexture(RenderMiscEffects.glintBF);
+		mc.entityRenderer.disableLightmap();
+
+		float scale = 2F;
+		float r = 0F;
+		float g = 0.8F;
+		float b = 0.15F;
+		float speed = -6;
+		float glintColor = 0.76F;
+		int layers = 3;
+
+		GlStateManager.pushMatrix();
+		float offset = mc.player.ticksExisted + interp;
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.depthFunc(GL11.GL_EQUAL);
+		GlStateManager.depthMask(false);
+		GlStateManager.blendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
+
+		for (int k = 0; k < layers; ++k) {
+			GlStateManager.color(r * glintColor, g * glintColor, b * glintColor, 1.0F);
+			GlStateManager.matrixMode(GL11.GL_TEXTURE);
+			GlStateManager.loadIdentity();
+
+			float movement = offset * (0.001F + (float) k * 0.003F) * speed;
+
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.rotate(30.0F - k * 60.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.translate(0F, movement, 0F);
+
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+			ResourceManager.fatman.renderPart("MiniNuke");
+		}
+
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.matrixMode(GL11.GL_TEXTURE);
+		GlStateManager.depthMask(true);
+		GlStateManager.loadIdentity();
+		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.depthFunc(GL11.GL_LEQUAL);
+		GlStateManager.popMatrix();
+
+		mc.entityRenderer.enableLightmap();
 	}
 }
 

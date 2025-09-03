@@ -1,15 +1,22 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.interfaces.AutoRegister;
+import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-@AutoRegister(item = "gun_g3")
 public class ItemRenderG3 extends ItemRenderWeaponBase {
+
+	public ResourceLocation texture;
+
+	public ItemRenderG3(ResourceLocation texture) {
+		this.texture = texture;
+	}
 
 	@Override
 	protected float getTurnMagnitude(ItemStack stack) { return ItemGunBaseNT.getIsAiming(stack) ? 2.5F : -0.25F; }
@@ -23,15 +30,18 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 	@Override
 	public void setupFirstPerson(ItemStack stack) {
 		GlStateManager.translate(0, 0, 0.875);
-
+		boolean isScoped = this.isScoped(stack);
 		float offset = 0.8F;
 		standardAimingTransform(stack,
 				-1.25F * offset, -1F * offset, 2.75F * offset,
-				0, -3.5625 / 8D, 1.75);
+				0, isScoped ? (-5.53125 / 8D) : (-3.5625 / 8D), isScoped ? 1.46875 : 1.75);
 	}
 
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
+
+		boolean isScoped = this.isScoped(stack);
+		if(isScoped && ItemGunBaseNT.prevAimingProgress == 1 && ItemGunBaseNT.aimingProgress == 1) return;
 
 		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.g3_tex);
@@ -44,6 +54,7 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 		double[] mag = HbmAnimationsSedna.getRelevantTransformation("MAG");
 		double[] speen = HbmAnimationsSedna.getRelevantTransformation("SPEEN");
 		double[] bolt = HbmAnimationsSedna.getRelevantTransformation("BOLT");
+		double[] plug = HbmAnimationsSedna.getRelevantTransformation("PLUG");
 		double[] handle = HbmAnimationsSedna.getRelevantTransformation("HANDLE");
 		double[] bullet = HbmAnimationsSedna.getRelevantTransformation("BULLET");
 
@@ -60,9 +71,10 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 		ResourceManager.g3.renderPart("Rifle");
-		ResourceManager.g3.renderPart("Stock");
-		ResourceManager.g3.renderPart("Flash_Hider");
-		ResourceManager.g3.renderPart("Trigger_Rifle.002");
+		if(hasStock(stack)) ResourceManager.g3.renderPart("Stock");
+		boolean silenced = hasSilencer(stack);
+		if(!silenced) ResourceManager.g3.renderPart("Flash_Hider");
+		ResourceManager.g3.renderPart("Trigger");
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(mag[0], mag[1], mag[2]);
@@ -76,10 +88,20 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, bolt[2]);
-		ResourceManager.g3.renderPart("Bolt");
-		GlStateManager.translate(0, 0.625, 0);
+		ResourceManager.g3.renderPart("Guide_And_Bolt");
+		GlStateManager.popMatrix();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0.625, plug[2]);
 		GlStateManager.rotate(handle[2], 0, 0, 1);
 		GlStateManager.translate(0, -0.625, 0);
+		ResourceManager.g3.renderPart("Plug");
+
+		GlStateManager.translate(0, 0.625, 5.25);
+		GlStateManager.rotate(22.5, 0, 0, 1);
+		GlStateManager.rotate(handle[1], 0, 1, 0);
+		GlStateManager.rotate(-22.5, 0, 0, 1);
+		GlStateManager.translate(0, -0.625, -5.25);
 		ResourceManager.g3.renderPart("Handle");
 		GlStateManager.popMatrix();
 
@@ -87,27 +109,35 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 		GlStateManager.translate(0, -0.875, -3.5);
 		GlStateManager.rotate(-30 * (1 - ItemGunBaseNT.getMode(stack, 0)), 1, 0, 0);
 		GlStateManager.translate(0, 0.875, 3.5);
-		ResourceManager.g3.renderPart("Selector_Rifle.001");
+		ResourceManager.g3.renderPart("Selector");
 		GlStateManager.popMatrix();
 
-		double smokeScale = 0.75;
+		if(silenced || isScoped) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.g3_attachments);
+			if(silenced) ResourceManager.g3.renderPart("Silencer");
+			if(isScoped) ResourceManager.g3.renderPart("Scope");
+		}
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, 13);
-		GlStateManager.rotate(90, 0, 1, 0);
-		GlStateManager.scale(smokeScale, smokeScale, smokeScale);
-		this.renderSmokeNodes(gun.getConfig(stack, 0).smokeNodes, 0.5D);
-		GlStateManager.popMatrix();
+		if(!silenced) {
+			double smokeScale = 0.75;
 
-		GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0, 13);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.scale(smokeScale, smokeScale, smokeScale);
+			this.renderSmokeNodes(gun.getConfig(stack, 0).smokeNodes, 0.5D);
+			GlStateManager.popMatrix();
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, 12);
-		GlStateManager.rotate(90, 0, 1, 0);
-		GlStateManager.rotate(-25 + gun.shotRand * 10, 1, 0, 0);
-		GlStateManager.scale(0.75, 0.75, 0.75);
-		this.renderMuzzleFlash(gun.lastShot[0], 75, 10);
-		GlStateManager.popMatrix();
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0, 12);
+			GlStateManager.rotate(90, 0, 1, 0);
+			GlStateManager.rotate(-25 + gun.shotRand * 10, 1, 0, 0);
+			GlStateManager.scale(0.75, 0.75, 0.75);
+			this.renderMuzzleFlash(gun.lastShot[0], 75, 10);
+			GlStateManager.popMatrix();
+		}
 	}
 
 	@Override
@@ -121,26 +151,45 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 	@Override
 	public void setupInv(ItemStack stack) {
 		super.setupInv(stack);
-		double scale = 0.875D;
+		if(hasStock(stack)) {
+			double scale = 0.875D;
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.rotate(25, 1, 0, 0);
+			GlStateManager.rotate(45, 0, 1, 0);
+			GlStateManager.translate(-0.5, 0.5, 0);
+		} else {
+			double scale = 1.125D;
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.rotate(25, 1, 0, 0);
+			GlStateManager.rotate(hasSilencer(stack) ? 55 : 45, 0, 1, 0); //preserves proportions whilst limiting size
+			GlStateManager.translate(2.5, 0.5, 0);
+		}
+	}
+
+	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -5D;
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.rotate(25, 1, 0, 0);
-		GlStateManager.rotate(45, 0, 1, 0);
-		GlStateManager.translate(-0.5, 0.5, 0);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0, 0.5, -0.5);
 	}
 
 	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 
+		boolean silenced = hasSilencer(stack);
+		boolean isScoped = this.isScoped(stack);
+
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.g3_tex);
+		Minecraft.getMinecraft().renderEngine.bindTexture(getTexture(stack));
 		ResourceManager.g3.renderPart("Rifle");
-		ResourceManager.g3.renderPart("Stock");
+		if(hasStock(stack)) ResourceManager.g3.renderPart("Stock");
 		ResourceManager.g3.renderPart("Magazine");
-		ResourceManager.g3.renderPart("Flash_Hider");
-		ResourceManager.g3.renderPart("Bolt");
+		if(!silenced)ResourceManager.g3.renderPart("Flash_Hider");
+		ResourceManager.g3.renderPart("Guide_And_Bolt");
 		ResourceManager.g3.renderPart("Handle");
-		ResourceManager.g3.renderPart("Trigger_Rifle.002");
+		ResourceManager.g3.renderPart("Trigger");
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -0.875, -3.5);
@@ -149,7 +198,30 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 		ResourceManager.g3.renderPart("Selector_Rifle.001");
 		GlStateManager.popMatrix();
 
+		if(silenced || isScoped) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.g3_attachments);
+			if(silenced) ResourceManager.g3.renderPart("Silencer");
+			if(isScoped) ResourceManager.g3.renderPart("Scope");
+		}
 		GlStateManager.shadeModel(GL11.GL_FLAT);
+	}
+
+	public boolean hasStock(ItemStack stack) {
+		return !WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_NO_STOCK);
+	}
+
+	public boolean hasSilencer(ItemStack stack) {
+		return stack.getItem() == ModItems.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SILENCER);
+	}
+
+	public boolean isScoped(ItemStack stack) {
+		return stack.getItem() == ModItems.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
+	}
+
+	public ResourceLocation getTexture(ItemStack stack) {
+		if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_FURNITURE_GREEN)) return ResourceManager.g3_green_tex;
+		if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_FURNITURE_BLACK)) return ResourceManager.g3_black_tex;
+		return texture;
 	}
 }
 

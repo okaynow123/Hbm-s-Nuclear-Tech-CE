@@ -302,6 +302,18 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.gun_autoshotgun, new ItemRenderShredder(ResourceManager.shredder_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun_shredder, new ItemRenderShredder(ResourceManager.shredder_orig_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun_sexy, new ItemRenderShredder(ResourceManager.sexy_tex), reg);
+        registerItemRenderer(ModItems.gun_amat, new ItemRenderAmat(ResourceManager.amat_tex), reg);
+        registerItemRenderer(ModItems.gun_amat_penance, new ItemRenderAmat(ResourceManager.amat_penance_tex), reg);
+        registerItemRenderer(ModItems.gun_amat_subtlety, new ItemRenderAmat(ResourceManager.amat_subtlety_tex), reg);
+        registerItemRenderer(ModItems.gun_g3, new ItemRenderG3(ResourceManager.g3_tex), reg);
+        registerItemRenderer(ModItems.gun_g3_zebra, new ItemRenderG3(ResourceManager.g3_zebra_tex), reg);
+        registerItemRenderer(ModItems.gun_henry, new ItemRenderHenry(ResourceManager.henry_tex), reg);
+        registerItemRenderer(ModItems.gun_henry_lincoln, new ItemRenderHenry(ResourceManager.henry_lincoln_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol, new ItemRenderHenry(ResourceManager.laser_pistol_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol_pew_pew, new ItemRenderHenry(ResourceManager.laser_pistol_pew_pew_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol_morning_glory, new ItemRenderHenry(ResourceManager.laser_pistol_morning_glory_tex), reg);
+        registerItemRenderer(ModItems.gun_autoshotgun_sexy, new ItemRenderSexy(ResourceManager.sexy_tex), reg);
+        registerItemRenderer(ModItems.gun_autoshotgun_heretic, new ItemRenderSexy(ResourceManager.heretic_tex), reg);
         //
         registerItemRenderer(ModItems.missile_taint, new ItemRenderMissileGeneric(RenderMissileType.TYPE_TIER0), reg);
         registerItemRenderer(ModItems.missile_micro, new ItemRenderMissileGeneric(RenderMissileType.TYPE_TIER0), reg);

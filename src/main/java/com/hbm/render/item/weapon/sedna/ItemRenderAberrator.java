@@ -195,6 +195,14 @@ public class ItemRenderAberrator extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -12.5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0,-1, 0.5);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);

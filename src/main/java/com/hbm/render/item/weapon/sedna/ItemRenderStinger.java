@@ -119,6 +119,14 @@ public class ItemRenderStinger extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -7.5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(-90, 0, 1, 0);
+		GlStateManager.translate(0, -4, 0);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 

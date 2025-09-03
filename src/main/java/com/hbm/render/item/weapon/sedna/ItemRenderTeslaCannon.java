@@ -127,6 +127,14 @@ public class ItemRenderTeslaCannon extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -8.75D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0, 0.5, 0);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 

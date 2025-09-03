@@ -690,6 +690,7 @@ public class ModBlocks {
 
 
 	public static final Block machine_armor_table = new BlockArmorTable(Material.IRON, "machine_armor_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
+	public static final Block machine_weapon_table = new BlockWeaponTable("machine_weapon_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
 
 	//Turrets
 

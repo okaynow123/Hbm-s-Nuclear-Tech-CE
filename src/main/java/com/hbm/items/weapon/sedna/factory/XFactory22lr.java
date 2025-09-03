@@ -8,6 +8,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.SpentCasing;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class XFactory22lr {
     public static BulletConfig p22_sp;
@@ -35,7 +37,7 @@ public class XFactory22lr {
                 .setCasing(casing22.clone().register("p22fmj"));
         p22_jhp = new BulletConfig().setItem(GunFactory.EnumAmmo.P22_JHP).setCasing(ItemEnums.EnumCasingType.SMALL, 24).setKnockback(0F).setDamage(1.5F).setHeadshot(1.5F).setArmorPiercing(-0.25F)
                 .setCasing(casing22.clone().register("p22jhp"));
-        p22_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P22_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 24).setKnockback(0F).setDoesPenetrate(true).setDamageFalloutByPen(false).setDamage(1.5F).setThresholdNegation(2.5F).setArmorPiercing(0.15F)
+        p22_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P22_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 24).setKnockback(0F).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(2.5F).setArmorPiercing(0.15F)
                 .setCasing(casing22.clone().setColor(SpentCasing.COLOR_CASE_44).register("p22ap"));
 
         ModItems.gun_am180 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_am180", new GunConfig()
@@ -47,8 +49,13 @@ public class XFactory22lr {
                         .setupStandardFire().recoil(LAMBDA_RECOIL_AM180))
                 .setupStandardConfiguration()
                 .anim(LAMBDA_AM180_ANIMS).orchestra(Orchestras.ORCHESTRA_AM180)
-        );
+        ).setNameMutator(LAMBDA_NAME_AM180);
     }
+
+    public static Function<ItemStack, String> LAMBDA_NAME_AM180 = (stack) -> {
+        if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SILENCER)) return stack.getTranslationKey() + "_silenced";
+        return null;
+    };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_SMOKE = (stack, ctx) -> Lego.handleStandardSmoke(ctx.entity, stack, 3000, 0.05D, 1.1D, 0);
 

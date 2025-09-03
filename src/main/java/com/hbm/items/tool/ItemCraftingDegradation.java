@@ -22,13 +22,17 @@ public class ItemCraftingDegradation extends ItemBase {
 
     @Override
     public ItemStack getContainerItem(ItemStack stack) {
-        if(this.getMaxDamage() > 0) {
-            stack.setItemDamage(stack.getItemDamage() + 1);
-            return stack;
+        ItemStack ret = stack.copy();
 
-        } else {
-            return stack;
+        if (ret.isItemStackDamageable() && ret.getMaxDamage() > 0) {
+            ret.setItemDamage(ret.getItemDamage() + 1);
+
+            if (ret.getItemDamage() >= ret.getMaxDamage()) {
+                return ItemStack.EMPTY;
+            }
         }
+
+        return ret;
     }
 
 }

@@ -21,8 +21,7 @@ public class RenderRefueler extends TileEntitySpecialRenderer<TileEntityRefueler
 
     @Override
     public void render(TileEntityRefueler tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        TileEntityRefueler refueler = tile;
-
+        GlStateManager.enableAlpha();
         GlStateManager.pushMatrix();
         {
             GlStateManager.translate(x + 0.5, y, z + 0.5);
@@ -54,10 +53,10 @@ public class RenderRefueler extends TileEntitySpecialRenderer<TileEntityRefueler
             GlStateManager.disableTexture2D();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
-            double fillLevel = refueler.prevFillLevel + (refueler.fillLevel - refueler.prevFillLevel) * partialTicks;
+            double fillLevel = tile.prevFillLevel + (tile.fillLevel - tile.prevFillLevel) * partialTicks;
             GlStateManager.translate(0, (1 - fillLevel) * -0.625, 0);
 
-            Color color = new Color(refueler.tank.getTankType().getColor());
+            Color color = new Color(tile.tank.getTankType().getColor());
             GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.75F);
             ResourceManager.refueler.renderPart("Fluid");
             GlStateManager.color(1F, 1F, 1F, 1F);

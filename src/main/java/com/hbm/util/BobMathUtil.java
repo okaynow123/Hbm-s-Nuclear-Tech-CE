@@ -3,16 +3,6 @@ package com.hbm.util;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.FloatBuffer;
-import java.text.NumberFormat;
-import java.util.*;
-import java.util.function.ToIntFunction;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nullable;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Quat4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
@@ -20,9 +10,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nullable;
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Quat4f;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.FloatBuffer;
+import java.text.NumberFormat;
+import java.util.*;
+import java.util.function.ToIntFunction;
 
 public class BobMathUtil {
 
@@ -472,6 +473,8 @@ public class BobMathUtil {
     public static double interp(double x, double y, float interp) {
         return x + (y - x) * interp;
     }
+
+    public static double interp(double x, double y, double interp) { return x + (y - x) * interp; }
 
     // I am sick of trying to remember the ridiculous quirks of Java 8
     // so I wrote this thing that can shit any int-ish list-ish into a regular fucking int[]

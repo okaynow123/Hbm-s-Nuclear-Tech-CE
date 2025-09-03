@@ -8,11 +8,12 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class RenderMiscEffects {
 
 	public static ResourceLocation glint = new ResourceLocation(RefStrings.MODID + ":textures/misc/glint.png");
+    public static ResourceLocation glintBF = new ResourceLocation(RefStrings.MODID + ":textures/misc/glintBF.png");
 
 	public static void renderClassicGlint(World world, float interpol, IModelCustom model, String part, float colorMod, float r, float g, float b, float speed, float scale) {
 

@@ -341,6 +341,11 @@ public final class HBMSoundHandler {
     public static SoundEvent fireRifleHeavy;
     public static SoundEvent fireAssault;
     public static SoundEvent fireDisintegration;
+    public static SoundEvent fireLaserPistol;
+    public static SoundEvent fireStab;
+    public static SoundEvent fireGrenade;
+    public static SoundEvent fireAmat;
+    public static SoundEvent fireExtinguisher;
 
     public static SoundEvent alarmHatch = registerBypass("alarm.hatch");
     public static SoundEvent alarmAutopilot = registerBypass("alarm.autopilot");
@@ -700,6 +705,7 @@ public final class HBMSoundHandler {
         firePistol = register("weapon.fire.pistol");
         fireBlackPowder = register("weapon.fire.blackPowder");
         fireUzi = register("weapon.fire.uzi");
+        fireGreaseGun = register("weapon.fire.greaseGun");
         fireAberrator = register("weapon.fire.aberrator");
         coilgunShoot = register("weapon.coilgunShoot");
         fireTauRelease = register("weapon.fire.tauRelease");
@@ -717,6 +723,11 @@ public final class HBMSoundHandler {
         fireRifleHeavy = register("weapon.fire.rifleHeavy");
         fireAssault = register("weapon.fire.assault");
         fireDisintegration = register("weapon.fire.disintegration");
+        fireLaserPistol = register("weapon.fire.laserPistol");
+        fireStab = register("weapon.fire.stab");
+        fireGrenade = register("weapon.fire.grenade");
+        fireAmat = register("weapon.fire.amat");
+        fireExtinguisher = register("weapon.extinguisher");
 
         geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6, geiger7, geiger8};
         voiceSounds = new SoundEvent[]{voices1, voices2, voices3, voices4, voices5, voices6, voices7, voices8};

@@ -108,6 +108,20 @@ public class ItemRenderFlaregun extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+	}
+
+	@Override
+	public void setupEntity(ItemStack stack) {
+		super.setupEntity(stack);
+		double scale = 0.5D;
+		GlStateManager.scale(scale, scale, scale);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 		GlStateManager.enableLighting();
 

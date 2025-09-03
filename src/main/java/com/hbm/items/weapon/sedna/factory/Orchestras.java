@@ -4,8 +4,10 @@ import com.hbm.config.ClientConfig;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
+import com.hbm.items.weapon.sedna.impl.ItemGunChargeThrower;
 import com.hbm.items.weapon.sedna.impl.ItemGunStinger;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
@@ -13,11 +15,11 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.helper.CasingCreator;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EntityDamageUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -25,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -990,6 +991,35 @@ public class Orchestras {
         }
     };
 
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MINIGUN_DUAL = (stack, ctx) -> {
+        EntityPlayer entity = ctx.getPlayer();
+        if(entity.world.isRemote) return;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+
+        if(type == HbmAnimationsSedna.AnimType.CYCLE) {
+            if(timer == 0) {
+                int index = ctx.configIndex == 0 ? -1 : 1;
+                int rounds = WeaponModManager.hasUpgrade(stack, ctx.configIndex, WeaponModManager.ID_MINIGUN_SPEED) ? 3 : 1;
+                for(int i = 0; i < rounds; i++) {
+                    SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
+                    if(casing != null) CasingCreator.composeEffect(entity.world, entity, 0.25, -0.25, -0.5D * index, 0, 0.18, -0.12 * index, 0.01, (float)entity.getRNG().nextGaussian() * 15F, (float)entity.getRNG().nextGaussian() * 15F, casing.getName());
+                }
+            }
+            if(timer == (WeaponModManager.hasUpgrade(stack, 0, 207) ? 3 : 1)) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverSpin, SoundCategory.PLAYERS, 1F, 0.75F);
+        }
+        if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick, SoundCategory.PLAYERS, 1F, 0.75F);
+            if(timer == 1) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverSpin, SoundCategory.PLAYERS, 1F, 0.75F);
+        }
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverSpin, SoundCategory.PLAYERS, 1F, 0.75F);
+        }
+        if(type == HbmAnimationsSedna.AnimType.INSPECT) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverSpin, SoundCategory.PLAYERS, 1F, 0.75F);
+        }
+    };
+
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MISSILE_LAUNCHER = (stack, ctx) -> {
         EntityPlayer entity = ctx.getPlayer();
         if(entity.world.isRemote) return;
@@ -1026,6 +1056,30 @@ public class Orchestras {
         }
         if(type == HbmAnimationsSedna.AnimType.INSPECT) {
             if(timer == 12) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.squeakyToy, SoundCategory.PLAYERS, 0.25F, 1F);
+        }
+    };
+
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_LASER_PISTOL = (stack, ctx) -> {
+        EntityPlayer entity = ctx.getPlayer();
+        if(entity.world.isRemote) return;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+
+        if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick, SoundCategory.PLAYERS, 1F, 1.5F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 10) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magSmallRemove, SoundCategory.PLAYERS, 1F, 1.25F);
+            if(timer == 34) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magSmallInsert, SoundCategory.PLAYERS, 1F, 1.25F);
+            if(timer == 40) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose, SoundCategory.PLAYERS, 1F, 1.25F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.JAMMED) {
+            if(timer == 10) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 15) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose, SoundCategory.PLAYERS, 1F, 1.25F);
+            if(timer == 30) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.impact, SoundCategory.PLAYERS, 0.25F, 1.5F);
         }
     };
 
@@ -1407,6 +1461,34 @@ public class Orchestras {
         if(type == HbmAnimationsSedna.AnimType.INSPECT) {
             if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltOpen, SoundCategory.PLAYERS, 0.5F, 1F);
             if(timer == 17) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose, SoundCategory.PLAYERS, 0.5F, 1F);
+        }
+    };
+
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FIREEXT = (stack, ctx) -> {
+        EntityLivingBase entity = ctx.entity;
+        if(entity.world.isRemote) return;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.pressureValve, SoundCategory.PLAYERS, 1F, 1F);
+        }
+    };
+
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_CHARGE_THROWER = (stack, ctx) -> {
+        EntityLivingBase entity = ctx.entity;
+        if(entity.world.isRemote) return;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+
+        if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
+            Entity e = entity.world.getEntityByID(ItemGunChargeThrower.getLastHook(stack));
+            if(timer == 0 && e == null) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick, SoundCategory.PLAYERS, 1F, 0.75F);
+        }
+
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 30) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.insertRocket, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 40) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose, SoundCategory.PLAYERS, 1F, 1F);
         }
     };
 }

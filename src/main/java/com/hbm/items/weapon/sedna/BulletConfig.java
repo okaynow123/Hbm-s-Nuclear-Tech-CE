@@ -361,7 +361,7 @@ public class BulletConfig implements Cloneable {
         return this;
     }
 
-    public BulletConfig setDamageFalloutByPen(boolean falloff) {
+    public BulletConfig setDamageFalloffByPen(boolean falloff) {
         this.damageFalloffByPen = falloff;
         return this;
     }

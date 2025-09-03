@@ -34,7 +34,7 @@ public class XFactory10ga {
         float buckshotSpread = 0.035F;
         g10 = new BulletConfig().setItem(GunFactory.EnumAmmo.G10).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setProjectiles(10).setDamage(1F/10F).setSpread(buckshotSpread).setRicochetAngle(15).setThresholdNegation(5F).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0xB52B2B, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GA"));
         g10_shrapnel = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_SHRAPNEL).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setProjectiles(10).setDamage(1F/10F).setSpread(buckshotSpread).setRicochetAngle(90).setRicochetCount(15).setThresholdNegation(5F).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0xE5DD00, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GAShrapnel"));
-        g10_du = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_DU).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setProjectiles(10).setDamage(1F/4F).setSpread(buckshotSpread).setRicochetAngle(15).setThresholdNegation(10F).setArmorPiercing(0.2F).setDoesPenetrate(true).setDamageFalloutByPen(false).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0x538D53, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GADU"));
+        g10_du = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_DU).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setProjectiles(10).setDamage(1F/4F).setSpread(buckshotSpread).setRicochetAngle(15).setThresholdNegation(10F).setArmorPiercing(0.2F).setDoesPenetrate(true).setDamageFalloffByPen(false).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0x538D53, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GADU"));
         g10_slug = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_SLUG).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setRicochetAngle(15).setThresholdNegation(10F).setArmorPiercing(0.1F).setDoesPenetrate(true).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0x808080, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GASlug"));
         g10_explosive = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_EXPLOSIVE).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setWear(3F).setProjectiles(10).setDamage(1F/4F).setSpread(buckshotSpread).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0xFAC943, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GAEXP")).setOnImpact(LAMBDA_TINY_EXPLODE);
 
@@ -57,6 +57,16 @@ public class XFactory10ga {
                         .setupStandardFire().recoil(LAMBDA_RECOIL_DOUBLE_BARREL))
                 .setupStandardConfiguration()
                 .anim(LAMBDA_DOUBLE_BARREL_ANIMS).orchestra(Orchestras.ORCHESTRA_DOUBLE_BARREL)
+        );
+        ModItems.gun_autoshotgun_heretic = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_autoshotgun_heretic", new GunConfig()
+                .draw(20).inspect(65).reloadSequential(true).inspectCancel(false).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).hideCrosshair(false).smoke(Lego.LAMBDA_STANDARD_SMOKE)
+                .rec(new Receiver(0)
+                        .dmg(100F).delay(3).auto(true).dryfireAfterAuto(true).reload(110).jam(19).sound(HBMSoundHandler.fireShotgunAuto, 1.0F, 1.0F)
+                        .mag(new MagazineFullReload(0, 250).addConfigs(g10, g10_shrapnel, g10_du, g10_slug, g10_explosive))
+                        .offset(0.75, -0.125, -0.25)
+                        .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_NOWEAR_FIRE).recoil(XFactory12ga.LAMBDA_RECOIL_SEXY))
+                .setupStandardConfiguration()
+                .anim(XFactory12ga.LAMBDA_SEXY_ANIMS).orchestra(Orchestras.ORCHESTRA_SHREDDER_SEXY)
         );
     }
 

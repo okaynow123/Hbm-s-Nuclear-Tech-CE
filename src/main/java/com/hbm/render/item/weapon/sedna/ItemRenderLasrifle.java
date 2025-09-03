@@ -2,6 +2,7 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,7 @@ public class ItemRenderLasrifle extends ItemRenderWeaponBase {
 	public float getViewFOV(ItemStack stack, float fov) {
 		float aimingProgress = ItemGunBaseNT.prevAimingProgress +
 				(ItemGunBaseNT.aimingProgress - ItemGunBaseNT.prevAimingProgress) * interp;
-		return fov * (1 - aimingProgress * 0.75F);
+		return fov * (1 - aimingProgress * (hasScope(stack) ? 0.75F : 0.66F));
 	}
 
 	@Override
@@ -28,15 +29,22 @@ public class ItemRenderLasrifle extends ItemRenderWeaponBase {
 		GlStateManager.translate(0, 0, 0.875);
 
 		float offset = 0.8F;
-		standardAimingTransform(stack,
-				-1.5F * offset, -1.5F * offset, 2.5F * offset,
-				0, -7.375 / 8D, 0.75);
+		if(hasScope(stack)) {
+			standardAimingTransform(stack,
+					-1.5F * offset, -1.5F * offset, 2.5F * offset,
+					0, -7.375 / 8D, 0.75);
+		} else {
+			standardAimingTransform(stack,
+					-1.5F * offset, -1.5F * offset, 2.5F * offset,
+					0, -5.25 / 8D, 1);
+		}
 	}
 
 	@Override
 	public void renderFirstPerson(ItemStack stack) {
 
-		if(ItemGunBaseNT.prevAimingProgress == 1 && ItemGunBaseNT.aimingProgress == 1) return;
+		if(hasScope(stack) && ItemGunBaseNT.prevAimingProgress == 1 && ItemGunBaseNT.aimingProgress == 1) return;
+		ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.lasrifle_tex);
 		double scale = 0.3125D;
 		GlStateManager.scale(scale, scale, scale);
@@ -71,6 +79,19 @@ public class ItemRenderLasrifle extends ItemRenderWeaponBase {
 		ResourceManager.lasrifle.renderPart("Battery");
 		GlStateManager.popMatrix();
 
+		if(!hasShotgun(stack)) ResourceManager.lasrifle.renderPart("Barrel");
+		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.lasrifle_mods_tex);
+		if(hasShotgun(stack)) ResourceManager.lasrifle_mods.renderPart("BarrelShotgun");
+		if(hasCapacitor(stack)) ResourceManager.lasrifle_mods.renderPart("UnderBarrel");
+
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 1.5, 12);
+		GlStateManager.rotate(90, 0, 1, 0);
+		renderLaserFlash(gun.lastShot[0], 150, 1.5D, 0xff0000);
+		GlStateManager.translate(0, 0, -0.25);
+		renderLaserFlash(gun.lastShot[0], 150, 0.75D, 0xff8000);
+		GlStateManager.popMatrix();
+
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 	}
 
@@ -97,14 +118,29 @@ public class ItemRenderLasrifle extends ItemRenderWeaponBase {
 		GlStateManager.enableLighting();
 
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.lasrifle_tex);
+		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.lasrifle_tex);
 		ResourceManager.lasrifle.renderPart("Gun");
-		ResourceManager.lasrifle.renderPart("Barrel");
 		ResourceManager.lasrifle.renderPart("Stock");
-		ResourceManager.lasrifle.renderPart("Scope");
+		if(hasScope(stack)) ResourceManager.lasrifle.renderPart("Scope");
 		ResourceManager.lasrifle.renderPart("Lever");
 		ResourceManager.lasrifle.renderPart("Battery");
+		if(!hasShotgun(stack)) ResourceManager.lasrifle.renderPart("Barrel");
+		Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.lasrifle_mods_tex);
+		if(hasShotgun(stack)) ResourceManager.lasrifle_mods.renderPart("BarrelShotgun");
+		if(hasCapacitor(stack)) ResourceManager.lasrifle_mods.renderPart("UnderBarrel");
 		GlStateManager.shadeModel(GL11.GL_FLAT);
+	}
+
+	public boolean hasScope(ItemStack stack) {
+		return !WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_LAS_AUTO);
+	}
+
+	public boolean hasShotgun(ItemStack stack) {
+		return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_LAS_SHOTGUN);
+	}
+
+	public boolean hasCapacitor(ItemStack stack) {
+		return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_LAS_CAPACITOR);
 	}
 }
 

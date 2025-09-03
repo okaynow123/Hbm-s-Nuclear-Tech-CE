@@ -20,6 +20,9 @@ import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.render.anim.BusAnimation;
+import com.hbm.render.anim.BusAnimationSequence;
+import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -53,6 +56,9 @@ public class XFactoryEnergy {
     public static BulletConfig energy_las;
     public static BulletConfig energy_las_overcharge;
     public static BulletConfig energy_las_ir;
+    public static BulletConfig energy_emerald;
+    public static BulletConfig energy_emerald_overcharge;
+    public static BulletConfig energy_emerald_ir;
 
     public static BiConsumer<EntityBulletBeamBase, RayTraceResult> LAMBDA_LIGHTNING_HIT = (beam, mop) -> {
 
@@ -128,6 +134,10 @@ public class XFactoryEnergy {
         energy_las_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
         energy_las_ir = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_IR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.FIRE).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(LAMBDA_IR_HIT);
 
+        energy_emerald = energy_las.clone().setArmorPiercing(0.5F).setThresholdNegation(10F);
+        energy_emerald_overcharge = energy_las_overcharge.clone().setArmorPiercing(0.5F).setThresholdNegation(15F);
+        energy_emerald_ir = energy_las_ir.clone().setArmorPiercing(0.5F).setThresholdNegation(10F);
+
         ModItems.gun_tesla_cannon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tesla_cannon", new GunConfig()
                 .dura(2_000).draw(10).inspect(33).reloadSequential(true).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
@@ -137,6 +147,37 @@ public class XFactoryEnergy {
                         .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))
                 .setupStandardConfiguration()
                 .anim(LAMBDA_TESLA_ANIMS).orchestra(Orchestras.ORCHESTRA_TESLA)
+        );
+
+        ModItems.gun_laser_pistol = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_laser_pistol", new GunConfig()
+                .dura(500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
+                .rec(new Receiver(0)
+                        .dmg(25F).delay(5).spread(1F).spreadHipfire(1F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 1.0F)
+                        .mag(new MagazineFullReload(0, 30).addConfigs(energy_las, energy_las_overcharge, energy_las_ir))
+                        .offset(0.75, -0.0625 * 1.5, -0.1875)
+                        .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))
+                .setupStandardConfiguration()
+                .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
+        );
+        ModItems.gun_laser_pistol_pew_pew = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_laser_pistol_pew_pew", new GunConfig()
+                .dura(500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
+                .rec(new Receiver(0)
+                        .dmg(30F).rounds(5).delay(10).spread(0.25F).spreadHipfire(1F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 0.8F)
+                        .mag(new MagazineFullReload(0, 10).addConfigs(energy_las, energy_las_overcharge, energy_las_ir))
+                        .offset(0.75, -0.0625 * 1.5, -0.1875)
+                        .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))
+                .setupStandardConfiguration()
+                .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
+        );
+        ModItems.gun_laser_pistol_morning_glory = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_laser_pistol_morning_glory", new GunConfig()
+                .dura(1_500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
+                .rec(new Receiver(0)
+                        .dmg(20F).delay(7).spread(0F).spreadHipfire(0.5F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 1.1F)
+                        .mag(new MagazineFullReload(0, 20).addConfigs(energy_emerald, energy_emerald_overcharge, energy_emerald_ir))
+                        .offset(0.75, -0.0625 * 1.5, -0.1875)
+                        .setupStandardFire().recoil(LAMBDA_RECOIL_ENERGY))
+                .setupStandardConfiguration()
+                .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
         );
 
         ModItems.gun_lasrifle = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lasrifle", new GunConfig()
@@ -170,6 +211,27 @@ public class XFactoryEnergy {
             default -> null;
         };
 
+    };
+
+    @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_LASER_PISTOL = (stack, type) -> {
+        switch(type) {
+            case EQUIP: return new BusAnimationSedna()
+                    .addBus("EQUIP", new BusAnimationSequenceSedna().addPos(60, 0, 0, 0).addPos(0, 0, 0, 500, IType.SIN_DOWN));
+            case CYCLE: return new BusAnimationSedna()
+                    .addBus("RECOIL", new BusAnimationSequenceSedna().addPos(0, 0, -0.5, 50, IType.SIN_DOWN).addPos(0, 0, 0, 150, IType.SIN_FULL));
+            case RELOAD: return new BusAnimationSedna()
+                    .addBus("LATCH", new BusAnimationSequenceSedna().addPos(0, -20, 0, 100).hold(1900).addPos(0, 0, 0, 100))
+                    .addBus("LIFT", new BusAnimationSequenceSedna().hold(100).addPos(-45, 0, 0, 250, IType.SIN_FULL).hold(500).addPos(0, 0, 0, 500, IType.SIN_FULL))
+                    .addBus("JOLT", new BusAnimationSequenceSedna().hold(350).addPos(0, 0, 0.5, 100, IType.SIN_FULL).addPos(0, 0, -1.5, 100, IType.SIN_UP).addPos(0, 0, 0, 150, IType.SIN_FULL).holdUntil(2100).addPos(-0.0625, 0, 0, 50, IType.SIN_UP).addPos(0, 0, 0, 100, IType.SIN_FULL))
+                    .addBus("BATTERY", new BusAnimationSequenceSedna().hold(550).addPos(0, 0, 5, 250).hold(550).setPos(0, -2, -2).addPos(0, 0, -2, 250, IType.SIN_FULL).addPos(0, 0, 0, 250, IType.SIN_UP));
+            case JAMMED: return new BusAnimationSedna()
+                    .addBus("LATCH", new BusAnimationSequenceSedna().hold(500).addPos(0, -20, 0, 100).hold(250).addPos(0, 0, 0, 100))
+                    .addBus("JOLT", new BusAnimationSequenceSedna().hold(950).addPos(-0.0625, 0, 0, 50, IType.SIN_UP).addPos(0, 0, 0, 100, IType.SIN_FULL))
+                    .addBus("EQUIP", new BusAnimationSequenceSedna().hold(1500).addPos(7.5, 0, 0, 100, IType.SIN_DOWN).addPos(0, 0, 0, 250, IType.SIN_FULL));
+            case INSPECT: return new BusAnimationSedna()
+                    .addBus("SWIRL", new BusAnimationSequenceSedna().addPos(-720, 0, 0, 750, IType.SIN_FULL).hold(500).addPos(0, 0, 0, 750, IType.SIN_FULL));
+        }
+        return null;
     };
 
     @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_LASRIFLE = (stack, type) -> {

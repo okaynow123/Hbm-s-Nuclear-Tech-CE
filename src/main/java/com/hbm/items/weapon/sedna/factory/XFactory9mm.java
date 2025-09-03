@@ -7,6 +7,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class XFactory9mm {
     public static BulletConfig p9_sp;
@@ -35,7 +37,7 @@ public class XFactory9mm {
                 .setCasing(casing9.clone().register("p9fmj"));
         p9_jhp = new BulletConfig().setItem(GunFactory.EnumAmmo.P9_JHP).setCasing(ItemEnums.EnumCasingType.SMALL, 12).setDamage(1.5F).setHeadshot(1.5F).setArmorPiercing(-0.25F)
                 .setCasing(casing9.clone().register("p9jhp"));
-        p9_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P9_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 12).setDoesPenetrate(true).setDamageFalloutByPen(false).setDamage(1.5F).setThresholdNegation(5F).setArmorPiercing(0.15F)
+        p9_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P9_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 12).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(5F).setArmorPiercing(0.15F)
                 .setCasing(casing9.clone().setColor(SpentCasing.COLOR_CASE_44).register("p9ap"));
 
         ModItems.gun_greasegun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_greasegun", new GunConfig()
@@ -47,7 +49,7 @@ public class XFactory9mm {
                         .setupStandardFire().recoil(LAMBDA_RECOIL_GREASEGUN))
                 .setupStandardConfiguration()
                 .anim(LAMBDA_GREASEGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_GREASEGUN)
-        );
+        ).setNameMutator(LAMBDA_NAME_GREASEGUN);
 
         ModItems.gun_lag = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lag", new GunConfig()
                 .dura(1_700).draw(7).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
@@ -69,7 +71,7 @@ public class XFactory9mm {
                         .setupStandardFire().recoil(LAMBDA_RECOIL_UZI))
                 .setupStandardConfiguration()
                 .anim(LAMBDA_UZI_ANIMS).orchestra(Orchestras.ORCHESTRA_UZI)
-        );
+        ).setNameMutator(LAMBDA_NAME_UZI);
         ModItems.gun_uzi_akimbo = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_uzi_akimbo",
                 new GunConfig().dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                         .rec(new Receiver(0)
@@ -91,6 +93,16 @@ public class XFactory9mm {
                         .anim(LAMBDA_UZI_ANIMS).orchestra(Orchestras.ORCHESTRA_UZI_AKIMBO)
         );
     }
+
+    public static Function<ItemStack, String> LAMBDA_NAME_GREASEGUN = (stack) -> {
+        if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_GREASEGUN_CLEAN)) return stack.getTranslationKey() + "_m3";
+        return null;
+    };
+
+    public static Function<ItemStack, String> LAMBDA_NAME_UZI = (stack) -> {
+        if(WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SILENCER)) return stack.getTranslationKey() + "_richter";
+        return null;
+    };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_RECOIL_GREASEGUN = (stack, ctx) -> ItemGunBaseNT.setupRecoil(2, (float) (ctx.getPlayer().getRNG().nextGaussian() * 0.5));
 

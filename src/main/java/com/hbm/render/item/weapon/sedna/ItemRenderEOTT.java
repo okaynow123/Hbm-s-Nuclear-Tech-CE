@@ -171,6 +171,14 @@ public class ItemRenderEOTT extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -12.5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0,-1, 0.5);
+	}
+
+	@Override
 	public void renderInv(ItemStack stack) {
 
 		GlStateManager.enableLighting();

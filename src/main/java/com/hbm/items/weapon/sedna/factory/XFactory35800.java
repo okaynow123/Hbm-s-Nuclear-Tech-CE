@@ -1,5 +1,8 @@
 package com.hbm.items.weapon.sedna.factory;
 
+import com.hbm.capability.HbmCapability;
+import com.hbm.entity.effect.EntityFireLingering;
+import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
@@ -13,18 +16,42 @@ import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class XFactory35800 {
     public static BulletConfig p35800;
+    public static BulletConfig p35800_bl;
+
+    public static BiConsumer<EntityBulletBeamBase, RayTraceResult> LAMBDA_BLACK_IMPACT = (bullet, mop) -> {
+        if(mop.typeOfHit == mop.typeOfHit.ENTITY) {
+            Entity hit = mop.entityHit;
+            if(hit instanceof EntityLivingBase elb) {
+                HbmCapability.IHBMData props = HbmCapability.getData(elb);
+                // TODO
+                //props.setBlackFire(props.getBlackFire() + 200);
+            }
+        }
+        if(mop.typeOfHit == mop.typeOfHit.BLOCK) {
+            EntityFireLingering fire = new EntityFireLingering(bullet.world).setArea(7.5F, 2F).setDuration(200).setType(EntityFireLingering.TYPE_BLACK);
+            fire.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
+            bullet.world.spawnEntity(fire);
+        }
+
+        BulletConfig.LAMBDA_STANDARD_BEAM_HIT.accept(bullet, mop);
+    };
 
     public static void init() {
 
         p35800 = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.P35_800).setArmorPiercing(0.5F).setThresholdNegation(50F).setBeam().setSpread(0.0F).setLife(3).setRenderRotations(false)
                 .setCasing(new SpentCasing(SpentCasing.CasingType.STRAIGHT).setColor(0xCEB78E).register("35-800")).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
+        p35800_bl = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.P35_800_BL).setArmorPiercing(0.5F).setThresholdNegation(50F).setBeam().setSpread(0.0F).setLife(3).setRenderRotations(false)
+                .setCasing(new SpentCasing(SpentCasing.CasingType.STRAIGHT).setColor(0xCEB78E).register("35-800")).setOnBeamImpact(LAMBDA_BLACK_IMPACT);
 
         ModItems.gun_aberrator = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator", new GunConfig()
                 .dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)

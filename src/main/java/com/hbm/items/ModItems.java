@@ -1864,6 +1864,7 @@ public class ModItems {
     public static Item gun_light_revolver_atlas;
     public static Item gun_light_revolver_dani;
     public static Item gun_henry;
+    public static Item gun_henry_lincoln;
     public static Item gun_greasegun;
     public static Item gun_maresleg;
     public static Item gun_maresleg_akimbo;
@@ -1884,18 +1885,27 @@ public class ModItems {
     public static Item gun_spas12;
     public static Item gun_panzerschreck;
     public static Item gun_g3;
+    public static Item gun_g3_zebra;
     public static Item gun_stinger;
     public static Item gun_chemthrower;
+    public static Item gun_amat;
+    public static Item gun_amat_subtlety;
+    public static Item gun_amat_penance;
     public static Item gun_m2;
     public static Item gun_autoshotgun;
     public static Item gun_autoshotgun_shredder;
     public static Item gun_autoshotgun_sexy;
+    public static Item gun_autoshotgun_heretic;
     public static Item gun_quadro;
     public static Item gun_lag;
     public static Item gun_minigun;
+    public static Item gun_minigun_dual;
     public static Item gun_minigun_lacunae;
     public static Item gun_missile_launcher;
     public static Item gun_tesla_cannon;
+    public static Item gun_laser_pistol;
+    public static Item gun_laser_pistol_pew_pew;
+    public static Item gun_laser_pistol_morning_glory;
     public static Item gun_stg77;
     public static Item gun_tau;
     public static Item gun_fatman;
@@ -1909,13 +1919,14 @@ public class ModItems {
     public static Item gun_aberrator_eott;
     public static Item gun_double_barrel;
     public static Item gun_double_barrel_sacred_dragon;
-    public static Item gun_amat;
-    public static Item gun_amat_subtlety;
-    public static Item gun_amat_penance;
+
     public static Item gun_charge_thrower;
-    public static Item gun_laser_pistol;
-    public static Item gun_laser_pistol_pew_pew;
-    public static Item gun_laser_pistol_morning_glory;
+    public static Item gun_fireext;
+
+    public static Item weapon_mod_test;
+    public static Item weapon_mod_generic;
+    public static Item weapon_mod_special;
+    public static Item weapon_mod_caliber;
 
 
     public static Item ammo_debug;
@@ -1923,7 +1934,7 @@ public class ModItems {
     public static Item ammo_secret;
     public static final ItemEnumMulti ammo_shell = (ItemEnumMulti) new ItemAmmo("ammo_shell", ItemAmmoEnums.Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_dgk = new ItemCustomLore("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
-    //public static final ItemEnumMulti ammo_fireext = (ItemEnumMulti) new ItemAmmo("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
+    public static final ItemEnumMulti ammo_fireext = (ItemEnumMulti) new ItemAmmo("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
     // FIXME why do the fuck we have this Bob, if we don't even USE it dammit
     public static final ItemEnumMulti ammo_misc = new ItemAmmo("ammo_misc", ItemAmmoEnums.AmmoMisc.class);
     public static final Item ammo_arty = new ItemAmmoArty("ammo_arty");

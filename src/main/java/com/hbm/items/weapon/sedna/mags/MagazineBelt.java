@@ -1,5 +1,7 @@
 package com.hbm.items.weapon.sedna.mags;
 
+import com.hbm.items.ModItems;
+import com.hbm.items.tool.ItemAmmoBag;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.particle.SpentCasing;
@@ -8,13 +10,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MagazineBelt implements IMagazine<BulletConfig> {
 
-    protected List<BulletConfig> acceptedBullets = new ArrayList();
+    public List<BulletConfig> acceptedBullets = new ArrayList<>();
 
-    public MagazineBelt addConfigs(BulletConfig... cfgs) { for(BulletConfig cfg : cfgs) acceptedBullets.add(cfg); return this; }
+    public MagazineBelt addConfigs(BulletConfig... cfgs) {
+        Collections.addAll(acceptedBullets, cfgs);
+        return this;
+    }
 
     @Override
     public BulletConfig getType(ItemStack stack, IInventory inventory) {
@@ -41,6 +47,24 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
                     IMagazine.handleAmmoBag(inventory, first, toRemove);
                     if(amount <= 0) return;
                 }
+
+                boolean infBag = slot.getItem() == ModItems.ammo_bag_infinite;
+                if(slot.getItem() == ModItems.ammo_bag || infBag) {
+                    ItemAmmoBag.InventoryAmmoBag bag = new ItemAmmoBag.InventoryAmmoBag(slot);
+                    for(int j = 0; j < bag.getSlots(); j++) {
+                        ItemStack bagslot = bag.getStackInSlot(j);
+
+                        if(bagslot != null && !bagslot.isEmpty()) {
+                            if(first.ammo.matchesRecipe(bagslot, true)) {
+                                int toRemove = Math.min(bagslot.getCount(), amount);
+                                amount -= toRemove;
+                                if(!infBag) bag.setStackInSlot(j, new ItemStack(bagslot.getItem(), amount, bagslot.getMetadata()) );
+                                IMagazine.handleAmmoBag(inventory, first, toRemove);
+                                if(amount <= 0) return;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -49,6 +73,7 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
     @Override public int getCapacity(ItemStack stack) { return 0; }
     @Override public void setAmount(ItemStack stack, int amount) { }
     @Override public boolean canReload(ItemStack stack, IInventory inventory) { return false; }
+    @Override public void initNewType(ItemStack stack, IInventory inventory) { }
     @Override public void reloadAction(ItemStack stack, IInventory inventory) { }
     @Override public void setAmountBeforeReload(ItemStack stack, int amount) { }
     @Override public int getAmountBeforeReload(ItemStack stack) { return 0; }
@@ -96,6 +121,19 @@ public class MagazineBelt implements IMagazine<BulletConfig> {
             if(slot != null && !slot.isEmpty()) {
                 for(BulletConfig config : this.acceptedBullets) {
                     if(config.ammo.matchesRecipe(slot, true)) return config;
+                }
+
+                if(slot.getItem() == ModItems.ammo_bag || slot.getItem() == ModItems.ammo_bag_infinite) {
+                    ItemAmmoBag.InventoryAmmoBag bag = new ItemAmmoBag.InventoryAmmoBag(slot);
+                    for(int j = 0; j < bag.getSlots(); j++) {
+                        ItemStack bagslot = bag.getStackInSlot(j);
+
+                        if(bagslot != null && !bagslot.isEmpty()) {
+                            for(BulletConfig config : this.acceptedBullets) {
+                                if(config.ammo.matchesRecipe(bagslot, true)) return config;
+                            }
+                        }
+                    }
                 }
             }
         }

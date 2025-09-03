@@ -2,9 +2,15 @@ package com.hbm.items.weapon.sedna;
 
 import com.hbm.handler.HbmKeybinds;
 import com.hbm.interfaces.IItemHUD;
-import com.hbm.items.*;
+import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.gui.GUIWeaponTable;
+import com.hbm.items.IEquipReceiver;
+import com.hbm.items.IKeybindReceiver;
+import com.hbm.items.ModItems;
+import com.hbm.items.armor.ArmorTrenchmaster;
 import com.hbm.items.weapon.sedna.hud.IHUDComponent;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.GunAnimationPacketSedna;
@@ -15,6 +21,7 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,10 +41,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipReceiver, IItemHUD {
 
@@ -48,7 +59,10 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     /** [0;1] randomized every shot for various rendering applications */
     public double shotRand = 0D;
 
-    public static List<Item> secrets = new ArrayList();
+    public static List<Item> secrets = new ArrayList<>();
+    public List<RecipesCommon.ComparableStack> recognizedMods = new ArrayList<>();
+    public static final DecimalFormatSymbols SYMBOLS_US = new DecimalFormatSymbols(Locale.US);
+    public static final DecimalFormat FORMAT_DMG = new DecimalFormat("#.##", SYMBOLS_US);
 
     public static float recoilVertical = 0;
     public static float recoilHorizontal = 0;
@@ -85,20 +99,23 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     public static final String KEY_LOCKONTARGET = "lockontarget";
     public static final String KEY_LOCKEDON = "lockedon";
     public static final String KEY_CANCELRELOAD = "cancel";
+    public static final String KEY_EQUIPPED = "eqipped";
 
-    public static ConcurrentHashMap<EntityLivingBase, AudioWrapper> loopedSounds = new ConcurrentHashMap();
+
+    public static ConcurrentHashMap<EntityLivingBase, AudioWrapper> loopedSounds = new ConcurrentHashMap<>();
 
     public static float prevAimingProgress;
     public static float aimingProgress;
 
     /** NEVER ACCESS DIRECTLY - USE GETTER */
     protected GunConfig[] configs_DNA;
-
+    public Function<ItemStack, String> LAMBDA_NAME_MUTATOR;
     public WeaponQuality quality;
 
     public GunConfig getConfig(ItemStack stack, int index) {
         GunConfig cfg = configs_DNA[index];
-        return WeaponUpgradeManager.eval(cfg, stack, O_GUNCONFIG + index, this);
+        if(stack == null) return cfg;
+        return WeaponModManager.eval(cfg, stack, O_GUNCONFIG + index, this, index);
     }
 
     public int getConfigCount() {
@@ -113,27 +130,44 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
         this.configs_DNA = cfg;
         this.quality = quality;
         this.lastShot = new long[cfg.length];
-        if(quality == WeaponQuality.A_SIDE || quality == WeaponQuality.SPECIAL) this.setCreativeTab(MainRegistry.weaponTab);
+        for(int i = 0; i < cfg.length; i++) cfg[i].index = i;
+        if(quality == WeaponQuality.A_SIDE || quality == WeaponQuality.SPECIAL || quality == WeaponQuality.UTILITY) this.setCreativeTab(MainRegistry.weaponTab);
         if(quality == WeaponQuality.LEGENDARY || quality == WeaponQuality.SECRET) this.secrets.add(this);
         ModItems.ALL_ITEMS.add(this);
         INSTANCES.add(this);
     }
 
-    public static enum WeaponQuality {
+    public enum WeaponQuality {
         A_SIDE,
         B_SIDE,
         LEGENDARY,
+        UTILITY,
         SPECIAL,
         SECRET,
         DEBUG
     }
 
-    public static enum GunState {
+    public enum GunState {
         DRAWING,	//forced delay where nothing can be done
         IDLE,		//the gun is ready to fire or reload
         COOLDOWN,	//forced delay, but with option for refire
         RELOADING,	//forced delay after which a reload action happens, may be canceled (TBI)
         JAMMED,		//forced delay due to jamming
+    }
+
+    public ItemGunBaseNT setNameMutator(Function<ItemStack, String> lambda) {
+        this.LAMBDA_NAME_MUTATOR = lambda;
+        return this;
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+
+        if(this.LAMBDA_NAME_MUTATOR != null) {
+            String unloc = this.LAMBDA_NAME_MUTATOR.apply(stack);
+            if(unloc != null) return (I18n.format(unloc + ".name")).trim();
+        }
+
+        return super.getItemStackDisplayName(stack);
     }
 
     @SideOnly(Side.CLIENT)
@@ -152,21 +186,38 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
                 IMagazine mag = rec.getMagazine(stack);
                 tooltip.add("Ammo: " + mag.getIconForHUD(stack, player).getDisplayName() + " " + mag.reportAmmoStateForHUD(stack, player));
                 float dmg = rec.getBaseDamage(stack);
-                tooltip.add("Base Damage: " + dmg);
-                if (mag.getType(stack, player.inventory) instanceof BulletConfig) {
-                    BulletConfig bullet = (BulletConfig) mag.getType(stack, player.inventory);
-                    tooltip.add("Damage with current ammo: " + dmg * bullet.damageMult + (bullet.projectilesMin > 1 ? (" x" + (bullet.projectilesMin != bullet.projectilesMax ? (bullet.projectilesMin + "-" + bullet.projectilesMax) : bullet.projectilesMin)) : ""));
+                tooltip.add("Base Damage: " + FORMAT_DMG.format(dmg));
+                if (mag.getType(stack, player.inventory) instanceof BulletConfig bullet) {
+                    int min = (int) (bullet.projectilesMin * rec.getSplitProjectiles(stack));
+                    int max = (int) (bullet.projectilesMax * rec.getSplitProjectiles(stack));
+                    tooltip.add("Damage with current ammo: " + FORMAT_DMG.format(dmg * bullet.damageMult) + (min > 1 ? (" x" + (min != max ? (min + "-" + max) : min)) : ""));
                 }
+            }
+            float maxDura = config.getDurability(stack);
+            if(maxDura > 0) {
+                int dura = MathHelper.clamp((int)((maxDura - this.getWear(stack, i)) * 100 / maxDura), 0, 100);
+                tooltip.add("Condition: " + dura + "%");
+            }
+
+            for(ItemStack upgrade : WeaponModManager.getUpgradeItems(stack, i)) {
+                tooltip.add(TextFormatting.YELLOW + upgrade.getDisplayName());
             }
         }
 
         switch (this.quality) {
-            case A_SIDE: tooltip.add(TextFormatting.YELLOW + "Standard Arsenal"); break;
-            case B_SIDE: tooltip.add(TextFormatting.GOLD + "B-Side"); break;
-            case LEGENDARY: tooltip.add(TextFormatting.RED + "Legendary Weapon"); break;
-            case SPECIAL: tooltip.add(TextFormatting.AQUA + "Special Weapon"); break;
-            case SECRET: tooltip.add((BobMathUtil.getBlink() ? TextFormatting.DARK_RED : TextFormatting.RED) + "SECRET"); break;
-            case DEBUG: tooltip.add((BobMathUtil.getBlink() ? TextFormatting.YELLOW : TextFormatting.GOLD) + "DEBUG"); break;
+            case A_SIDE -> tooltip.add(TextFormatting.YELLOW + "Standard Arsenal");
+            case B_SIDE -> tooltip.add(TextFormatting.GOLD + "B-Side");
+            case LEGENDARY -> tooltip.add(TextFormatting.RED + "Legendary Weapon");
+            case SPECIAL -> tooltip.add(TextFormatting.AQUA + "Special Weapon");
+            case UTILITY -> tooltip.add(TextFormatting.GREEN + "Utility");
+            case SECRET ->
+                    tooltip.add((BobMathUtil.getBlink() ? TextFormatting.DARK_RED : TextFormatting.RED) + "SECRET");
+            case DEBUG -> tooltip.add((BobMathUtil.getBlink() ? TextFormatting.YELLOW : TextFormatting.GOLD) + "DEBUG");
+        }
+
+        if(Minecraft.getMinecraft().currentScreen instanceof GUIWeaponTable && !this.recognizedMods.isEmpty()) {
+            tooltip.add(TextFormatting.RED + "Accepts:");
+            for(RecipesCommon.ComparableStack comp : this.recognizedMods) tooltip.add(TextFormatting.RED + "  " + comp.toStack().getDisplayName());
         }
     }
 
@@ -196,14 +247,15 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
             GunConfig config = getConfig(stack, i);
             LambdaContext ctx = new LambdaContext(config, entity, inventory, i);
 
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	newState && !getPrimary(stack, i)) {	if(config.getPressPrimary(stack) != null)		config.getPressPrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	!newState && getPrimary(stack, i)) {	if(config.getReleasePrimary(stack) != null)		config.getReleasePrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	newState && !getSecondary(stack, i)) {	if(config.getPressSecondary(stack) != null)		config.getPressSecondary(stack).accept(stack, ctx);		this.setSecondary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	!newState && getSecondary(stack, i)) {	if(config.getReleaseSecondary(stack) != null)	config.getReleaseSecondary(stack).accept(stack, ctx);	this.setSecondary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	newState && !getTertiary(stack, i)) {	if(config.getPressTertiary(stack) != null)		config.getPressTertiary(stack).accept(stack, ctx);		this.setTertiary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	!newState && getTertiary(stack, i)) {	if(config.getReleaseTertiary(stack) != null)	config.getReleaseTertiary(stack).accept(stack, ctx);	this.setTertiary(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			newState && !getReloadKey(stack, i)) {	if(config.getPressReload(stack) != null)		config.getPressReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, newState);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			!newState && getReloadKey(stack, i)) {	if(config.getReleaseReload(stack) != null)		config.getReleaseReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, newState);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	newState && !getPrimary(stack, i)) {	if(config.getPressPrimary(stack) != null)		config.getPressPrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	!newState && getPrimary(stack, i)) {	if(config.getReleasePrimary(stack) != null)		config.getReleasePrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	newState && !getSecondary(stack, i)) {	if(config.getPressSecondary(stack) != null)		config.getPressSecondary(stack).accept(stack, ctx);		this.setSecondary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	!newState && getSecondary(stack, i)) {	if(config.getReleaseSecondary(stack) != null)	config.getReleaseSecondary(stack).accept(stack, ctx);	this.setSecondary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	newState && !getTertiary(stack, i)) {	if(config.getPressTertiary(stack) != null)		config.getPressTertiary(stack).accept(stack, ctx);		this.setTertiary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	!newState && getTertiary(stack, i)) {	if(config.getReleaseTertiary(stack) != null)	config.getReleaseTertiary(stack).accept(stack, ctx);	this.setTertiary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			newState && !getReloadKey(stack, i)) {	if(config.getPressReload(stack) != null)		config.getPressReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			!newState && getReloadKey(stack, i)) {	if(config.getReleaseReload(stack) != null)		config.getReleaseReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, false);
+            }
         }
     }
 
@@ -270,6 +322,15 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
             return;
         }
 
+        if(player != null) {
+            boolean wasHeld = this.getIsEquipped(stack);
+
+            if(!wasHeld && isHeld && player != null) {
+                this.onEquip(player, stack);
+            }
+        }
+        this.setIsEquipped(stack, isHeld);
+
         /// RESET WHEN NOT EQUIPPED ///
         if(!isHeld) {
             for(int i = 0; i < confNo; i++) {
@@ -278,12 +339,14 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
                     this.setState(stack, i, GunState.DRAWING);
                     this.setTimer(stack, i, configs[i].getDrawDuration(stack));
                 }
+                this.setLastAnim(stack, i, HbmAnimationsSedna.AnimType.CYCLE); //prevents new guns from initializing with DRAWING, 0
             }
             this.setIsAiming(stack, false);
+            this.setReloadCancel(stack, false);
             return;
         }
 
-        for(int i = 0; i < confNo; i++) {
+        for(int i = 0; i < confNo; i++) for(int k = 0; k == 0 || (k < 2 && ArmorTrenchmaster.isTrenchMaster(player) && this.getState(stack, i) == GunState.RELOADING); k++) {
             BiConsumer<ItemStack, LambdaContext> orchestra = configs[i].getOrchestra(stack);
             if(orchestra != null) orchestra.accept(stack, ctx[i]);
 
@@ -337,6 +400,9 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     // RELOAD CANCEL //
     public static boolean getReloadCancel(ItemStack stack) { return getValueBool(stack, KEY_CANCELRELOAD); }
     public static void setReloadCancel(ItemStack stack, boolean value) { setValueBool(stack, KEY_CANCELRELOAD, value); }
+    // EQUIPPED //
+    public static boolean getIsEquipped(ItemStack stack) { return getValueBool(stack, KEY_EQUIPPED); }
+    public static void setIsEquipped(ItemStack stack, boolean value) { setValueBool(stack, KEY_EQUIPPED, value); }
 
 
     /// UTIL ///

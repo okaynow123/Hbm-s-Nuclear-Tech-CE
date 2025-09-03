@@ -142,6 +142,14 @@ public class ItemRenderMareslegAkimbo extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -12.5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0, -0.5, 1);
+	}
+
+	@Override
 	public void renderInv(ItemStack stack) {
 
 		GlStateManager.enableLighting();

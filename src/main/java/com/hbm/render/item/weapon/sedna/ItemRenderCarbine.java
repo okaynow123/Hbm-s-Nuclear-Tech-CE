@@ -2,6 +2,7 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
@@ -48,6 +49,7 @@ public class ItemRenderCarbine extends ItemRenderWeaponBase {
 		double[] lift = HbmAnimationsSedna.getRelevantTransformation("LIFT");
 		double[] bullet = HbmAnimationsSedna.getRelevantTransformation("BULLET");
 		double[] rel = HbmAnimationsSedna.getRelevantTransformation("REL");
+		double[] stab = HbmAnimationsSedna.getRelevantTransformation("STAB");
 
 		GlStateManager.translate(0, -1, -2);
 		GlStateManager.rotate((float) equip[0], 1, 0, 0);
@@ -56,6 +58,8 @@ public class ItemRenderCarbine extends ItemRenderWeaponBase {
 		GlStateManager.translate(0, 0, -2);
 		GlStateManager.rotate((float) lift[0], 1, 0, 0);
 		GlStateManager.translate(0, 0, 2);
+
+		GlStateManager.translate(stab[0], stab[1], stab[2]);
 
 		GlStateManager.translate(0, 0, recoil[2]);
 
@@ -74,6 +78,11 @@ public class ItemRenderCarbine extends ItemRenderWeaponBase {
 		GlStateManager.translate(rel[0], rel[1], rel[2]);
 		if (bullet[0] != 1) ResourceManager.carbine.renderPart("Bullet");
 		GlStateManager.popMatrix();
+
+		if(hasBayonet(stack)) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.carbine_bayonet_tex);
+			ResourceManager.carbine.renderPart("Bayonet");
+		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 1, 8);
@@ -103,11 +112,27 @@ public class ItemRenderCarbine extends ItemRenderWeaponBase {
 	@Override
 	public void setupInv(ItemStack stack) {
 		super.setupInv(stack);
-		double scale = 1.375D;
+		if(hasBayonet(stack)) {
+			double scale = 1.1875D;
+			GL11.glScaled(scale, scale, scale);
+			GL11.glRotated(25, 1, 0, 0);
+			GL11.glRotated(45, 0, 1, 0);
+			GL11.glTranslated(1.5, 0, 0);
+		} else {
+			double scale = 1.375D;
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.rotate(25F, 1, 0, 0);
+			GlStateManager.rotate(45F, 0, 1, 0);
+			GlStateManager.translate(-0.5, 0, 0);
+		}
+	}
+
+	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -7.75D;
 		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.rotate(25F, 1, 0, 0);
-		GlStateManager.rotate(45F, 0, 1, 0);
-		GlStateManager.translate(-0.5, 0, 0);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0, 0, -1.75);
 	}
 
 	@Override
@@ -116,8 +141,18 @@ public class ItemRenderCarbine extends ItemRenderWeaponBase {
 
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.carbine_tex);
-		ResourceManager.carbine.renderAll();
+		ResourceManager.carbine.renderPart("Gun");
+		ResourceManager.carbine.renderPart("Slide");
+		ResourceManager.carbine.renderPart("Magazine");
+		if(hasBayonet(stack)) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.carbine_bayonet_tex);
+			ResourceManager.carbine.renderPart("Bayonet");
+		}
 		GlStateManager.shadeModel(GL11.GL_FLAT);
+	}
+
+	public boolean hasBayonet(ItemStack stack) {
+		return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_CARBINE_BAYONET);
 	}
 }
 

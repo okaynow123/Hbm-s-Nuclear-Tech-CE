@@ -31,7 +31,7 @@ public class XFactory357 {
         m357_sp = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_SP).setCasing(ItemEnums.EnumCasingType.SMALL, 8);
         m357_fmj = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_FMJ).setCasing(ItemEnums.EnumCasingType.SMALL, 8).setDamage(0.8F).setThresholdNegation(2F).setArmorPiercing(0.1F);
         m357_jhp = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_JHP).setCasing(ItemEnums.EnumCasingType.SMALL, 8).setDamage(1.5F).setHeadshot(1.5F).setArmorPiercing(-0.25F);
-        m357_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 8).setDoesPenetrate(true).setDamageFalloutByPen(false).setDamage(1.5F).setThresholdNegation(5F).setArmorPiercing(0.15F);
+        m357_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 8).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(5F).setArmorPiercing(0.15F);
         m357_express = new BulletConfig().setItem(GunFactory.EnumAmmo.M357_EXPRESS).setCasing(ItemEnums.EnumCasingType.SMALL, 8).setDoesPenetrate(true).setDamage(1.5F).setThresholdNegation(2F).setArmorPiercing(0.1F).setWear(1.5F);
 
         ModItems.gun_light_revolver = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_light_revolver", new GunConfig()

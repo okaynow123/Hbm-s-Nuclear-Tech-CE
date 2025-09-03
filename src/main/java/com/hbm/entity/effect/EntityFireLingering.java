@@ -24,6 +24,8 @@ public class EntityFireLingering extends Entity {
     public static int TYPE_DIESEL = 0;
     public static int TYPE_BALEFIRE = 1;
     public static int TYPE_PHOSPHORUS = 2;
+    public static int TYPE_OXY = 3;
+    public static int TYPE_BLACK = 4; // TODO implement black fire
     public int maxAge = 150;
 
     public static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityFireLingering.class, DataSerializers.FLOAT);

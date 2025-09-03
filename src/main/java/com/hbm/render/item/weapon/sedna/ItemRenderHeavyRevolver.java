@@ -2,6 +2,7 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
@@ -149,6 +150,14 @@ public class ItemRenderHeavyRevolver extends ItemRenderWeaponBase {
 	}
 
 	@Override
+	public void setupModTable(ItemStack stack) {
+		double scale = -5D;
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(0, -0.5, 0);
+	}
+
+	@Override
 	public void renderOther(ItemStack stack, Object type) {
 
 		GlStateManager.rotate(90, 0, 1, 0);
@@ -172,7 +181,7 @@ public class ItemRenderHeavyRevolver extends ItemRenderWeaponBase {
 	}
 
 	public boolean isScoped(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_heavy_revolver_lilmac;
+		return stack.getItem() == ModItems.gun_heavy_revolver_lilmac || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
 	}
 }
 

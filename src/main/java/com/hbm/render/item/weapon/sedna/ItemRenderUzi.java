@@ -2,10 +2,12 @@ package com.hbm.render.item.weapon.sedna;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 @AutoRegister(item = "gun_uzi")
@@ -34,7 +36,7 @@ public class ItemRenderUzi extends ItemRenderWeaponBase {
     public void renderFirstPerson(ItemStack stack) {
 
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
-        Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.uzi_tex);
+        Minecraft.getMinecraft().renderEngine.bindTexture(isSaturnite(stack) ? ResourceManager.uzi_saturnite_tex : ResourceManager.uzi_tex);
         double scale = 0.25D;
         GlStateManager.scale(scale, scale, scale);
 
@@ -65,6 +67,9 @@ public class ItemRenderUzi extends ItemRenderWeaponBase {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         ResourceManager.uzi.renderPart("Gun");
 
+        boolean silenced = hasSilencer(stack, 0);
+        if(silenced) ResourceManager.uzi.renderPart("Silencer");
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0.3125D, -5.75);
         GlStateManager.rotate(180 - stockFront[0], 1, 0, 0);
@@ -87,24 +92,25 @@ public class ItemRenderUzi extends ItemRenderWeaponBase {
         ResourceManager.uzi.renderPart("Magazine");
         if(bullet[0] == 1) ResourceManager.uzi.renderPart("Bullet");
         GlStateManager.popMatrix();
+        if(!silenced) {
+            double smokeScale = 0.5;
 
-        double smokeScale = 0.5;
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0.75, 8.5);
+            GlStateManager.rotate(90, 0, 1, 0);
+            GlStateManager.scale(smokeScale, smokeScale, smokeScale);
+            this.renderSmokeNodes(gun.getConfig(stack, 0).smokeNodes, 0.75D);
+            GlStateManager.popMatrix();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0.75, 8.5);
-        GlStateManager.rotate(90, 0, 1, 0);
-        GlStateManager.scale(smokeScale, smokeScale, smokeScale);
-        this.renderSmokeNodes(gun.getConfig(stack, 0).smokeNodes, 0.75D);
-        GlStateManager.popMatrix();
+            GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0.75, 8.5);
-        GlStateManager.rotate(90, 0, 1, 0);
-        GlStateManager.rotate(90 * gun.shotRand, 1, 0, 0);
-        this.renderMuzzleFlash(gun.lastShot[0], 75, 7.5);
-        GlStateManager.popMatrix();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0.75, 8.5);
+            GlStateManager.rotate(90, 0, 1, 0);
+            GlStateManager.rotate(90 * gun.shotRand, 1, 0, 0);
+            this.renderMuzzleFlash(gun.lastShot[0], 75, 7.5);
+            GlStateManager.popMatrix();
+        }
     }
 
     @Override
@@ -125,16 +131,56 @@ public class ItemRenderUzi extends ItemRenderWeaponBase {
     }
 
     @Override
-    public void renderOther(ItemStack stack, Object type) {
+    public void setupModTable(ItemStack stack) {
+        double scale = -6.25D;
+        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.rotate(90, 0, 1, 0);
+        GlStateManager.translate(0, 1, -4);
+    }
+
+    @Override
+    public void renderModTable(ItemStack stack, int index) {
         GlStateManager.enableLighting();
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.uzi_tex);
+        Minecraft.getMinecraft().renderEngine.bindTexture(isSaturnite(stack) ? ResourceManager.uzi_saturnite_tex : ResourceManager.uzi_tex);
         ResourceManager.uzi.renderPart("Gun");
         ResourceManager.uzi.renderPart("StockBack");
         ResourceManager.uzi.renderPart("StockFront");
         ResourceManager.uzi.renderPart("Slide");
         ResourceManager.uzi.renderPart("Magazine");
+        if(hasSilencer(stack, index)) ResourceManager.uzi.renderPart("Silencer");
         GlStateManager.shadeModel(GL11.GL_FLAT);
+    }
+
+    @Override
+    public void renderOther(ItemStack stack, Object type) {
+        GlStateManager.enableLighting();
+
+        boolean silenced = hasSilencer(stack, 0);
+
+        if(silenced && type == ItemCameraTransforms.TransformType.GUI) {
+            double scale = 0.625D;
+            GlStateManager.scale(scale, scale, scale);
+            GlStateManager.translate(0, 0, -4);
+        }
+
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().renderEngine.bindTexture(isSaturnite(stack) ? ResourceManager.uzi_saturnite_tex : ResourceManager.uzi_tex);
+        ResourceManager.uzi.renderPart("Gun");
+        ResourceManager.uzi.renderPart("StockBack");
+        ResourceManager.uzi.renderPart("StockFront");
+        ResourceManager.uzi.renderPart("Slide");
+        ResourceManager.uzi.renderPart("Magazine");
+        if(silenced) ResourceManager.uzi.renderPart("Silencer");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+    }
+
+    public boolean hasSilencer(ItemStack stack, int cfg) {
+        return WeaponModManager.hasUpgrade(stack, cfg, WeaponModManager.ID_SILENCER);
+    }
+
+    public boolean isSaturnite(ItemStack stack) {
+        return WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_UZI_SATURN);
     }
 }

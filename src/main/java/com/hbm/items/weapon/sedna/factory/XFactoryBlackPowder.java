@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 public class XFactoryBlackPowder {
     public static BulletConfig stone = new BulletConfig().setItem(GunFactory.EnumAmmo.STONE).setBlackPowder(true).setHeadshot(1F).setSpread(0.025F).setRicochetAngle(15);
     public static BulletConfig flint = new BulletConfig().setItem(GunFactory.EnumAmmo.STONE_AP).setBlackPowder(true).setHeadshot(1F).setSpread(0.01F).setRicochetAngle(5).setDoesPenetrate(true).setDamage(1.5F);
-    public static BulletConfig iron = new BulletConfig().setItem(GunFactory.EnumAmmo.STONE_IRON).setBlackPowder(true).setHeadshot(1F).setSpread(0F).setRicochetAngle(90).setRicochetCount(5).setDoesPenetrate(true).setDamageFalloutByPen(false).setDamage(1.5F);
+    public static BulletConfig iron = new BulletConfig().setItem(GunFactory.EnumAmmo.STONE_IRON).setBlackPowder(true).setHeadshot(1F).setSpread(0F).setRicochetAngle(90).setRicochetCount(5).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F);
     public static BulletConfig shot = new BulletConfig().setItem(GunFactory.EnumAmmo.STONE_SHOT).setBlackPowder(true).setHeadshot(1F).setSpread(0.1F).setRicochetAngle(45).setProjectiles(6, 6).setDamage(1F/6F);
 
     public static void init() {

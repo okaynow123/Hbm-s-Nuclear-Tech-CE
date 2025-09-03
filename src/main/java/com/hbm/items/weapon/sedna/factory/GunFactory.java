@@ -45,6 +45,7 @@ public class GunFactory {
         XFactoryBlackPowder.init();
         XFactory357.init();
         XFactory44.init();
+        XFactory45.init();
         XFactory9mm.init();
         XFactory12ga.init();
         XFactory40mm.init();
@@ -60,8 +61,14 @@ public class GunFactory {
         XFactory75Bolt.init();
         XFactoryFolly.init();
         XFactoryTurret.init();
+        XFactoryTool.init();
         XFactory10ga.init();
         XFactory35800.init();
+
+        ModItems.weapon_mod_test = new ItemEnumMulti("weapon_mod_test", EnumModTest.class, true, true).setMaxStackSize(1);
+        ModItems.weapon_mod_generic = new ItemEnumMulti("weapon_mod_generic", EnumModGeneric.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
+        ModItems.weapon_mod_special = new ItemEnumMulti("weapon_mod_special", EnumModSpecial.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
+        ModItems.weapon_mod_caliber = new ItemEnumMulti("weapon_mod_caliber", EnumModCaliber.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
 
         /// PROXY BULLSHIT ///
         MainRegistry.proxy.registerGunCfg();

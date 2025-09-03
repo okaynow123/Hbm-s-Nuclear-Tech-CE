@@ -2,8 +2,10 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
+import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.hud.HUDComponentAmmoCounter;
 import com.hbm.items.weapon.sedna.hud.HUDComponentDurabilityBar;
+import com.hbm.items.weapon.sedna.impl.ItemGunChargeThrower;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.misc.BeamPronter;
@@ -12,7 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
@@ -43,6 +48,18 @@ public class LegoClient {
         double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
         if(length <= 0) return;
         renderBulletStandard(Tessellator.getInstance().getBuffer(), 0xD8CA00, 0xFFF19D, length, true);
+    };
+
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_SM_BULLET = (bullet, interp) -> {
+        double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
+        if(length <= 0) return;
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x42A8DD, 0xFFFFFF, length, true);
+    };
+
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_BLACK_BULLET = (bullet, interp) -> {
+        double length = bullet.prevVelocity + (bullet.velocity - bullet.prevVelocity) * interp;
+        if(length <= 0) return;
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x000000, 0x7F006E, length, true);
     };
 
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_AP_BULLET = (bullet, interp) -> {
@@ -356,8 +373,30 @@ public class LegoClient {
         RenderArcFurnace.fullbright(false);
     };
 
+    public static BiConsumer<EntityBulletBeamBase, Float> RENDER_BLACK_LIGHTNING = (bullet, interp) -> {
+
+        RenderArcFurnace.fullbright(true);
+        double age = MathHelper.clamp(1D - ((double) bullet.ticksExisted - 2 + interp) / (double) bullet.getBulletConfig().expires, 0, 1);
+
+        GL11.glPushMatrix();
+        GL11.glRotatef(180 - bullet.rotationYaw, 0, 1F, 0);
+        GL11.glRotatef(-bullet.rotationPitch - 90, 1F, 0, 0);
+
+        double scale = 5D;
+        GL11.glScaled(age * scale, 1, age * scale);
+        GL11.glTranslated(0, bullet.beamLength, 0);
+        GL11.glRotatef(-90, 0, 0, 1);
+        renderBulletStandard(Tessellator.getInstance().getBuffer(), 0x4C3093, 0x000000, bullet.beamLength, true);
+
+        GL11.glPopMatrix();
+        RenderArcFurnace.fullbright(false);
+    };
+
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_LASER_RED = (bullet, interp) -> {
         renderStandardLaser(bullet, interp, 0x80, 0x15, 0x15);
+    };
+    public static BiConsumer<EntityBulletBeamBase, Float> RENDER_LASER_EMERALD = (bullet, interp) -> {
+        renderStandardLaser(bullet, interp, 0x15, 0x80, 0x15);
     };
     public static BiConsumer<EntityBulletBeamBase, Float> RENDER_LASER_CYAN = (bullet, interp) -> {
         renderStandardLaser(bullet, interp, 0x15, 0x15, 0x80);
@@ -433,5 +472,174 @@ public class LegoClient {
         ResourceManager.panzerschreck.renderPart("Rocket");
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glPopMatrix();
+    };
+
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_CT_HOOK = (bullet, interp) -> {
+
+        GlStateManager.pushMatrix();
+
+        GlStateManager.rotate(bullet.prevRotationYaw + (bullet.rotationYaw - bullet.prevRotationYaw) * interp - 90.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(bullet.prevRotationPitch + (bullet.rotationPitch - bullet.prevRotationPitch) * interp + 180.0F, 0.0F, 0.0F, 1.0F);
+
+        GlStateManager.scale(0.125F, 0.125F, 0.125F);
+        GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate(0.0F, 0.0F, -6.0F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.charge_thrower_hook_tex);
+        ResourceManager.charge_thrower.renderPart("Hook");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
+
+        if (bullet.getThrower() instanceof EntityPlayer player) {
+            ItemStack stack = player.getHeldItemMainhand();
+            if (!stack.isEmpty() && stack.getItem() == ModItems.gun_charge_thrower && ItemGunChargeThrower.getLastHook(stack) == bullet.getEntityId()) {
+                renderWire(bullet, interp);
+            }
+        }
+    };
+
+    public static void renderWire(EntityBulletBaseMK4 bullet, float interp) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.wire_greyscale_tex);
+
+        double bx = bullet.prevPosX + (bullet.posX - bullet.prevPosX) * interp;
+        double by = bullet.prevPosY + (bullet.posY - bullet.prevPosY) * interp;
+        double bz = bullet.prevPosZ + (bullet.posZ - bullet.prevPosZ) * interp;
+
+        Entity thrower = bullet.getThrower();
+        double x = thrower.prevPosX + (thrower.posX - thrower.prevPosX) * interp;
+        double y = thrower.prevPosY + (thrower.posY - thrower.prevPosY) * interp;
+        double z = thrower.prevPosZ + (thrower.posZ - thrower.prevPosZ) * interp;
+        double eyaw = thrower.prevRotationYaw + (thrower.rotationYaw - thrower.prevRotationYaw) * interp;
+        double epitch = thrower.prevRotationPitch + (thrower.rotationPitch - thrower.prevRotationPitch) * interp;
+
+        Vec3d offset = new Vec3d(0.125D, 0.25D, -0.75D);
+        offset = offset.rotatePitch((float) Math.toRadians(-epitch));
+        offset = offset.rotateYaw((float) Math.toRadians(-eyaw));
+
+        Vec3d target = new Vec3d(x - offset.x, y + thrower.getEyeHeight() - offset.y, z - offset.z);
+
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+
+        double deltaX = target.x - bx;
+        double deltaY = target.y - by;
+        double deltaZ = target.z - bz;
+        Vec3d delta = new Vec3d(deltaX, deltaY, deltaZ);
+
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
+        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
+
+        int count = 10;
+        double hang = Math.min(delta.length() / 15D, 0.5D);
+
+        double girth = 0.03125D;
+        double hyp = Math.sqrt(delta.x * delta.x + delta.z * delta.z);
+        double yaw = Math.atan2(delta.x, delta.z);
+        double pitch = Math.atan2(delta.y, hyp);
+        double rotator = Math.PI * 0.5D;
+        double newPitch = pitch + rotator;
+        double newYaw = yaw + rotator;
+        double iZ = Math.cos(yaw) * Math.cos(newPitch) * girth;
+        double iX = Math.sin(yaw) * Math.cos(newPitch) * girth;
+        double iY = Math.sin(newPitch) * girth;
+        double jZ = Math.cos(newYaw) * girth;
+        double jX = Math.sin(newYaw) * girth;
+
+        for (float j = 0; j < count; j++) {
+
+            float k = j + 1;
+
+            double sagJ = Math.sin(j / count * Math.PI) * hang;
+            double sagK = Math.sin(k / count * Math.PI) * hang;
+            double sagMean = (sagJ + sagK) / 2D;
+
+            double ja = j + 0.5D;
+            double ix = bx + deltaX / (double) (count) * ja;
+            double iy = by + deltaY / (double) (count) * ja - sagMean;
+            double iz = bz + deltaZ / (double) (count) * ja;
+
+            int brightness = bullet.world.getCombinedLight(new BlockPos(MathHelper.floor(ix), MathHelper.floor(iy), MathHelper.floor(iz)), 0);
+            int lightU = brightness & 0xFFFF;
+            int lightV = (brightness >>> 16) & 0xFFFF;
+
+            drawLineSegment(buf,
+                    (deltaX * j / count),
+                    (deltaY * j / count) - sagJ,
+                    (deltaZ * j / count),
+                    (deltaX * k / count),
+                    (deltaY * k / count) - sagK,
+                    (deltaZ * k / count),
+                    iX, iY, iZ, jX, jZ,
+                    lightU, lightV,
+                    bx, by, bz);
+        }
+
+        tess.draw();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
+    }
+
+    public static void drawLineSegment(BufferBuilder buf, double x, double y, double z, double a, double b, double c, double iX, double iY, double iZ, double jX, double jZ, int lightU, int lightV, double baseX, double baseY, double baseZ) {
+
+        double X = baseX + x;
+        double Y = baseY + y;
+        double Z = baseZ + z;
+
+        double A = baseX + a;
+        double B = baseY + b;
+        double C = baseZ + c;
+
+        double deltaX = A - X;
+        double deltaY = B - Y;
+        double deltaZ = C - Z;
+        double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+        int wrap = (int) Math.ceil(length * 8);
+
+        if (deltaX + deltaZ < 0) {
+            wrap *= -1;
+            jZ *= -1;
+            jX *= -1;
+        }
+
+        buf.pos(X + iX, Y + iY, Z + iZ).tex(0, 0).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(X - iX, Y - iY, Z - iZ).tex(0, 1).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(A - iX, B - iY, C - iZ).tex(wrap, 1).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(A + iX, B + iY, C + iZ).tex(wrap, 0).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+
+        buf.pos(X + jX, Y, Z + jZ).tex(0, 0).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(X - jX, Y, Z - jZ).tex(0, 1).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(A - jX, B, C - jZ).tex(wrap, 1).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+        buf.pos(A + jX, B, C + jZ).tex(wrap, 0).lightmap(lightU, lightV).color(0x60, 0x60, 0x60, 0xFF).endVertex();
+    }
+
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_CT_MORTAR = (bullet, interp) -> {
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.125F, 0.125F, 0.125F);
+        GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate(0.0F, 0.0F, -6.0F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.charge_thrower_mortar_tex);
+        ResourceManager.charge_thrower.renderPart("Mortar");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
+    };
+
+    public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_CT_MORTAR_CHARGE = (bullet, interp) -> {
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.125F, 0.125F, 0.125F);
+        GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate(0.0F, 0.0F, -6.0F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.charge_thrower_mortar_tex);
+        ResourceManager.charge_thrower.renderPart("Mortar");
+        ResourceManager.charge_thrower.renderPart("Oomph");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
     };
 }

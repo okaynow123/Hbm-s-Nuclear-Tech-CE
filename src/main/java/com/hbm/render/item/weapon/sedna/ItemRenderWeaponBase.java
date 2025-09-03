@@ -32,7 +32,8 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             .get(ItemCameraTransforms.TransformType.GROUND)
             .setScale(0.85f).setPosition(-0.5, 0.6, -0.5).getHelper();
 
-    public static final ResourceLocation flash_plume = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/lilmac_plume.png");
+    public static final ResourceLocation flash_plume =  new ResourceLocation(RefStrings.MODID, "textures/models/weapons/lilmac_plume.png");
+    public static final ResourceLocation laser_flash = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/laser_flash.png");
     public static float interp;
 
     public boolean isAkimbo() { return false; }
@@ -168,7 +169,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         int brightness = mc.world.getCombinedLight(new net.minecraft.util.math.BlockPos(player.posX, player.posY, player.posZ), 0);
         int j = brightness % 65536;
         int k = brightness / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         //color setup
@@ -183,8 +184,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         GlStateManager.rotate(180, 0, 1, 0);
 
         //viewbob
-        if(mc.getRenderViewEntity() instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) mc.getRenderViewEntity();
+        if(mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
             float distanceDelta = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
             float distanceInterp = -(entityplayer.distanceWalkedModified + distanceDelta * interp);
             float camYaw = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * interp;
@@ -207,7 +207,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         } else {
             float offset = 0.8F;
             GlStateManager.rotate(180, 0, 1, 0);
-            GlStateManager.translate(1.0F * offset, -0.75F * offset, -0.5F * offset);
+            GlStateManager.translate(offset, -0.75F * offset, -0.5F * offset);
             GlStateManager.rotate(180, 0, 1, 0);
         }
     }
@@ -242,6 +242,16 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
     public void setupEntity(ItemStack stack) {
         double scale = 0.125D;
         GlStateManager.scale(scale, scale, scale);
+    }
+
+    public void setupModTable(ItemStack stack) {
+        double scale = -5D;
+        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.rotate(90, 0, 1, 0);
+    }
+
+    public void renderModTable(ItemStack stack, int index) {
+        renderOther(stack, ItemCameraTransforms.TransformType.GUI);
     }
 
     public abstract void renderFirstPerson(ItemStack stack);
@@ -386,6 +396,36 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
             Tessellator.getInstance().draw();
 
+            endFullbrightAdditive();
+        }
+    }
+
+    public static void renderLaserFlash(long lastShot, int flash, double scale, int color) {
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+
+        if (System.currentTimeMillis() - lastShot < flash) {
+            double fire = (System.currentTimeMillis() - lastShot) / (double) flash;
+            double size = 4 * fire * scale;
+
+            Minecraft.getMinecraft().getTextureManager().bindTexture(laser_flash);
+            beginFullbrightAdditive();
+            GlStateManager.depthMask(false);
+
+            int r = (color >> 16) & 0xFF;
+            int g = (color >> 8) & 0xFF;
+            int b = color & 0xFF;
+            int a = 255;
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+            buffer.pos(0, -size, -size).tex(1, 1).color(r, g, b, a).endVertex();
+            buffer.pos(0,  size, -size).tex(0, 1).color(r, g, b, a).endVertex();
+            buffer.pos(0,  size,  size).tex(0, 0).color(r, g, b, a).endVertex();
+            buffer.pos(0, -size,  size).tex(1, 0).color(r, g, b, a).endVertex();
+
+            Tessellator.getInstance().draw();
+
+            GlStateManager.depthMask(true);
             endFullbrightAdditive();
         }
     }

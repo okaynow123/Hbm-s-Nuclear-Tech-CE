@@ -90,6 +90,7 @@
     "weapon.revolverShootAlt": {"category": "player", "sounds": [{"name": "hbm:weapon/revolverShootAlt", "stream": false}]},
 	"weapon.heavyShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/heavyShoot", "stream": false}]},
 	"weapon.shotgunShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/shotgunShoot", "stream": false}]},
+    "weapon.extinguisher": {"category": "player", "sounds": [{"name": "hbm:weapon/extinguisher", "stream": false}]},
 	"weapon.shottyShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/shottyShoot", "stream": false}]},
 	"weapon.schrabidiumshoot": {"category": "player", "sounds": [{"name": "hbm:weapon/schrabidiumShoot", "stream": false}]},
 	"weapon.osiprShoot": {"category": "player", "sounds": [{"name": "hbm:weapon/osiprShoot", "stream": false}]},
@@ -231,6 +232,7 @@
     "weapon.fire.loudestNoiseOnEarth": {"category": "player", "sounds": ["hbm:weapon/fire/loudestNoiseOnEarth"]},
     "weapon.fire.disintegration": {"category": "player", "sounds": ["hbm:weapon/fire/disintegration"]},
     "weapon.fire.laser": {"category": "player", "sounds": ["hbm:weapon/fire/laser"]},
+    "weapon.fire.laserPistol": {"category": "player", "sounds": ["hbm:weapon/fire/laserPistol"]},
     "weapon.fire.laserGatling": {"category": "player", "sounds": ["hbm:weapon/fire/laserGatling"]},
     "weapon.fire.silenced": {"category": "player", "sounds": ["hbm:weapon/fire/silenced"]},
     "weapon.fire.assault": {"category": "player", "sounds": ["hbm:weapon/fire/assault"]},
@@ -244,6 +246,9 @@
     "weapon.fire.uzi": {"category": "player", "sounds": ["hbm:weapon/fire/uzi"]},
     "weapon.fire.tesla": {"category": "player", "sounds": ["hbm:weapon/fire/tesla"]},
     "weapon.fire.aberrator": {"category": "player", "sounds": ["hbm:weapon/fire/aberrator"]},
+    "weapon.fire.stab": {"category": "player", "sounds": ["hbm:weapon/fire/stab1", "hbm:weapon/fire/stab2"]},
+    "weapon.fire.grenade": {"category": "player", "sounds": ["hbm:weapon/fire/grenade"]},
+    "weapon.fire.amat": {"category": "player", "sounds": ["hbm:weapon/fire/amat"]},
 	
 	"weapon.reload.boltClose": {"category": "player", "sounds": ["hbm:weapon/reload/boltclose"]},
     "weapon.reload.boltOpen": {"category": "player", "sounds": ["hbm:weapon/reload/boltopen"]},
@@ -273,6 +278,8 @@
     "weapon.reload.impact": {"category": "player", "sounds": ["hbm:weapon/reload/impact1", "hbm:weapon/reload/impact2", "hbm:weapon/reload/impact3"]},
     "weapon.reload.fatmanFull": {"category": "player", "sounds": ["hbm:weapon/reload/fatmanfull"]},
     "weapon.reload.screw": {"category": "player", "sounds": ["hbm:weapon/reload/screw"]},
+
+    "weapon.foley.gunWhack": {"category": "player", "sounds": ["hbm:weapon/foley/gunWhack", "hbm:weapon/foley/gunWhack2"]},	
 	
 	"weapon.44Shoot": {"category": "player", "sounds": [{"name": "hbm:weapon/44shoot", "stream": false}]},
     "weapon.glReload": {"category": "player", "sounds": [{"name": "hbm:weapon/glReload", "stream": false}]},
