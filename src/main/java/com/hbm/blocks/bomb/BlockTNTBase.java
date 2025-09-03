@@ -24,11 +24,13 @@ public abstract class BlockTNTBase extends BlockDetonatable implements IToolable
     public BlockTNTBase(String s) {
         super(Material.TNT, s, 15, 100, 20, false, false);
         this.setDefaultState(this.blockState.getBaseState().withProperty(META, 0));
+        this.META_COUNT = 1;
     }
 
     public BlockTNTBase(String s, BlockBakeFrame... frames) {
         super(Material.TNT, s, 15, 100, 20, false, false, frames);
         this.setDefaultState(this.blockState.getBaseState().withProperty(META, 0));
+        this.META_COUNT = 1;
     }
 
     @Override
