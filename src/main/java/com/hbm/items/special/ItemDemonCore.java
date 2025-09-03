@@ -16,20 +16,20 @@ public class ItemDemonCore extends ItemBase {
 	public ItemDemonCore(String s){
 		super(s);
 	}
-	
-	@Override
-	public boolean onEntityItemUpdate(EntityItem entityItem){
-		if(entityItem != null && !entityItem.world.isRemote && entityItem.onGround) {
-			entityItem.setItem(new ItemStack(ModItems.demon_core_closed));
-			entityItem.world.spawnEntity(new EntityItem(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, new ItemStack(ModItems.screwdriver)));
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
-		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
-	}
-
+//
+//	@Override
+//	public boolean onEntityItemUpdate(EntityItem entityItem){
+//		if(entityItem != null && !entityItem.world.isRemote && entityItem.onGround) {
+//			entityItem.setItem(new ItemStack(ModItems.demon_core_closed));
+//			entityItem.world.spawnEntity(new EntityItem(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, new ItemStack(ModItems.screwdriver)));
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
+//		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
+//	}
+//
 }

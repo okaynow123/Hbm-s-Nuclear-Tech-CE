@@ -16,6 +16,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -503,12 +504,24 @@ public class HazardRegistry {
 		//HazardSystem.register(DictFrame.fromOne(ModItems.holotape_image, EnumHoloImage.HOLO_RESTORED), makeData(DIGAMMA, 1F));
 		//HazardSystem.register(holotape_damaged, makeData(DIGAMMA, 1_000F));
 		registerContaminatingDrops();
+        HazardRegistry.registerDangerousDrops();
+
+
 		/*
 		 * Blacklist
 		 */
 		for(String ore : TH232.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
 		for(String ore : U.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
 	}
+
+    private static void registerDangerousDrops(){
+        HazardSystem.register(demon_core_open, makeData().addEntry(new HazardTypeDangerousDrop((item, level) ->{
+            if(item.onGround) {
+                item.setItem(new ItemStack(ModItems.demon_core_closed));
+                item.world.spawnEntity(new EntityItem(item.world, item.posX, item.posY, item.posZ, new ItemStack(ModItems.screwdriver)));
+            }
+        } )));
+    };
 
 	public static void registerTrafos() {
 		HazardSystem.trafos.add(new HazardTransformerRadiationNBT());
