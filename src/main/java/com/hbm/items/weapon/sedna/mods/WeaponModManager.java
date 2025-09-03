@@ -290,7 +290,7 @@ public class WeaponModManager {
         if(stack.isEmpty()) return base;
         if(!stack.hasTagCompound()) return base;
 
-        for(int i : Objects.requireNonNull(stack.getTagCompound()).getIntArray(KEY_MOD_LIST + cfg)) {
+        for(int i : Objects.requireNonNull(stack).getTagCompound().getIntArray(KEY_MOD_LIST + cfg)) {
             IWeaponMod mod = idToMod.get(i);
             if(mod != null) base = mod.eval(base, stack, key, parent);
         }
