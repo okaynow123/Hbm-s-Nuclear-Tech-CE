@@ -188,25 +188,27 @@ public class FalloutConfigJSON {
                 ));
 
 
+        for (int i = 1; i <= 10; i++) {
+            int m = 10 - i;
 
             entries.add(new FalloutEntry()
                     .primaryStates(
-                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 3),
-                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 2))
+                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getDefaultState(), 3),
+                            new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getDefaultState(), 2))
                     .setPrimaryChance(0.5)
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(Blocks.COAL_ORE));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getDefaultState(), 1))
                     .setPrimaryChance(0.2)
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(ModBlocks.ore_lignite));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(ModBlocks.ore_beryllium));
@@ -214,82 +216,83 @@ public class FalloutConfigJSON {
             if (m > 4) {
                 entries.add(new FalloutEntry()
                         .primaryStates(
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getStateFromMeta(m), 1),
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9))
+                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getDefaultState(), 1),
+                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getDefaultState(), 9))
                         .setMax(i * 5)
                         .isSolid(true)
                         .setBlockState(ModBlocks.ore_uranium));
 
                 entries.add(new FalloutEntry()
                         .primaryStates(
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getStateFromMeta(m), 1),
-                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9))
+                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_schrabidium.getDefaultState(), 1),
+                                new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getDefaultState(), 9))
                         .setMax(i * 5)
                         .isSolid(true)
                         .setBlockState(ModBlocks.ore_gneiss_uranium));
             }
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_radgem.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_radgem.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(Blocks.DIAMOND_ORE));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(Blocks.BEDROCK));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(ModBlocks.ore_bedrock_block));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(ModBlocks.ore_bedrock_oil));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setBlockState(ModBlocks.sellafield_bedrock));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setMatchingMaterial(Material.IRON));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setMatchingMaterial(Material.ROCK));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setMatchingMaterial(Material.SAND));
 
             entries.add(new FalloutEntry()
-                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
+                    .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
                     .setMax(i * 5)
                     .isSolid(true)
                     .setMatchingMaterial(Material.GROUND));
 
             if (i <= 9) {
                 entries.add(new FalloutEntry()
-                        .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
+                        .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getDefaultState(), 1))
                         .setMax(i * 5)
                         .isSolid(true)
                         .setMatchingMaterial(Material.GRASS));
             }
+        }
 
 
         entries.add(new FalloutEntry()
