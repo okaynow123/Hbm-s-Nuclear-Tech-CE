@@ -50,7 +50,7 @@ public class BlockMeta extends BlockBase implements ICustomBlockItem, IDynamicMo
 
     //Norwood:Yes you could use strings, enums or whatever, but this is much simpler and more efficient, as well as has exactly same scope as 1.7.10
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
-    public final short META_COUNT;
+    protected short META_COUNT;
     protected boolean separateTranslationKeys = true;
 
     protected BlockBakeFrame[] blockFrames;

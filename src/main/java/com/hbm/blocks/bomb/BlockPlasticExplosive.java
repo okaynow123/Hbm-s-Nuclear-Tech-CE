@@ -50,6 +50,7 @@ public class BlockPlasticExplosive extends BlockDetonatable implements IBomb {
     public BlockPlasticExplosive(Material mat, SoundType soundType, String registryName, BlockBakeFrame blockFrame) {
         super(mat, registryName, 0, 0, 0, false, false, blockFrame);
         this.blockSoundType = soundType;
+        this.META_COUNT = 0;
     }
 
     //I am not proud of this either
