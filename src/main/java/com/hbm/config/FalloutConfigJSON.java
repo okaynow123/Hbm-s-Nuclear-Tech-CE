@@ -98,12 +98,12 @@ public class FalloutConfigJSON {
 
         /* petrify all wooden things possible */
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.LOG.getDefaultState())
+                .setBlockState(Blocks.LOG)
                 .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.LOG2.getDefaultState())
+                .setBlockState(Blocks.LOG2)
                 .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
@@ -120,22 +120,22 @@ public class FalloutConfigJSON {
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.RED_MUSHROOM_BLOCK.getDefaultState())
+                .setBlockState(Blocks.RED_MUSHROOM_BLOCK)
                 .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState())
+                .setBlockState(Blocks.BROWN_MUSHROOM_BLOCK)
                 .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.SNOW.getDefaultState())
+                .setBlockState(Blocks.SNOW)
                 .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.PLANKS.getDefaultState())
+                .setBlockState(Blocks.PLANKS)
                 .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_planks.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
@@ -162,34 +162,32 @@ public class FalloutConfigJSON {
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(ModBlocks.waste_leaves.getDefaultState())
+                .setBlockState(ModBlocks.waste_leaves)
                 .primaryStates(new net.minecraft.util.Tuple(Blocks.AIR.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.LEAVES.getDefaultState())
+                .setBlockState(Blocks.LEAVES)
                 .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_leaves.getDefaultState(), 1))
                 .setMinDistance(woodEffectRange - 5D));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.LEAVES2.getDefaultState())
+                .setBlockState(Blocks.LEAVES2)
                 .primaryStates(new net.minecraft.util.Tuple(ModBlocks.waste_leaves.getDefaultState(), 1))
                 .setMinDistance(woodEffectRange - 5D));
 
         entries.add(new FalloutEntry()
-                .setBlockState(Blocks.MOSSY_COBBLESTONE.getDefaultState())
+                .setBlockState(Blocks.MOSSY_COBBLESTONE)
                 .primaryStates(new net.minecraft.util.Tuple(Blocks.COAL_ORE.getDefaultState(), 1)));
 
         entries.add(new FalloutEntry()
-                .setBlockState(ModBlocks.ore_nether_uranium.getDefaultState())
+                .setBlockState(ModBlocks.ore_nether_uranium)
                 .primaryStates(
                         new net.minecraft.util.Tuple(ModBlocks.ore_nether_schrabidium.getDefaultState(), 1),
                         new net.minecraft.util.Tuple(ModBlocks.ore_nether_uranium_scorched.getDefaultState(), 99)
                 ));
 
 
-        for (int i = 1; i <= 10; i++) {
-            int m = 10 - i;
 
             entries.add(new FalloutEntry()
                     .primaryStates(
@@ -198,20 +196,20 @@ public class FalloutConfigJSON {
                     .setPrimaryChance(0.5)
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(Blocks.COAL_ORE.getDefaultState()));
+                    .setBlockState(Blocks.COAL_ORE));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 1))
                     .setPrimaryChance(0.2)
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(ModBlocks.ore_lignite.getDefaultState()));
+                    .setBlockState(ModBlocks.ore_lignite));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(ModBlocks.ore_beryllium.getDefaultState()));
+                    .setBlockState(ModBlocks.ore_beryllium));
 
             if (m > 4) {
                 entries.add(new FalloutEntry()
@@ -220,7 +218,7 @@ public class FalloutConfigJSON {
                                 new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9))
                         .setMax(i * 5)
                         .isSolid(true)
-                        .setBlockState(ModBlocks.ore_uranium.getDefaultState()));
+                        .setBlockState(ModBlocks.ore_uranium));
 
                 entries.add(new FalloutEntry()
                         .primaryStates(
@@ -228,38 +226,38 @@ public class FalloutConfigJSON {
                                 new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9))
                         .setMax(i * 5)
                         .isSolid(true)
-                        .setBlockState(ModBlocks.ore_gneiss_uranium.getDefaultState()));
+                        .setBlockState(ModBlocks.ore_gneiss_uranium));
             }
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.ore_sellafield_radgem.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(Blocks.DIAMOND_ORE.getDefaultState()));
+                    .setBlockState(Blocks.DIAMOND_ORE));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(Blocks.BEDROCK.getDefaultState()));
+                    .setBlockState(Blocks.BEDROCK));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(ModBlocks.ore_bedrock_block.getDefaultState()));
+                    .setBlockState(ModBlocks.ore_bedrock_block));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(ModBlocks.ore_bedrock_oil.getDefaultState()));
+                    .setBlockState(ModBlocks.ore_bedrock_oil));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1))
                     .setMax(i * 5)
                     .isSolid(true)
-                    .setBlockState(ModBlocks.sellafield_bedrock.getDefaultState()));
+                    .setBlockState(ModBlocks.sellafield_bedrock));
 
             entries.add(new FalloutEntry()
                     .primaryStates(new net.minecraft.util.Tuple(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1))
@@ -292,7 +290,6 @@ public class FalloutConfigJSON {
                         .isSolid(true)
                         .setMatchingMaterial(Material.GRASS));
             }
-        }
 
 
         entries.add(new FalloutEntry()
@@ -437,6 +434,7 @@ public class FalloutConfigJSON {
             for (net.minecraft.util.Tuple<IBlockState, Integer> state : array) {
                 writer.beginArray();
                 writer.value(stateToString(state.getFirst()));
+                writer.value(state.getSecond());
                 writer.endArray();
             }
 
