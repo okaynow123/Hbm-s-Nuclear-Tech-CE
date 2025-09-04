@@ -309,9 +309,9 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.gun_g3_zebra, new ItemRenderG3(ResourceManager.g3_zebra_tex), reg);
         registerItemRenderer(ModItems.gun_henry, new ItemRenderHenry(ResourceManager.henry_tex), reg);
         registerItemRenderer(ModItems.gun_henry_lincoln, new ItemRenderHenry(ResourceManager.henry_lincoln_tex), reg);
-        registerItemRenderer(ModItems.gun_laser_pistol, new ItemRenderHenry(ResourceManager.laser_pistol_tex), reg);
-        registerItemRenderer(ModItems.gun_laser_pistol_pew_pew, new ItemRenderHenry(ResourceManager.laser_pistol_pew_pew_tex), reg);
-        registerItemRenderer(ModItems.gun_laser_pistol_morning_glory, new ItemRenderHenry(ResourceManager.laser_pistol_morning_glory_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol, new ItemRenderLaserPistol(ResourceManager.laser_pistol_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol_pew_pew, new ItemRenderLaserPistol(ResourceManager.laser_pistol_pew_pew_tex), reg);
+        registerItemRenderer(ModItems.gun_laser_pistol_morning_glory, new ItemRenderLaserPistol(ResourceManager.laser_pistol_morning_glory_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun_sexy, new ItemRenderSexy(ResourceManager.sexy_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun_heretic, new ItemRenderSexy(ResourceManager.heretic_tex), reg);
         //

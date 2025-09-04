@@ -1272,16 +1272,23 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         }
 
         boolean hudOn = HbmCapability.getData(Minecraft.getMinecraft().player).getEnableHUD();
+        EntityPlayer plr = Minecraft.getMinecraft().player;
         if (hudOn) {
             RenderOverhead.renderMarkers(evt.getPartialTicks());
+            boolean thermalSights = false;
 
-            if (ArmorFSB.hasFSBArmor(Minecraft.getMinecraft().player)) {
-                ItemStack plate = Minecraft.getMinecraft().player.inventory.armorInventory.get(2);
+            if (ArmorFSB.hasFSBArmor(plr)) {
+                ItemStack plate = plr.inventory.armorInventory.get(2);
                 ArmorFSB chestplate = (ArmorFSB) plate.getItem();
 
-                if (chestplate.thermal)
-                    RenderOverhead.renderThermalSight(evt.getPartialTicks());
+                if(chestplate.thermal) thermalSights = true;
             }
+
+            if(!plr.getHeldItemMainhand().isEmpty() && plr.getHeldItemMainhand().getItem() instanceof ItemGunBaseNT gun && ItemGunBaseNT.aimingProgress == 1) {
+                for(int i = 0; i < gun.getConfigCount(); i++) if(gun.getConfig(plr.getHeldItemMainhand(), i).hasThermalSights(plr.getHeldItemMainhand())) thermalSights = true;
+            }
+
+            if(thermalSights) RenderOverhead.renderThermalSight(evt.getPartialTicks());
         }
 
         if (entity instanceof EntityPlayer) {

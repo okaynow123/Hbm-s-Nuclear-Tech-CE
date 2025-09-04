@@ -3,9 +3,10 @@ package com.hbm.inventory.gui;
 import com.hbm.inventory.container.ContainerWeaponTable;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.lib.RefStrings;
+import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,7 @@ public class GUIWeaponTable extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+        super.renderHoveredToolTip(mouseX, mouseY);
 
         if (guiLeft + 8 <= mouseX && guiLeft + 8 + 160 > mouseX && guiTop + 18 < mouseY && guiTop + 18 + 79 >= mouseY) {
             if (org.lwjgl.input.Mouse.isButtonDown(0)) {
@@ -73,6 +75,7 @@ public class GUIWeaponTable extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        super.drawDefaultBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
@@ -86,14 +89,20 @@ public class GUIWeaponTable extends GuiInfoContainer {
             GlStateManager.pushMatrix();
             GlStateManager.translate(guiLeft + 88F, guiTop + 57F, 100F);
 
-            RenderHelper.enableGUIStandardItemLighting();
+            TileEntityItemStackRenderer render = gun.getItem().getTileEntityItemStackRenderer();
 
-            GlStateManager.rotate((float) yaw, 0F, 1F, 0F);
-            GlStateManager.rotate((float) pitch, 1F, 0F, 0F);
-
-            this.mc.getRenderItem().renderItem(gun, ItemCameraTransforms.TransformType.FIXED);
-
-            RenderHelper.disableStandardItemLighting();
+            if(render instanceof ItemRenderWeaponBase renderGun) {
+                GlStateManager.pushMatrix();
+                GlStateManager.rotate(180, 1, 0, 0);
+                RenderHelper.enableGUIStandardItemLighting();
+                GlStateManager.popMatrix();
+                GlStateManager.rotate((float) yaw, 0F, 1F, 0F);
+                GlStateManager.rotate((float) pitch, 1F, 0F, 0F);
+                GlStateManager.enableRescaleNormal();
+                renderGun.setupModTable(gun);
+                renderGun.renderModTable(gun, container.configIndex);
+                GlStateManager.disableRescaleNormal();
+            }
             GlStateManager.popMatrix();
         }
     }

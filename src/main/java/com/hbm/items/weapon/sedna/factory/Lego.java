@@ -17,7 +17,6 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT.LambdaContext;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.SmokeNode;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
-import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.BlackPowderCreator;
@@ -27,7 +26,9 @@ import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -80,7 +81,7 @@ public class Lego {
     };
 
     /** If IDLE and ammo is loaded, fire and set to JUST_FIRED. */
-    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_STANDARD_CLICK_PRIMARY = (stack, ctx) -> { clickReceiver(stack, ctx, 0); };
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_STANDARD_CLICK_PRIMARY = (stack, ctx) -> clickReceiver(stack, ctx, 0);
 
     public static void clickReceiver(ItemStack stack, LambdaContext ctx, int receiver) {
 
@@ -137,9 +138,7 @@ public class Lego {
     };
 
     /** Default smoke. */
-    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_STANDARD_SMOKE = (stack, ctx) -> {
-        handleStandardSmoke(ctx.entity, stack, 2000, 0.025D, 1.15D, ctx.configIndex);
-    };
+    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_STANDARD_SMOKE = (stack, ctx) -> handleStandardSmoke(ctx.entity, stack, 2000, 0.025D, 1.15D, ctx.configIndex);
 
     public static void handleStandardSmoke(EntityLivingBase entity, ItemStack stack, int smokeDuration, double alphaDecay, double widthGrowth, int index) {
         ItemGunBaseNT gun = (ItemGunBaseNT) stack.getItem();
@@ -173,28 +172,24 @@ public class Lego {
     }
 
     /** Toggles isAiming. Used by keybinds. */
-    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_TOGGLE_AIM = (stack, ctx) -> { ItemGunBaseNT.setIsAiming(stack, !ItemGunBaseNT.getIsAiming(stack)); };
+    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_TOGGLE_AIM = (stack, ctx) -> ItemGunBaseNT.setIsAiming(stack, !ItemGunBaseNT.getIsAiming(stack));
 
     /** Returns true if the mag has ammo in it. Used by keybind functions on whether to fire, and deciders on whether to trigger a refire. */
-    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_STANDARD_CAN_FIRE = (stack, ctx) -> { return ctx.config.getReceivers(stack)[0].getMagazine(stack).getAmount(stack, ctx.inventory) > 0; };
+    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_STANDARD_CAN_FIRE = (stack, ctx) -> ctx.config.getReceivers(stack)[0].getMagazine(stack).getAmount(stack, ctx.inventory) > 0;
 
     /** Returns true if the mag has ammo in it, and the gun is in the locked on state */
-    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_LOCKON_CAN_FIRE = (stack, ctx) -> { return ctx.config.getReceivers(stack)[0].getMagazine(stack).getAmount(stack, ctx.inventory) > 0 && ItemGunBaseNT.getIsLockedOn(stack); };
+    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_LOCKON_CAN_FIRE = (stack, ctx) -> ctx.config.getReceivers(stack)[0].getMagazine(stack).getAmount(stack, ctx.inventory) > 0 && ItemGunBaseNT.getIsLockedOn(stack);
 
 
 
 
     /** JUMPER - bypasses mag testing and just allows constant fire */
-    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_DEBUG_CAN_FIRE = (stack, ctx) -> { return true; };
+    public static BiFunction<ItemStack, LambdaContext, Boolean> LAMBDA_DEBUG_CAN_FIRE = (stack, ctx) -> true;
 
     /** Spawns an EntityBulletBaseMK4 with the loaded bulletcfg */
-    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_STANDARD_FIRE = (stack, ctx) -> {
-        doStandardFire(stack, ctx, HbmAnimationsSedna.AnimType.CYCLE, true);
-    };
+    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_STANDARD_FIRE = (stack, ctx) -> doStandardFire(stack, ctx, HbmAnimationsSedna.AnimType.CYCLE, true);
     /** Spawns an EntityBulletBaseMK4 with the loaded bulletcfg, ignores wear */
-    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_NOWEAR_FIRE = (stack, ctx) -> {
-        doStandardFire(stack, ctx, HbmAnimationsSedna.AnimType.CYCLE, false);
-    };
+    public static BiConsumer<ItemStack, LambdaContext> LAMBDA_NOWEAR_FIRE = (stack, ctx) -> doStandardFire(stack, ctx, HbmAnimationsSedna.AnimType.CYCLE, false);
     /** Spawns an EntityBulletBaseMK4 with the loaded bulletcfg, then resets lockon progress */
     public static BiConsumer<ItemStack, LambdaContext> LAMBDA_LOCKON_FIRE = (stack, ctx) -> {
         doStandardFire(stack, ctx, HbmAnimationsSedna.AnimType.CYCLE, true);
@@ -265,14 +260,14 @@ public class Lego {
     }
 
     public static float getStandardWearSpread(ItemStack stack, GunConfig config, int index) {
-        float percent = (float) ItemGunBaseNT.getWear(stack, index) / config.getDurability(stack);
+        float percent = ItemGunBaseNT.getWear(stack, index) / config.getDurability(stack);
         if(percent < 0.5F) return 0F;
         return (percent - 0.5F) * 2F;
     }
 
     /** Returns the standard multiplier for damage based on wear */
     public static float getStandardWearDamage(ItemStack stack, GunConfig config, int index) {
-        float percent = (float) ItemGunBaseNT.getWear(stack, index) / config.getDurability(stack);
+        float percent = ItemGunBaseNT.getWear(stack, index) / config.getDurability(stack);
         if(percent < 0.75F) return 1F;
         return 1F - (percent - 0.75F) * 2F;
     }
@@ -306,10 +301,10 @@ public class Lego {
 
     public static void tinyExplode(EntityBulletBaseMK4 bullet, RayTraceResult mop, float range) { tinyExplode(bullet, mop, range, 1F); }
     public static void tinyExplode(EntityBulletBaseMK4 bullet, RayTraceResult mop, float range, float damageMod) {
-        ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
-        double x = mop.hitVec.x + dir.offsetX * 0.25D;
-        double y = mop.hitVec.y + dir.offsetY * 0.25D;
-        double z = mop.hitVec.z + dir.offsetZ * 0.25D;
+        EnumFacing facing = resolveImpactFacing(bullet, mop);
+        double x = mop.hitVec.x + facing.getXOffset() * 0.25D;
+        double y = mop.hitVec.y + facing.getYOffset() * 0.25D;
+        double z = mop.hitVec.z + facing.getZOffset() * 0.25D;
         ExplosionVNT vnt = new ExplosionVNT(bullet.world, x, y, z, range, bullet.getThrower());
         vnt.setEntityProcessor(new EntityProcessorCrossSmooth(1, bullet.damage * damageMod)
                 .setupPiercing(bullet.config.armorThresholdNegation, bullet.config.armorPiercingPercent).setKnockback(0.25D));
@@ -317,31 +312,71 @@ public class Lego {
         vnt.setSFX(new ExplosionEffectTiny());
         vnt.explode();
     }
+    // because guess what? riiight, 1.9+ doesn't have a sideHit anymore if we're hitting an entity
+    private static EnumFacing resolveImpactFacing(EntityBulletBaseMK4 bullet, RayTraceResult mop) {
+        if (mop.sideHit != null) return mop.sideHit;
 
-    /** anims for the DEBUG revolver, mostly a copy of the li'lpip but with some fixes regarding the cylinder movement */
-    @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_DEBUG_ANIMS = (stack, type) -> {
-        switch(type) {
-            case CYCLE: return new BusAnimationSedna()
-                    .addBus("RECOIL", new BusAnimationSequenceSedna().addPos(0, 0, 0, 50).addPos(0, 0, -3, 50).addPos(0, 0, 0, 250))
-                    .addBus("HAMMER", new BusAnimationSequenceSedna().addPos(0, 0, 1, 50).addPos(0, 0, 1, 400).addPos(0, 0, 0, 200))
-                    .addBus("DRUM", new BusAnimationSequenceSedna().addPos(0, 0, 0, 450).addPos(0, 0, 1, 200));
-            case CYCLE_DRY: return new BusAnimationSedna()
-                    .addBus("HAMMER", new BusAnimationSequenceSedna().addPos(0, 0, 1, 50).addPos(0, 0, 1, 300 + 100).addPos(0, 0, 0, 200))
-                    .addBus("DRUM", new BusAnimationSequenceSedna().addPos(0, 0, 0, 450).addPos(0, 0, 1, 200));
-            case EQUIP: return new BusAnimationSedna().addBus("ROTATE", new BusAnimationSequenceSedna().addPos(-360, 0, 0, 350));
-            case RELOAD: return new BusAnimationSedna()
-                    .addBus("RELAOD_TILT", new BusAnimationSequenceSedna().addPos(-15, 0, 0, 100).addPos(65, 0, 0, 100).addPos(45, 0, 0, 50).addPos(0, 0, 0, 200).addPos(0, 0, 0, 1450).addPos(-80, 0, 0, 100).addPos(-80, 0, 0, 100).addPos(0, 0, 0, 200))
-                    .addBus("RELOAD_CYLINDER", new BusAnimationSequenceSedna().addPos(0, 0, 0, 200).addPos(90, 0, 0, 100).addPos(90, 0, 0, 1700).addPos(0, 0, 0, 70))
-                    .addBus("RELOAD_LIFT", new BusAnimationSequenceSedna().addPos(0, 0, 0, 350).addPos(-45, 0, 0, 250).addPos(-45, 0, 0, 350).addPos(-15, 0, 0, 200).addPos(-15, 0, 0, 1050).addPos(0, 0, 0, 100))
-                    .addBus("RELOAD_JOLT", new BusAnimationSequenceSedna().addPos(0, 0, 0, 600).addPos(2, 0, 0, 50).addPos(0, 0, 0, 100))
-                    .addBus("RELOAD_BULLETS", new BusAnimationSequenceSedna().addPos(0, 0, 0, 650).addPos(10, 0, 0, 300).addPos(10, 0, 0, 200).addPos(0, 0, 0, 700))
-                    .addBus("RELOAD_BULLETS_CON", new BusAnimationSequenceSedna().addPos(1, 0, 0, 0).addPos(1, 0, 0, 950).addPos(0, 0, 0, 1 ) );
-            case INSPECT:
-            case JAMMED: return new BusAnimationSedna()
-                    .addBus("RELAOD_TILT", new BusAnimationSequenceSedna().addPos(-15, 0, 0, 100).addPos(65, 0, 0, 100).addPos(45, 0, 0, 50).addPos(0, 0, 0, 200).addPos(0, 0, 0, 200).addPos(-80, 0, 0, 100).addPos(-80, 0, 0, 100).addPos(0, 0, 0, 200))
-                    .addBus("RELOAD_CYLINDER", new BusAnimationSequenceSedna().addPos(0, 0, 0, 200).addPos(90, 0, 0, 100).addPos(90, 0, 0, 450).addPos(0, 0, 0, 70));
+        double mx = bullet.motionX, my = bullet.motionY, mz = bullet.motionZ;
+        double len2 = mx*mx + my*my + mz*mz;
+
+        if (len2 < 1.0e-6) {
+            mx = bullet.posX - bullet.prevPosX;
+            my = bullet.posY - bullet.prevPosY;
+            mz = bullet.posZ - bullet.prevPosZ;
+            len2 = mx*mx + my*my + mz*mz;
         }
 
-        return null;
+        if (len2 > 1.0e-6) {
+            return EnumFacing.getFacingFromVector((float)mx, (float)my, (float)mz);
+        }
+
+        if (mop.entityHit != null) {
+            AxisAlignedBB bb = mop.entityHit.getEntityBoundingBox();
+
+            double dxMin = Math.abs(mop.hitVec.x - bb.minX);
+            double dxMax = Math.abs(bb.maxX - mop.hitVec.x);
+            double dyMin = Math.abs(mop.hitVec.y - bb.minY);
+            double dyMax = Math.abs(bb.maxY - mop.hitVec.y);
+            double dzMin = Math.abs(mop.hitVec.z - bb.minZ);
+            double dzMax = Math.abs(bb.maxZ - mop.hitVec.z);
+
+            double dx = Math.min(dxMin, dxMax);
+            double dy = Math.min(dyMin, dyMax);
+            double dz = Math.min(dzMin, dzMax);
+
+            if (dx <= dy && dx <= dz) {
+                return (dxMin < dxMax) ? EnumFacing.WEST : EnumFacing.EAST;
+            } else if (dy <= dx && dy <= dz) {
+                return (dyMin < dyMax) ? EnumFacing.DOWN : EnumFacing.UP;
+            } else {
+                return (dzMin < dzMax) ? EnumFacing.NORTH : EnumFacing.SOUTH;
+            }
+        }
+
+        return EnumFacing.UP;
+    }
+
+    /** anims for the DEBUG revolver, mostly a copy of the li'lpip but with some fixes regarding the cylinder movement */
+    @SuppressWarnings("incomplete-switch") public static BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_DEBUG_ANIMS = (stack, type) -> switch (type) {
+        case CYCLE -> new BusAnimationSedna()
+                .addBus("RECOIL", new BusAnimationSequenceSedna().addPos(0, 0, 0, 50).addPos(0, 0, -3, 50).addPos(0, 0, 0, 250))
+                .addBus("HAMMER", new BusAnimationSequenceSedna().addPos(0, 0, 1, 50).addPos(0, 0, 1, 400).addPos(0, 0, 0, 200))
+                .addBus("DRUM", new BusAnimationSequenceSedna().addPos(0, 0, 0, 450).addPos(0, 0, 1, 200));
+        case CYCLE_DRY -> new BusAnimationSedna()
+                .addBus("HAMMER", new BusAnimationSequenceSedna().addPos(0, 0, 1, 50).addPos(0, 0, 1, 300 + 100).addPos(0, 0, 0, 200))
+                .addBus("DRUM", new BusAnimationSequenceSedna().addPos(0, 0, 0, 450).addPos(0, 0, 1, 200));
+        case EQUIP ->
+                new BusAnimationSedna().addBus("ROTATE", new BusAnimationSequenceSedna().addPos(-360, 0, 0, 350));
+        case RELOAD -> new BusAnimationSedna()
+                .addBus("RELAOD_TILT", new BusAnimationSequenceSedna().addPos(-15, 0, 0, 100).addPos(65, 0, 0, 100).addPos(45, 0, 0, 50).addPos(0, 0, 0, 200).addPos(0, 0, 0, 1450).addPos(-80, 0, 0, 100).addPos(-80, 0, 0, 100).addPos(0, 0, 0, 200))
+                .addBus("RELOAD_CYLINDER", new BusAnimationSequenceSedna().addPos(0, 0, 0, 200).addPos(90, 0, 0, 100).addPos(90, 0, 0, 1700).addPos(0, 0, 0, 70))
+                .addBus("RELOAD_LIFT", new BusAnimationSequenceSedna().addPos(0, 0, 0, 350).addPos(-45, 0, 0, 250).addPos(-45, 0, 0, 350).addPos(-15, 0, 0, 200).addPos(-15, 0, 0, 1050).addPos(0, 0, 0, 100))
+                .addBus("RELOAD_JOLT", new BusAnimationSequenceSedna().addPos(0, 0, 0, 600).addPos(2, 0, 0, 50).addPos(0, 0, 0, 100))
+                .addBus("RELOAD_BULLETS", new BusAnimationSequenceSedna().addPos(0, 0, 0, 650).addPos(10, 0, 0, 300).addPos(10, 0, 0, 200).addPos(0, 0, 0, 700))
+                .addBus("RELOAD_BULLETS_CON", new BusAnimationSequenceSedna().addPos(1, 0, 0, 0).addPos(1, 0, 0, 950).addPos(0, 0, 0, 1));
+        case INSPECT, JAMMED -> new BusAnimationSedna()
+                .addBus("RELAOD_TILT", new BusAnimationSequenceSedna().addPos(-15, 0, 0, 100).addPos(65, 0, 0, 100).addPos(45, 0, 0, 50).addPos(0, 0, 0, 200).addPos(0, 0, 0, 200).addPos(-80, 0, 0, 100).addPos(-80, 0, 0, 100).addPos(0, 0, 0, 200))
+                .addBus("RELOAD_CYLINDER", new BusAnimationSequenceSedna().addPos(0, 0, 0, 200).addPos(90, 0, 0, 100).addPos(90, 0, 0, 450).addPos(0, 0, 0, 70));
+        default -> null;
     };
 }

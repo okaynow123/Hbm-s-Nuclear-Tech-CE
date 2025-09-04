@@ -168,8 +168,34 @@ public class ContainerWeaponTable extends Container {
             copy = stack.copy();
 
             if (index < 8) {
-                if (!this.mergeItemStack(stack, 8, this.inventorySlots.size(), true)) return ItemStack.EMPTY;
-                slot.onTake(player, stack);
+                if (index == 7) {
+                    WeaponModManager.install(
+                            stack, this.configIndex,
+                            mods.getStackInSlot(0),
+                            mods.getStackInSlot(1),
+                            mods.getStackInSlot(2),
+                            mods.getStackInSlot(3),
+                            mods.getStackInSlot(4),
+                            mods.getStackInSlot(5),
+                            mods.getStackInSlot(6));
+
+                    for (int i = 0; i < 7; i++) {
+                        ItemStack mod = this.mods.getStackInSlot(i);
+                        if (WeaponModManager.isApplicable(stack, mod, this.configIndex, false)) {
+                            this.mods.setStackInSlot(i, ItemStack.EMPTY);
+                        }
+                    }
+
+                    this.configIndex = 0;
+                    this.detectAndSendChanges();
+                }
+
+                if (!this.mergeItemStack(stack, 8, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+                if (index != 7) {
+                    slot.onTake(player, copy);
+                }
             } else {
                 if (stack.getItem() instanceof ItemGunBaseNT) {
                     if (!this.mergeItemStack(stack, 7, 8, false)) return ItemStack.EMPTY;
