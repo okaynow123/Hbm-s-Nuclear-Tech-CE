@@ -112,12 +112,4 @@ public class SubChunkKey {
     public static long getPosLong(long longSubKey) {
         return ChunkPos.asLong(SubChunkKey.getSubX(longSubKey), SubChunkKey.getSubZ(longSubKey));
     }
-
-    public static int getChunkX(long chunkKey) {
-        return (int) (chunkKey & 0xFFFFFFFFL);
-    }
-
-    public static int getChunkZ(long chunkKey) {
-        return (int) ((chunkKey >>> 32) & 0xFFFFFFFFL);
-    }
 }
