@@ -10,42 +10,29 @@ import static com.hbm.core.HbmCorePlugin.fail;
 import static org.objectweb.asm.Opcodes.*;
 
 public class ForgeHooksTransformer implements IClassTransformer {
+    private static final ObfSafeName isSpectator = new ObfSafeName("isSpectator", "func_175149_v");
 
-    private static final String TARGET_CLASS = "net.minecraftforge.common.ForgeHooks";
-    private static final String TARGET_METHOD = "isLivingOnLadder";
-    private static final String TARGET_DESC =
-            "(Lnet/minecraft/block/state/IBlockState;" + "Lnet/minecraft/world/World;" + "Lnet/minecraft/util/math/BlockPos;" +
-            "Lnet/minecraft/entity/EntityLivingBase;)Z";
-
-    private static final String FMOD_OWNER = "net/minecraftforge/common/ForgeModContainer";
-    private static final String FMOD_FIELD = "fullBoundingBoxLadders";
-    private static final String FMOD_DESC = "Z";
-    private static final String HOOK_OWNER = "com/hbm/core/LadderHook";
-    private static final String HOOK_NAME = "onCheckLadder";
-    private static final String HOOK_DESC =
-            "(Lnet/minecraft/block/state/IBlockState;" + "Lnet/minecraft/world/World;" + "Lnet/minecraft/util/math/BlockPos;" +
-            "Lnet/minecraft/entity/EntityLivingBase;)" + "Lnet/minecraftforge/fml/common/eventhandler/Event$Result;";
-    private static final String RESULT_OWNER = "net/minecraftforge/fml/common/eventhandler/Event$Result";
-    private static final String RESULT_DESC = "L" + RESULT_OWNER + ";";
-    private static final String RESULT_ALLOW = "ALLOW";
-    private static final String RESULT_DENY = "DENY";
-
-    private static void injectHook(MethodNode method) {
-        AbstractInsnNode anchor = null;
+    private static AbstractInsnNode findAnchor(MethodNode method) {
         for (AbstractInsnNode n : method.instructions.toArray()) {
             if (n.getOpcode() == GETSTATIC) {
                 FieldInsnNode f = (FieldInsnNode) n;
-                if (FMOD_OWNER.equals(f.owner) && FMOD_FIELD.equals(f.name) && FMOD_DESC.equals(f.desc)) {
-                    anchor = n;
-                    break;
+                if ("net/minecraftforge/common/ForgeModContainer".equals(f.owner) && "fullBoundingBoxLadders".equals(f.name) && "Z".equals(f.desc)) {
+                    return n;
                 }
             }
         }
-        if (anchor == null) {
-            throw new RuntimeException("Anchor GETSTATIC ForgeModContainer.fullBoundingBoxLadders not found in isLivingOnLadder");
-        }
+        return null;
+    }
 
-        // Local variables (static method params):
+    private static AbstractInsnNode firstRealInsn(InsnList list) {
+        AbstractInsnNode cur = list.getFirst();
+        while (cur instanceof LabelNode || cur instanceof LineNumberNode || cur instanceof FrameNode) {
+            cur = cur.getNext();
+        }
+        return cur == null ? list.getFirst() : cur;
+    }
+
+    private static void injectHook(MethodNode method, AbstractInsnNode anchor, boolean headFallback) {
         // 0: IBlockState state
         // 1: World       world
         // 2: BlockPos    pos
@@ -57,21 +44,42 @@ public class ForgeHooksTransformer implements IClassTransformer {
 
         InsnList patch = new InsnList();
 
+        // Fallback path for LittleTiles because they literally nuked the method
+        // so we have to inject our own spectator guard
+        if (headFallback) {
+            LabelNode L_notSpectator = new LabelNode();
+            patch.add(new VarInsnNode(ALOAD, 3));
+            patch.add(new TypeInsnNode(INSTANCEOF, "net/minecraft/entity/player/EntityPlayer"));
+            patch.add(new JumpInsnNode(IFEQ, L_notSpectator));
+
+            patch.add(new VarInsnNode(ALOAD, 3));
+            patch.add(new TypeInsnNode(CHECKCAST, "net/minecraft/entity/player/EntityPlayer"));
+            patch.add(new MethodInsnNode(INVOKEVIRTUAL, "net/minecraft/entity/player/EntityPlayer", isSpectator.getName(), "()Z", false));
+            patch.add(new JumpInsnNode(IFEQ, L_notSpectator));
+            patch.add(new InsnNode(ICONST_0));
+            patch.add(new InsnNode(IRETURN));
+            patch.add(L_notSpectator);
+        }
+
         // Call LadderHook.onCheckLadder(state, world, pos, entity)
         patch.add(new VarInsnNode(ALOAD, 0));
         patch.add(new VarInsnNode(ALOAD, 1));
         patch.add(new VarInsnNode(ALOAD, 2));
         patch.add(new VarInsnNode(ALOAD, 3));
-        patch.add(new MethodInsnNode(INVOKESTATIC, HOOK_OWNER, HOOK_NAME, HOOK_DESC, false));
+        patch.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/LadderHook", "onCheckLadder",
+                "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
+                "Lnet/minecraft/entity/EntityLivingBase;)Lnet/minecraftforge/fml/common/eventhandler/Event$Result;", false));
 
         // Duplicate result and compare against Event.Result.ALLOW
         patch.add(new InsnNode(DUP));
-        patch.add(new FieldInsnNode(GETSTATIC, RESULT_OWNER, RESULT_ALLOW, RESULT_DESC));
+        patch.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/fml/common/eventhandler/Event$Result", "ALLOW",
+                "Lnet/minecraftforge/fml/common/eventhandler/Event$Result;"));
         patch.add(new JumpInsnNode(IF_ACMPEQ, L_returnTrue));
 
         // Duplicate again and compare against Event.Result.DENY
         patch.add(new InsnNode(DUP));
-        patch.add(new FieldInsnNode(GETSTATIC, RESULT_OWNER, RESULT_DENY, RESULT_DESC));
+        patch.add(new FieldInsnNode(GETSTATIC, "net/minecraftforge/fml/common/eventhandler/Event$Result", "DENY",
+                "Lnet/minecraftforge/fml/common/eventhandler/Event$Result;"));
         patch.add(new JumpInsnNode(IF_ACMPEQ, L_returnFalse));
 
         // DEFAULT -> pop the result and continue
@@ -92,12 +100,13 @@ public class ForgeHooksTransformer implements IClassTransformer {
         patch.add(L_continue);
 
         method.instructions.insertBefore(anchor, patch);
-        coreLogger.info("Injected CheckLadderEvent hook before fullBoundingBoxLadders read");
+        if (!headFallback) coreLogger.info("Injected CheckLadderEvent hook before fullBoundingBoxLadders read");
+        else coreLogger.warn("A mod nuked isLivingOnLadder! Injected spectator check and CheckLadderEvent hook on isLivingOnLadder HEAD");
     }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if (basicClass == null || !TARGET_CLASS.equals(transformedName)) {
+        if (basicClass == null || !"net.minecraftforge.common.ForgeHooks".equals(transformedName)) {
             return basicClass;
         }
         coreLogger.info("Patching class {} / {}", transformedName, name);
@@ -108,16 +117,29 @@ public class ForgeHooksTransformer implements IClassTransformer {
 
             boolean patched = false;
             for (MethodNode mn : cn.methods) {
-                if (TARGET_METHOD.equals(mn.name) && TARGET_DESC.equals(mn.desc)) {
-                    coreLogger.info("Patching method: {}{}", TARGET_METHOD, TARGET_DESC);
-                    injectHook(mn);
+                if ("isLivingOnLadder".equals(mn.name) &&
+                    ("(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
+                     "Lnet/minecraft/entity/EntityLivingBase;)Z").equals(mn.desc)) {
+                    coreLogger.info("Patching method: {}{}", "isLivingOnLadder",
+                            "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
+                            "Lnet/minecraft/entity/EntityLivingBase;)Z");
+
+                    AbstractInsnNode anchor = findAnchor(mn);
+                    boolean headFallback = false;
+                    if (anchor == null) {
+                        anchor = firstRealInsn(mn.instructions);
+                        headFallback = true;
+                    }
+                    injectHook(mn, anchor, headFallback);
                     patched = true;
                     break;
                 }
             }
 
             if (!patched) {
-                coreLogger.warn("Failed to find {}{}", TARGET_METHOD, TARGET_DESC);
+                coreLogger.warn("Failed to find {}{}", "isLivingOnLadder",
+                        "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
+                        "Lnet/minecraft/entity/EntityLivingBase;)Z");
                 return basicClass;
             }
 
@@ -125,7 +147,7 @@ public class ForgeHooksTransformer implements IClassTransformer {
             cn.accept(cw);
             return cw.toByteArray();
         } catch (Throwable t) {
-            fail(TARGET_CLASS, t);
+            fail("net.minecraftforge.common.ForgeHooks", t);
             return basicClass;
         }
     }
