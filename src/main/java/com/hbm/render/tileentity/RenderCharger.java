@@ -106,6 +106,7 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 			}
 			public void renderCommon() {
 				GlStateManager.scale(2, 2, 2);
+				GlStateManager.rotate(90, 0F, 1F, 0F);
 				GlStateManager.shadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.charger_tex);
 				ResourceManager.charger.renderAll();
