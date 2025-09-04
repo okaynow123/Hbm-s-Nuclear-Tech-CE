@@ -10,9 +10,8 @@ import com.hbm.lib.UnsafeHolder;
 import com.hbm.lib.maps.LongObjectConsumer;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.ChunkUtil;
 import com.hbm.util.ConcurrentBitSet;
-import com.hbm.util.SubChunkKey;
-import com.hbm.util.SubChunkSnapshot;
 import io.netty.util.internal.shaded.org.jctools.queues.atomic.MpscLinkedAtomicQueue;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -36,7 +35,6 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.*;
 import java.util.Arrays;
@@ -76,7 +74,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final double RAY_DIRECTION_EPSILON = 1e-6;
     private static final double PROCESSING_EPSILON = 1e-9;
     private static final float MIN_EFFECTIVE_DIST_FOR_ENERGY_CALC = 0.01f;
-    private static final long UNLOAD_QUEUED_OFFSET = UnsafeHolder.fieldOffset(Chunk.class, "unloadQueued", "field_189550_d");
 
     private static final ThreadLocal<MutableBlockPos> TL_POS = ThreadLocal.withInitial(MutableBlockPos::new);
     private static final ThreadLocal<LocalAgg> TL_LOCAL_AGG = ThreadLocal.withInitial(LocalAgg::new);
@@ -280,36 +277,9 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    @Nullable
-    private Chunk getLoadedChunk(long chunkPos) {
-        try {
-            Chunk chunk = world.getChunkProvider().loadedChunks.get(chunkPos);
-            if (chunk != null) U.putBooleanVolatile(chunk, UNLOAD_QUEUED_OFFSET, false);
-            return chunk;
-        } catch (Exception ignored) {
-            // ChunkProviderServer#loadedChunks is a Long2ObjectOpenHashMap, which isn't thread-safe
-            // This is extremely unlikely to happen for small to medium-sized blasts
-            // with radius = 1000, strength = 2000 I can only observe two ArrayIndexOutOfBoundsException thrown
-            // that's 0.0636 ppm
-            return null;
-        }
-    }
-
-    @Nullable
-    private ExtendedBlockStorage[] getLoadedEBS(long chunkPos) {
-        try {
-            Chunk chunk = world.getChunkProvider().loadedChunks.get(chunkPos);
-            if (chunk == null) return null;
-            U.putBooleanVolatile(chunk, UNLOAD_QUEUED_OFFSET, false);
-            return chunk.getBlockStorageArray();
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
-
     @ServerThread
     private void processChunkLoadRequest(long chunkPos) {
-        Chunk chunk = world.getChunk(SubChunkKey.getChunkX(chunkPos), SubChunkKey.getChunkZ(chunkPos));
+        Chunk chunk = world.getChunk(ChunkUtil.getChunkPosX(chunkPos), ChunkUtil.getChunkPosZ(chunkPos));
         WaitGroup waiters = waitingRoom.remove(chunkPos);
         if (waiters != null && pool != null && !pool.isShutdown()) {
             IntArrayList batch = waiters.drain();
@@ -327,11 +297,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private void secondPass() {
         for (Long2IntMap.Entry e : sectionMaskByChunk.long2IntEntrySet()) {
             long cp = e.getLongKey();
-            int cx = SubChunkKey.getChunkX(cp);
-            int cz = SubChunkKey.getChunkZ(cp);
+            int cx = ChunkUtil.getChunkPosX(cp);
+            int cz = ChunkUtil.getChunkPosZ(cp);
             int changedMask = e.getIntValue();
             if (changedMask == 0) continue;
-            Chunk chunk = getLoadedChunk(cp);
+            Chunk chunk = ChunkUtil.getLoadedChunk(world, cp);
             if (chunk == null) continue;
             ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
 
@@ -411,7 +381,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 agg.drainUnlocked();
 
                 aggMap.remove(cpLong);
-                ExtendedBlockStorage[] storages = getLoadedEBS(cpLong);
+                ExtendedBlockStorage[] storages = ChunkUtil.getLoadedEBS(world, cpLong);
                 if (storages == null) {
                     enqueueResumableForMissingChunk(cpLong, (cp, ebs) -> {
                         aggChunk(cp, agg, ebs);
@@ -429,7 +399,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     destructionMap.remove(cpLong);
                     return;
                 }
-                ExtendedBlockStorage[] storages = getLoadedEBS(cpLong);
+                ExtendedBlockStorage[] storages = ChunkUtil.getLoadedEBS(world, cpLong);
                 if (storages == null) {
                     enqueueResumableForMissingChunk(cpLong, (cp, ebs) -> {
                         final ConcurrentBitSet latest = destructionMap.remove(cp);
@@ -566,7 +536,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     Library.fromLong(p, lp);
                     if (world.isBlockLoaded(p)) world.notifyNeighborsOfStateChange(p, Blocks.AIR, true);
                 }
-                Chunk chunk = getLoadedChunk(cpLong);
+                Chunk chunk = ChunkUtil.getLoadedChunk(world, cpLong);
                 if (chunk != null) chunk.markDirty();
             } finally {
                 if (pendingCarveNotifies.decrementAndGet() == 0) {
@@ -577,8 +547,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     }
 
     private CarveResult carveSubchunkAndSwap(long chunkKey, int subY, ConcurrentBitSet bitset, ExtendedBlockStorage[] storages) {
-        final int cx = SubChunkKey.getChunkX(chunkKey);
-        final int cz = SubChunkKey.getChunkZ(chunkKey);
+        final int cx = ChunkUtil.getChunkPosX(chunkKey);
+        final int cz = ChunkUtil.getChunkPosZ(chunkKey);
         ExtendedBlockStorage expected = storages[subY];
         if (expected == Chunk.NULL_BLOCK_STORAGE || expected.isEmpty()) {
             return new CarveResult(new LongArrayList(0), new LongOpenHashSet(0), true);
@@ -586,8 +556,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         while (true) {
             final LongArrayList te = new LongArrayList(8);
             final LongOpenHashSet edges = new LongOpenHashSet(64);
-            final ExtendedBlockStorage carved = SubChunkSnapshot.copyAndCarve(world, cx, cz, subY, expected, bitset, te, edges);
-            if (SubChunkSnapshot.compareAndSwap(expected, carved, storages, subY)) {
+            final ExtendedBlockStorage carved = ChunkUtil.copyAndCarve(world, cx, cz, subY, storages, bitset, te, edges);
+            if (ChunkUtil.compareAndSwap(expected, carved, storages, subY)) {
                 final boolean emptied = carved == Chunk.NULL_BLOCK_STORAGE || carved.isEmpty();
                 return new CarveResult(te, edges, emptied);
             }
@@ -674,8 +644,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 long ck = e.getLongKey();
                 int mask = e.getIntValue();
                 NBTTagCompound t = new NBTTagCompound();
-                t.setInteger("cX", SubChunkKey.getChunkX(ck));
-                t.setInteger("cZ", SubChunkKey.getChunkZ(ck));
+                t.setInteger("cX", ChunkUtil.getChunkPosX(ck));
+                t.setInteger("cZ", ChunkUtil.getChunkPosZ(ck));
                 t.setInteger("mask", mask);
                 list.appendTag(t);
             }
@@ -685,8 +655,8 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             NBTTagList list = new NBTTagList();
             this.destructionMap.forEach((long ck, ConcurrentBitSet bitset) -> {
                 NBTTagCompound tag = new NBTTagCompound();
-                tag.setInteger("cX", SubChunkKey.getChunkX(ck));
-                tag.setInteger("cZ", SubChunkKey.getChunkZ(ck));
+                tag.setInteger("cX", ChunkUtil.getChunkPosX(ck));
+                tag.setInteger("cZ", ChunkUtil.getChunkPosZ(ck));
                 tag.setTag("bitset", new NBTTagLongArray(bitset.toLongArray()));
                 list.appendTag(tag);
             });
@@ -766,7 +736,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
 
                 if (cx != lastCX || cz != lastCZ) {
                     cachedCPLong = ChunkPos.asLong(cx, cz);
-                    storages = getLoadedEBS(cachedCPLong);
+                    storages = ChunkUtil.getLoadedEBS(world, cachedCPLong);
                     if (storages == null) {
                         enqueueIndexForMissingChunk(cachedCPLong, dirIndex);
                         return false;

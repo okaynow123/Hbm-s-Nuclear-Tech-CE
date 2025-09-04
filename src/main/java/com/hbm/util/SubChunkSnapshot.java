@@ -1,26 +1,14 @@
 package com.hbm.util;
 
-import com.hbm.lib.Library;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.BitArray;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.*;
+import net.minecraft.world.chunk.BlockStateContainer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.concurrent.Immutable;
-
-import static com.hbm.lib.UnsafeHolder.U;
 
 /**
  * Immutable 16x16x16 snapshot of an ExtendedBlockStorage.
@@ -30,9 +18,6 @@ import static com.hbm.lib.UnsafeHolder.U;
 @Immutable
 public final class SubChunkSnapshot extends ExtendedBlockStorage {
     private static final SubChunkSnapshot[] emptyCache = new SubChunkSnapshot[16];
-    private static final ThreadLocal<ByteBuf> TL_PALETTE_BUF = ThreadLocal.withInitial(() -> Unpooled.buffer(256));
-    private static final long ARR_BASE = U.arrayBaseOffset(ExtendedBlockStorage[].class);
-    private static final long ARR_SCALE = U.arrayIndexScale(ExtendedBlockStorage[].class);
 
     static {
         for (int i = 0; i < 16; i++) {
@@ -58,148 +43,12 @@ public final class SubChunkSnapshot extends ExtendedBlockStorage {
      * Always returns a snapshot (even if all-air).
      */
     @NotNull
-    public static SubChunkSnapshot of(@NotNull ExtendedBlockStorage src) {
+    public static SubChunkSnapshot snapshot(@NotNull ExtendedBlockStorage src) {
         final int y = src.getYLocation();
         if (src.isEmpty()) return emptyCache[y >> 4];
         final BlockStateContainer srcData = src.getData();
-        BlockStateContainer copied = copyOf(srcData);
+        BlockStateContainer copied = ChunkUtil.copyOf(srcData);
         return new SubChunkSnapshot(y, copied, src.blockRefCount, src.tickRefCount);
-    }
-
-    @NotNull
-    @Contract("_ -> new")
-    public static BlockStateContainer copyOf(@NotNull BlockStateContainer srcData) {
-        final int bits = srcData.bits;
-        final BitArray srcStorage = srcData.storage;
-        final IBlockStatePalette srcPalette = srcData.palette;
-        final BlockStateContainer copied = new BlockStateContainer();
-        copied.bits = bits;
-        if (bits <= 4) copied.palette = new BlockStatePaletteLinear(bits, copied);
-        else if (bits <= 8) copied.palette = new BlockStatePaletteHashMap(bits, copied);
-        else copied.palette = BlockStateContainer.REGISTRY_BASED_PALETTE;
-        if (bits <= 8) {
-            final ByteBuf raw = TL_PALETTE_BUF.get();
-            raw.clear();
-            raw.ensureWritable(srcPalette.getSerializedSize());
-            final PacketBuffer buf = new PacketBuffer(raw);
-            srcPalette.write(buf);
-            buf.readerIndex(0);
-            copied.palette.read(buf);
-            raw.clear();
-        }
-        copied.storage = new BitArray(bits, 4096);
-        final long[] srcLongs = srcStorage.getBackingLongArray();
-        final long[] dstLongs = copied.storage.getBackingLongArray();
-        System.arraycopy(srcLongs, 0, dstLongs, 0, srcLongs.length);
-        return copied;
-    }
-
-    /**
-     * @return null when src is null or empty
-     */
-    @Nullable
-    @Contract(mutates = "param7, param8") // teRemovals and edgeOut
-    public static ExtendedBlockStorage copyAndCarve(@NotNull WorldServer world, int chunkX, int chunkZ, int subY, ExtendedBlockStorage src,
-                                                    ConcurrentBitSet bs, LongArrayList teRemovals, LongOpenHashSet edgeOut) {
-        if (src == Chunk.NULL_BLOCK_STORAGE || src.isEmpty()) return Chunk.NULL_BLOCK_STORAGE;
-        final boolean hasSky = world.provider.hasSkyLight();
-        final int height = world.getHeight();
-        final ExtendedBlockStorage dst = new ExtendedBlockStorage(src.getYLocation(), hasSky);
-        dst.data = SubChunkSnapshot.copyOf(src.getData());
-        if (!(src instanceof SubChunkSnapshot)) {
-            dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
-            dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
-        }
-        dst.blockRefCount = src.blockRefCount;
-        dst.tickRefCount = src.tickRefCount;
-        ExtendedBlockStorage[] selfStorages = null;
-        ExtendedBlockStorage[] storagesNegX = null, storagesPosX = null, storagesNegZ = null, storagesPosZ = null;
-        final int startBit = (height - 1 - ((subY << 4) + 15)) << 8;
-        final int endBit = ((height - 1 - (subY << 4)) << 8) | 0xFF;
-        int bit = bs.nextSetBit(startBit);
-        while (bit >= 0 && bit <= endBit) {
-            final int yGlobal = height - 1 - (bit >>> 8);
-            final int xGlobal = (chunkX << 4) | ((bit >>> 4) & 0xF);
-            final int zGlobal = (chunkZ << 4) | (bit & 0xF);
-
-            final int xLocal = xGlobal & 0xF;
-            final int yLocal = yGlobal & 0xF;
-            final int zLocal = zGlobal & 0xF;
-
-            final IBlockState old = dst.get(xLocal, yLocal, zLocal);
-            final Block oldBlock = old.getBlock();
-            if (oldBlock != Blocks.AIR) {
-                final long packed = Library.blockPosToLong(xGlobal, yGlobal, zGlobal);
-                if (oldBlock.hasTileEntity(old)) teRemovals.add(packed);
-                boolean touchesOutsideNonAir = false;
-                if (yLocal == 0 && subY > 0) {
-                    if (selfStorages == null) selfStorages = world.getChunk(chunkX, chunkZ).getBlockStorageArray();
-                    ExtendedBlockStorage below = selfStorages[subY - 1];
-                    if (below != Chunk.NULL_BLOCK_STORAGE && !below.isEmpty()) {
-                        IBlockState nb = below.get(xLocal, 15, zLocal);
-                        if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                    }
-                }
-                if (!touchesOutsideNonAir && yLocal == 15 && subY < (height >> 4) - 1) {
-                    if (selfStorages == null) selfStorages = world.getChunk(chunkX, chunkZ).getBlockStorageArray();
-                    ExtendedBlockStorage above = selfStorages[subY + 1];
-                    if (above != Chunk.NULL_BLOCK_STORAGE && !above.isEmpty()) {
-                        IBlockState nb = above.get(xLocal, 0, zLocal);
-                        if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                    }
-                }
-                if (!touchesOutsideNonAir && xLocal == 0) {
-                    int nCX = chunkX - 1;
-                    if (world.getChunkProvider().chunkExists(nCX, chunkZ)) {
-                        if (storagesNegX == null) storagesNegX = world.getChunk(nCX, chunkZ).getBlockStorageArray();
-                        ExtendedBlockStorage n = storagesNegX[subY];
-                        if (n != Chunk.NULL_BLOCK_STORAGE && !n.isEmpty()) {
-                            IBlockState nb = n.get(15, yLocal, zLocal);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && xLocal == 15) {
-                    int nCX = chunkX + 1;
-                    if (world.getChunkProvider().chunkExists(nCX, chunkZ)) {
-                        if (storagesPosX == null) storagesPosX = world.getChunk(nCX, chunkZ).getBlockStorageArray();
-                        ExtendedBlockStorage n = storagesPosX[subY];
-                        if (n != Chunk.NULL_BLOCK_STORAGE && !n.isEmpty()) {
-                            IBlockState nb = n.get(0, yLocal, zLocal);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && zLocal == 0) {
-                    int nCZ = chunkZ - 1;
-                    if (world.getChunkProvider().chunkExists(chunkX, nCZ)) {
-                        if (storagesNegZ == null) storagesNegZ = world.getChunk(chunkX, nCZ).getBlockStorageArray();
-                        ExtendedBlockStorage n = storagesNegZ[subY];
-                        if (n != Chunk.NULL_BLOCK_STORAGE && !n.isEmpty()) {
-                            IBlockState nb = n.get(xLocal, yLocal, 15);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && zLocal == 15) {
-                    int nCZ = chunkZ + 1;
-                    if (world.getChunkProvider().chunkExists(chunkX, nCZ)) {
-                        if (storagesPosZ == null) storagesPosZ = world.getChunk(chunkX, nCZ).getBlockStorageArray();
-                        ExtendedBlockStorage n = storagesPosZ[subY];
-                        if (n != Chunk.NULL_BLOCK_STORAGE && !n.isEmpty()) {
-                            IBlockState nb = n.get(xLocal, yLocal, 0);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (touchesOutsideNonAir) {
-                    edgeOut.add(packed);
-                }
-                dst.set(xLocal, yLocal, zLocal, Blocks.AIR.getDefaultState()); // updates ref counts
-            }
-            bit = bs.nextSetBit(bit + 1);
-        }
-        return dst;
     }
 
     /**
@@ -241,12 +90,7 @@ public final class SubChunkSnapshot extends ExtendedBlockStorage {
         ExtendedBlockStorage[] arr = chunk.getBlockStorageArray();
         ExtendedBlockStorage ebs = arr[subY];
         if (ebs == Chunk.NULL_BLOCK_STORAGE) return emptyCache[subY];
-        return of(ebs);
-    }
-
-    public static boolean compareAndSwap(ExtendedBlockStorage expect, ExtendedBlockStorage update, ExtendedBlockStorage[] arr, int subY) {
-        final long off = ARR_BASE + ((long) subY) * ARR_SCALE;
-        return U.compareAndSwapObject(arr, off, expect, update);
+        return snapshot(ebs);
     }
 
     @Override
