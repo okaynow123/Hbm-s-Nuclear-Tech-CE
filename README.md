@@ -8,9 +8,8 @@ An attempt at a "definitive" port of NTM to 1.12. Came from necessity as other d
 
 ### Is it survival ready?
 
-**As of me writing this, no**. Mod has been badly maintained on 1.12, missing the majority of the content. We still have
-about a year or 2 worth of content to port and bugtest. The current builds are testing only. We invite you to our
-GitHub, where we publish nightly releases.
+While there is still a lot of work to be done, the mod itself has been proven to be in a state where it can be played in
+survival, though it still has many bugs to be fixed.
 
 ### How different is it from extended?
 
