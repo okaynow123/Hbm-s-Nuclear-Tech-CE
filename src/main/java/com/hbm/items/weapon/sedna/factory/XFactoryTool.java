@@ -56,7 +56,7 @@ public class XFactoryTool {
     public static BulletConfig ct_mortar_charge;
 
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_WATER_HIT = (bullet, mop) -> {
-        if (!bullet.world.isRemote) {
+        if (!bullet.world.isRemote && mop.typeOfHit == mop.typeOfHit.BLOCK) {
             BlockPos base = mop.getBlockPos();
             int ix = base.getX();
             int iy = base.getY();
@@ -113,7 +113,7 @@ public class XFactoryTool {
     };
 
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_FOAM_HIT = (bullet, mop) -> {
-        if (!bullet.world.isRemote) {
+        if (!bullet.world.isRemote && mop.typeOfHit == mop.typeOfHit.BLOCK) {
             BlockPos base = mop.getBlockPos();
             int ix = base.getX();
             int iy = base.getY();
@@ -178,7 +178,7 @@ public class XFactoryTool {
     };
 
     public static BiConsumer<EntityBulletBaseMK4, RayTraceResult> LAMBDA_SAND_HIT = (bullet, mop) -> {
-        if (!bullet.world.isRemote) {
+        if (!bullet.world.isRemote && mop.typeOfHit == mop.typeOfHit.BLOCK) {
             BlockPos pos = mop.getBlockPos();
             int ix = pos.getX();
             int iy = pos.getY();
