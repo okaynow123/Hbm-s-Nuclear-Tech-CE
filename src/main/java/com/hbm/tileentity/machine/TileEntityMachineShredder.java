@@ -37,10 +37,9 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	public int soundCycle = 0;
 	public static final long maxPower = 10000;
 	public static final int processingSpeed = 60;
-
-	private static final int[] slots_top = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8};
-	private static final int[] slots_bottom = new int[] {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29};
-	private static final int[] slots_side = new int[] {27, 28, 29};
+	// Th3_Sl1ze: firstly it will try inserting blades, then it will try inserting inputs
+	private static final int[] slots_other = new int[] {27, 28, 29, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+	private static final int[] slots_bottom = new int[] {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
 
 	public TileEntityMachineShredder() {
 		super(30);
@@ -54,7 +53,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	@Override
 	public int[] getAccessibleSlotsFromSide(EnumFacing e){
 		int i = e.ordinal();
-		return i == 0 ? slots_bottom : (i == 1 ? slots_top : slots_side);
+		return i == 0 ? slots_bottom : slots_other;
 	}
 
 	@Override
