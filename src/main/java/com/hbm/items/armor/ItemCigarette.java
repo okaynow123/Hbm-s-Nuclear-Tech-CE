@@ -57,13 +57,14 @@ public class ItemCigarette extends Item {
 
     @Override
     public @NotNull ItemStack onItemUseFinish(ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving) {
-        stack.shrink(1);
+        if (!(entityLiving instanceof EntityPlayer) || !((EntityPlayer) entityLiving).isCreative())
+            stack.shrink(1);
 
-        if(!worldIn.isRemote) {
+        if (!worldIn.isRemote) {
 
             EntityPlayer player = (EntityPlayer) entityLiving;
 
-            if(this == ModItems.cigarette) {
+            if (this == ModItems.cigarette) {
                 HbmLivingProps.incrementBlackLung(player, 2000);
                 HbmLivingProps.incrementAsbestos(player, 2000);
                 HbmLivingProps.incrementRadiation(player, 100F);
@@ -75,7 +76,7 @@ public class ItemCigarette extends Item {
 //                }
             }
 
-            if(this == ModItems.crackpipe) {
+            if (this == ModItems.crackpipe) {
                 HbmLivingProps.incrementBlackLung(player, 500);
                 player.addPotionEffect(new PotionEffect(Objects.requireNonNull(MobEffects.NAUSEA), 200, 0));
                 player.heal(10F);
@@ -88,7 +89,7 @@ public class ItemCigarette extends Item {
             nbt.setString("mode", "smoke");
             nbt.setInteger("count", 30);
             nbt.setInteger("entity", player.getEntityId());
-            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(nbt, 0, 0, 0),  new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 25));
+            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(nbt, 0, 0, 0), new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 25));
         }
 
         return stack;
@@ -98,13 +99,13 @@ public class ItemCigarette extends Item {
     @SideOnly(Side.CLIENT)
     public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
 
-        if(this == ModItems.cigarette) {
+        if (this == ModItems.cigarette) {
             tooltip.add(ChatFormatting.RED + "✓ Asbestos filter");
             tooltip.add(ChatFormatting.RED + "✓ High in tar");
             tooltip.add(ChatFormatting.RED + "✓ Tobacco contains 100% Polonium-210");
             tooltip.add(ChatFormatting.RED + "✓ Yum");
         } else {
-            String[] colors = new String[] {
+            String[] colors = new String[]{
                     ChatFormatting.RED + "",
                     ChatFormatting.GOLD + "",
                     ChatFormatting.YELLOW + "",
@@ -115,7 +116,7 @@ public class ItemCigarette extends Item {
                     ChatFormatting.LIGHT_PURPLE + "",
             };
             int len = 2000;
-            tooltip.add("This can't be good for me, but I feel " + colors[(int)(System.currentTimeMillis() % len * colors.length / len)] + "GREAT");
+            tooltip.add("This can't be good for me, but I feel " + colors[(int) (System.currentTimeMillis() % len * colors.length / len)] + "GREAT");
         }
     }
 }
