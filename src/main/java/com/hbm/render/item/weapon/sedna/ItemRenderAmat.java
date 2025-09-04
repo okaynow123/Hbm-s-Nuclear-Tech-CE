@@ -7,6 +7,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -17,6 +18,7 @@ public class ItemRenderAmat extends ItemRenderWeaponBase {
 
     public ItemRenderAmat(ResourceLocation texture) {
         this.texture = texture;
+        this.offsets = offsets.get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).setScale(1).setPosition(-0.65 , 0.15, -0.9).getHelper();
     }
 
     @Override

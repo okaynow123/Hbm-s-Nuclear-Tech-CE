@@ -301,7 +301,6 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.gun_minigun_lacunae, new ItemRenderMinigun(ResourceManager.minigun_lacunae_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun, new ItemRenderShredder(ResourceManager.shredder_tex), reg);
         registerItemRenderer(ModItems.gun_autoshotgun_shredder, new ItemRenderShredder(ResourceManager.shredder_orig_tex), reg);
-        registerItemRenderer(ModItems.gun_autoshotgun_sexy, new ItemRenderShredder(ResourceManager.sexy_tex), reg);
         registerItemRenderer(ModItems.gun_amat, new ItemRenderAmat(ResourceManager.amat_tex), reg);
         registerItemRenderer(ModItems.gun_amat_penance, new ItemRenderAmat(ResourceManager.amat_penance_tex), reg);
         registerItemRenderer(ModItems.gun_amat_subtlety, new ItemRenderAmat(ResourceManager.amat_subtlety_tex), reg);

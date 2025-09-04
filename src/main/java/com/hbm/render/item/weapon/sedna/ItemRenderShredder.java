@@ -23,7 +23,8 @@ public class ItemRenderShredder extends ItemRenderWeaponBase {
 
 	public ItemRenderShredder(ResourceLocation texture) {
 		this.texture = texture;
-		offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -7.25).getHelper();
+		offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 16.5, -7.25)
+				.getHelper().get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).setScale(0.8).setPosition(-0.95, -0.05, -1.2).getHelper();
 	}
 
 	@Override

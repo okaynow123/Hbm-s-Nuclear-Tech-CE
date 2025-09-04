@@ -7,6 +7,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -17,6 +18,7 @@ public class ItemRenderHeavyRevolver extends ItemRenderWeaponBase {
 
 	public ItemRenderHeavyRevolver(ResourceLocation texture) {
 		this.texture = texture;
+		offsets = offsets.get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).setScale(0.75).setPosition(-0.9, 0.3, -1.15).getHelper();
 	}
 
 	@Override

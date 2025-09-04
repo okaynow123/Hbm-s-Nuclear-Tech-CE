@@ -160,7 +160,7 @@ public abstract class MagazineSingleTypeBase implements IMagazine<BulletConfig> 
                                 if(config == null) { config = this.acceptedBullets.get(0); this.setType(stack, config); } //fixing broken NBT
 
                                 if(config.ammo.matchesRecipe(bagslot, true)) {
-                                    int alreadyLoaded = 0; // FIXME ASAP this.getAmount(stack, bag);
+                                    int alreadyLoaded = getMagCount(stack, index);
                                     int wantsToLoad = (int) Math.ceil((double) (this.getCapacity(stack) - alreadyLoaded) / (double) config.ammoReloadCount);
                                     int toLoad = BobMathUtil.min(wantsToLoad, infBag ? 9_999 : bagslot.getCount(), loadLimit);
                                     this.setAmount(stack, Math.min((toLoad * config.ammoReloadCount) + alreadyLoaded, this.capacity));

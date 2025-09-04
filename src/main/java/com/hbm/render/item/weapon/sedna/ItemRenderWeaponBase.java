@@ -28,7 +28,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             .get(ItemCameraTransforms.TransformType.GUI)
             .setScale(0.06f).setPosition(0.00, 16.5, -9.25).setRotation(186, -182, 0).getHelper()
             .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-            .setScale(0.5f).setPosition(-1.15, 0.9, -1.4).setRotation(-25, 101, 5).getHelper()
+            .setScale(0.5f).setPosition(-1.15, 0.9, -1.4).setRotation(-14, 105, 0).getHelper()
             .get(ItemCameraTransforms.TransformType.GROUND)
             .setScale(0.85f).setPosition(-0.5, 0.6, -0.5).getHelper();
 

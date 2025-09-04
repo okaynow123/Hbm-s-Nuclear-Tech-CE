@@ -5,6 +5,7 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +15,8 @@ public class ItemRenderHenry extends ItemRenderWeaponBase {
 
 	public ItemRenderHenry(ResourceLocation texture) {
 		this.texture = texture;
+		offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setScale(0.07).setPosition(-4, 14.75, 1.6).setRotation(202, 291, 0).getHelper()
+				.get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).setScale(1.0f).setPosition(-0.55, 0.05, -0.95).setRotation(-16, 103, 0).getHelper();
 	}
 
 	@Override

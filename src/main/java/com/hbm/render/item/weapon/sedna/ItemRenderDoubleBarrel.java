@@ -17,6 +17,7 @@ public class ItemRenderDoubleBarrel extends ItemRenderWeaponBase {
 
 	public ItemRenderDoubleBarrel(ResourceLocation texture) {
 		this.texture = texture;
+		offsets = offsets.get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND).setScale(0.9).setPosition(-0.65, 0.1, -1).getHelper();
 		if(texture == ResourceManager.double_barrel_sacred_dragon_tex) offsets = offsets.get(ItemCameraTransforms.TransformType.GUI).setPosition(0, 18.25, -3.75).getHelper();
 	}
 
