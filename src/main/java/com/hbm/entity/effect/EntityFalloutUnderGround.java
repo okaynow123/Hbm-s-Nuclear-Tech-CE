@@ -89,17 +89,17 @@ public class EntityFalloutUnderGround extends EntityFallout {
                 rayCounter++;
             }
             if (this.currentSample >= this.maxSamples - 1) {
-                if (falloutRainRadius1 > 0) {
-                    EntityFalloutRain falloutRain = new EntityFalloutRain(this.world);
-                    falloutRain.doFallout = falloutRainDoFallout;
-                    falloutRain.doFlood = falloutRainDoFlood;
-                    falloutRain.posX = this.posX;
-                    falloutRain.posY = this.posY;
-                    falloutRain.posZ = this.posZ;
-                    falloutRain.spawnFire = falloutRainFire;
-                    falloutRain.setScale(falloutRainRadius1, falloutRainRadius2);
-                    this.world.spawnEntity(falloutRain);
-                }
+//                if (falloutRainRadius1 > 0) {
+//                    EntityFalloutRain falloutRain = new EntityFalloutRain(this.world);
+//                    falloutRain.doFallout = falloutRainDoFallout;
+//                    falloutRain.doFlood = falloutRainDoFlood;
+//                    falloutRain.posX = this.posX;
+//                    falloutRain.posY = this.posY;
+//                    falloutRain.posZ = this.posZ;
+//                    falloutRain.spawnFire = falloutRainFire;
+//                    falloutRain.setScale(falloutRainRadius1, falloutRainRadius2);
+//                    this.world.spawnEntity(falloutRain);
+//                }
                 unloadAllChunks();
                 this.setDead();
             }

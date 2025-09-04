@@ -85,6 +85,15 @@ public class WorldConfig {
 	public static int meteorShowerChance = 20 * 60 * 5;
 	public static int meteorShowerDuration = 6000;
 
+	public static boolean enableCraterBiomes = true;
+	public static int craterBiomeId = 80;
+	public static int craterBiomeInnerId = 81;
+	public static int craterBiomeOuterId = 82;
+	public static float craterBiomeRad = 5F;
+	public static float craterBiomeInnerRad = 25F;
+	public static float craterBiomeOuterRad = 0.5F;
+	public static float craterBiomeWaterMult = 5F;
+
 	public static int convertToInt(Object e){
 		if(e == null)
 			return 0;
@@ -180,6 +189,16 @@ public class WorldConfig {
 		meteorStrikeChance = convertToInt(CompatibilityConfig.meteorStrikeChance.get(0));
 		meteorShowerChance = convertToInt(CompatibilityConfig.meteorShowerChance.get(0));
 		meteorShowerDuration = convertToInt(CompatibilityConfig.meteorShowerDuration.get(0));
+
+		final String CATEGORY_BIOMES = CommonConfig.CATEGORY_BIOMES;
+		enableCraterBiomes = CommonConfig.createConfigBool(config, CATEGORY_BIOMES, "17.B_toggle", "Enables the biome change caused by nuclear explosions", true);
+		craterBiomeId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B00_craterBiomeId", "The numeric ID for the crater biome", 80);
+		craterBiomeInnerId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B01_craterBiomeInnerId", "The numeric ID for the inner crater biome", 81);
+		craterBiomeOuterId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B02_craterBiomeOuterId", "The numeric ID for the outer crater biome", 82);
+		craterBiomeRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R00_craterBiomeRad", "RAD/s for the crater biome", 5D);
+		craterBiomeInnerRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R01_craterBiomeInnerRad", "RAD/s for the inner crater biome", 25D);
+		craterBiomeOuterRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R02_craterBiomeOuterRad", "RAD/s for the outer crater biome", 0.5D);
+		craterBiomeWaterMult = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R03_craterBiomeWaterMult", "Multiplier for RAD/s in crater biomes when in water", 5D);
 
 	}
 }
