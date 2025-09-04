@@ -884,7 +884,7 @@ public class ResourceManager {
 	public static final ResourceLocation mine_ap_stone_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_ap_stone.png");
 
 	public static final ResourceLocation mine_marelet_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_marelet.png");
-	public static final ResourceLocation mine_shrap_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_shrap.png");
+	public static final ResourceLocation mine_shrap_tex = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/mine_shrapnel.png");
 	public static final ResourceLocation mine_fat_tex = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/mine_fat.png");
 
 	//Derrick

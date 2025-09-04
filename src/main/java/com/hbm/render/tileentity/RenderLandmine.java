@@ -53,8 +53,10 @@ public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine
       GlStateManager.shadeModel(GL11.GL_FLAT);
     }
     if (block == ModBlocks.mine_shrap) {
+      GL11.glScaled(0.375D, 0.375D, 0.375D);
+      GlStateManager.translate(0, -0.0625 * 3.5, 0);
       bindTexture(ResourceManager.mine_shrap_tex);
-      ResourceManager.mine_he.renderAll();
+      ResourceManager.mine_ap.renderAll();
     }
     if (block == ModBlocks.mine_fat) {
       GL11.glScaled(0.25D, 0.25D, 0.25D);
@@ -125,13 +127,13 @@ public class RenderLandmine extends TileEntitySpecialRenderer<TileEntityLandmine
     } else if (item == Item.getItemFromBlock(ModBlocks.mine_shrap)) {
       return new ItemRenderBase() {
         public void renderInventory() {
-          GlStateManager.scale(6, 6, 6);
+          GlStateManager.scale(8, 8, 8);
         }
 
         public void renderCommon() {
-          GlStateManager.scale(4, 4, 4);
+          GlStateManager.scale(1.25, 1.25, 1.25);
           bindTexture(ResourceManager.mine_shrap_tex);
-          ResourceManager.mine_he.renderAll();
+          ResourceManager.mine_ap.renderAll();
         }
       };
     }
