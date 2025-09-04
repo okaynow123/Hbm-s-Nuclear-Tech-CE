@@ -241,12 +241,12 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 			}
         } else {
 			if (!did2 && waste) {
-				EntityFalloutRain fallout = new EntityFalloutRain(this.world);
+				EntityFalloutRain fallout = new EntityFalloutRain(this.world, (int)(this.destructionRange * 1.8) * 10);
 				fallout.posX = this.posX;
 				fallout.posY = this.posY;
 				fallout.posZ = this.posZ;
 				fallout.detonator = detonator;
-				fallout.setScale((int)(this.destructionRange * 1.8), this.destructionRange+16);
+				fallout.setScale((int)(this.destructionRange * 1.8));
 
 				this.world.spawnEntity(fallout);
 				//this.world.getWorldInfo().setRaining(true);

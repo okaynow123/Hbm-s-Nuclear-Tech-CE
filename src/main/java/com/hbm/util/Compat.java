@@ -10,11 +10,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Compat {
+	private static final boolean MOD_EIDS = Loader.isModLoaded("jeid") || Loader.isModLoaded("neid");
+
+	public static boolean isIDExtensionModLoaded() {
+		return MOD_EIDS;
+	}
+
 	public static Item tryLoadItem(String domain, String name) {
 		return Item.REGISTRY.getObject(new ResourceLocation(domain, name));
 	}

@@ -1,564 +1,283 @@
 package com.hbm.entity.effect;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
-import com.hbm.config.RadiationConfig;
+import com.hbm.config.FalloutConfigJSON;
+import com.hbm.config.FalloutConfigJSON.FalloutEntry;
+import com.hbm.config.WorldConfig;
+import com.hbm.entity.logic.EntityExplosionChunkloading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.saveddata.AuxSavedData;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import com.hbm.util.ChunkUtil;
+import com.hbm.world.WorldUtil;
+import com.hbm.world.biome.BiomeGenCraterBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagLongArray;
-import net.minecraft.network.play.server.SPacketChunkData;
-import net.minecraft.server.management.PlayerChunkMapEntry;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.biome.Biome;
 
 import java.util.*;
+
 @AutoRegister(name = "entity_fallout_rain", trackingRange = 1000)
-public class EntityFalloutRain extends EntityFallout implements IConstantRenderer {
+public class EntityFalloutRain extends EntityExplosionChunkloading {
 
-	private static final int WORLD_HEIGHT = 256;
-	private static final int BITSET_SIZE = 16 * WORLD_HEIGHT * 16;
-	private static final int SUBCHUNK_PER_CHUNK = WORLD_HEIGHT >> 4;
+    private static final DataParameter<Integer> SCALE = EntityDataManager.createKey(EntityFalloutRain.class, DataSerializers.VARINT);
+    private final List<Long> chunksToProcess = new ArrayList<>();
+    private final List<Long> outerChunksToProcess = new ArrayList<>();
+    private int tickDelay = BombConfig.falloutDelay;
+    public UUID detonator;
 
-	public boolean doFallout = false;
-	public boolean doFlood = false;
-	public boolean doDrop = false;
-	public int waterLevel;
-	public boolean spawnFire = false;
-	public int falloutBallRadius = 0;
-	private int fallingRadius;
-	private boolean firstTick = true;
-	private final List<Long> chunksToProcess = new ArrayList<>();
-	private final List<Long> outerChunksToProcess = new ArrayList<>();
-	private int falloutTickNumber = 0;
-	private boolean stompingDone = false;
-	private boolean drainFinished = false;
-	private final Map<ChunkPos, BitSet> drainMap = new HashMap<>();
-	private final List<ChunkPos> orderedDrainChunks = new ArrayList<>();
-	private List<BlockPos> drainedList = new ArrayList<>();
-	public UUID detonator;
+    public EntityFalloutRain(World worldIn) {
+        super(worldIn);
+        this.setSize(4.0F, 20.0F);
+        this.ignoreFrustumCheck = true;
+        this.isImmuneToFire = true;
+    }
 
-	public EntityFalloutRain(World world) {
-		super(world);
-		this.setSize(4, 20);
-		int result = 0;
-		Object e = CompatibilityConfig.fillCraterWithWater.get(world.provider.getDimension());
-		if(e != null) {
-			result = (int) e;
-		}
-		this.waterLevel = result;
-		if (this.waterLevel == 0) {
-			this.waterLevel = world.getSeaLevel();
-		} else if (this.waterLevel < 0 && this.waterLevel > -world.getSeaLevel()) {
-			this.waterLevel = world.getSeaLevel() - this.waterLevel;
-		}
-		this.spawnFire = BombConfig.spawnFire;
-		this.drainFinished = this.doFlood;
-	}
+    public EntityFalloutRain(World worldIn, int maxAge) {
+        super(worldIn);
+        this.setSize(4.0F, 20.0F);
+        this.isImmuneToFire = true;
+    }
 
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX, this.posY, this.posZ);
-	}
+    public static Biome getBiomeChange(double dist, int scale, Biome original) {
+        if (!WorldConfig.enableCraterBiomes) return null;
+        if (scale >= 150 && dist < 15) return BiomeGenCraterBase.craterInnerBiome;
+        if (scale >= 100 && dist < 55 && original != BiomeGenCraterBase.craterInnerBiome) return BiomeGenCraterBase.craterBiome;
+        if (scale >= 25 && original != BiomeGenCraterBase.craterInnerBiome && original != BiomeGenCraterBase.craterBiome)
+            return BiomeGenCraterBase.craterOuterBiome;
+        return null;
+    }
 
-	@Override
-	public boolean isInRangeToRender3d(double x, double y, double z) {
-		return true;
-	}
+    private static void addAllFromPairs(List<Long> out, int[] data) {
+        if (data == null || data.length == 0) return;
+        for (int i = 0; i + 1 < data.length; i += 2) {
+            out.add(ChunkPos.asLong(data[i], data[i + 1]));
+        }
+    }
 
-	@Override
-	public boolean isInRangeToRenderDist(double distance) {
-		return true;
-	}
+    private static int[] toPairsArray(List<Long> coords) {
+        int[] data = new int[coords.size() * 2];
+        for (int i = 0; i < coords.size(); i++) {
+            long packed = coords.get(i);
+            data[i * 2] = ChunkUtil.getChunkPosX(packed);
+            data[i * 2 + 1] = ChunkUtil.getChunkPosZ(packed);
+        }
+        return data;
+    }
 
-	public void setScale(int i, int craterRadius) {
-		dataManager.set(SCALE, i);
-		calculateS(i);
-		fallingRadius = craterRadius;
-		doDrop = fallingRadius > 20;
-	}
+    @Override
+    public void onUpdate() {
+        if (!world.isRemote) {
+            long start = System.currentTimeMillis();
+            if (!CompatibilityConfig.isWarDim(world)) this.setDead();
+            else if (firstUpdate && chunksToProcess.isEmpty() && outerChunksToProcess.isEmpty()) gatherChunks();
+            if (tickDelay == 0) {
+                tickDelay = BombConfig.falloutDelay;
 
-	@Override
-	protected double getFallingRadius() {
-		return fallingRadius;
-	}
+                while (System.currentTimeMillis() < start + BombConfig.mk5) {
+                    if (!chunksToProcess.isEmpty()) {
+                        long chunkPosLong = chunksToProcess.remove(chunksToProcess.size() - 1);
+                        int chunkPosX = ChunkUtil.getChunkPosX(chunkPosLong);
+                        int chunkPosZ = ChunkUtil.getChunkPosZ(chunkPosLong);
+                        boolean biomeModified = false;
+                        for (int x = (chunkPosX << 4); x < (chunkPosX << 4) + 16; x++) {
+                            for (int z = (chunkPosZ << 4); z < (chunkPosZ << 4) + 16; z++) {
+                                double percent = Math.hypot(x - this.posX, z - this.posZ) * 100.0 / getScale();
+                                stomp(x, z, percent);
+                                Biome biome = getBiomeChange(percent, getScale(), world.getBiome(new BlockPos(x, 0, z)));
+                                if (biome != null) {
+                                    WorldUtil.setBiome(world, x, z, biome);
+                                    biomeModified = true;
+                                }
+                            }
+                        }
+                        if (biomeModified) WorldUtil.syncBiomeChange(world, chunkPosX, chunkPosZ);
+                    } else if (!outerChunksToProcess.isEmpty()) {
+                        long chunkPosLong = outerChunksToProcess.remove(outerChunksToProcess.size() - 1);
+                        int chunkPosX = ChunkUtil.getChunkPosX(chunkPosLong);
+                        int chunkPosZ = ChunkUtil.getChunkPosZ(chunkPosLong);
+                        boolean biomeModified = false;
+                        for (int x = (chunkPosX << 4); x < (chunkPosX << 4) + 16; x++) {
+                            for (int z = (chunkPosZ << 4); z < (chunkPosZ << 4) + 16; z++) {
+                                double distance = Math.hypot(x - this.posX, z - this.posZ);
+                                if (distance <= getScale()) {
+                                    double percent = distance * 100.0 / getScale();
+                                    stomp(x, z, percent);
+                                    Biome biome = getBiomeChange(percent, getScale(), world.getBiome(new BlockPos(x, 0, z)));
+                                    if (biome != null) {
+                                        WorldUtil.setBiome(world, x, z, biome);
+                                        biomeModified = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (biomeModified) WorldUtil.syncBiomeChange(world, chunkPosX, chunkPosZ);
+                    } else {
+                        this.clearChunkLoader();
+                        this.setDead();
+                        break;
+                    }
+                }
+            }
+            tickDelay--;
+        }
+        super.onUpdate();
+    }
 
-	@Override
-	protected boolean getSpawnFire() {
-		return spawnFire;
-	}
+    // Is it worth the effort to split this into a method that can be called over multiple ticks? I'd say it's fast enough anyway...
+    private void gatherChunks() {
+        Set<Long> chunks = new LinkedHashSet<>();
+        Set<Long> outerChunks = new LinkedHashSet<>();
+        int outerRange = getScale();
 
-	@Override
-	public void onUpdate() {
-		if (!world.isRemote) {
-			if (!CompatibilityConfig.isWarDim(world)) {
-				this.setDead();
-			} else if (firstTick) {
-				if (chunksToProcess.isEmpty() && outerChunksToProcess.isEmpty()) gatherChunks();
-				firstTick = false;
-			}
-			if (falloutTickNumber >= BombConfig.fChunkSpeed) {
-				if (!this.isDead) {
-					long start = System.currentTimeMillis();
-					final long timeBudget = BombConfig.falloutDelay;
-					long deadline = start + timeBudget;
-					while (System.currentTimeMillis() < deadline && !stompingDone) {
-						stompAround();
-					}
-					while (System.currentTimeMillis() < deadline && stompingDone && !drainFinished) {
-						drainTick();
-					}
-					if (stompingDone && drainFinished) {
-						secondPass((WorldServer) world, drainedList);
-						drainedList = null;
-						setDead();
-					}
-				}
-				falloutTickNumber = 0;
-			}
-			falloutTickNumber++;
+        // step size heuristic (minimum ~18 to cover all chunks)
+        int adjustedMaxAngle = 20 * outerRange / 32;
+        if (adjustedMaxAngle < 18) adjustedMaxAngle = 18;
 
-			if (this.isDead) {
-				if (falloutBallRadius > 0) {
-					EntityFalloutUnderGround falloutBall = new EntityFalloutUnderGround(this.world);
-					falloutBall.posX = this.posX;
-					falloutBall.posY = this.posY;
-					falloutBall.posZ = this.posZ;
-					falloutBall.setScale(falloutBallRadius);
-					this.world.spawnEntity(falloutBall);
-				}
-				unloadAllChunks();
-				this.done = true;
-				if (RadiationConfig.rain > 0 && doFlood) {
-					if ((doFallout && getScale() > 100) || (doFlood && getScale() > 50)) {
-						world.getWorldInfo().setRaining(true);
-						world.getWorldInfo().setRainTime(RadiationConfig.rain);
-					}
-					if ((doFallout && getScale() > 150) || (doFlood && getScale() > 100)) {
-						world.getWorldInfo().setThundering(true);
-						world.getWorldInfo().setThunderTime(RadiationConfig.rain);
-						AuxSavedData.setThunder(world, RadiationConfig.rain);
-					}
-				}
-			}
-		}
-	}
+        // outer ring
+        for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
+            double theta = angle * (2.0 * Math.PI) / adjustedMaxAngle; // full rotation
+            Vec3d vec = new Vec3d(outerRange, 0, 0).rotateYaw((float) theta);
+            int cx = ((int) Math.floor(this.posX + vec.x)) >> 4;
+            int cz = ((int) Math.floor(this.posZ + vec.z)) >> 4;
+            outerChunks.add(ChunkPos.asLong(cx, cz));
+        }
 
-	public static void secondPass(WorldServer world, List<BlockPos> destroyedList) {
-		if (destroyedList == null || destroyedList.isEmpty()) return;
-		Long2IntOpenHashMap sectionMaskByChunk = new Long2IntOpenHashMap();
-		for (BlockPos pos : destroyedList) {
-			world.notifyNeighborsOfStateChange(pos, Blocks.AIR, true);
-			long key = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
-			int mask = sectionMaskByChunk.getOrDefault(key, 0);
-			mask |= 1 << (pos.getY() >>> 4);
-			sectionMaskByChunk.put(key, mask);
-		}
-		for (Long2IntMap.Entry e : sectionMaskByChunk.long2IntEntrySet()) {
-			long longKey = e.getLongKey();
-			int cx = (int) (longKey & 0xFFFFFFFFL);
-			int cz = (int) (longKey >>> 32);
-			int mask = e.getIntValue();
-			Chunk chunk = world.getChunk(cx, cz);
-			chunk.generateSkylightMap();
-			chunk.resetRelightChecks();
-			PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(cx, cz);
-			if (entry != null) entry.sendPacket(new SPacketChunkData(chunk, mask));
-		}
-		destroyedList.clear();
-	}
+        // interior (radial spokes every 8 blocks)
+        for (int distance = 0; distance <= outerRange; distance += 8) {
+            for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
+                double theta = angle * (2.0 * Math.PI) / adjustedMaxAngle;
+                Vec3d vec = new Vec3d(distance, 0, 0).rotateYaw((float) theta);
+                int cx = ((int) Math.floor(this.posX + vec.x)) >> 4;
+                int cz = ((int) Math.floor(this.posZ + vec.z)) >> 4;
+                long packed = ChunkPos.asLong(cx, cz);
+                if (!outerChunks.contains(packed)) chunks.add(packed);
+            }
+        }
 
-	private void gatherChunks() {
-		Set<Long> chunks = new LinkedHashSet<>();
-		Set<Long> outerChunks = new LinkedHashSet<>();
-		int outerRange = doFallout ? getScale() : fallingRadius;
-		int adjustedMaxAngle = 20 * outerRange / 32;
-		for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
-			Vec3d vector = new Vec3d(outerRange, 0, 0);
-			vector = vector.rotateYaw((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0)));
-			outerChunks.add(ChunkPos.asLong((int) (posX + vector.x) >> 4, (int) (posZ + vector.z) >> 4));
-		}
-		for (int distance = 0; distance <= outerRange; distance += 8) for (int angle = 0; angle <= adjustedMaxAngle; angle++) {
-			Vec3d vector = new Vec3d(distance, 0, 0);
-			vector = vector.rotateYaw((float) (angle * Math.PI / 180.0 / (adjustedMaxAngle / 360.0)));
-			long chunkCoord = ChunkPos.asLong((int) (posX + vector.x) >> 4, (int) (posZ + vector.z) >> 4);
-			if (!outerChunks.contains(chunkCoord)) chunks.add(chunkCoord);
-		}
+        chunksToProcess.addAll(chunks);
+        outerChunksToProcess.addAll(outerChunks);
+        Collections.reverse(chunksToProcess); // start nicely from the middle
+        Collections.reverse(outerChunksToProcess);
+    }
 
-		chunksToProcess.addAll(chunks);
-		outerChunksToProcess.addAll(outerChunks);
-		Collections.reverse(chunksToProcess);
-		Collections.reverse(outerChunksToProcess);
-	}
+    private void stomp(int x, int z, double dist) {
+        int depth = 0;
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-	private void stompAround() {
-		if (!chunksToProcess.isEmpty()) {
-			long chunkPos = chunksToProcess.remove(chunksToProcess.size() - 1);
-			int chunkPosX = (int) (chunkPos & Integer.MAX_VALUE);
-			int chunkPosZ = (int) (chunkPos >> 32 & Integer.MAX_VALUE);
-			for (int x = chunkPosX << 4; x < (chunkPosX << 4) + 16; x++) {
-				for (int z = chunkPosZ << 4; z < (chunkPosZ << 4) + 16; z++) {
-					double dist = Math.hypot(x - posX, z - posZ);
-					stomp(new MutableBlockPos(x, 0, z), dist);
-				}
-			}
+        for (int y = 255; y >= 0; y--) {
+            if (depth >= 3) return;
 
-		} else if (!outerChunksToProcess.isEmpty()) {
-			long chunkPos = outerChunksToProcess.remove(outerChunksToProcess.size() - 1);
-			int chunkPosX = (int) (chunkPos & Integer.MAX_VALUE);
-			int chunkPosZ = (int) (chunkPos >> 32 & Integer.MAX_VALUE);
-			for (int x = chunkPosX << 4; x < (chunkPosX << 4) + 16; x++) {
-				for (int z = chunkPosZ << 4; z < (chunkPosZ << 4) + 16; z++) {
-					double dist = Math.hypot(x - posX, z - posZ);
-					if (dist <= getScale()) {
-						stomp(new MutableBlockPos(x, 0, z), dist);
-					}
-				}
-			}
+            pos.setPos(x, y, z);
+            IBlockState state = world.getBlockState(pos);
+            Block block = state.getBlock();
 
-		} else {
-			stompingDone = true;
-		}
-	}
+            if (state.getMaterial() == Material.AIR || block == ModBlocks.fallout) continue;
 
-	private void stomp(MutableBlockPos pos, double dist) {
-		if (dist > s0) {
-			if (world.rand.nextFloat() > 0.05F + (5F * (s0 / dist) - 4F)) {
-				return;
-			}
-		}
-		int[] gapData;
-		if (doFallout) {
-			gapData = doFallout(pos, dist);
-		} else {
-			gapData = doNoFallout(pos, dist);
-		}
-		if (dist < fallingRadius) {
-			if (doDrop && gapData[0] == 1) {
-				letFall(world, pos, gapData[1], gapData[2]);
-			}
-			if (doFlood) {
-				flood(pos);
-			} else {
-				collectDrain(pos);
-			}
-		}
-	}
+            // TODO: implement volcano_rad_core
+//			if (block == ModBlocks.volcano_core) {
+//				world.setBlockState(pos, ModBlocks.volcano_rad_core.getDefaultState(), 3);
+//				continue;
+//			}
 
-	@SuppressWarnings("deprecation")
-	private int[] doFallout(MutableBlockPos pos, double dist) {
-		int stoneDepth = 0;
-		int maxStoneDepth = 0;
-		if (dist > s1) maxStoneDepth = 0;
-		else if (dist > s2) maxStoneDepth = 1;
-		else if (dist > s3) maxStoneDepth = 2;
-		else if (dist > s4) maxStoneDepth = 3;
-		else if (dist > s5) maxStoneDepth = 4;
-		else if (dist > s6) maxStoneDepth = 5;
-		else maxStoneDepth = 6;
-		boolean lastReachedStone = false;
-		boolean reachedStone = false;
-		int contactHeight = 420;
-		int lastGapHeight = 420;
-		boolean gapFound = false;
-		outer: for (int y = 255; y >= 0; y--) {
-			pos.setY(y);
-			IBlockState blockState = world.getBlockState(pos);
-			Block block = blockState.getBlock();
-			Material bmaterial = blockState.getMaterial();
-			if (block != Blocks.AIR && contactHeight == 420) contactHeight = Math.min(y + 1, 255);
-			lastReachedStone = reachedStone;
-			reachedStone = bmaterial == Material.ROCK;
-			if (reachedStone && bmaterial != Material.AIR) stoneDepth++;
-			if (reachedStone && stoneDepth > maxStoneDepth) break outer;
-			if (bmaterial == Material.AIR || bmaterial.isLiquid()) {
-				if (y < contactHeight) {
-					gapFound = true;
-					lastGapHeight = y;
-				}
-				continue;
-			}
-			if (!processBlock(world, pos, dist, true, stoneDepth, maxStoneDepth, reachedStone, lastReachedStone, contactHeight)) {
-				break;
-			}
-		}
-		return new int[]{gapFound ? 1 : 0, lastGapHeight, contactHeight};
-	}
+            BlockPos posUp = pos.up();
+            IBlockState stateUp = world.getBlockState(posUp);
 
-	private int[] doNoFallout(MutableBlockPos pos, double dist) {
-		int stoneDepth = 0;
-		int maxStoneDepth = 6;
-		boolean reachedStone = false;
-		int contactHeight = 420;
-		int lastGapHeight = 420;
-		boolean gapFound = false;
-		for (int y = 255; y >= 0; y--) {
-			pos.setY(y);
-			IBlockState b = world.getBlockState(pos);
-			Block bblock = b.getBlock();
-			Material bmaterial = b.getMaterial();
-			if (bblock.isCollidable() && contactHeight == 420) contactHeight = Math.min(y + 1, 255);
-			if (reachedStone && bmaterial != Material.AIR) {
-				stoneDepth++;
-			} else {
-				reachedStone = b.getMaterial() == Material.ROCK;
-			}
-			if (reachedStone && stoneDepth > maxStoneDepth) {
-				break;
-			}
-			if (bmaterial == Material.AIR || bmaterial.isLiquid()) {
-				if (y < contactHeight) {
-					gapFound = true;
-					lastGapHeight = y;
-				}
-			}
-		}
-		return new int[]{gapFound ? 1 : 0, lastGapHeight, contactHeight};
-	}
+            if (depth == 0 && (world.isAirBlock(posUp) || stateUp.getBlock().isReplaceable(world, posUp) && !stateUp.getMaterial().isLiquid())) {
 
-	private void letFall(World world, MutableBlockPos pos, int lastGapHeight, int contactHeight) {
-		int fallChance = RadiationConfig.blocksFallCh;
-		if (fallChance < 1) return;
-		if (fallChance < 100) {
-			int chance = world.rand.nextInt(100);
-			if (chance < fallChance) return;
-		}
-		int bottomHeight = lastGapHeight;
-		MutableBlockPos gapPos = new MutableBlockPos(pos.getX(), 0, pos.getZ());
-		for (int i = lastGapHeight; i <= contactHeight; i++) {
-			pos.setY(i);
-			Block b = world.getBlockState(pos).getBlock();
-			if (!b.isReplaceable(world, pos)) {
-				float hardness = b.getExplosionResistance(null);
-				if (hardness >= 0 && hardness < 50 && i != bottomHeight) {
-					gapPos.setY(bottomHeight);
-					world.setBlockState(gapPos, world.getBlockState(pos));
-					world.setBlockToAir(pos);
-				}
-				bottomHeight++;
-			}
-		}
-	}
+                double d = dist / 100.0;
+                double chance = 0.1 - Math.pow((d - 0.7), 2.0);
 
-	private void flood(MutableBlockPos pos) {
-		if (CompatibilityConfig.doFillCraterWithWater && waterLevel > 1) {
-			for (int y = waterLevel - 1; y > 1; y--) {
-				pos.setY(y);
-				if (world.isAirBlock(pos) || world.getBlockState(pos).getBlock() == Blocks.FLOWING_WATER) {
-					world.setBlockState(pos, Blocks.WATER.getDefaultState());
-				}
-			}
-		}
-	}
+                if (chance >= rand.nextDouble() && ModBlocks.fallout.canPlaceBlockAt(world, posUp)) {
+                    world.setBlockState(posUp, ModBlocks.fallout.getDefaultState(), 3);
+                }
+            }
 
-	private void collectDrain(MutableBlockPos pos) {
-		for (int y = 255; y > 1; y--) {
-			pos.setY(y);
-			IBlockState state = world.getBlockState(pos);
-			Block b = state.getBlock();
-			if (b == Blocks.WATER || b == Blocks.FLOWING_WATER) {
-				int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((pos.getX() & 0xF) << 4) | (pos.getZ() & 0xF);
-				ChunkPos cp = new ChunkPos(pos);
-				drainMap.computeIfAbsent(cp, k -> new BitSet(BITSET_SIZE)).set(bitIndex);
-			}
-		}
-	}
+            if (dist < 65 && block.isFlammable(world, pos, EnumFacing.UP)) {
+                if (rand.nextInt(5) == 0 && world.isAirBlock(posUp)) {
+                    world.setBlockState(posUp, Blocks.FIRE.getDefaultState(), 3);
+                }
+            }
 
-	private void drainTick() {
-		final long deadline = System.nanoTime() + BombConfig.falloutDelay * 1_000_000L;
+            boolean eval = false;
 
-		if (orderedDrainChunks.isEmpty() && !drainMap.isEmpty()) {
-			orderedDrainChunks.addAll(drainMap.keySet());
-			int originChunkX = (int) posX >> 4;
-			int originChunkZ = (int) posZ >> 4;
-			orderedDrainChunks.sort(Comparator.comparingInt(c -> Math.abs(originChunkX - c.x) + Math.abs(originChunkZ - c.z)));
-		}
+            for (FalloutEntry entry : FalloutConfigJSON.entries) {
+                if (entry.eval(world, pos, state, dist, state)) {
+                    if (entry.isSolid()) {
+                        depth++;
+                    }
+                    eval = true;
+                    break;
+                }
+            }
 
-		Iterator<ChunkPos> it = orderedDrainChunks.iterator();
-		while (it.hasNext() && System.nanoTime() < deadline) {
-			ChunkPos cp = it.next();
-			BitSet bs = drainMap.get(cp);
-			if (bs == null) {
-				it.remove();
-				continue;
-			}
+            float hardness = state.getBlockHardness(world, pos);
+            if (y > 0 && dist < 65 && hardness <= Blocks.STONEBRICK.getExplosionResistance(null) && hardness >= 0) {
+                BlockPos below = pos.down();
+                if (world.isAirBlock(below)) {
+                    for (int i = 0; i <= depth; i++) {
+                        BlockPos p = pos.add(0, i, 0);
+                        IBlockState s = world.getBlockState(p);
+                        float h = s.getBlockHardness(world, p);
+                        if (h <= Blocks.STONEBRICK.getExplosionResistance(null) && h >= 0) {
+                            EntityFallingBlock falling = new EntityFallingBlock(world, x + 0.5D, y + 0.5D + i, z + 0.5D, s);
+                            falling.shouldDropItem = false; // turn off block drops because block dropping was coded by a mule with dementia
+                            world.spawnEntity(falling);
+                        }
+                    }
+                }
+            }
 
-			Chunk chunk = world.getChunk(cp.x, cp.z);
-			ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
-			boolean chunkModified = false;
+            if (!eval && state.isNormalCube()) {
+                depth++;
+            }
+        }
+    }
 
-			for (int subY = 0; subY < SUBCHUNK_PER_CHUNK; subY++) {
-				ExtendedBlockStorage storage = storages[subY];
-				if (storage == null || storage.isEmpty()) continue;
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(SCALE, 1);
+    }
 
-				int startBit = (WORLD_HEIGHT - 1 - ((subY << 4) + 15)) << 8;
-				int endBit = ((WORLD_HEIGHT - 1 - (subY << 4)) << 8) | 0xFF;
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound tag) {
+        setScale(tag.getInteger("scale"));
+        chunksToProcess.clear();
+        outerChunksToProcess.clear();
+        addAllFromPairs(chunksToProcess, tag.getIntArray("chunks"));
+        addAllFromPairs(outerChunksToProcess, tag.getIntArray("outerChunks"));
+    }
 
-				int bit = bs.nextSetBit(startBit);
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound tag) {
+        tag.setInteger("scale", getScale());
+        tag.setIntArray("chunks", toPairsArray(chunksToProcess));
+        tag.setIntArray("outerChunks", toPairsArray(outerChunksToProcess));
+    }
 
-				while (bit >= 0 && bit <= endBit) {
-					if (System.nanoTime() >= deadline) {
-						if (chunkModified) chunk.markDirty();
-						return;
-					}
-					int yGlobal = WORLD_HEIGHT - 1 - (bit >>> 8);
-					int xGlobal = (cp.x << 4) | ((bit >>> 4) & 0xF);
-					int zGlobal = (cp.z << 4) | (bit & 0xF);
-					int xLocal = xGlobal & 0xF;
-					int yLocal = yGlobal & 0xF;
-					int zLocal = zGlobal & 0xF;
+    public int getScale() {
+        Integer scale = this.dataManager.get(SCALE);
+        return scale <= 0 ? 1 : scale;
+    }
 
-					Block block = storage.get(xLocal, yLocal, zLocal).getBlock();
-					if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
-						BlockPos drainPos = new BlockPos(xGlobal, yGlobal, zGlobal);
-						world.removeTileEntity(drainPos);
-						storage.set(xLocal, yLocal, zLocal, Blocks.AIR.getDefaultState());
-						chunkModified = true;
-						this.drainedList.add(drainPos);
-					}
-					bs.clear(bit);
-					bit = bs.nextSetBit(bit + 1);
-				}
-			}
-			if (chunkModified) chunk.markDirty();
-			if (bs.isEmpty()) {
-				drainMap.remove(cp);
-				it.remove();
-			}
-		}
-		if (orderedDrainChunks.isEmpty() && drainMap.isEmpty()) {
-			drainFinished = true;
-		}
-	}
+    public void setScale(int i) {
+        this.dataManager.set(SCALE, i);
+    }
 
-	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		setScale(nbt.getInteger("scale"), nbt.getInteger("dropRadius"));
-		falloutBallRadius = nbt.getInteger("fBall");
-		if (nbt.hasKey("chunks"))
-			chunksToProcess.addAll(readChunksFromIntArray(nbt.getIntArray("chunks")));
-		if (nbt.hasKey("outerChunks"))
-			outerChunksToProcess.addAll(readChunksFromIntArray(nbt.getIntArray("outerChunks")));
-		doFallout = nbt.getBoolean("doFallout");
-		doFlood = nbt.getBoolean("doFlood");
-		stompingDone = nbt.getBoolean("stompingDone");
-		drainFinished = nbt.getBoolean("drainFinished");
-		if (nbt.hasKey("detonator"))
-			detonator = nbt.getUniqueId("detonator");
-		if (stompingDone && !drainFinished) {
-			if (nbt.hasKey("drainMap", Constants.NBT.TAG_LIST)) {
-				NBTTagList list = nbt.getTagList("drainMap", Constants.NBT.TAG_COMPOUND);
-				for (int i = 0; i < list.tagCount(); i++) {
-					NBTTagCompound tag = list.getCompoundTagAt(i);
-					ChunkPos pos = new ChunkPos(tag.getInteger("cX"), tag.getInteger("cZ"));
-					long[] bitsetData = ((NBTTagLongArray) tag.getTag("bitset")).data;
-					this.drainMap.put(pos, BitSet.valueOf(bitsetData));
-				}
-			}
-			if (nbt.hasKey("orderedDrainChunks", Constants.NBT.TAG_LIST)) {
-				NBTTagList list = nbt.getTagList("orderedDrainChunks", Constants.NBT.TAG_COMPOUND);
-				for (int i = 0; i < list.tagCount(); i++) {
-					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-					this.orderedDrainChunks.add(new ChunkPos(nbt1.getInteger("cX"), nbt1.getInteger("cZ")));
-				}
-			}
-			if (nbt.hasKey("drainedList", Constants.NBT.TAG_LIST)) {
-				NBTTagList list = nbt.getTagList("drainedList", Constants.NBT.TAG_COMPOUND);
-				for (int i = 0; i < list.tagCount(); i++) {
-					NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-					this.drainedList.add(new BlockPos(nbt1.getInteger("pX"), nbt1.getInteger("pY"), nbt1.getInteger("pZ")));
-				}
-			}
-		}
-	}
-
-	private Collection<Long> readChunksFromIntArray(int[] data) {
-		List<Long> coords = new ArrayList<>();
-		boolean firstPart = true;
-		int x = 0;
-		for (int coord : data) {
-			if (firstPart)
-				x = coord;
-			else
-				coords.add(ChunkPos.asLong(x, coord));
-			firstPart = !firstPart;
-		}
-		return coords;
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("scale", getScale());
-		nbt.setInteger("fBall", falloutBallRadius);
-		nbt.setInteger("dropRadius", fallingRadius);
-		nbt.setBoolean("doFallout", doFallout);
-		nbt.setBoolean("doFlood", doFlood);
-		nbt.setBoolean("stompingDone", stompingDone);
-		nbt.setBoolean("drainFinished", drainFinished);
-
-		nbt.setIntArray("chunks", writeChunksToIntArray(chunksToProcess));
-		nbt.setIntArray("outerChunks", writeChunksToIntArray(outerChunksToProcess));
-
-		if (detonator != null)
-			nbt.setUniqueId("detonator", detonator);
-		if (stompingDone && !drainFinished) {
-			if (!this.drainMap.isEmpty()) {
-				NBTTagList list = new NBTTagList();
-				for (Map.Entry<ChunkPos, BitSet> entry : this.drainMap.entrySet()) {
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setInteger("cX", entry.getKey().x);
-					tag.setInteger("cZ", entry.getKey().z);
-					tag.setTag("bitset", new NBTTagLongArray(entry.getValue().toLongArray()));
-					list.appendTag(tag);
-				}
-				nbt.setTag("drainMap", list);
-			}
-			if (!this.orderedDrainChunks.isEmpty()) {
-				NBTTagList list = new NBTTagList();
-				this.orderedDrainChunks.forEach(pos -> {
-					NBTTagCompound nbt1 = new NBTTagCompound();
-					nbt1.setInteger("cX", pos.x);
-					nbt1.setInteger("cZ", pos.z);
-					list.appendTag(nbt1);
-				});
-				nbt.setTag("orderedDrainChunks", list);
-			}
-			if (this.drainedList != null && !this.drainedList.isEmpty()) {
-				NBTTagList list = new NBTTagList();
-				this.drainedList.forEach(pos -> {
-					NBTTagCompound nbt1 = new NBTTagCompound();
-					nbt1.setInteger("pX", pos.getX());
-					nbt1.setInteger("pY", pos.getY());
-					nbt1.setInteger("pZ", pos.getZ());
-					list.appendTag(nbt1);
-				});
-				nbt.setTag("drainedList", list);
-			}
-		}
-	}
-
-	private int[] writeChunksToIntArray(List<Long> coords) {
-		int[] data = new int[coords.size() * 2];
-		for (int i = 0; i < coords.size(); i++) {
-			data[i * 2] = (int) (coords.get(i) & Integer.MAX_VALUE);
-			data[i * 2 + 1] = (int) (coords.get(i) >> 32 & Integer.MAX_VALUE);
-		}
-		return data;
-	}
+    public void setScale(int i, int ignored) {
+        this.dataManager.set(SCALE, i);
+    }
 }

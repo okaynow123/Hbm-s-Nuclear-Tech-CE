@@ -1,15 +1,37 @@
 package com.hbm.world;
 
+import com.hbm.main.MainRegistry;
+import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.BiomeSyncPacket;
+import com.hbm.util.Compat;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.chunkio.ChunkIOExecutor;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class WorldUtil {
+    private static final Method getIntBiomeArray;
+
+    static {
+        Method method = null;
+        if (Compat.isIDExtensionModLoaded()) {
+            try {
+                method = Chunk.class.getMethod("getIntBiomeArray");
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+        getIntBiomeArray = method;
+    }
+
     public static Chunk provideChunk(WorldServer world, int chunkX, int chunkZ) {
         try {
             ChunkProviderServer provider = world.getChunkProvider();
@@ -36,5 +58,56 @@ public class WorldUtil {
         }
 
         return chunk;
+    }
+
+    public static void setBiome(World world, int blockX, int blockZ, Biome biome) {
+        if (world == null || biome == null) return;
+        final int chunkX = blockX >> 4;
+        final int chunkZ = blockZ >> 4;
+        final Chunk chunk = world.getChunk(chunkX, chunkZ);
+        final int i = blockX & 15;
+        final int j = blockZ & 15;
+        final int idx = (j << 4) | i;
+        final int biomeId = Biome.getIdForBiome(biome);
+        boolean updated = false;
+        if (Compat.isIDExtensionModLoaded()) {
+            int[] arr = getIntBiomeArray(chunk);
+            if (arr != null) {
+                arr[idx] = biomeId;
+                updated = true;
+            }
+        }
+        if (!updated) {
+            byte[] bArr = chunk.getBiomeArray();
+            if (bArr.length == 256) {
+                bArr[idx] = (byte) (biomeId & 0xFF);
+            }
+        }
+        chunk.markDirty();
+    }
+
+    public static int @Nullable [] getIntBiomeArray(Chunk chunk) {
+        int[] arr = null;
+        if (getIntBiomeArray != null) {
+            try {
+                arr = (int[]) getIntBiomeArray.invoke(chunk);
+            } catch (IllegalAccessException | InvocationTargetException ignored) {
+            }
+        }
+        if (arr != null && arr.length == 256) {
+            return arr;
+        } else {
+            MainRegistry.logger.error("JEID/REID/NEID is loaded, but getIntBiomeArray failed to get the correct data. This is a bug!");
+            return null;
+        }
+    }
+
+    public static void syncBiomeChange(World world, int chunkX, int chunkZ) {
+        Chunk chunk = world.getChunk(chunkX, chunkZ);
+        if(Compat.isIDExtensionModLoaded()) {
+            PacketDispatcher.wrapper.sendToAllAround(new BiomeSyncPacket(chunkX, chunkZ, getIntBiomeArray(chunk)), new TargetPoint(world.provider.getDimension(), chunkX << 4, 128, chunkZ << 4, 1024D));
+        } else {
+            PacketDispatcher.wrapper.sendToAllAround(new BiomeSyncPacket(chunkX, chunkZ, chunk.getBiomeArray()), new TargetPoint(world.provider.getDimension(), chunkX << 4, 128, chunkZ << 4, 1024D));
+        }
     }
 }

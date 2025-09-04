@@ -22,9 +22,9 @@ public class VariantBakedModel implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-        if (state instanceof IExtendedBlockState) {
-            int variant = ((IExtendedBlockState) state).getValue(VARIANT);
-                return variants[variant].getQuads(state, side, rand);
+        if (state instanceof IExtendedBlockState extendedBlockState) {
+            Integer variant = extendedBlockState.getValue(VARIANT);
+            if(variant != null) return variants[variant].getQuads(state, side, rand);
         }
         return fallback.getQuads(state, side, rand);
     }

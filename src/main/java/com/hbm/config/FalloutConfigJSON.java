@@ -277,8 +277,8 @@ public class FalloutConfigJSON {
         private boolean matchesOpaque = false;
 
         //BlockState / Weight
-        private net.minecraft.util.Tuple<IBlockState, Integer>[] primaryBlocks = null;
-        private net.minecraft.util.Tuple<IBlockState, Integer>[] secondaryBlocks = null;
+        private Tuple<IBlockState, Integer>[] primaryBlocks = null;
+        private Tuple<IBlockState, Integer>[] secondaryBlocks = null;
         private double primaryChance = 1.0D;
         private double minDist = 0.0D;
         private double maxDist = 100.0D;
@@ -348,11 +348,11 @@ public class FalloutConfigJSON {
             return entry;
         }
 
-        private static void writeStateArray(JsonWriter writer, net.minecraft.util.Tuple<IBlockState, Integer>[] array) throws IOException {
+        private static void writeStateArray(JsonWriter writer, Tuple<IBlockState, Integer>[] array) throws IOException {
             writer.beginArray();
             writer.setIndent("");
 
-            for (net.minecraft.util.Tuple<IBlockState, Integer> state : array) {
+            for (Tuple<IBlockState, Integer> state : array) {
                 writer.beginArray();
                 writer.value(stateToString(state.getFirst()));
                 writer.value(state.getSecond());
@@ -363,12 +363,12 @@ public class FalloutConfigJSON {
             writer.setIndent("  ");
         }
 
-        private static net.minecraft.util.Tuple<IBlockState, Integer>[] readMetaArray(JsonElement jsonElement) {
+        private static Tuple<IBlockState, Integer>[] readMetaArray(JsonElement jsonElement) {
 
             if (!jsonElement.isJsonArray()) return null;
 
             JsonArray array = jsonElement.getAsJsonArray();
-            net.minecraft.util.Tuple<IBlockState, Integer>[] stateArray = new Tuple[array.size()];
+            Tuple<IBlockState, Integer>[] stateArray = new Tuple[array.size()];
 
             for (int i = 0; i < stateArray.length; i++) {
                 JsonElement metaBlock = array.get(i);
@@ -467,12 +467,12 @@ public class FalloutConfigJSON {
             return this;
         }
 
-        public FalloutEntry primaryStates(net.minecraft.util.Tuple<IBlockState, Integer>... blocks) {
+        public FalloutEntry primaryStates(Tuple<IBlockState, Integer>... blocks) {
             this.primaryBlocks = blocks;
             return this;
         }
 
-        public FalloutEntry secondaryStates(net.minecraft.util.Tuple<IBlockState, Integer>... blocks) {
+        public FalloutEntry secondaryStates(Tuple<IBlockState, Integer>... blocks) {
             this.secondaryBlocks = blocks;
             return this;
         }
@@ -507,6 +507,20 @@ public class FalloutConfigJSON {
             return this;
         }
 
+        /**
+         * Evaluates whether this {@link FalloutEntry} should convert the block at the given
+         * position and, if so, performs the conversion in-world.
+         * <p><strong>Side effects:</strong> May call {@link World#setBlockState(BlockPos, IBlockState, int)}
+         * to mutate the world.
+         *
+         * @param world              the world being modified (also used for Gaussian randomness)
+         * @param pos                the target block position
+         * @param blockState         the current block state at {@code pos} to test against this entry
+         * @param dist               distance factor from the effect origin (same units as {@link #minDist}/{@link #maxDist}; typically a percentage)
+         * @param originalBlockState the original state at {@code pos} used for tier/meta comparisons and protective rules
+         * @return {@code true} if a conversion was performed and a new block state was placed;
+         * {@code false} if no action was taken (no match, skipped by falloff, no valid outcome, or blocked by safety rules)
+         */
         public boolean eval(World world, BlockPos pos, IBlockState blockState, double dist, IBlockState originalBlockState) {
             if (dist > maxDist || dist < minDist) return false;
 
@@ -556,18 +570,18 @@ public class FalloutConfigJSON {
             return true;
         }
 
-        private RecipesCommon.MetaBlock chooseRandomOutcome(net.minecraft.util.Tuple<IBlockState, Integer>[] blocks) {
+        private RecipesCommon.MetaBlock chooseRandomOutcome(Tuple<IBlockState, Integer>[] blocks) {
             if (blocks == null) return null;
 
             int weight = 0;
 
-            for (net.minecraft.util.Tuple<IBlockState, Integer> choice : blocks) {
+            for (Tuple<IBlockState, Integer> choice : blocks) {
                 weight += choice.getSecond();
             }
 
             int r = rand.nextInt(weight);
 
-            for (net.minecraft.util.Tuple<IBlockState, Integer> choice : blocks) {
+            for (Tuple<IBlockState, Integer> choice : blocks) {
                 r -= choice.getSecond();
 
                 if (r <= 0) {

@@ -159,28 +159,24 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
             if (GeneralConfig.enableExtendedLogging && explosionStart != 0)
                 MainRegistry.logger.log(Level.INFO, "[NUKE] Explosion complete. Time elapsed: {}ms", (System.currentTimeMillis() - explosionStart));
             if (fallout) {
-                EntityFalloutUnderGround falloutBall = new EntityFalloutUnderGround(this.world);
-                falloutBall.posX = this.posX;
-                falloutBall.posY = this.posY;
-                falloutBall.posZ = this.posZ;
-                falloutBall.setScale((int) (this.radius * (BombConfig.falloutRange / 100F) + falloutAdd));
-
-                falloutBall.falloutRainDoFallout = fallout && !explosion.isContained();
-                falloutBall.falloutRainDoFlood = floodPlease;
-                falloutBall.falloutRainFire = spawnFire;
-                falloutBall.falloutRainRadius1 = (int) ((this.radius * 2.5F + falloutAdd) * BombConfig.falloutRange * 0.01F);
-                falloutBall.falloutRainRadius2 = this.radius + 4;
-                this.world.spawnEntity(falloutBall);
-            } else {
-                EntityFalloutRain falloutRain = new EntityFalloutRain(this.world);
-                falloutRain.doFallout = false;
-                falloutRain.doFlood = floodPlease;
-                falloutRain.posX = this.posX;
-                falloutRain.posY = this.posY;
-                falloutRain.posZ = this.posZ;
-                if (spawnFire) falloutRain.spawnFire = true;
-                falloutRain.setScale((int) ((this.radius * 2.5F + falloutAdd) * BombConfig.falloutRange * 0.01F), this.radius + 4);
-                this.world.spawnEntity(falloutRain);
+                EntityFalloutRain fallout = new EntityFalloutRain(this.world);
+                fallout.posX = this.posX;
+                fallout.posY = this.posY;
+                fallout.posZ = this.posZ;
+                fallout.setScale((int)(this.radius * 2.5 + falloutAdd) * BombConfig.falloutRange / 100);
+                this.world.spawnEntity(fallout);
+//                EntityFalloutUnderGround falloutBall = new EntityFalloutUnderGround(this.world);
+//                falloutBall.posX = this.posX;
+//                falloutBall.posY = this.posY;
+//                falloutBall.posZ = this.posZ;
+//                falloutBall.setScale((int) (this.radius * (BombConfig.falloutRange / 100F) + falloutAdd));
+//
+//                falloutBall.falloutRainDoFallout = fallout && !explosion.isContained();
+//                falloutBall.falloutRainDoFlood = floodPlease;
+//                falloutBall.falloutRainFire = spawnFire;
+//                falloutBall.falloutRainRadius1 = (int) ((this.radius * 2.5F + falloutAdd) * BombConfig.falloutRange * 0.01F);
+//                falloutBall.falloutRainRadius2 = this.radius + 4;
+//                this.world.spawnEntity(falloutBall);
             }
 
             this.clearLoadedChunks();
