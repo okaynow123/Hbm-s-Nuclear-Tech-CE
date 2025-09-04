@@ -53,6 +53,7 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_light_revolver, 1), "BRM", "  G", 'B', STEEL.lightBarrel(), 'R', STEEL.lightReceiver(), 'M', GUNMETAL.mechanism(), 'G', WOOD.grip() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_light_revolver_atlas, 1), " M ", "MAM", " M ", 'M', WEAPONSTEEL.mechanism(), 'A', ModItems.gun_light_revolver );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_henry, 1), "BRP", "BMS", 'B', STEEL.lightBarrel(), 'R', GUNMETAL.lightReceiver(), 'M', GUNMETAL.mechanism(), 'S', WOOD.stock(), 'P', GUNMETAL.plate() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_henry_lincoln, 1), new Object[] { " M ", "PGP", " M ", 'M', WEAPONSTEEL.mechanism(), 'P', GOLD.plateCast(), 'G', ModItems.gun_henry });
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_greasegun, 1), "BRS", "SMG", 'B', STEEL.lightBarrel(), 'R', STEEL.lightReceiver(), 'S', STEEL.bolt(), 'M', GUNMETAL.mechanism(), 'G', STEEL.grip() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_maresleg, 1), "BRM", "BGS", 'B', STEEL.lightBarrel(), 'R', STEEL.lightReceiver(), 'M', GUNMETAL.mechanism(), 'G', STEEL.bolt(), 'S', WOOD.stock() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_maresleg_akimbo, 1), "SMS", 'S', ModItems.gun_maresleg, 'M', WEAPONSTEEL.mechanism() );
@@ -71,6 +72,7 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_g3, 1), "BRM", "WGS", 'B', WEAPONSTEEL.lightBarrel(), 'R', WEAPONSTEEL.lightReceiver(), 'M', WEAPONSTEEL.mechanism(), 'W', WOOD.grip(), 'G', RUBBER.grip(), 'S', WOOD.stock() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_stinger, 1), "BBB", "PGM", 'B', WEAPONSTEEL.heavyBarrel(), 'P', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'G', WEAPONSTEEL.grip(), 'M', WEAPONSTEEL.mechanism() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_chemthrower, 1), "MHW", "PSS", 'M', WEAPONSTEEL.mechanism(), 'H', RUBBER.pipe(), 'W', ModItems.wrench, 'P', WEAPONSTEEL.heavyBarrel(), 'S', WEAPONSTEEL.shell() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_amat, 1), new Object[] { " C ", "BRS", " MG", 'G', WOOD.grip(), 'B', FERRO.heavyBarrel(), 'R', FERRO.heavyReceiver(), 'M', WEAPONSTEEL.mechanism(), 'C', DictFrame.fromOne(ModItems.weapon_mod_special, GunFactory.EnumModSpecial.SCOPE), 'S', WOOD.stock() });
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_m2, 1), "  G", "BRM", "  G", 'G', WOOD.grip(), 'B', FERRO.heavyBarrel(), 'R', FERRO.heavyReceiver(), 'M', WEAPONSTEEL.mechanism() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_autoshotgun, 1), "BRM", "G G", 'B', FERRO.heavyBarrel(), 'R', FERRO.heavyReceiver(), 'M', WEAPONSTEEL.mechanism(), 'G', ANY_PLASTIC.grip() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_autoshotgun_shredder, 1), " M ", "MAM", " M ", 'M', BIGMT.mechanism(), 'A', ModItems.gun_autoshotgun );
@@ -84,6 +86,9 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_tau, 1), " RD", "CTT", "GMS", 'D', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID), 'C', CU.pipe(), 'T', ModItems.coil_advanced_torus, 'G', ANY_HARDPLASTIC.grip(), 'R', BIGMT.lightReceiver(), 'M', BIGMT.mechanism(), 'S', ANY_HARDPLASTIC.stock() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_lasrifle, 1), "LC ", "BRS", "MG ", 'L', ModItems.crystal_redstone, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID), 'B', ANY_BISMOIDBRONZE.lightBarrel(), 'R', ANY_BISMOIDBRONZE.lightReceiver(), 'S', ANY_HARDPLASTIC.stock(), 'M', BIGMT.mechanism(), 'G', ANY_HARDPLASTIC.grip() );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.gun_double_barrel_sacred_dragon, 1), ModItems.gun_double_barrel, DictFrame.fromOne(ModItems.item_secret, ItemEnums.EnumSecretType.SELENIUM_STEEL) );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_charge_thrower, 1), new Object[] { "MMM", "BBL", "GG ", 'M', GUNMETAL.mechanism(), 'B', STEEL.heavyBarrel(), 'G', STEEL.grip(), 'L', Items.leather });
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.gun_charge_thrower, 1), new Object[] { "MMM", "BBL", "GG ", 'M', GUNMETAL.mechanism(), 'B', STEEL.heavyBarrel(), 'G', STEEL.grip(), 'L', ANY_RUBBER.ingot() });
+
 
         //SEDNA Ammo
         CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.STONE, 6), "C", "P", "G", 'C', KEY_COBBLESTONE, 'P', Items.PAPER, 'G', Items.GUNPOWDER );
