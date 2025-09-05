@@ -159,7 +159,7 @@ public class GUIPADipole extends GuiInfoContainer {
     }
 
     public void addLine(BufferBuilder buffer, int x, int y, int color, Vec3NT vec, float yaw) {
-        vec.setComponents(0, 6, 0);
+        vec.set(0, 6, 0);
         vec.rotateAroundZDeg(yaw);
 
         float r = (float) (color >> 16 & 255) / 255.0F;

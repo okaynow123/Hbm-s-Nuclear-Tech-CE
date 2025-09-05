@@ -72,9 +72,9 @@ public class ArmorEnvsuit extends ArmorFSBPowered {
 
 				double mo = 0.1 * player.moveForward;
 				Vec3NT vec = new Vec3NT(player.getLookVec());
-				vec.x *= mo;
-				vec.y *= mo;
-				vec.z *= mo;
+				vec.setX(vec.x * mo);
+				vec.setY(vec.y * mo);
+				vec.setZ(vec.z * mo);
 
 				player.motionX += vec.x;
 				player.motionY += vec.y;

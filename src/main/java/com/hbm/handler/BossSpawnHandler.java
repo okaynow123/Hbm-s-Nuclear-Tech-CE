@@ -212,8 +212,8 @@ public class BossSpawnHandler {
 		if(repell) {
 			vec = new Vec3NT(meteor.posX - player.posX, 0, meteor.posZ - player.posZ).normalizeSelf();
 			double vel = meteorRand.nextDouble();
-			vec.x = vec.x * vel;
-			vec.z = vec.z * vel;
+			vec.setX(vec.x * vel);
+			vec.setZ(vec.z * vel);
 			meteor.safe = true;
 		} else {
 			vec = new Vec3NT(meteorRand.nextDouble() - 0.5D, 0, 0);
