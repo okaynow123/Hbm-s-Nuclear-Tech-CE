@@ -636,24 +636,55 @@ public class FalloutConfigJSON {
             if (fromProp == null || toProp == null) return to;
 
             Object oldValue = from.getValue(fromProp);
-
-            if (!(oldValue instanceof Enum)) return to;
-
-            Enum oldEnum = (Enum) oldValue;
             Object mappedValue = null;
 
-            for (Object allowed : toProp.getAllowedValues()) {
-                if (allowed instanceof Enum) {
-                    Enum allowedEnum = (Enum) allowed;
-                    if (allowedEnum.ordinal() == oldEnum.ordinal()) {
-                        mappedValue = allowedEnum;
+            // enums
+            if (oldValue instanceof Enum) {
+                Enum oldEnum = (Enum) oldValue;
+                for (Object allowed : toProp.getAllowedValues()) {
+                    if (allowed instanceof Enum) {
+                        Enum allowedEnum = (Enum) allowed;
+                        // Match by ordinal
+                        if (allowedEnum.ordinal() == oldEnum.ordinal()) {
+                            mappedValue = allowedEnum;
+                            break;
+                        }
+                    }
+                }
+            }
+            // integers
+            else if (oldValue instanceof Integer) {
+                int oldInt = (Integer) oldValue;
+                for (Object allowed : toProp.getAllowedValues()) {
+                    if (allowed instanceof Integer && allowed.equals(oldInt)) {
+                        mappedValue = allowed;
+                        break;
+                    }
+                }
+            }
+            // booleans
+            else if (oldValue instanceof Boolean) {
+                boolean oldBool = (Boolean) oldValue;
+                for (Object allowed : toProp.getAllowedValues()) {
+                    if (allowed instanceof Boolean && allowed.equals(oldBool)) {
+                        mappedValue = allowed;
+                        break;
+                    }
+                }
+            }
+            else {
+                for (Object allowed : toProp.getAllowedValues()) {
+                    if (allowed.toString().equals(oldValue.toString())) {
+                        mappedValue = allowed;
                         break;
                     }
                 }
             }
 
-            if (mappedValue == null) return to; // no compatible value found
-            return to.withProperty((IProperty) toProp, (Comparable) mappedValue);
+            if (mappedValue == null) return to;
+
+            IProperty rawToProp = (IProperty) toProp;
+            return to.withProperty(rawToProp, (Comparable) mappedValue);
         }
 
 
