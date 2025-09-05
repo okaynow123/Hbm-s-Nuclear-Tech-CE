@@ -42,7 +42,7 @@ public class ButtonPush extends Control {
     public void render() {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_push_tex);
-        Tessellator tes = Tessellator.instance;
+
         IModelCustom model = getModel();
 
         boolean isPushed = getVar("isPushed").getBoolean();
@@ -52,44 +52,38 @@ public class ButtonPush extends Control {
         float lX = OpenGlHelper.lastBrightnessX;
         float lY = OpenGlHelper.lastBrightnessY;
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0, posY);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "btn_base");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0, posY);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("btn_base");
+        GlStateManager.popMatrix();
 
         if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
         }
 
-        float cMul = 0.6F;
-        if (isLit) {
-            cMul = 1;
-        }
+        float cMul = isLit ? 1F : 0.6F;
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, (isPushed)?-.1F:0, posY);
-        tes.setColorRGBA_F(color[0]*cMul, color[1]*cMul, color[2]*cMul, 1F);
-        model.tessellatePart(tes, "btn_top");
-        tes.draw();
-
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, (isPushed)?-.1F:0, posY);
-        tes.setColorRGBA_F(color[0]*cMul, color[1]*cMul, color[2]*cMul, 1F);
-        model.tessellatePart(tes, "btn_top_top");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, isPushed ? -0.1F : 0, posY);
+        GlStateManager.color(color[0] * cMul, color[1] * cMul, color[2] * cMul, 1F);
+        model.renderPart("btn_top");
+        model.renderPart("btn_top_top");
+        GlStateManager.popMatrix();
 
         if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
         }
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override

@@ -40,54 +40,54 @@ public class SwitchToggle extends Control {
         return new float[] {1, 1, .62F};
     }
 
-    @Override
+     @Override
     public void render() {
         boolean isOn = getVar("isOn").getBoolean();
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_switch_toggle_tex);
-        Tessellator tes = Tessellator.instance;
 
         IModelCustom model = getModel();
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
 
         GlStateManager.disableTexture2D();
         float lX = OpenGlHelper.lastBrightnessX;
         float lY = OpenGlHelper.lastBrightnessY;
-        float onCMul = (isOn) ? 3F : .4F;
-        float offCMul = (isOn) ? .4F : 3F;
+        float onCMul = isOn ? 3F : 0.4F;
+        float offCMul = isOn ? 0.4F : 3F;
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (isOn)?240:lX, (isOn)?240:lY);
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(.031F * onCMul, .17F * onCMul, .024F * onCMul, 1);
-        model.tessellatePart(tes, "lamp_on");
-        tes.draw();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, isOn ? 240 : lX, isOn ? 240 : lY);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(0.031F * onCMul, 0.17F * onCMul, 0.024F * onCMul, 1F);
+        model.renderPart("lamp_on");
+        GlStateManager.popMatrix();
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (!isOn)?240:lX, (!isOn)?240:lY);
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(.25F * offCMul, 0.04F * offCMul, 0.04F * offCMul, 1);
-        model.tessellatePart(tes, "lamp_off");
-        tes.draw();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, !isOn ? 240 : lX, !isOn ? 240 : lY);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(0.25F * offCMul, 0.04F * offCMul, 0.04F * offCMul, 1F);
+        model.renderPart("lamp_off");
+        GlStateManager.popMatrix();
 
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
         GlStateManager.enableTexture2D();
 
-        Matrix4f rot_mat = new Matrix4f().rotate((float) ((isOn) ? Math.toRadians(-60) : 0), new Vector3f(1, 0, 0));
-        Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, 0, posY)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
+        Matrix4f rot = new Matrix4f().rotate((float) (isOn ? Math.toRadians(-60) : 0), new Vector3f(1, 0, 0));
+        Matrix4f trans = new Matrix4f().translate(new Vector3f(posX, 0, posY));
+        Matrix4f mat = new Matrix4f();
+        Matrix4f.mul(trans, rot, mat);
+        mat.store(ClientProxy.AUX_GL_BUFFER);
         ClientProxy.AUX_GL_BUFFER.rewind();
         GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "lever");
-        tes.draw();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("lever");
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
     }

@@ -40,22 +40,18 @@ public class ButtonEmergencyPush extends Control {
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_emergency_push_tex);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
 
         IModelCustom model = getModel();
 
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.setTranslation(posX, 0, posY);
-        buffer.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0, posY);
         model.renderPart("base");
-        tessellator.draw();
+        GlStateManager.popMatrix();
 
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.setTranslation(posX, (isPushed)?-0.125F:0, posY);
-        buffer.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, isPushed ? -0.125F : 0, posY);
         model.renderPart("top");
-        tessellator.draw();
+        GlStateManager.popMatrix();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
     }

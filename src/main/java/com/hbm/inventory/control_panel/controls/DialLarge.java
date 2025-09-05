@@ -57,47 +57,64 @@ public class DialLarge extends Control {
     public void render() {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_dial_large_tex);
-        Tessellator tes = Tessellator.instance;
-        IModelCustom model = getModel();
 
+        IModelCustom model = getModel();
         int value = (int) getVar("value").getNumber();
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
-
         GlStateManager.pushMatrix();
-        Matrix4f rot_mat = new Matrix4f().rotate((float) -MathHelper.clamp((value*(Math.PI/100F)), 0, Math.PI), new Vector3f(0, 1, 0));
-        Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, 0, posY+.77F)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
-        ClientProxy.AUX_GL_BUFFER.rewind();
-        GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "dial");
-        tes.draw();
+        GlStateManager.translate(posX, 0, posY);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("base");
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, .07F, posY);
-        GlStateManager.scale(.023F, .023F, .023F);
+        {
+        float rotation = (float) -MathHelper.clamp(value * (Math.PI / 100F), 0, (float) Math.PI);
+
+        Matrix4f rotMat = new Matrix4f().rotate(rotation, new Vector3f(0, 1, 0));
+        Matrix4f transMat = new Matrix4f().translate(new Vector3f(posX, 0, posY + 0.77F));
+        Matrix4f transform = new Matrix4f();
+        Matrix4f.mul(transMat, rotMat, transform);
+
+        transform.store(ClientProxy.AUX_GL_BUFFER);
+        ClientProxy.AUX_GL_BUFFER.rewind();
+        GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("dial");
+        }
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        {
+        GlStateManager.translate(posX, 0.07F, posY);
+        GlStateManager.scale(0.023F, 0.023F, 0.023F);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F);
         GlStateManager.rotate(90, 1, 0, 0);
 
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 
-        for (int i=0; i<11; i++) {
-            double angle = (Math.PI*1.1F)/11F * i;
+        for (int i = 0; i < 11; i++) {
+            double angle = (Math.PI * 1.1F) / 11F * i;
             float r = 68;
-            double x = r * Math.cos(angle-Math.PI)+i;
-            double y = r * Math.sin(angle-Math.PI);
-            font.drawString(Integer.toString(i*10), (float) (x - ((i==10)? 14 : 10)), (float) (29.5F+y), 0x303030, false);
+            double x = r * Math.cos(angle - Math.PI) + i;
+            double y = r * Math.sin(angle - Math.PI);
+            font.drawString(
+                Integer.toString(i * 10),
+                (float) (x - ((i == 10) ? 14 : 10)),
+                (float) (29.5F + y),
+                0x303030,
+                false
+            );
         }
 
         font.drawSplitString(label, -31, -10, 70, 0x303030);
-
+        }
         GlStateManager.popMatrix();
+
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override

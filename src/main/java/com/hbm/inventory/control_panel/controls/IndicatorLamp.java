@@ -36,44 +36,38 @@ public class IndicatorLamp extends Control {
         return new float[] {.5F, .5F, .18F};
     }
 
+    
     @Override
     public void render() {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_push_tex);
-        Tessellator tes = Tessellator.instance;
+
         IModelCustom model = getModel();
 
         boolean isLit = getVar("isLit").getBoolean();
-        float[] color = getVar("color").getEnum(EnumDyeColor.class).getColorComponentValues();
+        float[] rgb = getVar("color").getEnum(EnumDyeColor.class).getColorComponentValues();
 
         float lX = OpenGlHelper.lastBrightnessX;
         float lY = OpenGlHelper.lastBrightnessY;
 
         GlStateManager.disableTexture2D();
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(.3F, .3F, .3F, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(0.3F, 0.3F, 0.3F, 1F);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
         GlStateManager.enableTexture2D();
 
-        if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-        }
+        if (isLit) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        float cMul = isLit ? 1.5F : 0.5F;
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        float cMul = 0.5F;
-        if (isLit) {
-            cMul = 1.5F;
-        }
-        tes.setColorRGBA_F(color[0]*cMul, color[1]*cMul, color[2]*cMul, 1F);
-        model.tessellatePart(tes, "lamp");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(rgb[0] * cMul, rgb[1] * cMul, rgb[2] * cMul, 1F);
+        model.renderPart("lamp");
+        GlStateManager.popMatrix();
 
-        if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
-        }
+        if (isLit) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
     }

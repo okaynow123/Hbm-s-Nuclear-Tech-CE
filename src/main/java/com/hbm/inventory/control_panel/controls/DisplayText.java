@@ -79,58 +79,54 @@ public class DisplayText extends Control {
 
         textWidth = font.getStringWidth(text);
         height = font.FONT_HEIGHT;
-        float s = scale/500F;
+        float s = scale / 500F;
 
         float lX = OpenGlHelper.lastBrightnessX;
         float lY = OpenGlHelper.lastBrightnessY;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(posX, 0, posY);
-
-        GlStateManager.translate(0, .03F, 0);
+        GlStateManager.translate(0, 0.03F, 0);
         GlStateManager.scale(s, -s, s);
         GL11.glNormal3f(0.0F, 0.0F, -1.0F);
         GlStateManager.rotate(90, 1, 0, 0);
 
-        if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-        }
-
+        if (isLit) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
         GlStateManager.disableLighting();
         font.drawString(text, 0, 0, color, false);
         GlStateManager.enableLighting();
-
-        if (isLit) {
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
-        }
+        if (isLit) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
 
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
         GlStateManager.rotate(90, 1, 0, 0);
-        GlStateManager.translate(0, 0, -.01F);
+        GlStateManager.translate(0, 0, -0.01F);
 
         GlStateManager.disableTexture2D();
-        Tessellator tes = Tessellator.getInstance();
-        BufferBuilder buf = tes.getBuffer();
-        buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+
         float[] box = getBox();
-        float[] rgb = new float[]{0, 0, 0};
-        float d = 0;
-        buf.pos(box[0]-d, box[1]-d, -.01).tex(0, 0).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[0]-d, box[3], -.01).tex(0, 1).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[2]+d, box[3], -.01).tex(1, 1).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[2]+d, box[1]-d, -.01).tex(1, 0).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        rgb = new float[]{.3F, .3F, .3F};
-        d = .05F;
-        buf.pos(box[0]-d, box[1]-d, 0).tex(0, 0).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[0]-d, box[3]+d, 0).tex(0, 1).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[2]+d, box[3]+d, 0).tex(1, 1).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        buf.pos(box[2]+d, box[1]-d, 0).tex(1, 0).color(rgb[0], rgb[1], rgb[2], 1).endVertex();
-        tes.draw();
+
+        GL11.glColor4f(0F, 0F, 0F, 1F);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3f(box[0], box[1], -0.01F);
+        GL11.glVertex3f(box[0], box[3], -0.01F);
+        GL11.glVertex3f(box[2], box[3], -0.01F);
+        GL11.glVertex3f(box[2], box[1], -0.01F);
+        GL11.glEnd();
+        float d = 0.05F;
+        GL11.glColor4f(0.3F, 0.3F, 0.3F, 1F);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3f(box[0] - d, box[1] - d, 0F);
+        GL11.glVertex3f(box[0] - d, box[3] + d, 0F);
+        GL11.glVertex3f(box[2] + d, box[3] + d, 0F);
+        GL11.glVertex3f(box[2] + d, box[1] - d, 0F);
+        GL11.glEnd();
+
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
 
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override

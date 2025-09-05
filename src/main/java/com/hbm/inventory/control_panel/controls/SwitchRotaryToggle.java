@@ -44,31 +44,30 @@ public class SwitchRotaryToggle extends Control {
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_switch_rotary_toggle_tex);
-        Tessellator tes = Tessellator.instance;
 
         IModelCustom model = getModel();
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0F, posY);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
 
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setColorRGBA_F(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
         if (isFlipped) {
-            Matrix4f rot_mat = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(0, 1, 0));
-            Matrix4f trans_mat = new Matrix4f().translate(new Vector3f(posX, 0, posY));
-            Matrix4f transform_mat = new Matrix4f();
-            Matrix4f.mul(trans_mat, rot_mat, transform_mat);
-            transform_mat.store(ClientProxy.AUX_GL_BUFFER);
+            Matrix4f rot = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(0, 1, 0));
+            Matrix4f trans = new Matrix4f().translate(new Vector3f(posX, 0, posY));
+            Matrix4f mat = new Matrix4f();
+            Matrix4f.mul(trans, rot, mat);
+            mat.store(ClientProxy.AUX_GL_BUFFER);
             ClientProxy.AUX_GL_BUFFER.rewind();
             GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
         } else {
-            tes.setTranslation(posX, 0, posY);
+            GlStateManager.translate(posX, 0F, posY);
         }
-        model.tessellatePart(tes, "lever");
-        tes.draw();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        model.renderPart("lever");
+        GlStateManager.popMatrix();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
     }

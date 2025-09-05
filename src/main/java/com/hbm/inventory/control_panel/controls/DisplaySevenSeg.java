@@ -97,55 +97,53 @@ public class DisplaySevenSeg extends Control {
     public void render() {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_display_seven_seg_tex);
-        Tessellator tes = Tessellator.instance;
 
         IModelCustom model = getModel();
 
-        int value = Math.max(0, (int) getVar("value").getNumber()); //TODO: negative config
-
+        int value = Math.max(0, (int) getVar("value").getNumber());
         float lX = OpenGlHelper.lastBrightnessX;
         float lY = OpenGlHelper.lastBrightnessY;
 
-        int base = (isDecimal)? 10 : 16;
+        int base = (isDecimal) ? 10 : 16;
 
-        for (int i=0; i < digitCount; i++) {
+        for (int i = 0; i < digitCount; i++) {
             byte character = chars[value % base];
             value /= base;
 
-            float t_off = i * getSize()[0] - i * (i>0? .125F : 0);
+            float t_off = i * getSize()[0] - i * (i > 0 ? 0.125F : 0);
 
-            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-            tes.setTranslation(posX-t_off, 0, posY);
-            tes.setColorRGBA_F(1, 1, 1, 1);
-            model.tessellatePart(tes, "base");
-            tes.draw();
+            // base (textured)
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX - t_off, 0F, posY);
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            model.renderPart("base");
+            GlStateManager.popMatrix();
 
+            // border (untextured grey)
             GlStateManager.disableTexture2D();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX - t_off, 0F, posY);
+            GlStateManager.color(0.31F, 0.31F, 0.31F, 1F);
+            model.renderPart("border");
+            GlStateManager.popMatrix();
 
-            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-            tes.setTranslation(posX-t_off, 0, posY);
-            tes.setColorRGBA_F(.31F, .31F, .31F, 1);
-            model.tessellatePart(tes, "border");
-            tes.draw();
-
+            // segments (fullbright, untextured, per-segment color/intensity)
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-
             for (int j = 0; j < 7; j++) {
                 boolean enabled = (character & (1 << j)) != 0;
-                float cMul = (enabled) ? 1 : 0.1F;
+                float cMul = enabled ? 1F : 0.1F;
 
-                tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-                tes.setTranslation(posX-t_off, 0, posY);
-                tes.setColorRGBA_F(color[0] * cMul, color[1] * cMul, color[2] * cMul, 1);
-                model.tessellatePart(tes, "seg_" + (6 - j));
-                tes.draw();
-            }
-
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
-            GlStateManager.enableTexture2D();
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(posX - t_off, 0F, posY);
+                GlStateManager.color(color[0] * cMul, color[1] * cMul, color[2] * cMul, 1F);
+                model.renderPart("seg_" + (6 - j));
+                GlStateManager.popMatrix();
         }
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
+        GlStateManager.enableTexture2D();
+    }
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+    GlStateManager.shadeModel(GL11.GL_FLAT);
     }
 
     @Override
