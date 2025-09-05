@@ -108,7 +108,7 @@ public class ItemGunStinger extends ItemGunBaseNT {
 
         for(Entity entity : entities) {
             if(entity.height < 0.5F || !entity.canBeCollidedWith()) continue;
-            toEntity.setComponents(entity.posX - x, entity.posY + entity.height / 2D - y, entity.posZ - z);
+            toEntity.set(entity.posX - x, entity.posY + entity.height / 2D - y, entity.posZ - z);
 
             double vecProd = toEntity.x * delta.x + toEntity.y * delta.y + toEntity.z * delta.z;
             double bot = toEntity.toVec3d().length() * delta.toVec3d().length();

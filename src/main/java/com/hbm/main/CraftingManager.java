@@ -481,10 +481,10 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.steel_scaffold, 8, 2), "SSS", "SDS", "SSS", 'S', ModBlocks.steel_scaffold, 'D', "dyeWhite" );
 		addRecipeAuto(new ItemStack(ModBlocks.steel_scaffold, 8, 3), "SSS", "SDS", "SSS", 'S', ModBlocks.steel_scaffold, 'D', "dyeYellow" );
 		// TODO: wood structures
-		/*addRecipeAuto(new ItemStack(ModBlocks.wood_barrier, 8), "SFS", "SFS", 'S', KEY_SLAB, 'F', "fenceWood" );
-		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.ROOF, 16), "SSS", "F F", 'S', KEY_SLAB, 'F', "fenceWood" );
-		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.CEILING, 16), "F F", "SSS", 'S', KEY_SLAB, 'F', "fenceWood" );
-		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.SCAFFOLD, 4), "SSS", "F F", "F F", 'S', KEY_SLAB, 'F', "fenceWood" );*/
+		addRecipeAuto(new ItemStack(ModBlocks.wood_barrier, 8), "SFS", "SFS", 'S', KEY_SLAB, 'F', "fenceWood" );
+//		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.ROOF, 16), "SSS", "F F", 'S', KEY_SLAB, 'F', "fenceWood" );
+//		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.CEILING, 16), "F F", "SSS", 'S', KEY_SLAB, 'F', "fenceWood" );
+//		addRecipeAuto(DictFrame.fromOne(ModBlocks.wood_structure, EnumWoodStructure.SCAFFOLD, 4), "SSS", "F F", "F F", 'S', KEY_SLAB, 'F', "fenceWood" );
 
 		reg2();
 

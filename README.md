@@ -1,3 +1,8 @@
+> **IMPORTANT: FOLLOW THE ISSUE TEMPLATE WHILE REPORTING ISSUES**  
+> Due to the amount of issues we get daily, we enforce strict issue report guidelines stated in the templates. 
+Failure to follow the templates will result in closing and locking of the issue without a warning. Rule does not apply
+retroacitvely. Please respect our time and make sure issue reports are of quality.
+
 # <u>**HBM's Nuclear Tech Mod Community Edition**</u>
 An attempt at a "definitive" port of NTM to 1.12. Came from necessity as other developers have failed to update and maintain other forks. Heavy WIP as there is much content to port
 

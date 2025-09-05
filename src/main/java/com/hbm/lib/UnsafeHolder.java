@@ -13,6 +13,7 @@ public class UnsafeHolder {
     public static final Unsafe U;
 
     static {
+        MainRegistry.logger.info("Loading UnsafeHolder");
         U = getUnsafe();
     }
 

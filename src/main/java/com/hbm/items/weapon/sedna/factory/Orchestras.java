@@ -1156,7 +1156,7 @@ public class Orchestras {
 
             if(timer < 300) {
                 if(runningAudio == null || !runningAudio.isPlaying()) {
-                    AudioWrapper audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.tauLoop, SoundCategory.PLAYERS, (float) entity.posX, (float) entity.posY, (float) entity.posZ, 1F, 15F);
+                    AudioWrapper audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.tauLoop, SoundCategory.PLAYERS, (float) entity.posX, (float) entity.posY, (float) entity.posZ, 1F, 15F, 0.75F, 10);
                     audio.updatePitch(0.75F);
                     ItemGunBaseNT.loopedSounds.put(entity, audio);
                     audio.startSound();
