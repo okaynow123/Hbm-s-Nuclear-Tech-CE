@@ -21,7 +21,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;
@@ -42,8 +42,9 @@ public class GUISILEX extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float f) {
         super.drawScreen(mouseX, mouseY, f);
+        super.renderHoveredToolTip(mouseX, mouseY);
 
-        silex.tankNew.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 42, 52, 7);
+        silex.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 42, 52, 7);
 
         if (silex.current != null) {
             this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 27, guiTop + 72, 16, 52, mouseX, mouseY, new String[]{silex.currentFill + "/" + silex.maxFill + "mB", silex.current.toStack().getDisplayName()});
@@ -82,9 +83,9 @@ public class GUISILEX extends GuiInfoContainer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-        if (silex.tankNew.getFill() > 0) {
+        if (silex.tank.getFill() > 0) {
 
-            if (silex.tankNew.getTankType() == Fluids.PEROXIDE || silex.fluidConversion.containsKey(silex.tankNew.getTankType()) || SILEXRecipes.getOutput(new ItemStack(ModItems.fluid_icon, 1, silex.tankNew.getTankType().getID())) != null) {
+            if (silex.tank.getTankType() == Fluids.PEROXIDE || silex.fluidConversion.containsKey(silex.tank.getTankType()) || SILEXRecipes.getOutput(new ItemStack(ModItems.fluid_icon, 1, silex.tank.getTankType().getID())) != null) {
                 drawTexturedModalRect(guiLeft + 7, guiTop + 41, 176, 118, 54, 9);
             } else {
                 drawTexturedModalRect(guiLeft + 7, guiTop + 41, 176, 109, 54, 9);
@@ -98,7 +99,7 @@ public class GUISILEX extends GuiInfoContainer {
         drawTexturedModalRect(guiLeft + 26, guiTop + 124 - f, 176, 109 - f, 16, f);
 
         int i = silex.getFluidScaled(52);
-        drawTexturedModalRect(guiLeft + 8, guiTop + 42, 176, silex.tankNew.getTankType() == Fluids.PEROXIDE ? 43 : 50, i, 7);
+        drawTexturedModalRect(guiLeft + 8, guiTop + 42, 176, silex.tank.getTankType() == Fluids.PEROXIDE ? 43 : 50, i, 7);
 
         if (silex.mode != EnumWavelengths.NULL) {
             float freq = 0.0125F * (float) Math.pow(2, silex.mode.ordinal());

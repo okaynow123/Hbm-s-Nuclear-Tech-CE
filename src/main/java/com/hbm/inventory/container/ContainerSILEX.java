@@ -31,7 +31,7 @@ public class ContainerSILEX extends Container {
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 6, 152, 72));
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 7, 134, 90));
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 8, 152, 90));
-		this.addSlotToContainer(new SlotItemHandler(te.inventory, 8, 134, 108));
+		this.addSlotToContainer(new SlotItemHandler(te.inventory, 9, 134, 108));
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 10, 152, 108));
 		
 		for(int i = 0; i < 3; i++)
@@ -81,7 +81,7 @@ public class ContainerSILEX extends Container {
 //
 //		return var3;
 //	}
-
+	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int par2) {
 		ItemStack var3 = ItemStack.EMPTY;
 		Slot var4 = this.inventorySlots.get(par2);
@@ -100,7 +100,7 @@ public class ContainerSILEX extends Container {
 					if (!this.mergeItemStack(var5, 1, 2, false)) {
 						return ItemStack.EMPTY ;
 					}
-				} else if (FluidContainerRegistry.getFluidContent(var3, silex.tankNew.getTankType()) > 0) {
+				} else if (FluidContainerRegistry.getFluidContent(var3, silex.tank.getTankType()) > 0) {
 					if (!this.mergeItemStack(var5, 2, 3, false)) {
 						return ItemStack.EMPTY;
 					}

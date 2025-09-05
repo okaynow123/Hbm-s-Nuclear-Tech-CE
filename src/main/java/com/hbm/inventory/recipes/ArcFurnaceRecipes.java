@@ -99,12 +99,11 @@ public class ArcFurnaceRecipes extends SerializableRecipe {
         }
 
         // Autogen for furnace recipes
-        for(Object o : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
+        for(Map.Entry entry : FurnaceRecipes.instance().getSmeltingList().entrySet()) {
             ItemStack input = (ItemStack) entry.getKey();
             ItemStack output = (ItemStack) entry.getValue();
 
-            if(input != null && output != null) {
+            if(input != null && output != null && !input.isEmpty() && !output.isEmpty()) {
                 RecipesCommon.ComparableStack comp = new RecipesCommon.ComparableStack(input);
                 if(OreDictManager.arcSmeltable.contains(comp) || OreDictManager.arcSmeltable.contains(new RecipesCommon.ComparableStack(output))) {
                     ArcFurnaceRecipe recipe = new ArcFurnaceRecipe();
@@ -188,7 +187,7 @@ public class ArcFurnaceRecipes extends SerializableRecipe {
     }
 
     public static HashMap<Object, Object> getFluidRecipes() {
-        HashMap<Object, Object> recipes = new HashMap<Object, Object>();
+        HashMap<Object, Object> recipes = new HashMap<>();
         for(Tuple.Pair<RecipesCommon.AStack, ArcFurnaceRecipe> recipe : ArcFurnaceRecipes.recipeList) {
             if(recipe.getValue().fluidOutput != null && recipe.getValue().fluidOutput.length > 0) {
                 Object[] out = new Object[recipe.getValue().fluidOutput.length];

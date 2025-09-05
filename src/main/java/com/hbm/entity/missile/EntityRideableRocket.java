@@ -668,7 +668,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	}
 
 	public int getStateTimer() {
-		return dataWatcher.getWatchableObjectInt(WATCHABLE_TIMER);
+		// TODO: space content should be separated so I'll leave 0 here
+		return 0; // dataWatcher.getWatchableObjectInt(WATCHABLE_TIMER);
 	}
 
 	public void setStateTimer(int timer) {

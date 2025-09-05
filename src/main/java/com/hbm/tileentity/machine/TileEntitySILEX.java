@@ -30,8 +30,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +40,12 @@ import java.util.HashMap;
 public class TileEntitySILEX extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IFFtoNTMF, IGUIProvider {
 
 	public EnumWavelengths mode = EnumWavelengths.NULL;
-	public FluidTank tank;
-	public FluidTankNTM tankNew;
+	public FluidTankNTM tank;
 	public ComparableStack current;
 	public int currentFill;
 	public static final int maxFill = 16000;
 	public int progress;
 	public final int processTime = 80;
-
-	private static boolean converted = false;
 	
 	//0: Input
 	//2-3: Fluid Containers
@@ -60,15 +55,10 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	public TileEntitySILEX() {
 		super(11, true, false);
 		//acid
-		tank = new FluidTank(16000);
-		tankNew = new FluidTankNTM(Fluids.PEROXIDE, 16000);
-		converted = true;
+		tank = new FluidTankNTM(Fluids.PEROXIDE, 16000);
 	}
 
-	public Fluid getTankType(){
-		return tank.getFluid() == null ? null : tank.getFluid().getFluid();
-	}
-	
+
 	@Override
 	public String getName() {
 		return "container.machineSILEX";
@@ -76,19 +66,14 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 	@Override
 	public void update() {
-		if(!converted){
-			resizeInventory(11);
-			convertAndSetFluid(tank.getFluid().getFluid(), tank, tankNew);
-			converted = true;
-		}
 		if(!world.isRemote) {
 
-			tankNew.setType(1, 1, inventory);
-			tankNew.loadTank(2, 3, inventory);
+			tank.setType(1, 1, inventory);
+			tank.loadTank(2, 3, inventory);
 
 			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10).getRotation(ForgeDirection.UP);
-			this.trySubscribe(tankNew.getTankType(), world, pos.getX() + dir.offsetX * 2, pos.getY() + 1, pos.getZ() + dir.offsetZ * 2, dir);
-			this.trySubscribe(tankNew.getTankType(), world, pos.getX() - dir.offsetX * 2, pos.getY() + 1, pos.getZ() - dir.offsetZ * 2, dir.getOpposite());
+			this.trySubscribe(tank.getTankType(), world, pos.getX() + dir.offsetX * 2, pos.getY() + 1, pos.getZ() + dir.offsetZ * 2, dir);
+			this.trySubscribe(tank.getTankType(), world, pos.getX() - dir.offsetX * 2, pos.getY() + 1, pos.getZ() - dir.offsetZ * 2, dir.getOpposite());
 
 			loadFluid();
 
@@ -115,7 +100,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 		buf.writeInt(progress);
 		BufferUtil.writeString(buf, mode.toString());
 
-		tankNew.serialize(buf);
+		tank.serialize(buf);
 
 		if(this.current != null) {
 			buf.writeInt(Item.getIdFromItem(this.current.item));
@@ -130,7 +115,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 		progress = buf.readInt();
 		mode = EnumWavelengths.valueOf(BufferUtil.readString(buf));
 
-		tankNew.deserialize(buf);
+		tank.deserialize(buf);
 
 		if(currentFill > 0) {
 			current = new ComparableStack(Item.getItemById(buf.readInt()), 1, buf.readInt());
@@ -149,7 +134,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	}
 	
 	public int getFluidScaled(int i) {
-		return (tankNew.getFill() * i) / tankNew.getMaxFill();
+		return (tank.getFill() * i) / tank.getMaxFill();
 	}
 	
 	public int getFillScaled(int i) {
@@ -172,7 +157,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	
 	public void loadFluid() {
 		
-		ComparableStack conv = fluidConversion.get(tankNew.getTankType());
+		ComparableStack conv = fluidConversion.get(tank.getTankType());
 
 		if(conv != null) {
 
@@ -182,12 +167,12 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 			if(current != null && current.equals(conv)) {
 
-				int toFill = Math.min(50, Math.min(maxFill - currentFill, tankNew.getFill()));
+				int toFill = Math.min(50, Math.min(maxFill - currentFill, tank.getFill()));
 				currentFill += toFill;
-				tankNew.setFill(tankNew.getFill() - toFill);
+				tank.setFill(tank.getFill() - toFill);
 			}
 		} else {
-			ComparableStack direct = new ComparableStack(ModItems.fluid_icon, 1, tankNew.getTankType().getID());
+			ComparableStack direct = new ComparableStack(ModItems.fluid_icon, 1, tank.getTankType().getID());
 
 			if(SILEXRecipes.getOutput(direct.toStack()) != null) {
 
@@ -197,9 +182,9 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 				if(current != null && current.equals(direct)) {
 
-					int toFill = Math.min(50, Math.min(maxFill - currentFill, tankNew.getFill()));
+					int toFill = Math.min(50, Math.min(maxFill - currentFill, tank.getFill()));
 					currentFill += toFill;
-					tankNew.setFill(tankNew.getFill() - toFill);
+					tank.setFill(tank.getFill() - toFill);
 				}
 			}
 		}
@@ -209,7 +194,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 		if(loadDelay > 20)
 			loadDelay = 0;
 
-		if(loadDelay == 0 && !inventory.getStackInSlot(0).isEmpty() && tankNew.getTankType() == Fluids.PEROXIDE && (this.current == null || this.current.equals(new ComparableStack(inventory.getStackInSlot(0)).makeSingular()))) {
+		if(loadDelay == 0 && !inventory.getStackInSlot(0).isEmpty() && tank.getTankType() == Fluids.PEROXIDE && (this.current == null || this.current.equals(new ComparableStack(inventory.getStackInSlot(0)).makeSingular()))) {
 			SILEXRecipe recipe = SILEXRecipes.getOutput(inventory.getStackInSlot(0));
 
 			if(recipe == null)
@@ -217,10 +202,10 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 			int load = recipe.fluidProduced;
 
-			if(load <= this.maxFill - this.currentFill && load <= tankNew.getFill()) {
+			if(load <= this.maxFill - this.currentFill && load <= tank.getFill()) {
 				this.currentFill += load;
 				this.current = new ComparableStack(inventory.getStackInSlot(0)).makeSingular();
-				tankNew.setFill(tankNew.getFill() - load);
+				tank.setFill(tank.getFill() - load);
 				this.inventory.getStackInSlot(0).shrink(1);
 			}
 		}
@@ -265,10 +250,10 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 		if(!inventory.getStackInSlot(4).isEmpty()) {
 			
 			for(int i = 5; i < 11; i++) {
-				
-				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getCount() < inventory.getStackInSlot(i).getMaxStackSize() && InventoryUtil.doesStackDataMatch(inventory.getStackInSlot(3), inventory.getStackInSlot(i))) {
+
+				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getCount() < inventory.getStackInSlot(i).getMaxStackSize() && InventoryUtil.doesStackDataMatch(inventory.getStackInSlot(4), inventory.getStackInSlot(i))) {
 					inventory.getStackInSlot(i).grow(1);
-					inventory.getStackInSlot(3).shrink(1);
+					inventory.getStackInSlot(4).shrink(1);
 					return;
 				}
 			}
@@ -276,8 +261,8 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 			for(int i = 5; i < 11; i++) {
 				
 				if(inventory.getStackInSlot(i).isEmpty()) {
-					inventory.setStackInSlot(i, inventory.getStackInSlot(3).copy());
-					inventory.setStackInSlot(3, ItemStack.EMPTY);
+					inventory.setStackInSlot(i, inventory.getStackInSlot(4).copy());
+					inventory.setStackInSlot(4, ItemStack.EMPTY);
 					return;
 				}
 			}
@@ -305,11 +290,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(!converted){
-			this.tank.readFromNBT(nbt.getCompoundTag("tank"));
-		} else{
-			this.tankNew.readFromNBT(nbt, "tankNew");
-		}
+		this.tank.readFromNBT(nbt, "tankNew");
 		this.currentFill = nbt.getInteger("fill");
 		this.mode = nbt.hasKey("mode") ? EnumWavelengths.valueOf(nbt.getString("mode")) : EnumWavelengths.NULL;
 		
@@ -321,11 +302,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(!converted){
-			nbt.setTag("tank", this.tank.writeToNBT(new NBTTagCompound()));
-		} else{
-			this.tankNew.writeToNBT(nbt, "tankNew");
-		}
+		this.tank.writeToNBT(nbt, "tankNew");
 		nbt.setInteger("fill", this.currentFill);
 		nbt.setString("mode", mode.toString());
 		
@@ -350,12 +327,12 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 	@Override
 	public FluidTankNTM[] getAllTanks() {
-		return new FluidTankNTM[] {tankNew};
+		return new FluidTankNTM[] {tank};
 	}
 
 	@Override
 	public FluidTankNTM[] getReceivingTanks() {
-		return new FluidTankNTM[] {tankNew};
+		return new FluidTankNTM[] {tank};
 	}
 	
 	@Override
