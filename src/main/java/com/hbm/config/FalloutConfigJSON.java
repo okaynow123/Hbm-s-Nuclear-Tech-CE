@@ -3,20 +3,20 @@ package com.hbm.config;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
@@ -101,24 +101,26 @@ public class FalloutConfigJSON {
         /* petrify all wooden things possible */
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LOG)
+                .withPreserveState(BlockRotatedPillar.AXIS)
                 .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.LOG2)
+                .withPreserveState(BlockRotatedPillar.AXIS)
                 .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.RED_MUSHROOM_BLOCK.getStateFromMeta(10))
                 .shouldMatchState(true)
-                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
                 .setBlockState(Blocks.BROWN_MUSHROOM_BLOCK.getStateFromMeta(10))
                 .shouldMatchState(true)
-                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState(), 1))
+                .primaryStates(new Tuple<>(ModBlocks.waste_log.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), 1))
                 .setMax(woodEffectRange));
 
         entries.add(new FalloutEntry()
@@ -276,6 +278,10 @@ public class FalloutConfigJSON {
         private boolean matchState = true;
         private boolean matchesOpaque = false;
 
+
+        @SuppressWarnings("unchecked")
+        private IProperty<? extends Comparable<?>>[] preservedProperties = null;
+
         //BlockState / Weight
         private Tuple<IBlockState, Integer>[] primaryBlocks = null;
         private Tuple<IBlockState, Integer>[] secondaryBlocks = null;
@@ -291,6 +297,15 @@ public class FalloutConfigJSON {
 
         private static <T extends Comparable<T>> IBlockState applyProperty(IBlockState state, IProperty<T> prop, Object value) {
             return state.withProperty(prop, (T) value);
+        }
+
+        public void setPreserveState(IProperty<?>... properties) {
+            this.preservedProperties = properties;
+        }
+
+        public FalloutEntry withPreserveState(IProperty<?>... properties) {
+            this.preservedProperties = properties;
+            return this;
         }
 
         private static String stateToString(IBlockState state) {
@@ -333,6 +348,7 @@ public class FalloutConfigJSON {
             if (obj.has("matchesMaterial"))
                 entry.setMatchingMaterial(matNames.get(obj.get("mustBeOpaque").getAsString()));
             if (obj.has("restrictDepth")) entry.isSolid(obj.get("restrictDepth").getAsBoolean());
+            if(obj.has("preserveState")) entry.setPreserveState(readPreserveStateArray( entry.blockState.getBlock(), obj.get("preserveState").getAsJsonArray()));
 
             if (obj.has("primarySubstitution")) entry.primaryStates(readMetaArray(obj.get("primarySubstitution")));
             if (obj.has("secondarySubstitutions"))
@@ -347,6 +363,41 @@ public class FalloutConfigJSON {
 
             return entry;
         }
+
+        private static IProperty<?>[] readPreserveStateArray(Block block, JsonElement element) {
+
+            if (!element.isJsonArray()) return null;
+            JsonArray array = element.getAsJsonArray();
+            var outArray = new IProperty<?>[array.size()];
+            for(int index = 0; index < array.size(); index++){
+                String rawProperty = array.get(index).getAsString();
+                IProperty property = getPropertyByName(block, rawProperty);
+                if(property!=null)
+                    outArray[index] = property;
+            }
+
+            return outArray;
+        }
+
+        private static String writePreserveStateArray(IProperty<?>[] properties){
+            var sb = new StringBuilder();
+            sb.append("[");
+            for(int index = 0; index < properties.length; index++){
+                sb.append(properties[index].getName());
+                sb.append(index == properties.length - 1? "]":", ");
+            }
+            return sb.toString();
+        }
+
+        private static IProperty<?> getPropertyByName(Block block, String name) {
+            for (IProperty<?> prop : block.getBlockState().getProperties()) {
+                if (prop.getName().equals(name)) {
+                    return prop;
+                }
+            }
+            return null;
+        }
+
 
         private static void writeStateArray(JsonWriter writer, Tuple<IBlockState, Integer>[] array) throws IOException {
             writer.beginArray();
@@ -566,9 +617,45 @@ public class FalloutConfigJSON {
             }
 
             IBlockState newState = conversion.block.getStateFromMeta(conversion.meta);
+            if(preservedProperties != null) {
+                for (IProperty<?> property : preservedProperties) {
+                    newState = copyProperty(blockState, newState, property.getName());
+                }
+            }
             world.setBlockState(pos, newState, 3);
             return true;
         }
+
+        //GENERIC SLUDGE
+        //FUCK YOU MINECAFT
+        @SuppressWarnings("unchecked")
+        private static IBlockState copyProperty(IBlockState from, IBlockState to, String propertyName) {
+            IProperty<?> fromProp = getPropertyByName(from.getBlock(), propertyName);
+            IProperty<?> toProp = getPropertyByName(to.getBlock(), propertyName);
+
+            if (fromProp == null || toProp == null) return to;
+
+            Object oldValue = from.getValue(fromProp);
+
+            if (!(oldValue instanceof Enum)) return to;
+
+            Enum oldEnum = (Enum) oldValue;
+            Object mappedValue = null;
+
+            for (Object allowed : toProp.getAllowedValues()) {
+                if (allowed instanceof Enum) {
+                    Enum allowedEnum = (Enum) allowed;
+                    if (allowedEnum.ordinal() == oldEnum.ordinal()) {
+                        mappedValue = allowedEnum;
+                        break;
+                    }
+                }
+            }
+
+            if (mappedValue == null) return to; // no compatible value found
+            return to.withProperty((IProperty) toProp, (Comparable) mappedValue);
+        }
+
 
         private RecipesCommon.MetaBlock chooseRandomOutcome(Tuple<IBlockState, Integer>[] blocks) {
             if (blocks == null) return null;
@@ -610,6 +697,11 @@ public class FalloutConfigJSON {
                 }
             }
             if (isSolid) writer.name("restrictDepth").value(true);
+            if(preservedProperties != null) {
+                writer.name("preserveState").value(
+                        writePreserveStateArray(preservedProperties).toString()
+                );
+            }
 
             if (primaryBlocks != null) {
                 writer.name("primarySubstitution");
