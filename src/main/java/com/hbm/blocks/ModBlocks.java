@@ -1131,6 +1131,9 @@ public class ModBlocks {
 	public static final Block struct_watz_core = new BlockStruct(Material.IRON, "struct_watz_core", TileEntityWatzStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_icf_core = new BlockPlasmaStruct(Material.IRON, "struct_icf_core", TileEntityICFStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
+    // Wood Barrier
+    public static final Block wood_barrier = new BlockBarrier(Material.WOOD, "wood_barrier").setSoundType(SoundType.WOOD).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(15.0F);
+
 	//Big reactor
 
 	// PWR
