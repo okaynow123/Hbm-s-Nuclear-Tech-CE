@@ -42,6 +42,11 @@ public class SlotSmelting extends SlotTakeOnly {
         this.onCrafting(stack);
     }
 
+    public void awardXP(ItemStack stack, int amount)
+    {
+        onCrafting(stack, amount);
+    }
+
     @Override
     protected void onCrafting(ItemStack stack)
     {

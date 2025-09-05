@@ -2,6 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.inventory.SlotSmelting;
 import com.hbm.inventory.SlotTakeOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -122,5 +123,21 @@ public class ContainerBase extends Container {
         for (int row = 0; row < rows; row++) for (int col = 0; col < cols; col++) {
             this.addSlotToContainer(new SlotTakeOnly(inv, col + row * cols + from, x + col * slotSize, y + row * slotSize));
         }
+    }
+
+    public boolean handleSmeltingTransfer(Slot slot, ItemStack stack, ItemStack rStack, int startIndex, int endIndex) {
+        int originalCount = stack.getCount();
+
+        if (!this.mergeItemStack(stack, startIndex, endIndex, true)) {
+            return false;
+        }
+
+        int movedCount = originalCount - stack.getCount();
+
+        if (movedCount > 0 && slot instanceof SlotSmelting slotSmelting) {
+            slotSmelting.awardXP(rStack, movedCount);
+        }
+
+        return true;
     }
 }

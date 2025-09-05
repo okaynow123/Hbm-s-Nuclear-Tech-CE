@@ -7,18 +7,18 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineElectricFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerMachineElectricFurnace extends Container {
+public class ContainerMachineElectricFurnace extends ContainerBase {
 
 	private TileEntityMachineElectricFurnace diFurnace;
 
 	public ContainerMachineElectricFurnace(InventoryPlayer invPlayer, TileEntityMachineElectricFurnace tedf) {
+        super(invPlayer, tedf.inventory);
 
-		diFurnace = tedf;
+        diFurnace = tedf;
 
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 56, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 56, 17));
@@ -49,12 +49,9 @@ public class ContainerMachineElectricFurnace extends Container {
 			rStack = stack.copy();
 
             if (index == 2) {
-                if (!this.mergeItemStack(stack, 4, this.inventorySlots.size(), true)) {
+                if(!handleSmeltingTransfer(slot, stack, rStack, 4, this.inventorySlots.size())) {
                     return ItemStack.EMPTY;
                 }
-
-                slot.onSlotChange(stack, rStack);
-                slot.onTake(player, rStack);
             }
 			else if(index <= 3) {
 				if(!this.mergeItemStack(stack, 4, this.inventorySlots.size(), true)) {
