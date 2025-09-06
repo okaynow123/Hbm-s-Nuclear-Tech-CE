@@ -165,6 +165,7 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
       Item.getItemFromBlock(ModBlocks.secure_access_door),
       Item.getItemFromBlock(ModBlocks.sliding_seal_door),
       Item.getItemFromBlock(ModBlocks.sliding_gate_door),
+      Item.getItemFromBlock(ModBlocks.transition_seal),
     };
   }
 
@@ -314,9 +315,8 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
           GlStateManager.shadeModel(GL11.GL_FLAT);
         }
       };
-    }
-
-    return new ItemRenderBase() {
+    } else {
+      return new ItemRenderBase() {
       public void renderInventory() {
         GlStateManager.translate(0, -4.5, 0);
         GlStateManager.scale(0.5, 0.5, 0.5);
@@ -331,7 +331,8 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
         ResourceManager.transition_seal.controller.setAnim(w);
         ResourceManager.transition_seal.renderAnimated(System.currentTimeMillis());
         GlStateManager.shadeModel(GL11.GL_FLAT);
-      }
-    };
+        }
+      };
+    }
   }
 }
