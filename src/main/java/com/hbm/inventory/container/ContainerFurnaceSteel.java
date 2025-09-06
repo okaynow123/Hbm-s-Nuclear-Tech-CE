@@ -1,19 +1,19 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotSmelting;
 import com.hbm.tileentity.machine.TileEntityFurnaceSteel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFurnaceSteel extends Container {
+public class ContainerFurnaceSteel extends ContainerBase {
 	
 	protected TileEntityFurnaceSteel furnace;
 	
 	public ContainerFurnaceSteel(InventoryPlayer invPlayer, TileEntityFurnaceSteel furnace) {
+        super(invPlayer, furnace.inventory);
 		this.furnace = furnace;
 
 		//input
@@ -21,9 +21,9 @@ public class ContainerFurnaceSteel extends Container {
 		this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 1, 35, 35));
 		this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 2, 35, 53));
 		//output
-		this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 3, 125, 17));
-		this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 4, 125, 35));
-		this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 5, 125, 53));
+		this.addSlotToContainer(new SlotSmelting(invPlayer.player, furnace.inventory, 3, 125, 17));
+		this.addSlotToContainer(new SlotSmelting(invPlayer.player, furnace.inventory, 4, 125, 35));
+		this.addSlotToContainer(new SlotSmelting(invPlayer.player, furnace.inventory, 5, 125, 53));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
@@ -38,32 +38,37 @@ public class ContainerFurnaceSteel extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) this.inventorySlots.get(index);
+		ItemStack rStack = ItemStack.EMPTY;
+		Slot slot = this.inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()) {
-			ItemStack originalStack = slot.getStack();
-			stack = originalStack.copy();
+			ItemStack stack = slot.getStack();
+            rStack = stack.copy();
 
-			if(index <= 5) {
-				if(!this.mergeItemStack(originalStack, 6, this.inventorySlots.size(), true)) {
+            if(index >= 3 && index <= 5) {
+                if(!handleSmeltingTransfer(slot, stack, rStack, 6, this.inventorySlots.size())) {
+                    return ItemStack.EMPTY;
+                }
+            }
+			else if(index < 3) {
+				if(!this.mergeItemStack(stack, 6, this.inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
 				
-				slot.onSlotChange(originalStack, stack);
+				slot.onSlotChange(stack, rStack);
 				
-			} else if(!this.mergeItemStack(originalStack, 0, 3, false)) {
+			} else if(!this.mergeItemStack(stack, 0, 3, false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if(originalStack.getCount() == 0) {
+			if(stack.isEmpty()) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}
 		}
 
-		return stack;
+		return rStack;
 	}
 
 	@Override

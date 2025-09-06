@@ -1,27 +1,26 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotSmelting;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityFurnaceCombination;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFurnaceCombo extends Container {
+public class ContainerFurnaceCombo extends ContainerBase {
 
     protected TileEntityFurnaceCombination furnace;
 
     public ContainerFurnaceCombo(InventoryPlayer invPlayer, TileEntityFurnaceCombination furnace) {
+        super(invPlayer, furnace.inventory);
         this.furnace = furnace;
 
         //input
         this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 0, 26, 36));
-        //output
-        // TODO: implement SlotSmelting to give experience
-        this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 1, 89, 36));
+        // output
+        this.addSlotToContainer(new SlotSmelting(invPlayer.player, furnace.inventory, 1, 89, 36));
         this.addSlotToContainer(new SlotItemHandler(furnace.inventory, 2, 136, 18));
         this.addSlotToContainer(new SlotTakeOnly(furnace.inventory, 3, 136, 54));
         for(int i = 0; i < 3; i++) {
@@ -37,32 +36,37 @@ public class ContainerFurnaceCombo extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
+        ItemStack rStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack()) {
-            ItemStack originalStack = slot.getStack();
-            stack = originalStack.copy();
+            ItemStack stack = slot.getStack();
+            rStack = stack.copy();
 
-            if(index <= 3) {
-                if(!this.mergeItemStack(originalStack, 4, this.inventorySlots.size(), true)) {
+            if(index == 1) {
+                if(!handleSmeltingTransfer(slot, stack, rStack, 4, this.inventorySlots.size())) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if(index <= 3) {
+                if(!this.mergeItemStack(stack, 4, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(originalStack, stack);
+                slot.onSlotChange(stack, rStack);
 
-            } else if(!this.mergeItemStack(originalStack, 0, 1, false)) {
+            } else if(!this.mergeItemStack(stack, 0, 1, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if(originalStack.getCount() == 0) {
+            if(stack.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
         }
 
-        return stack;
+        return rStack;
     }
 
     @Override

@@ -5,12 +5,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
 public class TileEntityBarrier extends TileEntity {
+
   @Override
-  public @NotNull AxisAlignedBB getRenderBoundingBox() {
+  public AxisAlignedBB getRenderBoundingBox() {
     return TileEntity.INFINITE_EXTENT_AABB;
   }
 

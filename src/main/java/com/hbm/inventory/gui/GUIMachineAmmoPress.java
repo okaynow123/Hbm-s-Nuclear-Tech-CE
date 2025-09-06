@@ -218,6 +218,8 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
       if (i >= recipes.size()) break;
 
       int ind = i - index * 3;
+      int col = ind / 3;
+      int row = ind % 3;
 
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       RenderHelper.enableGUIStandardItemLighting();
@@ -232,10 +234,9 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
 
       itemRender.zLevel = 100.0F;
       itemRender.renderItemAndEffectIntoGUI(
-          Objects.requireNonNull(recipe.output),
-          guiLeft + 17 + 18 * (ind / 3),
-          guiTop + 18 + 18 * (ind % 3));
-
+              Objects.requireNonNull(recipe.output),
+              guiLeft + 17 + 18 * col,
+              guiTop + 18 + 18 * row);
       itemRender.zLevel = 0.0F;
 
       GlStateManager.enableAlpha();
@@ -243,17 +244,20 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
       this.mc.getTextureManager().bindTexture(texture);
       this.zLevel = 300.0F;
 
-      if (selection == AmmoPressRecipes.recipes.indexOf(this.recipes.get(i)))
+      if (selection == AmmoPressRecipes.recipes.indexOf(this.recipes.get(i))) {
         this.drawTexturedModalRect(
-            guiLeft + 16 + 18 * (ind / 3), guiTop + 17 + 18 * (ind % 3), 194, 0, 18, 18);
-      else
+                guiLeft + 16 + 18 * col, guiTop + 17 + 18 * row, 194, 0, 18, 18);
+      } else {
         this.drawTexturedModalRect(
-            guiLeft + 16 + 18 * (ind / 3), guiTop + 17 + 18 * (ind % 3), 212, 0, 18, 18);
+                guiLeft + 16 + 18 * col, guiTop + 17 + 18 * row, 212, 0, 18, 18);
+      }
 
       GlStateManager.pushMatrix();
       GlStateManager.translate(
-          guiLeft + 17 + 18 * ((float) ind / 3) + 8, guiTop + 18 + 18 * (ind % 3) + 8, 0);
-      GlStateManager.scale(0.5, 0.5, 1);
+              guiLeft + 17 + 18 * col + 8,
+              guiTop + 18 + 18 * row + 8,
+              0);
+      GlStateManager.scale(0.5F, 0.5F, 1F);
       itemRender.renderItemOverlayIntoGUI(font, recipe.output, 0, 0, recipe.output.getCount() + "");
       GlStateManager.popMatrix();
     }
@@ -267,9 +271,9 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
         if (!press.inventory.getStackInSlot(i).isEmpty()) continue;
         List<ItemStack> inputs = stack.extractForJEI();
         ItemStack input =
-            inputs.isEmpty()
-                ? new ItemStack(ModItems.nothing)
-                : inputs.get((int) (Math.abs(System.currentTimeMillis() / 1000) % inputs.size()));
+                inputs.isEmpty()
+                        ? new ItemStack(ModItems.nothing)
+                        : inputs.get((int) (Math.abs(System.currentTimeMillis() / 1000) % inputs.size()));
 
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.disableLighting();
@@ -280,13 +284,13 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
 
         itemRender.zLevel = 10.0F;
         itemRender.renderItemAndEffectIntoGUI(
-            input, guiLeft + 116 + 18 * (i % 3), guiTop + 18 + 18 * (i / 3));
+                input, guiLeft + 116 + 18 * (i % 3), guiTop + 18 + 18 * (i / 3));
         itemRender.renderItemOverlayIntoGUI(
-            font,
-            input,
-            guiLeft + 116 + 18 * (i % 3),
-            guiTop + 18 + 18 * (i / 3),
-            input.getCount() > 1 ? (input.getCount() + "") : null);
+                font,
+                input,
+                guiLeft + 116 + 18 * (i % 3),
+                guiTop + 18 + 18 * (i / 3),
+                input.getCount() > 1 ? (input.getCount() + "") : null);
         itemRender.zLevel = 0.0F;
 
         GlStateManager.enableAlpha();
@@ -298,12 +302,12 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
         GlStateManager.color(1F, 1F, 1F, 0.5F);
         GlStateManager.enableBlend();
         drawTexturedModalRect(
-            guiLeft + 116 + 18 * (i % 3),
-            guiTop + 18 + 18 * (i / 3),
-            116 + 18 * (i % 3),
-            18 + 18 * (i / 3),
-            18,
-            18);
+                guiLeft + 116 + 18 * (i % 3),
+                guiTop + 18 + 18 * (i / 3),
+                116 + 18 * (i % 3),
+                18 + 18 * (i / 3),
+                18,
+                18);
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.disableBlend();
       }

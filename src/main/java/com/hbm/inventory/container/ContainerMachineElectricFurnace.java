@@ -1,28 +1,28 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotSmelting;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineElectricFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerMachineElectricFurnace extends Container {
-	
+public class ContainerMachineElectricFurnace extends ContainerBase {
+
 	private TileEntityMachineElectricFurnace diFurnace;
-	
+
 	public ContainerMachineElectricFurnace(InventoryPlayer invPlayer, TileEntityMachineElectricFurnace tedf) {
-		
-		diFurnace = tedf;
-		
+        super(invPlayer, tedf.inventory);
+
+        diFurnace = tedf;
+
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 56, 53));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 56, 17));
-		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 116, 35));
+        this.addSlotToContainer(new SlotSmelting(invPlayer.player, tedf.inventory, 2, 116, 35));
 		//Upgrades
 		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 3, 147, 34));
 		for(int i = 0; i < 3; i++)
@@ -32,7 +32,7 @@ public class ContainerMachineElectricFurnace extends Container {
 				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
-		
+
 		for(int i = 0; i < 9; i++)
 		{
 			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
@@ -48,7 +48,12 @@ public class ContainerMachineElectricFurnace extends Container {
 			ItemStack stack = slot.getStack();
 			rStack = stack.copy();
 
-			if(index <= 3) {
+            if (index == 2) {
+                if(!handleSmeltingTransfer(slot, stack, rStack, 4, this.inventorySlots.size())) {
+                    return ItemStack.EMPTY;
+                }
+            }
+			else if(index <= 3) {
 				if(!this.mergeItemStack(stack, 4, this.inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
@@ -68,7 +73,7 @@ public class ContainerMachineElectricFurnace extends Container {
 					return ItemStack.EMPTY;
 			}
 
-			if(stack.getCount() == 0) {
+			if(stack.isEmpty()) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
